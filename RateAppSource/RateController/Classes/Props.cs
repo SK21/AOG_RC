@@ -37,6 +37,35 @@ namespace RateController.Classes
         sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
     };
 
+    public static class SubMenuLayout
+    {
+        // main menu 782,680
+        // sub menu 540,598
+        // button 70,63
+        public const int MainMenuWidth = 782;
+        public const int MainMenuHeight = 680;
+        public const int ButtonLeftOffset = 458;
+        public const int ButtonSpacing = 76;
+        public const int ButtonTopOffset = 603;
+        public const int HeightOffset = -2;
+        public const int LeftOffset = 240;
+        public const int TopOffset = 1;
+        public const int WidthOffset = -242;
+
+        public static void SetFormLayout(Form Sub, Form Main, Button btn)
+        {
+            Sub.Left = Main.Left + LeftOffset;
+            Sub.Top = Main.Top + TopOffset;
+            Sub.Width = Main.Width + WidthOffset;
+            Sub.Height = Main.Height + HeightOffset;
+
+            if (btn != null)
+            {
+                btn.Left = ButtonLeftOffset;
+                btn.Top = ButtonTopOffset;
+            }
+        }
+    }
     public static class Props
     {
         public static readonly int MaxModules = 8;

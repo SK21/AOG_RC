@@ -13,7 +13,7 @@ namespace RateController.Classes
         private readonly object _lock = new object();
 
         private readonly List<RateReading> Readings = new List<RateReading>();
-        private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(20);
+        private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(15);
         private readonly Stopwatch SaveStopWatch = new Stopwatch();
         private string cFilePath;
         private double LastLatitude = 0;
@@ -38,11 +38,32 @@ namespace RateController.Classes
             Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
         }
 
+        public int DataPoints
+        { get { return Readings.Count; } }
+
+        public void ClearReadings()
+        {
+            lock (_lock)
+            {
+                Readings.Clear();
+                lastSavedIndex = 0;
+                if (Props.IsPathSafeToDelete(cFilePath)) File.Delete(cFilePath);
+            }
+        }
+
         public IReadOnlyList<RateReading> GetReadings()
         {
             lock (_lock)
             {
                 return Readings.ToList();
+            }
+        }
+
+        public int GetReadingsCount()
+        {
+            lock (_lock)
+            {
+                return Readings.Count;
             }
         }
 
@@ -94,6 +115,7 @@ namespace RateController.Classes
                     snapshot = Readings.Skip(lastSavedIndex).ToList();
                     // Update the index so that next time only the new items will be written.
                     lastSavedIndex = Readings.Count;
+                    Debug.Print("Readings count: " + Readings.Count);
                 }
 
                 bool fileExists = File.Exists(cFilePath);

@@ -14,8 +14,6 @@ namespace RateController
     {
         public const int StartLeft = 100;
         public const int StartTop = 100;
-        private const int FormHeight = 680;
-        private const int FormWidth = 800;
         private const int SubFirstSpacing = 75;
         private const int SubOffset = 10;
         private const int SubSpacing = 55;
@@ -27,6 +25,7 @@ namespace RateController
         private bool LoadLast = false;
         private FormStart mf;
         private Point MouseDownLocation;
+
 
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
@@ -976,8 +975,8 @@ namespace RateController
         private void frmMenu_Load(object sender, EventArgs e)
         {
             Props.LoadFormLocation(this);
-            this.Width = FormWidth;
-            this.Height = FormHeight;
+            this.Width = SubMenuLayout.MainMenuWidth;
+            this.Height = SubMenuLayout.MainMenuHeight;
             StyleControls(this);
             butPowerOff.Left = 12;
             butPowerOff.Top = this.Height - 75;

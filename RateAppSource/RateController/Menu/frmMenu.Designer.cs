@@ -450,9 +450,9 @@
             // 
             this.gbLine1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbLine1.ForeColor = System.Drawing.Color.Yellow;
-            this.gbLine1.Location = new System.Drawing.Point(237, 0);
+            this.gbLine1.Location = new System.Drawing.Point(237, 3);
             this.gbLine1.Name = "gbLine1";
-            this.gbLine1.Size = new System.Drawing.Size(1, 750);
+            this.gbLine1.Size = new System.Drawing.Size(3, 665);
             this.gbLine1.TabIndex = 159;
             this.gbLine1.TabStop = false;
             // 

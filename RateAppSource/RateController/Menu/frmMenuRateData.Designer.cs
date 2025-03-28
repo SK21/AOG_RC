@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuRateData));
             this.rbTarget = new System.Windows.Forms.RadioButton();
             this.rbApplied = new System.Windows.Forms.RadioButton();
@@ -47,9 +48,13 @@
             this.ckRecord = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.gbRecord = new System.Windows.Forms.GroupBox();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.lbDataPoints = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.HSRecordInterval = new System.Windows.Forms.HScrollBar();
             this.label2 = new System.Windows.Forms.Label();
             this.lbRecordInterval = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gbMap.SuspendLayout();
             this.gbCoverage.SuspendLayout();
             this.gbRecord.SuspendLayout();
@@ -171,11 +176,11 @@
             this.HSrefreshMap.LargeChange = 1;
             this.HSrefreshMap.Location = new System.Drawing.Point(190, 216);
             this.HSrefreshMap.Maximum = 300;
-            this.HSrefreshMap.Minimum = 15;
+            this.HSrefreshMap.Minimum = 1;
             this.HSrefreshMap.Name = "HSrefreshMap";
             this.HSrefreshMap.Size = new System.Drawing.Size(239, 45);
             this.HSrefreshMap.TabIndex = 375;
-            this.HSrefreshMap.Value = 15;
+            this.HSrefreshMap.Value = 1;
             this.HSrefreshMap.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSresolution_Scroll);
             // 
             // HSresolution
@@ -229,9 +234,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(344, 554);
+            this.btnCancel.Location = new System.Drawing.Point(382, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(89, 64);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 378;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -248,7 +253,7 @@
             this.gbCoverage.Controls.Add(this.HSresolution);
             this.gbCoverage.Controls.Add(this.lbRefresh);
             this.gbCoverage.Controls.Add(this.lbResolution);
-            this.gbCoverage.Location = new System.Drawing.Point(12, 217);
+            this.gbCoverage.Location = new System.Drawing.Point(12, 252);
             this.gbCoverage.Name = "gbCoverage";
             this.gbCoverage.Size = new System.Drawing.Size(516, 331);
             this.gbCoverage.TabIndex = 380;
@@ -262,7 +267,7 @@
             this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRecord.Image = global::RateController.Properties.Resources.record;
-            this.ckRecord.Location = new System.Drawing.Point(213, 28);
+            this.ckRecord.Location = new System.Drawing.Point(17, 28);
             this.ckRecord.Name = "ckRecord";
             this.ckRecord.Size = new System.Drawing.Size(89, 64);
             this.ckRecord.TabIndex = 382;
@@ -280,9 +285,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(439, 554);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(89, 64);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 383;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -290,17 +295,52 @@
             // 
             // gbRecord
             // 
+            this.gbRecord.Controls.Add(this.btnDelete);
+            this.gbRecord.Controls.Add(this.lbDataPoints);
+            this.gbRecord.Controls.Add(this.label1);
             this.gbRecord.Controls.Add(this.HSRecordInterval);
             this.gbRecord.Controls.Add(this.label2);
             this.gbRecord.Controls.Add(this.lbRecordInterval);
             this.gbRecord.Controls.Add(this.ckRecord);
-            this.gbRecord.Location = new System.Drawing.Point(12, 12);
+            this.gbRecord.Location = new System.Drawing.Point(12, 35);
             this.gbRecord.Name = "gbRecord";
             this.gbRecord.Size = new System.Drawing.Size(516, 199);
             this.gbRecord.TabIndex = 384;
             this.gbRecord.TabStop = false;
             this.gbRecord.Text = "Record Rate Data";
             this.gbRecord.Paint += new System.Windows.Forms.PaintEventHandler(this.gbMap_Paint);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.FlatAppearance.BorderSize = 0;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDelete.Location = new System.Drawing.Point(171, 28);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(82, 64);
+            this.btnDelete.TabIndex = 397;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // lbDataPoints
+            // 
+            this.lbDataPoints.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDataPoints.Location = new System.Drawing.Point(428, 48);
+            this.lbDataPoints.Name = "lbDataPoints";
+            this.lbDataPoints.Size = new System.Drawing.Size(59, 23);
+            this.lbDataPoints.TabIndex = 396;
+            this.lbDataPoints.Text = "0";
+            this.lbDataPoints.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(287, 48);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(135, 23);
+            this.label1.TabIndex = 395;
+            this.label1.Text = "Data points:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // HSRecordInterval
             // 
@@ -334,11 +374,16 @@
             this.lbRecordInterval.Text = "100";
             this.lbRecordInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // frmMenuRateData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.gbRecord);
             this.Controls.Add(this.gbCoverage);
             this.Controls.Add(this.btnOK);
@@ -352,6 +397,7 @@
             this.Name = "frmMenuRateData";
             this.ShowInTaskbar = false;
             this.Text = "Rate Data";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuRateData_FormClosed);
             this.Load += new System.EventHandler(this.frmRates_Load);
             this.gbMap.ResumeLayout(false);
             this.gbCoverage.ResumeLayout(false);
@@ -382,5 +428,9 @@
         private System.Windows.Forms.HScrollBar HSRecordInterval;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbRecordInterval;
+        private System.Windows.Forms.Label lbDataPoints;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Timer timer1;
     }
 }

@@ -34,7 +34,6 @@ namespace RateController.Classes
         public GMapOverlay CreateOverlay(List<RateReading> readings, out Dictionary<string, Color> legend,
             double cellAreaAcres = 0.1, RateType selectedRateType = RateType.Applied, int selectedRateIndex = 0)
         {
-
             // Initialize the legend.
             legend = new Dictionary<string, Color>();
 
@@ -42,7 +41,6 @@ namespace RateController.Classes
             GMapOverlay overlay = new GMapOverlay("asAppliedMap");
             try
             {
-
                 if (readings == null || readings.Count == 0)
                     return overlay;  // Nothing to map.
 
@@ -113,12 +111,17 @@ namespace RateController.Classes
                 // Define five shades of green (from light to dark).
                 Color[] shadesOfGreen = new Color[5]
                 {
-                Color.LightGreen,
-                Color.MediumSeaGreen,
-                Color.SeaGreen,
-                Color.ForestGreen,
-                Color.DarkGreen
+                    Color.FromArgb(204, 255, 204),  // A very light green (almost pastel)
+                    Color.FromArgb(153, 255, 153),  // A light, minty green
+                    Color.FromArgb(102, 255, 102),  // A bright, vibrant lime green
+                    Color.FromArgb(51, 204, 51),    // A medium green
+                    Color.FromArgb(0, 153, 0)       // A dark, rich green
                 };
+                // Convert each color to a semi-transparent version:
+                for (int i = 0; i < shadesOfGreen.Length; i++)
+                {
+                    shadesOfGreen[i] = Color.FromArgb(175, shadesOfGreen[i]);
+                }
 
                 // Build the legend.
                 for (int k = 0; k < 5; k++)
@@ -158,6 +161,7 @@ namespace RateController.Classes
                 };
 
                     GMapPolygon polygon = new GMapPolygon(points, $"Cell_{cellKey.i}_{cellKey.j}");
+                    polygon.Stroke = new Pen(shadesOfGreen[rangeIndex], 2);
                     polygon.Fill = new SolidBrush(shadesOfGreen[rangeIndex]);
                     polygon.Stroke = new System.Drawing.Pen(System.Drawing.Color.Black, 1);
 
@@ -173,5 +177,3 @@ namespace RateController.Classes
         }
     }
 }
-
-

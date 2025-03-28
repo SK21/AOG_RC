@@ -48,7 +48,7 @@
             this.panel1.Controls.Add(this.rbBackColor);
             this.panel1.Controls.Add(this.rbForeColor);
             this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(185, 491);
+            this.panel1.Location = new System.Drawing.Point(187, 552);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(164, 114);
             this.panel1.TabIndex = 11;
@@ -90,7 +90,7 @@
             this.rbColourUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.rbColourUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbColourUser.ForeColor = System.Drawing.Color.Yellow;
-            this.rbColourUser.Location = new System.Drawing.Point(5, 577);
+            this.rbColourUser.Location = new System.Drawing.Point(8, 622);
             this.rbColourUser.Name = "rbColourUser";
             this.rbColourUser.Size = new System.Drawing.Size(21, 36);
             this.rbColourUser.TabIndex = 16;
@@ -103,7 +103,7 @@
             this.rbColour2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.rbColour2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbColour2.ForeColor = System.Drawing.Color.Yellow;
-            this.rbColour2.Location = new System.Drawing.Point(5, 530);
+            this.rbColour2.Location = new System.Drawing.Point(8, 575);
             this.rbColour2.Name = "rbColour2";
             this.rbColour2.Size = new System.Drawing.Size(21, 36);
             this.rbColour2.TabIndex = 15;
@@ -117,7 +117,7 @@
             this.rbColour1.Checked = true;
             this.rbColour1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbColour1.ForeColor = System.Drawing.Color.Yellow;
-            this.rbColour1.Location = new System.Drawing.Point(5, 483);
+            this.rbColour1.Location = new System.Drawing.Point(8, 528);
             this.rbColour1.Name = "rbColour1";
             this.rbColour1.Size = new System.Drawing.Size(21, 36);
             this.rbColour1.TabIndex = 14;
@@ -131,7 +131,7 @@
             this.tbColourUser1.BackColor = System.Drawing.Color.Black;
             this.tbColourUser1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbColourUser1.ForeColor = System.Drawing.Color.Yellow;
-            this.tbColourUser1.Location = new System.Drawing.Point(32, 577);
+            this.tbColourUser1.Location = new System.Drawing.Point(35, 622);
             this.tbColourUser1.Multiline = true;
             this.tbColourUser1.Name = "tbColourUser1";
             this.tbColourUser1.ReadOnly = true;
@@ -147,7 +147,7 @@
             this.tbColourDefault1.BackColor = System.Drawing.Color.Black;
             this.tbColourDefault1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbColourDefault1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.tbColourDefault1.Location = new System.Drawing.Point(32, 483);
+            this.tbColourDefault1.Location = new System.Drawing.Point(35, 528);
             this.tbColourDefault1.Multiline = true;
             this.tbColourDefault1.Name = "tbColourDefault1";
             this.tbColourDefault1.ReadOnly = true;
@@ -163,7 +163,7 @@
             this.colorPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colorPanel.Location = new System.Drawing.Point(12, 12);
             this.colorPanel.Name = "colorPanel";
-            this.colorPanel.Size = new System.Drawing.Size(516, 465);
+            this.colorPanel.Size = new System.Drawing.Size(516, 510);
             this.colorPanel.TabIndex = 10;
             this.colorPanel.TabStop = true;
             this.colorPanel.Click += new System.EventHandler(this.colorPanel_Click);
@@ -176,7 +176,7 @@
             this.tbColourDefault2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.tbColourDefault2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbColourDefault2.ForeColor = System.Drawing.Color.Black;
-            this.tbColourDefault2.Location = new System.Drawing.Point(32, 530);
+            this.tbColourDefault2.Location = new System.Drawing.Point(35, 575);
             this.tbColourDefault2.Multiline = true;
             this.tbColourDefault2.Name = "tbColourDefault2";
             this.tbColourDefault2.ReadOnly = true;
@@ -197,9 +197,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 18;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -215,9 +215,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 17;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -227,7 +227,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.panel1);

@@ -1,6 +1,7 @@
 ﻿using RateController.Classes;
 using System;
 using System.Drawing;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace RateController.Forms
@@ -10,9 +11,11 @@ namespace RateController.Forms
         private bool cEdited = false;
         private bool Initializing = false;
         private frmMenu MainMenu;
+        private int MaxRecordSeconds = 30;
+        private int MaxRefreshSeconds = 30;
         private FormStart mf;
-        private int MaxRecordSeconds = 120;
-        private int MinRecordSeconds = 5;
+        private int MinRecordSeconds = 1;
+        private int MinRefreshSeconds = 1;
 
         public frmMenuRateData(FormStart main, frmMenu menu)
         {
@@ -25,12 +28,31 @@ namespace RateController.Forms
 
             HSRecordInterval.Minimum = MinRecordSeconds;
             HSRecordInterval.Maximum = MaxRecordSeconds;
+
+            HSrefreshMap.Minimum = MinRefreshSeconds;
+            HSrefreshMap.Maximum = MaxRefreshSeconds;
+            timer1.Enabled = true;
+            lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(mf, "Confirm Delete all job data?", "Delete File", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                mf.Tls.RateCollector.ClearReadings();
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -82,21 +104,21 @@ namespace RateController.Forms
             }
         }
 
+        private void frmMenuRateData_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            timer1.Enabled = false;
+        }
+
         private void frmRates_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
-            SetLanguage();
-            MainMenu.MenuMoved += MainMenu_MenuMoved;
-            this.BackColor = Properties.Settings.Default.MainBackColour;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
-            btnOK.Left = this.Width - 84;
-            btnOK.Top = this.Height - 84;
-            btnCancel.Left = btnOK.Left - 78;
+            SubMenuLayout.SetFormLayout(this,MainMenu,btnOK);
+
+            btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
             PositionForm();
+            SetLanguage();
             UpdateForm();
 
             Font ValFont = new Font(lbRefresh.Font.FontFamily, 14, FontStyle.Bold);
@@ -124,8 +146,8 @@ namespace RateController.Forms
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void Props_UnitsChanged(object sender, EventArgs e)
@@ -168,6 +190,11 @@ namespace RateController.Forms
             {
                 lbResolutionDescription.Text = "Resolution (Acres)";
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
         }
 
         private void UpdateControlDisplay()

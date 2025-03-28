@@ -125,18 +125,13 @@ namespace RateController.Menu
 
         private void frmMenuColor_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
-            SetLanguage();
-            MainMenu.MenuMoved += MainMenu_MenuMoved;
-            this.BackColor = Properties.Settings.Default.DisplayBackColour;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
-            btnOK.Left = this.Width - 84;
-            btnOK.Top = this.Height - 84;
-            btnCancel.Left = btnOK.Left - 78;
+            SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
+
+            btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+            SetLanguage();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
             PositionForm();
             UpdateForm();
             this.Visible = true;
@@ -149,8 +144,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void rbColour1_Click(object sender, EventArgs e)
