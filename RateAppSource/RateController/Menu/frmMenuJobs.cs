@@ -1,7 +1,7 @@
-﻿using RateController.Classes;
+﻿using AgOpenGPS;
+using RateController.Classes;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -306,21 +306,75 @@ namespace RateController.Menu
         {
             try
             {
+                Parcel CurrentSearchField = cbSearchField.SelectedItem as Parcel;
                 List<Parcel> Flds = ParcelManager.GetParcels();
 
                 // Sort and create independent lists for each ComboBox
                 var fieldList = Flds.OrderBy(p => p.Name).ToList();
                 var searchFieldList = Flds.OrderBy(p => p.Name).ToList();
 
-                // Set data sources separately to prevent unwanted synchronization
-                cbField.DataSource = fieldList;
-                cbSearchField.DataSource = searchFieldList;
+                // Suspend layout updates to prevent ComboBox flashing
+                cbField.BeginUpdate();
+                cbSearchField.BeginUpdate();
 
-                // Assign display and value members
-                cbField.DisplayMember = cbSearchField.DisplayMember = "Name";
-                cbField.ValueMember = cbSearchField.ValueMember = "ID";
+                try
+                {
+                    // Set data sources separately to prevent unwanted synchronization
+                    cbField.DataSource = fieldList;
+                    cbSearchField.DataSource = searchFieldList;
 
-                cbSearchField.SelectedIndex = -1;
+                    // Assign display and value members
+                    cbField.DisplayMember = cbSearchField.DisplayMember = "Name";
+                    cbField.ValueMember = cbSearchField.ValueMember = "ID";
+                }
+                finally
+                {
+                    // Resume layout updates
+                    cbField.EndUpdate();
+                    cbSearchField.EndUpdate();
+                }
+
+                bool Found = false;
+                if (EditingJob != null)
+                {
+                    Parcel fieldParcel = ParcelManager.SearchParcel(EditingJob.FieldID);
+                    if (fieldParcel != null)
+                    {
+                        foreach (var item in cbSearchField.Items)
+                        {
+                            if (item is Parcel parcel && parcel.ID == fieldParcel.ID)
+                            {
+                                cbSearchField.SelectedItem = parcel;
+                                Found = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!Found)
+                {
+                    if (CurrentSearchField == null)
+                    {
+                        cbSearchField.SelectedIndex = -1;
+                    }
+                    else
+                    {
+                        foreach (var item in cbSearchField.Items)
+                        {
+                            if (item is Parcel parcel && parcel.ID == CurrentSearchField.ID)
+                            {
+                                cbSearchField.SelectedItem = parcel;
+                                Found = true;
+                                break;
+                            }
+                        }
+                        if (!Found)
+                        {
+                            cbSearchField.SelectedIndex = -1;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -533,6 +587,35 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
+            }
+        }
+
+        private void tbSearchYear_TextChanged(object sender, EventArgs e)
+        {
+            // highlight btnRefeshJobs 
+        }
+
+        private void tbSearchYear_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSearchYear.Text, out tempD);
+            if (tempD < 1900 || tempD > 2100)
+            {
+               tbSearchYear.Text = DateTime.Now.Year.ToString();
+            }
+        }
+
+        private void tbSearchYear_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSearchYear.Text, out tempD);
+            using (var form = new FormNumeric(1900, 2100, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSearchYear.Text = form.ReturnValue.ToString();
+                }
             }
         }
     }

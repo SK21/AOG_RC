@@ -2393,6 +2393,7 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\ru\RateController.resourc
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormStart.resources
+G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmCopyMap.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmHelp.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmImport.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.frmLargeScreen.resources
@@ -2452,4 +2453,3 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\ru\R
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateCont.B5F4215A.Up2Date
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.pdb
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmCopyMap.resources

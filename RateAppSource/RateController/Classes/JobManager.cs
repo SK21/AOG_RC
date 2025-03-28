@@ -177,7 +177,7 @@ namespace RateController.Classes
         {
             string Result = null;
             Job JB = SearchJob(JobID);
-            if (JB != null) Result = Path.Combine(JB.JobFolder, "Map\\Map.shp");
+            if (JB != null) Result = Path.Combine(JB.JobFolder, "Map\\Job.shp");
             return Result;
         }
 

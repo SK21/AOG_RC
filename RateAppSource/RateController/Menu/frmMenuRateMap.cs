@@ -61,6 +61,7 @@ namespace RateController.Menu
             btnCreateZone.FlatAppearance.BorderSize = 0;
             ckEdit.Checked = false;
             mf.Tls.Manager.SaveMap();
+            UpdateForm();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -474,8 +475,8 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            tbName.Text = mf.Tls.Manager.ZoneName;
             mf.Tls.Manager.UpdateTargetRates();
+            tbName.Text = mf.Tls.Manager.ZoneName;
             tbP1.Text = mf.Tls.Manager.GetRate(0).ToString();
             tbP2.Text = mf.Tls.Manager.GetRate(1).ToString();
             tbP3.Text = mf.Tls.Manager.GetRate(2).ToString();

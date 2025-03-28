@@ -379,6 +379,9 @@
             this.tbSearchYear.TabIndex = 386;
             this.tbSearchYear.Text = "2025";
             this.tbSearchYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSearchYear.TextChanged += new System.EventHandler(this.tbSearchYear_TextChanged);
+            this.tbSearchYear.Enter += new System.EventHandler(this.tbSearchYear_Enter);
+            this.tbSearchYear.Validating += new System.ComponentModel.CancelEventHandler(this.tbSearchYear_Validating);
             // 
             // label4
             // 

@@ -1,5 +1,4 @@
-﻿using GMap.NET.MapProviders;
-using RateController.Language;
+﻿using RateController.Language;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,9 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace RateController.Classes
 {
@@ -56,7 +53,6 @@ namespace RateController.Classes
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
-        private static string cDefaultJob;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
