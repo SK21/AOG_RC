@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace RateController.Forms
 {
@@ -12,6 +11,8 @@ namespace RateController.Forms
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
+        private int MaxRecordSeconds = 120;
+        private int MinRecordSeconds = 5;
 
         public frmMenuRateData(FormStart main, frmMenu menu)
         {
@@ -21,6 +22,9 @@ namespace RateController.Forms
             MainMenu = menu;
             mf = main;
             this.Tag = false;
+
+            HSRecordInterval.Minimum = MinRecordSeconds;
+            HSRecordInterval.Maximum = MaxRecordSeconds;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -69,7 +73,7 @@ namespace RateController.Forms
 
                     SetButtons(false);
                     UpdateForm();
-                    Props.RaiseMapShowRatesSettingsChanged();
+                    Props.RaiseRateDataSettingsChanged();
                 }
                 catch (Exception ex)
                 {

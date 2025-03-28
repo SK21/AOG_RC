@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace RateController
 {
-
     public class clsProduct
     {
         public readonly FormStart mf;

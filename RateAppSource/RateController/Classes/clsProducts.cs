@@ -18,12 +18,12 @@ namespace RateController
         }
         public double[] ProductAppliedRates()
         {
-            double[] Result = new double[Props.MaxProducts];
+            double[] Result = new double[Props.MaxProducts-2];
             for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
                 if (cProducts[i].RateSensor.Connected())
                 {
-                    Result[i] = cProducts[i].SmoothRate();
+                    Result[i] = cProducts[i].CurrentRate();
                 }
             }
             return Result;
@@ -31,7 +31,7 @@ namespace RateController
 
         public double[] ProductTargetRates()
         {
-            double[] Result = new double[Props.MaxProducts];
+            double[] Result = new double[Props.MaxProducts-2];
             for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
                 if (cProducts[i].RateSensor.Connected())

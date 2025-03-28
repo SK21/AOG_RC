@@ -49,7 +49,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "19-Mar-2025";
+        private static string cAppDate = "27-Mar-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0-beta.9";
@@ -101,9 +101,7 @@ namespace RateController.Classes
 
         public static event EventHandler JobChanged;
 
-        public static event EventHandler MapShowRatesSettingsChanged;
-
-        public static event EventHandler RecordSettingsChanged;
+        public static event EventHandler RateDataSettingsChanged;
 
         public static event EventHandler UnitsChanged;
 
@@ -134,7 +132,7 @@ namespace RateController.Classes
                     Properties.Settings.Default.CurrentJob = 0;
                     Properties.Settings.Default.Save();
                     current = JobManager.SearchJob(0);
-                    JobChanged?.Invoke(null, EventArgs.Empty);
+                    SaveJobInfo();
                 }
                 return Properties.Settings.Default.CurrentJob;
             }
@@ -143,6 +141,7 @@ namespace RateController.Classes
                 Properties.Settings.Default.CurrentJob = value;
                 Properties.Settings.Default.Save();
                 JobChanged?.Invoke(null, EventArgs.Empty);
+                SaveJobInfo();
             }
         }
 
@@ -296,7 +295,6 @@ namespace RateController.Classes
             {
                 cRateRecordEnabled = value;
                 SetProp("RecordRates", value.ToString());
-                RecordSettingsChanged?.Invoke(null, EventArgs.Empty);
             }
         }
 
@@ -537,6 +535,18 @@ namespace RateController.Classes
             return cAppDate;
         }
 
+        private static void SaveJobInfo()
+        {
+            string InfoPath = cJobsFolder + "\\CurrentJob.txt";
+            string JobPath = "";
+            Job current = JobManager.SearchJob(Properties.Settings.Default.CurrentJob);
+            if (current != null)
+            {
+                JobPath = current.JobFolder;
+            }
+            File.WriteAllText(InfoPath, JobPath);
+        }
+
         #endregion MainProperties
 
         public static bool CheckFolders()
@@ -589,10 +599,19 @@ namespace RateController.Classes
 
                 // check user files, current job
                 int CurrentJob = Props.CurrentJobID;
-                if (JobManager.SearchJob(CurrentJob) == null) Props.CurrentJobID = 0;
+                if (JobManager.SearchJob(CurrentJob) == null)
+                {
+                    Props.CurrentJobID = 0;
+                }
+                else
+                {
+                    Props.CurrentJobID = Properties.Settings.Default.CurrentJob;
+                }
 
                 // create field names path
                 cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
+
+                SaveJobInfo();
 
                 Result = true;
             }
@@ -777,7 +796,7 @@ namespace RateController.Classes
         public static void LoadProperties()
         {
             cReadOnly = bool.TryParse(GetProp("ReadOnly"), out bool rd) ? rd : false;
-            cUseVariableRate = bool.TryParse(GetProp("UseVariableRate_" + Props.CurrentDir()), out bool vr) ? vr : false;
+            cUseVariableRate = bool.TryParse(GetProp("UseVariableRate_" + CurrentFileName()), out bool vr) ? vr : false;
             cMasterSwitchMode = Enum.TryParse(GetProp("MasterSwitchMode"), out MasterSwitchMode msm) ? msm : MasterSwitchMode.ControlAll;
             cDefaultProduct = int.TryParse(GetProp("DefaultProduct"), out int dp) ? dp : 0;
             cPrimeDelay = int.TryParse(GetProp("PrimeDelay"), out int pd) ? pd : 3;
@@ -858,9 +877,9 @@ namespace RateController.Classes
             return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
         }
 
-        public static void RaiseMapShowRatesSettingsChanged()
+        public static void RaiseRateDataSettingsChanged()
         {
-            MapShowRatesSettingsChanged?.Invoke(null, EventArgs.Empty);
+            RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static void SaveFormLocation(Form frm, string Instance = "")

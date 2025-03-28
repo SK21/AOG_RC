@@ -53,7 +53,7 @@ namespace RateController.Classes
             AppliedOverlayTimer.Enabled = false;
 
             Props.JobChanged += Props_JobChanged;
-            Props.MapShowRatesSettingsChanged += Props_MapShowRatesChanged;
+            Props.RateDataSettingsChanged += Props_MapShowRatesChanged;
         }
 
         public event EventHandler MapChanged;
