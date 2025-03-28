@@ -5,6 +5,7 @@ using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Timers;
@@ -54,6 +55,7 @@ namespace RateController.Classes
 
             Props.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_MapShowRatesChanged;
+            LoadMap();
         }
 
         public event EventHandler MapChanged;
@@ -276,6 +278,7 @@ namespace RateController.Classes
             else
             {
                 RemoveOverlay(zoneOverlay);
+                gmap.Refresh();
             }
         }
 
@@ -288,6 +291,7 @@ namespace RateController.Classes
             else
             {
                 RemoveOverlay(currentAppliedOverlay);
+                gmap.Refresh();
                 AppliedOverlayTimer.Enabled = false;
             }
         }
@@ -425,13 +429,15 @@ namespace RateController.Classes
         {
             if (NewOverlay != null)
             {
-                if (!gmap.Overlays.Contains(NewOverlay))
+                // Check if an overlay with the same Id already exists
+                bool overlayExists = gmap.Overlays.Any(o => o.Id == NewOverlay.Id);
+
+                if (!overlayExists)
                 {
                     gmap.Overlays.Add(NewOverlay);
                 }
             }
         }
-
         private GMapOverlay AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
         {
             foreach (var polygon in polygons)
@@ -491,6 +497,7 @@ namespace RateController.Classes
                 if (currentAppliedOverlay != null)
                 {
                     RemoveOverlay(currentAppliedOverlay);
+                    gmap.Refresh();
                 }
                 currentAppliedOverlay = updatedOverlay;
                 AddOverlay(currentAppliedOverlay);
@@ -632,6 +639,7 @@ namespace RateController.Classes
             AddOverlay(gpsMarkerOverlay);
             AddOverlay(tempMarkerOverlay);
             AddOverlay(zoneOverlay);
+            gmap.Refresh();
         }
 
         private void InitializeMapZones()
@@ -650,17 +658,19 @@ namespace RateController.Classes
             UpdateRateDataDisplay();
         }
 
-        private void RemoveOverlay(GMapOverlay Overlay)
+        private void RemoveOverlay(GMapOverlay overlay)
         {
             try
             {
-                if (Overlay != null)
+                if (overlay != null)
                 {
-                    while (gmap.Overlays.Contains(Overlay))
+                    // Collect all overlays that match the passed overlay's Id.
+                    var overlaysToRemove = gmap.Overlays.Where(o => o.Id == overlay.Id).ToList();
+
+                    foreach (var o in overlaysToRemove)
                     {
-                        gmap.Overlays.Remove(Overlay);
+                        gmap.Overlays.Remove(o);
                     }
-                    gmap.Refresh();
                 }
             }
             catch (Exception ex)
