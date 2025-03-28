@@ -56,9 +56,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 164;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -74,9 +74,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 163;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -242,7 +242,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.gbMasterSwitch);
             this.Controls.Add(this.gbOnScreen);
             this.Controls.Add(this.gbAutoSwitch);

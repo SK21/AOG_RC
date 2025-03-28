@@ -63,7 +63,7 @@
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(8, 88);
+            this.btnImport.Location = new System.Drawing.Point(8, 96);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(89, 64);
             this.btnImport.TabIndex = 342;
@@ -73,7 +73,6 @@
             // 
             // gbZone
             // 
-            this.gbZone.Controls.Add(this.legendPanel);
             this.gbZone.Controls.Add(this.lbArea);
             this.gbZone.Controls.Add(this.label1);
             this.gbZone.Controls.Add(this.colorComboBox);
@@ -91,7 +90,7 @@
             this.gbZone.Controls.Add(this.tbName);
             this.gbZone.Location = new System.Drawing.Point(106, 0);
             this.gbZone.Name = "gbZone";
-            this.gbZone.Size = new System.Drawing.Size(427, 254);
+            this.gbZone.Size = new System.Drawing.Size(427, 302);
             this.gbZone.TabIndex = 21;
             this.gbZone.TabStop = false;
             this.gbZone.Text = "Zone";
@@ -99,7 +98,7 @@
             // 
             // legendPanel
             // 
-            this.legendPanel.Location = new System.Drawing.Point(139, 216);
+            this.legendPanel.Location = new System.Drawing.Point(133, 356);
             this.legendPanel.Name = "legendPanel";
             this.legendPanel.Size = new System.Drawing.Size(200, 100);
             this.legendPanel.TabIndex = 359;
@@ -116,7 +115,7 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(150, 207);
+            this.label1.Location = new System.Drawing.Point(150, 260);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(68, 24);
             this.label1.TabIndex = 341;
@@ -131,7 +130,7 @@
             "Red ",
             "Purple",
             "Orange"});
-            this.colorComboBox.Location = new System.Drawing.Point(224, 204);
+            this.colorComboBox.Location = new System.Drawing.Point(224, 256);
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(186, 32);
             this.colorComboBox.TabIndex = 340;
@@ -141,7 +140,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(10, 100);
+            this.btnDelete.Location = new System.Drawing.Point(10, 124);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 12;
@@ -153,7 +152,7 @@
             this.btnCreateZone.FlatAppearance.BorderSize = 0;
             this.btnCreateZone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCreateZone.Image = global::RateController.Properties.Resources.OK;
-            this.btnCreateZone.Location = new System.Drawing.Point(10, 172);
+            this.btnCreateZone.Location = new System.Drawing.Point(10, 220);
             this.btnCreateZone.Name = "btnCreateZone";
             this.btnCreateZone.Size = new System.Drawing.Size(82, 64);
             this.btnCreateZone.TabIndex = 2;
@@ -162,7 +161,7 @@
             // 
             // lbP4
             // 
-            this.lbP4.Location = new System.Drawing.Point(150, 171);
+            this.lbP4.Location = new System.Drawing.Point(150, 212);
             this.lbP4.Name = "lbP4";
             this.lbP4.Size = new System.Drawing.Size(116, 24);
             this.lbP4.TabIndex = 11;
@@ -170,7 +169,7 @@
             // 
             // tbP4
             // 
-            this.tbP4.Location = new System.Drawing.Point(343, 169);
+            this.tbP4.Location = new System.Drawing.Point(343, 210);
             this.tbP4.Name = "tbP4";
             this.tbP4.Size = new System.Drawing.Size(67, 29);
             this.tbP4.TabIndex = 10;
@@ -181,7 +180,7 @@
             // 
             // lbP3
             // 
-            this.lbP3.Location = new System.Drawing.Point(150, 136);
+            this.lbP3.Location = new System.Drawing.Point(150, 166);
             this.lbP3.Name = "lbP3";
             this.lbP3.Size = new System.Drawing.Size(116, 24);
             this.lbP3.TabIndex = 9;
@@ -204,7 +203,7 @@
             // 
             // tbP3
             // 
-            this.tbP3.Location = new System.Drawing.Point(343, 134);
+            this.tbP3.Location = new System.Drawing.Point(343, 164);
             this.tbP3.Name = "tbP3";
             this.tbP3.Size = new System.Drawing.Size(67, 29);
             this.tbP3.TabIndex = 8;
@@ -215,7 +214,7 @@
             // 
             // lbP2
             // 
-            this.lbP2.Location = new System.Drawing.Point(150, 101);
+            this.lbP2.Location = new System.Drawing.Point(150, 120);
             this.lbP2.Name = "lbP2";
             this.lbP2.Size = new System.Drawing.Size(116, 24);
             this.lbP2.TabIndex = 7;
@@ -223,7 +222,7 @@
             // 
             // tbP2
             // 
-            this.tbP2.Location = new System.Drawing.Point(343, 99);
+            this.tbP2.Location = new System.Drawing.Point(343, 118);
             this.tbP2.Name = "tbP2";
             this.tbP2.Size = new System.Drawing.Size(67, 29);
             this.tbP2.TabIndex = 6;
@@ -234,7 +233,7 @@
             // 
             // lbP1
             // 
-            this.lbP1.Location = new System.Drawing.Point(150, 66);
+            this.lbP1.Location = new System.Drawing.Point(150, 74);
             this.lbP1.Name = "lbP1";
             this.lbP1.Size = new System.Drawing.Size(116, 24);
             this.lbP1.TabIndex = 5;
@@ -242,7 +241,7 @@
             // 
             // tbP1
             // 
-            this.tbP1.Location = new System.Drawing.Point(343, 64);
+            this.tbP1.Location = new System.Drawing.Point(343, 72);
             this.tbP1.Name = "tbP1";
             this.tbP1.Size = new System.Drawing.Size(67, 29);
             this.tbP1.TabIndex = 4;
@@ -267,7 +266,7 @@
             this.ckSatView.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckSatView.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSatView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSatView.Location = new System.Drawing.Point(8, 468);
+            this.ckSatView.Location = new System.Drawing.Point(8, 516);
             this.ckSatView.Name = "ckSatView";
             this.ckSatView.Size = new System.Drawing.Size(89, 64);
             this.ckSatView.TabIndex = 349;
@@ -281,7 +280,7 @@
             this.ckFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckFullScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFullScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFullScreen.Location = new System.Drawing.Point(8, 316);
+            this.ckFullScreen.Location = new System.Drawing.Point(8, 348);
             this.ckFullScreen.Name = "ckFullScreen";
             this.ckFullScreen.Size = new System.Drawing.Size(89, 64);
             this.ckFullScreen.TabIndex = 348;
@@ -293,7 +292,7 @@
             // VSzoom
             // 
             this.VSzoom.LargeChange = 1;
-            this.VSzoom.Location = new System.Drawing.Point(106, 260);
+            this.VSzoom.Location = new System.Drawing.Point(106, 308);
             this.VSzoom.Name = "VSzoom";
             this.VSzoom.Size = new System.Drawing.Size(45, 358);
             this.VSzoom.TabIndex = 349;
@@ -301,7 +300,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(154, 260);
+            this.pictureBox1.Location = new System.Drawing.Point(154, 308);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(379, 358);
             this.pictureBox1.TabIndex = 350;
@@ -312,7 +311,7 @@
             this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(8, 240);
+            this.ckEnable.Location = new System.Drawing.Point(8, 264);
             this.ckEnable.Name = "ckEnable";
             this.ckEnable.Size = new System.Drawing.Size(89, 64);
             this.ckEnable.TabIndex = 351;
@@ -332,7 +331,7 @@
             this.ckZones.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckZones.Location = new System.Drawing.Point(8, 392);
+            this.ckZones.Location = new System.Drawing.Point(8, 432);
             this.ckZones.Name = "ckZones";
             this.ckZones.Size = new System.Drawing.Size(89, 64);
             this.ckZones.TabIndex = 354;
@@ -343,7 +342,7 @@
             // 
             // btnPNG
             // 
-            this.btnPNG.Location = new System.Drawing.Point(8, 164);
+            this.btnPNG.Location = new System.Drawing.Point(8, 180);
             this.btnPNG.Name = "btnPNG";
             this.btnPNG.Size = new System.Drawing.Size(89, 64);
             this.btnPNG.TabIndex = 356;
@@ -362,7 +361,7 @@
             this.ckRateData.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckRateData.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateData.Location = new System.Drawing.Point(8, 544);
+            this.ckRateData.Location = new System.Drawing.Point(8, 600);
             this.ckRateData.Name = "ckRateData";
             this.ckRateData.Size = new System.Drawing.Size(89, 64);
             this.ckRateData.TabIndex = 358;
@@ -385,8 +384,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.ControlBox = false;
+            this.Controls.Add(this.legendPanel);
             this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.btnPNG);
             this.Controls.Add(this.ckRateData);

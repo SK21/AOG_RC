@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DGV = new System.Windows.Forms.DataGridView();
             this.cReadingDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cRawDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -92,15 +92,15 @@
             this.ID});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.NullValue = "<dbnull>";
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.NullValue = "<dbnull>";
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle4;
             this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
             this.DGV.Location = new System.Drawing.Point(14, 27);
             this.DGV.Margin = new System.Windows.Forms.Padding(11);
@@ -115,10 +115,10 @@
             // cReadingDataGridViewTextBoxColumn
             // 
             this.cReadingDataGridViewTextBoxColumn.DataPropertyName = "cReading";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.Format = "N0";
-            dataGridViewCellStyle5.NullValue = null;
-            this.cReadingDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.NullValue = null;
+            this.cReadingDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.cReadingDataGridViewTextBoxColumn.HeaderText = "Reading";
             this.cReadingDataGridViewTextBoxColumn.Name = "cReadingDataGridViewTextBoxColumn";
             this.cReadingDataGridViewTextBoxColumn.ReadOnly = true;
@@ -126,10 +126,10 @@
             // cRawDataGridViewTextBoxColumn
             // 
             this.cRawDataGridViewTextBoxColumn.DataPropertyName = "cRaw";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N0";
-            dataGridViewCellStyle6.NullValue = null;
-            this.cRawDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            this.cRawDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.cRawDataGridViewTextBoxColumn.HeaderText = "Raw Data";
             this.cRawDataGridViewTextBoxColumn.Name = "cRawDataGridViewTextBoxColumn";
             this.cRawDataGridViewTextBoxColumn.ReadOnly = true;
@@ -139,10 +139,10 @@
             // 
             this.cKnownPressureDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.cKnownPressureDataGridViewTextBoxColumn.DataPropertyName = "cKnownPressure";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N1";
-            dataGridViewCellStyle7.NullValue = null;
-            this.cKnownPressureDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N1";
+            dataGridViewCellStyle3.NullValue = null;
+            this.cKnownPressureDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.cKnownPressureDataGridViewTextBoxColumn.HeaderText = "Pressure";
             this.cKnownPressureDataGridViewTextBoxColumn.Name = "cKnownPressureDataGridViewTextBoxColumn";
             this.cKnownPressureDataGridViewTextBoxColumn.ReadOnly = true;
@@ -247,9 +247,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 185;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -265,9 +265,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 184;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -344,9 +344,9 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(202, 546);
+            this.btnDelete.Location = new System.Drawing.Point(204, 603);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(82, 72);
+            this.btnDelete.Size = new System.Drawing.Size(70, 63);
             this.btnDelete.TabIndex = 216;
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
@@ -356,9 +356,9 @@
             this.btnCopy.FlatAppearance.BorderSize = 0;
             this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCopy.Image = global::RateController.Properties.Resources.copy1;
-            this.btnCopy.Location = new System.Drawing.Point(290, 546);
+            this.btnCopy.Location = new System.Drawing.Point(292, 603);
             this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(82, 72);
+            this.btnCopy.Size = new System.Drawing.Size(70, 63);
             this.btnCopy.TabIndex = 217;
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
@@ -369,7 +369,7 @@
             this.ckPressure.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckPressure.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckPressure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPressure.Location = new System.Drawing.Point(26, 546);
+            this.ckPressure.Location = new System.Drawing.Point(12, 594);
             this.ckPressure.Name = "ckPressure";
             this.ckPressure.Size = new System.Drawing.Size(82, 72);
             this.ckPressure.TabIndex = 218;
@@ -390,7 +390,7 @@
             this.grpSensor.Controls.Add(this.label2);
             this.grpSensor.Controls.Add(this.lbCalIntercept);
             this.grpSensor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpSensor.Location = new System.Drawing.Point(54, 168);
+            this.grpSensor.Location = new System.Drawing.Point(54, 203);
             this.grpSensor.Name = "grpSensor";
             this.grpSensor.Size = new System.Drawing.Size(418, 372);
             this.grpSensor.TabIndex = 219;
@@ -448,7 +448,7 @@
             this.groupBox1.Controls.Add(this.tbSlope);
             this.groupBox1.Controls.Add(this.tbIntercept);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(54, 48);
+            this.groupBox1.Location = new System.Drawing.Point(54, 74);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(418, 114);
             this.groupBox1.TabIndex = 220;
@@ -501,9 +501,9 @@
             this.btnNew.FlatAppearance.BorderSize = 0;
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
-            this.btnNew.Location = new System.Drawing.Point(114, 546);
+            this.btnNew.Location = new System.Drawing.Point(116, 603);
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(82, 72);
+            this.btnNew.Size = new System.Drawing.Size(70, 63);
             this.btnNew.TabIndex = 221;
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
@@ -517,7 +517,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpSensor);

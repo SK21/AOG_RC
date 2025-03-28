@@ -57,7 +57,7 @@
             this.lstProfiles.Location = new System.Drawing.Point(132, 116);
             this.lstProfiles.Name = "lstProfiles";
             this.lstProfiles.ScrollAlwaysVisible = true;
-            this.lstProfiles.Size = new System.Drawing.Size(349, 469);
+            this.lstProfiles.Size = new System.Drawing.Size(349, 531);
             this.lstProfiles.Sorted = true;
             this.lstProfiles.TabIndex = 150;
             // 
@@ -145,7 +145,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.btnProfilesDown);
             this.Controls.Add(this.btnProfilesUp);
             this.Controls.Add(this.tbName);

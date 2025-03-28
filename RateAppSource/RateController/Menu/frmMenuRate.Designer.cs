@@ -377,7 +377,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(52, 222);
+            this.label7.Location = new System.Drawing.Point(46, 222);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 23);
             this.label7.TabIndex = 201;
@@ -388,7 +388,7 @@
             this.lbFanStarted.BackColor = System.Drawing.SystemColors.Control;
             this.lbFanStarted.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFanStarted.Image = global::RateController.Properties.Resources.Off;
-            this.lbFanStarted.Location = new System.Drawing.Point(282, 215);
+            this.lbFanStarted.Location = new System.Drawing.Point(276, 215);
             this.lbFanStarted.Name = "lbFanStarted";
             this.lbFanStarted.Size = new System.Drawing.Size(41, 37);
             this.lbFanStarted.TabIndex = 200;
@@ -398,7 +398,7 @@
             // 
             this.lbFanErrorValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFanErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanErrorValue.Location = new System.Drawing.Point(251, 133);
+            this.lbFanErrorValue.Location = new System.Drawing.Point(245, 133);
             this.lbFanErrorValue.Name = "lbFanErrorValue";
             this.lbFanErrorValue.Size = new System.Drawing.Size(102, 30);
             this.lbFanErrorValue.TabIndex = 196;
@@ -408,7 +408,7 @@
             // 
             this.lbFanError.AutoSize = true;
             this.lbFanError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanError.Location = new System.Drawing.Point(48, 137);
+            this.lbFanError.Location = new System.Drawing.Point(42, 137);
             this.lbFanError.Name = "lbFanError";
             this.lbFanError.Size = new System.Drawing.Size(77, 23);
             this.lbFanError.TabIndex = 197;
@@ -418,7 +418,7 @@
             // 
             this.lbFanRPMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFanRPMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanRPMvalue.Location = new System.Drawing.Point(251, 92);
+            this.lbFanRPMvalue.Location = new System.Drawing.Point(245, 92);
             this.lbFanRPMvalue.Name = "lbFanRPMvalue";
             this.lbFanRPMvalue.Size = new System.Drawing.Size(102, 30);
             this.lbFanRPMvalue.TabIndex = 194;
@@ -428,7 +428,7 @@
             // 
             this.lbFanRPM.AutoSize = true;
             this.lbFanRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanRPM.Location = new System.Drawing.Point(48, 96);
+            this.lbFanRPM.Location = new System.Drawing.Point(42, 96);
             this.lbFanRPM.Name = "lbFanRPM";
             this.lbFanRPM.Size = new System.Drawing.Size(116, 23);
             this.lbFanRPM.TabIndex = 195;
@@ -438,7 +438,7 @@
             // 
             this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanPWMvalue.Location = new System.Drawing.Point(251, 174);
+            this.lbFanPWMvalue.Location = new System.Drawing.Point(245, 174);
             this.lbFanPWMvalue.Name = "lbFanPWMvalue";
             this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
             this.lbFanPWMvalue.TabIndex = 190;
@@ -448,7 +448,7 @@
             // 
             this.lbFanPWM.AutoSize = true;
             this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFanPWM.Location = new System.Drawing.Point(48, 178);
+            this.lbFanPWM.Location = new System.Drawing.Point(42, 178);
             this.lbFanPWM.Name = "lbFanPWM";
             this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
             this.lbFanPWM.TabIndex = 191;
@@ -457,7 +457,7 @@
             // lbCountsRPM
             // 
             this.lbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCountsRPM.Location = new System.Drawing.Point(48, 14);
+            this.lbCountsRPM.Location = new System.Drawing.Point(42, 14);
             this.lbCountsRPM.Name = "lbCountsRPM";
             this.lbCountsRPM.Size = new System.Drawing.Size(197, 23);
             this.lbCountsRPM.TabIndex = 117;
@@ -466,7 +466,7 @@
             // tbCountsRPM
             // 
             this.tbCountsRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCountsRPM.Location = new System.Drawing.Point(251, 10);
+            this.tbCountsRPM.Location = new System.Drawing.Point(245, 10);
             this.tbCountsRPM.MaxLength = 8;
             this.tbCountsRPM.Name = "tbCountsRPM";
             this.tbCountsRPM.Size = new System.Drawing.Size(102, 30);
@@ -481,7 +481,7 @@
             // 
             this.lbTargetRPM.AutoSize = true;
             this.lbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTargetRPM.Location = new System.Drawing.Point(48, 55);
+            this.lbTargetRPM.Location = new System.Drawing.Point(42, 55);
             this.lbTargetRPM.Name = "lbTargetRPM";
             this.lbTargetRPM.Size = new System.Drawing.Size(108, 23);
             this.lbTargetRPM.TabIndex = 114;
@@ -490,7 +490,7 @@
             // tbTargetRPM
             // 
             this.tbTargetRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTargetRPM.Location = new System.Drawing.Point(251, 51);
+            this.tbTargetRPM.Location = new System.Drawing.Point(245, 51);
             this.tbTargetRPM.MaxLength = 8;
             this.tbTargetRPM.Name = "tbTargetRPM";
             this.tbTargetRPM.Size = new System.Drawing.Size(102, 30);
@@ -525,7 +525,7 @@
             this.pnlMain.Controls.Add(this.tbVolumeUnits);
             this.pnlMain.Controls.Add(this.TankRemain);
             this.pnlMain.Controls.Add(this.TankSize);
-            this.pnlMain.Location = new System.Drawing.Point(71, 48);
+            this.pnlMain.Location = new System.Drawing.Point(71, 75);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(396, 480);
             this.pnlMain.TabIndex = 164;
@@ -536,9 +536,9 @@
             this.btnRight.FlatAppearance.BorderSize = 0;
             this.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRight.Image = global::RateController.Properties.Resources.ArrowRight1;
-            this.btnRight.Location = new System.Drawing.Point(300, 546);
+            this.btnRight.Location = new System.Drawing.Point(298, 603);
             this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(72, 72);
+            this.btnRight.Size = new System.Drawing.Size(70, 63);
             this.btnRight.TabIndex = 160;
             this.btnRight.UseVisualStyleBackColor = false;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
@@ -549,9 +549,9 @@
             this.btnLeft.FlatAppearance.BorderSize = 0;
             this.btnLeft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLeft.Image = global::RateController.Properties.Resources.ArrowLeft1;
-            this.btnLeft.Location = new System.Drawing.Point(222, 546);
+            this.btnLeft.Location = new System.Drawing.Point(222, 603);
             this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(72, 72);
+            this.btnLeft.Size = new System.Drawing.Size(70, 63);
             this.btnLeft.TabIndex = 159;
             this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
@@ -564,9 +564,9 @@
             this.btnResetTank.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetTank.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnResetTank.Image = global::RateController.Properties.Resources.Update;
-            this.btnResetTank.Location = new System.Drawing.Point(144, 546);
+            this.btnResetTank.Location = new System.Drawing.Point(147, 603);
             this.btnResetTank.Name = "btnResetTank";
-            this.btnResetTank.Size = new System.Drawing.Size(72, 72);
+            this.btnResetTank.Size = new System.Drawing.Size(70, 63);
             this.btnResetTank.TabIndex = 146;
             this.btnResetTank.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnResetTank.UseVisualStyleBackColor = false;
@@ -582,9 +582,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(382, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 136;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -600,9 +600,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 135;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -617,7 +617,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1173, 630);
+            this.ClientSize = new System.Drawing.Size(1173, 678);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFan);
             this.Controls.Add(this.lbProduct);

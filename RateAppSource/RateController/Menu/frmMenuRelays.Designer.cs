@@ -92,9 +92,9 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(378, 546);
+            this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(72, 72);
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 176;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -110,9 +110,9 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(456, 546);
+            this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 175;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
@@ -127,9 +127,9 @@
             this.btnReset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.Image = global::RateController.Properties.Resources.Update;
             this.btnReset.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReset.Location = new System.Drawing.Point(214, 546);
+            this.btnReset.Location = new System.Drawing.Point(216, 603);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(72, 72);
+            this.btnReset.Size = new System.Drawing.Size(70, 63);
             this.btnReset.TabIndex = 178;
             this.btnReset.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnReset.UseVisualStyleBackColor = false;
@@ -144,10 +144,10 @@
             this.btnRenumber.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnRenumber.Image = global::RateController.Properties.Resources.add;
             this.btnRenumber.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnRenumber.Location = new System.Drawing.Point(297, 546);
+            this.btnRenumber.Location = new System.Drawing.Point(299, 603);
             this.btnRenumber.Margin = new System.Windows.Forms.Padding(6);
             this.btnRenumber.Name = "btnRenumber";
-            this.btnRenumber.Size = new System.Drawing.Size(72, 72);
+            this.btnRenumber.Size = new System.Drawing.Size(70, 63);
             this.btnRenumber.TabIndex = 177;
             this.btnRenumber.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnRenumber.UseVisualStyleBackColor = false;
@@ -156,7 +156,7 @@
             // lbModule
             // 
             this.lbModule.AutoSize = true;
-            this.lbModule.Location = new System.Drawing.Point(148, 15);
+            this.lbModule.Location = new System.Drawing.Point(146, 39);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(74, 24);
             this.lbModule.TabIndex = 181;
@@ -167,7 +167,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(324, 9);
+            this.ModuleIndicator.Location = new System.Drawing.Point(322, 33);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 0;
@@ -187,7 +187,7 @@
             "5",
             "6",
             "7"});
-            this.cbModules.Location = new System.Drawing.Point(237, 12);
+            this.cbModules.Location = new System.Drawing.Point(235, 36);
             this.cbModules.Name = "cbModules";
             this.cbModules.Size = new System.Drawing.Size(61, 31);
             this.cbModules.TabIndex = 179;
@@ -217,7 +217,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DGV.DefaultCellStyle = dataGridViewCellStyle3;
             this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.DGV.Location = new System.Drawing.Point(69, 72);
+            this.DGV.Location = new System.Drawing.Point(59, 100);
             this.DGV.Margin = new System.Windows.Forms.Padding(11);
             this.DGV.Name = "DGV";
             this.DGV.RowHeadersVisible = false;
@@ -266,7 +266,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 630);
+            this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.lbModule);
             this.Controls.Add(this.ModuleIndicator);

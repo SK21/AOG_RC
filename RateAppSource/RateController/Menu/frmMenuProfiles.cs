@@ -176,13 +176,9 @@ namespace RateController.Menu
 
         private void frmMenuProfiles_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
-            //SetLanguage();
-            MainMenu.MenuMoved += MainMenu_MenuMoved;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
+            SubMenuLayout.SetFormLayout(this, MainMenu, null);
             PositionForm();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.StyleControls(this);
             SetLanguage();
             UpdateForm();
@@ -196,8 +192,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void SetLanguage()

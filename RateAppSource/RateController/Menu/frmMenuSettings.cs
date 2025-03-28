@@ -119,13 +119,7 @@ namespace RateController.Menu
 
         private void frmMenuSettings_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
-            //SetLanguage();
-            MainMenu.MenuMoved += MainMenu_MenuMoved;
-            MainMenu.ProductChanged += MainMenu_ProductChanged;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
+            SubMenuLayout.SetFormLayout(this, MainMenu, null);
             btnOK.Left = this.Width - 84;
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
@@ -136,6 +130,9 @@ namespace RateController.Menu
             btnLeft.Top = btnOK.Top;
             PositionForm();
             MainMenu.StyleControls(this);
+            //SetLanguage();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
+            MainMenu.ProductChanged += MainMenu_ProductChanged;
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             timer1.Enabled = true;
             UpdateForm();
@@ -166,8 +163,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void rbUPMFixed_CheckedChanged(object sender, EventArgs e)
@@ -360,17 +357,18 @@ namespace RateController.Menu
                 ckBumpButtons.Visible = false;
                 ckScale.Visible = false;
 
-                ckOnScreen.Left = 184;
-                ckOnScreen.Top = 193;
-                ckOffRate.Left = 122;
-                ckOffRate.Top = 253;
-                tbOffRate.Left = 314;
-                tbOffRate.Top = 256;
-                lbPercent.Left = 353;
+                ckOnScreen.Left = 185;
+                ckOnScreen.Top = 205;
+                ckOffRate.Left = 86;
+                ckOffRate.Top = 257;
+                tbOffRate.Left = 235;
+                tbOffRate.Top = 259;
+                lbPercent.Left = 286;
                 lbPercent.Top = 259;
             }
             else
             {
+                // products
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
                 grpMinUPM.Visible = true;
                 ckDefault.Visible = true;
@@ -378,13 +376,13 @@ namespace RateController.Menu
                 ckScale.Visible = true;
 
                 ckOnScreen.Left = 305;
-                ckOnScreen.Top = 344;
+                ckOnScreen.Top = 386;
                 ckOffRate.Left = 75;
-                ckOffRate.Top = 474;
+                ckOffRate.Top = 516;
                 tbOffRate.Left = 224;
-                tbOffRate.Top = 477;
+                tbOffRate.Top = 518;
                 lbPercent.Left = 275;
-                lbPercent.Top = 480;
+                lbPercent.Top = 521;
                 ckScale.Checked = mf.ShowScale(MainMenu.CurrentProduct.ID);
             }
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;

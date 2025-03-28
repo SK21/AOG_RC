@@ -12,14 +12,17 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
-        private const int ScreenHeightMin = 358;
-        private const int ScreenLeftMin = 154;
-        private const int ScreenWidthMin = 379;
         private bool Initializing = false;
         private int MainLeft = 0;
         private frmMenu MainMenu;
         private int MainTop = 0;
         private FormStart mf;
+        private int PicTop;
+        private int PicLeft;
+        private int PicHeight;
+        private int PicWidth;
+        private int FormWidth;
+        private int FormHeight;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
@@ -129,22 +132,22 @@ namespace RateController.Menu
 
                 if (Props.UseLargeScreen)
                 {
-                    mf.LSLeft = ScreenLeftMin + this.Left;
-                    mf.LSTop = 260 + this.Top;
+                    mf.LSLeft = PicLeft + this.Left;
+                    mf.LSTop = PicTop + this.Top;
                 }
                 else
                 {
-                    mf.Left = ScreenLeftMin + this.Left;
-                    mf.Top = 260 + this.Top;
+                    mf.Left = PicLeft + this.Left;
+                    mf.Top = PicTop + this.Top;
                 }
                 if (Props.MapShowRates) ShowLegend();
             }
             else
             {
-                this.Width = 540;
-                this.Height = 630;
-                pictureBox1.Size = new Size(ScreenWidthMin, ScreenHeightMin);
-                pictureBox1.Location = new System.Drawing.Point(ScreenLeftMin, 260);
+                this.Width = FormWidth;
+                this.Height = FormHeight;
+                pictureBox1.Size = new Size(PicWidth, PicHeight);
+                pictureBox1.Location = new System.Drawing.Point(PicLeft, PicTop);
                 PositionForm();
 
                 if (Props.UseLargeScreen)
@@ -284,15 +287,12 @@ namespace RateController.Menu
 
         private void mnuRateMap_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
+            SubMenuLayout.SetFormLayout(this, MainMenu, null);
             pictureBox1.Controls.Add(mf.Tls.Manager.gmapObject);
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             mf.Tls.Manager.MapChanged += Manager_MapChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
             MainMenu.StyleControls(this);
             PositionForm();
             UpdateForm();
@@ -300,6 +300,14 @@ namespace RateController.Menu
 
             MainLeft = mf.Left;
             MainTop = mf.Top;
+
+            PicTop = pictureBox1.Top;
+            PicLeft = pictureBox1.Left;
+            PicHeight = pictureBox1.Height;
+            PicWidth = pictureBox1.Width;
+
+            FormHeight = this.Height;
+            FormWidth = this.Width;
 
             if (Props.UseLargeScreen)
             {
@@ -315,8 +323,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void SetLanguage()

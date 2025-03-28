@@ -208,28 +208,28 @@ namespace RateController.Menu
 
         private void frmMenuRate_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
-            SetLanguage();
-            MainMenu.MenuMoved += MyMenu_MenuMoved;
-            MainMenu.ProductChanged += MainMenu_ProductChanged;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
-            btnOK.Left = this.Width - 84;
-            btnOK.Top = this.Height - 84;
-            btnCancel.Left = btnOK.Left - 78;
+            SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
+
+            btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
-            btnRight.Left = btnCancel.Left - 78;
+            btnRight.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing;
             btnRight.Top = btnOK.Top;
-            btnLeft.Left = btnRight.Left - 78;
+            btnLeft.Left = btnRight.Left - SubMenuLayout.ButtonSpacing;
             btnLeft.Top = btnOK.Top;
-            btnResetTank.Left = btnLeft.Left - 78;
+            btnResetTank.Left = btnLeft.Left - SubMenuLayout.ButtonSpacing;
             btnResetTank.Top = btnOK.Top;
             PositionForm();
             MainMenu.StyleControls(this);
+            SetLanguage();
+            MainMenu.MenuMoved += MyMenu_MenuMoved;
+            MainMenu.ProductChanged += MainMenu_ProductChanged;
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
-            UpdateForm();
             timer1.Enabled = true;
+            pnlFan.Left = 71;
+            pnlFan.Top = 75;
+            pnlMain.Left = 71;
+            pnlMain.Top = 75;
+            UpdateForm();
         }
 
         private void lbBaseRate_Enter(object sender, EventArgs e)
@@ -269,8 +269,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void ProdDensity_Enter(object sender, EventArgs e)
@@ -547,8 +547,6 @@ namespace RateController.Menu
             {
                 // fans
                 pnlFan.Visible = true;
-                pnlFan.Left = 71;
-                pnlFan.Top = 48;
                 pnlMain.Visible = false;
                 lbProduct.Text = "Fan " + (3 - (Props.MaxProducts - MainMenu.CurrentProduct.ID)).ToString();
             }

@@ -278,13 +278,7 @@ namespace RateController.Menu
 
         private void frmMenuSections_Load(object sender, EventArgs e)
         {
-            // menu 800,600
-            // sub menu 540,630
-            SetLanguage();
-            MainMenu.MenuMoved += MainMenu_MenuMoved;
-            this.BackColor = Properties.Settings.Default.MainBackColour;
-            this.Width = MainMenu.Width - 260;
-            this.Height = MainMenu.Height - 50;
+            SubMenuLayout.SetFormLayout(this, MainMenu, null);
             btnOK.Left = this.Width - 84;
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
@@ -294,6 +288,9 @@ namespace RateController.Menu
             ckZones.Left = btnEqual.Left - 122;
             ckZones.Top = btnCancel.Top - 25;
             MainMenu.StyleControls(this);
+            SetLanguage();
+            MainMenu.MenuMoved += MainMenu_MenuMoved;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
 
             DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
@@ -387,8 +384,8 @@ namespace RateController.Menu
 
         private void PositionForm()
         {
-            this.Top = MainMenu.Top + 30;
-            this.Left = MainMenu.Left + 246;
+            this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
+            this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
         private void SaveDGV()
