@@ -184,7 +184,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\AsAppliedMapLayerCreator.cs" />
+    <Compile Include="Classes\AppliedLayerCreator.cs" />
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />

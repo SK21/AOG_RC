@@ -28,7 +28,9 @@ namespace RateController.Classes
             RecordTimer.Elapsed += RecordTimer_Elapsed;
             RecordTimer.Enabled = Props.RateRecordEnabled;
             RecordTimer.Interval = Props.RateRecordInterval * 1000;
+
             cFilePath = Props.CurrentRateDataPath;
+            LoadDataFromCsv();
 
             if (Props.RateRecordEnabled) SaveStopWatch.Start();
 
@@ -220,7 +222,7 @@ namespace RateController.Classes
 
                             // Parse target rates.
                             List<double> targetRates = new List<double>();
-                            for (int i = 8; i < 14; i++)
+                            for (int i = 8; i < 13; i++)
                             {
                                 double rate;
                                 if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))

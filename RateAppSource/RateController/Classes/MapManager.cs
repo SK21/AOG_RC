@@ -230,22 +230,16 @@ namespace RateController.Classes
         public Dictionary<string, Color> ShowAppliedLayer()
         {
             Dictionary<string, Color> legend = new Dictionary<string, Color>();
-            double RefreshIntervalSeconds = Props.RateDisplayRefresh;
-            double CellAreaAcres = Props.RateDisplayResolution;
-            RateType AppliedType = Props.RateDisplayType;
-            int AppliedProductID = Props.RateDisplayProduct;
             try
             {
                 // display layer
-                AppliedOverlayType = AppliedType;
-                AppliedOverlayProductID = AppliedProductID;
-                AppliedOverlayCellSize = CellAreaAcres;
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
-                AsAppliedMapLayerCreator creator = new AsAppliedMapLayerCreator();
-                currentAppliedOverlay = creator.CreateOverlay(readings, out legend, AppliedOverlayCellSize, AppliedOverlayType, AppliedOverlayProductID);
+                AppliedLayerCreator creator = new AppliedLayerCreator();
+                currentAppliedOverlay = creator.CreateOverlay(readings, out legend, Props.RateDisplayResolution, Props.RateDisplayType, Props.RateDisplayProduct);
                 AddOverlay(currentAppliedOverlay);
                 gmap.Refresh();
 
+                double RefreshIntervalSeconds = Props.RateDisplayRefresh;
                 if (RefreshIntervalSeconds > 29 && RefreshIntervalSeconds < 1800)
                 {
                     AppliedOverlayTimer.Interval = RefreshIntervalSeconds * 1000;
@@ -287,12 +281,14 @@ namespace RateController.Classes
             if (Props.MapShowRates)
             {
                 cLegend = ShowAppliedLayer();
+                Debug.Print("MapManager.UpdateRateDataDisplay: Rates displayed.");
             }
             else
             {
                 RemoveOverlay(currentAppliedOverlay);
                 gmap.Refresh();
                 AppliedOverlayTimer.Enabled = false;
+                Debug.Print("MapManager.UpdateRateDataDisplay: Rates hidden.");
             }
         }
 
@@ -487,7 +483,7 @@ namespace RateController.Classes
         {
             // Get updated data and re-create overlay; use the UI thread for map updates.
             List<RateReading> readings = mf.Tls.RateCollector.GetReadings().ToList();
-            AsAppliedMapLayerCreator creator = new AsAppliedMapLayerCreator();
+            AppliedLayerCreator creator = new AppliedLayerCreator();
             Dictionary<string, Color> legend;
             GMapOverlay updatedOverlay = creator.CreateOverlay(readings, out legend, AppliedOverlayCellSize, AppliedOverlayType, AppliedOverlayProductID);
 
