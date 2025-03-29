@@ -68,9 +68,9 @@
             this.btnNew.FlatAppearance.BorderSize = 0;
             this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
-            this.btnNew.Location = new System.Drawing.Point(296, 603);
+            this.btnNew.Location = new System.Drawing.Point(6, 157);
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(70, 63);
+            this.btnNew.Size = new System.Drawing.Size(82, 64);
             this.btnNew.TabIndex = 368;
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
@@ -80,7 +80,7 @@
             this.btnCopy.FlatAppearance.BorderSize = 0;
             this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCopy.Image = global::RateController.Properties.Resources.copy1;
-            this.btnCopy.Location = new System.Drawing.Point(6, 188);
+            this.btnCopy.Location = new System.Drawing.Point(6, 224);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(82, 64);
             this.btnCopy.TabIndex = 367;
@@ -92,7 +92,7 @@
             this.btnLoad.FlatAppearance.BorderSize = 0;
             this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoad.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnLoad.Location = new System.Drawing.Point(6, 94);
+            this.btnLoad.Location = new System.Drawing.Point(6, 89);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(82, 64);
             this.btnLoad.TabIndex = 366;
@@ -104,7 +104,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(6, 282);
+            this.btnDelete.Location = new System.Drawing.Point(6, 292);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 365;
@@ -307,6 +307,7 @@
             this.gbJobs.Controls.Add(this.cbSearchField);
             this.gbJobs.Controls.Add(this.btnDeleteField);
             this.gbJobs.Controls.Add(this.label2);
+            this.gbJobs.Controls.Add(this.btnNew);
             this.gbJobs.Controls.Add(this.btnJobsDown);
             this.gbJobs.Controls.Add(this.tbSearchYear);
             this.gbJobs.Controls.Add(this.label4);
@@ -456,7 +457,6 @@
             this.Controls.Add(this.gbJobs);
             this.Controls.Add(this.gbLine);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.btnNew);
             this.Controls.Add(this.ckJobs);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
