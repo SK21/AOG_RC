@@ -16,32 +16,6 @@ namespace RateController
             mf = CallingForm;
             Items = cProducts.AsReadOnly();
         }
-        public double[] ProductAppliedRates()
-        {
-            double[] Result = new double[Props.MaxProducts-2];
-            for (int i = 0; i < Props.MaxProducts - 2; i++)
-            {
-                if (cProducts[i].RateSensor.Connected())
-                {
-                    Result[i] = cProducts[i].CurrentRate();
-                }
-            }
-            return Result;
-        }
-
-        public double[] ProductTargetRates()
-        {
-            double[] Result = new double[Props.MaxProducts-2];
-            for (int i = 0; i < Props.MaxProducts - 2; i++)
-            {
-                if (cProducts[i].RateSensor.Connected())
-                {
-                    Result[i] = cProducts[i].TargetRate();
-                }
-            }
-            return Result;
-        }
-
 
         public bool AlarmOn()
         {
@@ -146,9 +120,49 @@ namespace RateController
                     Prd.LoadDefaultControlSettings();
                     Prd.Save();
 
-                   Props.DefaultProduct = 0;
+                    Props.DefaultProduct = 0;
                 }
             }
+        }
+
+        public bool ProductsAreOn()
+        {
+            bool Result = false;
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                if (cProducts[i].ProductOn())
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
+        }
+
+        public double[] ProductAppliedRates()
+        {
+            double[] Result = new double[Props.MaxProducts - 2];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].RateSensor.Connected())
+                {
+                    Result[i] = cProducts[i].CurrentRate();
+                }
+            }
+            return Result;
+        }
+
+        public double[] ProductTargetRates()
+        {
+            double[] Result = new double[Props.MaxProducts - 2];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].RateSensor.Connected())
+                {
+                    Result[i] = cProducts[i].TargetRate();
+                }
+            }
+            return Result;
         }
 
         public void Save(int ProdID = 0)
@@ -168,21 +182,6 @@ namespace RateController
             }
         }
 
-        public bool UniqueModSen(int ModID, int SenID, int ProdID)
-        {
-            // checks if product module ID/sensor ID pair are unique
-            bool Result = true;
-            for (int i = 0; i < Count(); i++)
-            {
-                if ((cProducts[i].ID != ProdID) && (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID))
-                {
-                    Result = false;
-                    break;
-                }
-            }
-            return Result;
-        }
-
         public void Save()
         {
             for (int i = 0; i < Props.MaxProducts; i++)
@@ -198,6 +197,21 @@ namespace RateController
                 }
                 LastSave = DateTime.Now;
             }
+        }
+
+        public bool UniqueModSen(int ModID, int SenID, int ProdID)
+        {
+            // checks if product module ID/sensor ID pair are unique
+            bool Result = true;
+            for (int i = 0; i < Count(); i++)
+            {
+                if ((cProducts[i].ID != ProdID) && (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID))
+                {
+                    Result = false;
+                    break;
+                }
+            }
+            return Result;
         }
 
         public void UpdatePID()

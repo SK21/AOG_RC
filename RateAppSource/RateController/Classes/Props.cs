@@ -98,7 +98,7 @@ namespace RateController.Classes
         private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
         private static bool cRateRecordEnabled;
-        private static int cRateRecordInterval;
+        private static double cRateRecordInterval;
         private static int cRateType;
         private static bool cReadOnly = false;
         private static bool cResumeAfterPrime;
@@ -330,7 +330,7 @@ namespace RateController.Classes
             }
         }
 
-        public static int RateRecordInterval
+        public static double RateRecordInterval
         {
             get { return cRateRecordInterval; }
             set
@@ -846,7 +846,7 @@ namespace RateController.Classes
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
             cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
             cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
-            cRateRecordInterval = int.TryParse(GetProp("RateRecordInterval"), out int rr) ? rr : 300;
+            cRateRecordInterval = double.TryParse(GetProp("RateRecordInterval"), out double rr) ? rr : 10;
             cRateRecordEnabled = bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : true;
             cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
             cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;

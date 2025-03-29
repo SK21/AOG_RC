@@ -1137,7 +1137,7 @@ namespace RateController
             return Result;
         }
 
-        private bool ProductOn()
+        public bool ProductOn()
         {
             bool Result = false;
             if (ControlType == ControlTypeEnum.Fan)

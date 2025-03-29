@@ -346,8 +346,7 @@
             // 
             this.HSRecordInterval.LargeChange = 1;
             this.HSRecordInterval.Location = new System.Drawing.Point(182, 125);
-            this.HSRecordInterval.Maximum = 120;
-            this.HSRecordInterval.Minimum = 5;
+            this.HSRecordInterval.Minimum = 1;
             this.HSRecordInterval.Name = "HSRecordInterval";
             this.HSRecordInterval.Size = new System.Drawing.Size(239, 45);
             this.HSRecordInterval.TabIndex = 393;

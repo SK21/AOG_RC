@@ -1,4 +1,5 @@
-﻿using RateController.Classes;
+﻿using GMap.NET.MapProviders;
+using RateController.Classes;
 using System;
 using System.Drawing;
 using System.Linq.Expressions;
@@ -11,11 +12,11 @@ namespace RateController.Forms
         private bool cEdited = false;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private int MaxRecordSeconds = 30;
         private int MaxRefreshSeconds = 30;
         private FormStart mf;
-        private int MinRecordSeconds = 1;
         private int MinRefreshSeconds = 1;
+        private double ResolutionDivisorAcres = 0.05;
+        private double RecordDivisorSeconds = 0.1;
 
         public frmMenuRateData(FormStart main, frmMenu menu)
         {
@@ -24,9 +25,6 @@ namespace RateController.Forms
             MainMenu = menu;
             mf = main;
             this.Tag = false;
-
-            HSRecordInterval.Minimum = MinRecordSeconds;
-            HSRecordInterval.Maximum = MaxRecordSeconds;
 
             HSrefreshMap.Minimum = MinRefreshSeconds;
             HSrefreshMap.Maximum = MaxRefreshSeconds;
@@ -70,7 +68,7 @@ namespace RateController.Forms
                     }
 
                     Props.RateRecordEnabled = ckRecord.Checked;
-                    Props.RateRecordInterval = HSRecordInterval.Value;
+                    Props.RateRecordInterval = RecordIntervalTo();
 
                     Props.RateDisplayRefresh = HSrefreshMap.Value;
                     Props.RateDisplayResolution = MapResolutionTo();
@@ -148,11 +146,11 @@ namespace RateController.Forms
             int Result = 0;
             if (Props.UseMetric)
             {
-                Result = (int)(Value / 0.020234);
+                Result = (int)(Value / ResolutionDivisorAcres * 0.4047);
             }
             else
             {
-                Result = (int)(Value / 0.05);
+                Result = (int)(Value /ResolutionDivisorAcres);
             }
             if (Result < HSresolution.Minimum)
             {
@@ -170,13 +168,32 @@ namespace RateController.Forms
             double Result = 0;
             if (Props.UseMetric)
             {
-                Result = HSresolution.Value * 0.020234;
+                Result = HSresolution.Value * ResolutionDivisorAcres * 0.4047;
             }
             else
             {
-                Result = HSresolution.Value * 0.05;
+                Result = HSresolution.Value * ResolutionDivisorAcres;
             }
             return Result;
+        }
+
+        private int RecordIntervalFrom(double Value)
+        {
+          int  Result= (int)(Value / RecordDivisorSeconds);
+            if(Result < HSRecordInterval.Minimum)
+            {
+                Result = HSRecordInterval.Minimum;
+            }
+            else if (Result > HSRecordInterval.Maximum)
+            {
+                Result = HSRecordInterval.Maximum;
+            }
+            return Result;
+        }
+
+        private double RecordIntervalTo()
+        {
+            return HSRecordInterval.Value * RecordDivisorSeconds;
         }
 
         private void PositionForm()
@@ -235,7 +252,7 @@ namespace RateController.Forms
         private void UpdateControlDisplay()
         {
             lbRefresh.Text = HSrefreshMap.Value.ToString("N0");
-            lbRecordInterval.Text = HSRecordInterval.Value.ToString("N0");
+            lbRecordInterval.Text = RecordIntervalTo().ToString("N1");
             lbResolution.Text = MapResolutionTo().ToString("N2");
         }
 
@@ -249,7 +266,7 @@ namespace RateController.Forms
                 ckRecord.Checked = Props.RateRecordEnabled;
                 HSrefreshMap.Value = Props.RateDisplayRefresh;
                 HSresolution.Value = MapResolutionFrom(Props.RateDisplayResolution);
-                HSRecordInterval.Value = Props.RateRecordInterval;
+                HSRecordInterval.Value = RecordIntervalFrom(Props.RateRecordInterval);
 
                 switch (Props.RateDisplayProduct)
                 {

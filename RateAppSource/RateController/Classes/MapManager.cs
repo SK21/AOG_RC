@@ -245,7 +245,7 @@ namespace RateController.Classes
                 tractorMarker.Position = NewLocation; // Update the marker position
                 gmap.Refresh(); // Refresh the map to show the updated marker
                 UpdateTargetRates();
-                mf.Tls.RateCollector.RecordReading(NewLocation.Lat, NewLocation.Lng, AppliedRates, TargetRates);
+               if(mf.Products.ProductsAreOn()) mf.Tls.RateCollector.RecordReading(NewLocation.Lat, NewLocation.Lng, AppliedRates, TargetRates);
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
