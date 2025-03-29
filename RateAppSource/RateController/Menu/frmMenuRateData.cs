@@ -19,7 +19,6 @@ namespace RateController.Forms
 
         public frmMenuRateData(FormStart main, frmMenu menu)
         {
-            Initializing = true;
             InitializeComponent();
             Props.UnitsChanged += Props_UnitsChanged;
             MainMenu = menu;
@@ -74,7 +73,7 @@ namespace RateController.Forms
                     Props.RateRecordInterval = HSRecordInterval.Value;
 
                     Props.RateDisplayRefresh = HSrefreshMap.Value;
-                    Props.RateDisplayResolution = HSresolution.Value;
+                    Props.RateDisplayResolution = MapResolutionTo();
 
                     if (rbProductA.Checked)
                     {
@@ -111,7 +110,7 @@ namespace RateController.Forms
 
         private void frmRates_Load(object sender, EventArgs e)
         {
-            SubMenuLayout.SetFormLayout(this,MainMenu,btnOK);
+            SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
 
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
@@ -142,6 +141,42 @@ namespace RateController.Forms
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private int MapResolutionFrom(double Value)
+        {
+            int Result = 0;
+            if (Props.UseMetric)
+            {
+                Result = (int)(Value / 0.020234);
+            }
+            else
+            {
+                Result = (int)(Value / 0.05);
+            }
+            if (Result < HSresolution.Minimum)
+            {
+                Result = HSresolution.Minimum;
+            }
+            else if (Result > HSresolution.Maximum)
+            {
+                Result = HSresolution.Maximum;
+            }
+            return Result;
+        }
+
+        private double MapResolutionTo()
+        {
+            double Result = 0;
+            if (Props.UseMetric)
+            {
+                Result = HSresolution.Value * 0.020234;
+            }
+            else
+            {
+                Result = HSresolution.Value * 0.05;
+            }
+            return Result;
         }
 
         private void PositionForm()
@@ -200,15 +235,8 @@ namespace RateController.Forms
         private void UpdateControlDisplay()
         {
             lbRefresh.Text = HSrefreshMap.Value.ToString("N0");
-            if (Props.UseMetric)
-            {
-                lbResolution.Text = (HSresolution.Value * 0.020234).ToString("N2");
-            }
-            else
-            {
-                lbResolution.Text = (HSresolution.Value * 0.05).ToString("N2");
-            }
             lbRecordInterval.Text = HSRecordInterval.Value.ToString("N0");
+            lbResolution.Text = MapResolutionTo().ToString("N2");
         }
 
         private void UpdateForm()
@@ -220,7 +248,7 @@ namespace RateController.Forms
                 rbTarget.Checked = !rbApplied.Checked;
                 ckRecord.Checked = Props.RateRecordEnabled;
                 HSrefreshMap.Value = Props.RateDisplayRefresh;
-                HSresolution.Value = Props.RateDisplayResolution;
+                HSresolution.Value = MapResolutionFrom(Props.RateDisplayResolution);
                 HSRecordInterval.Value = Props.RateRecordInterval;
 
                 switch (Props.RateDisplayProduct)

@@ -302,9 +302,9 @@ namespace RateController.Classes
             set { SetProp("RateDisplayRefresh", value.ToString()); }
         }
 
-        public static int RateDisplayResolution
+        public static double RateDisplayResolution
         {
-            get { return int.TryParse(GetProp("RateDisplayResolution"), out int rs) ? rs : 20; }
+            get { return double.TryParse(GetProp("RateDisplayResolution"), out double rs) ? rs : 0.5; }
             set
             {
                 SetProp("RateDisplayResolution", value.ToString());
