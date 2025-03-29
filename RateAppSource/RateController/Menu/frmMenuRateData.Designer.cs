@@ -175,7 +175,7 @@
             // 
             this.HSrefreshMap.LargeChange = 1;
             this.HSrefreshMap.Location = new System.Drawing.Point(190, 216);
-            this.HSrefreshMap.Maximum = 300;
+            this.HSrefreshMap.Maximum = 60;
             this.HSrefreshMap.Minimum = 1;
             this.HSrefreshMap.Name = "HSrefreshMap";
             this.HSrefreshMap.Size = new System.Drawing.Size(239, 45);

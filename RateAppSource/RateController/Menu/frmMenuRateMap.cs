@@ -173,7 +173,7 @@ namespace RateController.Menu
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
             Props.MapShowRates = ckRateData.Checked;
-            mf.Tls.Manager.UpdateRateDataDisplay();
+            mf.Tls.Manager.ShowAppliedRatesOverlay();
         }
 
         private void ckZones_CheckedChanged(object sender, EventArgs e)

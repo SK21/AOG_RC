@@ -298,8 +298,11 @@ namespace RateController.Classes
 
         public static int RateDisplayRefresh
         {
-            get { return int.TryParse(GetProp("RateDisplayRefresh"), out int rs) ? rs : 300; }
-            set { SetProp("RateDisplayRefresh", value.ToString()); }
+            get { return int.TryParse(GetProp("RateDisplayRefresh"), out int rs) ? rs : 5; }
+            set
+            {
+                if (value >= 0 && value <= 60) SetProp("RateDisplayRefresh", value.ToString());
+            }
         }
 
         public static double RateDisplayResolution
