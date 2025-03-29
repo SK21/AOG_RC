@@ -116,7 +116,7 @@ namespace RateController.Classes
                         // Define five shades of green (from light to dark).
                         Color[] shadesOfGreen = new Color[5]
                         {
-                            Color.FromArgb(204, 255, 204),  // A very light green (almost pastel)
+                            Color.FromArgb(175, 255, 175),  // A very light green (almost pastel)
                             Color.FromArgb(153, 255, 153),  // A light, minty green
                             Color.FromArgb(102, 255, 102),  // A bright, vibrant lime green
                             Color.FromArgb(51, 204, 51),    // A medium green
@@ -133,7 +133,7 @@ namespace RateController.Classes
                         {
                             double lowerBound = overallMin + k * rangeWidth;
                             double upperBound = overallMin + (k + 1) * rangeWidth;
-                            string label = $"{lowerBound:F2} - {upperBound:F2}";
+                            string label = $"{lowerBound:F1} - {upperBound:F1}";
                             legend[label] = shadesOfGreen[k];
                         }
                         #endregion

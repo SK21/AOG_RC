@@ -339,38 +339,72 @@ namespace RateController.Menu
         {
             try
             {
-                legendPanel.Left = this.Left + 8;
-                legendPanel.Top = this.Top + 628;
-                legendPanel.Size = new Size(250, 300);
+                // Position the legendPanel relative to pictureBox1.
+                legendPanel.Left = pictureBox1.Left + 10;
+                legendPanel.Top = pictureBox1.Top + 10;
+
+                // Define constants for margins and component sizes.
+                int minPanelWidth = 150;            // Minimum fixed width.
+                int leftMargin = 10;                // Left margin inside the panel.
+                int colorBoxWidth = 20;             // Width of the color box.
+                int gapBetween = 10;                // Gap between the color box and label.
+                int rightMargin = 10;               // Right margin inside the panel.
+
+                // Initially, use the minimum panel width.
+                int panelWidth = minPanelWidth;
+
+                // Set a border on the legendPanel.
+                legendPanel.BorderStyle = BorderStyle.FixedSingle;
+
+                // Clear any existing legend items.
+                legendPanel.Controls.Clear();
+
                 int yOffset = 10;
+                int maxLabelWidth = 0;  // Track the widest label.
+
+                // Loop through each legend entry.
                 foreach (var entry in mf.Tls.Manager.Legend)
                 {
+                    // Create a color box.
                     Panel colorBox = new Panel
                     {
-                        Size = new Size(20, 20),
+                        Size = new Size(colorBoxWidth, 20),
                         BackColor = entry.Value,
-                        Location = new Point(legendPanel.Left + 10, legendPanel.Top + yOffset)
+                        Location = new Point(leftMargin, yOffset) // Relative to legendPanel.
                     };
 
+                    // Create a label displaying the range.
                     Label label = new Label
                     {
                         Text = entry.Key,
-                        Location = new Point(legendPanel.Left + 40, legendPanel.Top + yOffset),
-                        AutoSize = true
+                        AutoSize = true,
+                        Location = new Point(leftMargin + colorBoxWidth + gapBetween, yOffset)
                     };
+
+                    // Measure the text size of the label.
+                    Size textSize = TextRenderer.MeasureText(entry.Key, label.Font);
+                    if (textSize.Width > maxLabelWidth)
+                        maxLabelWidth = textSize.Width;
 
                     legendPanel.Controls.Add(colorBox);
                     legendPanel.Controls.Add(label);
 
-                    yOffset += 30;
+                    yOffset += 20 + 10; // Increment y-offset for the next row.
                 }
+
+                // Calculate the required width: left margin + color box width + gap + widest label + right margin.
+                int requiredWidth = leftMargin + colorBoxWidth + gapBetween + maxLabelWidth + rightMargin;
+                panelWidth = Math.Max(minPanelWidth, requiredWidth);
+
+                // Set the legendPanel's size with the computed width and the computed height.
+                legendPanel.Size = new Size(panelWidth, yOffset);
+                legendPanel.Visible = Props.MapShowRates;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuRateMap/ShowLegend: " + ex.Message);
             }
         }
-
         private void tbName_TextChanged(object sender, EventArgs e)
         {
             if (ckEdit.Checked)
