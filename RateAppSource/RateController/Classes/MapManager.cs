@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Timers;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -16,7 +15,7 @@ namespace RateController.Classes
     public class MapManager
     {
         private GMapOverlay AppliedOverlay;
-        private System.Timers.Timer AppliedOverlayTimer;
+        private System.Windows.Forms.Timer AppliedOverlayTimer;
         private bool cEditMode;
         private Dictionary<string, Color> cLegend;
         private PointLatLng cTractorPosition;
@@ -46,8 +45,9 @@ namespace RateController.Classes
             gmap.MouseUp += Gmap_MouseUp;
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
 
-            AppliedOverlayTimer = new System.Timers.Timer(60);
-            AppliedOverlayTimer.Elapsed += AppliedOverlayTimer_Elapsed;
+            AppliedOverlayTimer = new System.Windows.Forms.Timer();
+            AppliedOverlayTimer.Interval = 60000;
+            AppliedOverlayTimer.Tick += AppliedOverlayTimer_Tick;
             AppliedOverlayTimer.Enabled = false;
 
             Props.JobChanged += Props_JobChanged;
@@ -145,7 +145,6 @@ namespace RateController.Classes
                             mapZones.Remove(zoneToRemove);
 
                             // Re-bind the overlay to the map
-                            Debug.Print("DeleteZone");
                             RemoveOverlay(zoneOverlay);
                             AddOverlay(zoneOverlay);
 
@@ -156,6 +155,36 @@ namespace RateController.Classes
                         }
                     }
                 }
+            }
+            return Result;
+        }
+
+        public RectLatLng GetOverallRectLatLng()
+        {
+            RectLatLng Result = new RectLatLng();
+            Result = RectLatLng.Empty;
+            if (zoneOverlay != null && zoneOverlay.Polygons.Count > 0)
+            {
+                // Initialize min and max values
+                double minLat = double.MaxValue;
+                double maxLat = double.MinValue;
+                double minLng = double.MaxValue;
+                double maxLng = double.MinValue;
+
+                // Iterate through all polygons to find the overall bounding box
+                foreach (var polygon in zoneOverlay.Polygons)
+                {
+                    if (polygon.Points.Count == 0) continue;
+
+                    // Update min and max latitude and longitude
+                    minLat = Math.Min(minLat, polygon.Points.Min(p => p.Lat));
+                    maxLat = Math.Max(maxLat, polygon.Points.Max(p => p.Lat));
+                    minLng = Math.Min(minLng, polygon.Points.Min(p => p.Lng));
+                    maxLng = Math.Max(maxLng, polygon.Points.Max(p => p.Lng));
+                }
+
+                // Create the bounding box from the min and max values
+                Result = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
             }
             return Result;
         }
@@ -180,16 +209,12 @@ namespace RateController.Classes
                 mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapPath);
 
                 zoneOverlay.Polygons.Clear();
-
-                if (mapZones.Count > 0) CenterMapToZone(mapZones[0]);
-
                 foreach (var mapZone in mapZones)
                 {
                     zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
                 }
 
                 gmap.Refresh();
-                gmap.Zoom = 16;
                 Result = true;
                 MapChanged?.Invoke(this, EventArgs.Empty);
                 ZoomToFit();
@@ -234,9 +259,8 @@ namespace RateController.Classes
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 AppliedLayerCreator creator = new AppliedLayerCreator();
 
-                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, Props.RateDisplayResolution, Props.RateDisplayType, Props.RateDisplayProduct);
+                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, GetOverallRectLatLng(), Props.RateDisplayResolution, Props.RateDisplayType, Props.RateDisplayProduct);
                 gmap.Refresh();
-                Debug.Print("Overlay after count: " + gmap.Overlays.Count);
             }
             catch (Exception ex)
             {
@@ -256,7 +280,7 @@ namespace RateController.Classes
                     cLegend = ShowAppliedLayer();
                     gmap.Refresh();
 
-                    double RefreshIntervalSeconds = Props.RateDisplayRefresh;
+                    int RefreshIntervalSeconds = Props.RateDisplayRefresh;
                     if (RefreshIntervalSeconds > 0 && RefreshIntervalSeconds < 61)
                     {
                         AppliedOverlayTimer.Interval = RefreshIntervalSeconds * 1000;
@@ -270,7 +294,6 @@ namespace RateController.Classes
             }
             else
             {
-                Debug.Print("ShowAppliedRatesOverlay");
                 RemoveOverlay(AppliedOverlay);
                 gmap.Refresh();
                 AppliedOverlayTimer.Enabled = false;
@@ -295,7 +318,6 @@ namespace RateController.Classes
             }
             else
             {
-                Debug.Print("ShowZoneOverlay");
                 RemoveOverlay(zoneOverlay);
                 gmap.Refresh();
             }
@@ -404,35 +426,15 @@ namespace RateController.Classes
 
         public void ZoomToFit()
         {
-            if (zoneOverlay.Polygons.Count > 0)
+            RectLatLng boundingBox = GetOverallRectLatLng();
+            if (boundingBox != RectLatLng.Empty)
             {
-                // Initialize min and max values
-                double minLat = double.MaxValue;
-                double maxLat = double.MinValue;
-                double minLng = double.MaxValue;
-                double maxLng = double.MinValue;
-
-                // Iterate through all polygons to find the overall bounding box
-                foreach (var polygon in zoneOverlay.Polygons)
-                {
-                    if (polygon.Points.Count == 0) continue;
-
-                    // Update min and max latitude and longitude
-                    minLat = Math.Min(minLat, polygon.Points.Min(p => p.Lat));
-                    maxLat = Math.Max(maxLat, polygon.Points.Max(p => p.Lat));
-                    minLng = Math.Min(minLng, polygon.Points.Min(p => p.Lng));
-                    maxLng = Math.Max(maxLng, polygon.Points.Max(p => p.Lng));
-                }
-
-                // Create the bounding box from the min and max values
-                RectLatLng boundingBox = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
                 gmap.SetZoomToFitRect(boundingBox);
             }
         }
 
         private void AddOverlay(GMapOverlay NewOverlay)
         {
-            Debug.Print("AddOverlay");
             if (NewOverlay != null)
             {
                 // Check if an overlay with the same Id already exists
@@ -441,14 +443,9 @@ namespace RateController.Classes
                 if (!overlayExists)
                 {
                     gmap.Overlays.Add(NewOverlay);
-                    Debug.Print(NewOverlay.Id);
-                }
-                else
-                {
-                    Debug.Print("+++ ????");
                 }
             }
-            DisplayOverlays();
+            //DisplayOverlays();
         }
 
         private GMapOverlay AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
@@ -496,33 +493,9 @@ namespace RateController.Classes
             }
         }
 
-        private void AppliedOverlayTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void AppliedOverlayTimer_Tick(object sender, EventArgs e)
         {
             ShowAppliedLayer();
-        }
-
-        private Coordinate CalculateCentroid(Polygon polygon)
-        {
-            double xSum = 0;
-            double ySum = 0;
-            int numPoints = polygon.Coordinates.Length;
-
-            foreach (var coord in polygon.Coordinates)
-            {
-                xSum += coord.X; // Longitude
-                ySum += coord.Y; // Latitude
-            }
-
-            // Calculate the average to find the centroid
-            return new Coordinate(xSum / numPoints, ySum / numPoints);
-        }
-
-        private void CenterMapToZone(MapZone zone)
-        {
-            var centroid = CalculateCentroid(zone.Geometry); // Assuming Geometry is a Polygon
-            gmap.Position = new PointLatLng(centroid.Y, centroid.X); // Set the map position to the centroid
-            Props.SetProp("LastMapLat", centroid.Y.ToString());
-            Props.SetProp("LastMapLng", centroid.X.ToString());
         }
 
         private void DisplayOverlays()
@@ -670,29 +643,22 @@ namespace RateController.Classes
         {
             try
             {
-                Debug.Print("RemoveOverlay");
                 if (overlay != null)
                 {
-                    Debug.Print(overlay.Id);
                     // Collect all overlays that match the passed overlay's Id.
                     var overlaysToRemove = gmap.Overlays.Where(o => o.Id == overlay.Id).ToList();
 
                     foreach (var o in overlaysToRemove)
                     {
                         gmap.Overlays.Remove(o);
-                        Debug.Print("Removed.");
                     }
-                }
-                else
-                {
-                    Debug.Print("--- ????");
                 }
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapManager/RemoveLayer: " + ex.Message);
             }
-            DisplayOverlays();
+            //DisplayOverlays();
         }
     }
 }

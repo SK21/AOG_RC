@@ -32,7 +32,7 @@ namespace RateController.Classes
         /// Defaults to 0.
         /// </param>
         public bool UpdateRatesOverlay(ref GMapOverlay overlay, List<RateReading> readings, out Dictionary<string, Color> legend,
-            double cellAreaAcres = 0.1, RateType selectedRateType = RateType.Applied, int selectedRateIndex = 0)
+            RectLatLng OverallBounds, double cellAreaAcres = 0.1, RateType selectedRateType = RateType.Applied, int selectedRateIndex = 0)
         {
             bool Result = false;
             legend = new Dictionary<string, Color>();
@@ -42,11 +42,16 @@ namespace RateController.Classes
                 if (readings != null && readings.Count > 0)
                 {
                     #region build box
-                    // Determine the geographic bounding box.
-                    double minLat = readings.Min(r => r.Latitude);
-                    double maxLat = readings.Max(r => r.Latitude);
-                    double minLng = readings.Min(r => r.Longitude);
-                    double maxLng = readings.Max(r => r.Longitude);
+                    //// Determine the geographic bounding box.
+                    //double minLat = readings.Min(r => r.Latitude);
+                    //double maxLat = readings.Max(r => r.Latitude);
+                    //double minLng = readings.Min(r => r.Longitude);
+                    //double maxLng = readings.Max(r => r.Longitude);
+
+                    double minLat = OverallBounds.Top;
+                    double maxLat = OverallBounds.Bottom;
+                    double minLng = OverallBounds.Left;
+                    double maxLng = OverallBounds.Right;
 
                     // Convert the cell area (in acres) to square meters.
                     // 1 acre ≈ 4046.86 m².
@@ -100,7 +105,7 @@ namespace RateController.Classes
                     // If no valid averages, return an empty overlay.
                     if (cellAverages.Count > 0)
                     {
-                        #region Calculate ranges
+                        #region Build Legend
                         // Determine overall minimum and maximum for the computed averages.
                         double overallMin = cellAverages.Values.Min();
                         double overallMax = cellAverages.Values.Max();
