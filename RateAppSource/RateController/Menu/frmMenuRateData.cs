@@ -122,6 +122,7 @@ namespace RateController.Forms
             lbRefresh.Font = ValFont;
             lbResolution.Font = ValFont;
             lbRecordInterval.Font = ValFont;
+            lbDataPoints.Font = ValFont;
         }
 
         private void gbMap_Paint(object sender, PaintEventArgs e)
