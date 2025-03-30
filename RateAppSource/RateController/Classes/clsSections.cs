@@ -108,7 +108,7 @@ namespace RateController
             }
         }
 
-        public float TotalWidth(bool UseInches = false)
+        public float TotalWidth(bool ReturnFeet = false)
         {
             float Result = 0;
             float cWorkingWidth_cm = 0;
@@ -121,18 +121,18 @@ namespace RateController
                 }
             }
 
-            if (UseInches)
+            if (ReturnFeet)
             {
-                Result = (float)((cWorkingWidth_cm / 100.0) * 3.28);   // feet
+                Result = (float)(cWorkingWidth_cm * 0.032808);   // feet
             }
             else
             {
-                Result = (float)(cWorkingWidth_cm / 100.0);    // meters
+                Result = (float)(cWorkingWidth_cm * 0.01);    // meters
             }
             return Result;
         }
 
-        public float WorkingWidth(bool UseInches = false)
+        public float WorkingWidth(bool ReturnFeet = false)
         {
             float Result = 0;
             float cWorkingWidth_cm = 0;
@@ -145,13 +145,13 @@ namespace RateController
                 }
             }
 
-            if (UseInches)
+            if (ReturnFeet)
             {
-                Result = (float)((cWorkingWidth_cm / 100.0) * 3.28);   // feet
+                Result = (float)(cWorkingWidth_cm * 0.032808);   // feet
             }
             else
             {
-                Result = (float)(cWorkingWidth_cm / 100.0);    // meters
+                Result = (float)(cWorkingWidth_cm * 0.01);    // meters
             }
             return Result;
         }

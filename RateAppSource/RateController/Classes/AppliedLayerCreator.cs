@@ -4,184 +4,235 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GMap.NET.MapProviders;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController.Classes
 {
     public class AppliedLayerCreator
     {
         /// <summary>
-        /// Creates a GMapOverlay using a grid whose cell area is defined in acres.
-        /// For each grid cell, the average rate is computed based on a user-selected rate value
-        /// from either the applied or target rates.
-        /// Each cell is colored with one of five shades of green based on the computed rate ranges.
-        /// A legend mapping range labels to colors is output via the out parameter.
+        /// Creates a GMapOverlay with rotated rectangular boxes computed over segments of the entire
+        /// list of RateReading data. Each segment (for example, 5 readings per segment) is processed to produce
+        /// a box that is positioned at the segment’s midpoint and rotated according to its travel direction.
+        /// The box’s color is chosen from five green shades according to a shading range that goes from 0
+        /// to 10% over the largest target rate. A legend is built so that the mapping of intervals to color is clear.
+        /// 
+        /// This version clears all polygons before starting and then redraws a box for each segment,
+        /// thereby “retaining”/redrawing all previous segments.
+        /// 
+        /// Parameters:
+        ///   overlay         - The GMapOverlay to which the polygons will be added.
+        ///   readings        - The list of RateReading data.
+        ///   legend          - Output dictionary mapping range labels to colors.
+        ///   cellAreaAcres   - The desired area for each rotated box (in acres).
+        ///   boxWidthMeters  - The box width (the side perpendicular to the travel direction) in meters.
+        ///   selectedRateType- Specifies whether to use the Applied or Target rate values.
+        ///   selectedRateIndex - The index (0-based) of the rate within each reading’s array.
         /// </summary>
-        /// <param name="readings">The list of RateReading data.</param>
-        /// <param name="legend">Output dictionary mapping range labels to colors.</param>
-        /// <param name="cellAreaAcres">
-        /// The area for a square grid cell in acres. Defaults to 0.1 (i.e. 1/10 acre).
-        /// </param>
-        /// <param name="selectedRateType">
-        /// Specifies whether to use the AppliedRates or TargetRates. Defaults to Applied.
-        /// </param>
-        /// <param name="selectedRateIndex">
-        /// The index (0-based) of the rate to use in the selected rate array.
-        /// Defaults to 0.
-        /// </param>
-        public bool UpdateRatesOverlay(ref GMapOverlay overlay, List<RateReading> readings, out Dictionary<string, Color> legend,
-            RectLatLng OverallBounds, double cellAreaAcres = 0.1, RateType selectedRateType = RateType.Applied, int selectedRateIndex = 0)
+        public bool UpdateRatesOverlay(
+            ref GMapOverlay overlay,
+            List<RateReading> readings,
+            out Dictionary<string, Color> legend,
+            double cellAreaAcres = 0.1,
+            double ImplementWidth_Feet = 100,
+            RateType selectedRateType = RateType.Applied,
+            int selectedRateIndex = 0)
         {
             bool Result = false;
             legend = new Dictionary<string, Color>();
+            cellAreaAcres = 0.1;
+
+            // Clear previously drawn polygons so that we will redraw them all.
             overlay.Polygons.Clear();
+
             try
             {
                 if (readings != null && readings.Count > 0)
                 {
-                    #region build box
-                    //// Determine the geographic bounding box.
-                    //double minLat = readings.Min(r => r.Latitude);
-                    //double maxLat = readings.Max(r => r.Latitude);
-                    //double minLng = readings.Min(r => r.Longitude);
-                    //double maxLng = readings.Max(r => r.Longitude);
+                    #region build legend
+                    // ------------------------------------------------------------------------
+                    // 1. Compute shading boundaries:
+                    //    - Lower bound is fixed at 0.
+                    //    - Upper bound is 10% above the largest target rate.
+                    //    These boundaries will be used to partition the range into 5 intervals.
+                    // ------------------------------------------------------------------------
+                    var validTargetRates = readings
+                        .Where(r => r.TargetRates.Length > selectedRateIndex)
+                        .Select(r => r.TargetRates[selectedRateIndex])
+                        .ToList();
+                    if (validTargetRates.Count == 0)
+                        return false;
 
-                    double minLat = OverallBounds.Top;
-                    double maxLat = OverallBounds.Bottom;
-                    double minLng = OverallBounds.Left;
-                    double maxLng = OverallBounds.Right;
+                    double shadingMin = 0.0;
+                    double shadingMax = validTargetRates.Max() * 1.1;
+                    double rangeWidth = (shadingMax - shadingMin) / 5.0;
 
-                    // Convert the cell area (in acres) to square meters.
-                    // 1 acre ≈ 4046.86 m².
-                    double cellAreaMeters = cellAreaAcres * 4046.86;
-                    // For a square cell, side = sqrt(area) (in meters).
-                    double cellSideMeters = Math.Sqrt(cellAreaMeters);
-
-                    // Convert cell side length from meters to degrees latitude.
-                    // 1 degree latitude ≈ 111,320 meters.
-                    double metersPerDegreeLat = 111320;
-                    double cellSizeDegreesLat = cellSideMeters / metersPerDegreeLat;
-
-                    // Convert cell side length from meters to degrees longitude using the average latitude.
-                    double avgLat = (minLat + maxLat) / 2.0;
-                    double metersPerDegreeLng = 111320 * Math.Cos(avgLat * Math.PI / 180.0);
-                    double cellSizeDegreesLng = cellSideMeters / metersPerDegreeLng;
-                    #endregion
-                    #region group readings
-                    // Group readings into grid cells using calculated indices.
-                    Dictionary<(int i, int j), List<RateReading>> grid = new Dictionary<(int, int), List<RateReading>>();
-                    foreach (var reading in readings)
+                    // Define the 5 green shades (each with alpha = 175).
+                    // (Note that the first color has been updated to use 4 parameters.)
+                    Color[] shadesOfGreen = new Color[5]
                     {
-                        int i = (int)Math.Floor((reading.Latitude - minLat) / cellSizeDegreesLat);
-                        int j = (int)Math.Floor((reading.Longitude - minLng) / cellSizeDegreesLng);
-                        var key = (i, j);
-                        if (!grid.ContainsKey(key))
-                            grid[key] = new List<RateReading>();
-                        grid[key].Add(reading);
+                        Color.FromArgb(175, 175, 255, 175),  // Very light green.
+                        Color.FromArgb(175, 153, 255, 153),  // Light, minty green.
+                        Color.FromArgb(175, 102, 255, 102),  // Bright, vibrant green.
+                        Color.FromArgb(175, 51, 204, 51),    // Medium green.
+                        Color.FromArgb(175, 0, 153, 0)         // Dark, rich green.
+                    };
+
+                    // Build the legend mapping each interval to a green shade.
+                    for (int k = 0; k < 5; k++)
+                    {
+                        double lowerBound = shadingMin + k * rangeWidth;
+                        double upperBound = shadingMin + (k + 1) * rangeWidth;
+                        string label = $"{lowerBound:F1} - {upperBound:F1}";
+                        legend[label] = shadesOfGreen[k];
                     }
+                    #endregion
 
-                    // Compute the average rate per cell.
-                    // Only include readings that actually have at least (selectedRateIndex+1) entries in the selected array.
-                    Dictionary<(int i, int j), double> cellAverages = new Dictionary<(int, int), double>();
-                    foreach (var kvp in grid)
+                    // ------------------------------------------------------------------------
+                    // 2. Partition the readings into segments and compute a rotated box for each segment.
+                    //    Here we use segments of up to 5 readings. (If fewer exist at the end, we use the
+                    //    last available reading for the segment.)
+                    // ------------------------------------------------------------------------
+                    for (int segStart = 0; segStart < readings.Count; segStart += 5)
                     {
-                        // Get the valid rates from this cell.
-                        var validRates = kvp.Value
+                        #region segment rates and box color
+                        int segEnd = (segStart + 4 < readings.Count) ? segStart + 4 : readings.Count - 1;
+                        var segment = readings.GetRange(segStart, segEnd - segStart + 1);
+
+                        // Filter for valid rates in this segment (using the selected rate type).
+                        var validSegmentRates = segment
                             .Where(r => (selectedRateType == RateType.Applied && r.AppliedRates.Length > selectedRateIndex) ||
                                         (selectedRateType == RateType.Target && r.TargetRates.Length > selectedRateIndex))
                             .Select(r => selectedRateType == RateType.Applied ? r.AppliedRates[selectedRateIndex] : r.TargetRates[selectedRateIndex])
                             .ToList();
+                        if (validSegmentRates.Count == 0)
+                            continue; // Skip this segment if no valid rate data is available.
 
-                        if (validRates.Count > 0)
+                        double segmentAvg = validSegmentRates.Average();
+                        int shadeIndex = (rangeWidth == 0) ? 0 : (int)Math.Floor((segmentAvg - shadingMin) / rangeWidth);
+                        if (shadeIndex < 0)
+                            shadeIndex = 0;
+                        if (shadeIndex >= 5)
+                            shadeIndex = 4;
+                        Color boxColor = shadesOfGreen[shadeIndex];
+                        #endregion
+
+                        #region travel direction and box center
+                        // --------------------------------------------------------------------
+                        // 3. Compute the segment’s travel direction and box center.
+                        //    Use the first and last reading in the segment.
+                        // --------------------------------------------------------------------
+                        RateReading startReading = segment.First();
+                        RateReading endReading = segment.Last();
+
+                        double travelBearingDeg = CalculateBearing(
+                            startReading.Latitude, startReading.Longitude,
+                            endReading.Latitude, endReading.Longitude);
+
+                        // Center the box at the midpoint of the segment.
+                        double centerLat = (startReading.Latitude + endReading.Latitude) / 2.0;
+                        double centerLng = (startReading.Longitude + endReading.Longitude) / 2.0;
+                        #endregion
+
+                        #region box dimensions
+                        // --------------------------------------------------------------------
+                        // 4. Compute the rectangle (box) dimensions.
+                        //    Convert the desired area (in acres) to square meters.
+                        //    Then compute the box’s length so that:
+                        //         area = length * boxWidthMeters.
+                        // --------------------------------------------------------------------
+                        double areaMeters = cellAreaAcres * 4046.86;
+                        double rectangleLength = areaMeters / (ImplementWidth_Feet * 0.3048);
+                        double halfLength = rectangleLength / 2.0;
+                        double halfWidth = (ImplementWidth_Feet * 0.3048) / 2.0;
+
+                        // Convert travel bearing to radians.
+                        double theta = travelBearingDeg * Math.PI / 180.0;
+
+                        // Compute displacement vectors:
+                        //   - V: along travel direction (half-length vector).
+                        //   - W: perpendicular to travel direction (half-width vector).
+                        double Vx = halfLength * Math.Sin(theta);
+                        double Vy = halfLength * Math.Cos(theta);
+                        double Wx = halfWidth * Math.Sin(theta + Math.PI / 2);
+                        double Wy = halfWidth * Math.Cos(theta + Math.PI / 2);
+
+                        // Determine the four corners of the rotated box via vector addition.
+                        double dx1 = Vx + Wx;
+                        double dy1 = Vy + Wy;
+                        double dx2 = Vx - Wx;
+                        double dy2 = Vy - Wy;
+                        double dx3 = -Vx - Wx;
+                        double dy3 = -Vy - Wy;
+                        double dx4 = -Vx + Wx;
+                        double dy4 = -Vy + Wy;
+                        #endregion
+
+                        #region box points
+                        // --------------------------------------------------------------------
+                        // 5. Convert meter offsets to latitude/longitude degrees.
+                        //    (Using approximate conversion factors.)
+                        // --------------------------------------------------------------------
+                        double metersPerDegreeLat = 111320; // Approximate.
+                        double metersPerDegreeLng = 111320 * Math.Cos(centerLat * Math.PI / 180.0);
+
+                        double lat1 = centerLat + dy1 / metersPerDegreeLat;
+                        double lng1 = centerLng + dx1 / metersPerDegreeLng;
+                        double lat2 = centerLat + dy2 / metersPerDegreeLat;
+                        double lng2 = centerLng + dx2 / metersPerDegreeLng;
+                        double lat3 = centerLat + dy3 / metersPerDegreeLat;
+                        double lng3 = centerLng + dx3 / metersPerDegreeLng;
+                        double lat4 = centerLat + dy4 / metersPerDegreeLat;
+                        double lng4 = centerLng + dx4 / metersPerDegreeLng;
+
+                        List<PointLatLng> boxPoints = new List<PointLatLng>
                         {
-                            double cellAvg = validRates.Average();
-                            cellAverages[kvp.Key] = cellAvg;
-                        }
-                    }
-                    #endregion
-
-                    // If no valid averages, return an empty overlay.
-                    if (cellAverages.Count > 0)
-                    {
-                        #region Build Legend
-                        // Determine overall minimum and maximum for the computed averages.
-                        double overallMin = cellAverages.Values.Min();
-                        double overallMax = cellAverages.Values.Max();
-
-                        // Divide the range into five equal intervals.
-                        double rangeWidth = (overallMax - overallMin) / 5.0;
-
-                        // Define five shades of green (from light to dark).
-                        Color[] shadesOfGreen = new Color[5]
-                        {
-                            Color.FromArgb(175, 255, 175),  // A very light green (almost pastel)
-                            Color.FromArgb(153, 255, 153),  // A light, minty green
-                            Color.FromArgb(102, 255, 102),  // A bright, vibrant lime green
-                            Color.FromArgb(51, 204, 51),    // A medium green
-                            Color.FromArgb(0, 153, 0)       // A dark, rich green
+                            new PointLatLng(lat1, lng1),
+                            new PointLatLng(lat2, lng2),
+                            new PointLatLng(lat3, lng3),
+                            new PointLatLng(lat4, lng4)
                         };
-                        // Convert each color to a semi-transparent version:
-                        for (int i = 0; i < shadesOfGreen.Length; i++)
-                        {
-                            shadesOfGreen[i] = Color.FromArgb(175, shadesOfGreen[i]);
-                        }
-
-                        // Build the legend.
-                        for (int k = 0; k < 5; k++)
-                        {
-                            double lowerBound = overallMin + k * rangeWidth;
-                            double upperBound = overallMin + (k + 1) * rangeWidth;
-                            string label = $"{lowerBound:F1} - {upperBound:F1}";
-                            legend[label] = shadesOfGreen[k];
-                        }
                         #endregion
-                        #region Create polygons
-                        // Create a polygon for each grid cell, coloring it based on its average rate.
-                        foreach (var kvp in cellAverages)
-                        {
-                            (int i, int j) cellKey = kvp.Key;
-                            double avgRate = kvp.Value;
 
-                            int rangeIndex;
-                            if (rangeWidth == 0)
-                                rangeIndex = 0;
-                            else
-                                rangeIndex = (int)Math.Floor((avgRate - overallMin) / rangeWidth);
-                            if (rangeIndex >= 5)
-                                rangeIndex = 4;
+                        #region polygon
+                        // Create the polygon for this segment.
+                        GMapPolygon polygon = new GMapPolygon(boxPoints, $"SegmentBox_{segStart}_{segEnd}");
+                        polygon.Stroke = new Pen(boxColor, 2);
+                        polygon.Fill = new SolidBrush(boxColor);
 
-                            // Calculate cell boundaries.
-                            double cellMinLat = minLat + cellKey.i * cellSizeDegreesLat;
-                            double cellMinLng = minLng + cellKey.j * cellSizeDegreesLng;
-                            double cellMaxLat = cellMinLat + cellSizeDegreesLat;
-                            double cellMaxLng = cellMinLng + cellSizeDegreesLng;
-
-                            List<PointLatLng> points = new List<PointLatLng>
-                            {
-                                new PointLatLng(cellMinLat, cellMinLng),
-                                new PointLatLng(cellMinLat, cellMaxLng),
-                                new PointLatLng(cellMaxLat, cellMaxLng),
-                                new PointLatLng(cellMaxLat, cellMinLng)
-                            };
-
-                            GMapPolygon polygon = new GMapPolygon(points, $"Cell_{cellKey.i}_{cellKey.j}");
-                            polygon.Stroke = new Pen(shadesOfGreen[rangeIndex], 2);
-                            polygon.Fill = new SolidBrush(shadesOfGreen[rangeIndex]);
-
-                            overlay.Polygons.Add(polygon);
-                        }
-                        Result = true;
+                        overlay.Polygons.Add(polygon);
                         #endregion
                     }
+
+                    Result = true;
                 }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("AsAppliedCreator/CreateOverlay: " + ex.Message);
+                Props.WriteErrorLog("AppliedLayerCreator/UpdateRatesOverlay: " + ex.Message);
             }
             return Result;
         }
+
+        /// <summary>
+        /// Calculates the bearing (in degrees) from (lat1, lng1) to (lat2, lng2).
+        /// Bearing is measured clockwise from north.
+        /// </summary>
+        private double CalculateBearing(double lat1, double lng1, double lat2, double lng2)
+        {
+            double radLat1 = lat1 * Math.PI / 180.0;
+            double radLat2 = lat2 * Math.PI / 180.0;
+            double deltaLng = (lng2 - lng1) * Math.PI / 180.0;
+
+            double y = Math.Sin(deltaLng) * Math.Cos(radLat2);
+            double x = Math.Cos(radLat1) * Math.Sin(radLat2) -
+                       Math.Sin(radLat1) * Math.Cos(radLat2) * Math.Cos(deltaLng);
+            double bearingRad = Math.Atan2(y, x);
+            double bearingDeg = (bearingRad * 180.0 / Math.PI + 360) % 360;
+            return bearingDeg;
+        }
+
+
     }
 }

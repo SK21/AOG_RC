@@ -259,7 +259,8 @@ namespace RateController.Classes
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 AppliedLayerCreator creator = new AppliedLayerCreator();
 
-                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, GetOverallRectLatLng(), Props.RateDisplayResolution, Props.RateDisplayType, Props.RateDisplayProduct);
+                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, Props.RateDisplayResolution, 
+                    mf.Sections.TotalWidth(true), Props.RateDisplayType, Props.RateDisplayProduct);
                 gmap.Refresh();
             }
             catch (Exception ex)
@@ -278,7 +279,6 @@ namespace RateController.Classes
                     if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
                     AddOverlay(AppliedOverlay);
                     cLegend = ShowAppliedLayer();
-                    gmap.Refresh();
 
                     int RefreshIntervalSeconds = Props.RateDisplayRefresh;
                     if (RefreshIntervalSeconds > 0 && RefreshIntervalSeconds < 61)
@@ -495,7 +495,7 @@ namespace RateController.Classes
 
         private void AppliedOverlayTimer_Tick(object sender, EventArgs e)
         {
-            ShowAppliedLayer();
+            cLegend = ShowAppliedLayer();
         }
 
         private void DisplayOverlays()

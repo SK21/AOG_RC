@@ -57,9 +57,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ckRateData = new System.Windows.Forms.CheckBox();
             this.btnCopy = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.gbZone.SuspendLayout();
-            this.legendPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -255,7 +253,6 @@
             // 
             // legendPanel
             // 
-            this.legendPanel.Controls.Add(this.label2);
             this.legendPanel.Location = new System.Drawing.Point(133, 356);
             this.legendPanel.Name = "legendPanel";
             this.legendPanel.Size = new System.Drawing.Size(239, 245);
@@ -383,15 +380,6 @@
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(161, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 24);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "label2";
-            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -421,8 +409,6 @@
             this.Load += new System.EventHandler(this.mnuRateMap_Load);
             this.gbZone.ResumeLayout(false);
             this.gbZone.PerformLayout();
-            this.legendPanel.ResumeLayout(false);
-            this.legendPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -458,6 +444,5 @@
         private System.Windows.Forms.CheckBox ckRateData;
         private System.Windows.Forms.Panel legendPanel;
         private System.Windows.Forms.Button btnCopy;
-        private System.Windows.Forms.Label label2;
     }
 }

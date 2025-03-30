@@ -325,9 +325,9 @@
             // lbDataPoints
             // 
             this.lbDataPoints.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDataPoints.Location = new System.Drawing.Point(428, 48);
+            this.lbDataPoints.Location = new System.Drawing.Point(400, 48);
             this.lbDataPoints.Name = "lbDataPoints";
-            this.lbDataPoints.Size = new System.Drawing.Size(59, 23);
+            this.lbDataPoints.Size = new System.Drawing.Size(87, 23);
             this.lbDataPoints.TabIndex = 396;
             this.lbDataPoints.Text = "0";
             this.lbDataPoints.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -335,7 +335,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(287, 48);
+            this.label1.Location = new System.Drawing.Point(259, 48);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 23);
             this.label1.TabIndex = 395;
