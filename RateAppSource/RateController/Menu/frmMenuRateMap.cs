@@ -92,20 +92,10 @@ namespace RateController.Menu
 
         private void btnPNG_Click(object sender, EventArgs e)
         {
-            GMapControl map = mf.Tls.Manager.gmapObject;
-            Bitmap MapImage = new Bitmap(map.Width, map.Height);
-            map.DrawToBitmap(MapImage, new Rectangle(0, 0, map.Width, map.Height));
-            saveFileDialog1.InitialDirectory = Props.CurrentDir();
-            saveFileDialog1.Title = "Save Map";
-            saveFileDialog1.Filter = "PNG|*.PNG";
-            saveFileDialog1.FileName = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (saveFileDialog1.FileName != "")
-                {
-                    MapImage.Save(saveFileDialog1.FileName, ImageFormat.Png);
-                }
-            }
+            MapImageSaver saver = new MapImageSaver();
+            saver.MapControl = mf.Tls.Manager.gmapObject;
+            saver.LegendPanel = legendPanel; 
+            saver.SaveCompositeImageToFile(Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy"));
         }
 
         private void ckEdit_CheckedChanged(object sender, EventArgs e)

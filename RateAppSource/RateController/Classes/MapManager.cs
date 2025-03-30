@@ -260,7 +260,7 @@ namespace RateController.Classes
                 AppliedLayerCreator creator = new AppliedLayerCreator();
 
                 creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, Props.RateDisplayResolution, 
-                    mf.Sections.TotalWidth(true), Props.RateDisplayType, Props.RateDisplayProduct);
+                     Props.RateDisplayType, Props.RateDisplayProduct);
                 gmap.Refresh();
             }
             catch (Exception ex)
