@@ -12,17 +12,18 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
+        private int FormHeight;
+        private int FormWidth;
         private bool Initializing = false;
         private int MainLeft = 0;
         private frmMenu MainMenu;
         private int MainTop = 0;
         private FormStart mf;
-        private int PicTop;
-        private int PicLeft;
         private int PicHeight;
+        private int PicLeft;
+        private int PicTop;
         private int PicWidth;
-        private int FormWidth;
-        private int FormHeight;
+        private bool EditZones = false;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
@@ -46,6 +47,17 @@ namespace RateController.Menu
             colorComboBox.SelectedIndex = 1;
         }
 
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmCopyMap");
+
+            if (fs == null)
+            {
+                Form frm = new frmCopyMap(mf);
+                frm.Show();
+            }
+        }
+
         private void btnCreateZone_Click(object sender, EventArgs e)
         {
             int RateA = 0;
@@ -62,7 +74,8 @@ namespace RateController.Menu
                 mf.Tls.ShowMessage("Could not save Zone.");
             }
             btnCreateZone.FlatAppearance.BorderSize = 0;
-            ckEdit.Checked = false;
+            ckEditPolygons.Checked = false;
+            EnableButtons();
             mf.Tls.Manager.SaveMap();
             UpdateForm();
         }
@@ -94,13 +107,13 @@ namespace RateController.Menu
         {
             MapImageSaver saver = new MapImageSaver();
             saver.MapControl = mf.Tls.Manager.gmapObject;
-            saver.LegendPanel = legendPanel; 
+            saver.LegendPanel = legendPanel;
             saver.SaveCompositeImageToFile(Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy"));
         }
 
         private void ckEdit_CheckedChanged(object sender, EventArgs e)
         {
-            mf.Tls.Manager.EditMode = ckEdit.Checked;
+            mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
             EnableButtons();
         }
 
@@ -203,14 +216,15 @@ namespace RateController.Menu
 
         private void EnableButtons()
         {
-            tbName.Enabled = mf.Tls.Manager.EditMode;
-            tbP1.Enabled = mf.Tls.Manager.EditMode;
-            tbP2.Enabled = mf.Tls.Manager.EditMode;
-            tbP3.Enabled = mf.Tls.Manager.EditMode;
-            tbP4.Enabled = mf.Tls.Manager.EditMode;
-            btnDelete.Enabled = !mf.Tls.Manager.EditMode;
-            btnCreateZone.Enabled = mf.Tls.Manager.EditMode;
-            colorComboBox.Enabled = mf.Tls.Manager.EditMode;
+            tbName.Enabled = EditZones;
+            tbP1.Enabled = EditZones;
+            tbP2.Enabled = EditZones;
+            tbP3.Enabled = EditZones;
+            tbP4.Enabled = EditZones;
+            btnDelete.Enabled = EditZones;
+            btnCreateZone.Enabled = EditZones;
+            colorComboBox.Enabled = EditZones;
+            ckEditPolygons.Enabled = EditZones;
         }
 
         private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -395,9 +409,10 @@ namespace RateController.Menu
                 Props.WriteErrorLog("frmMenuRateMap/ShowLegend: " + ex.Message);
             }
         }
+
         private void tbName_TextChanged(object sender, EventArgs e)
         {
-            if (ckEdit.Checked)
+            if (ckEditPolygons.Checked)
             {
                 HighlightZoneSave();
             }
@@ -530,6 +545,9 @@ namespace RateController.Menu
             ckSatView.Checked = mf.Tls.Manager.ShowTiles;
             ckZones.Checked = Props.MapShowZones;
             gbZone.Enabled = ckZones.Checked;
+
+            ckEditPolygons.Checked = mf.Tls.Manager.EditModePolygons;
+
             Initializing = false;
         }
 
@@ -538,14 +556,34 @@ namespace RateController.Menu
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
         }
 
-        private void btnCopy_Click(object sender, EventArgs e)
+        private void ckEditPolygons_CheckedChanged(object sender, EventArgs e)
         {
-            Form fs = Props.IsFormOpen("frmCopyMap");
+            mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
 
-            if (fs == null)
+            if (ckEditPolygons.Checked)
             {
-                Form frm = new frmCopyMap(mf);
-                frm.Show();
+                ckEditPolygons.FlatAppearance.BorderSize = 1;
+            }
+            else
+            {
+                ckEditPolygons.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+        private void ckEditZones_CheckedChanged(object sender, EventArgs e)
+        {
+            EditZones = ckEditZones.Checked;
+            mf.Tls.Manager.MouseSetTractorPosition = ckEditZones.Checked;
+            EnableButtons();
+
+            if(ckEditZones.Checked)
+            {
+                ckEditZones.FlatAppearance.BorderSize = 1;
+            }
+            else
+            {
+                ckEditZones.FlatAppearance.BorderSize = 0;
+                mf.Tls.Manager.EditModePolygons = false;
             }
         }
     }

@@ -16,8 +16,9 @@ namespace RateController.Classes
     {
         private GMapOverlay AppliedOverlay;
         private System.Windows.Forms.Timer AppliedOverlayTimer;
-        private bool cEditMode;
+        private bool cEditPolygons = false;
         private Dictionary<string, Color> cLegend;
+        private bool cMouseSetTractorPosition = false;
         private PointLatLng cTractorPosition;
         private List<PointLatLng> currentZoneVertices;
         private Color cZoneColor;
@@ -30,6 +31,7 @@ namespace RateController.Classes
         private System.Drawing.Point lastMousePosition;
         private List<MapZone> mapZones;
         private FormStart mf;
+        private List<RectLatLng> RateGrid;
         private GMapOverlay tempMarkerOverlay;
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
@@ -57,12 +59,12 @@ namespace RateController.Classes
 
         public event EventHandler MapChanged;
 
-        public bool EditMode
+        public bool EditModePolygons
         {
-            get { return cEditMode; }
+            get { return cEditPolygons; }
             set
             {
-                cEditMode = value;
+                cEditPolygons = value;
                 tempMarkerOverlay.Clear();
                 currentZoneVertices.Clear();
             }
@@ -76,6 +78,15 @@ namespace RateController.Classes
 
         public Dictionary<string, Color> Legend
         { get { return cLegend; } }
+
+        public bool MouseSetTractorPosition
+        {
+            get { return cMouseSetTractorPosition; }
+            set
+            {
+                cMouseSetTractorPosition = value;
+            }
+        }
 
         public bool ShowTiles
         {
@@ -116,6 +127,76 @@ namespace RateController.Classes
                     cZoneName = "Unnamed Zone";
                 }
             }
+        }
+
+        public List<RectLatLng> CreateGrid(double acres)
+        {
+            List<RectLatLng> grid = new List<RectLatLng>();
+
+            // Get the overall geographic bounding box.
+            RectLatLng overallRect = GetOverallRectLatLng();
+            if (overallRect == RectLatLng.Empty)
+                return grid;
+
+            // Convert the desired cell area from acres to square meters.
+            // 1 acre ≈ 4046.86 m².
+            double squareMeters = acres * 4046.86;
+            // Calculate the cell's side length in meters.
+            double cellSideMeters = Math.Sqrt(squareMeters);
+
+            // Convert the cell side length into degrees latitude.
+            // Approximately: 1 degree latitude ≈ 111,000 meters.
+            double cellHeight = cellSideMeters / 111000.0;
+
+            // For longitude, the conversion is dependent on latitude.
+            // We use the average latitude from the overall rectangle.
+            double avgLat = (overallRect.Top + overallRect.Bottom) / 2.0;
+            double cellWidth = cellSideMeters / (111000.0 * Math.Cos(avgLat * Math.PI / 180.0));
+
+            // Determine the total width and height of the overall rectangle in degrees.
+            double totalWidth = overallRect.Right - overallRect.Left;
+            double totalHeight = overallRect.Top - overallRect.Bottom;
+
+            // Determine how many full-width/height cells fit inside.
+            int numFullCols = (int)Math.Floor(totalWidth / cellWidth);
+            int numFullRows = (int)Math.Floor(totalHeight / cellHeight);
+
+            // The remaining width/height (if any) along the borders.
+            double remainderWidth = totalWidth - (numFullCols * cellWidth);
+            double remainderHeight = totalHeight - (numFullRows * cellHeight);
+
+            // Total columns and rows (adding an extra column/row if there is a remainder).
+            int totalCols = numFullCols + (remainderWidth > 0.000001 ? 1 : 0);
+            int totalRows = numFullRows + (remainderHeight > 0.000001 ? 1 : 0);
+
+            // Loop to generate each grid cell.
+            for (int row = 0; row < totalRows; row++)
+            {
+                // For rows, if this is the last row and there is a remainder, use the remainder as the cell height.
+                double currentCellHeight = (row == totalRows - 1 && remainderHeight > 0.000001)
+                                            ? remainderHeight
+                                            : cellHeight;
+                // Calculate the top coordinate for the row.
+                // Note: overallRect.Top is the maximum latitude; each row descends by the full cellHeight.
+                double cellTop = overallRect.Top - row * cellHeight;
+
+                for (int col = 0; col < totalCols; col++)
+                {
+                    // For columns, if this is the last column and there is a remainder, reduce the cell's width.
+                    double currentCellWidth = (col == totalCols - 1 && remainderWidth > 0.000001)
+                                              ? remainderWidth
+                                              : cellWidth;
+                    // Calculate the left coordinate.
+                    double cellLeft = overallRect.Left + col * cellWidth;
+
+                    // Create a cell with the computed boundaries.
+                    // RectLatLng expects (Top, Left, Width, Height), where Width is the difference in longitude and Height the difference in latitude.
+                    RectLatLng cell = new RectLatLng(cellTop, cellLeft, currentCellWidth, currentCellHeight);
+                    grid.Add(cell);
+                }
+            }
+
+            return grid;
         }
 
         public bool DeleteZone(string name)
@@ -237,15 +318,15 @@ namespace RateController.Classes
             return Result;
         }
 
-        public void SetTractorPosition(PointLatLng NewLocation, double[] AppliedRates, double[] TargetRates, bool FromMouseClick = false)
+        public void SetTractorPosition(PointLatLng NewLocation, double[] AppliedRates, double[] TargetRates)
         {
-            if (FromMouseClick || (!cEditMode && !FromMouseClick))
+            if (!cMouseSetTractorPosition)
             {
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation; // Update the marker position
                 gmap.Refresh(); // Refresh the map to show the updated marker
                 UpdateTargetRates();
-               if(mf.Products.ProductsAreOn()) mf.Tls.RateCollector.RecordReading(NewLocation.Lat, NewLocation.Lng, AppliedRates, TargetRates);
+                if (mf.Products.ProductsAreOn()) mf.Tls.RateCollector.RecordReading(NewLocation.Lat, NewLocation.Lng, AppliedRates, TargetRates);
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -259,8 +340,10 @@ namespace RateController.Classes
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 AppliedLayerCreator creator = new AppliedLayerCreator();
 
-                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, Props.RateDisplayResolution, 
-                     Props.RateDisplayType, Props.RateDisplayProduct);
+                //creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, Props.RateDisplayResolution,
+                //     Props.RateDisplayType, Props.RateDisplayProduct);
+
+                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, RateGrid, out legend, Props.RateDisplayType, Props.RateDisplayProduct);
                 gmap.Refresh();
             }
             catch (Exception ex)
@@ -444,8 +527,8 @@ namespace RateController.Classes
                 {
                     gmap.Overlays.Add(NewOverlay);
                 }
+                if (NewOverlay.Id == "mapzones") RateGrid = CreateGrid(Props.RateDisplayResolution);
             }
-            //DisplayOverlays();
         }
 
         private GMapOverlay AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
@@ -512,16 +595,20 @@ namespace RateController.Classes
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (EditMode)
+                if (EditModePolygons)
                 {
+                    // add vertices to the current zone
                     var point = gmap.FromLocalToLatLng(e.X, e.Y);
                     currentZoneVertices.Add(point);
                     tempMarkerOverlay.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.red_small));
                 }
                 else
                 {
+                    // set tractor position
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
-                    SetTractorPosition(Location, null, null, true);
+                    cTractorPosition = Location;
+                    tractorMarker.Position = Location; // Update the marker position
+                    gmap.Refresh(); // Refresh the map to show the updated marker
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -652,6 +739,8 @@ namespace RateController.Classes
                     {
                         gmap.Overlays.Remove(o);
                     }
+
+                    if (overlay.Id == "mapzones") RateGrid = CreateGrid(Props.RateDisplayResolution);
                 }
             }
             catch (Exception ex)

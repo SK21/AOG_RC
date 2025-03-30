@@ -38,7 +38,7 @@
             this.lbP4 = new System.Windows.Forms.Label();
             this.tbP4 = new System.Windows.Forms.TextBox();
             this.lbP3 = new System.Windows.Forms.Label();
-            this.ckEdit = new System.Windows.Forms.CheckBox();
+            this.ckEditPolygons = new System.Windows.Forms.CheckBox();
             this.tbP3 = new System.Windows.Forms.TextBox();
             this.lbP2 = new System.Windows.Forms.Label();
             this.tbP2 = new System.Windows.Forms.TextBox();
@@ -57,6 +57,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ckRateData = new System.Windows.Forms.CheckBox();
             this.btnCopy = new System.Windows.Forms.Button();
+            this.ckEditZones = new System.Windows.Forms.CheckBox();
             this.gbZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -73,6 +74,7 @@
             // 
             // gbZone
             // 
+            this.gbZone.Controls.Add(this.ckEditZones);
             this.gbZone.Controls.Add(this.lbArea);
             this.gbZone.Controls.Add(this.label1);
             this.gbZone.Controls.Add(this.colorComboBox);
@@ -81,7 +83,7 @@
             this.gbZone.Controls.Add(this.lbP4);
             this.gbZone.Controls.Add(this.tbP4);
             this.gbZone.Controls.Add(this.lbP3);
-            this.gbZone.Controls.Add(this.ckEdit);
+            this.gbZone.Controls.Add(this.ckEditPolygons);
             this.gbZone.Controls.Add(this.tbP3);
             this.gbZone.Controls.Add(this.lbP2);
             this.gbZone.Controls.Add(this.tbP2);
@@ -132,7 +134,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(10, 124);
+            this.btnDelete.Location = new System.Drawing.Point(10, 162);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 12;
@@ -144,7 +146,7 @@
             this.btnCreateZone.FlatAppearance.BorderSize = 0;
             this.btnCreateZone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCreateZone.Image = global::RateController.Properties.Resources.OK;
-            this.btnCreateZone.Location = new System.Drawing.Point(10, 220);
+            this.btnCreateZone.Location = new System.Drawing.Point(10, 232);
             this.btnCreateZone.Name = "btnCreateZone";
             this.btnCreateZone.Size = new System.Drawing.Size(82, 64);
             this.btnCreateZone.TabIndex = 2;
@@ -178,20 +180,21 @@
             this.lbP3.TabIndex = 9;
             this.lbP3.Text = "Product C";
             // 
-            // ckEdit
+            // ckEditPolygons
             // 
-            this.ckEdit.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckEdit.FlatAppearance.BorderSize = 0;
-            this.ckEdit.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEdit.Image = global::RateController.Properties.Resources.FileEditName;
-            this.ckEdit.Location = new System.Drawing.Point(10, 28);
-            this.ckEdit.Name = "ckEdit";
-            this.ckEdit.Size = new System.Drawing.Size(82, 64);
-            this.ckEdit.TabIndex = 339;
-            this.ckEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEdit.UseVisualStyleBackColor = true;
-            this.ckEdit.CheckedChanged += new System.EventHandler(this.ckEdit_CheckedChanged);
+            this.ckEditPolygons.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEditPolygons.Enabled = false;
+            this.ckEditPolygons.FlatAppearance.BorderSize = 0;
+            this.ckEditPolygons.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEditPolygons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEditPolygons.Image = global::RateController.Properties.Resources.polygon;
+            this.ckEditPolygons.Location = new System.Drawing.Point(10, 92);
+            this.ckEditPolygons.Name = "ckEditPolygons";
+            this.ckEditPolygons.Size = new System.Drawing.Size(82, 64);
+            this.ckEditPolygons.TabIndex = 339;
+            this.ckEditPolygons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEditPolygons.UseVisualStyleBackColor = true;
+            this.ckEditPolygons.CheckedChanged += new System.EventHandler(this.ckEditPolygons_CheckedChanged);
             // 
             // tbP3
             // 
@@ -380,6 +383,21 @@
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
+            // ckEditZones
+            // 
+            this.ckEditZones.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEditZones.FlatAppearance.BorderSize = 0;
+            this.ckEditZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEditZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEditZones.Image = global::RateController.Properties.Resources.FileEditName;
+            this.ckEditZones.Location = new System.Drawing.Point(10, 22);
+            this.ckEditZones.Name = "ckEditZones";
+            this.ckEditZones.Size = new System.Drawing.Size(82, 64);
+            this.ckEditZones.TabIndex = 343;
+            this.ckEditZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEditZones.UseVisualStyleBackColor = true;
+            this.ckEditZones.CheckedChanged += new System.EventHandler(this.ckEditZones_CheckedChanged);
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -428,7 +446,7 @@
         private System.Windows.Forms.TextBox tbP1;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.Button btnImport;
-        private System.Windows.Forms.CheckBox ckEdit;
+        private System.Windows.Forms.CheckBox ckEditPolygons;
         private System.Windows.Forms.VScrollBar VSzoom;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox ckFullScreen;
@@ -444,5 +462,6 @@
         private System.Windows.Forms.CheckBox ckRateData;
         private System.Windows.Forms.Panel legendPanel;
         private System.Windows.Forms.Button btnCopy;
+        private System.Windows.Forms.CheckBox ckEditZones;
     }
 }
