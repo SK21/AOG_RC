@@ -8,84 +8,87 @@ bool ESPpgnFound;
 
 void ReceiveESP()
 {
-	if (SerialESP->available())
+	if (MDL.ESPserialPort != NC)
 	{
-		if (SerialESP->available() > MaxReadBuffer)
+		if (SerialESP->available())
 		{
-			// clear buffer
-			while (SerialESP->available())
+			if (SerialESP->available() > MaxReadBuffer)
 			{
-				SerialESP->read();
-			}
-			ESPpgn = 0;
-			ESPpgnFound = false;
-		}
-
-		if (ESPpgnFound)
-		{
-			if (SerialESP->available() > ESPpgnLength - 3)
-			{
-				for (int i = 2; i < ESPpgnLength; i++)
+				// clear buffer
+				while (SerialESP->available())
 				{
-					SD[i] = SerialESP->read();
+					SerialESP->read();
 				}
-				ReadPGNs(SD, ESPpgnLength);
-
-				// reset pgn
 				ESPpgn = 0;
 				ESPpgnFound = false;
 			}
-		}
-		else
-		{
-			switch (ESPpgn)
+
+			if (ESPpgnFound)
 			{
-			case 32500:
-				ESPpgnLength = 14;
-				ESPpgnFound = true;
-				ESPtime = millis();
-				break;
+				if (SerialESP->available() > ESPpgnLength - 3)
+				{
+					for (int i = 2; i < ESPpgnLength; i++)
+					{
+						SD[i] = SerialESP->read();
+					}
+					ReadPGNs(SD, ESPpgnLength);
 
-			case 32501:
-				ESPpgnLength = 10;
-				ESPpgnFound = true;
-				break;
+					// reset pgn
+					ESPpgn = 0;
+					ESPpgnFound = false;
+				}
+			}
+			else
+			{
+				switch (ESPpgn)
+				{
+				case 32500:
+					ESPpgnLength = 14;
+					ESPpgnFound = true;
+					ESPtime = millis();
+					break;
 
-			case 32502:
-				ESPpgnLength = 10;
-				ESPpgnFound = true;
-				break;
+				case 32501:
+					ESPpgnLength = 10;
+					ESPpgnFound = true;
+					break;
 
-			case 32503:
-				ESPpgnLength = 6;
-				ESPpgnFound = true;
-				break;
+				case 32502:
+					ESPpgnLength = 10;
+					ESPpgnFound = true;
+					break;
 
-			case 32600:
-				ESPpgnLength = 8;
-				ESPpgnFound = true;
-				break;
+				case 32503:
+					ESPpgnLength = 6;
+					ESPpgnFound = true;
+					break;
 
-			case 32700:
-				ESPpgnLength = 31;
-				ESPpgnFound = true;
-				break;
+				case 32600:
+					ESPpgnLength = 8;
+					ESPpgnFound = true;
+					break;
 
-			case 32702:
-				ESPpgnLength = 33;
-				ESPpgnFound = true;
-				break;
+				case 32700:
+					ESPpgnLength = 31;
+					ESPpgnFound = true;
+					break;
 
-			default:
-				// find pgn
-				MSB = SerialESP->read();
-				ESPpgn = MSB << 8 | LSB;
+				case 32702:
+					ESPpgnLength = 33;
+					ESPpgnFound = true;
+					break;
 
-				SD[0] = LSB;
-				SD[1] = MSB;
+				default:
+					// find pgn
+					MSB = SerialESP->read();
+					ESPpgn = MSB << 8 | LSB;
 
-				LSB = MSB;
-				break;
+					SD[0] = LSB;
+					SD[1] = MSB;
+
+					LSB = MSB;
+					break;
+				}
 			}
 		}
 	}

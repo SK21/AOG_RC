@@ -123,32 +123,34 @@ void DoSetup()
 	//ESP8266 serial port
 	switch (MDL.ESPserialPort)
 	{
-	case 1:
-		SerialESP = &Serial1;
-		break;
-	case 2:
-		SerialESP = &Serial2;
-		break;
-	case 3:
-		SerialESP = &Serial3;
-		break;
-	case 4:
-		SerialESP = &Serial4;
-		break;
-	case 5:
-		SerialESP = &Serial5;
-		break;
-	case 6:
-		SerialESP = &Serial6;
-		break;
-	case 7:
-		SerialESP = &Serial7;
-		break;
-	default:
-		SerialESP = &Serial8;
-		break;
+		case 1:
+			SerialESP = &Serial1;
+			break;
+		case 2:
+			SerialESP = &Serial2;
+			break;
+		case 3:
+			SerialESP = &Serial3;
+			break;
+		case 4:
+			SerialESP = &Serial4;
+			break;
+		case 5:
+			SerialESP = &Serial5;
+			break;
+		case 6:
+			SerialESP = &Serial6;
+			break;
+		case 7:
+			SerialESP = &Serial7;
+			break;
+		case 8:
+			SerialESP = &Serial8;
+		default:
+			MDL.ESPserialPort = NC;
+			break;
 	}
-	SerialESP->begin(38400);
+	if(MDL.ESPserialPort!=NC) SerialESP->begin(38400);
 
 	// Relays
 	switch (MDL.RelayControl)
@@ -231,6 +233,31 @@ void DoSetup()
 	}
 
 	pinMode(LED_BUILTIN, OUTPUT);
+
+	Serial.println("");
+	Serial.println("Sensor 1: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[0].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[0].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.println(Sensor[0].PWMPin);
+
+	Serial.println("");
+	Serial.println("Sensor 2: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[1].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[1].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.println(Sensor[1].PWMPin);
+
+	Serial.println("");
+	Serial.print("Work Switch Pin: ");
+	Serial.println(MDL.WorkPin);
+	Serial.print("Pressure Pin: ");
+	Serial.println(MDL.PressurePin);
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
@@ -287,7 +314,7 @@ void LoadDefaults()
 
 	MDL.WorkPin = NC;
 
-	// default flow pins
+	// RC11-2
 	Sensor[0].FlowPin = 28;
 	Sensor[0].DirPin = 37;
 	Sensor[0].PWMPin = 36;
@@ -316,20 +343,21 @@ void LoadDefaults()
 
 	// module settings
 	MDL.ID = 0;
-	MDL.SensorCount = 1;
-	MDL.InvertRelay = false;
-	MDL.InvertFlow = false;
+	MDL.SensorCount = 2;
+	MDL.InvertRelay = true;
+	MDL.InvertFlow = true;
 	MDL.IP0 = 192;
 	MDL.IP1 = 168;
 	MDL.IP2 = 1;
 	MDL.IP3 = 50;
 	MDL.RelayControl = 1;
-	MDL.ESPserialPort = 1;
+	MDL.ESPserialPort = NC;
 	MDL.WifiModeUseStation = false;
-	MDL.WorkPin = NC;
+	MDL.WorkPin = 30;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;
+	MDL.PressurePin = 40;
 
 	// network name
 	memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name

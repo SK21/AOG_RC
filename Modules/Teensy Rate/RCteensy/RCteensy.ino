@@ -21,8 +21,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  12-Mar-2025"
-const uint16_t InoID = 12035;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  29-Mar-2025"
+const uint16_t InoID = 29035;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -40,27 +40,28 @@ char DefaultNetPassword[ModStringLengths] = "111222333";
 
 struct ModuleConfig
 {
+	// RC11-2
 	uint8_t ID = 0;
-	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
-	bool InvertRelay = false;	    // value that turns on relays
-	bool InvertFlow = false;		// sets on value for flow valve or sets motor direction
+	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
+	bool InvertRelay = true;	    // value that turns on relays
+	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
 	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
-	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
+	uint8_t RelayControl = 1;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
 	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
-	uint8_t WorkPin = 2;
+	uint8_t WorkPin = 30;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
-	uint8_t PressurePin = NC;		// NC - no pressure pin
+	uint8_t PressurePin = 40;		
 	bool ADS1115Enabled = false;
-	uint8_t ESPserialPort = 1;		// serial port to connect to wifi module
+	uint8_t ESPserialPort = NC;		// serial port to connect to wifi module
 };
 
 ModuleConfig MDL;
@@ -186,18 +187,6 @@ hex_info_t hex =
 void setup()
 {
 	DoSetup();
-
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[0].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[0].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.println(Sensor[0].PWMPin);
-	Serial.print("Work Switch Pin: ");
-	Serial.println(MDL.WorkPin);
-	Serial.print("Pressure Pin: ");
-	Serial.println(MDL.PressurePin);
-	Serial.println("");
 }
 
 void loop()
