@@ -18,19 +18,14 @@
 
 #include <Adafruit_PWMServoDriver.h>
 
-#include <Adafruit_MCP23008.h>
-#include <Adafruit_MCP23X08.h>
-#include <Adafruit_MCP23X17.h>
-#include <Adafruit_MCP23XXX.h>
-
-#include <Adafruit_BusIO_Register.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_I2CRegister.h>
-#include <Adafruit_SPIDevice.h>
+//#include <Adafruit_BusIO_Register.h>
+//#include <Adafruit_I2CDevice.h>
+//#include <Adafruit_I2CRegister.h>
+//#include <Adafruit_SPIDevice.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  21-Mar-2025"
-const uint16_t InoID = 21035;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  01-Apr-2025"
+const uint16_t InoID = 1045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -44,7 +39,7 @@ const uint8_t OutputEnablePin = 27;
 const uint8_t PCA9685address = 0x55;	// RC15 1010101, 1 + A5-A0
 
 const int16_t ADS1115_Address = 0x48;
-const uint8_t MCP23017address = 0x20;
+uint8_t MCP23017address;
 const uint8_t PCF8574address = 0x20;
 const uint8_t W5500_SS = 5;		// W5500 SPI SS
 const uint8_t NC = 0xFF;		// Pin not connected
@@ -60,7 +55,7 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
+	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";

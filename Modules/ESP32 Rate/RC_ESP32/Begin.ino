@@ -142,9 +142,9 @@ void DoSetup()
 		Serial.println("Using GPIO pins for relays.");
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] < NC)
+			if (MDL.RelayControlPins[i] < NC)
 			{
-				pinMode(MDL.RelayPins[i], OUTPUT);
+				pinMode(MDL.RelayControlPins[i], OUTPUT);
 			}
 		}
 		break;
@@ -182,18 +182,37 @@ void DoSetup()
 		break;
 
 	case 4:
-		// MCP23017 I/O expander on default address 0x20
+		// MCP23017 I/O expander on 0x20, 0x21
+
 		Serial.println("");
 		Serial.println("Starting MCP23017 ...");
+
 		ErrorCount = 0;
+		MCP23017address = 0x21;
 		while (!MCP23017_found)
 		{
+			// RC12-3
 			Serial.print(".");
-			Wire.beginTransmission(MCP23017address);
+			Wire.beginTransmission(0x21);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
 			if (ErrorCount > 5) break;
+		}
+
+		if (!MCP23017_found)
+		{
+			ErrorCount = 0;
+			MCP23017address = 0x20;
+			while (!MCP23017_found)
+			{
+				Serial.print(".");
+				Wire.beginTransmission(MCP23017address);
+				MCP23017_found = (Wire.endTransmission() == 0);
+				ErrorCount++;
+				delay(500);
+				if (ErrorCount > 5) break;
+			}
 		}
 
 		Serial.println("");
@@ -420,7 +439,7 @@ void LoadDefaults()
 	// relay pins
 	for (int i = 0; i < 16; i++)
 	{
-		MDL.RelayPins[i] = NC;
+		MDL.RelayControlPins[i] = NC;
 	}
 	MDL.SensorCount = 1;
 	MDL.RelayControl = 5;
@@ -518,8 +537,8 @@ bool ValidData()
 				Result = false;
 				for (int j = 0; j < sizeof(ValidPins0); j++)
 				{
-					if ((MDL.RelayPins[k] == ValidPins0[j])
-						|| (MDL.RelayPins[k] == NC))
+					if ((MDL.RelayControlPins[k] == ValidPins0[j])
+						|| (MDL.RelayControlPins[k] == NC))
 					{
 						Result = true;
 						break;
