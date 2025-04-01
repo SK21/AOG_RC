@@ -2,18 +2,7 @@
 #include <EEPROM.h> 
 #include <NativeEthernet.h>
 #include <NativeEthernetUdp.h>
-#include <Watchdog_t4.h>	// https://github.com/tonton81/WDT_T4
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
-
-#include <Adafruit_MCP23008.h>
-#include <Adafruit_MCP23X08.h>
-#include <Adafruit_MCP23X17.h>
-#include <Adafruit_MCP23XXX.h>
-
-#include <Adafruit_BusIO_Register.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_I2CRegister.h>
-#include <Adafruit_SPIDevice.h>
 
 #include "FXUtil.h"		// read_ascii_line(), hex file support
 extern "C" {
@@ -21,8 +10,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  29-Mar-2025"
-const uint16_t InoID = 29035;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  01-Apr-2025"
+const uint16_t InoID = 1045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -31,7 +20,7 @@ const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano R
 #define ModStringLengths 15
 
 const int16_t ADS1115_Address = 0x48;
-const uint8_t MCP23017address = 0x20;
+uint8_t MCP23017address;
 const uint8_t PCF8574address = 0x20;
 
 uint8_t DefaultRelayPins[] = {8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC};		// pin numbers when GPIOs are used for relay control (1), default RC11
@@ -49,7 +38,7 @@ struct ModuleConfig
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t RelayPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
+	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
@@ -115,7 +104,6 @@ bool AutoOn = true;
 PCA9555 PCA;
 bool PCA9555PW_found = false;
 
-Adafruit_MCP23X17 MCP;
 bool MCP23017_found = false;
 
 uint32_t ESPtime;
@@ -140,8 +128,6 @@ bool WifiSwitchesEnabled = false;
 byte WifiSwitches[6];
 HardwareSerial* SerialESP;
 
-WDT_T4<WDT1> wdt;
-extern float tempmonGetTemp(void);
 bool GoodPins = false;	// configuration pins correct
 bool WrkOn;
 bool WrkLast;
@@ -217,7 +203,6 @@ void loop()
 
 	SendComm();
 	Blink();
-	wdt.feed();
 }
 
 byte ParseModID(byte ID)
@@ -306,9 +291,6 @@ void Blink()
 
 			Serial.print(", ");
 			Serial.print(Ethernet.localIP());
-
-			//Serial.print(", Temp: ");
-			//Serial.print(tempmonGetTemp());
 
 			//Serial.print(", ");
 			//Serial.print(debug1);

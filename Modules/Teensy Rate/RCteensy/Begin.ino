@@ -3,11 +3,6 @@ void DoSetup()
 {
 	uint8_t ErrorCount = 0;
 
-	//watchdog timer
-	WDT_timings_t config;
-	config.timeout = 60;	// seconds
-	wdt.begin(config);
-
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
 
@@ -159,9 +154,9 @@ void DoSetup()
 		// Relay GPIO Pins
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] < NC)
+			if (MDL.RelayControlPins[i] < NC)
 			{
-				pinMode(MDL.RelayPins[i], OUTPUT);
+				pinMode(MDL.RelayControlPins[i], OUTPUT);
 			}
 		}
 		break;
@@ -200,30 +195,53 @@ void DoSetup()
 		break;
 
 	case 4:
-		// MCP23017 I/O expander on default address 0x20
+		// MCP23017 I/O expander on 0x20, 0x21
+
 		Serial.println("");
 		Serial.println("Starting MCP23017 ...");
+
 		ErrorCount = 0;
+		MCP23017address = 0x21;
 		while (!MCP23017_found)
 		{
+			// RC12-3
 			Serial.print(".");
-			Wire.beginTransmission(MCP23017address);
+			Wire.beginTransmission(0x21);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
 			if (ErrorCount > 5) break;
 		}
 
+		if (!MCP23017_found)
+		{
+			ErrorCount = 0;
+			MCP23017address = 0x20;
+			while (!MCP23017_found)
+			{
+				Serial.print(".");
+				Wire.beginTransmission(MCP23017address);
+				MCP23017_found = (Wire.endTransmission() == 0);
+				ErrorCount++;
+				delay(500);
+				if (ErrorCount > 5) break;
+			}
+		}
+
 		Serial.println("");
 		if (MCP23017_found)
 		{
-			Serial.println("MCP23017 found.");
-			MCP.begin_I2C();
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x00); // IODIRA register
+			Wire.write(0x00); // set all of port A to outputs
+			Wire.endTransmission();
 
-			for (int i = 0; i < 16; i++)
-			{
-				MCP.pinMode(MDL.RelayPins[i], OUTPUT);
-			}
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x01); // IODIRB register
+			Wire.write(0x00); // set all of port B to outputs
+			Wire.endTransmission();
+
+			Serial.println("MCP23017 found.");
 		}
 		else
 		{
@@ -338,7 +356,7 @@ void LoadDefaults()
 	// relay pins
 	for (int i = 0; i < 16; i++)
 	{
-		MDL.RelayPins[i] = DefaultRelayPins[i];
+		MDL.RelayControlPins[i] = DefaultRelayPins[i];
 	}
 
 	// module settings
@@ -391,7 +409,7 @@ bool ValidData()
 		// check GPIOs for relays
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] > 41 && MDL.RelayPins[i] != NC)
+			if (MDL.RelayControlPins[i] > 41 && MDL.RelayControlPins[i] != NC)
 			{
 				Result = false;
 				break;

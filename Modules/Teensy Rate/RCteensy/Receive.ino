@@ -357,7 +357,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 
 				for (int i = 0; i < 16; i++)
 				{
-					MDL.RelayPins[i] = Data[13 + i];
+					MDL.RelayControlPins[i] = Data[13 + i];
 				}
 
 				MDL.WorkPin = Data[29];
