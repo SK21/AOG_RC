@@ -104,9 +104,9 @@ void DoSetup()
 		// Relay GPIO Pins
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] < NC)
+			if (MDL.RelayControlPins[i] < NC)
 			{
-				pinMode(MDL.RelayPins[i], OUTPUT);
+				pinMode(MDL.RelayControlPins[i], OUTPUT);
 			}
 		}
 		break;
@@ -145,18 +145,37 @@ void DoSetup()
 		break;
 
 	case 4:
-		// MCP23017 I/O expander on default address 0x20
+		// MCP23017 I/O expander on 0x20, 0x21
+
 		Serial.println("");
 		Serial.println("Starting MCP23017 ...");
+
 		ErrorCount = 0;
+		MCP23017address = 0x21;
 		while (!MCP23017_found)
 		{
+			// RC12-3
 			Serial.print(".");
-			Wire.beginTransmission(MCP23017address);
+			Wire.beginTransmission(0x21);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
 			delay(500);
 			if (ErrorCount > 5) break;
+		}
+
+		if (!MCP23017_found)
+		{
+			ErrorCount = 0;
+			MCP23017address = 0x20;
+			while (!MCP23017_found)
+			{
+				Serial.print(".");
+				Wire.beginTransmission(MCP23017address);
+				MCP23017_found = (Wire.endTransmission() == 0);
+				ErrorCount++;
+				delay(500);
+				if (ErrorCount > 5) break;
+			}
 		}
 
 		Serial.println("");
@@ -180,6 +199,21 @@ void DoSetup()
 		}
 		break;
 	}
+
+	Serial.println("");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[0].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[0].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.print(Sensor[0].PWMPin);
+	Serial.println("");
+
+	Serial.print("Work Pin: ");
+	Serial.println(MDL.WorkPin);
+	Serial.print("Pressure Pin: ");
+	Serial.print(MDL.PressurePin);
+	Serial.println("");
 
 	Serial.println("");
 	Serial.println("Finished setup.");
@@ -234,17 +268,17 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
-	MDL.WorkPin = NC;
-	MDL.PressurePin = NC;
+	MDL.WorkPin = 14;
+	MDL.PressurePin = 15;
 
 	// default flow pins
 	Sensor[0].FlowPin = 3;
-	Sensor[0].DirPin = 6;
-	Sensor[0].PWMPin = 9;
+	Sensor[0].DirPin = 4;
+	Sensor[0].PWMPin = 5;
 
 	Sensor[1].FlowPin = 2;
-	Sensor[1].DirPin = 4;
-	Sensor[1].PWMPin = 5;
+	Sensor[1].DirPin = 6;
+	Sensor[1].PWMPin = 9;
 
 	// default control settings
 	Sensor[0].HighAdjust = 50;
@@ -261,14 +295,14 @@ void LoadDefaults()
 	// relay pins
 	for (int i = 0; i < 16; i++)
 	{
-		MDL.RelayPins[i] = NC;
+		MDL.RelayControlPins[i] = NC;
 	}
-	MDL.SensorCount = 1;
-	MDL.RelayControl = 2;
+	MDL.SensorCount = 2;
+	MDL.RelayControl = 4;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;
-	MDL.InvertFlow = false;
-	MDL.InvertRelay = false;
+	MDL.InvertFlow = true;
+	MDL.InvertRelay = true;
 }
 
 bool ValidData()
@@ -294,7 +328,7 @@ bool ValidData()
 		// check GPIOs for relays
 		for (int i = 0; i < 16; i++)
 		{
-			if (MDL.RelayPins[i] > 21 && MDL.RelayPins[i] != NC)
+			if (MDL.RelayControlPins[i] > 21 && MDL.RelayControlPins[i] != NC)
 			{
 				Result = false;
 				break;

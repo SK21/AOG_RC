@@ -34,9 +34,9 @@ void CheckRelays()
             if (j < 1) Rlys = NewLo; else Rlys = NewHi;
             for (int i = 0; i < 8; i++)
             {
-                if (MDL.RelayPins[i + j * 8] < NC) // check if relay is enabled
+                if (MDL.RelayControlPins[i + j * 8] < NC) // check if relay is enabled
                 {
-                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayPins[i + j * 8], MDL.InvertRelay); else digitalWrite(MDL.RelayPins[i + j * 8], !MDL.InvertRelay);
+                    if (bitRead(Rlys, i)) digitalWrite(MDL.RelayControlPins[i + j * 8], MDL.InvertRelay); else digitalWrite(MDL.RelayControlPins[i + j * 8], !MDL.InvertRelay);
                 }
             }
         }
@@ -56,7 +56,7 @@ void CheckRelays()
 
                     if (BitState)
                     {
-                        // on
+                        // IsOn
                         PCA.write(IOpin, PCA95x5::Level::L);
                     }
                     else
@@ -91,7 +91,7 @@ void CheckRelays()
 
                     if (BitState)
                     {
-                        // on
+                        // IsOn
                         PCA.write(IOpin, PCA95x5::Level::L);
                     }
                     else
@@ -106,43 +106,46 @@ void CheckRelays()
         break;
 
     case 4:
-        // MCP23017
+        // MCP23017 control pins, RC5, RC8	{ 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 }
+        // MCP23017 control pins, RC12-3	{ 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 }
+
         if (MCP23017_found)
         {
-            uint8_t mcpOutA = 0; // Output for port A
-            uint8_t mcpOutB = 0; // Output for port B
+            uint8_t mcpOutA = 0; 
+            uint8_t mcpOutB = 0;
+            uint8_t Relay;
+			uint8_t RelayBanks[] = { NewLo, NewHi };
 
-            // Calculate output for port A, sections 1-8
-            mcpOutA = (bitRead(NewLo, 0) ? 1 : 0) |
-                (bitRead(NewLo, 1) ? 2 : 0) |
-                (bitRead(NewLo, 2) ? 4 : 0) |
-                (bitRead(NewLo, 3) ? 8 : 0) |
-                (bitRead(NewLo, 4) ? 16 : 0) |
-                (bitRead(NewLo, 5) ? 32 : 0) |
-                (bitRead(NewLo, 6) ? 64 : 0) |
-                (bitRead(NewLo, 7) ? 128 : 0);
-
-            // Calculate output for port B, sections 9-16
-            mcpOutB = (bitRead(NewHi, 0) ? 1 : 0) |
-                (bitRead(NewHi, 1) ? 2 : 0) |
-                (bitRead(NewHi, 2) ? 4 : 0) |
-                (bitRead(NewHi, 3) ? 8 : 0) |
-                (bitRead(NewHi, 4) ? 16 : 0) |
-                (bitRead(NewHi, 5) ? 32 : 0) |
-                (bitRead(NewHi, 6) ? 64 : 0) |
-                (bitRead(NewHi, 7) ? 128 : 0);
+            for (int bit = 0; bit < 8; bit++)
+            {
+                for (int bank = 0; bank < 2; bank++)
+                {
+                    Relay = bit + bank * 8;
+                    if ((RelayBanks[bank] & (1 << bit)) == (1 << bit))
+                    {
+                        if (MDL.RelayControlPins[Relay] < 8)
+                        {
+                            mcpOutA |= (1 << MDL.RelayControlPins[Relay]);
+                        }
+                        else
+                        {
+                            mcpOutB |= (1 << (MDL.RelayControlPins[Relay] - 8));
+                        }
+                    }
+                }
+            }
 
             if (MDL.InvertRelay)
             {
-                mcpOutA = ~mcpOutA;
-                mcpOutB = ~mcpOutB;
+                mcpOutA = (uint8_t)~mcpOutA;
+                mcpOutB = (uint8_t)~mcpOutB;
             }
 
-            // Send both outputs in a single transmission
+            // Now send the output bytes.
             Wire.beginTransmission(MCP23017address);
-            Wire.write(0x12); // address port A of MCP
-            Wire.write(mcpOutA); // value for port A
-            Wire.write(mcpOutB); // value for port B
+            Wire.write(0x12);         // Starting register address (GPIOA)
+            Wire.write(mcpOutA);      // GPA value
+            Wire.write(mcpOutB);      // GPB value
             Wire.endTransmission();
         }
         break;

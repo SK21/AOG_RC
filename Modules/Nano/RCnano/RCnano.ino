@@ -6,30 +6,34 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  24-Dec-2024"
-const uint16_t InoID = 24124;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  01-Apr-2025"
+const uint16_t InoID = 1045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins are not connected
-const uint8_t MCP23017address = 0x20;
+uint8_t MCP23017address;
 
+
+// MCP23017 control pins, RC5, RC8	{ 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 }
+// MCP23017 control pins, RC12-3	{ 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 }
 struct ModuleConfig
 {
+	// RC12-3
 	uint8_t ID = 0;
-	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
-	bool InvertRelay = false;	    // value that turns on relays
-	bool InvertFlow = false;		// sets on value for flow valve or sets motor direction
+	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
+	bool InvertRelay = true;	    // value that turns on relays
+	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	uint8_t RelayPins[16] = { 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 };		// MCP23017 pins RC5, RC8
-	uint8_t RelayControl = 2;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
-	uint8_t WorkPin = NC;
+	uint8_t RelayControlPins[16] = { 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 };	// MCP23017, RC12-3
+	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
+	uint8_t WorkPin = 14;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - powered on/off, True - powered on only
-	uint8_t PressurePin = NC;		// NC - no pressure pin
+	uint8_t PressurePin = 15;		
 	bool ADS1115Enabled = false;
 };
 
@@ -120,14 +124,6 @@ bool EthernetConnected()
 void setup()
 {
 	DoSetup();
-
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[0].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[0].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.print(Sensor[0].PWMPin);
-	Serial.println("");
 }
 
 void loop()
@@ -235,16 +231,16 @@ void CheckPressure()
 		CurrentPressure = analogRead(MDL.PressurePin) * 10.0;
 	}
 }
-
+//
 //uint32_t DebugTime;
 //uint32_t MaxLoopTime;
 //uint32_t LoopTmr;
 //byte ReadReset;
 //int MinMem = 2000;
-//double debug1;
-//double debug2;
-//double debug3;
-//double debug4;
+//uint16_t debug1;
+//uint16_t debug2;
+//uint16_t debug3;
+//uint16_t debug4;
 //
 //void DebugTheIno()
 //{
@@ -260,16 +256,16 @@ void CheckPressure()
 //		//Serial.print(MinMem);
 //
 //		//Serial.print(", ");
-//		Serial.print(debug1,3);
+//		Serial.print(debug1,BIN);
 //
 //		Serial.print(", ");
-//		Serial.print(debug2);
+//		Serial.print(debug2,BIN);
 //
 //		Serial.print(", ");
-//		Serial.print(debug3);
+//		Serial.print(debug3,BIN);
 //
 //		Serial.print(", ");
-//		Serial.print(debug4);
+//		Serial.print(debug4,BIN);
 //
 //		Serial.println("");
 //
