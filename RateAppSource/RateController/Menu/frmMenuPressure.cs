@@ -200,9 +200,9 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4).ToString("N1");
+            tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4).ToString("N0");
             tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 1).ToString("N1");
-            tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 2).ToString("N1");
+            tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 2).ToString("N0");
             tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 3).ToString("N1");
 
             ckPressure.Checked = Props.ShowPressure;

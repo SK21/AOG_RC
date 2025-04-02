@@ -46,14 +46,13 @@
             this.tbMaxVol = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lbPressureReading = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.lbRaw = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbModule
             // 
             this.lbModule.AutoSize = true;
-            this.lbModule.Location = new System.Drawing.Point(173, 103);
+            this.lbModule.Location = new System.Drawing.Point(156, 156);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(74, 24);
             this.lbModule.TabIndex = 189;
@@ -64,7 +63,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(349, 97);
+            this.ModuleIndicator.Location = new System.Drawing.Point(332, 150);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 183;
@@ -84,7 +83,7 @@
             "5",
             "6",
             "7"});
-            this.cbModules.Location = new System.Drawing.Point(262, 100);
+            this.cbModules.Location = new System.Drawing.Point(245, 153);
             this.cbModules.Name = "cbModules";
             this.cbModules.Size = new System.Drawing.Size(61, 31);
             this.cbModules.TabIndex = 188;
@@ -129,7 +128,7 @@
             // tbMinVol
             // 
             this.tbMinVol.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinVol.Location = new System.Drawing.Point(243, 206);
+            this.tbMinVol.Location = new System.Drawing.Point(226, 259);
             this.tbMinVol.MaxLength = 8;
             this.tbMinVol.Name = "tbMinVol";
             this.tbMinVol.Size = new System.Drawing.Size(80, 30);
@@ -157,7 +156,7 @@
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(113, 209);
+            this.lbMin.Location = new System.Drawing.Point(96, 263);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(124, 23);
             this.lbMin.TabIndex = 216;
@@ -172,7 +171,7 @@
             // tbMinPres
             // 
             this.tbMinPres.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinPres.Location = new System.Drawing.Point(366, 206);
+            this.tbMinPres.Location = new System.Drawing.Point(349, 259);
             this.tbMinPres.MaxLength = 8;
             this.tbMinPres.Name = "tbMinPres";
             this.tbMinPres.Size = new System.Drawing.Size(80, 30);
@@ -185,7 +184,7 @@
             // lbVoltage
             // 
             this.lbVoltage.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbVoltage.Location = new System.Drawing.Point(228, 159);
+            this.lbVoltage.Location = new System.Drawing.Point(211, 212);
             this.lbVoltage.Name = "lbVoltage";
             this.lbVoltage.Size = new System.Drawing.Size(95, 37);
             this.lbVoltage.TabIndex = 223;
@@ -195,7 +194,7 @@
             // lbPressure
             // 
             this.lbPressure.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressure.Location = new System.Drawing.Point(351, 159);
+            this.lbPressure.Location = new System.Drawing.Point(334, 212);
             this.lbPressure.Name = "lbPressure";
             this.lbPressure.Size = new System.Drawing.Size(95, 37);
             this.lbPressure.TabIndex = 224;
@@ -205,7 +204,7 @@
             // tbMaxPres
             // 
             this.tbMaxPres.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxPres.Location = new System.Drawing.Point(366, 253);
+            this.tbMaxPres.Location = new System.Drawing.Point(349, 310);
             this.tbMaxPres.MaxLength = 8;
             this.tbMaxPres.Name = "tbMaxPres";
             this.tbMaxPres.Size = new System.Drawing.Size(80, 30);
@@ -218,7 +217,7 @@
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(113, 256);
+            this.lbMax.Location = new System.Drawing.Point(96, 314);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(124, 23);
             this.lbMax.TabIndex = 226;
@@ -228,7 +227,7 @@
             // tbMaxVol
             // 
             this.tbMaxVol.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxVol.Location = new System.Drawing.Point(243, 253);
+            this.tbMaxVol.Location = new System.Drawing.Point(226, 310);
             this.tbMaxVol.MaxLength = 8;
             this.tbMaxVol.Name = "tbMaxVol";
             this.tbMaxVol.Size = new System.Drawing.Size(80, 30);
@@ -241,42 +240,32 @@
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(113, 328);
+            this.label4.Location = new System.Drawing.Point(96, 365);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(178, 23);
+            this.label4.Size = new System.Drawing.Size(124, 23);
             this.label4.TabIndex = 229;
-            this.label4.Text = "Current Reading:";
+            this.label4.Text = "Current:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lbPressureReading
             // 
             this.lbPressureReading.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbPressureReading.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressureReading.Location = new System.Drawing.Point(297, 371);
+            this.lbPressureReading.Location = new System.Drawing.Point(349, 361);
             this.lbPressureReading.Name = "lbPressureReading";
             this.lbPressureReading.Size = new System.Drawing.Size(80, 30);
             this.lbPressureReading.TabIndex = 232;
-            this.lbPressureReading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(113, 375);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(178, 23);
-            this.label2.TabIndex = 231;
-            this.label2.Text = "Current Pressure:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbPressureReading.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbRaw
             // 
             this.lbRaw.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRaw.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRaw.Location = new System.Drawing.Point(297, 324);
+            this.lbRaw.Location = new System.Drawing.Point(226, 361);
             this.lbRaw.Name = "lbRaw";
             this.lbRaw.Size = new System.Drawing.Size(80, 30);
             this.lbRaw.TabIndex = 233;
-            this.lbRaw.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbRaw.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // frmMenuPressure
             // 
@@ -285,7 +274,6 @@
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.lbRaw);
             this.Controls.Add(this.lbPressureReading);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tbMaxPres);
             this.Controls.Add(this.lbMax);
@@ -332,7 +320,6 @@
         private System.Windows.Forms.TextBox tbMaxVol;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lbPressureReading;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbRaw;
     }
 }
