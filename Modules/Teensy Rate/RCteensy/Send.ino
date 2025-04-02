@@ -88,7 +88,7 @@ void SendComm()
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo X 10
+        //3     Pressure Lo
         //4     Pressure Hi
         //5     -
         //6     -

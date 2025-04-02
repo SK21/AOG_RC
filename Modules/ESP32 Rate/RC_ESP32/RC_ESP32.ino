@@ -161,7 +161,7 @@ bool WorkSwitchOn = false;
 bool WrkLast;
 bool WrkCurrent;
 uint8_t DisconnectCount = 0;
-int16_t CurrentPressure = 0;
+int16_t PressureReading = 0;
 
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
@@ -296,14 +296,14 @@ void CheckWorkSwitch()
 
 void CheckPressure()
 {
-	CurrentPressure = 0;
+	PressureReading = 0;
 	if (MDL.PressurePin < NC)
 	{
-		CurrentPressure = analogRead(MDL.PressurePin) * 10.0;
+		PressureReading = analogRead(MDL.PressurePin);
 	}
 	else if (ADSfound)
 	{
-		CurrentPressure = AINs.AIN0 / 10.0;
+		PressureReading = AINs.AIN0;
 	}
 }
 
