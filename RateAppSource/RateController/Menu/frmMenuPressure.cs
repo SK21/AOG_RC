@@ -2,9 +2,6 @@
 using RateController.Classes;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -31,59 +28,15 @@ namespace RateController.Menu
             SetButtons(false);
         }
 
-        private void btnCopy_Click(object sender, EventArgs e)
-        {
-            double slope = 0;
-            double intercept = 0;
-            if (double.TryParse(lbCalSlope.Text, out double sl)) slope = sl;
-            if (double.TryParse(lbCalIntercept.Text, out double pt)) intercept = pt;
-            tbSlope.Text = slope.ToString("N3");
-            tbIntercept.Text = intercept.ToString("N3");
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (DGV.CurrentCell != null)
-            {
-                int currentRowIndex = DGV.CurrentCell.RowIndex;
-                if (currentRowIndex >= 0 && currentRowIndex < DGV.Rows.Count)
-                {
-                    DGV.Rows.RemoveAt(currentRowIndex);
-                    SetButtons(true);
-                }
-            }
-        }
-
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (DGV.Rows.Count < 10)
-                {
-                    DataRow RW = dataSet1.Tables[0].NewRow();
-                    RW[0] = DGV.Rows.Count + 1;
-                    RW[1] = mf.ModulesStatus.Pressure(cbModules.SelectedIndex);
-
-                    double pressure = 0;
-                    if (double.TryParse(tbPressure.Text, out double pr)) pressure = pr;
-                    RW[2] = pr;
-
-                    RW[3] = -1;
-                    dataSet1.Tables[0].Rows.Add(RW);
-                    SetButtons(true);
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuPressure/btnNew: " + ex.Message);
-            }
-        }
-
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
             {
-                SaveData();
+                Props.SetPressureCal(cbModules.SelectedIndex * 4, double.Parse(tbMinVol.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 4 + 1, double.Parse(tbMinPres.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 4 + 2, double.Parse(tbMaxVol.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 4 + 3, double.Parse(tbMaxPres.Text));
+                Props.ShowPressure = ckPressure.Checked;
                 SetButtons(false);
                 UpdateForm();
             }
@@ -98,12 +51,6 @@ namespace RateController.Menu
             UpdateForm();
         }
 
-        private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            Props.WriteErrorLog("frmMenuPressure/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
-            + " Exception: " + e.Exception.ToString());
-        }
-
         private void frmMenuPressure_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
@@ -112,19 +59,11 @@ namespace RateController.Menu
 
         private void frmMenuPressure_Load(object sender, EventArgs e)
         {
-            SubMenuLayout.SetFormLayout(this, MainMenu, null);
-            btnOK.Left = this.Width - 84;
-            btnOK.Top = this.Height - 84;
-            btnCancel.Left = btnOK.Left - 78;
+            SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
+            btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
-            btnCopy.Left = btnCancel.Left - 78;
-            btnCopy.Top = btnOK.Top;
-            btnDelete.Left = btnCopy.Left - 78;
-            btnDelete.Top = btnOK.Top;
-            btnNew.Left = btnDelete.Left - 78;
-            btnNew.Top = btnOK.Top;
-            ckPressure.Left = btnNew.Left - 90;
-            ckPressure.Top = btnOK.Top;
+            ckPressure.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing - 20;
+            ckPressure.Top = btnOK.Top - 10;
 
             MainMenu.StyleControls(this);
             SetLanguage();
@@ -134,63 +73,8 @@ namespace RateController.Menu
 
             cbModules.SelectedIndex = 0;
 
-            DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
-            DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
             UpdateForm();
             timer1.Enabled = true;
-        }
-
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void LoadData()
-        {
-            try
-            {
-                dataSet1.Clear();
-                double CalSlope = 0;
-                double CalIntercept = 0;
-                double Slope = 0;
-                double Intercept = 0;
-                int MinRaw = 0;
-                int count = 0;
-                if (mf.PressureObjects.PressureItemFound(cbModules.SelectedIndex))
-                {
-                    clsPressure Pres = mf.PressureObjects.Item(cbModules.SelectedIndex);
-                    Slope = Pres.Slope;
-                    Intercept = Pres.Intercept;
-                    MinRaw = Pres.MinimumRawData;
-
-                    List<clsPressureRawData> RawData = mf.PressureObjects.GetCalDataByModuleID(cbModules.SelectedIndex);
-                    if (RawData.Count > 0)
-                    {
-                        foreach (clsPressureRawData rawData in RawData)
-                        {
-                            DataRow RW = dataSet1.Tables[0].NewRow();
-                            RW[0] = ++count;
-                            RW[1] = rawData.RawData;
-                            RW[2] = rawData.Pressure;
-                            RW[3] = rawData.ID;
-                            dataSet1.Tables[0].Rows.Add(RW);
-                        }
-                        (CalSlope, CalIntercept) = mf.PressureObjects.GetSlopeAndInterceptByModuleID(cbModules.SelectedIndex);
-                    }
-                }
-                lbCalSlope.Text = CalSlope.ToString("N3");
-                lbCalIntercept.Text = CalIntercept.ToString("N3");
-                tbSlope.Text = Slope.ToString("N3");
-                tbIntercept.Text = Intercept.ToString("N3");
-                tbMin.Text = MinRaw.ToString("N0");
-                ckPressure.Checked = Props.ShowPressure;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuPressure/LoadData:" + ex.Message);
-            }
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -204,66 +88,6 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
-        private void SaveData()
-        {
-            try
-            {
-                // DGV
-                mf.PressureObjects.DeleteCalDataByModuleID(cbModules.SelectedIndex);
-                for (int i = 0; i < DGV.Rows.Count; i++)
-                {
-                    clsPressureRawData NewData = new clsPressureRawData();
-                    NewData.ModuleID = cbModules.SelectedIndex;
-                    for (int j = 1; j < 4; j++)
-                    {
-                        string StringVal = DGV.Rows[i].Cells[j].EditedFormattedValue.ToString();
-                        double Val = 0;
-                        if (StringVal != "")
-                        {
-                            if (Double.TryParse(StringVal, out double v)) Val = v;
-                        }
-                        switch (j)
-                        {
-                            case 1:
-                                // Raw Data
-                                NewData.RawData = (int)Val;
-                                break;
-
-                            case 2:
-                                // known pressure
-                                NewData.Pressure = Val;
-                                break;
-
-                            case 3:
-                                // ID
-                                NewData.ID = (int)Val;
-                                break;
-                        }
-                    }
-                    mf.PressureObjects.AddCalData(NewData);
-                }
-                mf.PressureObjects.SaveCalData();
-
-                // textboxes
-                double slope = 0;
-                double intercept = 0;
-                int MinRaw = 0;
-                if (double.TryParse(tbSlope.Text, out double sl)) slope = sl;
-                if (double.TryParse(tbIntercept.Text, out double cpt)) intercept = cpt;
-                if (int.TryParse(tbMin.Text, out int mn)) MinRaw = mn;
-                clsPressure pres = mf.PressureObjects.Item(cbModules.SelectedIndex);
-                pres.Slope = slope;
-                pres.Intercept = intercept;
-                pres.MinimumRawData = MinRaw;
-                mf.PressureObjects.Save(cbModules.SelectedIndex);
-                Props.ShowPressure = ckPressure.Checked;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuPressure/SaveData: " + ex.Message);
-            }
-        }
-
         private void SetButtons(bool Edited)
         {
             if (!Initializing)
@@ -273,16 +97,12 @@ namespace RateController.Menu
                     btnCancel.Enabled = true;
                     btnOK.Enabled = true;
                     cbModules.Enabled = false;
-                    btnCopy.Enabled = false;
-                    btnDelete.Enabled = false;
                 }
                 else
                 {
                     btnCancel.Enabled = false;
                     btnOK.Enabled = false;
                     cbModules.Enabled = true;
-                    btnCopy.Enabled = true;
-                    btnDelete.Enabled = true;
                 }
 
                 cEdited = Edited;
@@ -292,9 +112,10 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            DGV.Columns[0].HeaderText = Lang.lgPressureReading;
-            DGV.Columns[1].HeaderText = Lang.lgPressureRaw;
-            DGV.Columns[2].HeaderText = Lang.lgPressurePressure;
+            lbMin.Text = Lang.lgPressureMin;
+            lbMax.Text = Lang.lgPressureMax;
+            lbPressure.Text = Lang.lgPressurePressure;
+            lbVoltage.Text = Lang.lgPressureVoltage;
         }
 
         private void SetModuleIndicator()
@@ -309,78 +130,92 @@ namespace RateController.Menu
             }
         }
 
-        private void tbIntercept_Enter(object sender, EventArgs e)
+        private void tbMaxPres_Enter(object sender, EventArgs e)
         {
             double temp;
-            double.TryParse(tbIntercept.Text, out temp);
-            using (var form = new FormNumeric(-100, 100, temp))
+            double.TryParse(tbMaxPres.Text, out temp);
+            using (var form = new FormNumeric(0, 200, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbIntercept.Text = form.ReturnValue.ToString("N1");
+                    tbMaxPres.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
 
-        private void tbMin_Enter(object sender, EventArgs e)
+        private void tbMaxVol_Enter(object sender, EventArgs e)
         {
             double temp;
-            double.TryParse(tbMin.Text, out temp);
+            double.TryParse(tbMaxVol.Text, out temp);
             using (var form = new FormNumeric(0, 5000, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbMin.Text = form.ReturnValue.ToString("N0");
+                    tbMaxVol.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
 
-        private void tbPressure_Enter(object sender, EventArgs e)
+        private void tbMinPres_Enter(object sender, EventArgs e)
         {
             double temp;
-            double.TryParse(tbPressure.Text, out temp);
-            using (var form = new FormNumeric(0, 1000, temp))
+            double.TryParse(tbMinPres.Text, out temp);
+            using (var form = new FormNumeric(0, 200, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbPressure.Text = form.ReturnValue.ToString("N0");
+                    tbMinPres.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
 
-        private void tbSlope_Enter(object sender, EventArgs e)
+        private void tbMinVol_Enter(object sender, EventArgs e)
         {
             double temp;
-            double.TryParse(tbSlope.Text, out temp);
-            using (var form = new FormNumeric(-100, 100, temp))
+            double.TryParse(tbMinVol.Text, out temp);
+            using (var form = new FormNumeric(0, 5000, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbSlope.Text = form.ReturnValue.ToString("N1");
+                    tbMinVol.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
 
-        private void tbSlope_TextChanged(object sender, EventArgs e)
+        private void tbMinVol_TextChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbRaw.Text = mf.ModulesStatus.Pressure(cbModules.SelectedIndex).ToString("N0");
+            UpdateRaw();
         }
 
         private void UpdateForm()
         {
             Initializing = true;
-            LoadData();
+
+            tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4).ToString("N1");
+            tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 1).ToString("N1");
+            tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 2).ToString("N1");
+            tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 3).ToString("N1");
+
+            ckPressure.Checked = Props.ShowPressure;
             SetModuleIndicator();
+
             Initializing = false;
+        }
+
+        private void UpdateRaw()
+        {
+            double Reading = mf.ModulesStatus.PressureReading(cbModules.SelectedIndex);
+            lbRaw.Text = Reading.ToString("N0");
+            lbPressureReading.Text = Props.PressureReading(cbModules.SelectedIndex, Reading).ToString("N1");
         }
     }
 }

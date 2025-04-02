@@ -1051,6 +1051,24 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximum Reading.
+        /// </summary>
+        internal static string lgPressureMax {
+            get {
+                return ResourceManager.GetString("lgPressureMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Reading.
+        /// </summary>
+        internal static string lgPressureMin {
+            get {
+                return ResourceManager.GetString("lgPressureMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pressure Pin.
         /// </summary>
         internal static string lgPressurePin {
@@ -1069,20 +1087,11 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Raw Data.
-        /// </summary>
-        internal static string lgPressureRaw {
-            get {
-                return ResourceManager.GetString("lgPressureRaw", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Reading.
         /// </summary>
-        internal static string lgPressureReading {
+        internal static string lgPressureVoltage {
             get {
-                return ResourceManager.GetString("lgPressureReading", resourceCulture);
+                return ResourceManager.GetString("lgPressureVoltage", resourceCulture);
             }
         }
         

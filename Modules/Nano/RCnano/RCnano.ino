@@ -106,7 +106,7 @@ bool WrkLast;
 bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
-int16_t CurrentPressure = 0;
+int16_t PressureReading = 0;
 bool WorkSwitchOn = false;
 bool MCP23017_found = false;
 
@@ -225,20 +225,20 @@ void CheckWorkSwitch()
 
 void CheckPressure()
 {
-	CurrentPressure = 0;
+	PressureReading = 0;
 	if (MDL.PressurePin < NC)
 	{
-		CurrentPressure = analogRead(MDL.PressurePin) * 10.0;
+		PressureReading = analogRead(MDL.PressurePin);
 	}
 }
-//
+
 //uint32_t DebugTime;
 //uint32_t MaxLoopTime;
 //uint32_t LoopTmr;
 //byte ReadReset;
 //int MinMem = 2000;
-//uint16_t debug1;
-//uint16_t debug2;
+//double debug1;
+//double debug2;
 //uint16_t debug3;
 //uint16_t debug4;
 //
@@ -256,16 +256,16 @@ void CheckPressure()
 //		//Serial.print(MinMem);
 //
 //		//Serial.print(", ");
-//		Serial.print(debug1,BIN);
+//		Serial.print(debug1);
 //
 //		Serial.print(", ");
-//		Serial.print(debug2,BIN);
+//		Serial.print(debug2);
 //
-//		Serial.print(", ");
-//		Serial.print(debug3,BIN);
+//		//Serial.print(", ");
+//		//Serial.print(debug3);
 //
-//		Serial.print(", ");
-//		Serial.print(debug4,BIN);
+//		//Serial.print(", ");
+//		//Serial.print(debug4);
 //
 //		Serial.println("");
 //

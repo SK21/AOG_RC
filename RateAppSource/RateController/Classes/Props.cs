@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -37,35 +38,6 @@ namespace RateController.Classes
         sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
     };
 
-    public static class SubMenuLayout
-    {
-        // main menu 782,680
-        // sub menu 540,598
-        // button 70,63
-        public const int MainMenuWidth = 782;
-        public const int MainMenuHeight = 680;
-        public const int ButtonLeftOffset = 458;
-        public const int ButtonSpacing = 76;
-        public const int ButtonTopOffset = 603;
-        public const int HeightOffset = -2;
-        public const int LeftOffset = 240;
-        public const int TopOffset = 1;
-        public const int WidthOffset = -242;
-
-        public static void SetFormLayout(Form Sub, Form Main, Button btn)
-        {
-            Sub.Left = Main.Left + LeftOffset;
-            Sub.Top = Main.Top + TopOffset;
-            Sub.Width = Main.Width + WidthOffset;
-            Sub.Height = Main.Height + HeightOffset;
-
-            if (btn != null)
-            {
-                btn.Left = ButtonLeftOffset;
-                btn.Top = ButtonTopOffset;
-            }
-        }
-    }
     public static class Props
     {
         public static readonly int MaxModules = 8;
@@ -116,6 +88,18 @@ namespace RateController.Classes
         private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
+
+        #region pressure calibration
+
+        // cal 0    module 0, minimum voltage
+        // cal 1    module 0, minimum pressure
+        // cal 2    module 0, maximum voltage
+        // cal 3    module 0, maximum pressure
+        // continues for each module, up to 8 modules
+
+        private static double[] PressureCals = new double[32];
+
+        #endregion pressure calibration
 
         #region // flow adjustment defaults
 
@@ -730,6 +714,11 @@ namespace RateController.Classes
             }
         }
 
+        public static double GetPressureCal(int Index)
+        {
+            return PressureCals[Index];
+        }
+
         public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
@@ -851,6 +840,12 @@ namespace RateController.Classes
             cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
             cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
             cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
+
+            for (int i = 0; i < 8; i++)
+            {
+                string key = "PressureCal_" + i.ToString();
+                if (double.TryParse(GetProp(key), out double pc)) PressureCals[i] = pc;
+            }
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)
@@ -909,6 +904,34 @@ namespace RateController.Classes
             return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
         }
 
+        public static double PressureReading(int ModuleID, double Reading)
+        {
+            // y = Mx + B
+            // M = (y2-y1)/(x2-x1)
+            // B = y - Mx
+
+            double Result = 0;
+            try
+            {
+                double MinVol = GetPressureCal(ModuleID * 4);       // x1
+                double MinPres = GetPressureCal(ModuleID * 4 + 1);  // y1
+                double MaxVol = GetPressureCal(ModuleID * 4 + 2);   // x2
+                double MaxPres = GetPressureCal(ModuleID * 4 + 3);  // y2
+                if ((MaxPres - MinPres) > 0)
+                {
+                    double M = (MaxPres - MinPres) / (MaxVol - MinVol);
+                    double B = MaxPres - M * MaxVol;
+                    Result = M * Reading + B;
+                    if (Result < 0) Result = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/PressureReading: " + ex.Message);
+            }
+            return Result;
+        }
+
         public static void RaiseRateDataSettingsChanged()
         {
             RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
@@ -931,6 +954,13 @@ namespace RateController.Classes
             {
                 WriteErrorLog("Props/SaveFormLocation: " + ex.Message);
             }
+        }
+
+        public static void SetPressureCal(int Index, double Value)
+        {
+            PressureCals[Index] = Value;
+            string key = "PressureCal_" + Index.ToString();
+            SetProp(key, Value.ToString());
         }
 
         public static void SetProp(string key, string value, bool IgnoreReadOnly = false)
@@ -1270,6 +1300,43 @@ namespace RateController.Classes
             }
             catch (Exception)
             {
+            }
+        }
+    }
+
+    public static class SubMenuLayout
+    {
+        public const int ButtonLeftOffset = 458;
+
+        public const int ButtonSpacing = 76;
+
+        public const int ButtonTopOffset = 603;
+
+        public const int HeightOffset = -2;
+
+        public const int LeftOffset = 240;
+
+        public const int MainMenuHeight = 680;
+
+        // main menu 782,680
+        // sub menu 540,598
+        // button 70,63
+        public const int MainMenuWidth = 782;
+
+        public const int TopOffset = 1;
+        public const int WidthOffset = -242;
+
+        public static void SetFormLayout(Form Sub, Form Main, Button btn)
+        {
+            Sub.Left = Main.Left + LeftOffset;
+            Sub.Top = Main.Top + TopOffset;
+            Sub.Width = Main.Width + WidthOffset;
+            Sub.Height = Main.Height + HeightOffset;
+
+            if (btn != null)
+            {
+                btn.Left = ButtonLeftOffset;
+                btn.Top = ButtonTopOffset;
             }
         }
     }

@@ -9,7 +9,7 @@ namespace RateController
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo X 10
+        //3     Pressure Lo 
         //4     Pressure Hi
         //5     -
         //6     -
@@ -35,7 +35,7 @@ namespace RateController
         private bool[] cEthernetConnected;
         private bool[] cGoodPins;
         private UInt16[] cInoID;
-        private double[] cPressure;
+        private double[] cPressureReading;
         private UInt16[,] cReading = new UInt16[255, 4];
         private byte[] cWifiSignal;
         private bool[] cWorkSwitch;
@@ -49,7 +49,7 @@ namespace RateController
             mf = CalledFrom;
             cInoID = new ushort[Props.MaxModules];
             cWorkSwitch = new bool[Props.MaxModules];
-            cPressure = new double[Props.MaxModules];
+            cPressureReading = new double[Props.MaxModules];
             ReceiveTime = new DateTime[Props.MaxModules];
             cWifiSignal = new byte[Props.MaxModules];
             cEthernetConnected = new bool[Props.MaxModules];
@@ -88,7 +88,7 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 byte ModuleID = Data[2];
-                cPressure[ModuleID] = (double)(Data[3] | Data[4] << 8);
+                cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
                 cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
                 cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
 
@@ -124,9 +124,9 @@ namespace RateController
             return Result;
         }
 
-        public double Pressure(int Module)
+        public double PressureReading(int Module)
         {
-            return cPressure[Module];
+            return cPressureReading[Module];
         }
 
         public UInt16 Reading(byte ModuleID, byte SensorID)

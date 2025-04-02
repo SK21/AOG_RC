@@ -188,9 +188,7 @@
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
-    <Compile Include="Classes\clsPressure.cs" />
     <Compile Include="Classes\clsPressureRawData.cs" />
-    <Compile Include="Classes\clsPressures.cs" />
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\MapImageSaver.cs" />
     <Compile Include="Classes\ParcelManager.cs" />

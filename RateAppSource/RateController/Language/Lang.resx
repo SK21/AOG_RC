@@ -447,16 +447,19 @@
   <data name="lgPressure" xml:space="preserve">
     <value>Pressure</value>
   </data>
+  <data name="lgPressureMax" xml:space="preserve">
+    <value>Maximum Reading</value>
+  </data>
+  <data name="lgPressureMin" xml:space="preserve">
+    <value>Minimum Reading</value>
+  </data>
   <data name="lgPressurePin" xml:space="preserve">
     <value>Pressure Pin</value>
   </data>
   <data name="lgPressurePressure" xml:space="preserve">
     <value>Pressure</value>
   </data>
-  <data name="lgPressureRaw" xml:space="preserve">
-    <value>Raw Data</value>
-  </data>
-  <data name="lgPressureReading" xml:space="preserve">
+  <data name="lgPressureVoltage" xml:space="preserve">
     <value>Reading</value>
   </data>
   <data name="lgPrimedStart" xml:space="preserve">

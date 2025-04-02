@@ -24,7 +24,6 @@ namespace RateController
         public PGN32700 ModuleConfig;
         public PGN32401 ModulesStatus;
         public PGN32702 NetworkConfig;
-        public clsPressures PressureObjects;
         public clsProducts Products;
         public clsAlarm RCalarm;
         public clsRelays RelayObjects;
@@ -113,7 +112,6 @@ namespace RateController
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
             GPS = new PGN100(this);
-            PressureObjects = new clsPressures(this);
         }
 
         public event EventHandler ColorChanged;
@@ -219,8 +217,6 @@ namespace RateController
                 Swt = new frmSwitches(this);
                 Swt.Show();
             }
-
-            PressureObjects.Load();
 
             Products.UpdatePID();
             UpdateStatus();

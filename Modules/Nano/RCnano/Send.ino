@@ -84,7 +84,7 @@ void SendData()
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo X 10
+        //3     Pressure Lo 
         //4     Pressure Hi
         //5     -
         //6     -
@@ -106,8 +106,8 @@ void SendData()
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
-        Data[3] = (byte)CurrentPressure;
-        Data[4] = (byte)(CurrentPressure >> 8);
+        Data[3] = (byte)PressureReading;
+        Data[4] = (byte)(PressureReading >> 8);
         Data[5] = 0;
         Data[6] = 0;
         Data[7] = 0;

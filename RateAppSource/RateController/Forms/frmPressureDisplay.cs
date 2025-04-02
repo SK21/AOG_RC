@@ -73,12 +73,8 @@ namespace RateController
             double Pressure = 0;
 
             int ModuleID = mf.Products.Items[mf.CurrentProduct()].ModuleID;
-            double RawData = mf.ModulesStatus.Pressure(ModuleID);
-            clsPressure pres = mf.PressureObjects.Item(ModuleID);
-            if (RawData > pres.MinimumRawData)
-            {
-                Pressure = pres.Slope * RawData + pres.Intercept;
-            }
+            double RawData = mf.ModulesStatus.PressureReading(ModuleID);
+            Pressure = Props.PressureReading(ModuleID, RawData);
             lbPressureValue.Text = Pressure.ToString("N1");
         }
     }
