@@ -86,7 +86,7 @@
             this.cbModules.Location = new System.Drawing.Point(245, 153);
             this.cbModules.Name = "cbModules";
             this.cbModules.Size = new System.Drawing.Size(61, 31);
-            this.cbModules.TabIndex = 188;
+            this.cbModules.TabIndex = 0;
             this.cbModules.SelectedIndexChanged += new System.EventHandler(this.cbModules_SelectedIndexChanged);
             // 
             // btnCancel
@@ -102,7 +102,7 @@
             this.btnCancel.Location = new System.Drawing.Point(380, 603);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
-            this.btnCancel.TabIndex = 185;
+            this.btnCancel.TabIndex = 2;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -120,7 +120,7 @@
             this.btnOK.Location = new System.Drawing.Point(458, 603);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
-            this.btnOK.TabIndex = 184;
+            this.btnOK.TabIndex = 1;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -132,7 +132,7 @@
             this.tbMinVol.MaxLength = 8;
             this.tbMinVol.Name = "tbMinVol";
             this.tbMinVol.Size = new System.Drawing.Size(80, 30);
-            this.tbMinVol.TabIndex = 190;
+            this.tbMinVol.TabIndex = 4;
             this.tbMinVol.Text = "0";
             this.tbMinVol.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbMinVol.TextChanged += new System.EventHandler(this.tbMinVol_TextChanged);
@@ -147,7 +147,7 @@
             this.ckPressure.Location = new System.Drawing.Point(269, 594);
             this.ckPressure.Name = "ckPressure";
             this.ckPressure.Size = new System.Drawing.Size(82, 72);
-            this.ckPressure.TabIndex = 218;
+            this.ckPressure.TabIndex = 3;
             this.ckPressure.Text = "Show";
             this.ckPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckPressure.UseVisualStyleBackColor = true;
@@ -175,7 +175,7 @@
             this.tbMinPres.MaxLength = 8;
             this.tbMinPres.Name = "tbMinPres";
             this.tbMinPres.Size = new System.Drawing.Size(80, 30);
-            this.tbMinPres.TabIndex = 222;
+            this.tbMinPres.TabIndex = 5;
             this.tbMinPres.Text = "0";
             this.tbMinPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbMinPres.TextChanged += new System.EventHandler(this.tbMinVol_TextChanged);
@@ -208,7 +208,7 @@
             this.tbMaxPres.MaxLength = 8;
             this.tbMaxPres.Name = "tbMaxPres";
             this.tbMaxPres.Size = new System.Drawing.Size(80, 30);
-            this.tbMaxPres.TabIndex = 227;
+            this.tbMaxPres.TabIndex = 7;
             this.tbMaxPres.Text = "0";
             this.tbMaxPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbMaxPres.TextChanged += new System.EventHandler(this.tbMinVol_TextChanged);
@@ -231,7 +231,7 @@
             this.tbMaxVol.MaxLength = 8;
             this.tbMaxVol.Name = "tbMaxVol";
             this.tbMaxVol.Size = new System.Drawing.Size(80, 30);
-            this.tbMaxVol.TabIndex = 225;
+            this.tbMaxVol.TabIndex = 6;
             this.tbMaxVol.Text = "0";
             this.tbMaxVol.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbMaxVol.TextChanged += new System.EventHandler(this.tbMinVol_TextChanged);

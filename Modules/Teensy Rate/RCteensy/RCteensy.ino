@@ -33,7 +33,7 @@ struct ModuleConfig
 	uint8_t ID = 0;
 	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
-	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
+	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
@@ -134,7 +134,6 @@ bool WrkLast;
 bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
-
 
 // firmware update
 EthernetUDP UpdateComm;

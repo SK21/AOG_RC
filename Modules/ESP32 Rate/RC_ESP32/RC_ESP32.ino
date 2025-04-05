@@ -24,8 +24,8 @@
 //#include <Adafruit_SPIDevice.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  01-Apr-2025"
-const uint16_t InoID = 1045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  04-Apr-2025"
+const uint16_t InoID = 4045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -85,11 +85,12 @@ struct SensorConfig
 	double TargetUPM;
 	double MeterCal;
 	double ManualAdjust;
-	double KP;
-	double KI;
-	double KD;
-	byte MinPWM;
-	byte MaxPWM;
+	double HighAdjust;
+	double LowAdjust;
+	double AdjustThreshold;
+	double MaxPower;
+	double MinPower;
+	double Scaling;
 };
 
 SensorConfig Sensor[2];
@@ -312,10 +313,11 @@ uint32_t LastBlink;
 uint32_t LastLoop;
 byte ReadReset;
 uint32_t MaxLoopTime;
-//double debug1;
-//double debug2;
-//double debug3;
-//double debug4;
+double debug1;
+double debug2;
+double debug3;
+double debug4;
+double debug5;
 
 void Blink()
 {
@@ -328,17 +330,20 @@ void Blink()
 		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
 
-		//Serial.print(", ");
-		//Serial.print(debug1);
-		//
-		//Serial.print(", ");
-		//Serial.print(debug2);
+		Serial.print(", ");
+		Serial.print(debug1);
+		
+		Serial.print(", ");
+		Serial.print(debug2);
 
-		//Serial.print(", ");
-		//Serial.print(debug3);
+		Serial.print(", ");
+		Serial.print(debug3);
 
-		//Serial.print(", ");
-		//Serial.print(debug4);
+		Serial.print(", ");
+		Serial.print(debug4);
+
+		Serial.print(", ");
+		Serial.print(debug5);
 
 		Serial.println("");
 

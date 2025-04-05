@@ -232,7 +232,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 					{
 						Sensor[SensorID].HighAdjust = (double)(255.0 * Data[3] / 100.0);
 						Sensor[SensorID].LowAdjust = (double)(255.0 * Data[4] / 100.0);
-						Sensor[SensorID].AdjustThreshold = (double)(255.0 * Data[5] / 100.0);
+						Sensor[SensorID].AdjustThreshold = (double)(Data[5] / 100.0);
 						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
 						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 

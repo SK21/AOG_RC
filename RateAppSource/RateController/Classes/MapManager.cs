@@ -340,9 +340,6 @@ namespace RateController.Classes
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 AppliedLayerCreator creator = new AppliedLayerCreator();
 
-                //creator.UpdateRatesOverlay(ref AppliedOverlay, readings, out legend, Props.RateDisplayResolution,
-                //     Props.RateDisplayType, Props.RateDisplayProduct);
-
                 creator.UpdateRatesOverlay(ref AppliedOverlay, readings, RateGrid, out legend, Props.RateDisplayType, Props.RateDisplayProduct);
                 gmap.Refresh();
             }
@@ -581,16 +578,6 @@ namespace RateController.Classes
             cLegend = ShowAppliedLayer();
         }
 
-        private void DisplayOverlays()
-        {
-            Debug.Print("++++++++");
-            foreach (var overlay in gmap.Overlays)
-            {
-                Debug.Print("Overlay: " + overlay.Id + ", Polygons: " + overlay.Polygons.Count.ToString());
-            }
-            Debug.Print("----------");
-        }
-
         private void Gmap_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -747,7 +734,6 @@ namespace RateController.Classes
             {
                 Props.WriteErrorLog("MapManager/RemoveLayer: " + ex.Message);
             }
-            //DisplayOverlays();
         }
     }
 }
