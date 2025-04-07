@@ -258,5 +258,18 @@ namespace RateController.Menu
 
             Initializing = false;
         }
+
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            tbFlow1.Text = "-";
+            tbDir1.Text = "-";
+            tbPWM1.Text = "-";
+            tbFlow2.Text = "-";
+            tbDir2.Text = "-";
+            tbPWM2.Text =   "-";
+            tbWrk.Text = "-";
+            tbPressure.Text = "-";
+            ckMomentary.Checked = false;
+        }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuRelayPins));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbRelay16 = new System.Windows.Forms.TextBox();
@@ -62,6 +63,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tbRelay1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.btnRescan = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -420,11 +422,29 @@
             this.label10.TabIndex = 158;
             this.label10.Text = "Relay 1";
             // 
+            // btnRescan
+            // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
+            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnRescan.Location = new System.Drawing.Point(304, 608);
+            this.btnRescan.Name = "btnRescan";
+            this.btnRescan.Size = new System.Drawing.Size(70, 63);
+            this.btnRescan.TabIndex = 240;
+            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnRescan.UseVisualStyleBackColor = false;
+            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
+            // 
             // frmMenuRelayPins
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnRescan);
             this.Controls.Add(this.tbRelay16);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.tbRelay15);
@@ -505,5 +525,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbRelay1;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnRescan;
     }
 }

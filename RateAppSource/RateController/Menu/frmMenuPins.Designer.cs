@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuPins));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbPressure = new System.Windows.Forms.TextBox();
@@ -47,6 +48,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbFlow1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.btnRescan = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -260,11 +262,29 @@
             this.label4.TabIndex = 222;
             this.label4.Text = "Flow 1";
             // 
+            // btnRescan
+            // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
+            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnRescan.Location = new System.Drawing.Point(304, 608);
+            this.btnRescan.Name = "btnRescan";
+            this.btnRescan.Size = new System.Drawing.Size(70, 63);
+            this.btnRescan.TabIndex = 239;
+            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnRescan.UseVisualStyleBackColor = false;
+            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
+            // 
             // frmMenuPins
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnRescan);
             this.Controls.Add(this.tbPressure);
             this.Controls.Add(this.lbPressure);
             this.Controls.Add(this.ckMomentary);
@@ -315,5 +335,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbFlow1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnRescan;
     }
 }

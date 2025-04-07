@@ -33,8 +33,15 @@ namespace RateController.Menu
             {
                 if (byte.TryParse(tbModuleID.Text, out byte id)) mf.ModuleConfig.ModuleID = id;
                 if (byte.TryParse(tbSensorCount.Text, out byte ct)) mf.ModuleConfig.SensorCount = ct;
-                if (byte.TryParse(tbWifiPort.Text, out byte pt)) mf.ModuleConfig.WifiPort = pt;
-                mf.ModuleConfig.InvertRelay = ckRelayOn.Checked;
+                if (byte.TryParse(tbWifiPort.Text, out byte pt))
+                {
+                    mf.ModuleConfig.WifiPort = pt;
+                }
+                else
+                {
+                    mf.ModuleConfig.WifiPort = 255;
+                }
+                    mf.ModuleConfig.InvertRelay = ckRelayOn.Checked;
                 mf.ModuleConfig.InvertFlow = ckFlowOn.Checked;
                 mf.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
                 mf.ModuleConfig.RelayType = (byte)cbRelayControl.SelectedIndex;
@@ -185,6 +192,17 @@ namespace RateController.Menu
             ckADS1115enabled.Checked = mf.ModuleConfig.ADS1115enabled;
 
             Initializing = false;
+        }
+
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            ckRelayOn.Checked = true;
+            ckFlowOn.Checked = true;
+            ckADS1115enabled.Checked = false;
+            tbModuleID.Text = "0";
+            tbSensorCount.Text = "1";
+            tbWifiPort.Text = "-";
+            cbRelayControl.SelectedIndex = 0;
         }
     }
 }

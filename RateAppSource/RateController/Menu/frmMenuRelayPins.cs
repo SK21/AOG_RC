@@ -188,5 +188,25 @@ namespace RateController.Menu
 
             Initializing = false;
         }
+
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            tbRelay1.Text = "-";
+            tbRelay2.Text = "-";
+            tbRelay3.Text = "-";
+            tbRelay4.Text = "-";
+            tbRelay5.Text = "-";
+            tbRelay6.Text = "-";
+            tbRelay7.Text = "-";
+            tbRelay8.Text = "-";
+            tbRelay9.Text = "-";
+            tbRelay10.Text = "-";
+            tbRelay11.Text = "-";
+            tbRelay12.Text = "-";
+            tbRelay13.Text = "-";
+            tbRelay14.Text = "-";
+            tbRelay15.Text = "-";
+            tbRelay16.Text = "-";
+        }
     }
 }

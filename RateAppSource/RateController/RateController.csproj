@@ -340,12 +340,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.ru.resx</DependentUpon>
     </Compile>
-    <Compile Include="Menu\frmMenuBoards.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Menu\frmMenuBoards.Designer.cs">
-      <DependentUpon>frmMenuBoards.cs</DependentUpon>
-    </Compile>
     <Compile Include="Menu\frmMenuCalibrate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -597,9 +591,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Menu\frmMenuBoards.resx">
-      <DependentUpon>frmMenuBoards.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuCalibrate.resx">
       <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
