@@ -197,7 +197,7 @@
             this.rbNano.Size = new System.Drawing.Size(170, 37);
             this.rbNano.TabIndex = 0;
             this.rbNano.TabStop = true;
-            this.rbNano.Text = "Nano (RC12)";
+            this.rbNano.Text = "Nano (RC12-3)";
             this.rbNano.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbNano.UseVisualStyleBackColor = true;
             this.rbNano.CheckedChanged += new System.EventHandler(this.rbNano_CheckedChanged);
@@ -225,7 +225,7 @@
             this.rbTeensy.Name = "rbTeensy";
             this.rbTeensy.Size = new System.Drawing.Size(170, 37);
             this.rbTeensy.TabIndex = 45;
-            this.rbTeensy.Text = "Teensy (RC11)";
+            this.rbTeensy.Text = "Teensy (RC11-2)";
             this.rbTeensy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbTeensy.UseVisualStyleBackColor = true;
             this.rbTeensy.CheckedChanged += new System.EventHandler(this.rbTeensy_CheckedChanged);

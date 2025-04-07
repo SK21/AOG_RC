@@ -160,7 +160,7 @@ void loop()
 	}
 
 	SendData();
-	//DebugTheIno();
+	DebugTheIno();
 }
 
 byte ParseModID(byte ID)
@@ -232,58 +232,57 @@ void CheckPressure()
 	}
 }
 
-//uint32_t DebugTime;
-//uint32_t MaxLoopTime;
-//uint32_t LoopTmr;
-//byte ReadReset;
-//int MinMem = 2000;
-//double debug1;
-//double debug2;
-//uint16_t debug3;
-//uint16_t debug4;
-//
-//void DebugTheIno()
-//{
-//	if (millis() - DebugTime > 1000)
-//	{
-//		DebugTime = millis();
-//		Serial.println("");
-//
-//		//Serial.print(F(" Micros: "));
-//		//Serial.print(MaxLoopTime);
-//
-//		//Serial.print(F(",  SRAM left: "));
-//		//Serial.print(MinMem);
-//
-//		//Serial.print(", ");
-//		Serial.print(debug1);
-//
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug4);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 10)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//			MinMem = 2000;
-//		}
-//	}
-//	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
-//	LoopTmr = micros();
-//	if (freeRam() < MinMem) MinMem = freeRam();
-//}
-//
-//int freeRam() {
-//	extern int __heap_start, * __brkval;
-//	int v;
-//	return (int)&v - (__brkval == 0
-//		? (int)&__heap_start : (int)__brkval);
-//}
+uint32_t DebugTime;
+uint32_t MaxLoopTime;
+uint32_t LoopTmr;
+byte ReadReset;
+int MinMem = 2000;
+double debug1;
+double debug2;
+uint16_t debug3;
+uint16_t debug6;
+
+void DebugTheIno()
+{
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+		Serial.println("");
+
+		Serial.print(MaxLoopTime);
+
+		//Serial.print(F(",  SRAM left: "));
+		//Serial.print(MinMem);
+
+		////Serial.print(", ");
+		//Serial.print(debug1);
+
+		//Serial.print(", ");
+		//Serial.print(debug2);
+
+		//Serial.print(", ");
+		//Serial.print(debug3);
+
+		Serial.print(", ");
+		Serial.print(debug6);
+
+		Serial.println("");
+
+		if (ReadReset++ > 10)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+			MinMem = 2000;
+		}
+	}
+	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+	LoopTmr = micros();
+	if (freeRam() < MinMem) MinMem = freeRam();
+}
+
+int freeRam() {
+	extern int __heap_start, * __brkval;
+	int v;
+	return (int)&v - (__brkval == 0
+		? (int)&__heap_start : (int)__brkval);
+}

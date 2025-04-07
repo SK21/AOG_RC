@@ -156,6 +156,12 @@ namespace RateController
         {
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string FileName = exeDirectory + "Help\\" + cLastScreen + ".pdf";
+
+            if (cLastScreen == "frmMenuPins"||cLastScreen== "frmMenuRelayPins")
+            {
+                FileName = exeDirectory + "Help\\frmMenuConfig.pdf";
+            }
+
             try
             {
                 if (File.Exists(FileName))
@@ -1284,7 +1290,6 @@ namespace RateController
             butSwitches.Text = Lang.lgSwitches;
             butPrimed.Text = Lang.lgPrimedStart;
             butCalibrate.Text = Lang.lgCalibrate;
-            butBoards.Text = Lang.lgBoards;
             butNetwork.Text = Lang.lgNetwork;
             butConfig.Text = Lang.lgConfig;
             butPins.Text = Lang.lgPins;

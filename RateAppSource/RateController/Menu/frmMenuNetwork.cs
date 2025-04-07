@@ -230,10 +230,10 @@ namespace RateController.Menu
             switch (BoardType)
             {
                 case 1:
-                    // RC11, Teensy
+                    // RC11-2, Teensy
                     Set.ModuleID = 0;
                     Set.SensorCount = 2;
-                    Set.WifiPort = 1;
+                    Set.WifiPort = 255;
                     Set.RelayType = 1;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
@@ -244,8 +244,8 @@ namespace RateController.Menu
                     Set.Sensor1Dir = 14;
                     Set.Sensor0PWM = 36;
                     Set.Sensor1PWM = 15;
-                    Set.WorkPin = 255;
-                    Set.PressurePin = 255;
+                    Set.WorkPin = 30;
+                    Set.PressurePin = 40;
                     Set.ClientMode = false;
                     Set.Is3Wire = true;
 
@@ -263,7 +263,7 @@ namespace RateController.Menu
                     // RC15, ESP32
                     Set.ModuleID = 0;
                     Set.SensorCount = 2;
-                    Set.WifiPort = 0;
+                    Set.WifiPort = 255;
                     Set.RelayType = 5;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
@@ -281,24 +281,42 @@ namespace RateController.Menu
                     break;
 
                 default:
-                    // RC12, Nano
+                    // RC12-3, Nano
                     Set.ModuleID = 0;
-                    Set.SensorCount = 1;
-                    Set.WifiPort = 0;
-                    Set.RelayType = 2;
+                    Set.SensorCount = 2;
+                    Set.WifiPort = 255;
+                    Set.RelayType = 4;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
                     Set.Sensor0Flow = 3;
-                    Set.Sensor1Flow = 255;
-                    Set.Sensor0Dir = 6;
-                    Set.Sensor1Dir = 255;
-                    Set.Sensor0PWM = 9;
-                    Set.Sensor1PWM = 255;
-                    Set.WorkPin = 255;
-                    Set.PressurePin = 255;
+                    Set.Sensor1Flow = 2;
+                    Set.Sensor0Dir = 4;
+                    Set.Sensor1Dir = 6;
+                    Set.Sensor0PWM = 5;
+                    Set.Sensor1PWM = 9;
+                    Set.WorkPin = 15;
+                    Set.PressurePin = 14;
                     Set.ClientMode = false;
                     Set.Is3Wire = true;
+
+                    Pins[0] = 0;    // relay 1
+                    Pins[1] = 15;
+                    Pins[2] = 1;
+                    Pins[3] = 14;
+                    Pins[4] = 2;
+                    Pins[5] = 13;
+                    Pins[6] = 3;
+                    Pins[7] = 12;
+
+                    Pins[8] = 4;
+                    Pins[9] = 11;
+                    Pins[10] = 5;
+                    Pins[11] = 10;
+                    Pins[12] = 6;
+                    Pins[13] = 9;
+                    Pins[14] = 7;
+                    Pins[15] = 8;
                     break;
             }
 

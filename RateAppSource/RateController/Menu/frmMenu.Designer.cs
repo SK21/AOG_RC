@@ -59,7 +59,6 @@
             this.butFile = new System.Windows.Forms.Button();
             this.btnHelp = new System.Windows.Forms.Button();
             this.butUpdateModules = new System.Windows.Forms.Button();
-            this.butBoards = new System.Windows.Forms.Button();
             this.butColor = new System.Windows.Forms.Button();
             this.butMap = new System.Windows.Forms.Button();
             this.btnPressure = new System.Windows.Forms.Button();
@@ -618,24 +617,6 @@
             this.butUpdateModules.Visible = false;
             this.butUpdateModules.Click += new System.EventHandler(this.butUpdateModules_Click);
             // 
-            // butBoards
-            // 
-            this.butBoards.BackColor = System.Drawing.Color.Transparent;
-            this.butBoards.FlatAppearance.BorderSize = 0;
-            this.butBoards.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butBoards.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butBoards.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butBoards.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butBoards.Location = new System.Drawing.Point(759, 24);
-            this.butBoards.Name = "butBoards";
-            this.butBoards.Size = new System.Drawing.Size(158, 49);
-            this.butBoards.TabIndex = 162;
-            this.butBoards.Text = "Boards";
-            this.butBoards.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butBoards.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butBoards.UseVisualStyleBackColor = false;
-            this.butBoards.Visible = false;
-            // 
             // butColor
             // 
             this.butColor.BackColor = System.Drawing.Color.Transparent;
@@ -787,7 +768,6 @@
             this.Controls.Add(this.btnPressure);
             this.Controls.Add(this.butMap);
             this.Controls.Add(this.butColor);
-            this.Controls.Add(this.butBoards);
             this.Controls.Add(this.butUpdateModules);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.gbLine1);
@@ -863,7 +843,6 @@
         private System.Windows.Forms.GroupBox gbLine1;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button butUpdateModules;
-        private System.Windows.Forms.Button butBoards;
         private System.Windows.Forms.Button butColor;
         private System.Windows.Forms.Button butMap;
         private System.Windows.Forms.Button btnPressure;

@@ -170,7 +170,16 @@ namespace RateController.Menu
             tbModuleID.Text = data[2].ToString();
             tbSensorCount.Text = data[3].ToString();
             cbRelayControl.SelectedIndex = data[5];
-            tbWifiPort.Text = data[6].ToString();
+
+            if (data[6]> 60)
+            {
+                tbWifiPort.Text = "-";
+            }
+            else
+            {
+                tbWifiPort.Text = data[6].ToString();
+            }
+
             ckRelayOn.Checked = mf.ModuleConfig.InvertRelay;
             ckFlowOn.Checked = mf.ModuleConfig.InvertFlow;
             ckADS1115enabled.Checked = mf.ModuleConfig.ADS1115enabled;
