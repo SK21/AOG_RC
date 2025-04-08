@@ -9,8 +9,8 @@ double LastPWM[MaxProductCount];
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from 0.
-int TimedAdjustTime = 80;		// milliseconds
-int TimedPauseTime = 400;		// milliseconds
+uint16_t TimedAdjustTime = 80;		// milliseconds
+uint16_t TimedPauseTime = 400;		// milliseconds
 
 void SetPWM()
 {
