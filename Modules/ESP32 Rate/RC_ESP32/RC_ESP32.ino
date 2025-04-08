@@ -6,9 +6,6 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <WiFiClient.h>
-#include <WiFiAP.h>
-
-#include <WebServer.h>
 #include <EEPROM.h> 
 #include <Wire.h>
 
@@ -18,14 +15,9 @@
 
 #include <Adafruit_PWMServoDriver.h>
 
-//#include <Adafruit_BusIO_Register.h>
-//#include <Adafruit_I2CDevice.h>
-//#include <Adafruit_I2CRegister.h>
-//#include <Adafruit_SPIDevice.h>
-
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  04-Apr-2025"
-const uint16_t InoID = 4045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  08-Apr-2025"
+const uint16_t InoID = 8045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 

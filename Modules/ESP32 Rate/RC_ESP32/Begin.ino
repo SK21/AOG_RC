@@ -122,15 +122,6 @@ void DoSetup()
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
 			break;
 		}
-
-		// pwm
-		// DRV8870 IN1
-		ledcSetup(i * 2, 500, 8);
-		ledcAttachPin(Sensor[i].IN1, i * 2);
-
-		// DRV8870 IN2
-		ledcSetup(i * 2 + 1, 500, 8);
-		ledcAttachPin(Sensor[i].IN2, i * 2 + 1);
 	}
 
 	// Relays
@@ -303,10 +294,19 @@ void DoSetup()
 	IPAddress AP_LocalIP = IPAddress(192, 168, MDL.ID + 200, 1);
 	Wifi_DestinationIP = IPAddress(192, 168, MDL.ID + 200, 255);
 
+	uint64_t macInt = ESP.getEfuseMac();
+	char macStr[18];
+	sprintf(macStr, "%02llX:%02llX:%02llX:%02llX:%02llX:%02llX",
+		(macInt >> 40) & 0xFF,
+		(macInt >> 32) & 0xFF,
+		(macInt >> 24) & 0xFF,
+		(macInt >> 16) & 0xFF,
+		(macInt >> 8) & 0xFF,
+		macInt & 0xFF);
+
 	String AP = MDL.APname;
-	AP += "  (";
-	AP += WiFi.macAddress();
-	AP += ")";
+	AP += "_";
+	AP += String(macStr);
 
 	WiFi.softAP(AP, MDL.APpassword, 1, 0, 2);
 	delay(500);

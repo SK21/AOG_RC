@@ -50,14 +50,14 @@ void SetPWM(byte ID, double PWM)
 
     if (PWM > 0)
     {
-        ledcWrite(ID * 2, PWM);     // IN1
-        ledcWrite(ID * 2 + 1, 0);   // IN2
-    }
-    else
-    {
-        PWM = abs(PWM);
-        ledcWrite(ID * 2 + 1, PWM); // IN2
-        ledcWrite(ID * 2, 0);       // IN1
+		analogWrite(Sensor[ID].IN1, PWM); 
+		analogWrite(Sensor[ID].IN2, 0);   
+	}
+	else 
+	{
+		PWM = abs(PWM);
+		analogWrite(Sensor[ID].IN1, 0); 
+		analogWrite(Sensor[ID].IN2, PWM); 
     }
 }
 
