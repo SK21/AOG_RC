@@ -40,9 +40,9 @@ struct ModuleConfig
 {
 	// RC15
 	uint8_t ID = 0;
-	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
-	bool InvertRelay = false;	    // value that turns on relays
-	bool InvertFlow = false;		// sets on value for flow valve or sets motor direction
+	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
+	bool InvertRelay = true;	    // value that turns on relays
+	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
@@ -305,11 +305,12 @@ uint32_t LastBlink;
 uint32_t LastLoop;
 byte ReadReset;
 uint32_t MaxLoopTime;
-double debug1;
-double debug2;
-double debug3;
-double debug4;
-double debug5;
+double FlowHz;
+//double debug1;
+//double debug2;
+//double debug3;
+//double debug4;
+//double debug5;
 
 void Blink()
 {
@@ -319,23 +320,24 @@ void Blink()
 		State = !State;
 		//digitalWrite(LED_BUILTIN, State);
 
-		Serial.print(" Micros: ");
 		Serial.print(MaxLoopTime);
+		Serial.print(", ");
+		Serial.print(FlowHz);
 
-		Serial.print(", ");
-		Serial.print(debug1);
-		
-		Serial.print(", ");
-		Serial.print(debug2);
+		//Serial.print(", ");
+		//Serial.print(debug1);
+		//
+		//Serial.print(", ");
+		//Serial.print(debug2);
 
-		Serial.print(", ");
-		Serial.print(debug3);
+		//Serial.print(", ");
+		//Serial.print(debug3);
 
-		Serial.print(", ");
-		Serial.print(debug4);
+		//Serial.print(", ");
+		//Serial.print(debug4);
 
-		Serial.print(", ");
-		Serial.print(debug5);
+		//Serial.print(", ");
+		//Serial.print(debug5);
 
 		Serial.println("");
 

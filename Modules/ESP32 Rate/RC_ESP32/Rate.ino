@@ -75,6 +75,7 @@ void GetUPM()
 			PulseAvg[i] = ((double)CurrentTotal[i] / CurrentCount[i]) * 0.8 + PulseAvg[i] * 0.2;
 			Sensor[i].UPM = (double)(60000000.0 / PulseAvg[i]) / Sensor[i].MeterCal;
 			PulseMax[i] = PulseAvg[i] * 1.5;
+			FlowHz = 1000000 / PulseAvg[0];	// flow in Hz
 		}
 
 		// check for no flow

@@ -92,11 +92,6 @@ int PIDmotor(byte ID)
 				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 			}
 		}
-		debug1 = RateError;
-		debug2 = Sensor[ID].TargetUPM;
-		debug3 = Sensor[ID].UPM;
-		debug4 = Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold;
-		debug5 = Result;
 		LastPWM[ID] = Result;
 	}
 	return (int)Result;

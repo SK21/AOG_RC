@@ -440,13 +440,13 @@ void LoadDefaults()
 	{
 		MDL.RelayControlPins[i] = NC;
 	}
-	MDL.SensorCount = 1;
+	MDL.SensorCount = 2;
 	MDL.RelayControl = 5;
 	MDL.WifiModeUseStation = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = true;
-	MDL.InvertFlow = false;
-	MDL.InvertRelay = false;
+	MDL.InvertFlow = true;
+	MDL.InvertRelay = true;
 }
 
 bool ValidData()
