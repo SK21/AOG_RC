@@ -44,7 +44,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		// Switchbox pins
 		//0         HeaderLo    189
 		//1         HeaderHi    127
-		//2         -
+		//2         auto
 		//3         Master On
 		//4         Master Off
 		//5         Rate Up
@@ -59,6 +59,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		{
 			if (GoodCRC(Data, PGNlength))
 			{
+				MDL.AutoRate = Data[2];	
+				MDL.AutoSection = Data[2];	
 				MDL.MasterOn = Data[3];
 				MDL.MasterOff = Data[4];
 				MDL.RateUp = Data[5];
@@ -69,8 +71,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 					MDL.SectionPins[i - 7] = Data[i];
 					if (MDL.SectionPins[i - 7] < 3) MDL.SectionPins[i - 7] = NC;
 				}
-				MDL.AutoSection = NC;
-				MDL.AutoRate = NC;
 				MDL.WorkPin = Data[23];
 				if (MDL.WorkPin < 3) MDL.WorkPin = NC;
 
