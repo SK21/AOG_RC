@@ -1,6 +1,6 @@
 
 const uint32_t PulseMin = 250;		// micros
-const int SampleSize = 24;
+const int SampleSize = 8;
 uint32_t Samples[2][SampleSize];
 uint32_t LastPulse[2];
 double PulseAvg[2];
@@ -75,13 +75,14 @@ void GetUPM()
 			PulseAvg[i] = ((double)CurrentTotal[i] / CurrentCount[i]) * 0.8 + PulseAvg[i] * 0.2;
 			Sensor[i].UPM = (double)(60000000.0 / PulseAvg[i]) / Sensor[i].MeterCal;
 			PulseMax[i] = PulseAvg[i] * 1.5;
-			//FlowHz = 1000000.0 / PulseAvg[0];	// Hz
+			Sensor[i].Hz = 1000000.0 / PulseAvg[i];
 		}
 
 		// check for no flow
 		if (millis() - LastPulse[i] > 4000)
 		{
 			Sensor[i].UPM = 0;
+			Sensor[i].Hz = 0;
 			PulseMax[i] = 500000;
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;

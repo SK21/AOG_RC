@@ -18,7 +18,9 @@ void SendComm()
         //10    PWM Hi
         //11    Status
         //      bit 0   sensor connected
-        //12    CRC
+        //12    Hz
+        //13    -
+        //14    CRC
 
         byte Data[20];
 
@@ -53,13 +55,15 @@ void SendComm()
             Data[9] = (int)Sensor[i].PWM;
             Data[10] = (int)Sensor[i].PWM >> 8;
 
-
             // status
             Data[11] = 0;
             if (millis() - Sensor[i].CommTime < 4000) Data[11] |= 0b00000001;
 
+            // Hz
+            Data[12] = Sensor[i].Hz;
+
             // crc
-            Data[12] = CRC(Data, 12, 0);
+            Data[14] = CRC(Data, 14, 0);
 
             if (Ethernet.linkStatus() == LinkON)
             {

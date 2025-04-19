@@ -19,7 +19,9 @@ void SendData()
         //10    PWM Hi
         //11    Status
         //      bit 0   sensor connected
-        //12    CRC
+        //12    Hz
+        //13    -
+        //14    CRC
 
         byte Data[20];
 
@@ -59,24 +61,16 @@ void SendData()
             Data[11] = 0;
             if (millis() - Sensor[i].CommTime < 4000) Data[11] |= 0b00000001;
 
+            // Hz
+            Data[12] = Sensor[i].Hz;
+
             // crc
-            Data[12] = CRC(Data, 12, 0);
+            Data[14] = CRC(Data, 14, 0);
 
             if (EthernetConnected())
             {
                 // send ethernet
-                ether.sendUdp(Data, 13, SourcePort, DestinationIP, DestinationPort);
-            }
-            else
-            {
-                // send serial
-                Serial.print(Data[0]);
-                for (int i = 1; i < 13; i++)
-                {
-                    Serial.print(",");
-                    Serial.print(Data[i]);
-                }
-                Serial.println("");
+                ether.sendUdp(Data, 15, SourcePort, DestinationIP, DestinationPort);
             }
         }
 
@@ -132,17 +126,6 @@ void SendData()
         {
             // send ethernet
             ether.sendUdp(Data, 15, SourcePort, DestinationIP, DestinationPort);
-        }
-        else
-        {
-            // send serial
-            Serial.print(Data[0]);
-            for (int i = 1; i < 15; i++)
-            {
-                Serial.print(",");
-                Serial.print(Data[i]);
-            }
-            Serial.println("");
         }
     }
 }

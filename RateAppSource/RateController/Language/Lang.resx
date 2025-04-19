@@ -577,7 +577,7 @@
     <value>Rate Sensor Location</value>
   </data>
   <data name="lgSetPoint" xml:space="preserve">
-    <value>Set Point</value>
+    <value>Set</value>
   </data>
   <data name="lgSettings" xml:space="preserve">
     <value>Settings</value>

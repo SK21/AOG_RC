@@ -77,6 +77,8 @@
             this.sec0 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.lbHzData = new System.Windows.Forms.Label();
+            this.lbHz = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnRight
@@ -156,7 +158,7 @@
             // lbWifi
             // 
             this.lbWifi.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWifi.Location = new System.Drawing.Point(83, 453);
+            this.lbWifi.Location = new System.Drawing.Point(95, 465);
             this.lbWifi.Name = "lbWifi";
             this.lbWifi.Size = new System.Drawing.Size(114, 23);
             this.lbWifi.TabIndex = 249;
@@ -165,7 +167,7 @@
             // 
             // wifiBar
             // 
-            this.wifiBar.Location = new System.Drawing.Point(320, 452);
+            this.wifiBar.Location = new System.Drawing.Point(299, 463);
             this.wifiBar.Maximum = 3;
             this.wifiBar.Name = "wifiBar";
             this.wifiBar.Size = new System.Drawing.Size(130, 25);
@@ -175,7 +177,7 @@
             // tbCountsRev
             // 
             this.tbCountsRev.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbCountsRev.Location = new System.Drawing.Point(320, 232);
+            this.tbCountsRev.Location = new System.Drawing.Point(299, 258);
             this.tbCountsRev.MaxLength = 8;
             this.tbCountsRev.Name = "tbCountsRev";
             this.tbCountsRev.Size = new System.Drawing.Size(130, 30);
@@ -189,7 +191,7 @@
             // 
             this.lbCounts.AutoSize = true;
             this.lbCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCounts.Location = new System.Drawing.Point(83, 236);
+            this.lbCounts.Location = new System.Drawing.Point(95, 263);
             this.lbCounts.Name = "lbCounts";
             this.lbCounts.Size = new System.Drawing.Size(105, 23);
             this.lbCounts.TabIndex = 247;
@@ -199,7 +201,7 @@
             // 
             this.lbRPMheading.AutoSize = true;
             this.lbRPMheading.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRPMheading.Location = new System.Drawing.Point(83, 281);
+            this.lbRPMheading.Location = new System.Drawing.Point(95, 305);
             this.lbRPMheading.Name = "lbRPMheading";
             this.lbRPMheading.Size = new System.Drawing.Size(47, 23);
             this.lbRPMheading.TabIndex = 246;
@@ -209,7 +211,7 @@
             // 
             this.lbRPM.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRPM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRPM.Location = new System.Drawing.Point(320, 280);
+            this.lbRPM.Location = new System.Drawing.Point(299, 303);
             this.lbRPM.Name = "lbRPM";
             this.lbRPM.Size = new System.Drawing.Size(130, 25);
             this.lbRPM.TabIndex = 245;
@@ -219,7 +221,7 @@
             // 
             this.lbErrorPercent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbErrorPercent.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbErrorPercent.Location = new System.Drawing.Point(320, 146);
+            this.lbErrorPercent.Location = new System.Drawing.Point(299, 138);
             this.lbErrorPercent.Name = "lbErrorPercent";
             this.lbErrorPercent.Size = new System.Drawing.Size(130, 25);
             this.lbErrorPercent.TabIndex = 243;
@@ -229,7 +231,7 @@
             // 
             this.lbError.AutoSize = true;
             this.lbError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbError.Location = new System.Drawing.Point(83, 147);
+            this.lbError.Location = new System.Drawing.Point(95, 140);
             this.lbError.Name = "lbError";
             this.lbError.Size = new System.Drawing.Size(77, 23);
             this.lbError.TabIndex = 244;
@@ -290,7 +292,7 @@
             this.lbRateAppliedData.BackColor = System.Drawing.Color.Transparent;
             this.lbRateAppliedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateAppliedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAppliedData.Location = new System.Drawing.Point(320, 60);
+            this.lbRateAppliedData.Location = new System.Drawing.Point(299, 58);
             this.lbRateAppliedData.Name = "lbRateAppliedData";
             this.lbRateAppliedData.Size = new System.Drawing.Size(130, 25);
             this.lbRateAppliedData.TabIndex = 209;
@@ -300,7 +302,7 @@
             // 
             this.lbUPMApplied.AutoSize = true;
             this.lbUPMApplied.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbUPMApplied.Location = new System.Drawing.Point(83, 61);
+            this.lbUPMApplied.Location = new System.Drawing.Point(95, 60);
             this.lbUPMApplied.Name = "lbUPMApplied";
             this.lbUPMApplied.Size = new System.Drawing.Size(115, 23);
             this.lbUPMApplied.TabIndex = 221;
@@ -310,7 +312,7 @@
             // 
             this.lbRateSetData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbRateSetData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateSetData.Location = new System.Drawing.Point(320, 103);
+            this.lbRateSetData.Location = new System.Drawing.Point(299, 98);
             this.lbRateSetData.Name = "lbRateSetData";
             this.lbRateSetData.Size = new System.Drawing.Size(130, 25);
             this.lbRateSetData.TabIndex = 219;
@@ -320,7 +322,7 @@
             // 
             this.lbTarget.AutoSize = true;
             this.lbTarget.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTarget.Location = new System.Drawing.Point(83, 104);
+            this.lbTarget.Location = new System.Drawing.Point(95, 100);
             this.lbTarget.Name = "lbTarget";
             this.lbTarget.Size = new System.Drawing.Size(108, 23);
             this.lbTarget.TabIndex = 220;
@@ -330,7 +332,7 @@
             // 
             this.lbSpeedData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbSpeedData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSpeedData.Location = new System.Drawing.Point(320, 323);
+            this.lbSpeedData.Location = new System.Drawing.Point(299, 343);
             this.lbSpeedData.Name = "lbSpeedData";
             this.lbSpeedData.Size = new System.Drawing.Size(130, 25);
             this.lbSpeedData.TabIndex = 217;
@@ -340,7 +342,7 @@
             // 
             this.lbSpeed.AutoSize = true;
             this.lbSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSpeed.Location = new System.Drawing.Point(83, 324);
+            this.lbSpeed.Location = new System.Drawing.Point(95, 345);
             this.lbSpeed.Name = "lbSpeed";
             this.lbSpeed.Size = new System.Drawing.Size(63, 23);
             this.lbSpeed.TabIndex = 218;
@@ -350,7 +352,7 @@
             // 
             this.lbWidthData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbWidthData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidthData.Location = new System.Drawing.Point(320, 366);
+            this.lbWidthData.Location = new System.Drawing.Point(299, 383);
             this.lbWidthData.Name = "lbWidthData";
             this.lbWidthData.Size = new System.Drawing.Size(130, 25);
             this.lbWidthData.TabIndex = 215;
@@ -360,7 +362,7 @@
             // 
             this.lbWidth.AutoSize = true;
             this.lbWidth.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWidth.Location = new System.Drawing.Point(83, 367);
+            this.lbWidth.Location = new System.Drawing.Point(95, 385);
             this.lbWidth.Name = "lbWidth";
             this.lbWidth.Size = new System.Drawing.Size(166, 23);
             this.lbWidth.TabIndex = 216;
@@ -370,7 +372,7 @@
             // 
             this.lbPWMdata.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbPWMdata.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPWMdata.Location = new System.Drawing.Point(320, 189);
+            this.lbPWMdata.Location = new System.Drawing.Point(299, 178);
             this.lbPWMdata.Name = "lbPWMdata";
             this.lbPWMdata.Size = new System.Drawing.Size(130, 25);
             this.lbPWMdata.TabIndex = 213;
@@ -380,7 +382,7 @@
             // 
             this.lbPWM.AutoSize = true;
             this.lbPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPWM.Location = new System.Drawing.Point(83, 190);
+            this.lbPWM.Location = new System.Drawing.Point(95, 180);
             this.lbPWM.Name = "lbPWM";
             this.lbPWM.Size = new System.Drawing.Size(52, 23);
             this.lbPWM.TabIndex = 214;
@@ -390,7 +392,7 @@
             // 
             this.lbWorkRateData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbWorkRateData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkRateData.Location = new System.Drawing.Point(320, 409);
+            this.lbWorkRateData.Location = new System.Drawing.Point(299, 423);
             this.lbWorkRateData.Name = "lbWorkRateData";
             this.lbWorkRateData.Size = new System.Drawing.Size(130, 25);
             this.lbWorkRateData.TabIndex = 211;
@@ -400,7 +402,7 @@
             // 
             this.lbWorkRate.AutoSize = true;
             this.lbWorkRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkRate.Location = new System.Drawing.Point(83, 410);
+            this.lbWorkRate.Location = new System.Drawing.Point(95, 425);
             this.lbWorkRate.Name = "lbWorkRate";
             this.lbWorkRate.Size = new System.Drawing.Size(108, 23);
             this.lbWorkRate.TabIndex = 212;
@@ -603,11 +605,33 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // lbHzData
+            // 
+            this.lbHzData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbHzData.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHzData.Location = new System.Drawing.Point(299, 218);
+            this.lbHzData.Name = "lbHzData";
+            this.lbHzData.Size = new System.Drawing.Size(130, 25);
+            this.lbHzData.TabIndex = 250;
+            this.lbHzData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbHz
+            // 
+            this.lbHz.AutoSize = true;
+            this.lbHz.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHz.Location = new System.Drawing.Point(95, 220);
+            this.lbHz.Name = "lbHz";
+            this.lbHz.Size = new System.Drawing.Size(31, 23);
+            this.lbHz.TabIndex = 251;
+            this.lbHz.Text = "Hz";
+            // 
             // frmMenuMonitoring
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbHz);
+            this.Controls.Add(this.lbHzData);
             this.Controls.Add(this.lbWifi);
             this.Controls.Add(this.wifiBar);
             this.Controls.Add(this.tbCountsRev);
@@ -716,5 +740,7 @@
         private System.Windows.Forms.Label sec0;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Label lbHzData;
+        private System.Windows.Forms.Label lbHz;
     }
 }

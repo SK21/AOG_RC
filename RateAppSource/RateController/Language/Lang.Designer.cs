@@ -1438,7 +1438,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set Point.
+        ///   Looks up a localized string similar to Set.
         /// </summary>
         internal static string lgSetPoint {
             get {

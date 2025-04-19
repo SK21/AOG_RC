@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  08-Apr-2025"
-const uint16_t InoID = 8045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  18-Apr-2025"
+const uint16_t InoID = 18045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -59,6 +59,7 @@ struct SensorConfig
 	double MaxPower;
 	double MinPower;
 	double Scaling;
+	uint8_t Hz;
 };
 
 SensorConfig Sensor[2];
@@ -132,10 +133,6 @@ void loop()
 	{
 		//this must be called for ethercard functions to work.
 		ether.packetLoop(ether.packetReceive());
-	}
-	else
-	{
-		ReceiveSerial();
 	}
 
 	SetPWM();

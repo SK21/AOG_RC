@@ -49,6 +49,8 @@
             this.btnGainUp = new System.Windows.Forms.Button();
             this.lblMax = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.lbHz = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.unoChart)).BeginInit();
             this.SuspendLayout();
             // 
@@ -186,7 +188,7 @@
             this.lblPWM.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPWM.ForeColor = System.Drawing.Color.Lime;
-            this.lblPWM.Location = new System.Drawing.Point(137, 339);
+            this.lblPWM.Location = new System.Drawing.Point(156, 339);
             this.lblPWM.Name = "lblPWM";
             this.lblPWM.Size = new System.Drawing.Size(68, 23);
             this.lblPWM.TabIndex = 213;
@@ -200,7 +202,7 @@
             this.lblSteerAng.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblSteerAng.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSteerAng.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblSteerAng.Location = new System.Drawing.Point(137, 316);
+            this.lblSteerAng.Location = new System.Drawing.Point(156, 316);
             this.lblSteerAng.Name = "lblSteerAng";
             this.lblSteerAng.Size = new System.Drawing.Size(68, 23);
             this.lblSteerAng.TabIndex = 212;
@@ -214,11 +216,11 @@
             this.lbSetPoint.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lbSetPoint.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbSetPoint.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbSetPoint.Location = new System.Drawing.Point(12, 339);
+            this.lbSetPoint.Location = new System.Drawing.Point(70, 339);
             this.lbSetPoint.Name = "lbSetPoint";
-            this.lbSetPoint.Size = new System.Drawing.Size(124, 23);
+            this.lbSetPoint.Size = new System.Drawing.Size(80, 23);
             this.lbSetPoint.TabIndex = 215;
-            this.lbSetPoint.Text = "SetPoint";
+            this.lbSetPoint.Text = "Set";
             this.lbSetPoint.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbActual
@@ -228,9 +230,9 @@
             this.lbActual.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lbActual.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbActual.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbActual.Location = new System.Drawing.Point(12, 316);
+            this.lbActual.Location = new System.Drawing.Point(66, 316);
             this.lbActual.Name = "lbActual";
-            this.lbActual.Size = new System.Drawing.Size(124, 23);
+            this.lbActual.Size = new System.Drawing.Size(84, 23);
             this.lbActual.TabIndex = 214;
             this.lbActual.Text = "Actual";
             this.lbActual.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -301,12 +303,42 @@
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoEllipsis = true;
+            this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label1.Location = new System.Drawing.Point(12, 316);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 23);
+            this.label1.TabIndex = 225;
+            this.label1.Text = "Hz";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbHz
+            // 
+            this.lbHz.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbHz.AutoEllipsis = true;
+            this.lbHz.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbHz.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHz.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lbHz.Location = new System.Drawing.Point(12, 339);
+            this.lbHz.Name = "lbHz";
+            this.lbHz.Size = new System.Drawing.Size(52, 23);
+            this.lbHz.TabIndex = 226;
+            this.lbHz.Text = "1000";
+            this.lbHz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmMenuRateGraph
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(498, 369);
+            this.Controls.Add(this.lbHz);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblMax);
             this.Controls.Add(this.btnGainAuto);
             this.Controls.Add(this.btnGainDown);
@@ -355,5 +387,7 @@
         private System.Windows.Forms.Button btnGainUp;
         private System.Windows.Forms.Label lblMax;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbHz;
     }
 }
