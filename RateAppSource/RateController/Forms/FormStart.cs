@@ -771,8 +771,14 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                Props.UserRateType++;
-                if (Props.UserRateType > 1) Props.UserRateType = 0;
+                if (Props.UserRateType == 0)
+                {
+                    Props.UserRateType = 1;
+                }
+                else
+                {
+                    Props.UserRateType = 0;
+                }
                 UpdateStatus();
             }
         }
