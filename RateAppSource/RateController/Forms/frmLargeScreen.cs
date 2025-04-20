@@ -643,7 +643,7 @@ namespace RateController
                 }
                 else
                 {
-                    lbName0.BackColor = Color.LightBlue;
+                    lbName0.BackColor = Color.DeepSkyBlue;
                 }
             }
             else
@@ -661,7 +661,7 @@ namespace RateController
                 }
                 else
                 {
-                    lbName1.BackColor = Color.LightBlue;
+                    lbName1.BackColor = Color.DeepSkyBlue;
                 }
             }
             else
@@ -679,7 +679,7 @@ namespace RateController
                 }
                 else
                 {
-                    lbName2.BackColor = Color.LightBlue;
+                    lbName2.BackColor = Color.DeepSkyBlue;
                 }
             }
             else
@@ -697,7 +697,7 @@ namespace RateController
                 }
                 else
                 {
-                    lbName3.BackColor = Color.LightBlue;
+                    lbName3.BackColor = Color.DeepSkyBlue;
                 }
             }
             else
@@ -914,7 +914,7 @@ namespace RateController
                 }
                 else
                 {
-                    lbFan1.BackColor = Color.LightBlue;
+                    lbFan1.BackColor = Color.DeepSkyBlue;
                 }
             }
             else
@@ -941,7 +941,7 @@ namespace RateController
                 }
                 else
                 {
-                    lbFan2.BackColor = Color.LightBlue;
+                    lbFan2.BackColor = Color.DeepSkyBlue;
                 }
             }
             else

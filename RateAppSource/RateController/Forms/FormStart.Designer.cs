@@ -87,7 +87,7 @@ namespace RateController
             // 
             // lbArduinoConnected
             // 
-            this.lbArduinoConnected.BackColor = System.Drawing.Color.Red;
+            this.lbArduinoConnected.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.lbArduinoConnected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbArduinoConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbArduinoConnected.Location = new System.Drawing.Point(208, 153);

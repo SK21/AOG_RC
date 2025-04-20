@@ -386,7 +386,7 @@ namespace RateController
                         }
                         else
                         {
-                            lbArduinoConnected.BackColor = Color.LightBlue;
+                            lbArduinoConnected.BackColor = Color.DeepSkyBlue;
                         }
                     }
                     else

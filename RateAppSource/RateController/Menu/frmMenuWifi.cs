@@ -31,9 +31,12 @@ namespace RateController.Menu
             try
             {
                 mf.ModuleConfig.ClientMode = ckClient.Checked;
+                mf.ModuleConfig.Save();
+
                 mf.NetworkConfig.NetworkName = tbSSID.Text;
                 mf.NetworkConfig.NetworkPassword = tbPassword.Text;
-                mf.ModuleConfig.Save();
+                mf.NetworkConfig.Save();
+
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();

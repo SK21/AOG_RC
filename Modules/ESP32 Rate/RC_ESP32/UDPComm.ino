@@ -87,7 +87,7 @@ void SendComm()
             if (!Sent)
             {
                 UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-                UDP_Wifi.write(Data, 13);
+                UDP_Wifi.write(Data, 15);
                 UDP_Wifi.endPacket();
             }
         }
@@ -440,11 +440,11 @@ void ParseData(byte Data[], uint16_t len)
         break;
 
     case 32702:
-        // PGN32702, network config
+        // PGN32702, wifi network config
         // 0        190
         // 1        127
-        // 2-16     Network Name
-        // 17-31    Newtwork password
+        // 2-16     Network Name (14 bytes)
+        // 17-31    Network password (14 bytes)
         // 32       CRC
 
         PGNlength = 33;
@@ -453,16 +453,29 @@ void ParseData(byte Data[], uint16_t len)
         {
             if (GoodCRC(Data, PGNlength))
             {
-                // network name
-                memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
-                memcpy(MDL.SSID, &Data[2], 14);
+                char newSSID[15];
+                char newPassword[15];
 
-                // network password
-                memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
-                memcpy(MDL.Password, &Data[17], 14);
+                memset(newSSID, '\0', sizeof(newSSID));
+                memcpy(newSSID, &Data[2], 14);
 
-                SaveData();
+                memset(newPassword, '\0', sizeof(newPassword));
+                memcpy(newPassword, &Data[17], 14);
 
+                // Check if SSID or password has changed by comparing to MDL's stored values
+                if (strcmp(newSSID, MDL.SSID) != 0 || strcmp(newPassword, MDL.Password) != 0)
+                {
+                    // Update MDL only if there is a change
+                    memset(MDL.SSID, '\0', sizeof(MDL.SSID));
+                    strncpy(MDL.SSID, newSSID, sizeof(MDL.SSID) - 1);
+
+                    memset(MDL.Password, '\0', sizeof(MDL.Password));
+                    strncpy(MDL.Password, newPassword, sizeof(MDL.Password) - 1);
+
+                    MDL.WifiModeUseStation = true;   // try the new access point
+                }
+
+                SaveData(); // needed here to save 3700 changes
                 ESP.restart();
             }
         }

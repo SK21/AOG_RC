@@ -71,14 +71,14 @@ void SendComm()
             {
                 // send ethernet
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 13);
+                UDPcomm.write(Data, 15);
                 UDPcomm.endPacket();
             }
             else if (millis() - ESPtime > 5000)
             {
                 // send serial
                 Serial.print(Data[0]);
-                for (int i = 1; i < 13; i++)
+                for (int i = 1; i < 15; i++)
                 {
                     Serial.print(",");
                     Serial.print(Data[i]);
@@ -87,7 +87,7 @@ void SendComm()
             }
 
             // send wifi
-            if (MDL.ESPserialPort != NC) SerialESP->write(Data, 13);
+            if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
         }
 
         //PGN32401, module info from module to RC

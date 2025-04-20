@@ -61,7 +61,7 @@ void GetUPM()
 
 			Sensor[i].Hz = (1000000.0 * TotalCounts / TotalTime) * 0.8 + Sensor[i].Hz * 0.2;
 			Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
-			PulseMax[i] = constrain(1500000.0 / Sensor[i].Hz, 5000, 1500000);
+			PulseMax[i] = constrain(1500000.0 / Sensor[i].Hz, 5000, 1500000);	// max limit set to pulse time X 1.5 (within 5000 to 1500000 micros)
 		}
 
 		// check for no flow
