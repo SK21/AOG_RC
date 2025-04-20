@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  18-Apr-2025"
-const uint16_t InoID = 18045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  19-Apr-2025"
+const uint16_t InoID = 19045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -59,7 +59,7 @@ struct SensorConfig
 	double MaxPower;
 	double MinPower;
 	double Scaling;
-	uint8_t Hz;
+	double Hz;
 };
 
 SensorConfig Sensor[2];
@@ -235,9 +235,9 @@ void CheckPressure()
 //byte ReadReset;
 //int MinMem = 2000;
 //double FlowHz;
-////double debug1;
-////double debug2;
-////uint16_t debug3;
+//double debug1;
+//double debug2;
+//double debug3;
 //
 //void DebugTheIno()
 //{
@@ -247,20 +247,21 @@ void CheckPressure()
 //		Serial.println("");
 //
 //		Serial.print(MaxLoopTime);
+//
 //		Serial.print(", ");
-//		Serial.print(FlowHz);
+//		Serial.print(MinMem);
 //
-//		//Serial.print(F(",  SRAM left: "));
-//		//Serial.print(MinMem);
+//		Serial.print(", ");
+//		Serial.print(Sensor[0].Hz);
 //
-//		////Serial.print(", ");
-//		//Serial.print(debug1);
+//		Serial.print(", ");
+//		Serial.print(debug1);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug2);
+//		Serial.print(", ");
+//		Serial.print(debug2);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(debug3);
 //
 //		Serial.println("");
 //

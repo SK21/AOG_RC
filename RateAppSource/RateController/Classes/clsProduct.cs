@@ -683,7 +683,7 @@ namespace RateController
         {
             return RateSensor.PWMsetting;
         }
-        public byte Hz()
+        public double Hz()
         {
             return RateSensor.Hz;
         }

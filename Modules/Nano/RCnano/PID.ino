@@ -1,9 +1,8 @@
 
-uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
 const double Deadband = 0.015;			// error amount below which no adjustment is made
 
-double RateError;
+uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
@@ -73,7 +72,7 @@ int PIDmotor(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			double RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
@@ -107,7 +106,7 @@ int PIDvalve(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			double RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
@@ -183,7 +182,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				else
 				{
 					// auto adjust
-					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+					double RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 					// check deadband
 					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)

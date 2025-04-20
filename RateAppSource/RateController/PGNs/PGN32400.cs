@@ -20,8 +20,8 @@ namespace RateController
         //10    PWM Hi
         //11    Status
         //      bit 0   sensor connected
-        //12    Hz
-        //13    -
+        //12    Hz Lo   10 X actual
+        //13    Hz Hi
         //14    CRC
 
         private const byte cByteCount = 15;
@@ -29,7 +29,7 @@ namespace RateController
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
         private double cElapsedTime;
-        private byte cHz;
+        private double cHz;
         private double cPWMsetting;
         private double cQuantity;
         private bool cSensorReceiving;
@@ -48,7 +48,7 @@ namespace RateController
         public double AccumulatedQuantity
         { get { return cQuantity; } }
 
-        public byte Hz
+        public double Hz
         { get { return cHz; } }
 
         public double PWMsetting
@@ -101,7 +101,7 @@ namespace RateController
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
                         cSensorReceiving = ((Data[11] & 0b00000001) == 0b00000001);
-                        cHz = Data[12];
+                        cHz = (Data[12] | Data[13] << 8) / 10.0;
 
                         ReceiveTime = DateTime.Now;
                         Result = true;

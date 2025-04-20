@@ -15,12 +15,12 @@ void SendData()
         //6	    acc.Quantity Lo		10 X actual
         //7	    acc.Quantity Mid
         //8     acc.Quantity Hi
-        //9     PWM Lo
+        //9     PWM Lo  10 X actual
         //10    PWM Hi
         //11    Status
         //      bit 0   sensor connected
-        //12    Hz
-        //13    -
+        //12    Hz Lo
+        //13    Hz Hi
         //14    CRC
 
         byte Data[20];
@@ -62,7 +62,9 @@ void SendData()
             if (millis() - Sensor[i].CommTime < 4000) Data[11] |= 0b00000001;
 
             // Hz
-            Data[12] = Sensor[i].Hz;
+            uint16_t Hz = Sensor[i].Hz * 10;
+            Data[12] = Hz;
+            Data[13] = Hz >> 8;
 
             // crc
             Data[14] = CRC(Data, 14, 0);

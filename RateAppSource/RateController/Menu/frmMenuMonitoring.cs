@@ -204,7 +204,7 @@ namespace RateController.Menu
             lbRateAppliedData.Text = Applied.ToString("N1");
             lbRateSetData.Text = Target.ToString("N1");
             lbPWMdata.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
-            lbHzData.Text = MainMenu.CurrentProduct.Hz().ToString("N0");
+            lbHzData.Text = MainMenu.CurrentProduct.Hz().ToString("N1");
 
             if (MainMenu.CurrentProduct.CountsRev > 0)
             {

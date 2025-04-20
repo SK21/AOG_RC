@@ -1,57 +1,45 @@
 
 const uint32_t PulseMin = 250;		// micros
 const int SampleSize = 8;
+
 uint32_t Samples[2][SampleSize];
 uint32_t LastPulse[2];
-double PulseAvg[2];
-uint16_t CurrentCount[2];
-uint32_t CurrentTotal[2];
-uint32_t PulseLast[2];
+uint32_t ReadLast[2];
+uint32_t ReadTime[2];
 uint32_t PulseTime[2];
-uint32_t PulseCurrent[2];
 
 volatile uint32_t PulseMax[2] = { 50000,50000 };
 volatile uint16_t PulseCount[2];
 volatile int SamplesCount[2];
-volatile uint32_t SamplesTotal[2];
+volatile uint32_t SamplesTime[2];
 volatile uint16_t SamplesIndex[2];
 
 void IRAM_ATTR ISR0()
 {
-	PulseTime[0] = micros();
-	PulseCurrent[0] = PulseTime[0] - PulseLast[0];
-
-	if (PulseCurrent[0] > PulseMin)
-	{
-		PulseLast[0] = PulseTime[0];
-		if (PulseCurrent[0] < PulseMax[0])
-		{
-			PulseCount[0]++;
-			SamplesTotal[0] -= Samples[0][SamplesIndex[0]];
-			Samples[0][SamplesIndex[0]] = PulseCurrent[0];
-			SamplesTotal[0] += Samples[0][SamplesIndex[0]];
-			SamplesIndex[0] = (SamplesIndex[0] + 1) % SampleSize;
-			SamplesCount[0]++;
-		}
-	}
+	PulseISR(0);
 }
 
 void IRAM_ATTR ISR1()
 {
-	PulseTime[1] = micros();
-	PulseCurrent[1] = PulseTime[1] - PulseLast[1];
+	PulseISR(1);
+}
 
-	if (PulseCurrent[1] > PulseMin)
+void IRAM_ATTR PulseISR(uint8_t ID)
+{
+	ReadTime[ID] = micros();
+	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
+
+	if (PulseTime[ID] > PulseMin)
 	{
-		PulseLast[1] = PulseTime[1];
-		if (PulseCurrent[1] < PulseMax[1])
+		ReadLast[ID] = ReadTime[ID];
+		if (PulseTime[ID] < PulseMax[ID])
 		{
-			PulseCount[1]++;
-			SamplesTotal[1] -= Samples[1][SamplesIndex[1]];
-			Samples[1][SamplesIndex[1]] = PulseCurrent[1];
-			SamplesTotal[1] += Samples[1][SamplesIndex[1]];
-			SamplesIndex[1] = (SamplesIndex[1] + 1) % SampleSize;
-			SamplesCount[1]++;
+			PulseCount[ID]++;
+			SamplesTime[ID] -= Samples[ID][SamplesIndex[ID]];
+			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
+			SamplesTime[ID] += Samples[ID][SamplesIndex[ID]];
+			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % SampleSize;
+			if (SamplesCount[ID] < SampleSize) SamplesCount[ID]++;
 		}
 	}
 }
@@ -67,25 +55,24 @@ void GetUPM()
 			noInterrupts();
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
-			if (SamplesCount[i] > SampleSize) SamplesCount[i] = SampleSize;
-			CurrentCount[i] = SamplesCount[i];
-			CurrentTotal[i] = SamplesTotal[i];
+			uint16_t TotalCounts = SamplesCount[i];
+			uint32_t TotalTime = SamplesTime[i];
 			interrupts();
 
-			PulseAvg[i] = ((double)CurrentTotal[i] / CurrentCount[i]) * 0.8 + PulseAvg[i] * 0.2;
-			Sensor[i].UPM = (double)(60000000.0 / PulseAvg[i]) / Sensor[i].MeterCal;
-			PulseMax[i] = PulseAvg[i] * 1.5;
-			Sensor[i].Hz = 1000000 / PulseAvg[i];	
+			Sensor[i].Hz = (1000000.0 * TotalCounts / TotalTime) * 0.8 + Sensor[i].Hz * 0.2;
+			Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
+			PulseMax[i] = constrain(1500000.0 / Sensor[i].Hz, 5000, 1500000);
 		}
 
 		// check for no flow
 		if (millis() - LastPulse[i] > 4000)
 		{
 			Sensor[i].UPM = 0;
+			Sensor[i].Hz = 0;
 			PulseMax[i] = 500000;
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;
-			SamplesTotal[i] = 0;
+			SamplesTime[i] = 0;
 			memset(Samples[i], 0, sizeof(Samples[i]));
 		}
 	}
