@@ -108,9 +108,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		// 0   246
 		// 1   126
 		// 2   Mod/Sen ID     0-15/0-15
-		// 3   HighAdjust
-		// 4   LowAdjust
-		// 5   Threshold
+		// 3   -
+		// 4   -
+		// 5   -
 		// 6   MinAdjust
 		// 7   MaxAdjust
 		// 8   scale factor
@@ -127,15 +127,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 					byte SensorID = ParseSenID(Data[2]);
 					if (SensorID < MDL.SensorCount)
 					{
-						Sensor[SensorID].HighAdjust = (double)(255.0 * Data[3] / 100.0);
-						Sensor[SensorID].LowAdjust = (double)(255.0 * Data[4] / 100.0);
-						Sensor[SensorID].AdjustThreshold = (double)(Data[5] / 100.0);
 						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
 						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 
-						// 1.15 ^ ((100 - Scaling scroll bar value)* -1 + 3). 3 changes the max range of the scaling.
-						// 1.17 ^ -100 is approx equivalent to 1/1,000,000
-						Sensor[SensorID].Scaling = pow(1.15, (100 - Data[8]) * -1 + 3);
+						// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
+						Sensor[SensorID].Scaling = pow(1.1, Data[8] - 120);
 					}
 				}
 			}

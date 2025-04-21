@@ -541,7 +541,7 @@
     <value>Scale Weight</value>
   </data>
   <data name="lgScaling" xml:space="preserve">
-    <value>Scaling Factor</value>
+    <value>Gain</value>
   </data>
   <data name="lgSeconds" xml:space="preserve">
     <value>Seconds</value>

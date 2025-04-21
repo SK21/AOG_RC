@@ -37,9 +37,6 @@ namespace RateController.Menu
         {
             try
             {
-                MainMenu.CurrentProduct.HighAdjust = HShigh.Value;
-                MainMenu.CurrentProduct.LowAdjust = HSlow.Value;
-                MainMenu.CurrentProduct.Threshold = HSthreshold.Value;
                 MainMenu.CurrentProduct.MaxAdjust = HSmax.Value;
                 MainMenu.CurrentProduct.MinAdjust = HSmin.Value;
                 MainMenu.CurrentProduct.ScalingFactor = HSscaling.Value;
@@ -55,9 +52,6 @@ namespace RateController.Menu
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            HShigh.Value = Props.HighAdjustDefault;
-            HSlow.Value = Props.LowAdjustDefault;
-            HSthreshold.Value = Props.ThresholdDefault;
             HSmax.Value = Props.MaxAdjustDefault;
             HSmin.Value = Props.MinAdjustDefault;
             HSscaling.Value = Props.ScalingDefault;
@@ -105,9 +99,6 @@ namespace RateController.Menu
             UpdateForm();
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             Font ValFont = new Font(lbProduct.Font.FontFamily, 14, FontStyle.Bold);
-            lbHigh.Font = ValFont;
-            lbLow.Font = ValFont;
-            lbThresholdValue.Font = ValFont;
             lbBoost.Font = ValFont;
             lbMaxValue.Font = ValFont;
             lbMinValue.Font = ValFont;
@@ -161,9 +152,6 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            lbProportional.Text = Lang.lgHighAdjust;
-            lbRateLow.Text = Lang.lgLowAdjust;
-            lbThreshold.Text = Lang.lgThreshold;
             lbScaling.Text = Lang.lgScaling;
             lbMax.Text = Lang.lgPWMmax;
             lbMin.Text = Lang.lgPWMmin;
@@ -171,9 +159,6 @@ namespace RateController.Menu
 
         private void UpdateControlDisplay()
         {
-            lbHigh.Text = HShigh.Value.ToString("N0");
-            lbLow.Text = HSlow.Value.ToString("N0");
-            lbThresholdValue.Text = HSthreshold.Value.ToString("N0");
             lbMaxValue.Text = HSmax.Value.ToString("N0");
             lbMinValue.Text = HSmin.Value.ToString("N0");
             lbBoost.Text = HSscaling.Value.ToString("N0");
@@ -192,9 +177,6 @@ namespace RateController.Menu
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
             }
 
-            HShigh.Value = MainMenu.CurrentProduct.HighAdjust;
-            HSlow.Value = MainMenu.CurrentProduct.LowAdjust;
-            HSthreshold.Value = MainMenu.CurrentProduct.Threshold;
             HSmax.Value = MainMenu.CurrentProduct.MaxAdjust;
             HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
             HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;

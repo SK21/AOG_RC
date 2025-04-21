@@ -37,21 +37,12 @@
             this.lbMinValue = new System.Windows.Forms.Label();
             this.lbMaxValue = new System.Windows.Forms.Label();
             this.lbScaling = new System.Windows.Forms.Label();
-            this.lbThresholdValue = new System.Windows.Forms.Label();
-            this.lbLow = new System.Windows.Forms.Label();
-            this.lbHigh = new System.Windows.Forms.Label();
-            this.lbThreshold = new System.Windows.Forms.Label();
-            this.lbRateLow = new System.Windows.Forms.Label();
-            this.lbProportional = new System.Windows.Forms.Label();
             this.lbMax = new System.Windows.Forms.Label();
             this.lbMin = new System.Windows.Forms.Label();
             this.lbProduct = new System.Windows.Forms.Label();
             this.HSmin = new System.Windows.Forms.HScrollBar();
             this.HSmax = new System.Windows.Forms.HScrollBar();
             this.HSscaling = new System.Windows.Forms.HScrollBar();
-            this.HSthreshold = new System.Windows.Forms.HScrollBar();
-            this.HSlow = new System.Windows.Forms.HScrollBar();
-            this.HShigh = new System.Windows.Forms.HScrollBar();
             this.butGraph = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -137,7 +128,7 @@
             // lbBoost
             // 
             this.lbBoost.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbBoost.Location = new System.Drawing.Point(438, 357);
+            this.lbBoost.Location = new System.Drawing.Point(417, 182);
             this.lbBoost.Name = "lbBoost";
             this.lbBoost.Size = new System.Drawing.Size(59, 23);
             this.lbBoost.TabIndex = 187;
@@ -147,7 +138,7 @@
             // lbMinValue
             // 
             this.lbMinValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinValue.Location = new System.Drawing.Point(438, 549);
+            this.lbMinValue.Location = new System.Drawing.Point(417, 362);
             this.lbMinValue.Name = "lbMinValue";
             this.lbMinValue.Size = new System.Drawing.Size(59, 23);
             this.lbMinValue.TabIndex = 184;
@@ -157,7 +148,7 @@
             // lbMaxValue
             // 
             this.lbMaxValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValue.Location = new System.Drawing.Point(438, 453);
+            this.lbMaxValue.Location = new System.Drawing.Point(417, 272);
             this.lbMaxValue.Name = "lbMaxValue";
             this.lbMaxValue.Size = new System.Drawing.Size(59, 23);
             this.lbMaxValue.TabIndex = 183;
@@ -167,99 +158,39 @@
             // lbScaling
             // 
             this.lbScaling.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbScaling.Location = new System.Drawing.Point(34, 346);
+            this.lbScaling.Location = new System.Drawing.Point(13, 171);
             this.lbScaling.Name = "lbScaling";
             this.lbScaling.Size = new System.Drawing.Size(133, 45);
             this.lbScaling.TabIndex = 185;
-            this.lbScaling.Text = "Scaling Factor";
-            this.lbScaling.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbThresholdValue
-            // 
-            this.lbThresholdValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbThresholdValue.Location = new System.Drawing.Point(438, 261);
-            this.lbThresholdValue.Name = "lbThresholdValue";
-            this.lbThresholdValue.Size = new System.Drawing.Size(59, 23);
-            this.lbThresholdValue.TabIndex = 182;
-            this.lbThresholdValue.Text = "100";
-            this.lbThresholdValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbLow
-            // 
-            this.lbLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLow.Location = new System.Drawing.Point(438, 165);
-            this.lbLow.Name = "lbLow";
-            this.lbLow.Size = new System.Drawing.Size(59, 23);
-            this.lbLow.TabIndex = 181;
-            this.lbLow.Text = "100";
-            this.lbLow.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbHigh
-            // 
-            this.lbHigh.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHigh.Location = new System.Drawing.Point(438, 69);
-            this.lbHigh.Name = "lbHigh";
-            this.lbHigh.Size = new System.Drawing.Size(59, 23);
-            this.lbHigh.TabIndex = 180;
-            this.lbHigh.Text = "100";
-            this.lbHigh.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbThreshold
-            // 
-            this.lbThreshold.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbThreshold.Location = new System.Drawing.Point(34, 250);
-            this.lbThreshold.Name = "lbThreshold";
-            this.lbThreshold.Size = new System.Drawing.Size(133, 45);
-            this.lbThreshold.TabIndex = 176;
-            this.lbThreshold.Text = "Threshold";
-            this.lbThreshold.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbRateLow
-            // 
-            this.lbRateLow.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateLow.Location = new System.Drawing.Point(34, 154);
-            this.lbRateLow.Name = "lbRateLow";
-            this.lbRateLow.Size = new System.Drawing.Size(133, 45);
-            this.lbRateLow.TabIndex = 174;
-            this.lbRateLow.Text = "Low Adjust";
-            this.lbRateLow.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbProportional
-            // 
-            this.lbProportional.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbProportional.Location = new System.Drawing.Point(34, 58);
-            this.lbProportional.Name = "lbProportional";
-            this.lbProportional.Size = new System.Drawing.Size(133, 45);
-            this.lbProportional.TabIndex = 170;
-            this.lbProportional.Text = "High Adjust";
-            this.lbProportional.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbScaling.Text = "Gain";
+            this.lbScaling.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(34, 442);
+            this.lbMax.Location = new System.Drawing.Point(13, 261);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(133, 45);
             this.lbMax.TabIndex = 172;
             this.lbMax.Text = "Max Power";
-            this.lbMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(34, 538);
+            this.lbMin.Location = new System.Drawing.Point(13, 351);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(133, 45);
             this.lbMin.TabIndex = 171;
             this.lbMin.Text = "Min Power";
-            this.lbMin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbProduct
             // 
             this.lbProduct.BackColor = System.Drawing.SystemColors.Control;
             this.lbProduct.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbProduct.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lbProduct.Location = new System.Drawing.Point(71, 9);
+            this.lbProduct.Location = new System.Drawing.Point(72, 100);
             this.lbProduct.Name = "lbProduct";
             this.lbProduct.Size = new System.Drawing.Size(396, 28);
             this.lbProduct.TabIndex = 188;
@@ -269,7 +200,7 @@
             // HSmin
             // 
             this.HSmin.LargeChange = 1;
-            this.HSmin.Location = new System.Drawing.Point(173, 538);
+            this.HSmin.Location = new System.Drawing.Point(152, 351);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(263, 45);
             this.HSmin.TabIndex = 333;
@@ -278,7 +209,7 @@
             // HSmax
             // 
             this.HSmax.LargeChange = 1;
-            this.HSmax.Location = new System.Drawing.Point(173, 442);
+            this.HSmax.Location = new System.Drawing.Point(152, 261);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(263, 45);
             this.HSmax.TabIndex = 334;
@@ -287,38 +218,11 @@
             // HSscaling
             // 
             this.HSscaling.LargeChange = 1;
-            this.HSscaling.Location = new System.Drawing.Point(173, 346);
+            this.HSscaling.Location = new System.Drawing.Point(152, 171);
             this.HSscaling.Name = "HSscaling";
             this.HSscaling.Size = new System.Drawing.Size(263, 45);
             this.HSscaling.TabIndex = 335;
             this.HSscaling.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
-            // 
-            // HSthreshold
-            // 
-            this.HSthreshold.LargeChange = 1;
-            this.HSthreshold.Location = new System.Drawing.Point(173, 250);
-            this.HSthreshold.Name = "HSthreshold";
-            this.HSthreshold.Size = new System.Drawing.Size(263, 45);
-            this.HSthreshold.TabIndex = 336;
-            this.HSthreshold.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
-            // 
-            // HSlow
-            // 
-            this.HSlow.LargeChange = 1;
-            this.HSlow.Location = new System.Drawing.Point(173, 154);
-            this.HSlow.Name = "HSlow";
-            this.HSlow.Size = new System.Drawing.Size(263, 45);
-            this.HSlow.TabIndex = 337;
-            this.HSlow.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
-            // 
-            // HShigh
-            // 
-            this.HShigh.LargeChange = 1;
-            this.HShigh.Location = new System.Drawing.Point(173, 58);
-            this.HShigh.Name = "HShigh";
-            this.HShigh.Size = new System.Drawing.Size(263, 45);
-            this.HShigh.TabIndex = 338;
-            this.HShigh.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
             // 
             // butGraph
             // 
@@ -343,9 +247,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.butGraph);
-            this.Controls.Add(this.HShigh);
-            this.Controls.Add(this.HSlow);
-            this.Controls.Add(this.HSthreshold);
             this.Controls.Add(this.HSscaling);
             this.Controls.Add(this.HSmax);
             this.Controls.Add(this.HSmin);
@@ -354,12 +255,6 @@
             this.Controls.Add(this.lbMinValue);
             this.Controls.Add(this.lbMaxValue);
             this.Controls.Add(this.lbScaling);
-            this.Controls.Add(this.lbThresholdValue);
-            this.Controls.Add(this.lbLow);
-            this.Controls.Add(this.lbHigh);
-            this.Controls.Add(this.lbThreshold);
-            this.Controls.Add(this.lbRateLow);
-            this.Controls.Add(this.lbProportional);
             this.Controls.Add(this.lbMax);
             this.Controls.Add(this.lbMin);
             this.Controls.Add(this.btnPIDloadDefaults);
@@ -390,21 +285,12 @@
         private System.Windows.Forms.Label lbMinValue;
         private System.Windows.Forms.Label lbMaxValue;
         private System.Windows.Forms.Label lbScaling;
-        private System.Windows.Forms.Label lbThresholdValue;
-        private System.Windows.Forms.Label lbLow;
-        private System.Windows.Forms.Label lbHigh;
-        private System.Windows.Forms.Label lbThreshold;
-        private System.Windows.Forms.Label lbRateLow;
-        private System.Windows.Forms.Label lbProportional;
         private System.Windows.Forms.Label lbMax;
         private System.Windows.Forms.Label lbMin;
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.HScrollBar HSmin;
         private System.Windows.Forms.HScrollBar HSmax;
         private System.Windows.Forms.HScrollBar HSscaling;
-        private System.Windows.Forms.HScrollBar HSthreshold;
-        private System.Windows.Forms.HScrollBar HSlow;
-        private System.Windows.Forms.HScrollBar HShigh;
         private System.Windows.Forms.Button butGraph;
     }
 }

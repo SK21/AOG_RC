@@ -50,7 +50,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "20-Apr-2025";
+        private static string cAppDate = "21-Apr-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.0.0";
@@ -103,12 +103,9 @@ namespace RateController.Classes
 
         #region // flow adjustment defaults
 
-        public static readonly int HighAdjustDefault = 50;
-        public static readonly int LowAdjustDefault = 20;
         public static readonly int MaxAdjustDefault = 100;
         public static readonly int MinAdjustDefault = 5;
-        public static readonly int ScalingDefault = 48;
-        public static readonly int ThresholdDefault = 50;
+        public static readonly int ScalingDefault = 50;
 
         #endregion // flow adjustment defaults
 
@@ -1030,11 +1027,9 @@ namespace RateController.Classes
                         P3.TankSize = P0.TankSize;
                         P3.TankStart = P0.TankStart;
 
-                        P3.HighAdjust = P0.HighAdjust;
-                        P3.LowAdjust = P0.LowAdjust;
-                        P3.Threshold = P0.Threshold;
-                        P3.MaxAdjust = P0.Threshold;
+                        P3.MaxAdjust = P0.MaxAdjust;
                         P3.MinAdjust = P0.MinAdjust;
+                        P3.ScalingFactor = P0.ScalingFactor;
 
                         mf.Products.Item(2).BumpButtons = false;
                         P0.ModuleID = 6;

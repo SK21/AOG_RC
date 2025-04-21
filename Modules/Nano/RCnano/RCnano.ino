@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  19-Apr-2025"
-const uint16_t InoID = 19045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  21-Apr-2025"
+const uint16_t InoID = 21045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -53,9 +53,6 @@ struct SensorConfig
 	double TargetUPM;
 	double MeterCal;
 	double ManualAdjust;
-	double HighAdjust;
-	double LowAdjust;
-	double AdjustThreshold;
 	double MaxPower;
 	double MinPower;
 	double Scaling;
@@ -255,7 +252,7 @@ void CheckPressure()
 //		Serial.print(Sensor[0].Hz);
 //
 //		Serial.print(", ");
-//		Serial.print(debug1);
+//		Serial.print(debug1,10);
 //
 //		Serial.print(", ");
 //		Serial.print(debug2);

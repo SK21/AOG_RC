@@ -1330,7 +1330,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scaling Factor.
+        ///   Looks up a localized string similar to Gain.
         /// </summary>
         internal static string lgScaling {
             get {

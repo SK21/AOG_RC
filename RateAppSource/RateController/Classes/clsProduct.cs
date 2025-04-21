@@ -24,10 +24,8 @@ namespace RateController
         private bool cEnableProdDensity = false;
         private bool cFanOn;
         private double cHectaresPerMinute;
-        private int cHighAdjust;
         private double cHours1;
         private double cHours2;
-        private int cLowAdjust;
         private int cManualPWM;
         private int cMaxAdjust;
         private double cMeterCal = 0;
@@ -51,7 +49,6 @@ namespace RateController
         private int cShiftRange = 4;
         private double cTankSize = 0;
         private double cTankStart = 0;
-        private int cThreshold;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
         private double CurrentWorkedArea_Hc = 0;
@@ -191,14 +188,6 @@ namespace RateController
             }
         }
 
-        public int HighAdjust
-        {
-            get { return cHighAdjust; }
-            set
-            {
-                if (value >= 0 && value <= 100) cHighAdjust = value;
-            }
-        }
 
         public double Hours1
         { get { return cHours1; } }
@@ -209,14 +198,6 @@ namespace RateController
         public int ID
         { get { return cProductID; } }
 
-        public int LowAdjust
-        {
-            get { return cLowAdjust; }
-            set
-            {
-                if (value >= 0 && value <= 100) cLowAdjust = value;
-            }
-        }
 
         public int ManualPWM
         {
@@ -462,14 +443,6 @@ namespace RateController
             }
         }
 
-        public int Threshold
-        {
-            get { return cThreshold; }
-            set
-            {
-                if (value >= 0 && value <= 100) cThreshold = value;
-            }
-        }
 
         public bool UseAltRate
         { get { return cUseAltRate; } set { cUseAltRate = value; } }
@@ -642,9 +615,6 @@ namespace RateController
 
             if (Enum.TryParse(Props.GetProp("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
 
-            if (int.TryParse(Props.GetProp("AdjustHigh" + IDname), out int ah)) cHighAdjust = ah;
-            if (int.TryParse(Props.GetProp("AdjustLow" + IDname), out int al)) cLowAdjust = al;
-            if (int.TryParse(Props.GetProp("Threshold" + IDname), out int th)) cThreshold = th;
             if (int.TryParse(Props.GetProp("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
             if (int.TryParse(Props.GetProp("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
             if (int.TryParse(Props.GetProp("Scaling" + IDname), out int sc)) cScalingFactor = sc;
@@ -652,9 +622,6 @@ namespace RateController
 
         public void LoadDefaultControlSettings()
         {
-            cHighAdjust = Props.HighAdjustDefault;
-            cLowAdjust = Props.LowAdjustDefault;
-            cThreshold = Props.ThresholdDefault;
             cMaxAdjust = Props.MaxAdjustDefault;
             cMinAdjust = Props.MinAdjustDefault;
             cScalingFactor = Props.ScalingDefault;
@@ -850,9 +817,6 @@ namespace RateController
 
             Props.SetProp("AppMode" + IDname, cAppMode.ToString());
 
-            Props.SetProp("AdjustHigh" + IDname, cHighAdjust.ToString());
-            Props.SetProp("AdjustLow" + IDname, cLowAdjust.ToString());
-            Props.SetProp("Threshold" + IDname, cThreshold.ToString());
             Props.SetProp("MaxAdjust" + IDname, cMaxAdjust.ToString());
             Props.SetProp("MinAdjust" + IDname, cMinAdjust.ToString());
             Props.SetProp("Scaling" + IDname, cScalingFactor.ToString());

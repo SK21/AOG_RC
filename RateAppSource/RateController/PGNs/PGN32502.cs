@@ -6,9 +6,9 @@
         // 0   246
         // 1   126
         // 2   Mod/Sen ID     0-15/0-15
-        // 3   HighAdjust
-        // 4   LowAdjust
-        // 5   Threshold
+        // 3   -
+        // 4   -
+        // 5   -
         // 6   MinAdjust
         // 7   MaxAdjust
         // 8   Scale Factor
@@ -31,9 +31,9 @@
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            Data[3] = (byte)Prod.HighAdjust;
-            Data[4] = (byte)Prod.LowAdjust;
-            Data[5] = (byte)Prod.Threshold;
+            Data[3] = 0;
+            Data[4] = 0;
+            Data[5] = 0;
             Data[6] = (byte)Prod.MinAdjust;
             Data[7] = (byte)Prod.MaxAdjust;
             Data[8] = (byte)Prod.ScalingFactor;
