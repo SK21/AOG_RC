@@ -10,8 +10,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  20-Apr-2025"
-const uint16_t InoID = 20045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  23-Apr-2025"
+const uint16_t InoID = 23045;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -69,9 +69,6 @@ struct SensorConfig
 	double TargetUPM;
 	double MeterCal;
 	double ManualAdjust;
-	double HighAdjust;
-	double LowAdjust;
-	double AdjustThreshold;
 	double MaxPower;
 	double MinPower;
 	double Scaling;

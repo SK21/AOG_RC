@@ -1,9 +1,11 @@
 
-uint32_t LastCheck[MaxProductCount];
 const double SampleTime = 50;
 const double Deadband = 0.015;			// error amount below which no adjustment is made
+const double BrakePoint = 0.25;
+const double FastAdjust = 100;
+const double SlowAdjust = 30;
 
-double RateError;
+uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
@@ -73,7 +75,7 @@ int PIDmotor(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			double RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
@@ -81,14 +83,15 @@ int PIDmotor(byte ID)
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
+				if (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint)
 				{
-					Result += Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+					Result += RateError * Sensor[ID].Scaling * FastAdjust;
 				}
 				else
 				{
-					Result += Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+					Result += RateError * Sensor[ID].Scaling * SlowAdjust;
 				}
+
 				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 			}
 		}
@@ -107,7 +110,7 @@ int PIDvalve(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			double RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 			// check deadband
 			if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
@@ -115,13 +118,13 @@ int PIDvalve(byte ID)
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 				// check brakepoint
-				if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
+				if (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint)
 				{
-					Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+					Result = RateError * Sensor[ID].Scaling * FastAdjust;
 				}
 				else
 				{
-					Result = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+					Result = RateError * Sensor[ID].Scaling * SlowAdjust;
 				}
 
 				bool IsPositive = (Result > 0);
@@ -183,7 +186,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 				else
 				{
 					// auto adjust
-					RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+					double RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
 					// check deadband
 					if (abs(RateError) > Deadband * Sensor[ID].TargetUPM)
@@ -191,13 +194,13 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 						RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
 						// check brakepoint
-						if (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].AdjustThreshold)
+						if (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint)
 						{
-							Result = Sensor[ID].HighAdjust * RateError * Sensor[ID].Scaling;
+							Result = RateError * Sensor[ID].Scaling * FastAdjust;
 						}
 						else
 						{
-							Result = Sensor[ID].LowAdjust * RateError * Sensor[ID].Scaling;
+							Result = RateError * Sensor[ID].Scaling * SlowAdjust;
 						}
 
 						bool IsPositive = (Result > 0);

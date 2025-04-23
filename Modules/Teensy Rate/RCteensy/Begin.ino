@@ -342,14 +342,8 @@ void LoadDefaults()
 	Sensor[1].PWMPin = 15;
 
 	// default control settings
-	Sensor[0].HighAdjust = 50;
-	Sensor[0].LowAdjust = 20;
-	Sensor[0].AdjustThreshold = 0.25;
 	Sensor[0].MaxPower = 255;
 	Sensor[0].MinPower = 10;
-	Sensor[1].HighAdjust = 50;
-	Sensor[1].LowAdjust = 20;
-	Sensor[1].AdjustThreshold = 0.25;
 	Sensor[1].MaxPower = 255;
 	Sensor[1].MinPower = 10;
 
