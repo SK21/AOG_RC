@@ -44,6 +44,9 @@
             this.HSmax = new System.Windows.Forms.HScrollBar();
             this.HSscaling = new System.Windows.Forms.HScrollBar();
             this.butGraph = new System.Windows.Forms.Button();
+            this.HSintegral = new System.Windows.Forms.HScrollBar();
+            this.lbIntegral = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnRight
@@ -128,7 +131,7 @@
             // lbBoost
             // 
             this.lbBoost.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbBoost.Location = new System.Drawing.Point(417, 182);
+            this.lbBoost.Location = new System.Drawing.Point(417, 173);
             this.lbBoost.Name = "lbBoost";
             this.lbBoost.Size = new System.Drawing.Size(59, 23);
             this.lbBoost.TabIndex = 187;
@@ -138,7 +141,7 @@
             // lbMinValue
             // 
             this.lbMinValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinValue.Location = new System.Drawing.Point(417, 362);
+            this.lbMinValue.Location = new System.Drawing.Point(417, 416);
             this.lbMinValue.Name = "lbMinValue";
             this.lbMinValue.Size = new System.Drawing.Size(59, 23);
             this.lbMinValue.TabIndex = 184;
@@ -148,7 +151,7 @@
             // lbMaxValue
             // 
             this.lbMaxValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValue.Location = new System.Drawing.Point(417, 272);
+            this.lbMaxValue.Location = new System.Drawing.Point(417, 335);
             this.lbMaxValue.Name = "lbMaxValue";
             this.lbMaxValue.Size = new System.Drawing.Size(59, 23);
             this.lbMaxValue.TabIndex = 183;
@@ -158,7 +161,7 @@
             // lbScaling
             // 
             this.lbScaling.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbScaling.Location = new System.Drawing.Point(13, 171);
+            this.lbScaling.Location = new System.Drawing.Point(13, 162);
             this.lbScaling.Name = "lbScaling";
             this.lbScaling.Size = new System.Drawing.Size(133, 45);
             this.lbScaling.TabIndex = 185;
@@ -168,7 +171,7 @@
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(13, 261);
+            this.lbMax.Location = new System.Drawing.Point(13, 324);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(133, 45);
             this.lbMax.TabIndex = 172;
@@ -178,7 +181,7 @@
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(13, 351);
+            this.lbMin.Location = new System.Drawing.Point(13, 405);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(133, 45);
             this.lbMin.TabIndex = 171;
@@ -200,7 +203,7 @@
             // HSmin
             // 
             this.HSmin.LargeChange = 1;
-            this.HSmin.Location = new System.Drawing.Point(152, 351);
+            this.HSmin.Location = new System.Drawing.Point(152, 405);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(263, 45);
             this.HSmin.TabIndex = 333;
@@ -209,7 +212,7 @@
             // HSmax
             // 
             this.HSmax.LargeChange = 1;
-            this.HSmax.Location = new System.Drawing.Point(152, 261);
+            this.HSmax.Location = new System.Drawing.Point(152, 324);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(263, 45);
             this.HSmax.TabIndex = 334;
@@ -218,7 +221,7 @@
             // HSscaling
             // 
             this.HSscaling.LargeChange = 1;
-            this.HSscaling.Location = new System.Drawing.Point(152, 171);
+            this.HSscaling.Location = new System.Drawing.Point(152, 162);
             this.HSscaling.Name = "HSscaling";
             this.HSscaling.Size = new System.Drawing.Size(263, 45);
             this.HSscaling.TabIndex = 335;
@@ -241,11 +244,43 @@
             this.butGraph.UseVisualStyleBackColor = false;
             this.butGraph.Click += new System.EventHandler(this.butGraph_Click);
             // 
+            // HSintegral
+            // 
+            this.HSintegral.LargeChange = 1;
+            this.HSintegral.Location = new System.Drawing.Point(152, 243);
+            this.HSintegral.Name = "HSintegral";
+            this.HSintegral.Size = new System.Drawing.Size(263, 45);
+            this.HSintegral.TabIndex = 342;
+            this.HSintegral.ValueChanged += new System.EventHandler(this.HShigh_ValueChanged);
+            // 
+            // lbIntegral
+            // 
+            this.lbIntegral.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbIntegral.Location = new System.Drawing.Point(417, 254);
+            this.lbIntegral.Name = "lbIntegral";
+            this.lbIntegral.Size = new System.Drawing.Size(59, 23);
+            this.lbIntegral.TabIndex = 341;
+            this.lbIntegral.Text = "100";
+            this.lbIntegral.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(13, 243);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(133, 45);
+            this.label2.TabIndex = 340;
+            this.label2.Text = "Integral";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // frmMenuControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.HSintegral);
+            this.Controls.Add(this.lbIntegral);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.butGraph);
             this.Controls.Add(this.HSscaling);
             this.Controls.Add(this.HSmax);
@@ -292,5 +327,8 @@
         private System.Windows.Forms.HScrollBar HSmax;
         private System.Windows.Forms.HScrollBar HSscaling;
         private System.Windows.Forms.Button butGraph;
+        private System.Windows.Forms.HScrollBar HSintegral;
+        private System.Windows.Forms.Label lbIntegral;
+        private System.Windows.Forms.Label label2;
     }
 }

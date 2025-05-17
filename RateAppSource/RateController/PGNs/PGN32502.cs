@@ -6,7 +6,7 @@
         // 0   246
         // 1   126
         // 2   Mod/Sen ID     0-15/0-15
-        // 3   -
+        // 3   Ki
         // 4   -
         // 5   -
         // 6   MinAdjust
@@ -31,7 +31,7 @@
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            Data[3] = 0;
+            Data[3] = (byte)Prod.Integral;
             Data[4] = 0;
             Data[5] = 0;
             Data[6] = (byte)Prod.MinAdjust;

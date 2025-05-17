@@ -28,6 +28,7 @@ namespace RateController
         private double cHours2;
         private int cManualPWM;
         private int cMaxAdjust;
+        private int cIntegral;
         private double cMeterCal = 0;
         private int cMinAdjust;
         private double cMinUPM;
@@ -226,6 +227,14 @@ namespace RateController
             set
             {
                 if (value >= 0 && value <= 100) cMaxAdjust = value;
+            }
+        }
+        public int Integral
+        {
+            get { return cIntegral; }
+            set
+            {
+                if (value >= 0 && value <= 100) cIntegral = value;
             }
         }
 
@@ -618,6 +627,8 @@ namespace RateController
             if (int.TryParse(Props.GetProp("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
             if (int.TryParse(Props.GetProp("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
             if (int.TryParse(Props.GetProp("Scaling" + IDname), out int sc)) cScalingFactor = sc;
+
+            if (int.TryParse(Props.GetProp("Integral" + IDname), out int IG)) cIntegral = IG;
         }
 
         public void LoadDefaultControlSettings()
@@ -625,6 +636,7 @@ namespace RateController
             cMaxAdjust = Props.MaxAdjustDefault;
             cMinAdjust = Props.MinAdjustDefault;
             cScalingFactor = Props.ScalingDefault;
+            cIntegral = Props.IntegralDefault;
         }
 
         public double MinUPMinUse()
@@ -820,6 +832,8 @@ namespace RateController
             Props.SetProp("MaxAdjust" + IDname, cMaxAdjust.ToString());
             Props.SetProp("MinAdjust" + IDname, cMinAdjust.ToString());
             Props.SetProp("Scaling" + IDname, cScalingFactor.ToString());
+
+            Props.SetProp("Integral" + IDname, cIntegral.ToString());
         }
 
         public void SendPID()

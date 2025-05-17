@@ -50,10 +50,10 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "21-Apr-2025";
+        private static string cAppDate = "17-May-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
-        private static string cAppVersion = "4.0.0";
+        private static string cAppVersion = "4.0.1";
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
@@ -106,6 +106,7 @@ namespace RateController.Classes
         public static readonly int MaxAdjustDefault = 100;
         public static readonly int MinAdjustDefault = 5;
         public static readonly int ScalingDefault = 50;
+        public static readonly int IntegralDefault = 50;
 
         #endregion // flow adjustment defaults
 

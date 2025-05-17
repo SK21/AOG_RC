@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  21-Apr-2025"
-const uint16_t InoID = 21045;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  17-May-2025"
+const uint16_t InoID = 17055;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -56,6 +56,7 @@ struct SensorConfig
 	double MaxPower;
 	double MinPower;
 	double Scaling;
+	double KI;
 	double Hz;
 };
 
@@ -154,7 +155,7 @@ void loop()
 	}
 
 	SendData();
-	//DebugTheIno();
+	DebugTheIno();
 }
 
 byte ParseModID(byte ID)
@@ -226,57 +227,61 @@ void CheckPressure()
 	}
 }
 
-//uint32_t DebugTime;
-//uint32_t MaxLoopTime;
-//uint32_t LoopTmr;
-//byte ReadReset;
-//int MinMem = 2000;
-//double FlowHz;
-//double debug1;
-//double debug2;
-//double debug3;
-//
-//void DebugTheIno()
-//{
-//	if (millis() - DebugTime > 1000)
-//	{
-//		DebugTime = millis();
-//		Serial.println("");
-//
-//		Serial.print(MaxLoopTime);
-//
-//		Serial.print(", ");
-//		Serial.print(MinMem);
-//
-//		Serial.print(", ");
-//		Serial.print(Sensor[0].Hz);
-//
-//		Serial.print(", ");
-//		Serial.print(debug1,10);
-//
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		Serial.print(", ");
-//		Serial.print(debug3);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 10)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//			MinMem = 2000;
-//		}
-//	}
-//	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
-//	LoopTmr = micros();
-//	if (freeRam() < MinMem) MinMem = freeRam();
-//}
-//
-//int freeRam() {
-//	extern int __heap_start, * __brkval;
-//	int v;
-//	return (int)&v - (__brkval == 0
-//		? (int)&__heap_start : (int)__brkval);
-//}
+uint32_t DebugTime;
+uint32_t MaxLoopTime;
+uint32_t LoopTmr;
+byte ReadReset;
+int MinMem = 2000;
+double FlowHz;
+double debug1;
+volatile double debug2;
+double debug3;
+double debug4;
+
+void DebugTheIno()
+{
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+		Serial.println("");
+
+		//Serial.print(MaxLoopTime);
+
+		//Serial.print(", ");
+		//Serial.print(MinMem);
+
+		//Serial.print(", ");
+		Serial.print(Sensor[0].Hz);
+
+		Serial.print(", ");
+		Serial.print(debug1);
+
+		Serial.print(", ");
+		Serial.print(debug2);
+
+		Serial.print(", ");
+		Serial.print(debug3);
+
+		Serial.print(", ");
+		Serial.print(debug4);
+
+		Serial.println("");
+
+		if (ReadReset++ > 10)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+			MinMem = 2000;
+		}
+	}
+	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+	LoopTmr = micros();
+	if (freeRam() < MinMem) MinMem = freeRam();
+}
+
+int freeRam() {
+	extern int __heap_start, * __brkval;
+	int v;
+	return (int)&v - (__brkval == 0
+		? (int)&__heap_start : (int)__brkval);
+}

@@ -40,6 +40,7 @@ namespace RateController.Menu
                 MainMenu.CurrentProduct.MaxAdjust = HSmax.Value;
                 MainMenu.CurrentProduct.MinAdjust = HSmin.Value;
                 MainMenu.CurrentProduct.ScalingFactor = HSscaling.Value;
+                MainMenu.CurrentProduct.Integral= HSintegral.Value;
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
@@ -55,6 +56,7 @@ namespace RateController.Menu
             HSmax.Value = Props.MaxAdjustDefault;
             HSmin.Value = Props.MinAdjustDefault;
             HSscaling.Value = Props.ScalingDefault;
+            HSintegral.Value= Props.IntegralDefault;
         }
 
         private void btnRight_Click(object sender, EventArgs e)
@@ -102,6 +104,7 @@ namespace RateController.Menu
             lbBoost.Font = ValFont;
             lbMaxValue.Font = ValFont;
             lbMinValue.Font = ValFont;
+            lbIntegral.Font= ValFont;
         }
 
         private void MainMenu_ProductChanged(object sender, EventArgs e)
@@ -162,6 +165,7 @@ namespace RateController.Menu
             lbMaxValue.Text = HSmax.Value.ToString("N0");
             lbMinValue.Text = HSmin.Value.ToString("N0");
             lbBoost.Text = HSscaling.Value.ToString("N0");
+            lbIntegral.Text = HSintegral.Value.ToString("N0");
         }
 
         private void UpdateForm()
@@ -180,6 +184,7 @@ namespace RateController.Menu
             HSmax.Value = MainMenu.CurrentProduct.MaxAdjust;
             HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
             HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
+            HSintegral.Value = MainMenu.CurrentProduct.Integral;
             UpdateControlDisplay();
             Initializing = false;
         }
