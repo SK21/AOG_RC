@@ -191,7 +191,7 @@
       <CLanguageStandard>gnu11</CLanguageStandard>
       <CAdditionalWarning />
       <CppAdditionalWarning />
-      <ForcedIncludeFiles>c:\program files\microsoft visual studio\2022\community\common7\ide\extensions\wev10ohk.412\Micro Platforms\default\vm-intelli-pre.h;C:\Users\CoxDa\AppData\Local\Temp\VMBuilds\RCteensy\teensy41\Debug\.vmintelli\ad663208f40e3f0799d8e53faad9fa5b\vm-intelli-gcc-defines.h;c:\program files\microsoft visual studio\2022\community\common7\ide\extensions\wev10ohk.412\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.RCteensy.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>c:\program files\microsoft visual studio\2022\community\common7\ide\extensions\hj5dr3md.sit\Micro Platforms\default\vm-intelli-pre.h;C:\Users\CoxDa\AppData\Local\Temp\VMBuilds\RCteensy\teensy41\Debug\.vmintelli\cf7057bf44164cad874e3d48b2dab793\vm-intelli-gcc-defines.h;c:\program files\microsoft visual studio\2022\community\common7\ide\extensions\hj5dr3md.sit\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.RCteensy.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__HARDWARE_imxrt1062__;__HARDWARE_IMXRT1062__;__IMXRT1062__;TEENSYDUINO=157;ARDUINO=108019;ARDUINO_TEENSY41;F_CPU=450000000;USB_SERIAL;LAYOUT_US_ENGLISH;%(PreprocessorDefinitions)</PreprocessorDefinitions>

@@ -7,12 +7,13 @@ const double SlowAdjust = 30;
 
 uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
+double IntegralSum[MaxProductCount];
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from 0.
-uint16_t TimedAdjustTime = 80;		// milliseconds
-uint16_t TimedPauseTime = 400;		// milliseconds
+int TimedAdjustTime = 80;		// milliseconds
+int TimedPauseTime = 400;		// milliseconds
 
 void SetPWM()
 {
@@ -89,10 +90,17 @@ int PIDmotor(byte ID)
 				}
 				else
 				{
-					Result += RateError * Sensor[ID].Scaling * SlowAdjust;
+					IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+					IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+
+					Result += RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
 				}
 
 				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+			}
+			else
+			{
+				IntegralSum[ID] = 0;
 			}
 		}
 		LastPWM[ID] = Result;
@@ -124,7 +132,10 @@ int PIDvalve(byte ID)
 				}
 				else
 				{
-					Result = RateError * Sensor[ID].Scaling * SlowAdjust;
+					IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+					IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+
+					Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
 				}
 
 				bool IsPositive = (Result > 0);
@@ -135,6 +146,7 @@ int PIDvalve(byte ID)
 			else
 			{
 				Result = 0;
+				IntegralSum[ID] = 0;
 			}
 		}
 	}
@@ -200,7 +212,10 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 						}
 						else
 						{
-							Result = RateError * Sensor[ID].Scaling * SlowAdjust;
+							IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+							IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+
+							Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
 						}
 
 						bool IsPositive = (Result > 0);
@@ -211,6 +226,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 					else
 					{
 						Result = 0;
+						IntegralSum[ID] = 0;
 					}
 				}
 			}

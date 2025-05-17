@@ -1,6 +1,7 @@
 
 const uint32_t PulseMin = 250;		// micros
 const int SampleSize = 8;
+const double PulseLimit = 2000000.0;	// PulseMax is limited to ? X pulse time (1000000/Hz)
 
 uint32_t Samples[2][SampleSize];
 uint32_t LastPulse[2];
@@ -61,7 +62,7 @@ void GetUPM()
 
 			Sensor[i].Hz = (1000000.0 * TotalCounts / TotalTime) * 0.8 + Sensor[i].Hz * 0.2;
 			Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
-			PulseMax[i] = constrain(1500000.0 / Sensor[i].Hz, 5000, 1500000);
+			PulseMax[i] = constrain(PulseLimit / Sensor[i].Hz, 5000, PulseLimit);
 		}
 
 		// check for no flow
