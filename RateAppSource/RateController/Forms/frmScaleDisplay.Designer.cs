@@ -39,12 +39,12 @@
             // lbValue
             // 
             this.lbValue.BackColor = System.Drawing.Color.Transparent;
-            this.lbValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbValue.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbValue.ForeColor = System.Drawing.Color.Yellow;
             this.lbValue.Location = new System.Drawing.Point(69, 9);
             this.lbValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbValue.Name = "lbValue";
-            this.lbValue.Size = new System.Drawing.Size(148, 76);
+            this.lbValue.Size = new System.Drawing.Size(121, 76);
             this.lbValue.TabIndex = 0;
             this.lbValue.Text = "10000 (Applied 2)";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -76,7 +76,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(237, 90);
+            this.ClientSize = new System.Drawing.Size(190, 90);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbValue);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

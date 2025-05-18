@@ -46,8 +46,6 @@
             this.btnJobsDown = new System.Windows.Forms.Button();
             this.btnNotesDown = new System.Windows.Forms.Button();
             this.btnNotesUp = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.gbLine = new System.Windows.Forms.GroupBox();
             this.gbJobs = new System.Windows.Forms.GroupBox();
             this.btnRefeshJobs = new System.Windows.Forms.Button();
             this.cbSearchField = new System.Windows.Forms.ComboBox();
@@ -283,24 +281,6 @@
             this.btnNotesUp.UseVisualStyleBackColor = true;
             this.btnNotesUp.Click += new System.EventHandler(this.btnNotesUp_Click);
             // 
-            // label3
-            // 
-            this.label3.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 260);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 23);
-            this.label3.TabIndex = 387;
-            this.label3.Text = "Name:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // gbLine
-            // 
-            this.gbLine.Location = new System.Drawing.Point(12, 245);
-            this.gbLine.Name = "gbLine";
-            this.gbLine.Size = new System.Drawing.Size(514, 1);
-            this.gbLine.TabIndex = 389;
-            this.gbLine.TabStop = false;
-            // 
             // gbJobs
             // 
             this.gbJobs.Controls.Add(this.btnRefeshJobs);
@@ -316,7 +296,7 @@
             this.gbJobs.Controls.Add(this.btnCopy);
             this.gbJobs.Controls.Add(this.btnDelete);
             this.gbJobs.Controls.Add(this.lstJobs);
-            this.gbJobs.Location = new System.Drawing.Point(6, 0);
+            this.gbJobs.Location = new System.Drawing.Point(6, 235);
             this.gbJobs.Name = "gbJobs";
             this.gbJobs.Size = new System.Drawing.Size(528, 362);
             this.gbJobs.TabIndex = 390;
@@ -407,7 +387,7 @@
             this.gbCurrentJob.Controls.Add(this.cbField);
             this.gbCurrentJob.Controls.Add(this.lb1);
             this.gbCurrentJob.Controls.Add(this.tbNotes);
-            this.gbCurrentJob.Location = new System.Drawing.Point(6, 368);
+            this.gbCurrentJob.Location = new System.Drawing.Point(6, 0);
             this.gbCurrentJob.Name = "gbCurrentJob";
             this.gbCurrentJob.Size = new System.Drawing.Size(528, 228);
             this.gbCurrentJob.TabIndex = 391;
@@ -455,8 +435,6 @@
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.gbCurrentJob);
             this.Controls.Add(this.gbJobs);
-            this.Controls.Add(this.gbLine);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.ckJobs);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -494,8 +472,6 @@
         private System.Windows.Forms.Button btnJobsDown;
         private System.Windows.Forms.Button btnNotesDown;
         private System.Windows.Forms.Button btnNotesUp;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox gbLine;
         private System.Windows.Forms.GroupBox gbJobs;
         private System.Windows.Forms.ComboBox cbSearchField;
         private System.Windows.Forms.Label label2;

@@ -54,14 +54,14 @@ namespace RateController
             // lbRateAmount
             // 
             this.lbRateAmount.BackColor = System.Drawing.Color.Transparent;
-            this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRateAmount.ForeColor = System.Drawing.Color.Yellow;
             this.lbRateAmount.Location = new System.Drawing.Point(70, 0);
             this.lbRateAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lbRateAmount.Name = "lbRateAmount";
-            this.lbRateAmount.Size = new System.Drawing.Size(104, 62);
+            this.lbRateAmount.Size = new System.Drawing.Size(88, 62);
             this.lbRateAmount.TabIndex = 200;
-            this.lbRateAmount.Text = "0.0";
+            this.lbRateAmount.Text = "10000.0";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbRateAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbRateAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
@@ -76,7 +76,7 @@ namespace RateController
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(185, 68);
+            this.ClientSize = new System.Drawing.Size(163, 68);
             this.ControlBox = false;
             this.Controls.Add(this.lbRateAmount);
             this.Controls.Add(this.btRestore);

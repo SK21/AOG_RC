@@ -32,10 +32,11 @@ namespace RateController.Menu
         {
             try
             {
-                Props.SetPressureCal(cbModules.SelectedIndex * 4, double.Parse(tbMinVol.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 4 + 1, double.Parse(tbMinPres.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 4 + 2, double.Parse(tbMaxVol.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 4 + 3, double.Parse(tbMaxPres.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 5, double.Parse(tbMinVol.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 1, double.Parse(tbMinPres.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 2, double.Parse(tbMaxVol.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 3, double.Parse(tbMaxPres.Text));
+                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 4, double.Parse(tbZeroReading.Text));
                 Props.ShowPressure = ckPressure.Checked;
                 SetButtons(false);
                 UpdateForm();
@@ -116,6 +117,8 @@ namespace RateController.Menu
             lbMax.Text = Lang.lgPressureMax;
             lbPressure.Text = Lang.lgPressurePressure;
             lbVoltage.Text = Lang.lgPressureVoltage;
+            lbCurrent.Text = Lang.lgPressureCurrent;
+            lbZero.Text = Lang.lgPressureZero;
         }
 
         private void SetModuleIndicator()
@@ -191,6 +194,20 @@ namespace RateController.Menu
             SetButtons(true);
         }
 
+        private void tbZeroReading_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbZeroReading.Text, out temp);
+            using (var form = new FormNumeric(0, 5000, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbZeroReading.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateRaw();
@@ -200,10 +217,11 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4).ToString("N0");
-            tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 1).ToString("N1");
-            tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 2).ToString("N0");
-            tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 4 + 3).ToString("N1");
+            tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5).ToString("N0");
+            tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 1).ToString("N1");
+            tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 2).ToString("N0");
+            tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 3).ToString("N1");
+            tbZeroReading.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 4).ToString("N0");
 
             ckPressure.Checked = Props.ShowPressure;
             SetModuleIndicator();

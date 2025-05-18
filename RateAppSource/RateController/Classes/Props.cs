@@ -91,13 +91,14 @@ namespace RateController.Classes
 
         #region pressure calibration
 
-        // cal 0    module 0, minimum voltage
-        // cal 1    module 0, minimum pressure
-        // cal 2    module 0, maximum voltage
-        // cal 3    module 0, maximum pressure
+        // cal 0    module 0, low voltage
+        // cal 1    module 0, low pressure
+        // cal 2    module 0, high voltage
+        // cal 3    module 0, high pressure
+        // cal 4    module 0, minimum voltage, below is 0 pressure
         // continues for each module, up to 8 modules
 
-        private static double[] PressureCals = new double[32];
+        private static double[] PressureCals = new double[40];
 
         #endregion pressure calibration
 
@@ -911,11 +912,12 @@ namespace RateController.Classes
             double Result = 0;
             try
             {
-                double MinVol = GetPressureCal(ModuleID * 4);       // x1
-                double MinPres = GetPressureCal(ModuleID * 4 + 1);  // y1
-                double MaxVol = GetPressureCal(ModuleID * 4 + 2);   // x2
-                double MaxPres = GetPressureCal(ModuleID * 4 + 3);  // y2
-                if ((MaxPres - MinPres) > 0)
+                double MinVol = GetPressureCal(ModuleID * 5);       // x1
+                double MinPres = GetPressureCal(ModuleID * 5 + 1);  // y1
+                double MaxVol = GetPressureCal(ModuleID * 5 + 2);   // x2
+                double MaxPres = GetPressureCal(ModuleID * 5 + 3);  // y2
+                double ZeroValue = GetPressureCal(ModuleID * 5 + 4);
+                if ((MaxPres - MinPres) > 0 && Reading >= ZeroValue)
                 {
                     double M = (MaxPres - MinPres) / (MaxVol - MinVol);
                     double B = MaxPres - M * MaxVol;
