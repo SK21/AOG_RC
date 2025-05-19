@@ -105,6 +105,7 @@ bool WrkLast;
 bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
+
 int16_t PressureReading = 0;
 bool WorkSwitchOn = false;
 bool MCP23017_found = false;
