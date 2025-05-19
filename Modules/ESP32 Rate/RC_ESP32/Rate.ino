@@ -8,23 +8,23 @@ uint32_t ReadLast[2];
 uint32_t ReadTime[2];
 uint32_t PulseTime[2];
 
-volatile uint32_t PulseMax[2] = { 50000,50000 };
+volatile uint32_t PulseMax[2] = { 0,0 };
 volatile uint16_t PulseCount[2];
 volatile int SamplesCount[2];
 volatile uint32_t SamplesTime[2];
 volatile uint16_t SamplesIndex[2];
 
-void IRAM_ATTR ISR0()
+void ISR0()
 {
 	PulseISR(0);
 }
 
-void IRAM_ATTR ISR1()
+void ISR1()
 {
 	PulseISR(1);
 }
 
-void IRAM_ATTR PulseISR(uint8_t ID)
+void PulseISR(uint8_t ID)
 {
 	ReadTime[ID] = micros();
 	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
@@ -32,6 +32,7 @@ void IRAM_ATTR PulseISR(uint8_t ID)
 	if (PulseTime[ID] > PulseMin)
 	{
 		ReadLast[ID] = ReadTime[ID];
+		PulseMax[ID] = PulseMax[ID] * 0.8 + PulseTime[ID] * 1.5 * 0.2;
 		if (PulseTime[ID] < PulseMax[ID])
 		{
 			PulseCount[ID]++;
@@ -61,7 +62,6 @@ void GetUPM()
 
 			Sensor[i].Hz = (1000000.0 * TotalCounts / TotalTime) * 0.8 + Sensor[i].Hz * 0.2;
 			Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
-			PulseMax[i] = constrain(1500000.0 / Sensor[i].Hz, 5000, 1500000);
 		}
 
 		// check for no flow
@@ -69,7 +69,7 @@ void GetUPM()
 		{
 			Sensor[i].UPM = 0;
 			Sensor[i].Hz = 0;
-			PulseMax[i] = 500000;
+			PulseMax[i] = 250000;
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;
 			SamplesTime[i] = 0;
