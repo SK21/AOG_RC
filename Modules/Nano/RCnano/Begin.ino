@@ -62,20 +62,16 @@ void DoSetup()
 		{
 			Serial.println("");
 			ether.printIp("IP Address:     ", ether.myip);
-			Serial.println("Serial data disabled.");
 		}
 		else
 		{
 			Serial.println("Ethernet cable not connected.");
-			Serial.println("Serial data enabled.");
 		}
 	}
 	else
 	{
 		Serial.println("");
 		Serial.println("Ethernet controller not found.");
-		Serial.println("");
-		Serial.println("Serial data enabled.");
 	}
 
 	// sensors
