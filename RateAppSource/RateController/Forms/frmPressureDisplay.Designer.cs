@@ -51,7 +51,7 @@
             this.lbPressureValue.Name = "lbPressureValue";
             this.lbPressureValue.Size = new System.Drawing.Size(84, 62);
             this.lbPressureValue.TabIndex = 1;
-            this.lbPressureValue.Text = "-10,000";
+            this.lbPressureValue.Text = "0";
             this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbPressureValue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbPressureValue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);

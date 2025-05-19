@@ -316,7 +316,7 @@ void ParseData(byte Data[], uint16_t len)
         // 0   246
         // 1   126
         // 2   Mod/Sen ID     0-15/0-15
-        // 3   -
+        // 3   Ki
         // 4   -
         // 5   -
         // 6   MinAdjust
@@ -335,6 +335,7 @@ void ParseData(byte Data[], uint16_t len)
                     byte SensorID = ParseSenID(Data[2]);
                     if (SensorID < MDL.SensorCount)
                     {
+                        Sensor[SensorID].KI = (double)(5.0 * Data[3] / 100.0);
                         Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
                         Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 

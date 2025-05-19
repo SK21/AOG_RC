@@ -61,7 +61,7 @@ namespace RateController
             this.lbRateAmount.Name = "lbRateAmount";
             this.lbRateAmount.Size = new System.Drawing.Size(88, 62);
             this.lbRateAmount.TabIndex = 200;
-            this.lbRateAmount.Text = "10000.0";
+            this.lbRateAmount.Text = "0";
             this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbRateAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbRateAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
