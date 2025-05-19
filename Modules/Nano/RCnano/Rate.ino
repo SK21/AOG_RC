@@ -34,7 +34,7 @@ void PulseISR(uint8_t ID)
 	if (PulseTime[ID] > PulseMin)
 	{
 		ReadLast[ID] = ReadTime[ID];
-		PulseMax[ID] = (PulseMax[ID] * 8 + PulseTime[ID] * 3) / 10;
+		PulseMax[ID] = (PulseMax[ID] * 8 + PulseTime[ID] * 3) / 10;	// 1.5 X average
 
 		if (PulseTime[ID] < PulseMax[ID])
 		{
