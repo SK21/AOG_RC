@@ -1,6 +1,6 @@
 
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
-#include <pcf8574.h>		// https://github.com/RobTillaart/PCF8574
+#include <PCF8574.h>		// https://github.com/RobTillaart/PCF8574
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
@@ -16,8 +16,8 @@
 #include <Adafruit_PWMServoDriver.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  18-May-2025"
-const uint16_t InoID = 18055;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  24-May-2025"
+const uint16_t InoID = 24055;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 

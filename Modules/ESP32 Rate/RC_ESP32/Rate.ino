@@ -1,6 +1,8 @@
 
 const uint32_t PulseMin = 250;		// micros
 const int SampleSize = 8;
+const uint32_t FlowTimeout = 4000;
+const uint32_t PulseMaxReset = 500000;
 
 uint32_t Samples[2][SampleSize];
 uint32_t LastPulse[2];
@@ -14,17 +16,7 @@ volatile int SamplesCount[2];
 volatile uint32_t SamplesTime[2];
 volatile uint16_t SamplesIndex[2];
 
-void ISR0()
-{
-	PulseISR(0);
-}
-
-void ISR1()
-{
-	PulseISR(1);
-}
-
-void PulseISR(uint8_t ID)
+void IRAM_ATTR  PulseISR(uint8_t ID)
 {
 	ReadTime[ID] = micros();
 	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
@@ -32,7 +24,8 @@ void PulseISR(uint8_t ID)
 	if (PulseTime[ID] > PulseMin)
 	{
 		ReadLast[ID] = ReadTime[ID];
-		PulseMax[ID] = PulseMax[ID] * 0.8 + PulseTime[ID] * 1.5 * 0.2;
+		PulseMax[ID] = (PulseMax[ID] * 8 + PulseTime[ID] * 3) / 10;	// 1.5 X average
+
 		if (PulseTime[ID] < PulseMax[ID])
 		{
 			PulseCount[ID]++;
@@ -43,6 +36,16 @@ void PulseISR(uint8_t ID)
 			if (SamplesCount[ID] < SampleSize) SamplesCount[ID]++;
 		}
 	}
+}
+
+void IRAM_ATTR  ISR0()
+{
+	PulseISR(0);
+}
+
+void IRAM_ATTR  ISR1()
+{
+	PulseISR(1);
 }
 
 void GetUPM()
@@ -65,11 +68,11 @@ void GetUPM()
 		}
 
 		// check for no flow
-		if (millis() - LastPulse[i] > 4000)
+		if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
 		{
 			Sensor[i].UPM = 0;
 			Sensor[i].Hz = 0;
-			PulseMax[i] = 250000;
+			PulseMax[i] = PulseMaxReset;
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;
 			SamplesTime[i] = 0;

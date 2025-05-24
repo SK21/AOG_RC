@@ -107,7 +107,7 @@ int PIDmotor(byte ID)
 	}
 	else
 	{
-		LastPWM[ID] = 0;
+		//LastPWM[ID] = 0;
 	}
 	return (int)Result;
 }
