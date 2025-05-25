@@ -619,6 +619,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invert_Master.
+        /// </summary>
+        internal static string lgInvert_Master {
+            get {
+                return ResourceManager.GetString("lgInvert_Master", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invert Flow Control.
         /// </summary>
         internal static string lgInvertFlow {

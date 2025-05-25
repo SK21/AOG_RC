@@ -25,7 +25,7 @@ namespace RateController.Classes
     { Applied, Target }
 
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None };
+    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master };
 
     public enum SimType
     { Sim_None, Sim_Speed }

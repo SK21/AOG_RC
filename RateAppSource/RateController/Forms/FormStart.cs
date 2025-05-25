@@ -39,7 +39,7 @@ namespace RateController
 
         public string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
-            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone};
+            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master};
 
         public UDPComm UDPaog;
         public UDPComm UDPmodules;

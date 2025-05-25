@@ -312,6 +312,9 @@
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invert_Section</value>
   </data>
+  <data name="lgInvert_Master" xml:space="preserve">
+    <value>Invert_Master</value>
+  </data>
   <data name="lgJobs" xml:space="preserve">
     <value>Jobs</value>
   </data>

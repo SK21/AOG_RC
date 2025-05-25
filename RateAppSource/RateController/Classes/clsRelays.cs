@@ -280,6 +280,10 @@ namespace RateController
                             case RelayTypes.Switch:
                                 Rly.IsON = mf.SwitchBox.SwitchIsOn((SwIDs)(Rly.SwitchID + 5));
                                 break;
+
+                            case RelayTypes.Invert_Master:
+                                Rly.IsON = (MasterFound && !MasterRelayOn) || !SectionsOn;
+                                break;
                         }
 
                         // build return int
