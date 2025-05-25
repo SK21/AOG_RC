@@ -304,13 +304,14 @@ namespace RateController
 
         private void BuildInvertedRelays()
         {
+            // a list of relays that should be powered on by the module in case of comm failure with the app
             for (int i = 0; i < Props.MaxModules; i++)
             {
                 cInvertedRelays[i] = 0;
                 for (int j = 0; j < cRelays.Count; j++)
                 {
                     clsRelay Rly = cRelays[j];
-                    if (Rly.Type == RelayTypes.Invert_Section && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
+                    if ((Rly.Type == RelayTypes.Invert_Section || Rly.Type == RelayTypes.Invert_Master) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }
@@ -318,7 +319,7 @@ namespace RateController
         private void BuildPowerRelays()
         {
             // 16 bit list indicating which relays are power type
-            // needed for example when powering off a combo close valve in case of comm failure
+            // needed for example when powering off a combo close valve in case of comm failure with the app
             for (int i = 0; i < Props.MaxModules; i++)
             {
                 cPowerRelays[i] = 0;
