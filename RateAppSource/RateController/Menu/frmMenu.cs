@@ -1006,12 +1006,12 @@ namespace RateController
 
         private void frmMenu_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
         }
 
         private void frmMenu_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void HighlightButton(Button btn)

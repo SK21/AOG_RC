@@ -24,6 +24,8 @@ namespace RateController.Menu
         private int PicTop;
         private int PicWidth;
         private bool EditZones = false;
+        private int PressureLeft = 0;
+        private int PressureTop = 0;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
@@ -142,6 +144,13 @@ namespace RateController.Menu
                 {
                     mf.Left = PicLeft + this.Left;
                     mf.Top = PicTop + this.Top;
+
+                    Form fs = Props.IsFormOpen("frmPressureDisplay", false);
+                    if (fs != null)
+                    {
+                        fs.Left = PicLeft + this.Left;
+                        fs.Top = PicTop + this.Top + mf.Height + 10;
+                    }
                 }
                 if (Props.MapShowRates) ShowLegend();
             }
@@ -162,6 +171,13 @@ namespace RateController.Menu
                 {
                     mf.Left = MainLeft;
                     mf.Top = MainTop;
+
+                    Form fs = Props.IsFormOpen("frmPressureDisplay", false);
+                    if (fs != null)
+                    {
+                        fs.Left = PressureLeft;
+                        fs.Top = PressureTop;
+                    }
                 }
                 legendPanel.Visible = false;
             }
@@ -304,6 +320,13 @@ namespace RateController.Menu
 
             MainLeft = mf.Left;
             MainTop = mf.Top;
+
+            Form fs = Props.IsFormOpen("frmPressureDisplay", false);
+            if (fs != null)
+            {
+                PressureLeft = fs.Left;
+                PressureTop = fs.Top;
+            }
 
             PicTop = pictureBox1.Top;
             PicLeft = pictureBox1.Left;

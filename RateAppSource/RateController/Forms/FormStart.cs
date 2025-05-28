@@ -761,10 +761,7 @@ namespace RateController
 
         private void lbProduct_Click(object sender, EventArgs e)
         {
-            if (MouseButtonClicked == MouseButtons.Left)
-            {
-                ShowSettings(true);
-            }
+
         }
 
         private void lbRate_Click(object sender, EventArgs e)
@@ -852,12 +849,12 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             MouseButtonClicked = e.Button;
-            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+            if (e.Button == MouseButtons.Right || e.Button==MouseButtons.Left) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void SetDisplay()

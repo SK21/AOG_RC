@@ -163,12 +163,11 @@ namespace RateController
             // lbProduct
             // 
             this.lbProduct.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbProduct.Location = new System.Drawing.Point(3, 0);
+            this.lbProduct.Location = new System.Drawing.Point(5, 0);
             this.lbProduct.Name = "lbProduct";
-            this.lbProduct.Size = new System.Drawing.Size(136, 23);
+            this.lbProduct.Size = new System.Drawing.Size(134, 23);
             this.lbProduct.TabIndex = 157;
             this.lbProduct.Text = "Herbicide";
-            this.lbProduct.Click += new System.EventHandler(this.lbProduct_Click);
             this.lbProduct.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbProduct.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 

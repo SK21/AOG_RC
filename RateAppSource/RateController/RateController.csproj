@@ -742,6 +742,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\drag-and-drop.png" />
     <None Include="Resources\polygon.png" />
     <None Include="Resources\calendar - large.png" />
     <None Include="Resources\Update small.png" />
