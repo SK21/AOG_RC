@@ -30,6 +30,7 @@
         {
             this.btnImport = new System.Windows.Forms.Button();
             this.gbZone = new System.Windows.Forms.GroupBox();
+            this.ckEditZones = new System.Windows.Forms.CheckBox();
             this.lbArea = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
@@ -51,13 +52,10 @@
             this.VSzoom = new System.Windows.Forms.VScrollBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.ckZones = new System.Windows.Forms.CheckBox();
             this.btnPNG = new System.Windows.Forms.Button();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ckRateData = new System.Windows.Forms.CheckBox();
             this.btnCopy = new System.Windows.Forms.Button();
-            this.ckEditZones = new System.Windows.Forms.CheckBox();
             this.gbZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -97,6 +95,21 @@
             this.gbZone.TabStop = false;
             this.gbZone.Text = "Zone";
             this.gbZone.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // ckEditZones
+            // 
+            this.ckEditZones.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEditZones.FlatAppearance.BorderSize = 0;
+            this.ckEditZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEditZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEditZones.Image = global::RateController.Properties.Resources.FileEditName;
+            this.ckEditZones.Location = new System.Drawing.Point(10, 22);
+            this.ckEditZones.Name = "ckEditZones";
+            this.ckEditZones.Size = new System.Drawing.Size(82, 64);
+            this.ckEditZones.TabIndex = 343;
+            this.ckEditZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEditZones.UseVisualStyleBackColor = true;
+            this.ckEditZones.CheckedChanged += new System.EventHandler(this.ckEditZones_CheckedChanged);
             // 
             // lbArea
             // 
@@ -323,10 +336,6 @@
             this.ckEnable.UseVisualStyleBackColor = true;
             this.ckEnable.CheckedChanged += new System.EventHandler(this.ckEnable_CheckedChanged);
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // ckZones
             // 
             this.ckZones.Appearance = System.Windows.Forms.Appearance.Button;
@@ -353,10 +362,6 @@
             this.btnPNG.UseVisualStyleBackColor = true;
             this.btnPNG.Click += new System.EventHandler(this.btnPNG_Click);
             // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.DefaultExt = "PNG";
-            // 
             // ckRateData
             // 
             this.ckRateData.Appearance = System.Windows.Forms.Appearance.Button;
@@ -382,21 +387,6 @@
             this.btnCopy.Text = "Copy";
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
-            // ckEditZones
-            // 
-            this.ckEditZones.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckEditZones.FlatAppearance.BorderSize = 0;
-            this.ckEditZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckEditZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEditZones.Image = global::RateController.Properties.Resources.FileEditName;
-            this.ckEditZones.Location = new System.Drawing.Point(10, 22);
-            this.ckEditZones.Name = "ckEditZones";
-            this.ckEditZones.Size = new System.Drawing.Size(82, 64);
-            this.ckEditZones.TabIndex = 343;
-            this.ckEditZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEditZones.UseVisualStyleBackColor = true;
-            this.ckEditZones.CheckedChanged += new System.EventHandler(this.ckEditZones_CheckedChanged);
             // 
             // frmMenuRateMap
             // 
@@ -451,14 +441,12 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox ckFullScreen;
         private System.Windows.Forms.CheckBox ckEnable;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox colorComboBox;
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.CheckBox ckSatView;
         private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Button btnPNG;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.CheckBox ckRateData;
         private System.Windows.Forms.Panel legendPanel;
         private System.Windows.Forms.Button btnCopy;

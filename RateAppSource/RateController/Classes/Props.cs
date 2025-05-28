@@ -104,10 +104,10 @@ namespace RateController.Classes
 
         #region // flow adjustment defaults
 
+        public static readonly int IntegralDefault = 50;
         public static readonly int MaxAdjustDefault = 100;
         public static readonly int MinAdjustDefault = 5;
         public static readonly int ScalingDefault = 50;
-        public static readonly int IntegralDefault = 50;
 
         #endregion // flow adjustment defaults
 
@@ -278,7 +278,6 @@ namespace RateController.Classes
             get { return int.TryParse(GetProp("RatesProduct"), out int rs) ? rs : 0; }
             set { SetProp("RatesProduct", value.ToString()); }
         }
-
 
         public static double RateDisplayResolution
         {

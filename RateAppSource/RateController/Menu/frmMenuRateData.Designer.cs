@@ -49,6 +49,7 @@
             this.lbDataPoints = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.btnImport = new System.Windows.Forms.Button();
             this.gbMap.SuspendLayout();
             this.gbCoverage.SuspendLayout();
             this.gbRecord.SuspendLayout();
@@ -254,6 +255,7 @@
             // 
             // gbRecord
             // 
+            this.gbRecord.Controls.Add(this.btnImport);
             this.gbRecord.Controls.Add(this.btnDelete);
             this.gbRecord.Controls.Add(this.lbDataPoints);
             this.gbRecord.Controls.Add(this.label1);
@@ -271,7 +273,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(171, 28);
+            this.btnDelete.Location = new System.Drawing.Point(163, 69);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 397;
@@ -281,7 +283,7 @@
             // lbDataPoints
             // 
             this.lbDataPoints.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDataPoints.Location = new System.Drawing.Point(400, 48);
+            this.lbDataPoints.Location = new System.Drawing.Point(392, 89);
             this.lbDataPoints.Name = "lbDataPoints";
             this.lbDataPoints.Size = new System.Drawing.Size(87, 23);
             this.lbDataPoints.TabIndex = 396;
@@ -291,7 +293,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(259, 48);
+            this.label1.Location = new System.Drawing.Point(251, 89);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 23);
             this.label1.TabIndex = 395;
@@ -302,6 +304,16 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(17, 116);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(89, 64);
+            this.btnImport.TabIndex = 398;
+            this.btnImport.Text = "Export CSV";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // frmMenuRateData
             // 
@@ -350,5 +362,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnImport;
     }
 }

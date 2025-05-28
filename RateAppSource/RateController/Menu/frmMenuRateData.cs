@@ -2,6 +2,7 @@
 using RateController.Classes;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
@@ -44,6 +45,40 @@ namespace RateController.Forms
             if (Result)
             {
                 mf.Tls.RateCollector.ClearReadings();
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string sourceFilePath = Props.CurrentRateDataPath;
+                string filename = Path.GetFileName(sourceFilePath);
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Title = "Save File As";
+                    saveFileDialog.Filter = "All Files|*.csv";
+                    saveFileDialog.FileName = filename;
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string destinationFilePath = saveFileDialog.FileName;
+
+                        try
+                        {
+                            File.Copy(sourceFilePath, destinationFilePath, true);
+                            MessageBox.Show("File copied successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error copying file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mf.Tls.ShowMessage(ex.Message);
             }
         }
 
@@ -258,13 +293,12 @@ namespace RateController.Forms
 
                 UpdateControlDisplay();
                 SetLanguage();
-
-                Initializing = false;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmRates/UpdateForm: " + ex.Message);
             }
+            Initializing = false;
         }
     }
 }
