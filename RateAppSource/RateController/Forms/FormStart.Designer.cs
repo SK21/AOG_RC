@@ -168,8 +168,8 @@ namespace RateController
             this.lbProduct.Size = new System.Drawing.Size(134, 23);
             this.lbProduct.TabIndex = 157;
             this.lbProduct.Text = "Herbicide";
-            this.lbProduct.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
-            this.lbProduct.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.lbProduct.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbProduct_MouseDown);
+            this.lbProduct.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbProduct_MouseMove);
             // 
             // SetRate
             // 
@@ -222,9 +222,8 @@ namespace RateController
             this.lblUnits.TabIndex = 152;
             this.lblUnits.Text = "Imp Gal/Min";
             this.lblUnits.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.lblUnits.Click += new System.EventHandler(this.lblUnits_Click);
-            this.lblUnits.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
-            this.lblUnits.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.lblUnits.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbProduct_MouseDown);
+            this.lblUnits.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbProduct_MouseMove);
             // 
             // AreaDone
             // 

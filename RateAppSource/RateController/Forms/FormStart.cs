@@ -751,19 +751,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void lblUnits_Click(object sender, EventArgs e)
-        {
-            if (MouseButtonClicked == MouseButtons.Left)
-            {
-                ShowSettings(true);
-            }
-        }
-
-        private void lbProduct_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void lbRate_Click(object sender, EventArgs e)
         {
             if (MouseButtonClicked == MouseButtons.Left)
@@ -849,12 +836,12 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             MouseButtonClicked = e.Button;
-            if (e.Button == MouseButtons.Right || e.Button==MouseButtons.Left) MouseDownLocation = e.Location;
+            if (e.Button == MouseButtons.Right ) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if (e.Button == MouseButtons.Right ) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void SetDisplay()
@@ -955,6 +942,17 @@ namespace RateController
                 Tls.Manager.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
             }
             Tls.Manager.UpdateTargetRates();
+        }
+
+        private void lbProduct_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseButtonClicked = e.Button;
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
+        }
+
+        private void lbProduct_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
     }
 }

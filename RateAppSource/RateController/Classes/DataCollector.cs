@@ -21,13 +21,14 @@ namespace RateController.Classes
         private int lastSavedIndex = 0;
         private bool ReadyForNewData = false;
         private Timer RecordTimer;
+        const int RecordIntervalMS = 500;
 
         public DataCollector()
         {
             RecordTimer = new Timer();
             RecordTimer.Elapsed += RecordTimer_Elapsed;
             RecordTimer.Enabled = Props.RateRecordEnabled;
-            RecordTimer.Interval = Props.RateRecordInterval * 1000;
+            RecordTimer.Interval = RecordIntervalMS;
 
             cFilePath = Props.CurrentRateDataPath;
             LoadDataFromCsv();
@@ -286,7 +287,7 @@ namespace RateController.Classes
         private void Props_RateDataSettingsChanged(object sender, EventArgs e)
         {
             RecordTimer.Enabled = Props.RateRecordEnabled;
-            RecordTimer.Interval = Props.RateRecordInterval * 1000;
+            RecordTimer.Interval = RecordIntervalMS;
             if (Props.RateRecordEnabled)
             {
                 SaveStopWatch.Start();

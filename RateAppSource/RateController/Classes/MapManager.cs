@@ -35,6 +35,7 @@ namespace RateController.Classes
         private GMapOverlay tempMarkerOverlay;
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
+        const int MapRefreshSeconds = 2;
 
         public MapManager(FormStart main)
         {
@@ -360,7 +361,7 @@ namespace RateController.Classes
                     AddOverlay(AppliedOverlay);
                     cLegend = ShowAppliedLayer();
 
-                    int RefreshIntervalSeconds = Props.RateDisplayRefresh;
+                    int RefreshIntervalSeconds = MapRefreshSeconds;
                     if (RefreshIntervalSeconds > 0 && RefreshIntervalSeconds < 61)
                     {
                         AppliedOverlayTimer.Interval = RefreshIntervalSeconds * 1000;

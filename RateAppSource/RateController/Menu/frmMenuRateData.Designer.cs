@@ -37,11 +37,8 @@
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.rbProductA = new System.Windows.Forms.RadioButton();
             this.gbMap = new System.Windows.Forms.GroupBox();
-            this.lbSensorCounts = new System.Windows.Forms.Label();
-            this.HSrefreshMap = new System.Windows.Forms.HScrollBar();
             this.HSresolution = new System.Windows.Forms.HScrollBar();
             this.lbResolution = new System.Windows.Forms.Label();
-            this.lbRefresh = new System.Windows.Forms.Label();
             this.lbResolutionDescription = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.gbCoverage = new System.Windows.Forms.GroupBox();
@@ -51,9 +48,6 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.lbDataPoints = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.HSRecordInterval = new System.Windows.Forms.HScrollBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lbRecordInterval = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gbMap.SuspendLayout();
             this.gbCoverage.SuspendLayout();
@@ -153,35 +147,13 @@
             this.gbMap.Controls.Add(this.rbProductD);
             this.gbMap.Controls.Add(this.rbProductC);
             this.gbMap.Controls.Add(this.rbProductB);
-            this.gbMap.Location = new System.Drawing.Point(62, 110);
+            this.gbMap.Location = new System.Drawing.Point(64, 136);
             this.gbMap.Name = "gbMap";
             this.gbMap.Size = new System.Drawing.Size(367, 103);
             this.gbMap.TabIndex = 364;
             this.gbMap.TabStop = false;
             this.gbMap.Text = "Product to Display";
             this.gbMap.Paint += new System.Windows.Forms.PaintEventHandler(this.gbMap_Paint);
-            // 
-            // lbSensorCounts
-            // 
-            this.lbSensorCounts.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorCounts.Location = new System.Drawing.Point(13, 227);
-            this.lbSensorCounts.Name = "lbSensorCounts";
-            this.lbSensorCounts.Size = new System.Drawing.Size(170, 23);
-            this.lbSensorCounts.TabIndex = 366;
-            this.lbSensorCounts.Text = "Interval (Seconds)";
-            this.lbSensorCounts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // HSrefreshMap
-            // 
-            this.HSrefreshMap.LargeChange = 1;
-            this.HSrefreshMap.Location = new System.Drawing.Point(190, 216);
-            this.HSrefreshMap.Maximum = 60;
-            this.HSrefreshMap.Minimum = 1;
-            this.HSrefreshMap.Name = "HSrefreshMap";
-            this.HSrefreshMap.Size = new System.Drawing.Size(239, 45);
-            this.HSrefreshMap.TabIndex = 375;
-            this.HSrefreshMap.Value = 1;
-            this.HSrefreshMap.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSresolution_Scroll);
             // 
             // HSresolution
             // 
@@ -203,16 +175,6 @@
             this.lbResolution.TabIndex = 373;
             this.lbResolution.Text = "100";
             this.lbResolution.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbRefresh
-            // 
-            this.lbRefresh.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRefresh.Location = new System.Drawing.Point(436, 227);
-            this.lbRefresh.Name = "lbRefresh";
-            this.lbRefresh.Size = new System.Drawing.Size(59, 23);
-            this.lbRefresh.TabIndex = 372;
-            this.lbRefresh.Text = "100";
-            this.lbRefresh.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbResolutionDescription
             // 
@@ -244,14 +206,11 @@
             // 
             // gbCoverage
             // 
-            this.gbCoverage.Controls.Add(this.HSrefreshMap);
-            this.gbCoverage.Controls.Add(this.lbSensorCounts);
             this.gbCoverage.Controls.Add(this.gbMap);
             this.gbCoverage.Controls.Add(this.rbApplied);
             this.gbCoverage.Controls.Add(this.lbResolutionDescription);
             this.gbCoverage.Controls.Add(this.rbTarget);
             this.gbCoverage.Controls.Add(this.HSresolution);
-            this.gbCoverage.Controls.Add(this.lbRefresh);
             this.gbCoverage.Controls.Add(this.lbResolution);
             this.gbCoverage.Location = new System.Drawing.Point(12, 252);
             this.gbCoverage.Name = "gbCoverage";
@@ -298,9 +257,6 @@
             this.gbRecord.Controls.Add(this.btnDelete);
             this.gbRecord.Controls.Add(this.lbDataPoints);
             this.gbRecord.Controls.Add(this.label1);
-            this.gbRecord.Controls.Add(this.HSRecordInterval);
-            this.gbRecord.Controls.Add(this.label2);
-            this.gbRecord.Controls.Add(this.lbRecordInterval);
             this.gbRecord.Controls.Add(this.ckRecord);
             this.gbRecord.Location = new System.Drawing.Point(12, 35);
             this.gbRecord.Name = "gbRecord";
@@ -342,37 +298,6 @@
             this.label1.Text = "Data points:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // HSRecordInterval
-            // 
-            this.HSRecordInterval.LargeChange = 1;
-            this.HSRecordInterval.Location = new System.Drawing.Point(182, 125);
-            this.HSRecordInterval.Minimum = 1;
-            this.HSRecordInterval.Name = "HSRecordInterval";
-            this.HSRecordInterval.Size = new System.Drawing.Size(239, 45);
-            this.HSRecordInterval.TabIndex = 393;
-            this.HSRecordInterval.Value = 5;
-            this.HSRecordInterval.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSresolution_Scroll);
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(5, 136);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(170, 23);
-            this.label2.TabIndex = 391;
-            this.label2.Text = "Interval (Seconds)";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lbRecordInterval
-            // 
-            this.lbRecordInterval.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRecordInterval.Location = new System.Drawing.Point(428, 136);
-            this.lbRecordInterval.Name = "lbRecordInterval";
-            this.lbRecordInterval.Size = new System.Drawing.Size(59, 23);
-            this.lbRecordInterval.TabIndex = 392;
-            this.lbRecordInterval.Text = "100";
-            this.lbRecordInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -413,20 +338,14 @@
         private System.Windows.Forms.RadioButton rbProductB;
         private System.Windows.Forms.RadioButton rbProductA;
         private System.Windows.Forms.GroupBox gbMap;
-        private System.Windows.Forms.Label lbSensorCounts;
-        private System.Windows.Forms.HScrollBar HSrefreshMap;
         private System.Windows.Forms.HScrollBar HSresolution;
         private System.Windows.Forms.Label lbResolution;
-        private System.Windows.Forms.Label lbRefresh;
         private System.Windows.Forms.Label lbResolutionDescription;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.GroupBox gbCoverage;
         private System.Windows.Forms.CheckBox ckRecord;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.GroupBox gbRecord;
-        private System.Windows.Forms.HScrollBar HSRecordInterval;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lbRecordInterval;
         private System.Windows.Forms.Label lbDataPoints;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnDelete;

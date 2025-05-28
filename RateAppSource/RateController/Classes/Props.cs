@@ -279,14 +279,6 @@ namespace RateController.Classes
             set { SetProp("RatesProduct", value.ToString()); }
         }
 
-        public static int RateDisplayRefresh
-        {
-            get { return int.TryParse(GetProp("RateDisplayRefresh"), out int rs) ? rs : 5; }
-            set
-            {
-                if (value >= 0 && value <= 60) SetProp("RateDisplayRefresh", value.ToString());
-            }
-        }
 
         public static double RateDisplayResolution
         {
@@ -310,16 +302,6 @@ namespace RateController.Classes
             {
                 cRateRecordEnabled = value;
                 SetProp("RecordRates", value.ToString());
-            }
-        }
-
-        public static double RateRecordInterval
-        {
-            get { return cRateRecordInterval; }
-            set
-            {
-                cRateRecordInterval = value;
-                SetProp("RateRecordInterval", cRateRecordInterval.ToString());
             }
         }
 

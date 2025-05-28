@@ -12,11 +12,8 @@ namespace RateController.Forms
         private bool cEdited = false;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private int MaxRefreshSeconds = 30;
         private FormStart mf;
-        private int MinRefreshSeconds = 1;
         private double ResolutionDivisorAcres = 0.05;
-        private double RecordDivisorSeconds = 0.1;
 
         public frmMenuRateData(FormStart main, frmMenu menu)
         {
@@ -26,8 +23,6 @@ namespace RateController.Forms
             mf = main;
             this.Tag = false;
 
-            HSrefreshMap.Minimum = MinRefreshSeconds;
-            HSrefreshMap.Maximum = MaxRefreshSeconds;
             timer1.Enabled = true;
             lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
         }
@@ -68,9 +63,7 @@ namespace RateController.Forms
                     }
 
                     Props.RateRecordEnabled = ckRecord.Checked;
-                    Props.RateRecordInterval = RecordIntervalTo();
 
-                    Props.RateDisplayRefresh = HSrefreshMap.Value;
                     Props.RateDisplayResolution = MapResolutionTo();
 
                     if (rbProductA.Checked)
@@ -118,10 +111,8 @@ namespace RateController.Forms
             SetLanguage();
             UpdateForm();
 
-            Font ValFont = new Font(lbRefresh.Font.FontFamily, 14, FontStyle.Bold);
-            lbRefresh.Font = ValFont;
+            Font ValFont = new Font(lbResolution.Font.FontFamily, 14, FontStyle.Bold);
             lbResolution.Font = ValFont;
-            lbRecordInterval.Font = ValFont;
             lbDataPoints.Font = ValFont;
         }
 
@@ -151,7 +142,7 @@ namespace RateController.Forms
             }
             else
             {
-                Result = (int)(Value /ResolutionDivisorAcres);
+                Result = (int)(Value / ResolutionDivisorAcres);
             }
             if (Result < HSresolution.Minimum)
             {
@@ -176,25 +167,6 @@ namespace RateController.Forms
                 Result = HSresolution.Value * ResolutionDivisorAcres;
             }
             return Result;
-        }
-
-        private int RecordIntervalFrom(double Value)
-        {
-          int  Result= (int)(Value / RecordDivisorSeconds);
-            if(Result < HSRecordInterval.Minimum)
-            {
-                Result = HSRecordInterval.Minimum;
-            }
-            else if (Result > HSRecordInterval.Maximum)
-            {
-                Result = HSRecordInterval.Maximum;
-            }
-            return Result;
-        }
-
-        private double RecordIntervalTo()
-        {
-            return HSRecordInterval.Value * RecordDivisorSeconds;
         }
 
         private void PositionForm()
@@ -252,8 +224,6 @@ namespace RateController.Forms
 
         private void UpdateControlDisplay()
         {
-            lbRefresh.Text = HSrefreshMap.Value.ToString("N0");
-            lbRecordInterval.Text = RecordIntervalTo().ToString("N1");
             lbResolution.Text = MapResolutionTo().ToString("N2");
         }
 
@@ -265,9 +235,7 @@ namespace RateController.Forms
                 rbApplied.Checked = (Props.RateDisplayType == RateType.Applied);
                 rbTarget.Checked = !rbApplied.Checked;
                 ckRecord.Checked = Props.RateRecordEnabled;
-                HSrefreshMap.Value = Props.RateDisplayRefresh;
                 HSresolution.Value = MapResolutionFrom(Props.RateDisplayResolution);
-                HSRecordInterval.Value = RecordIntervalFrom(Props.RateRecordInterval);
 
                 switch (Props.RateDisplayProduct)
                 {
