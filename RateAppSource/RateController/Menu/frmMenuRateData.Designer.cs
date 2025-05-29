@@ -45,11 +45,11 @@
             this.ckRecord = new System.Windows.Forms.CheckBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.gbRecord = new System.Windows.Forms.GroupBox();
+            this.btnImport = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.lbDataPoints = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnImport = new System.Windows.Forms.Button();
             this.gbMap.SuspendLayout();
             this.gbCoverage.SuspendLayout();
             this.gbRecord.SuspendLayout();
@@ -268,6 +268,17 @@
             this.gbRecord.Text = "Record Rate Data";
             this.gbRecord.Paint += new System.Windows.Forms.PaintEventHandler(this.gbMap_Paint);
             // 
+            // btnImport
+            // 
+            this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImport.Location = new System.Drawing.Point(17, 116);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(89, 64);
+            this.btnImport.TabIndex = 398;
+            this.btnImport.Text = "Export CSV";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // btnDelete
             // 
             this.btnDelete.FlatAppearance.BorderSize = 0;
@@ -304,16 +315,6 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btnImport
-            // 
-            this.btnImport.Location = new System.Drawing.Point(17, 116);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(89, 64);
-            this.btnImport.TabIndex = 398;
-            this.btnImport.Text = "Export CSV";
-            this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // frmMenuRateData
             // 
