@@ -1,6 +1,8 @@
 
 const uint32_t PulseMin = 250;		// micros
 const int SampleSize = 8;
+const uint32_t FlowTimeout = 4000;
+const uint32_t PulseMaxReset = 500000;
 
 uint32_t Samples[2][SampleSize];
 uint32_t LastPulse[2];
@@ -32,7 +34,8 @@ void PulseISR(uint8_t ID)
 	if (PulseTime[ID] > PulseMin)
 	{
 		ReadLast[ID] = ReadTime[ID];
-		PulseMax[ID] = PulseMax[ID] * 0.8 + PulseTime[ID] * 1.5 * 0.2;
+		PulseMax[ID] = (PulseMax[ID] * 8 + PulseTime[ID] * 3) / 10;	// 1.5 X average
+
 		if (PulseTime[ID] < PulseMax[ID])
 		{
 			PulseCount[ID]++;
@@ -65,11 +68,11 @@ void GetUPM()
 		}
 
 		// check for no flow
-		if (millis() - LastPulse[i] > 4000)
+		if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
 		{
 			Sensor[i].UPM = 0;
 			Sensor[i].Hz = 0;
-			PulseMax[i] = 250000;
+			PulseMax[i] = PulseMaxReset;
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;
 			SamplesTime[i] = 0;
