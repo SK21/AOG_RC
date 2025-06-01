@@ -50,10 +50,10 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "29-May-2025";
+        private static string cAppDate = "01-Jun-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
-        private static string cAppVersion = "4.0.1";
+        private static string cAppVersion = "4.0.2";
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
@@ -85,7 +85,6 @@ namespace RateController.Classes
         private static bool cUseVariableRate = false;
         private static bool cUseZones = false;
         private static FormStart mf;
-        private static Dictionary<string, Form> openForms = new Dictionary<string, Form>();
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
 
@@ -716,11 +715,8 @@ namespace RateController.Classes
 
         public static Form IsFormOpen(string Name, bool SetFocus = true)
         {
-            Form frm = null;
-            if (openForms.TryGetValue(Name, out frm))
-            {
-                if (SetFocus) frm.Focus();
-            }
+            Form frm = Application.OpenForms[Name];
+            if (frm != null && SetFocus) frm.Focus();
             return frm;
         }
 
@@ -779,14 +775,6 @@ namespace RateController.Classes
                     frm.Top = Top;
                 }
                 CheckOnScreen(frm);
-
-                // record open forms
-                if (!openForms.ContainsKey(frm.Name))
-                {
-                    openForms.Add(frm.Name, frm);
-                    // subscribe to the form close event to remove
-                    frm.FormClosed += (s, e) => openForms.Remove(frm.Name);
-                }
             }
             catch (Exception ex)
             {

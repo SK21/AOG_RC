@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -62,7 +63,6 @@ namespace RateController.Classes
                     if (Directory.Exists(fromFolder))
                     {
                         CopyDirectory(fromFolder, toFolder);
-
                         if (EraseRateData)
                         {
                             // erase RateData.csv by overwriting it with an empty string

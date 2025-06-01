@@ -116,7 +116,6 @@ namespace RateController.Classes
                     snapshot = Readings.Skip(lastSavedIndex).ToList();
                     // Update the index so that next time only the new items will be written.
                     lastSavedIndex = Readings.Count;
-                    Debug.Print("Readings count: " + Readings.Count);
                 }
 
                 bool fileExists = File.Exists(cFilePath);

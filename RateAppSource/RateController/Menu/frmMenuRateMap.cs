@@ -4,14 +4,15 @@ using RateController.Classes;
 using RateController.Forms;
 using RateController.Language;
 using System;
+using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
+        private bool EditZones = false;
         private int FormHeight;
         private int FormWidth;
         private bool Initializing = false;
@@ -23,7 +24,6 @@ namespace RateController.Menu
         private int PicLeft;
         private int PicTop;
         private int PicWidth;
-        private bool EditZones = false;
         private int PressureLeft = 0;
         private int PressureTop = 0;
 
@@ -51,13 +51,18 @@ namespace RateController.Menu
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Form fs = Props.IsFormOpen("frmCopyMap");
+            //Form fs = Props.IsFormOpen("frmCopyMap");
 
-            if (fs == null)
-            {
-                Form frm = new frmCopyMap(mf);
-                frm.Show();
-            }
+            //if (fs == null)
+            //{
+            //    Form frm = new frmCopyMap(mf);
+            //    frm.Show();
+            //}
+
+
+            Form frm = new frmCopyMap(mf);
+            frm.ShowDialog();
+            UpdateMap();
         }
 
         private void btnCreateZone_Click(object sender, EventArgs e)
@@ -117,6 +122,37 @@ namespace RateController.Menu
         {
             mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
             EnableButtons();
+        }
+
+        private void ckEditPolygons_CheckedChanged(object sender, EventArgs e)
+        {
+            mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
+
+            if (ckEditPolygons.Checked)
+            {
+                ckEditPolygons.FlatAppearance.BorderSize = 1;
+            }
+            else
+            {
+                ckEditPolygons.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+        private void ckEditZones_CheckedChanged(object sender, EventArgs e)
+        {
+            EditZones = ckEditZones.Checked;
+            mf.Tls.Manager.MouseSetTractorPosition = ckEditZones.Checked;
+            EnableButtons();
+
+            if (ckEditZones.Checked)
+            {
+                ckEditZones.FlatAppearance.BorderSize = 1;
+            }
+            else
+            {
+                ckEditZones.FlatAppearance.BorderSize = 0;
+                mf.Tls.Manager.EditModePolygons = false;
+            }
         }
 
         private void ckEnable_CheckedChanged(object sender, EventArgs e)
@@ -304,6 +340,18 @@ namespace RateController.Menu
         {
             Props.SaveFormLocation(this);
         }
+
+        private void UpdateMap()
+        {
+            if (!pictureBox1.Controls.Contains(mf.Tls.Manager.gmapObject))
+            {
+                pictureBox1.Controls.Add(mf.Tls.Manager.gmapObject);
+            }
+            mf.Tls.Manager.LoadMap();
+            mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
+            mf.Tls.Manager.gmapObject.Refresh();
+        }
+
 
         private void mnuRateMap_Load(object sender, EventArgs e)
         {
@@ -577,37 +625,6 @@ namespace RateController.Menu
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
-        }
-
-        private void ckEditPolygons_CheckedChanged(object sender, EventArgs e)
-        {
-            mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
-
-            if (ckEditPolygons.Checked)
-            {
-                ckEditPolygons.FlatAppearance.BorderSize = 1;
-            }
-            else
-            {
-                ckEditPolygons.FlatAppearance.BorderSize = 0;
-            }
-        }
-
-        private void ckEditZones_CheckedChanged(object sender, EventArgs e)
-        {
-            EditZones = ckEditZones.Checked;
-            mf.Tls.Manager.MouseSetTractorPosition = ckEditZones.Checked;
-            EnableButtons();
-
-            if(ckEditZones.Checked)
-            {
-                ckEditZones.FlatAppearance.BorderSize = 1;
-            }
-            else
-            {
-                ckEditZones.FlatAppearance.BorderSize = 0;
-                mf.Tls.Manager.EditModePolygons = false;
-            }
         }
     }
 }

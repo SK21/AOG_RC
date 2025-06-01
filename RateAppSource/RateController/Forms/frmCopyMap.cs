@@ -67,6 +67,7 @@ namespace RateController.Forms
                 else
                 {
                     mf.Tls.ShowMessage("Failed to copy map.");
+                    this.Close();
                 }
             }
         }
