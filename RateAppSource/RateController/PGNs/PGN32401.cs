@@ -9,7 +9,7 @@ namespace RateController
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo 
+        //3     Pressure Lo
         //4     Pressure Hi
         //5     -
         //6     -
@@ -33,8 +33,10 @@ namespace RateController
         private const byte HeaderLo = 145;
         private readonly FormStart mf;
         private bool[] cEthernetConnected;
+        private byte[] cGainAdjust = new byte[2];
         private bool[] cGoodPins;
         private UInt16[] cInoID;
+        private byte[] cIntegralAdjust=new byte[2];
         private double[] cPressureReading;
         private UInt16[,] cReading = new UInt16[255, 4];
         private byte[] cWifiSignal;
@@ -72,6 +74,18 @@ namespace RateController
             return cEthernetConnected[Module];
         }
 
+        public byte GainAdjust(int ID)
+        {
+            if (ID == 0 || ID == 1)
+            {
+                return cGainAdjust[ID];
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public bool GoodPins(int Module)
         {
             return cGoodPins[Module];
@@ -82,6 +96,18 @@ namespace RateController
             return cInoID[Module];
         }
 
+        public byte IntegralAdjust(int ID)
+        {
+            if (ID == 0 || ID == 1)
+            {
+                return cIntegralAdjust[ID];
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
@@ -89,6 +115,10 @@ namespace RateController
             {
                 byte ModuleID = Data[2];
                 cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
+                cGainAdjust[0] = Data[5];
+                cIntegralAdjust[0] = Data[6];
+                cGainAdjust[1] = Data[7];
+                cIntegralAdjust[1] = Data[8];
                 cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
                 cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
 

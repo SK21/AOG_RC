@@ -6,8 +6,8 @@
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 // rate control with nano
-# define InoDescription "RCnano :  18-May-2025"
-const uint16_t InoID = 18055;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCnano :  03-Jun-2025"
+const uint16_t InoID = 3065;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -109,6 +109,9 @@ int TimedCombo(byte, bool);	// function prototype
 int16_t PressureReading = 0;
 bool WorkSwitchOn = false;
 bool MCP23017_found = false;
+
+byte GainAdjust[2];
+byte IntegralAdjust[2];
 
 bool EthernetConnected()
 {
