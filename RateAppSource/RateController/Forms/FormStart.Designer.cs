@@ -533,7 +533,7 @@ namespace RateController
             // timerPIDs
             // 
             this.timerPIDs.Enabled = true;
-            this.timerPIDs.Interval = 5000;
+            this.timerPIDs.Interval = 500;
             this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
             // 
             // btnRight

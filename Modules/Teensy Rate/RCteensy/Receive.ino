@@ -1,6 +1,4 @@
 
-const double KiMultiplier = 10;
-
 byte SerialMSB;
 byte SerialLSB;
 unsigned int SerialPGN;
@@ -232,7 +230,15 @@ void ReadPGNs(byte Data[], uint16_t len)
 					byte SensorID = ParseSenID(Data[2]);
 					if (SensorID < MDL.SensorCount)
 					{
-						Sensor[SensorID].KI = (double)(KiMultiplier * Data[3] / 100.0);
+						if (Data[3] > 0)
+						{
+							Sensor[SensorID].KI = pow(1.05, Data[3] - 120);
+						}
+						else
+						{
+							Sensor[SensorID].KI = 0;
+						}
+
 						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
 						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 

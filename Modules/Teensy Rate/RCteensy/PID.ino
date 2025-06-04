@@ -90,7 +90,7 @@ int PIDmotor(byte ID)
 				}
 				else
 				{
-					IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+					IntegralSum[ID] += RateError * Sensor[ID].KI;
 					IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
 					Result += RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
@@ -132,14 +132,14 @@ int PIDvalve(byte ID)
 				// check brakepoint
 				if (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint)
 				{
-					Result = RateError * Sensor[ID].Scaling * FastAdjust;
+					Result = RateError * Sensor[ID].Scaling * FastAdjust + Sensor[ID].MinPower;
 				}
 				else
 				{
-					IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+					IntegralSum[ID] += RateError * Sensor[ID].KI;
 					IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
-					Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
+					Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID] + Sensor[ID].MinPower;
 				}
 
 				bool IsPositive = (Result > 0);
@@ -212,14 +212,14 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 						// check brakepoint
 						if (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint)
 						{
-							Result = RateError * Sensor[ID].Scaling * FastAdjust;
+							Result = RateError * Sensor[ID].Scaling * FastAdjust + Sensor[ID].MinPower;
 						}
 						else
 						{
-							IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+							IntegralSum[ID] += RateError * Sensor[ID].KI;
 							IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
 
-							Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
+							Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID] + Sensor[ID].MinPower;
 						}
 
 						bool IsPositive = (Result > 0);

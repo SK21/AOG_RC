@@ -94,7 +94,7 @@
             series2.Name = "PWM";
             this.unoChart.Series.Add(series1);
             this.unoChart.Series.Add(series2);
-            this.unoChart.Size = new System.Drawing.Size(481, 304);
+            this.unoChart.Size = new System.Drawing.Size(481, 180);
             this.unoChart.TabIndex = 181;
             this.unoChart.TextAntiAliasingQuality = System.Windows.Forms.DataVisualization.Charting.TextAntiAliasingQuality.SystemDefault;
             // 
@@ -105,7 +105,7 @@
             this.label2.BackColor = System.Drawing.SystemColors.ControlText;
             this.label2.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Lime;
-            this.label2.Location = new System.Drawing.Point(472, 152);
+            this.label2.Location = new System.Drawing.Point(472, 90);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 33);
             this.label2.TabIndex = 204;
@@ -119,7 +119,7 @@
             this.lbPWMvalue.BackColor = System.Drawing.SystemColors.ControlText;
             this.lbPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbPWMvalue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbPWMvalue.Location = new System.Drawing.Point(362, 339);
+            this.lbPWMvalue.Location = new System.Drawing.Point(362, 215);
             this.lbPWMvalue.Name = "lbPWMvalue";
             this.lbPWMvalue.Size = new System.Drawing.Size(68, 23);
             this.lbPWMvalue.TabIndex = 218;
@@ -133,7 +133,7 @@
             this.lbErrorValue.BackColor = System.Drawing.SystemColors.ControlText;
             this.lbErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbErrorValue.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbErrorValue.Location = new System.Drawing.Point(362, 316);
+            this.lbErrorValue.Location = new System.Drawing.Point(362, 192);
             this.lbErrorValue.Name = "lbErrorValue";
             this.lbErrorValue.Size = new System.Drawing.Size(68, 23);
             this.lbErrorValue.TabIndex = 217;
@@ -147,7 +147,7 @@
             this.label6.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label6.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label6.Location = new System.Drawing.Point(230, 339);
+            this.label6.Location = new System.Drawing.Point(230, 215);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(102, 23);
             this.label6.TabIndex = 220;
@@ -161,7 +161,7 @@
             this.lbError.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lbError.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbError.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbError.Location = new System.Drawing.Point(231, 316);
+            this.lbError.Location = new System.Drawing.Point(231, 192);
             this.lbError.Name = "lbError";
             this.lbError.Size = new System.Drawing.Size(125, 23);
             this.lbError.TabIndex = 219;
@@ -174,7 +174,7 @@
             this.lblMin.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMin.ForeColor = System.Drawing.Color.White;
-            this.lblMin.Location = new System.Drawing.Point(436, 316);
+            this.lblMin.Location = new System.Drawing.Point(436, 192);
             this.lblMin.Name = "lblMin";
             this.lblMin.Size = new System.Drawing.Size(53, 23);
             this.lblMin.TabIndex = 216;
@@ -188,7 +188,7 @@
             this.lblPWM.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPWM.ForeColor = System.Drawing.Color.Lime;
-            this.lblPWM.Location = new System.Drawing.Point(156, 339);
+            this.lblPWM.Location = new System.Drawing.Point(156, 215);
             this.lblPWM.Name = "lblPWM";
             this.lblPWM.Size = new System.Drawing.Size(68, 23);
             this.lblPWM.TabIndex = 213;
@@ -202,7 +202,7 @@
             this.lblSteerAng.BackColor = System.Drawing.SystemColors.ControlText;
             this.lblSteerAng.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSteerAng.ForeColor = System.Drawing.Color.OrangeRed;
-            this.lblSteerAng.Location = new System.Drawing.Point(156, 316);
+            this.lblSteerAng.Location = new System.Drawing.Point(156, 192);
             this.lblSteerAng.Name = "lblSteerAng";
             this.lblSteerAng.Size = new System.Drawing.Size(68, 23);
             this.lblSteerAng.TabIndex = 212;
@@ -216,7 +216,7 @@
             this.lbSetPoint.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lbSetPoint.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbSetPoint.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbSetPoint.Location = new System.Drawing.Point(70, 339);
+            this.lbSetPoint.Location = new System.Drawing.Point(70, 215);
             this.lbSetPoint.Name = "lbSetPoint";
             this.lbSetPoint.Size = new System.Drawing.Size(80, 23);
             this.lbSetPoint.TabIndex = 215;
@@ -230,7 +230,7 @@
             this.lbActual.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lbActual.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbActual.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbActual.Location = new System.Drawing.Point(66, 316);
+            this.lbActual.Location = new System.Drawing.Point(66, 192);
             this.lbActual.Name = "lbActual";
             this.lbActual.Size = new System.Drawing.Size(84, 23);
             this.lbActual.TabIndex = 214;
@@ -245,7 +245,7 @@
             this.btnGainAuto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGainAuto.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGainAuto.ForeColor = System.Drawing.Color.White;
-            this.btnGainAuto.Location = new System.Drawing.Point(12, 129);
+            this.btnGainAuto.Location = new System.Drawing.Point(12, 67);
             this.btnGainAuto.Name = "btnGainAuto";
             this.btnGainAuto.Size = new System.Drawing.Size(48, 55);
             this.btnGainAuto.TabIndex = 223;
@@ -261,7 +261,7 @@
             this.btnGainDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGainDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGainDown.ForeColor = System.Drawing.Color.White;
-            this.btnGainDown.Location = new System.Drawing.Point(12, 236);
+            this.btnGainDown.Location = new System.Drawing.Point(12, 112);
             this.btnGainDown.Name = "btnGainDown";
             this.btnGainDown.Size = new System.Drawing.Size(48, 55);
             this.btnGainDown.TabIndex = 222;
@@ -310,7 +310,7 @@
             this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(12, 316);
+            this.label1.Location = new System.Drawing.Point(12, 192);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 23);
             this.label1.TabIndex = 225;
@@ -324,7 +324,7 @@
             this.lbHz.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.lbHz.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbHz.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lbHz.Location = new System.Drawing.Point(12, 339);
+            this.lbHz.Location = new System.Drawing.Point(12, 215);
             this.lbHz.Name = "lbHz";
             this.lbHz.Size = new System.Drawing.Size(52, 23);
             this.lbHz.TabIndex = 226;
@@ -336,7 +336,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(498, 369);
+            this.ClientSize = new System.Drawing.Size(498, 245);
             this.Controls.Add(this.lbHz);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblMax);
@@ -361,6 +361,7 @@
             this.Name = "frmMenuRateGraph";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuRateGraph";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuRateGraph_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuRateGraph_Load);
             ((System.ComponentModel.ISupportInitialize)(this.unoChart)).EndInit();
