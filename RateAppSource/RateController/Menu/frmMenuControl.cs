@@ -40,10 +40,12 @@ namespace RateController.Menu
                 MainMenu.CurrentProduct.MaxAdjust = HSmax.Value;
                 MainMenu.CurrentProduct.MinAdjust = HSmin.Value;
                 MainMenu.CurrentProduct.ScalingFactor = HSscaling.Value;
-                MainMenu.CurrentProduct.Integral= HSintegral.Value;
+                MainMenu.CurrentProduct.Integral = HSintegral.Value;
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
+
+                mf.Products.UpdatePID();
             }
             catch (Exception ex)
             {
