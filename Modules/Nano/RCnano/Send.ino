@@ -68,6 +68,7 @@ void SendData()
 
             // crc
             Data[14] = CRC(Data, 14, 0);
+
             if (EthernetConnected())
             {
                 // send ethernet
@@ -81,10 +82,10 @@ void SendData()
         //2     module ID
         //3     Pressure Lo 
         //4     Pressure Hi
-        //5     gain adjust 0
-        //6     integral adjust 0
-        //7     gain adjust 1
-        //8     integral adjust 1
+        //5     -
+        //6     -
+        //7     -
+        //8     -
         //9     -
         //10    -
         //11    InoID lo
@@ -103,10 +104,10 @@ void SendData()
         Data[2] = MDL.ID;
         Data[3] = (byte)PressureReading;
         Data[4] = (byte)(PressureReading >> 8);
-        Data[5] = GainAdjust[0];
-        Data[6] = IntegralAdjust[0];
-        Data[7] = GainAdjust[1];
-        Data[8] = IntegralAdjust[1];
+        Data[5] = 0;
+        Data[6] = 0;
+        Data[7] = 0;
+        Data[8] = 0;
         Data[9] = 0;
         Data[10] = 0;
         Data[11] = (byte)InoID;

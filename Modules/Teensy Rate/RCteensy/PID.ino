@@ -129,21 +129,18 @@ int PIDvalve(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
-				IntegralSum[ID] = constrain(IntegralSum[ID], -75, 75);
-				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
-				IntegralAdjust[ID] = IntegralSum[ID];
-
 				// check brakepoint
 				if (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint)
 				{
-					Result = RateError * Sensor[ID].Scaling * FastAdjust + IntegralSum[ID];
+					Result = RateError * Sensor[ID].Scaling * FastAdjust;
 				}
 				else
 				{
+					IntegralSum[ID] += RateError * Sensor[ID].Scaling * Sensor[ID].KI;
+					IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+
 					Result = RateError * Sensor[ID].Scaling * SlowAdjust + IntegralSum[ID];
 				}
-				GainAdjust[ID] = Result - IntegralAdjust[ID];
 
 				bool IsPositive = (Result > 0);
 				Result = abs(Result);
@@ -154,15 +151,10 @@ int PIDvalve(byte ID)
 			{
 				Result = 0;
 				IntegralSum[ID] = 0;
-				GainAdjust[ID] = 0;
-				IntegralAdjust[ID] = 0;
 			}
 		}
 	}
-	else
-	{
-		IntegralSum[ID] = 0;
-	}
+
 	LastPWM[ID] = Result;
 	return (int)Result;
 }

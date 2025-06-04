@@ -105,8 +105,6 @@ namespace RateController.Menu
             lbMaxValue.Font = ValFont;
             lbMinValue.Font = ValFont;
             lbIntegral.Font= ValFont;
-            lbGainAdjust.Font = ValFont;
-            lbIntegralAdjust.Font = ValFont;
         }
 
         private void MainMenu_ProductChanged(object sender, EventArgs e)
@@ -204,19 +202,6 @@ namespace RateController.Menu
             {
                 fs.Focus();
             }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            byte Gain = mf.ModulesStatus.GainAdjust(MainMenu.CurrentProduct.ID);
-            byte Integral = mf.ModulesStatus.IntegralAdjust(MainMenu.CurrentProduct.ID);
-            if(!MainMenu.CurrentProduct.ProductOn())
-            {
-                Gain = 0;
-                Integral = 0;
-            }
-            lbGainAdjust.Text = Gain.ToString("N0");
-            lbIntegralAdjust.Text = Integral.ToString("N0");
         }
     }
 }
