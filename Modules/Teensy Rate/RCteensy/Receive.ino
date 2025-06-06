@@ -232,13 +232,12 @@ void ReadPGNs(byte Data[], uint16_t len)
 					{
 						if (Data[3] > 0)
 						{
-							Sensor[SensorID].KI = pow(1.12, Data[3] - 120);
+							Sensor[SensorID].KI = pow(1.1, Data[3] - 120);
 						}
 						else
 						{
 							Sensor[SensorID].KI = 0;
 						}
-						debug1 = Sensor[0].KI;
 
 						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
 						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);

@@ -10,8 +10,8 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  05-Jun-2025"
-const uint16_t InoID = 5065;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RCteensy :  06-Jun-2025"
+const uint16_t InoID = 6065;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -271,10 +271,11 @@ byte ReadReset;
 uint32_t MaxLoopTime;
 double FlowHz;
 
-double debug1;
+//double debug1;
 //double debug2;
 //double debug3;
 //double debug4;
+//double debug5;
 
 void Blink()
 {
@@ -290,21 +291,24 @@ void Blink()
 
 			Serial.print(", ");
 			Serial.print(Ethernet.localIP());
-			Serial.print(", ");
-			Serial.print(FlowHz);
 
-			Serial.print(", ");
-			Serial.print(debug1,5);
+			//Serial.print(", ");
+			//Serial.print(FlowHz);
 
-			//debug2 = PressureReading;
+			//Serial.print(", ");
+			//Serial.print(debug1,5);
+
 			//Serial.print(", ");
 			//Serial.print(debug2);
 
 			//Serial.print(", ");
-			//Serial.print(debug3);
+			//Serial.print(debug3,4);
 
 			//Serial.print(", ");
-			//Serial.print(debug4);
+			//Serial.print(debug4,5);
+
+			//Serial.print(", ");
+			//Serial.print(debug5);
 
 			Serial.println("");
 
