@@ -273,7 +273,7 @@ double FlowHz;
 
 //double debug1;
 //double debug2;
-//double debug3;
+//volatile double debug3;
 //double debug4;
 //double debug5;
 
@@ -296,10 +296,10 @@ void Blink()
 			//Serial.print(debug1,5);
 
 			//Serial.print(", ");
-			//Serial.print(debug2);
+			//Serial.print(debug2,5);
 
 			//Serial.print(", ");
-			//Serial.print(debug3,4);
+			//Serial.print(debug3);
 
 			//Serial.print(", ");
 			//Serial.print(debug4,5);
