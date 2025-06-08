@@ -71,8 +71,8 @@ struct SensorConfig
 	double ManualAdjust;
 	double MaxPower;
 	double MinPower;
-	double Scaling;
-	double KI;
+	double Kp;
+	double Ki;
 	double Hz;
 };
 

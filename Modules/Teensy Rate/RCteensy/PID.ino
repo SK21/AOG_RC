@@ -84,15 +84,15 @@ int PIDmotor(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].KI; 
-				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+				IntegralSum[ID] += RateError * Sensor[ID].Ki; 
+				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using Ki
 				IntegralSum[ID] = constrain(IntegralSum[ID], -0.05, 0.05);	// max 1 pwm/sec change at 50 ms sample time
 
 				// check brakepoint
 				double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
 
 				// slew rate limit
-				double Change = RateError * Sensor[ID].Scaling * BrakeFactor + IntegralSum[ID];
+				double Change = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
 				if (Change > MaxOutputChange)
 				{
 					Change = MaxOutputChange;
@@ -136,13 +136,13 @@ int PIDvalve(byte ID)
 			{
 				RateError = constrain(RateError, -Sensor[ID].TargetUPM, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].KI;
-				IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using integral
+				IntegralSum[ID] += RateError * Sensor[ID].Ki;
+				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
 				IntegralSum[ID] = constrain(IntegralSum[ID], -10, 10);  // max total integral pwm
 
 				double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
 
-				double Control = RateError * Sensor[ID].Scaling * BrakeFactor + IntegralSum[ID];
+				double Control = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
 				double Sign = (Control >= 0) ? 1.0 : -1.0;
 
 				Result = abs(Control) + Sensor[ID].MinPower;
@@ -215,14 +215,14 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 					{
 						RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-						IntegralSum[ID] += RateError * Sensor[ID].KI;
-						IntegralSum[ID] *= (Sensor[ID].KI > 0);	// zero out if not using KI
+						IntegralSum[ID] += RateError * Sensor[ID].Ki;
+						IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using Ki
 						IntegralSum[ID] = constrain(IntegralSum[ID], -10, 10);	// total integral pwm
 
 						// check brakepoint
 						double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
 
-						double Control = RateError * Sensor[ID].Scaling * BrakeFactor + IntegralSum[ID];
+						double Control = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
 						double Sign = (Control >= 0) ? 1.0 : -1.0;
 
 						Result = abs(Control) + Sensor[ID].MinPower;

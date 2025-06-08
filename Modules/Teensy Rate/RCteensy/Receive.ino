@@ -216,7 +216,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		// 5   -
 		// 6   MinAdjust
 		// 7   MaxAdjust
-		// 8   scale factor
+		// 8   Kp
 		// 9   CRC
 
 		PGNlength = 10;
@@ -232,18 +232,18 @@ void ReadPGNs(byte Data[], uint16_t len)
 					{
 						if (Data[3] > 0)
 						{
-							Sensor[SensorID].KI = pow(1.1, Data[3] - 120);
+							Sensor[SensorID].Ki = pow(1.1, Data[3] - 120);
 						}
 						else
 						{
-							Sensor[SensorID].KI = 0;
+							Sensor[SensorID].Ki = 0;
 						}
 
 						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
 						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
 
 						// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
-						Sensor[SensorID].Scaling = pow(1.1, Data[8] - 120);
+						Sensor[SensorID].Kp = pow(1.1, Data[8] - 120);
 					}
 				}
 			}
