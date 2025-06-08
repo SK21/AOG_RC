@@ -1,9 +1,10 @@
 
-const double SampleTime = 50;
-const double Deadband = 0.015;			// error amount below which no adjustment is made
+const double SampleTime = 50;	// ms
+const double Deadband = 0.015;	// error amount below which no adjustment is made
 const double BrakePoint = 0.25;
 const double FastAdjust = 100;
 const double SlowAdjust = 30;
+const double MaxOutputChange = 2;
 
 uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
@@ -90,8 +91,18 @@ int PIDmotor(byte ID)
 				// check brakepoint
 				double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
 
-				Result += RateError * Sensor[ID].Scaling * BrakeFactor + IntegralSum[ID];
+				// slew rate limit
+				double Change = RateError * Sensor[ID].Scaling * BrakeFactor + IntegralSum[ID];
+				if (Change > MaxOutputChange)
+				{
+					Change = MaxOutputChange;
+				}
+				else if (Change < -MaxOutputChange)
+				{
+					Change = -MaxOutputChange;
+				}
 
+				Result += Change;
 				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
 			}
 			else
