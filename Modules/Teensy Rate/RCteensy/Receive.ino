@@ -232,7 +232,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 					{
 						if (Data[3] > 0)
 						{
-							Sensor[SensorID].Ki = pow(1.1, Data[3] - 120);
+							Sensor[SensorID].Ki = pow(1.06, Data[3] - 120);
 						}
 						else
 						{
