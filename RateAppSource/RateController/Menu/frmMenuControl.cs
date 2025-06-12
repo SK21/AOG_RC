@@ -8,10 +8,12 @@ namespace RateController.Menu
 {
     public partial class frmMenuControl : Form
     {
+        private Button ButtonPressed;
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
+        private Button[] RateButtons;
 
         public frmMenuControl(FormStart main, frmMenu menu)
         {
@@ -19,8 +21,65 @@ namespace RateController.Menu
             MainMenu = menu;
             mf = main;
             this.Tag = false;
+
+            RateButtons = new Button[]{ btGainMinus, btGainPlus,btIntegralMinus,btIntegralPlus
+            , btMaxMinus,btMaxPlus,btMinMinus,btMinPlus };
+
+            foreach (Button btn in RateButtons)
+            {
+                btn.Click += Btn_Click;
+                btn.MouseDown += Btn_MouseDown;
+                btn.MouseUp += Btn_MouseUp;
+            }
+        }
+        private void Btn_MouseDown(object sender, MouseEventArgs e)
+        {
+            timer1.Enabled = true;
+            ButtonPressed = (Button)sender;
         }
 
+        private void Btn_MouseUp(object sender, MouseEventArgs e)
+        {
+            timer1.Enabled = false;
+        }
+        private void Btn_Click(object sender, EventArgs e)
+        {
+            Button ClickedButton = (Button)sender;
+            switch (ClickedButton.Name)
+            {
+                case "btGainMinus":
+                    if (HSscaling.Value > 0) HSscaling.Value--;
+                    break;
+
+                case "btGainPlus":
+                    if (HSscaling.Value < HSscaling.Maximum) HSscaling.Value++;
+                    break;
+
+                case "btIntegralMinus":
+                    if (HSintegral.Value > 0) HSintegral.Value--;
+                    break;
+
+                case "btIntegralPlus":
+                    if (HSintegral.Value < HSintegral.Maximum) HSintegral.Value++;
+                    break;
+
+                case "btMaxMinus":
+                    if (HSmax.Value > 0) HSmax.Value--;
+                    break;
+
+                case "btMaxPlus":
+                    if (HSmax.Value < HSmax.Maximum) HSmax.Value++;
+                    break;
+
+                case "btMinMinus":
+                    if (HSmin.Value > 0) HSmin.Value--;
+                    break;
+
+                case "btMinPlus":
+                    if (HSmin.Value < HSmin.Maximum) HSmin.Value++;
+                    break;
+            }
+        }
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
@@ -204,6 +263,11 @@ namespace RateController.Menu
             {
                 fs.Focus();
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ButtonPressed.PerformClick();
         }
     }
 }

@@ -1195,7 +1195,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max Power.
+        ///   Looks up a localized string similar to Max.
         /// </summary>
         internal static string lgPWMmax {
             get {
@@ -1204,7 +1204,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Min Power.
+        ///   Looks up a localized string similar to Min.
         /// </summary>
         internal static string lgPWMmin {
             get {

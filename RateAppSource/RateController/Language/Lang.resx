@@ -496,10 +496,10 @@
     <value>Pulses</value>
   </data>
   <data name="lgPWMmax" xml:space="preserve">
-    <value>Max Power</value>
+    <value>Max</value>
   </data>
   <data name="lgPWMmin" xml:space="preserve">
-    <value>Min Power</value>
+    <value>Min</value>
   </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>Quantity</value>
