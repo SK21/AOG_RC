@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Media;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController
@@ -31,11 +33,12 @@ namespace RateController
         public clsTools(FormStart CallingForm)
         {
             mf = CallingForm;
-            CreateColorBitmap();
 
             lastMessage = string.Empty;
             lastMessageTime = DateTime.MinValue;
-            cRateCollector=new DataCollector();
+            cRateCollector = new DataCollector();
+
+            _ = InitializeAsync();
         }
 
         public MapManager Manager
@@ -80,6 +83,7 @@ namespace RateController
             }
             return Result;
         }
+
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor, float borderWidth = 1)
         {
             // useage:
@@ -120,7 +124,6 @@ namespace RateController
                 }
             }
         }
-
 
         public void DrawGroupBox2(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
         {
@@ -198,12 +201,11 @@ namespace RateController
             }
         }
 
-
         public void ShowMessage(string Message, string Title = "Help",
             int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)
         {
-            if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60) 
+            if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60)
             {
                 var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
                 if (Modal)
@@ -226,6 +228,11 @@ namespace RateController
         public void StartMapManager()
         {
             cManager = new MapManager(mf);
+        }
+
+        private async Task InitializeAsync()
+        {
+            await Task.Run(() => CreateColorBitmap());
         }
 
         #region ScreenBitMapCode

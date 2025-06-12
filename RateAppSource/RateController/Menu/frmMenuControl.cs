@@ -32,16 +32,7 @@ namespace RateController.Menu
                 btn.MouseUp += Btn_MouseUp;
             }
         }
-        private void Btn_MouseDown(object sender, MouseEventArgs e)
-        {
-            timer1.Enabled = true;
-            ButtonPressed = (Button)sender;
-        }
 
-        private void Btn_MouseUp(object sender, MouseEventArgs e)
-        {
-            timer1.Enabled = false;
-        }
         private void Btn_Click(object sender, EventArgs e)
         {
             Button ClickedButton = (Button)sender;
@@ -80,6 +71,18 @@ namespace RateController.Menu
                     break;
             }
         }
+
+        private void Btn_MouseDown(object sender, MouseEventArgs e)
+        {
+            timer1.Enabled = true;
+            ButtonPressed = (Button)sender;
+        }
+
+        private void Btn_MouseUp(object sender, MouseEventArgs e)
+        {
+            timer1.Enabled = false;
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
@@ -117,13 +120,28 @@ namespace RateController.Menu
             HSmax.Value = Props.MaxAdjustDefault;
             HSmin.Value = Props.MinAdjustDefault;
             HSscaling.Value = Props.ScalingDefault;
-            HSintegral.Value= Props.IntegralDefault;
+            HSintegral.Value = Props.IntegralDefault;
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
             MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID + 1);
             UpdateForm();
+        }
+
+        private void butGraph_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmMenuRateGraph");
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuRateGraph(mf);
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void frmMenuControl_Activated(object sender, EventArgs e)
@@ -165,12 +183,7 @@ namespace RateController.Menu
             lbBoost.Font = ValFont;
             lbMaxValue.Font = ValFont;
             lbMinValue.Font = ValFont;
-            lbIntegral.Font= ValFont;
-        }
-
-        private void MainMenu_ProductChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
+            lbIntegral.Font = ValFont;
         }
 
         private void HShigh_ValueChanged(object sender, EventArgs e)
@@ -182,6 +195,11 @@ namespace RateController.Menu
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void PositionForm()
@@ -221,6 +239,11 @@ namespace RateController.Menu
             lbMin.Text = Lang.lgPWMmin;
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ButtonPressed.PerformClick();
+        }
+
         private void UpdateControlDisplay()
         {
             lbMaxValue.Text = HSmax.Value.ToString("N0");
@@ -248,26 +271,6 @@ namespace RateController.Menu
             HSintegral.Value = MainMenu.CurrentProduct.Integral;
             UpdateControlDisplay();
             Initializing = false;
-        }
-
-        private void butGraph_Click(object sender, EventArgs e)
-        {
-            Form fs = Props.IsFormOpen("frmMenuRateGraph");
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRateGraph(mf);
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            ButtonPressed.PerformClick();
         }
     }
 }
