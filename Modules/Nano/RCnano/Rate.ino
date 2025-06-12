@@ -1,8 +1,7 @@
-
-const uint32_t PulseMin = 250;		// micros
-const int SampleSize = 8;
+const uint32_t PulseMin = 250;      // micros
+const uint32_t PulseMax = 250000;	// 4 Hz
+const int SampleSize = 12;
 const uint32_t FlowTimeout = 4000;
-const uint32_t PulseMaxReset = 500000;
 
 uint32_t Samples[2][SampleSize];
 uint32_t LastPulse[2];
@@ -10,10 +9,8 @@ uint32_t ReadLast[2];
 uint32_t ReadTime[2];
 uint32_t PulseTime[2];
 
-volatile uint32_t PulseMax[2] = { 0,0 };
 volatile uint16_t PulseCount[2];
 volatile int SamplesCount[2];
-volatile uint32_t SamplesTime[2];
 volatile uint16_t SamplesIndex[2];
 
 void ISR0()
@@ -30,22 +27,49 @@ void PulseISR(uint8_t ID)
 {
 	ReadTime[ID] = micros();
 	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
+	ReadLast[ID] = ReadTime[ID];
 
-	if (PulseTime[ID] > PulseMin)
+	if (PulseTime[ID] > PulseMin && PulseTime[ID] < PulseMax)
 	{
-		ReadLast[ID] = ReadTime[ID];
-		PulseMax[ID] = (PulseMax[ID] * 8 + PulseTime[ID] * 3) / 10;	// 1.5 X average
+		PulseCount[ID]++;
+		Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
+		SamplesIndex[ID] = (SamplesIndex[ID] + 1) % SampleSize;
+		if (SamplesCount[ID] < SampleSize) SamplesCount[ID]++;
+	}
+}
 
-		if (PulseTime[ID] < PulseMax[ID])
+uint32_t GetMedianPulseTime(uint8_t ID)
+{
+	uint32_t Result = 0;
+	if (SamplesCount[ID] > 0)
+	{
+		uint32_t sorted[SampleSize];
+		memcpy(sorted, Samples[ID], sizeof(sorted));
+
+		// Insertion sort
+		for (int i = 1; i < SamplesCount[ID]; i++)
 		{
-			PulseCount[ID]++;
-			SamplesTime[ID] -= Samples[ID][SamplesIndex[ID]];
-			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
-			SamplesTime[ID] += Samples[ID][SamplesIndex[ID]];
-			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % SampleSize;
-			if (SamplesCount[ID] < SampleSize) SamplesCount[ID]++;
+			uint32_t key = sorted[i];
+			int j = i - 1;
+			while (j >= 0 && sorted[j] > key)
+			{
+				sorted[j + 1] = sorted[j];
+				j--;
+			}
+			sorted[j + 1] = key;
+		}
+
+		if (SamplesCount[ID] % 2 == 1)
+		{
+			Result = sorted[SamplesCount[ID] / 2];
+		}
+		else
+		{
+			int mid = SamplesCount[ID] / 2;
+			Result = (sorted[mid - 1] + sorted[mid]) / 2;
 		}
 	}
+	return Result;
 }
 
 void GetUPM()
@@ -59,23 +83,24 @@ void GetUPM()
 			noInterrupts();
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
-			uint16_t TotalCounts = SamplesCount[i];
-			uint32_t TotalTime = SamplesTime[i];
+			uint32_t median = GetMedianPulseTime(i);
 			interrupts();
 
-			Sensor[i].Hz = (1000000.0 * TotalCounts / TotalTime) * 0.8 + Sensor[i].Hz * 0.2;
-			Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
+			if (median > 0)
+			{
+				double hz = 1000000.0 / median;
+				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
+				Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
+			}
 		}
 
-		// check for no flow
+		// Check for no flow
 		if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
 		{
 			Sensor[i].UPM = 0;
 			Sensor[i].Hz = 0;
-			PulseMax[i] = PulseMaxReset;
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;
-			SamplesTime[i] = 0;
 			memset(Samples[i], 0, sizeof(Samples[i]));
 		}
 	}
