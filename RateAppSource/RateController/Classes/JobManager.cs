@@ -127,16 +127,16 @@ namespace RateController.Classes
         {
             lock (_syncLock)
             {
-                IEnumerable<Job> filteredJobs = GetJobs();
+                IEnumerable<Job> filteredJobs = GetJobs().ToList();
 
                 if (startDate.HasValue && endDate.HasValue)
                 {
-                    filteredJobs = filteredJobs.Where(job => job.Date >= startDate.Value && job.Date <= endDate.Value);
+                    filteredJobs = filteredJobs.Where(job => job.Date >= startDate.Value && job.Date <= endDate.Value).ToList();
                 }
 
                 if (fieldID.HasValue)
                 {
-                    filteredJobs = filteredJobs.Where(job => job.FieldID == fieldID.Value);
+                    filteredJobs = filteredJobs.Where(job => job.FieldID == fieldID.Value).ToList();
                 }
 
                 return filteredJobs.ToList();
@@ -304,5 +304,6 @@ namespace RateController.Classes
         public string JobFolder => Path.Combine(Path.GetDirectoryName(Props.JobsDataPath), $"Job_{ID}");
         public string Name { get; set; }
         public string Notes { get; set; }
+        public string DisplayName => $"{Name.PadRight(15)} {Date:dd-MMM}";
     }
 }

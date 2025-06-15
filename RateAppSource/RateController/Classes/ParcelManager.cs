@@ -71,7 +71,7 @@ namespace RateController.Classes
                 {
                     string json = File.ReadAllText(FilePath);
                     var mappings = JsonSerializer.Deserialize<List<Parcel>>(json);
-                    return mappings ?? new List<Parcel>();
+                    return (mappings ?? new List<Parcel>()).OrderBy(p => p.Name).ToList();
                 }
                 catch (Exception ex)
                 {

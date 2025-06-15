@@ -57,18 +57,21 @@ namespace RateController.Menu
         {
             try
             {
-                if (lstJobs.SelectedIndex >= 0)
+                if (lvJobs.SelectedItems.Count > 0)
                 {
-                    Job SelectedJob = lstJobs.SelectedItem as Job;
-                    JobToCopyFromID = SelectedJob.ID;
-                    EditingJob = new Job();
-                    EditingJob.Date = DateTime.Now;
-                    EditingJob.FieldID = SelectedJob.FieldID;
-                    EditingJob.Name = SelectedJob.Name + "_Copy";
-                    EditingJob.Notes = "";
-                    IsNewJob = true;
-                    SetButtons(true);
-                    UpdateForm();
+                    Job SelectedJob = lvJobs.SelectedItems[0].Tag as Job;
+                    if (SelectedJob != null)
+                    {
+                        JobToCopyFromID = SelectedJob.ID;
+                        EditingJob = new Job();
+                        EditingJob.Date = DateTime.Now;
+                        EditingJob.FieldID = SelectedJob.FieldID;
+                        EditingJob.Name = SelectedJob.Name + "_Copy";
+                        EditingJob.Notes = "";
+                        IsNewJob = true;
+                        SetButtons(true);
+                        UpdateForm();
+                    }
                 }
                 else
                 {
@@ -85,8 +88,9 @@ namespace RateController.Menu
         {
             try
             {
-                if (lstJobs.SelectedItem is Job SelectedJob)
+                if (lvJobs.SelectedItems.Count > 0)
                 {
+                    Job SelectedJob = lvJobs.SelectedItems[0].Tag as Job;
                     if (SelectedJob != null && SelectedJob.ID != 0)    // keep 0, default job
                     {
                         var Hlp = new frmMsgBox(mf, "Confirm Delete [" + SelectedJob.Name + "] and all job data?", "Delete File", true);
@@ -160,25 +164,45 @@ namespace RateController.Menu
 
         private void btnJobsDown_Click(object sender, EventArgs e)
         {
-            int itemsPerPage = lstJobs.ClientSize.Height / lstJobs.ItemHeight; // Calculate visible items
-            lstJobs.TopIndex = Math.Min(lstJobs.Items.Count - 1, lstJobs.TopIndex + itemsPerPage); // Move down by 1 page
+            if (lvJobs.Items.Count == 0) return;
+
+            // Estimate items per page
+            int itemHeight = lvJobs.Font.Height + 4; // Add small buffer for padding
+            int itemsPerPage = lvJobs.ClientSize.Height / itemHeight;
+
+            // Find the first visible item
+            int currentTopIndex = lvJobs.TopItem?.Index ?? 0;
+
+            // Scroll down by one page
+            int newTopIndex = Math.Min(lvJobs.Items.Count - 1, currentTopIndex + itemsPerPage);
+            lvJobs.EnsureVisible(newTopIndex);
         }
 
         private void btnJobsUp_Click(object sender, EventArgs e)
         {
-            int itemsPerPage = lstJobs.ClientSize.Height / lstJobs.ItemHeight; // Calculate visible items
-            lstJobs.TopIndex = Math.Max(0, lstJobs.TopIndex - itemsPerPage); // Move up by 1 page
+            if (lvJobs.Items.Count == 0) return;
+
+            int itemHeight = lvJobs.Font.Height + 4;
+            int itemsPerPage = lvJobs.ClientSize.Height / itemHeight;
+
+            int currentTopIndex = lvJobs.TopItem?.Index ?? 0;
+            int newTopIndex = Math.Max(0, currentTopIndex - itemsPerPage);
+            lvJobs.EnsureVisible(newTopIndex);
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             try
             {
-                if (lstJobs.SelectedItem is Job selectedJob)
+                if (lvJobs.SelectedItems.Count > 0)
                 {
-                    Props.CurrentJobID = selectedJob.ID;
-                    UpdateEditingJob();
-                    UpdateForm();
+                    Job selectedJob = lvJobs.SelectedItems[0].Tag as Job;
+                    if (selectedJob != null)
+                    {
+                        Props.CurrentJobID = selectedJob.ID;
+                        UpdateEditingJob();
+                        UpdateForm();
+                    }
                 }
                 else
                 {
@@ -198,7 +222,7 @@ namespace RateController.Menu
                 EditingJob = new Job();
                 tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
                 tbNotes.Text = "";
-                tbName.Text = "New Job";
+                //tbName.Text = "New Job";
                 IsNewJob = true;
             }
             catch (Exception ex)
@@ -282,19 +306,9 @@ namespace RateController.Menu
             }
         }
 
-        private void btnRefeshJobs_Click(object sender, EventArgs e)
+        private void cbSearchField_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillListBox();
-        }
-
-        private void btnRefeshJobs_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                cbSearchField.SelectedIndex = -1;
-                tbSearchYear.Text = DateTime.Now.Year.ToString();
-                FillListBox();
-            }
+            FillJobsList();
         }
 
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
@@ -306,75 +320,46 @@ namespace RateController.Menu
         {
             try
             {
-                Parcel CurrentSearchField = cbSearchField.SelectedItem as Parcel;
-                List<Parcel> Flds = ParcelManager.GetParcels();
+                // Save selected ID values (not objects)
+                int? previousSearchFieldID = (cbSearchField.SelectedItem as Parcel)?.ID;
+                int? CurrentFieldID = EditingJob.FieldID;
 
-                // Sort and create independent lists for each ComboBox
-                var fieldList = Flds.OrderBy(p => p.Name).ToList();
-                var searchFieldList = Flds.OrderBy(p => p.Name).ToList();
+                List<Parcel> parcels = ParcelManager.GetParcels();
 
-                // Suspend layout updates to prevent ComboBox flashing
                 cbField.BeginUpdate();
                 cbSearchField.BeginUpdate();
 
                 try
                 {
-                    // Set data sources separately to prevent unwanted synchronization
-                    cbField.DataSource = fieldList;
-                    cbSearchField.DataSource = searchFieldList;
-
-                    // Assign display and value members
                     cbField.DisplayMember = cbSearchField.DisplayMember = "Name";
                     cbField.ValueMember = cbSearchField.ValueMember = "ID";
+
+                    cbField.DataSource = new List<Parcel>(parcels);
+                    cbSearchField.DataSource = new List<Parcel>(parcels);
                 }
                 finally
                 {
-                    // Resume layout updates
                     cbField.EndUpdate();
                     cbSearchField.EndUpdate();
                 }
 
-                bool Found = false;
-                if (EditingJob != null)
+                // Try to match by ID, after DataSource is assigned
+                int? targetSearchFieldID = previousSearchFieldID ?? CurrentFieldID;
+
+                if (targetSearchFieldID.HasValue)
                 {
-                    Parcel fieldParcel = ParcelManager.SearchParcel(EditingJob.FieldID);
-                    if (fieldParcel != null)
+                    foreach (var item in cbSearchField.Items)
                     {
-                        foreach (var item in cbSearchField.Items)
+                        if (item is Parcel parcel && parcel.ID == targetSearchFieldID.Value)
                         {
-                            if (item is Parcel parcel && parcel.ID == fieldParcel.ID)
-                            {
-                                cbSearchField.SelectedItem = parcel;
-                                Found = true;
-                                break;
-                            }
+                            cbSearchField.SelectedItem = parcel;
+                            return;
                         }
                     }
                 }
 
-                if (!Found)
-                {
-                    if (CurrentSearchField == null)
-                    {
-                        cbSearchField.SelectedIndex = -1;
-                    }
-                    else
-                    {
-                        foreach (var item in cbSearchField.Items)
-                        {
-                            if (item is Parcel parcel && parcel.ID == CurrentSearchField.ID)
-                            {
-                                cbSearchField.SelectedItem = parcel;
-                                Found = true;
-                                break;
-                            }
-                        }
-                        if (!Found)
-                        {
-                            cbSearchField.SelectedIndex = -1;
-                        }
-                    }
-                }
+                // If no match found
+                cbSearchField.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -382,40 +367,31 @@ namespace RateController.Menu
             }
         }
 
-        private void FillListBox()
+        private void FillJobsList()
         {
-            try
+            lvJobs.Items.Clear();
+
+            int yr;
+            if (!int.TryParse(tbSearchYear.Text, out yr)) yr = DateTime.Now.Year;
+
+            DateTime startDate = new DateTime(yr, 1, 1);
+            DateTime endDate = new DateTime(yr, 12, 31);
+
+            Parcel selectedParcel = cbSearchField.SelectedItem as Parcel;
+            int? SelectedParcelID = selectedParcel?.ID;
+
+            List<Job> filteredJobs = JobManager.FilterJobs(startDate, endDate, SelectedParcelID)
+                             .OrderBy(job => job.Date)
+                             .ThenBy(job => job.Name)
+                             .ToList();
+
+            foreach (var job in filteredJobs)
             {
-                int yr;
-                if (!int.TryParse(tbSearchYear.Text, out yr)) yr = DateTime.Now.Year;
+                var item = new ListViewItem(job.Name);  // First column
+                item.SubItems.Add(job.Date.ToString("dd-MMM"));  // Second column
 
-                DateTime startDate = new DateTime(yr, 1, 1);
-                DateTime endDate = new DateTime(yr, 12, 31);
-
-                int? selectedFieldID = cbSearchField.SelectedIndex >= 0 ? (int?)cbSearchField.SelectedValue : null;
-
-                // Preserve currently selected Job ID before filtering
-                int? selectedJobID = lstJobs.SelectedItem is Job selectedJob ? selectedJob.ID : (int?)null;
-
-                List<Job> filteredJobs = JobManager.FilterJobs(startDate, endDate, selectedFieldID)
-                                           .OrderBy(job => job.Date)
-                                           .ThenBy(job => job.Name)
-                                           .ToList();
-
-                lstJobs.DataSource = filteredJobs;
-                lstJobs.DisplayMember = "Name";
-
-                // Restore previous selection by ID
-                if (selectedJobID.HasValue)
-                {
-                    var jobToSelect = filteredJobs.FirstOrDefault(j => j.ID == selectedJobID);
-                    if (jobToSelect != null)
-                        lstJobs.SelectedItem = jobToSelect;
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/FillListBox: " + ex.Message);
+                item.Tag = job;  // Store the Job object for later retrieval
+                lvJobs.Items.Add(item);
             }
         }
 
@@ -510,6 +486,36 @@ namespace RateController.Menu
             //grpSensor.Text = Lang.lgSensorLocation;
         }
 
+        private void tbSearchYear_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSearchYear.Text, out tempD);
+            using (var form = new FormNumeric(1900, 2100, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSearchYear.Text = form.ReturnValue.ToString();
+                    FillJobsList();
+                }
+            }
+        }
+
+        private void tbSearchYear_TextChanged(object sender, EventArgs e)
+        {
+            // highlight btnRefeshJobs
+        }
+
+        private void tbSearchYear_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbSearchYear.Text, out tempD);
+            if (tempD < 1900 || tempD > 2100)
+            {
+                tbSearchYear.Text = DateTime.Now.Year.ToString();
+            }
+        }
+
         private void UpdateEditingJob()
         {
             int JobID = Props.CurrentJobID;
@@ -525,7 +531,7 @@ namespace RateController.Menu
                 Initializing = true;
 
                 FillCombos();
-                FillListBox();
+                FillJobsList();
 
                 if (EditingJob == null)
                 {
@@ -572,12 +578,12 @@ namespace RateController.Menu
                 gbJobs.Invalidate();
 
                 // highlight the current job in the list
-                int id = Props.CurrentJobID;
-                for (int i = 0; i < lstJobs.Items.Count; i++)
+                foreach (ListViewItem item in lvJobs.Items)
                 {
-                    if ((lstJobs.Items[i] as Job).ID == id)
+                    if (item.Tag is Job job && job.ID == Props.CurrentJobID)
                     {
-                        lstJobs.SelectedIndex = i;
+                        item.Selected = true;
+                        item.EnsureVisible();
                         break;
                     }
                 }
@@ -587,35 +593,6 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
-            }
-        }
-
-        private void tbSearchYear_TextChanged(object sender, EventArgs e)
-        {
-            // highlight btnRefeshJobs 
-        }
-
-        private void tbSearchYear_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbSearchYear.Text, out tempD);
-            if (tempD < 1900 || tempD > 2100)
-            {
-               tbSearchYear.Text = DateTime.Now.Year.ToString();
-            }
-        }
-
-        private void tbSearchYear_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbSearchYear.Text, out tempD);
-            using (var form = new FormNumeric(1900, 2100, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSearchYear.Text = form.ReturnValue.ToString();
-                }
             }
         }
     }

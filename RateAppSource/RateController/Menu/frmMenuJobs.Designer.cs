@@ -32,7 +32,6 @@
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.lstJobs = new System.Windows.Forms.ListBox();
             this.tbNotes = new System.Windows.Forms.TextBox();
             this.lb1 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,7 +46,6 @@
             this.btnNotesDown = new System.Windows.Forms.Button();
             this.btnNotesUp = new System.Windows.Forms.Button();
             this.gbJobs = new System.Windows.Forms.GroupBox();
-            this.btnRefeshJobs = new System.Windows.Forms.Button();
             this.cbSearchField = new System.Windows.Forms.ComboBox();
             this.btnDeleteField = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -57,6 +55,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbField = new System.Windows.Forms.ComboBox();
+            this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lvJobs = new System.Windows.Forms.ListView();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -108,17 +109,6 @@
             this.btnDelete.TabIndex = 365;
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // lstJobs
-            // 
-            this.lstJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstJobs.FormattingEnabled = true;
-            this.lstJobs.ItemHeight = 31;
-            this.lstJobs.Location = new System.Drawing.Point(94, 95);
-            this.lstJobs.Name = "lstJobs";
-            this.lstJobs.ScrollAlwaysVisible = true;
-            this.lstJobs.Size = new System.Drawing.Size(379, 252);
-            this.lstJobs.TabIndex = 364;
             // 
             // tbNotes
             // 
@@ -283,7 +273,7 @@
             // 
             // gbJobs
             // 
-            this.gbJobs.Controls.Add(this.btnRefeshJobs);
+            this.gbJobs.Controls.Add(this.lvJobs);
             this.gbJobs.Controls.Add(this.cbSearchField);
             this.gbJobs.Controls.Add(this.btnDeleteField);
             this.gbJobs.Controls.Add(this.label2);
@@ -295,7 +285,6 @@
             this.gbJobs.Controls.Add(this.btnLoad);
             this.gbJobs.Controls.Add(this.btnCopy);
             this.gbJobs.Controls.Add(this.btnDelete);
-            this.gbJobs.Controls.Add(this.lstJobs);
             this.gbJobs.Location = new System.Drawing.Point(6, 235);
             this.gbJobs.Name = "gbJobs";
             this.gbJobs.Size = new System.Drawing.Size(528, 362);
@@ -304,22 +293,9 @@
             this.gbJobs.Text = "Jobs";
             this.gbJobs.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
-            // btnRefeshJobs
-            // 
-            this.btnRefeshJobs.FlatAppearance.BorderSize = 0;
-            this.btnRefeshJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefeshJobs.Image = global::RateController.Properties.Resources.Update;
-            this.btnRefeshJobs.Location = new System.Drawing.Point(432, 25);
-            this.btnRefeshJobs.Name = "btnRefeshJobs";
-            this.btnRefeshJobs.Size = new System.Drawing.Size(82, 64);
-            this.btnRefeshJobs.TabIndex = 387;
-            this.btnRefeshJobs.UseVisualStyleBackColor = true;
-            this.btnRefeshJobs.Click += new System.EventHandler(this.btnRefeshJobs_Click);
-            this.btnRefeshJobs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRefeshJobs_MouseDown);
-            // 
             // cbSearchField
             // 
-            this.cbSearchField.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbSearchField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSearchField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSearchField.FormattingEnabled = true;
             this.cbSearchField.Location = new System.Drawing.Point(94, 52);
@@ -327,15 +303,15 @@
             this.cbSearchField.MaxLength = 20;
             this.cbSearchField.Name = "cbSearchField";
             this.cbSearchField.Size = new System.Drawing.Size(244, 32);
-            this.cbSearchField.Sorted = true;
             this.cbSearchField.TabIndex = 385;
+            this.cbSearchField.SelectedIndexChanged += new System.EventHandler(this.cbSearchField_SelectedIndexChanged);
             // 
             // btnDeleteField
             // 
             this.btnDeleteField.FlatAppearance.BorderSize = 0;
             this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteField.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteField.Location = new System.Drawing.Point(344, 25);
+            this.btnDeleteField.Location = new System.Drawing.Point(376, 25);
             this.btnDeleteField.Name = "btnDeleteField";
             this.btnDeleteField.Size = new System.Drawing.Size(82, 64);
             this.btnDeleteField.TabIndex = 389;
@@ -360,6 +336,7 @@
             this.tbSearchYear.TabIndex = 386;
             this.tbSearchYear.Text = "2025";
             this.tbSearchYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSearchYear.Click += new System.EventHandler(this.tbSearchYear_Enter);
             this.tbSearchYear.TextChanged += new System.EventHandler(this.tbSearchYear_TextChanged);
             this.tbSearchYear.Enter += new System.EventHandler(this.tbSearchYear_Enter);
             this.tbSearchYear.Validating += new System.ComponentModel.CancelEventHandler(this.tbSearchYear_Validating);
@@ -424,9 +401,33 @@
             this.cbField.MaxLength = 20;
             this.cbField.Name = "cbField";
             this.cbField.Size = new System.Drawing.Size(258, 32);
-            this.cbField.Sorted = true;
             this.cbField.TabIndex = 375;
             this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
+            // 
+            // HdrName
+            // 
+            this.HdrName.Text = "Name";
+            this.HdrName.Width = 275;
+            // 
+            // HdrDate
+            // 
+            this.HdrDate.Text = "Date";
+            this.HdrDate.Width = 300;
+            // 
+            // lvJobs
+            // 
+            this.lvJobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.HdrName,
+            this.HdrDate});
+            this.lvJobs.FullRowSelect = true;
+            this.lvJobs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvJobs.HideSelection = false;
+            this.lvJobs.Location = new System.Drawing.Point(94, 95);
+            this.lvJobs.Name = "lvJobs";
+            this.lvJobs.Size = new System.Drawing.Size(379, 244);
+            this.lvJobs.TabIndex = 392;
+            this.lvJobs.UseCompatibleStateImageBehavior = false;
+            this.lvJobs.View = System.Windows.Forms.View.Details;
             // 
             // frmMenuJobs
             // 
@@ -458,7 +459,6 @@
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.ListBox lstJobs;
         private System.Windows.Forms.TextBox tbNotes;
         private System.Windows.Forms.Label lb1;
         private System.Windows.Forms.Label label1;
@@ -482,6 +482,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.ComboBox cbField;
-        private System.Windows.Forms.Button btnRefeshJobs;
+        private System.Windows.Forms.ListView lvJobs;
+        private System.Windows.Forms.ColumnHeader HdrName;
+        private System.Windows.Forms.ColumnHeader HdrDate;
     }
 }
