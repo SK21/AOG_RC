@@ -34,11 +34,12 @@
             this.tbSearchYear = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnJobsUp = new System.Windows.Forms.Button();
-            this.lstJobs = new System.Windows.Forms.ListBox();
-            this.btnRefeshJobs = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.ckErase = new System.Windows.Forms.CheckBox();
+            this.lvJobs = new System.Windows.Forms.ListView();
+            this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // cbSearchField
@@ -46,7 +47,7 @@
             this.cbSearchField.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbSearchField.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSearchField.FormattingEnabled = true;
-            this.cbSearchField.Location = new System.Drawing.Point(96, 38);
+            this.cbSearchField.Location = new System.Drawing.Point(125, 38);
             this.cbSearchField.MaxDropDownItems = 12;
             this.cbSearchField.MaxLength = 20;
             this.cbSearchField.Name = "cbSearchField";
@@ -58,7 +59,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(92, 9);
+            this.label2.Location = new System.Drawing.Point(121, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 29);
             this.label2.TabIndex = 394;
@@ -79,17 +80,19 @@
             // 
             // tbSearchYear
             // 
-            this.tbSearchYear.Location = new System.Drawing.Point(12, 40);
+            this.tbSearchYear.Location = new System.Drawing.Point(41, 40);
             this.tbSearchYear.Name = "tbSearchYear";
             this.tbSearchYear.Size = new System.Drawing.Size(63, 29);
             this.tbSearchYear.TabIndex = 398;
             this.tbSearchYear.Text = "2025";
             this.tbSearchYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSearchYear.Enter += new System.EventHandler(this.tbSearchYear_Enter);
+            this.tbSearchYear.Validating += new System.ComponentModel.CancelEventHandler(this.tbSearchYear_Validating);
             // 
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(12, 9);
+            this.label4.Location = new System.Drawing.Point(41, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 29);
             this.label4.TabIndex = 393;
@@ -107,30 +110,6 @@
             this.btnJobsUp.TabIndex = 396;
             this.btnJobsUp.UseVisualStyleBackColor = true;
             this.btnJobsUp.Click += new System.EventHandler(this.btnJobsUp_Click);
-            // 
-            // lstJobs
-            // 
-            this.lstJobs.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstJobs.FormattingEnabled = true;
-            this.lstJobs.ItemHeight = 31;
-            this.lstJobs.Location = new System.Drawing.Point(12, 82);
-            this.lstJobs.Name = "lstJobs";
-            this.lstJobs.ScrollAlwaysVisible = true;
-            this.lstJobs.Size = new System.Drawing.Size(379, 221);
-            this.lstJobs.TabIndex = 390;
-            // 
-            // btnRefeshJobs
-            // 
-            this.btnRefeshJobs.FlatAppearance.BorderSize = 0;
-            this.btnRefeshJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefeshJobs.Image = global::RateController.Properties.Resources.Update;
-            this.btnRefeshJobs.Location = new System.Drawing.Point(346, 12);
-            this.btnRefeshJobs.Name = "btnRefeshJobs";
-            this.btnRefeshJobs.Size = new System.Drawing.Size(82, 64);
-            this.btnRefeshJobs.TabIndex = 399;
-            this.btnRefeshJobs.UseVisualStyleBackColor = true;
-            this.btnRefeshJobs.Click += new System.EventHandler(this.btnRefeshJobs_Click);
-            this.btnRefeshJobs.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRefeshJobs_MouseDown);
             // 
             // btnCancel
             // 
@@ -177,11 +156,37 @@
             this.ckErase.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckErase.UseVisualStyleBackColor = true;
             // 
+            // lvJobs
+            // 
+            this.lvJobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.HdrName,
+            this.HdrDate});
+            this.lvJobs.FullRowSelect = true;
+            this.lvJobs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvJobs.HideSelection = false;
+            this.lvJobs.Location = new System.Drawing.Point(12, 82);
+            this.lvJobs.Name = "lvJobs";
+            this.lvJobs.Size = new System.Drawing.Size(379, 230);
+            this.lvJobs.TabIndex = 404;
+            this.lvJobs.UseCompatibleStateImageBehavior = false;
+            this.lvJobs.View = System.Windows.Forms.View.Details;
+            // 
+            // HdrName
+            // 
+            this.HdrName.Text = "Name";
+            this.HdrName.Width = 275;
+            // 
+            // HdrDate
+            // 
+            this.HdrDate.Text = "Date";
+            this.HdrDate.Width = 300;
+            // 
             // frmCopyMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(452, 394);
+            this.Controls.Add(this.lvJobs);
             this.Controls.Add(this.ckErase);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -191,8 +196,6 @@
             this.Controls.Add(this.tbSearchYear);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.btnJobsUp);
-            this.Controls.Add(this.lstJobs);
-            this.Controls.Add(this.btnRefeshJobs);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(6);
@@ -215,10 +218,11 @@
         private System.Windows.Forms.TextBox tbSearchYear;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnJobsUp;
-        private System.Windows.Forms.ListBox lstJobs;
-        private System.Windows.Forms.Button btnRefeshJobs;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.CheckBox ckErase;
+        private System.Windows.Forms.ListView lvJobs;
+        private System.Windows.Forms.ColumnHeader HdrName;
+        private System.Windows.Forms.ColumnHeader HdrDate;
     }
 }
