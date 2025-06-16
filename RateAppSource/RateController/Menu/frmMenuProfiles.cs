@@ -18,7 +18,16 @@ namespace RateController.Menu
             mf = main;
             this.Tag = false;
         }
-
+        //private void btnCopy_Click(object sender, EventArgs e)
+        //{
+        //    if (lstProfiles.SelectedIndex >= 0)
+        //    {
+        //    }
+        //    else
+        //    {
+        //        mf.Tls.ShowMessage("No file selected.");
+        //    }
+        //}
         private void btnCopy_Click(object sender, EventArgs e)
         {
             try

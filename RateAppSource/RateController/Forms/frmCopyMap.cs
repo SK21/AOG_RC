@@ -169,5 +169,10 @@ namespace RateController.Forms
         private void SetLanguage()
         {
         }
+
+        private void cbSearchField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillListBox();
+        }
     }
 }

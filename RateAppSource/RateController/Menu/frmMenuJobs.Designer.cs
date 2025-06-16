@@ -46,6 +46,9 @@
             this.btnNotesDown = new System.Windows.Forms.Button();
             this.btnNotesUp = new System.Windows.Forms.Button();
             this.gbJobs = new System.Windows.Forms.GroupBox();
+            this.lvJobs = new System.Windows.Forms.ListView();
+            this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbSearchField = new System.Windows.Forms.ComboBox();
             this.btnDeleteField = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -55,9 +58,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbField = new System.Windows.Forms.ComboBox();
-            this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lvJobs = new System.Windows.Forms.ListView();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -118,7 +118,7 @@
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbNotes.Size = new System.Drawing.Size(373, 78);
-            this.tbNotes.TabIndex = 370;
+            this.tbNotes.TabIndex = 5;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
             // lb1
@@ -157,7 +157,7 @@
             this.ckJobs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckJobs.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckJobs.Location = new System.Drawing.Point(6, 602);
+            this.ckJobs.Location = new System.Drawing.Point(6, 228);
             this.ckJobs.Name = "ckJobs";
             this.ckJobs.Size = new System.Drawing.Size(89, 64);
             this.ckJobs.TabIndex = 376;
@@ -176,7 +176,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(377, 603);
+            this.btnCancel.Location = new System.Drawing.Point(368, 229);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 379;
@@ -194,10 +194,10 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(458, 603);
+            this.btnOK.Location = new System.Drawing.Point(444, 229);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
-            this.btnOK.TabIndex = 378;
+            this.btnOK.TabIndex = 6;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -207,7 +207,7 @@
             this.tbDate.Location = new System.Drawing.Point(94, 60);
             this.tbDate.Name = "tbDate";
             this.tbDate.Size = new System.Drawing.Size(258, 29);
-            this.tbDate.TabIndex = 382;
+            this.tbDate.TabIndex = 3;
             this.tbDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbDate.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
@@ -285,13 +285,38 @@
             this.gbJobs.Controls.Add(this.btnLoad);
             this.gbJobs.Controls.Add(this.btnCopy);
             this.gbJobs.Controls.Add(this.btnDelete);
-            this.gbJobs.Location = new System.Drawing.Point(6, 235);
+            this.gbJobs.Location = new System.Drawing.Point(6, 304);
             this.gbJobs.Name = "gbJobs";
             this.gbJobs.Size = new System.Drawing.Size(528, 362);
             this.gbJobs.TabIndex = 390;
             this.gbJobs.TabStop = false;
             this.gbJobs.Text = "Jobs";
             this.gbJobs.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // lvJobs
+            // 
+            this.lvJobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.HdrName,
+            this.HdrDate});
+            this.lvJobs.FullRowSelect = true;
+            this.lvJobs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lvJobs.HideSelection = false;
+            this.lvJobs.Location = new System.Drawing.Point(94, 95);
+            this.lvJobs.Name = "lvJobs";
+            this.lvJobs.Size = new System.Drawing.Size(379, 244);
+            this.lvJobs.TabIndex = 392;
+            this.lvJobs.UseCompatibleStateImageBehavior = false;
+            this.lvJobs.View = System.Windows.Forms.View.Details;
+            // 
+            // HdrName
+            // 
+            this.HdrName.Text = "Name";
+            this.HdrName.Width = 275;
+            // 
+            // HdrDate
+            // 
+            this.HdrDate.Text = "Date";
+            this.HdrDate.Width = 300;
             // 
             // cbSearchField
             // 
@@ -355,6 +380,9 @@
             // 
             this.gbCurrentJob.Controls.Add(this.label5);
             this.gbCurrentJob.Controls.Add(this.tbName);
+            this.gbCurrentJob.Controls.Add(this.btnOK);
+            this.gbCurrentJob.Controls.Add(this.btnCancel);
+            this.gbCurrentJob.Controls.Add(this.ckJobs);
             this.gbCurrentJob.Controls.Add(this.label1);
             this.gbCurrentJob.Controls.Add(this.tbDate);
             this.gbCurrentJob.Controls.Add(this.btnCalender);
@@ -366,7 +394,7 @@
             this.gbCurrentJob.Controls.Add(this.tbNotes);
             this.gbCurrentJob.Location = new System.Drawing.Point(6, 0);
             this.gbCurrentJob.Name = "gbCurrentJob";
-            this.gbCurrentJob.Size = new System.Drawing.Size(528, 228);
+            this.gbCurrentJob.Size = new System.Drawing.Size(528, 298);
             this.gbCurrentJob.TabIndex = 391;
             this.gbCurrentJob.TabStop = false;
             this.gbCurrentJob.Text = "Current Job";
@@ -387,7 +415,7 @@
             this.tbName.Location = new System.Drawing.Point(94, 25);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(258, 29);
-            this.tbName.TabIndex = 391;
+            this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbName.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
@@ -401,33 +429,8 @@
             this.cbField.MaxLength = 20;
             this.cbField.Name = "cbField";
             this.cbField.Size = new System.Drawing.Size(258, 32);
-            this.cbField.TabIndex = 375;
+            this.cbField.TabIndex = 4;
             this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
-            // 
-            // HdrName
-            // 
-            this.HdrName.Text = "Name";
-            this.HdrName.Width = 275;
-            // 
-            // HdrDate
-            // 
-            this.HdrDate.Text = "Date";
-            this.HdrDate.Width = 300;
-            // 
-            // lvJobs
-            // 
-            this.lvJobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.HdrName,
-            this.HdrDate});
-            this.lvJobs.FullRowSelect = true;
-            this.lvJobs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvJobs.HideSelection = false;
-            this.lvJobs.Location = new System.Drawing.Point(94, 95);
-            this.lvJobs.Name = "lvJobs";
-            this.lvJobs.Size = new System.Drawing.Size(379, 244);
-            this.lvJobs.TabIndex = 392;
-            this.lvJobs.UseCompatibleStateImageBehavior = false;
-            this.lvJobs.View = System.Windows.Forms.View.Details;
             // 
             // frmMenuJobs
             // 
@@ -436,9 +439,6 @@
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.gbCurrentJob);
             this.Controls.Add(this.gbJobs);
-            this.Controls.Add(this.ckJobs);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6);

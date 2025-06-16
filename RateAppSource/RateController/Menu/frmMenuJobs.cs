@@ -2,7 +2,9 @@
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -18,7 +20,6 @@ namespace RateController.Menu
         private Job EditingJob = null;
         private bool Initializing = false;
         private bool IsNewJob = false;
-        private string JobsDateFormat = "dd-MMM-yyyy   HH:mm";
         private int JobToCopyFromID = -1;
         private frmMenu MainMenu;
         private FormStart mf;
@@ -36,7 +37,7 @@ namespace RateController.Menu
 
         private void btnCalender_Click(object sender, EventArgs e)
         {
-            tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
+            tbDate.Text = FormattedDate(DateTime.Now);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -220,9 +221,8 @@ namespace RateController.Menu
             try
             {
                 EditingJob = new Job();
-                tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
+                tbDate.Text = FormattedDate(DateTime.Now);
                 tbNotes.Text = "";
-                //tbName.Text = "New Job";
                 IsNewJob = true;
             }
             catch (Exception ex)
@@ -395,6 +395,14 @@ namespace RateController.Menu
             }
         }
 
+        private string FormattedDate(DateTime date)
+        {
+            CultureInfo culture = CultureInfo.CurrentCulture;
+            string timeFormat = culture.DateTimeFormat.ShortTimePattern;
+            string format = "dd-MMM-yyyy   " + timeFormat;
+            return date.ToString(format, culture);
+        }
+
         private void frmMenuJobs_Load(object sender, EventArgs e)
         {
             try
@@ -536,14 +544,14 @@ namespace RateController.Menu
                 if (EditingJob == null)
                 {
                     tbName.Text = string.Empty;
-                    tbDate.Text = DateTime.Now.ToString(JobsDateFormat);
+                    tbDate.Text = FormattedDate(DateTime.Now);
                     cbField.SelectedIndex = -1;
                     tbNotes.Text = string.Empty;
                 }
                 else
                 {
                     tbName.Text = EditingJob.Name;
-                    tbDate.Text = EditingJob.Date.ToString(JobsDateFormat);
+                    tbDate.Text = FormattedDate(EditingJob.Date);
 
                     // Use ParcelManager.SearchParcel to find the Parcel by FieldID
                     Parcel fieldParcel = ParcelManager.SearchParcel(EditingJob.FieldID);
