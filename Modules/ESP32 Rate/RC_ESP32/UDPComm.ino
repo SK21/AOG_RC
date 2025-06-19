@@ -77,9 +77,8 @@ void SendComm()
             {
                 if (Ethernet.linkStatus() == LinkON)
                 {
-
                     UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-                    UDP_Ethernet.write(Data, 13);
+                    UDP_Ethernet.write(Data, 15);
                     UDP_Ethernet.endPacket();
                     Sent = true;
                 }

@@ -16,8 +16,8 @@
 #include <Adafruit_PWMServoDriver.h>
 
 // rate control with ESP32	board: DOIT ESP32 DEVKIT V1
-# define InoDescription "RC_ESP32 :  11-Jun-2025"
-const uint16_t InoID = 11065;	// change to send defaults to eeprom, ddmmy, no leading 0
+# define InoDescription "RC_ESP32 :  18-Jun-2025"
+const uint16_t InoID = 18065;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -305,8 +305,8 @@ void CheckPressure()
 //byte ReadReset;
 //uint32_t MaxLoopTime;
 //double FlowHz;
-////double debug1;
-////double debug2;
+//double debug1;
+//double debug2;
 ////double debug3;
 ////double debug4;
 ////double debug5;
@@ -319,15 +319,15 @@ void CheckPressure()
 //		State = !State;
 //		//digitalWrite(LED_BUILTIN, State);
 //
-//		Serial.print(MaxLoopTime);
-//		Serial.print(", ");
-//		Serial.print(FlowHz);
+//		//Serial.print(MaxLoopTime);
+//		//Serial.print(", ");
+//		//Serial.print(FlowHz);
 //
 //		//Serial.print(", ");
-//		//Serial.print(debug1);
-//		//
-//		//Serial.print(", ");
-//		//Serial.print(debug2);
+//		Serial.print(debug1);
+//		
+//		Serial.print(", ");
+//		Serial.print(debug2);
 //
 //		//Serial.print(", ");
 //		//Serial.print(debug3);
