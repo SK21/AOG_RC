@@ -261,7 +261,7 @@ namespace RateController.Classes
             get { return cPrimeTime; }
             set
             {
-                if (value >= 0 && value < 30)
+                if (value >= 0 && value <= 300)
                 {
                     cPrimeTime = value;
                     SetProp("PrimeTime", cPrimeTime.ToString());

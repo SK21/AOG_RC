@@ -165,7 +165,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbTime.Text, out tempD);
-            using (var form = new FormNumeric(0, 30, tempD))
+            using (var form = new FormNumeric(0, 300, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -184,7 +184,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbTime.Text, out tempD);
-            if (tempD < 0 || tempD > 30)
+            if (tempD < 0 || tempD > 300)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
