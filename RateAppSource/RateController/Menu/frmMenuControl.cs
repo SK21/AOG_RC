@@ -9,6 +9,7 @@ namespace RateController.Menu
     public partial class frmMenuControl : Form
     {
         private Button ButtonPressed;
+        private int ButtonStep = 5;
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -39,35 +40,91 @@ namespace RateController.Menu
             switch (ClickedButton.Name)
             {
                 case "btGainMinus":
-                    if (HSscaling.Value > 0) HSscaling.Value--;
+                    if (HSscaling.Value >= (HSscaling.Minimum + ButtonStep))
+                    {
+                        HSscaling.Value = HSscaling.Value - ButtonStep;
+                    }
+                    else
+                    {
+                        HSscaling.Value = HSscaling.Minimum;
+                    }
                     break;
 
                 case "btGainPlus":
-                    if (HSscaling.Value < HSscaling.Maximum) HSscaling.Value++;
+                    if (HSscaling.Value <= (HSscaling.Maximum - ButtonStep))
+                    {
+                        HSscaling.Value = HSscaling.Value + ButtonStep;
+                    }
+                    else
+                    {
+                        HSscaling.Value = HSscaling.Maximum;
+                    }
                     break;
 
                 case "btIntegralMinus":
-                    if (HSintegral.Value > 0) HSintegral.Value--;
+                    if (HSintegral.Value >= (HSintegral.Minimum + ButtonStep))
+                    {
+                        HSintegral.Value = HSintegral.Value - ButtonStep;
+                    }
+                    else
+                    {
+                        HSintegral.Value = HSintegral.Minimum;
+                    }
                     break;
 
                 case "btIntegralPlus":
-                    if (HSintegral.Value < HSintegral.Maximum) HSintegral.Value++;
+                    if (HSintegral.Value <= (HSintegral.Maximum - ButtonStep))
+                    {
+                        HSintegral.Value = HSintegral.Value + ButtonStep;
+                    }
+                    else
+                    {
+                        HSintegral.Value = HSintegral.Maximum;
+                    }
                     break;
 
                 case "btMaxMinus":
-                    if (HSmax.Value > 0) HSmax.Value--;
+                    if (HSmax.Value >= (HSmax.Minimum + ButtonStep))
+                    {
+                        HSmax.Value = HSmax.Value - ButtonStep;
+                    }
+                    else
+                    {
+                        HSmax.Value = HSmax.Minimum;
+                    }
                     break;
 
                 case "btMaxPlus":
-                    if (HSmax.Value < HSmax.Maximum) HSmax.Value++;
+                    if (HSmax.Value <= (HSmax.Maximum - ButtonStep))
+                    {
+                        HSmax.Value = HSmax.Value + ButtonStep;
+                    }
+                    else
+                    {
+                        HSmax.Value = HSmax.Maximum;
+                    }
                     break;
 
                 case "btMinMinus":
-                    if (HSmin.Value > 0) HSmin.Value--;
+                    if (HSmin.Value >= (HSmin.Minimum + ButtonStep))
+                    {
+                        HSmin.Value = HSmin.Value - ButtonStep;
+                    }
+                    else
+                    {
+                        HSmin.Value = HSmin.Minimum;
+                    }
                     break;
 
                 case "btMinPlus":
-                    if (HSmin.Value < HSmin.Maximum) HSmin.Value++;
+                    if (HSmin.Value <= (HSmin.Maximum - ButtonStep))
+                    {
+                        HSmin.Value = HSmin.Value + ButtonStep;
+                    }
+                    else
+                    {
+                        HSmin.Value = HSmin.Maximum;
+                    }
                     break;
             }
         }
