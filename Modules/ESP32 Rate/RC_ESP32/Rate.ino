@@ -1,5 +1,5 @@
 const uint32_t PulseMin = 250;      // micros
-const uint32_t PulseMax = 250000;	// 4 Hz
+const uint32_t PulseMax = 1000000;	// 1 Hz
 const int SampleSize = 12;
 const uint32_t FlowTimeout = 4000;
 
