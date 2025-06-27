@@ -23,13 +23,13 @@ void SendData()
 	// read switches
 	Data[2] = 0;
 
-	if (MDL.MasterOn < NC) Pins[1] = !digitalRead(MDL.MasterOn);
-	if (MDL.MasterOff < NC) Pins[2] = !digitalRead(MDL.MasterOff);
-	if (MDL.RateUp < NC) Pins[3] = !digitalRead(MDL.RateUp);
-	if (MDL.RateDown < NC) Pins[4] = !digitalRead(MDL.RateDown);
-	if (MDL.AutoSection < NC) Pins[5] = !digitalRead(MDL.AutoSection);
-	if (MDL.AutoRate < NC) Pins[6] = !digitalRead(MDL.AutoRate);
-	if (MDL.WorkPin < NC) Pins[7] = digitalRead(MDL.WorkPin);	// high is off, low is on - pin connected to ground
+	if (MDL.MasterOn < NC) Pins[1] = !ReadPin(MDL.MasterOn);
+	if (MDL.MasterOff < NC) Pins[2] = !ReadPin(MDL.MasterOff);
+	if (MDL.RateUp < NC) Pins[3] = !ReadPin(MDL.RateUp);
+	if (MDL.RateDown < NC) Pins[4] = !ReadPin(MDL.RateDown);
+	if (MDL.AutoSection < NC) Pins[5] = !ReadPin(MDL.AutoSection);
+	if (MDL.AutoRate < NC) Pins[6] = !ReadPin(MDL.AutoRate);
+	if (MDL.WorkPin < NC) Pins[7] = ReadPin(MDL.WorkPin);	// high is off, low is on - pin connected to ground
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -46,11 +46,11 @@ void SendData()
 		{
 			if (i < 8)
 			{
-				if (!digitalRead(MDL.SectionPins[i])) Data[3] = Data[3] | (1 << i);
+				if (!ReadPin(MDL.SectionPins[i])) Data[3] = Data[3] | (1 << i);
 			}
 			else
 			{
-				if (!digitalRead(MDL.SectionPins[i])) Data[4] = Data[4] | (1 << (i - 8));
+				if (!ReadPin(MDL.SectionPins[i])) Data[4] = Data[4] | (1 << (i - 8));
 			}
 		}
 	}
@@ -62,4 +62,20 @@ void SendData()
 		// send ethernet
 		ether.sendUdp(Data, 6, SourcePort, DestinationIP, DestinationPort);
 	}
+}
+
+bool ReadPin(int PinID)
+{
+	bool Result = false;
+
+	if (PinID == 20 || PinID == 21)
+	{
+		// A6 or A7 analog read
+		Result = analogRead(PinID) > 500;
+	}
+	else
+	{
+		Result = digitalRead(PinID);
+	}
+	return Result;
 }
