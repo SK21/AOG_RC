@@ -5,6 +5,7 @@ const double BrakePoint = 0.25;
 const double FastAdjust = 100;
 const double SlowAdjust = 30;
 const double MaxOutputChange = 2;
+const double MaxValveIntegral = 20;
 
 uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
@@ -138,7 +139,7 @@ int PIDvalve(byte ID)
 
 				IntegralSum[ID] += RateError * Sensor[ID].Ki;
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -10, 10);  // max total integral pwm
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxValveIntegral, MaxValveIntegral);  // max total integral pwm
 
 				double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
 
@@ -217,7 +218,7 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 
 						IntegralSum[ID] += RateError * Sensor[ID].Ki;
 						IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using Ki
-						IntegralSum[ID] = constrain(IntegralSum[ID], -10, 10);	// total integral pwm
+						IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxValveIntegral, MaxValveIntegral);	// total integral pwm
 
 						// check brakepoint
 						double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
