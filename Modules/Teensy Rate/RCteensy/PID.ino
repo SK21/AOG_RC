@@ -1,11 +1,11 @@
 
-const double SampleTime = 50;	// ms
-const double Deadband = 0.015;	// error amount below which no adjustment is made
-const double BrakePoint = 0.25;
-const double FastAdjust = 100;
-const double SlowAdjust = 30;
-const double MaxOutputChange = 2;
-const double MaxValveIntegral = 20;
+const double SampleTime = 50;		// ms
+const double Deadband = 0.015;		// error amount below which no adjustment is made
+const double BrakePoint = 0.25;		// error amount where adjustment rate changes from fast to slow
+const double FastAdjust = 100;		// fast adjustment factor
+const double SlowAdjust = 30;		// slow adjustment factor
+const double MaxMotorSlewRate = 2;	// slew rate limit. Max total pwm change per loop
+const double MaxValveIntegral = 40;	// max total integral pwm adjustment
 
 uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
@@ -94,13 +94,13 @@ int PIDmotor(byte ID)
 
 				// slew rate limit
 				double Change = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
-				if (Change > MaxOutputChange)
+				if (Change > MaxMotorSlewRate)
 				{
-					Change = MaxOutputChange;
+					Change = MaxMotorSlewRate;
 				}
-				else if (Change < -MaxOutputChange)
+				else if (Change < -MaxMotorSlewRate)
 				{
-					Change = -MaxOutputChange;
+					Change = -MaxMotorSlewRate;
 				}
 
 				Result += Change;
