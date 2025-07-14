@@ -126,36 +126,36 @@
             // 
             // lbAppCurrent
             // 
-            this.lbAppCurrent.Location = new System.Drawing.Point(205, 41);
+            this.lbAppCurrent.Location = new System.Drawing.Point(196, 41);
             this.lbAppCurrent.Name = "lbAppCurrent";
-            this.lbAppCurrent.Size = new System.Drawing.Size(106, 24);
+            this.lbAppCurrent.Size = new System.Drawing.Size(125, 24);
             this.lbAppCurrent.TabIndex = 162;
             this.lbAppCurrent.Text = "4.0.3";
             this.lbAppCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbAppLatest
             // 
-            this.lbAppLatest.Location = new System.Drawing.Point(348, 41);
+            this.lbAppLatest.Location = new System.Drawing.Point(339, 41);
             this.lbAppLatest.Name = "lbAppLatest";
-            this.lbAppLatest.Size = new System.Drawing.Size(106, 24);
+            this.lbAppLatest.Size = new System.Drawing.Size(125, 24);
             this.lbAppLatest.TabIndex = 163;
             this.lbAppLatest.Text = "4.1.0";
             this.lbAppLatest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbModuleCurrent
             // 
-            this.lbModuleCurrent.Location = new System.Drawing.Point(193, 71);
+            this.lbModuleCurrent.Location = new System.Drawing.Point(184, 71);
             this.lbModuleCurrent.Name = "lbModuleCurrent";
-            this.lbModuleCurrent.Size = new System.Drawing.Size(106, 24);
+            this.lbModuleCurrent.Size = new System.Drawing.Size(125, 24);
             this.lbModuleCurrent.TabIndex = 181;
             this.lbModuleCurrent.Text = "10-Jul-2025";
             this.lbModuleCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbModuleLatest
             // 
-            this.lbModuleLatest.Location = new System.Drawing.Point(336, 71);
+            this.lbModuleLatest.Location = new System.Drawing.Point(327, 71);
             this.lbModuleLatest.Name = "lbModuleLatest";
-            this.lbModuleLatest.Size = new System.Drawing.Size(106, 24);
+            this.lbModuleLatest.Size = new System.Drawing.Size(125, 24);
             this.lbModuleLatest.TabIndex = 180;
             this.lbModuleLatest.Text = "10-Jul-2025";
             this.lbModuleLatest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -196,18 +196,18 @@
             // 
             // lbSwitchBoxCurrent
             // 
-            this.lbSwitchBoxCurrent.Location = new System.Drawing.Point(205, 226);
+            this.lbSwitchBoxCurrent.Location = new System.Drawing.Point(196, 226);
             this.lbSwitchBoxCurrent.Name = "lbSwitchBoxCurrent";
-            this.lbSwitchBoxCurrent.Size = new System.Drawing.Size(106, 24);
+            this.lbSwitchBoxCurrent.Size = new System.Drawing.Size(125, 24);
             this.lbSwitchBoxCurrent.TabIndex = 270;
             this.lbSwitchBoxCurrent.Text = "10-Jul-2025";
             this.lbSwitchBoxCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbSwitchBoxLatest
             // 
-            this.lbSwitchBoxLatest.Location = new System.Drawing.Point(348, 226);
+            this.lbSwitchBoxLatest.Location = new System.Drawing.Point(339, 226);
             this.lbSwitchBoxLatest.Name = "lbSwitchBoxLatest";
-            this.lbSwitchBoxLatest.Size = new System.Drawing.Size(106, 24);
+            this.lbSwitchBoxLatest.Size = new System.Drawing.Size(125, 24);
             this.lbSwitchBoxLatest.TabIndex = 269;
             this.lbSwitchBoxLatest.Text = "10-Jul-2025";
             this.lbSwitchBoxLatest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

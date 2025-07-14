@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -31,46 +33,53 @@ namespace RateController.Classes
         public async Task Update()
         {
             string url = "https://raw.githubusercontent.com/SK21/AOG_RC/Versions/Versions.json";
+
             using (var client = new HttpClient())
             {
                 try
                 {
                     string json = await client.GetStringAsync(url);
-                    var doc = JsonDocument.Parse(json);
-                    Dictionary<int, ModuleInfo> ModulesUpdate = new Dictionary<int, ModuleInfo>();
-                    RCappInfo RCappUpdate = null;
 
-                    foreach (var property in doc.RootElement.EnumerateObject())
+                    var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(json);
+                    if (jsonObj == null)
+                        return;
+
+                    var modulesUpdate = new Dictionary<int, ModuleInfo>();
+                    RCappInfo rcappUpdate = null;
+
+                    foreach (var kvp in jsonObj)
                     {
-                        if (property.Name == "RCapp")
+                        if (kvp.Key == "RCapp")
                         {
-                            RCappUpdate = JsonSerializer.Deserialize<RCappInfo>(property.Value.GetRawText());
+                            rcappUpdate = kvp.Value.ToObject<RCappInfo>();
                         }
-                        else
+                        else if (int.TryParse(kvp.Key, out int moduleId))
                         {
-                            if (int.TryParse(property.Name, out int key))
-                            {
-                                var info = JsonSerializer.Deserialize<ModuleInfo>(property.Value.GetRawText());
-                                ModulesUpdate.Add(key, info);
-                            }
+                            var module = kvp.Value.ToObject<ModuleInfo>();
+                            modulesUpdate[moduleId] = module;
                         }
                     }
 
-                    RCapp = RCappUpdate;
-                    Modules = ModulesUpdate;
+                    // Apply updates
+                    RCapp = rcappUpdate;
+                    Modules = modulesUpdate;
 
-                    var saveObj = new
+                    // Build flat structure for saving
+                    var saveObj = new JObject();
+
+                    saveObj["RCapp"] = JObject.FromObject(RCapp);
+
+                    foreach (var kvp in Modules)
                     {
-                        RCapp,
-                        Modules
-                    };
+                        saveObj[kvp.Key.ToString()] = JObject.FromObject(kvp.Value);
+                    }
 
-                    string savedJson = JsonSerializer.Serialize(saveObj, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText(FileLocation, savedJson);
+                    // Write to file
+                    File.WriteAllText(FileLocation, saveObj.ToString(Formatting.Indented));
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error: " + ex.Message);
+                    Console.WriteLine("Update failed: " + ex.Message);
                 }
             }
         }
@@ -89,18 +98,12 @@ namespace RateController.Classes
                 {
                     if (property.Name == "RCapp")
                     {
-                        RCapp = JsonSerializer.Deserialize<RCappInfo>(property.Value.GetRawText());
+                        RCapp = JsonConvert.DeserializeObject<RCappInfo>(property.Value.GetRawText());
                     }
-                    else if (property.Name == "Modules")
+                    else if (int.TryParse(property.Name, out int key))
                     {
-                        foreach (var moduleProp in property.Value.EnumerateObject())
-                        {
-                            if (int.TryParse(moduleProp.Name, out int key))
-                            {
-                                var info = JsonSerializer.Deserialize<ModuleInfo>(moduleProp.Value.GetRawText());
-                                Modules[key] = info;
-                            }
-                        }
+                        var info = JsonConvert.DeserializeObject<ModuleInfo>(property.Value.GetRawText());
+                        Modules[key] = info;
                     }
                 }
             }
