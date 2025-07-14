@@ -19,13 +19,22 @@ namespace RateController.Classes
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
     public enum MasterSwitchMode
-    { ControlAll, ControlMasterRelayOnly, Override };
+    { ControlAll, ControlMasterRelayOnly, Override }
+
+    public enum ModuleTypes
+    {
+        TeensyAutoSteer,
+        TeensyRate,
+        NanoRate,
+        NanoSwitchBox,
+        ESPRate
+    }
 
     public enum RateType
     { Applied, Target }
 
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master };
+    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master }
 
     public enum SimType
     { Sim_None, Sim_Speed }
@@ -36,7 +45,7 @@ namespace RateController.Classes
         NotUsed, MasterOn, MasterOff, RateUp, RateDown, sw0, sw1, sw2, sw3, sw4, sw5,
 
         sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, AutoSection, AutoRate, WorkSwitch
-    };
+    }
 
     public static class Props
     {

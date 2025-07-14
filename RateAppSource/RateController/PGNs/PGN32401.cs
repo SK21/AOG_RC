@@ -9,32 +9,29 @@ namespace RateController
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo 
-        //4     Pressure Hi
-        //5     -
-        //6     -
-        //7     -
-        //8     -
-        //9     -
-        //10    -
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
+        //3     BuildDay
+        //4     BuildMonth
+        //5     BuildYear
+        //6     BuildType        0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+        //7     Pressure Lo
+        //8     Pressure Hi
+        //9     status
         //      bit 0   work switch
         //      bit 1   wifi rssi < -80
         //      bit 2	wifi rssi < -70
         //      bit 3	wifi rssi < -65
         //      bit 4   ethernet connected
         //      bit 5   good pin configuration
-        //14    CRC
+        //10    -
+        //11    CRC
 
-        private const byte cByteCount = 15;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
         private readonly FormStart mf;
+        private byte[,] cBuild = new byte[255, 4];
         private bool[] cEthernetConnected;
         private bool[] cGoodPins;
-        private UInt16[] cInoID;
         private double[] cPressureReading;
         private UInt16[,] cReading = new UInt16[255, 4];
         private byte[] cWifiSignal;
@@ -47,7 +44,6 @@ namespace RateController
         public PGN32401(FormStart CalledFrom)
         {
             mf = CalledFrom;
-            cInoID = new ushort[Props.MaxModules];
             cWorkSwitch = new bool[Props.MaxModules];
             cPressureReading = new double[Props.MaxModules];
             ReceiveTime = new DateTime[Props.MaxModules];
@@ -77,9 +73,14 @@ namespace RateController
             return cGoodPins[Module];
         }
 
-        public UInt16 InoID(int Module)
+        public DateTime ModuleDate(byte Module)
         {
-            return cInoID[Module];
+            return new DateTime(cBuild[Module, 2] + 2000, cBuild[Module, 1], cBuild[Module, 0]);
+        }
+
+        public UInt16 ModuleType(byte Module)
+        {
+            return cBuild[Module, 3];
         }
 
         public bool ParseByteData(byte[] Data)
@@ -88,18 +89,24 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 byte ModuleID = Data[2];
-                cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
-                cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
-                cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
+
+                cBuild[ModuleID, 0] = Data[3];
+                cBuild[ModuleID, 1] = Data[4];
+                cBuild[ModuleID, 2] = Data[5];
+                cBuild[ModuleID, 3] = Data[6];
+
+                cPressureReading[ModuleID] = (double)(Data[7] | Data[8] << 8);
+
+                cWorkSwitch[ModuleID] = ((Data[9] & 0b00000001) == 0b00000001);
 
                 // wifi strength
                 cWifiSignal[ModuleID] = 0;
-                if ((Data[13] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
-                if ((Data[13] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
-                if ((Data[13] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
+                if ((Data[9] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
+                if ((Data[9] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
+                if ((Data[9] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
 
-                cEthernetConnected[ModuleID] = ((Data[13] & 0b00010000) == 0b00010000);
-                cGoodPins[ModuleID] = ((Data[13] & 0b00100000) == 0b00100000);
+                cEthernetConnected[ModuleID] = ((Data[9] & 0b00010000) == 0b00010000);
+                cGoodPins[ModuleID] = ((Data[9] & 0b00100000) == 0b00100000);
 
                 ReceiveTime[ModuleID] = DateTime.Now;
                 Result = true;

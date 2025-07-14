@@ -189,6 +189,7 @@
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
     <Compile Include="Classes\clsPressureRawData.cs" />
+    <Compile Include="Classes\clsVersionChecker.cs" />
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\MapImageSaver.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
@@ -249,6 +250,12 @@
     </Compile>
     <Compile Include="Forms\frmLargeScreen.Designer.cs">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmVersion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmVersion.Designer.cs">
+      <DependentUpon>frmVersion.cs</DependentUpon>
     </Compile>
     <Compile Include="Menu\frmMenuJobs.cs">
       <SubType>Form</SubType>
@@ -529,6 +536,9 @@
     <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmVersion.resx">
+      <DependentUpon>frmVersion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuJobs.resx">
       <DependentUpon>frmMenuJobs.cs</DependentUpon>
     </EmbeddedResource>
@@ -742,6 +752,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\file-cloud.png" />
     <None Include="Resources\plus-square.png" />
     <None Include="Resources\minus-square.png" />
     <None Include="Resources\drag-and-drop.png" />

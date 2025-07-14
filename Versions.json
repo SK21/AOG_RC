@@ -1,0 +1,21 @@
+{
+    "RCapp": {
+        "version": "4.0.3",
+        "date": "2025-06-22"
+    },
+    "Teensy AutoSteer": {
+        "date": "2025-07-13"
+    },
+    "Teensy Rate": {
+        "date": "2025-07-13"
+    },
+    "Nano Rate": {
+        "date": "2025-07-13"
+    },
+    "Nano SwitchBox": {
+        "date": "2025-07-13"
+    },
+    "ESP Rate": {
+        "date": "2025-07-13"
+    }
+}
