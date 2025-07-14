@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -23,11 +22,11 @@ namespace RateController.Classes
 
     public enum ModuleTypes
     {
-        TeensyAutoSteer,
-        TeensyRate,
-        NanoRate,
-        NanoSwitchBox,
-        ESPRate
+        Teensy_AutoSteer,
+        Teensy_Rate,
+        Nano_Rate,
+        Nano_SwitchBox,
+        ESP_Rate
     }
 
     public enum RateType

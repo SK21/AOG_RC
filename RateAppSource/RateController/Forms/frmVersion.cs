@@ -11,11 +11,13 @@ namespace RateController.Forms
     public partial class frmVersion : Form
     {
         private FormStart mf;
+        private clsVersionChecker VC;
 
         public frmVersion(FormStart CallingForm)
         {
             InitializeComponent();
             mf = CallingForm;
+            VC= new clsVersionChecker();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -95,16 +97,19 @@ namespace RateController.Forms
         private void UpdateForm()
         {
             lbAppCurrent.Text = Props.AppVersion();
+            lbAppLatest.Text = VC.RCappLatest;
 
             int.TryParse(tbModuleID.Text, out int ModuleID);
             clsProduct Prod = mf.Products.Item(ModuleID);
             if (Prod.ModuleSending)
             {
+                lbModule.Text = Enum.GetName(typeof(ModuleTypes), mf.ModulesStatus.ModuleType((byte)ModuleID));
                 lbModuleCurrent.Text = mf.ModulesStatus.ModuleDate((byte)ModuleID).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
-                lbModuleLatest.Text = Prod.ModuleID.ToString();
+                lbModuleLatest.Text = VC.ModuleDate(mf.ModulesStatus.ModuleType((byte)ModuleID)).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
             }
             else
             {
+                lbModule.Text = "--";
                 lbModuleCurrent.Text = "--";
                 lbModuleLatest.Text = "--";
             }
@@ -112,7 +117,7 @@ namespace RateController.Forms
             if(mf.SwitchBox.Connected())
             {
                 lbSwitchBoxCurrent.Text=mf.SwitchBox.ModuleDate().ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
-                lbSwitchBoxLatest.Text = "";
+                lbSwitchBoxLatest.Text = VC.ModuleDate((int)ModuleTypes.Nano_SwitchBox).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
             }
             else
             {
@@ -124,6 +129,11 @@ namespace RateController.Forms
         private void VisitLink(string Link)
         {
             System.Diagnostics.Process.Start(Link);
+        }
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
+            await VC.Update();
         }
     }
 }

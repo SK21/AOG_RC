@@ -8,6 +8,7 @@ void DoSetup()
 	Serial.begin(38400);
 	delay(3000);
 	Serial.println("");
+	Serial.println("");
 	Serial.println(BuildTypes[BuildType]);
 	Serial.print("Version:    ");
 	Serial.print(BuildDay);
@@ -15,8 +16,6 @@ void DoSetup()
 	Serial.print(Months[BuildMonth - 1]);
 	Serial.print("-");
 	Serial.println(BuildYear + 2000);
-	Serial.print("Module ID:  ");
-	Serial.println(MDL.ID);
 	Serial.println("");
 
 	// eeprom

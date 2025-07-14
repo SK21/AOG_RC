@@ -1,26 +1,26 @@
 {
+    "0": {
+        "Description": "Teensy AutoSteer",
+        "date": "2025-03-10"
+    },
+    "1": {
+        "Description": "Teensy Rate",
+        "date": "2025-07-07"
+    },
+    "2": {
+        "Description": "Nano Rate",
+        "date": "2025-07-13"
+    },
+    "3": {
+        "Description": "Nano SwitchBox",
+        "date": "2025-06-27"
+    },
+    "4": {
+        "Description": "ESP Rate",
+        "date": "2025-07-01"
+    },
     "RCapp": {
         "version": "4.0.3",
         "date": "2025-06-22"
-    },
-    "Teensy AutoSteer": {
-        "BuildType": 0,
-        "date": "2025-03-10"
-    },
-    "Teensy Rate": {
-        "BuildType": 1,
-        "date": "2025-07-07"
-    },
-    "Nano Rate": {
-        "BuildType": 2,
-        "date": "2025-07-13"
-    },
-    "Nano SwitchBox": {
-        "BuildType": 3,
-        "date": "2025-06-27"
-    },
-    "ESP Rate": {
-        "BuildType": 4,
-        "date": "2025-07-01"
     }
 }
