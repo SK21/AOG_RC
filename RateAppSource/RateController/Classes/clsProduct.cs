@@ -165,6 +165,8 @@ namespace RateController
 
         public double ElapsedTime
         { get { return RateSensor.ElapsedTime(); } }
+        public bool ModuleSending
+        { get { return RateSensor.ModuleSending(); } }
 
         public bool Enabled
         {

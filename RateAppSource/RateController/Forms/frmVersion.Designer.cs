@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmVersion));
             this.btnOK = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
@@ -47,6 +48,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,6 +77,7 @@
             this.label7.Size = new System.Drawing.Size(72, 24);
             this.label7.TabIndex = 165;
             this.label7.Text = "Current";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label8
             // 
@@ -84,6 +87,7 @@
             this.label8.Size = new System.Drawing.Size(58, 24);
             this.label8.TabIndex = 166;
             this.label8.Text = "Latest";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button5
             // 
@@ -121,39 +125,39 @@
             // 
             // lbAppCurrent
             // 
-            this.lbAppCurrent.AutoSize = true;
-            this.lbAppCurrent.Location = new System.Drawing.Point(233, 41);
+            this.lbAppCurrent.Location = new System.Drawing.Point(205, 41);
             this.lbAppCurrent.Name = "lbAppCurrent";
-            this.lbAppCurrent.Size = new System.Drawing.Size(50, 24);
+            this.lbAppCurrent.Size = new System.Drawing.Size(106, 24);
             this.lbAppCurrent.TabIndex = 162;
             this.lbAppCurrent.Text = "4.0.3";
+            this.lbAppCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbAppLatest
             // 
-            this.lbAppLatest.AutoSize = true;
-            this.lbAppLatest.Location = new System.Drawing.Point(376, 41);
+            this.lbAppLatest.Location = new System.Drawing.Point(348, 41);
             this.lbAppLatest.Name = "lbAppLatest";
-            this.lbAppLatest.Size = new System.Drawing.Size(50, 24);
+            this.lbAppLatest.Size = new System.Drawing.Size(106, 24);
             this.lbAppLatest.TabIndex = 163;
             this.lbAppLatest.Text = "4.1.0";
+            this.lbAppLatest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbModuleCurrent
             // 
-            this.lbModuleCurrent.AutoSize = true;
             this.lbModuleCurrent.Location = new System.Drawing.Point(193, 71);
             this.lbModuleCurrent.Name = "lbModuleCurrent";
             this.lbModuleCurrent.Size = new System.Drawing.Size(106, 24);
             this.lbModuleCurrent.TabIndex = 181;
             this.lbModuleCurrent.Text = "10-Jul-2025";
+            this.lbModuleCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbModuleLatest
             // 
-            this.lbModuleLatest.AutoSize = true;
             this.lbModuleLatest.Location = new System.Drawing.Point(336, 71);
             this.lbModuleLatest.Name = "lbModuleLatest";
             this.lbModuleLatest.Size = new System.Drawing.Size(106, 24);
             this.lbModuleLatest.TabIndex = 180;
             this.lbModuleLatest.Text = "10-Jul-2025";
+            this.lbModuleLatest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel4
             // 
@@ -176,6 +180,8 @@
             this.tbModuleID.TabStop = false;
             this.tbModuleID.Text = "0";
             this.tbModuleID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbModuleID.Click += new System.EventHandler(this.tbModuleID_Enter);
+            this.tbModuleID.Enter += new System.EventHandler(this.tbModuleID_Enter);
             // 
             // lbModuleID
             // 
@@ -189,21 +195,21 @@
             // 
             // lbSwitchBoxCurrent
             // 
-            this.lbSwitchBoxCurrent.AutoSize = true;
             this.lbSwitchBoxCurrent.Location = new System.Drawing.Point(205, 226);
             this.lbSwitchBoxCurrent.Name = "lbSwitchBoxCurrent";
             this.lbSwitchBoxCurrent.Size = new System.Drawing.Size(106, 24);
             this.lbSwitchBoxCurrent.TabIndex = 270;
             this.lbSwitchBoxCurrent.Text = "10-Jul-2025";
+            this.lbSwitchBoxCurrent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbSwitchBoxLatest
             // 
-            this.lbSwitchBoxLatest.AutoSize = true;
             this.lbSwitchBoxLatest.Location = new System.Drawing.Point(348, 226);
             this.lbSwitchBoxLatest.Name = "lbSwitchBoxLatest";
             this.lbSwitchBoxLatest.Size = new System.Drawing.Size(106, 24);
             this.lbSwitchBoxLatest.TabIndex = 269;
             this.lbSwitchBoxLatest.Text = "10-Jul-2025";
+            this.lbSwitchBoxLatest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label6
             // 
@@ -239,6 +245,11 @@
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Releases";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // frmVersion
             // 
@@ -295,5 +306,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

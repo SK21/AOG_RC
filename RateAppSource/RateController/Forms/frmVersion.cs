@@ -1,7 +1,10 @@
-﻿using RateController.Classes;
+﻿using AgOpenGPS;
+using RateController.Classes;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace RateController.Forms
 {
@@ -23,6 +26,7 @@ namespace RateController.Forms
         private void frmVersion_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
+            timer1.Enabled = false;
         }
 
         private void frmVersion_Load(object sender, EventArgs e)
@@ -30,6 +34,8 @@ namespace RateController.Forms
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             SetLanguage();
+            UpdateForm();
+            timer1.Enabled = true;
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
@@ -65,6 +71,54 @@ namespace RateController.Forms
 
         private void SetLanguage()
         {
+        }
+
+        private void tbModuleID_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbModuleID.Text, out tempD);
+            using (var form = new FormNumeric(0, Props.MaxModules, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbModuleID.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateForm();
+        }
+
+        private void UpdateForm()
+        {
+            lbAppCurrent.Text = Props.AppVersion();
+
+            int.TryParse(tbModuleID.Text, out int ModuleID);
+            clsProduct Prod = mf.Products.Item(ModuleID);
+            if (Prod.ModuleSending)
+            {
+                lbModuleCurrent.Text = mf.ModulesStatus.ModuleDate((byte)ModuleID).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
+                lbModuleLatest.Text = Prod.ModuleID.ToString();
+            }
+            else
+            {
+                lbModuleCurrent.Text = "--";
+                lbModuleLatest.Text = "--";
+            }
+
+            if(mf.SwitchBox.Connected())
+            {
+                lbSwitchBoxCurrent.Text=mf.SwitchBox.ModuleDate().ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
+                lbSwitchBoxLatest.Text = "";
+            }
+            else
+            {
+                lbSwitchBoxCurrent.Text = "--";
+                lbSwitchBoxLatest.Text = "--";
+            }
         }
 
         private void VisitLink(string Link)

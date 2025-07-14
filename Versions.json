@@ -4,18 +4,23 @@
         "date": "2025-06-22"
     },
     "Teensy AutoSteer": {
-        "date": "2025-07-13"
+        "BuildType": 0,
+        "date": "2025-03-10"
     },
     "Teensy Rate": {
-        "date": "2025-07-13"
+        "BuildType": 1,
+        "date": "2025-07-07"
     },
     "Nano Rate": {
+        "BuildType": 2,
         "date": "2025-07-13"
     },
     "Nano SwitchBox": {
-        "date": "2025-07-13"
+        "BuildType": 3,
+        "date": "2025-06-27"
     },
     "ESP Rate": {
-        "date": "2025-07-13"
+        "BuildType": 4,
+        "date": "2025-07-01"
     }
 }

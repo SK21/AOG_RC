@@ -3,9 +3,13 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-# define InoDescription "SWarduino  :  27-Jun-2025"
-const int16_t InoID = 27065;	// change to send defaults to eeprom
-const uint8_t InoType = 3;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+const uint8_t BuildDay = 14;
+const uint8_t BuildMonth = 7;
+const uint8_t BuildYear = 25;
+const uint8_t BuildType = 3;	// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+
+const char* BuildTypes[] = { "Teensy AutoSteer","Teensy Rate","Nano Rate","Nano SwitchBox","ESP Rate" };
+const char* Months[] = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" };
 
 #define NC 255		// not connected
 

@@ -177,17 +177,17 @@ namespace RateController.Menu
         {
             clsProduct Prod = mf.Products.Item(mf.CurrentProduct());
 
-            if (Prod.ElapsedTime > 4000)
-            {
-                lbInoID.Text = "--";
-                lbModID.Text = "--";
-                lbTime.Text = "--";
-            }
-            else
+            if (Prod.ModuleSending)
             {
                 lbInoID.Text = mf.ModulesStatus.ModuleDate((byte)Prod.ModuleID).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
                 lbModID.Text = Prod.ModuleID.ToString();
                 lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
+            }
+            else
+            {
+                lbInoID.Text = "--";
+                lbModID.Text = "--";
+                lbTime.Text = "--";
             }
 
             if (!FreezeUpdate)

@@ -8,7 +8,8 @@ namespace RateController
         // to Rate Controller from virtual switch box
         // 0   106
         // 1   127
-        // 2    - bit 0 -
+        // 2    status
+        //      - bit 0 -
         //      - bit 1 MasterOn
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
@@ -18,7 +19,11 @@ namespace RateController
         //		- bit 7 Work switch
         // 3    sw0 to sw7
         // 4    sw8 to sw15
-        // 5    crc
+        // 5    BuildDay
+        // 6    BuildMonth
+        // 7    BuildYear
+        // 8    -
+        // 9    crc
 
         private bool cAutoRate;
         private bool cAutoSection;
@@ -34,9 +39,13 @@ namespace RateController
         {
             mf = CalledFrom;
             cSwitch = new bool[Props.MaxSwitches];
-            PressedData = new byte[6];
+            PressedData = new byte[10];
             PressedData[0] = 106;
             PressedData[1] = 127;
+            PressedData[5] = 0;
+            PressedData[6] = 0;
+            PressedData[7] = 0;
+            PressedData[8] = 0;
             Timer1.Tick += new EventHandler(TimerEventProcessor);
             Timer1.Interval = 250;
         }

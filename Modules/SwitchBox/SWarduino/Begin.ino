@@ -8,9 +8,15 @@ void DoSetup()
 	Serial.begin(38400);
 	delay(3000);
 	Serial.println("");
-	Serial.println("");
-	Serial.println("");
-	Serial.println(InoDescription);
+	Serial.println(BuildTypes[BuildType]);
+	Serial.print("Version:    ");
+	Serial.print(BuildDay);
+	Serial.print("-");
+	Serial.print(Months[BuildMonth - 1]);
+	Serial.print("-");
+	Serial.println(BuildYear + 2000);
+	Serial.print("Module ID:  ");
+	Serial.println(MDL.ID);
 	Serial.println("");
 
 	// eeprom
@@ -80,11 +86,13 @@ void DoSetup()
 void LoadData()
 {
 	bool IsValid = false;
-	int16_t StoredID;
-	int8_t StoredType;
-	EEPROM.get(0, StoredID);
-	EEPROM.get(4, StoredType);
-	if (StoredID == InoID && StoredType == InoType)
+	uint8_t ID[4];
+	for (int i = 0; i < 4; i++)
+	{
+		EEPROM.get(0 + i, ID[i]);
+	}
+
+	if (ID[0] == BuildDay && ID[1] == BuildMonth && ID[2] == BuildYear && ID[3] == BuildType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
@@ -107,8 +115,10 @@ void SaveData()
 {
 	// update stored data
 	Serial.println("Updating stored settings.");
-	EEPROM.put(0, InoID);
-	EEPROM.put(4, InoType);
+	EEPROM.put(0, BuildDay);
+	EEPROM.put(1, BuildMonth);
+	EEPROM.put(2, BuildYear);
+	EEPROM.put(3, BuildType);
 	EEPROM.put(110, MDL);
 }
 

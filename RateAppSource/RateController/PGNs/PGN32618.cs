@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using System;
+using System.Reflection;
 
 namespace RateController
 {
@@ -8,7 +9,8 @@ namespace RateController
         // to Rate Controller from arduino switch box
         // 0   106
         // 1   127
-        // 2    - bit 0 -
+        // 2    status
+        //      - bit 0 -
         //      - bit 1 MasterOn
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
@@ -18,13 +20,18 @@ namespace RateController
         //		- bit 7 Work switch
         // 3    sw0 to sw7
         // 4    sw8 to sw15
-        // 5    crc
+        // 5    BuildDay
+        // 6    BuildMonth
+        // 7    BuildYear
+        // 8    -
+        // 9    crc
 
-        private const byte cByteCount = 6;
+        private const byte cByteCount = 10;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private readonly FormStart mf;
         private bool cAutoRateDisabled = false;
+        private byte[] cBuild = new byte[3];
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
@@ -115,6 +122,18 @@ namespace RateController
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
 
+        public DateTime ModuleDate()
+        {
+            try
+            {
+                return new DateTime(cBuild[2] + 2000, cBuild[1], cBuild[0]);
+            }
+            catch (Exception)
+            {
+                return DateTime.MinValue;
+            }
+        }
+
         public bool ParseByteData(byte[] Data, bool RealSwitchBox = false)
         {
             bool Result = false;
@@ -161,6 +180,11 @@ namespace RateController
                         SW[5 + j + i * 8] = mf.Tls.BitRead(Data[i + 3], j);
                     }
                 }
+
+                // build date
+                cBuild[0] = Data[5];
+                cBuild[1] = Data[6];
+                cBuild[2] = Data[7];
 
                 SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
 

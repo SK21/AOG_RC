@@ -75,7 +75,15 @@ namespace RateController
 
         public DateTime ModuleDate(byte Module)
         {
+            try
+            {
             return new DateTime(cBuild[Module, 2] + 2000, cBuild[Module, 1], cBuild[Module, 0]);
+
+            }
+            catch (Exception)
+            {
+                return DateTime.MinValue;
+            }
         }
 
         public UInt16 ModuleType(byte Module)
