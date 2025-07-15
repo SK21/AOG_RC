@@ -134,7 +134,7 @@ namespace RateController.Forms
         private async void button5_Click(object sender, EventArgs e)
         {
             await VC.Update();
-            mf.Tls.ShowMessage("Updated.");
+            mf.Tls.ShowMessage("Update request sent.","Help",5000);
         }
     }
 }

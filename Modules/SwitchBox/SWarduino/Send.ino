@@ -20,6 +20,8 @@ void SendData()
 	// 8    -
 	// 9    crc
 
+	byte PGNlength = 10;
+
 	byte Pins[] = { 0,0,0,0,0,0,0,0 };
 	byte Data[10];
 	Data[0] = 106;
@@ -66,12 +68,12 @@ void SendData()
 
 	Data[8] = 0;
 
-	Data[9] = CRC(Data, 9, 0);
+	Data[PGNlength-1] = CRC(Data, PGNlength-1, 0);
 
 	if (EthernetConnected())
 	{
 		// send ethernet
-		ether.sendUdp(Data, 10, SourcePort, DestinationIP, DestinationPort);
+		ether.sendUdp(Data, PGNlength, SourcePort, DestinationIP, DestinationPort);
 	}
 }
 

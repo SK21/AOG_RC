@@ -22,6 +22,8 @@ void SendComm()
         //13    Hz Hi
         //14    CRC
 
+        byte PGNlength = 15;
+
         byte Data[20];
 
         for (int i = 0; i < MDL.SensorCount; i++)
@@ -65,20 +67,20 @@ void SendComm()
             Data[13] = Hz >> 8;
 
             // crc
-            Data[14] = CRC(Data, 14, 0);
+            Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
 
             if (Ethernet.linkStatus() == LinkON)
             {
                 // send ethernet
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 15);
+                UDPcomm.write(Data, PGNlength);
                 UDPcomm.endPacket();
             }
             else if (millis() - ESPtime > 5000)
             {
                 // send serial
                 Serial.print(Data[0]);
-                for (int i = 1; i < 15; i++)
+                for (int i = 1; i < PGNlength; i++)
                 {
                     Serial.print(",");
                     Serial.print(Data[i]);
@@ -87,84 +89,80 @@ void SendComm()
             }
 
             // send wifi
-            if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
+            if (MDL.ESPserialPort != NC) SerialESP->write(Data, PGNlength);
         }
 
         //PGN32401, module info from module to RC
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo
-        //4     Pressure Hi
-        //5     -
-        //6     -
-        //7     -
-        //8     -
-        //9     -
-        //10    -
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
+        //3     BuildDay
+        //4     BuildMonth
+        //5     BuildYear
+        //6     BuildType        0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+        //7     Pressure Lo 
+        //8     Pressure Hi
+        //9     status
         //      bit 0   work switch
         //      bit 1   wifi rssi < -80
         //      bit 2	wifi rssi < -70
         //      bit 3	wifi rssi < -65
         //      bit 4   ethernet connected
         //      bit 5   good pin configuration
-        //14    CRC
+        //10    -
+        //11    CRC
+
+        PGNlength = 12;
 
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
-
-        Data[3] = (byte)PressureReading;
-        Data[4] = (byte)(PressureReading >> 8);
-        Data[5] = 0;
-        Data[6] = 0;
-        Data[7] = 0;
-        Data[8] = 0;
+        Data[3] = BuildDay;
+        Data[4] = BuildMonth;
+        Data[5] = BuildYear;
+        Data[6] = BuildType;
+        Data[7] = (byte)PressureReading;
+        Data[8] = (byte)(PressureReading >> 8);
         Data[9] = 0;
         Data[10] = 0;
-        Data[11] = (byte)InoID;
-        Data[12] = InoID >> 8;
 
         // status
-        Data[13] = 0;
-        if (WorkPinOn()) Data[13] |= 0b00000001;
+        Data[9] = 0;
+        if (WorkPinOn()) Data[9] |= 0b00000001;
 
         if (millis() - ESPtime < 5000)
         {
             if (WifiStrength < -80)
             {
-                Data[13] |= 0b00000010;
+                Data[9] |= 0b00000010;
             }
             else if (WifiStrength < -70)
             {
-                Data[13] |= 0b00000100;
+                Data[9] |= 0b00000100;
             }
             else
             {
-                Data[13] |= 0b00001000;
+                Data[9] |= 0b00001000;
             }
         }
 
-        if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
-        if (GoodPins) Data[13] |= 0b00100000;
+        if (Ethernet.linkStatus() == LinkON) Data[9] |= 0b00010000;
+        if (GoodPins) Data[9] |= 0b00100000;
 
-        Data[14] = CRC(Data, 14, 0);
+        Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
 
         if (Ethernet.linkStatus() == LinkON)
         {
             // send ethernet
             UDPcomm.beginPacket(DestinationIP, DestinationPort);
-            UDPcomm.write(Data, 15);
+            UDPcomm.write(Data, PGNlength);
             UDPcomm.endPacket();
         }
         else if (millis() - ESPtime > 5000)
         {
             // send serial
             Serial.print(Data[0]);
-            for (int i = 1; i < 15; i++)
+            for (int i = 1; i < PGNlength; i++)
             {
                 Serial.print(",");
                 Serial.print(Data[i]);
@@ -173,7 +171,7 @@ void SendComm()
         }
 
         // send wifi
-        if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
+        if (MDL.ESPserialPort != NC) SerialESP->write(Data, PGNlength);
     }
 }
 

@@ -1,6 +1,4 @@
 
-const double KiMultiplier = 10;
-
 void SendComm()
 {
     if (millis() - SendLast > SendTime)
@@ -24,6 +22,8 @@ void SendComm()
         //12    Hz Lo
         //13    Hz Hi
         //14    CRC
+
+        byte PGNlength = 15;
 
         byte Data[20];
 
@@ -69,7 +69,7 @@ void SendComm()
             Data[13] = Hz >> 8;
 
             // crc
-            Data[14] = CRC(Data, 14, 0);
+            Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
             bool Sent = false;
 
             // ethernet
@@ -78,7 +78,7 @@ void SendComm()
                 if (Ethernet.linkStatus() == LinkON)
                 {
                     UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-                    UDP_Ethernet.write(Data, 15);
+                    UDP_Ethernet.write(Data, PGNlength);
                     UDP_Ethernet.endPacket();
                     Sent = true;
                 }
@@ -88,7 +88,7 @@ void SendComm()
             if (!Sent)
             {
                 UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-                UDP_Wifi.write(Data, 15);
+                UDP_Wifi.write(Data, PGNlength);
                 UDP_Wifi.endPacket();
             }
         }
@@ -97,68 +97,64 @@ void SendComm()
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo 
-        //4     Pressure Hi
-        //5     -
-        //6     -
-        //7     -
-        //8     -
-        //9     -
-        //10    -
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
+        //3     BuildDay
+        //4     BuildMonth
+        //5     BuildYear
+        //6     BuildType        0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+        //7     Pressure Lo 
+        //8     Pressure Hi
+        //9     status
         //      bit 0   work switch
         //      bit 1   wifi rssi < -80
         //      bit 2	wifi rssi < -70
         //      bit 3	wifi rssi < -65
         //      bit 4   ethernet connected
         //      bit 5   good pin configuration
-        //14    CRC
+        //10    -
+        //11    CRC
+
+        PGNlength = 12;
 
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
-        Data[3] = (byte)PressureReading;
-        Data[4] = (byte)(PressureReading >> 8);
-        Data[5] = 0;
-        Data[6] = 0;
-        Data[7] = 0;
-        Data[8] = 0;
+        Data[3] = BuildDay;
+        Data[4] = BuildMonth;
+        Data[5] = BuildYear;
+        Data[6] = BuildType;
+        Data[7] = (byte)PressureReading;
+        Data[8] = (byte)(PressureReading >> 8);
         Data[9] = 0;
         Data[10] = 0;
-        Data[11] = (byte)InoID;
-        Data[12] = (byte)(InoID >> 8);
 
         // status
-        Data[13] = 0;
-        if (WorkSwitchOn) Data[13] |= 0b00000001;
+        if (WorkSwitchOn) Data[9] |= 0b00000001;
 
         if (WiFi.isConnected())
         {
             int8_t WifiStrength = WiFi.RSSI();
             if (WifiStrength < -80)
             {
-                Data[13] |= 0b00000010;
+                Data[9] |= 0b00000010;
             }
             else if (WifiStrength < -70)
             {
-                Data[13] |= 0b00000100;
+                Data[9] |= 0b00000100;
             }
             else
             {
-                Data[13] |= 0b00001000;
+                Data[9] |= 0b00001000;
             }
         }
 
         if (ChipFound)
         {
-            if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
+            if (Ethernet.linkStatus() == LinkON) Data[9] |= 0b00010000;
         }
 
-        if (GoodPins) Data[13] |= 0b00100000;
+        if (GoodPins) Data[9] |= 0b00100000;
 
-        Data[14] = CRC(Data, 14, 0);
+        Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
 
         bool Sent = false;
         // ethernet
@@ -168,7 +164,7 @@ void SendComm()
             {
 
                 UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-                UDP_Ethernet.write(Data, 15);
+                UDP_Ethernet.write(Data, PGNlength);
                 UDP_Ethernet.endPacket();
                 Sent = true;
             }
@@ -178,7 +174,7 @@ void SendComm()
         if (!Sent)
         {
             UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-            UDP_Wifi.write(Data, 15);
+            UDP_Wifi.write(Data, PGNlength);
             UDP_Wifi.endPacket();
         }
     }

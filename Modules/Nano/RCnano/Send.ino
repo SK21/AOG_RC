@@ -23,6 +23,8 @@ void SendData()
         //13    Hz Hi
         //14    CRC
 
+        byte PGNlength = 15;
+
         byte Data[20];
 
         for (int i = 0; i < MDL.SensorCount; i++)
@@ -67,12 +69,12 @@ void SendData()
             Data[13] = Hz >> 8;
 
             // crc
-            Data[14] = CRC(Data, 14, 0);
+            Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
 
             if (EthernetConnected())
             {
                 // send ethernet
-                ether.sendUdp(Data, 15, SourcePort, DestinationIP, DestinationPort);
+                ether.sendUdp(Data, PGNlength, SourcePort, DestinationIP, DestinationPort);
             }
         }
 
@@ -96,6 +98,8 @@ void SendData()
         //10    -
         //11    CRC
 
+        PGNlength = 12;
+
         Data[0] = 145;
         Data[1] = 126;
         Data[2] = MDL.ID;
@@ -115,12 +119,12 @@ void SendData()
 
         if (GoodPins) Data[9] |= 0b00100000;
 
-        Data[11] = CRC(Data, 11, 0);
+        Data[PGNlength - 1] = CRC(Data, PGNlength - 1, 0);
 
         if (EthernetConnected())
         {
             // send ethernet
-            ether.sendUdp(Data, 12, SourcePort, DestinationIP, DestinationPort);
+            ether.sendUdp(Data, PGNlength, SourcePort, DestinationIP, DestinationPort);
         }
     }
 }

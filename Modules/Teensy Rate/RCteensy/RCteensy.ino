@@ -10,9 +10,13 @@ extern "C" {
 }
 
 // rate control with Teensy 4.1
-# define InoDescription "RCteensy :  07-Jul-2025"
-const uint16_t InoID = 7075;	// change to send defaults to eeprom, ddmmy, no leading 0
-const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+const uint8_t BuildDay = 14;
+const uint8_t BuildMonth = 7;
+const uint8_t BuildYear = 25;
+const uint8_t BuildType = 1;	// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+
+const char* BuildTypes[] = { "Teensy AutoSteer","Teensy Rate","Nano Rate","Nano SwitchBox","ESP Rate" };
+const char* Months[] = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" };
 
 #define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2

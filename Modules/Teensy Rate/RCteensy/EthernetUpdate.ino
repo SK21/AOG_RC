@@ -49,7 +49,7 @@ void ReceiveUpdate()
 						{
 							if (ParseModID(ReceivedData[2]) == MDL.ID)
 							{
-								if ((ReceivedData[4] == 1) || (ReceivedData[3] == InoType))
+								if ((ReceivedData[4] == 1) || (ReceivedData[3] == BuildType))
 								{
 									if (firmware_buffer_init(&buffer_addr, &buffer_size))
 									{
