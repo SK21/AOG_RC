@@ -79,7 +79,7 @@ namespace RateController.Classes
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Update failed: " + ex.Message);
+                    Props.WriteErrorLog("Update failed: " + ex.Message);
                 }
             }
         }

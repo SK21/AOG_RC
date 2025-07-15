@@ -50,7 +50,7 @@ namespace RateController.Forms
             try
             {
                 VisitLink("https://github.com/SK21/AOG_RC/releases");
-                linkLabel4.LinkVisited = true;
+                linkLabel1.LinkVisited = true;
             }
             catch (Exception ex)
             {
@@ -134,6 +134,7 @@ namespace RateController.Forms
         private async void button5_Click(object sender, EventArgs e)
         {
             await VC.Update();
+            mf.Tls.ShowMessage("Updated.");
         }
     }
 }
