@@ -3,7 +3,7 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-const uint8_t BuildDay = 14;
+const uint8_t BuildDay = 15;
 const uint8_t BuildMonth = 7;
 const uint8_t BuildYear = 25;
 const uint8_t BuildType = 3;	// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
@@ -75,6 +75,8 @@ void loop()
 		LastTime = millis();
 		SendData();
 	}
+
+	ReceiveSerial();
 
 	if (EthernetConnected())
 	{
