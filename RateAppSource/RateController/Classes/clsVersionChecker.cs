@@ -32,7 +32,7 @@ namespace RateController.Classes
 
         public async Task Update()
         {
-            string url = "https://raw.githubusercontent.com/SK21/AOG_RC/Versions/Versions.json";
+            string url = "https://github.com/SK21/AOG_RC/releases/latest/download/Versions.json";
 
             using (var client = new HttpClient())
             {
