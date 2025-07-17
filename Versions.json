@@ -1,21 +1,17 @@
 {
     "0": {
-        "Description": "Teensy AutoSteer",
-        "date": "2025-03-10"
-    },
-    "1": {
         "Description": "Teensy Rate",
         "date": "2025-07-14"
     },
-    "2": {
+    "1": {
         "Description": "Nano Rate",
         "date": "2025-07-14"
     },
-    "3": {
+    "2": {
         "Description": "Nano SwitchBox",
         "date": "2025-07-14"
     },
-    "4": {
+    "3": {
         "Description": "ESP Rate",
         "date": "2025-07-14"
     },
