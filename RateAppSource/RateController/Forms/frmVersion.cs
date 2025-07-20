@@ -17,7 +17,7 @@ namespace RateController.Forms
         {
             InitializeComponent();
             mf = CallingForm;
-            VC= new clsVersionChecker();
+            VC= new clsVersionChecker(mf);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -104,8 +104,8 @@ namespace RateController.Forms
             if (Prod.ModuleSending)
             {
                 lbModule.Text = Enum.GetName(typeof(ModuleTypes), mf.ModulesStatus.ModuleType((byte)ModuleID));
-                lbModuleCurrent.Text = mf.ModulesStatus.ModuleDate((byte)ModuleID).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
-                lbModuleLatest.Text = VC.ModuleDate(mf.ModulesStatus.ModuleType((byte)ModuleID)).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
+                lbModuleCurrent.Text = mf.ModulesStatus.ModuleVersion((byte)ModuleID);
+                lbModuleLatest.Text = VC.ModuleVersion(mf.ModulesStatus.ModuleType((byte)ModuleID));
             }
             else
             {
@@ -116,8 +116,8 @@ namespace RateController.Forms
 
             if(mf.SwitchBox.Connected())
             {
-                lbSwitchBoxCurrent.Text=mf.SwitchBox.ModuleDate().ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
-                lbSwitchBoxLatest.Text = VC.ModuleDate((int)ModuleTypes.Nano_SwitchBox).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
+                lbSwitchBoxCurrent.Text = mf.SwitchBox.ModuleVersion();
+                lbSwitchBoxLatest.Text = VC.ModuleVersion((int)ModuleTypes.Nano_SwitchBox);
             }
             else
             {

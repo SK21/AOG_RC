@@ -73,22 +73,22 @@ namespace RateController
             return cGoodPins[Module];
         }
 
-        public DateTime ModuleDate(byte Module)
-        {
-            try
-            {
-            return new DateTime(cBuild[Module, 2] + 2000, cBuild[Module, 1], cBuild[Module, 0]);
-
-            }
-            catch (Exception)
-            {
-                return DateTime.MinValue;
-            }
-        }
-
         public UInt16 ModuleType(byte Module)
         {
             return cBuild[Module, 3];
+        }
+
+        public string ModuleVersion(byte Module)
+        {
+            try
+            {
+                string version = "v" + (cBuild[Module, 2] + 2000).ToString() + "." + cBuild[Module, 1].ToString() + "." + cBuild[Module, 0].ToString();
+                return version;
+            }
+            catch (Exception)
+            {
+                return "N/A";
+            }
         }
 
         public bool ParseByteData(byte[] Data)

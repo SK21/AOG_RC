@@ -122,15 +122,16 @@ namespace RateController
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
 
-        public DateTime ModuleDate()
+        public string ModuleVersion()
         {
             try
             {
-                return new DateTime(cBuild[2] + 2000, cBuild[1], cBuild[0]);
+                string version = "v" + (cBuild[ 2] + 2000).ToString() + "." + cBuild[1].ToString() + "." + cBuild[ 0].ToString();
+                return version;
             }
             catch (Exception)
             {
-                return DateTime.MinValue;
+                return "N/A";
             }
         }
 

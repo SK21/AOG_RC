@@ -179,7 +179,7 @@ namespace RateController.Menu
 
             if (Prod.ModuleSending)
             {
-                lbInoID.Text = mf.ModulesStatus.ModuleDate((byte)Prod.ModuleID).ToString("dd-MMM-yyyy", CultureInfo.CurrentCulture);
+                lbInoID.Text = mf.ModulesStatus.ModuleVersion((byte)Prod.ModuleID);
                 lbModID.Text = Prod.ModuleID.ToString();
                 lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
             }
