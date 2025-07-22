@@ -3,13 +3,12 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-const uint8_t BuildDay = 15;
-const uint8_t BuildMonth = 7;
 const uint8_t BuildYear = 25;
+const uint8_t BuildMonth = 7;
+const uint8_t BuildDay = 21;
 const uint8_t BuildType = 3;	// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 const char* BuildTypes[] = { "Teensy AutoSteer","Teensy Rate","Nano Rate","Nano SwitchBox","ESP Rate" };
-const char* Months[] = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" };
 
 #define NC 255		// not connected
 

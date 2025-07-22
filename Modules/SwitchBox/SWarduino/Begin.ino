@@ -10,12 +10,12 @@ void DoSetup()
 	Serial.println("");
 	Serial.println("");
 	Serial.println(BuildTypes[BuildType]);
-	Serial.print("Version:    ");
-	Serial.print(BuildDay);
-	Serial.print("-");
-	Serial.print(Months[BuildMonth - 1]);
-	Serial.print("-");
-	Serial.println(BuildYear + 2000);
+	Serial.print("Version:    v");
+	Serial.print(BuildYear + 2000);
+	Serial.print(".");
+	Serial.print(BuildMonth);
+	Serial.print(".");
+	Serial.println(BuildDay);
 	Serial.println("");
 
 	// eeprom
@@ -77,6 +77,20 @@ void DoSetup()
 		Serial.println("");
 		Serial.println("Ethernet controller not found.");
 	}
+
+	Serial.println("");
+	Serial.print("AutoRate pin: ");
+	Serial.println(MDL.AutoRate);
+	Serial.print("AutoSection pin: ");
+	Serial.println(MDL.AutoSection);
+	Serial.print("MasterOn pin: ");
+	Serial.println(MDL.MasterOn);
+	Serial.print("MasterOff pin: ");
+	Serial.println(MDL.MasterOff);
+	Serial.print("RateUp pin: ");
+	Serial.println(MDL.RateUp);
+	Serial.print("RateDown pin: ");
+	Serial.println(MDL.RateDown);
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
