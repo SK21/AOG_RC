@@ -87,7 +87,7 @@ void SendData()
         //7     -
         //8     -
         //9     -
-        //10    -
+        //10    InoType
         //11    InoID lo
         //12    InoID hi
         //13    status
@@ -109,7 +109,7 @@ void SendData()
         Data[7] = 0;
         Data[8] = 0;
         Data[9] = 0;
-        Data[10] = 0;
+        Data[10] = InoType;
         Data[11] = (byte)InoID;
         Data[12] = InoID >> 8;
 
