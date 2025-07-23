@@ -26,9 +26,9 @@ namespace RateController
         private double cHectaresPerMinute;
         private double cHours1;
         private double cHours2;
+        private int cIntegral;
         private int cManualPWM;
         private int cMaxAdjust;
-        private int cIntegral;
         private double cMeterCal = 0;
         private int cMinAdjust;
         private double cMinUPM;
@@ -189,7 +189,6 @@ namespace RateController
             }
         }
 
-
         public double Hours1
         { get { return cHours1; } }
 
@@ -199,6 +198,14 @@ namespace RateController
         public int ID
         { get { return cProductID; } }
 
+        public int Integral
+        {
+            get { return cIntegral; }
+            set
+            {
+                if (value >= 0 && value <= 100) cIntegral = value;
+            }
+        }
 
         public int ManualPWM
         {
@@ -227,14 +234,6 @@ namespace RateController
             set
             {
                 if (value >= 0 && value <= 100) cMaxAdjust = value;
-            }
-        }
-        public int Integral
-        {
-            get { return cIntegral; }
-            set
-            {
-                if (value >= 0 && value <= 100) cIntegral = value;
             }
         }
 
@@ -309,6 +308,9 @@ namespace RateController
                 }
             }
         }
+
+        public bool ModuleSending
+        { get { return RateSensor.ModuleSending(); } }
 
         public byte OffRateSetting
         {
@@ -452,7 +454,6 @@ namespace RateController
             }
         }
 
-
         public bool UseAltRate
         { get { return cUseAltRate; } set { cUseAltRate = value; } }
 
@@ -530,6 +531,11 @@ namespace RateController
             {
                 return 0;
             }
+        }
+
+        public double Hz()
+        {
+            return RateSensor.Hz;
         }
 
         public bool IsNew()
@@ -653,6 +659,20 @@ namespace RateController
             return Result;
         }
 
+        public bool ProductOn()
+        {
+            bool Result = false;
+            if (ControlType == ControlTypeEnum.Fan)
+            {
+                Result = RateSensor.Connected();
+            }
+            else
+            {
+                Result = (RateSensor.Connected() && cHectaresPerMinute > 0);
+            }
+            return Result;
+        }
+
         public double Pulses()
         {
             return cUnitsApplied * cMeterCal;
@@ -661,10 +681,6 @@ namespace RateController
         public double PWM()
         {
             return RateSensor.PWMsetting;
-        }
-        public double Hz()
-        {
-            return RateSensor.Hz;
         }
 
         public double RateApplied()
@@ -1115,20 +1131,6 @@ namespace RateController
             else
             {
                 Result = mf.AutoSteerPGN.Speed_KMH();
-            }
-            return Result;
-        }
-
-        public bool ProductOn()
-        {
-            bool Result = false;
-            if (ControlType == ControlTypeEnum.Fan)
-            {
-                Result = RateSensor.Connected();
-            }
-            else
-            {
-                Result = (RateSensor.Connected() && cHectaresPerMinute > 0);
             }
             return Result;
         }

@@ -39,7 +39,6 @@
             this.tbEthernet = new System.Windows.Forms.TextBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -63,6 +62,7 @@
             this.butNet = new System.Windows.Forms.Button();
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.butVersion = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label12
@@ -161,7 +161,7 @@
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Pause;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(455, 600);
+            this.btnStart.Location = new System.Drawing.Point(452, 600);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(70, 63);
@@ -174,17 +174,6 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // linkLabel4
-            // 
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(398, 470);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(93, 24);
-            this.linkLabel4.TabIndex = 263;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "PCBsetup";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // linkLabel3
             // 
@@ -229,7 +218,7 @@
             this.butActivity.Image = global::RateController.Properties.Resources.file_text;
             this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butActivity.Location = new System.Drawing.Point(163, 591);
+            this.butActivity.Location = new System.Drawing.Point(181, 595);
             this.butActivity.Margin = new System.Windows.Forms.Padding(6);
             this.butActivity.Name = "butActivity";
             this.butActivity.Size = new System.Drawing.Size(81, 72);
@@ -249,7 +238,7 @@
             this.butErrors.Image = global::RateController.Properties.Resources.file_text;
             this.butErrors.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butErrors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butErrors.Location = new System.Drawing.Point(256, 591);
+            this.butErrors.Location = new System.Drawing.Point(267, 595);
             this.butErrors.Margin = new System.Windows.Forms.Padding(6);
             this.butErrors.Name = "butErrors";
             this.butErrors.Size = new System.Drawing.Size(81, 72);
@@ -268,7 +257,7 @@
             this.butGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.butGraph.Image = global::RateController.Properties.Resources.Chart;
             this.butGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butGraph.Location = new System.Drawing.Point(9, 590);
+            this.butGraph.Location = new System.Drawing.Point(9, 595);
             this.butGraph.Margin = new System.Windows.Forms.Padding(6);
             this.butGraph.Name = "butGraph";
             this.butGraph.Size = new System.Drawing.Size(81, 72);
@@ -323,10 +312,10 @@
             // lbInoID
             // 
             this.lbInoID.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbInoID.Location = new System.Drawing.Point(220, 324);
+            this.lbInoID.Location = new System.Drawing.Point(153, 324);
             this.lbInoID.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbInoID.Name = "lbInoID";
-            this.lbInoID.Size = new System.Drawing.Size(96, 23);
+            this.lbInoID.Size = new System.Drawing.Size(163, 23);
             this.lbInoID.TabIndex = 270;
             this.lbInoID.Text = "0";
             this.lbInoID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -434,7 +423,7 @@
             this.butNet.Image = global::RateController.Properties.Resources.file_text;
             this.butNet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butNet.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butNet.Location = new System.Drawing.Point(349, 591);
+            this.butNet.Location = new System.Drawing.Point(353, 595);
             this.butNet.Margin = new System.Windows.Forms.Padding(6);
             this.butNet.Name = "butNet";
             this.butNet.Size = new System.Drawing.Size(94, 72);
@@ -466,11 +455,31 @@
             this.label13.TabIndex = 282;
             this.label13.Text = "SwitchBox";
             // 
+            // butVersion
+            // 
+            this.butVersion.BackColor = System.Drawing.Color.Transparent;
+            this.butVersion.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butVersion.FlatAppearance.BorderSize = 0;
+            this.butVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butVersion.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butVersion.Image = global::RateController.Properties.Resources.file_cloud;
+            this.butVersion.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.butVersion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butVersion.Location = new System.Drawing.Point(95, 595);
+            this.butVersion.Margin = new System.Windows.Forms.Padding(6);
+            this.butVersion.Name = "butVersion";
+            this.butVersion.Size = new System.Drawing.Size(81, 72);
+            this.butVersion.TabIndex = 285;
+            this.butVersion.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.butVersion.UseVisualStyleBackColor = false;
+            this.butVersion.Click += new System.EventHandler(this.butVersion_Click);
+            // 
             // frmMenuHelp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.butVersion);
             this.Controls.Add(this.ModuleIndicator);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.butNet);
@@ -491,7 +500,6 @@
             this.Controls.Add(this.butGraph);
             this.Controls.Add(this.butErrors);
             this.Controls.Add(this.butActivity);
-            this.Controls.Add(this.linkLabel4);
             this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.linkLabel1);
@@ -528,7 +536,6 @@
         private System.Windows.Forms.TextBox tbEthernet;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.LinkLabel linkLabel4;
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.LinkLabel linkLabel1;
@@ -552,5 +559,6 @@
         private System.Windows.Forms.Button butNet;
         private System.Windows.Forms.Label ModuleIndicator;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button butVersion;
     }
 }

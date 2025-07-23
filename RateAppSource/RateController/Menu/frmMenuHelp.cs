@@ -1,4 +1,5 @@
 ﻿using RateController.Classes;
+using RateController.Forms;
 using RateController.Language;
 using System;
 using System.IO;
@@ -19,7 +20,6 @@ namespace RateController.Menu
             mf = main;
             this.Tag = false;
         }
-
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -72,6 +72,17 @@ namespace RateController.Menu
             if (!Props.ShowLog("Ethernet Log.txt"))
             {
                 mf.Tls.ShowMessage("File not found.");
+            }
+        }
+
+        private void butVersion_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmVersion");
+
+            if (fs == null)
+            {
+                Form frm = new frmVersion(mf);
+                frm.Show();
             }
         }
 
@@ -143,19 +154,6 @@ namespace RateController.Menu
             }
         }
 
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                VisitLink("https://github.com/SK21/PCBsetup");
-                linkLabel4.LinkVisited = true;
-            }
-            catch (Exception ex)
-            {
-                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
-            }
-        }
-
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
@@ -186,7 +184,7 @@ namespace RateController.Menu
             }
             else
             {
-                lbInoID.Text = mf.ModulesStatus.InoID(Prod.ModuleID).ToString();
+                lbInoID.Text = mf.ModulesStatus.ModuleVersion(Prod.ModuleID);
                 lbModID.Text = Prod.ModuleID.ToString();
                 lbTime.Text = (Prod.ElapsedTime / 1000.0).ToString("N3");
             }

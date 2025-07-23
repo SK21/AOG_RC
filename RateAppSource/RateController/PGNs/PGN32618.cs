@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using System;
+using System.Reflection;
 
 namespace RateController
 {
@@ -8,7 +9,8 @@ namespace RateController
         // to Rate Controller from arduino switch box
         // 0   106
         // 1   127
-        // 2    - bit 0 -
+        // 2   status
+        //      - bit 0 -
         //      - bit 1 MasterOn
         //      - bit 2 MasterOff
         //      - bit 3 RateUp
@@ -20,11 +22,31 @@ namespace RateController
         // 4    sw8 to sw15
         // 5    crc
 
-        private const byte cByteCount = 6;
+        // alternate pgn format
+        // 0   106
+        // 1   127
+        // 2   status
+        //      - bit 0 -
+        //      - bit 1 MasterOn
+        //      - bit 2 MasterOff
+        //      - bit 3 RateUp
+        //      - bit 4 RateDown
+        //      - bit 5 AutoSection
+        //      - bit 6 AutoRate
+        //		- bit 7 Work switch
+        // 3    sw0 to sw7
+        // 4    sw8 to sw15
+        // 5    InoID Lo
+        // 6    InoID Hi
+        // 7    -
+        // 8    crc
+
+        private const byte MinByteCount = 6;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
         private readonly FormStart mf;
         private bool cAutoRateDisabled = false;
+        private UInt16 cInoID;
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
@@ -115,11 +137,16 @@ namespace RateController
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
         }
 
+        public string ModuleVersion()
+        {
+            return Props.ParseDate(cInoID.ToString());
+        }
+
         public bool ParseByteData(byte[] Data, bool RealSwitchBox = false)
         {
             bool Result = false;
 
-            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
+            if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= MinByteCount && mf.Tls.GoodCRC(Data))
             {
                 if (RealSwitchBox) ReceivedReal = DateTime.Now;
 
@@ -162,26 +189,17 @@ namespace RateController
                     }
                 }
 
+                cInoID = 0;
+                if (Data.Length > MinByteCount)
+                {
+                    // alternate pgn format
+                    cInoID = (ushort)(Data[5] | Data[6] << 8);
+                }
+
                 SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
 
                 ReceiveTime = DateTime.Now;
                 Result = true;
-            }
-            return Result;
-        }
-
-        public bool ParseStringData(string[] Data)
-        {
-            bool Result = false;
-            byte[] BD;
-            if (Data.Length < 100)
-            {
-                BD = new byte[Data.Length];
-                for (int i = 0; i < Data.Length; i++)
-                {
-                    byte.TryParse(Data[i], out BD[i]);
-                }
-                Result = ParseByteData(BD);
             }
             return Result;
         }

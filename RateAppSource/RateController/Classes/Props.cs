@@ -21,6 +21,14 @@ namespace RateController.Classes
     public enum MasterSwitchMode
     { ControlAll, ControlMasterRelayOnly, Override };
 
+    public enum ModuleTypes
+    {
+        unknown,
+        Teensy_Rate,
+        Nano_Rate,
+        Nano_SwitchBox,
+        ESP_Rate
+    }
     public enum RateType
     { Applied, Target }
 
@@ -117,6 +125,24 @@ namespace RateController.Classes
         public static event EventHandler UnitsChanged;
 
         #region MainProperties
+        public static string ParseDate(string input)
+        {
+            // input = ddmmy, no leading 0
+            // output = v2025.7.1, year, month, day
+            string Result = "";
+            if (input.Length > 3)
+            {
+                int YR = int.Parse(input.Substring(input.Length - 1)) + 2020;
+                int MN = int.Parse(input.Substring(input.Length - 3, 2));
+                int DY = int.Parse(input.Substring(0, input.Length - 3));
+
+                if (DY > 0 && DY < 32 && MN > 0 && MN < 13)
+                {
+                    Result = "v" + YR.ToString() + "." + MN.ToString() + "." + DY.ToString();
+                }
+            }
+            return Result;
+        }
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }

@@ -9,14 +9,14 @@ namespace RateController
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo 
+        //3     Pressure Lo
         //4     Pressure Hi
         //5     -
         //6     -
         //7     -
         //8     -
         //9     -
-        //10    -
+        //10    InoType
         //11    InoID lo
         //12    InoID hi
         //13    status
@@ -35,8 +35,8 @@ namespace RateController
         private bool[] cEthernetConnected;
         private bool[] cGoodPins;
         private UInt16[] cInoID;
+        private UInt16[] cInoType;
         private double[] cPressureReading;
-        private UInt16[,] cReading = new UInt16[255, 4];
         private byte[] cWifiSignal;
         private bool[] cWorkSwitch;
         private bool[] EthernetConnectedLast;
@@ -58,6 +58,8 @@ namespace RateController
             EthernetConnectedLast = new bool[Props.MaxModules];
             WifiSignalLast = new byte[Props.MaxModules];
             GoodPinsLast = new bool[Props.MaxModules];
+
+            cInoType = new ushort[Props.MaxModules];
         }
 
         public event EventHandler<PinStatusEventArgs> PinStatusChanged;
@@ -67,19 +69,14 @@ namespace RateController
             return ((DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4);
         }
 
-        public bool EthernetConnected(int Module)
+        public UInt16 ModuleType(int Module)
         {
-            return cEthernetConnected[Module];
+            return cInoType[Module];
         }
 
-        public bool GoodPins(int Module)
+        public string ModuleVersion(int Module)
         {
-            return cGoodPins[Module];
-        }
-
-        public UInt16 InoID(int Module)
-        {
-            return cInoID[Module];
+            return Props.ParseDate(cInoID[Module].ToString());
         }
 
         public bool ParseByteData(byte[] Data)
@@ -89,6 +86,7 @@ namespace RateController
             {
                 byte ModuleID = Data[2];
                 cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
+                cInoType[ModuleID] = Data[10];
                 cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
                 cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
 
@@ -108,37 +106,9 @@ namespace RateController
             return Result;
         }
 
-        public bool ParseStringData(string[] Data)
-        {
-            bool Result = false;
-            byte[] BD;
-            if (Data.Length < 100)
-            {
-                BD = new byte[Data.Length];
-                for (int i = 0; i < Data.Length; i++)
-                {
-                    byte.TryParse(Data[i], out BD[i]);
-                }
-                Result = ParseByteData(BD);
-            }
-            return Result;
-        }
-
         public double PressureReading(int Module)
         {
             return cPressureReading[Module];
-        }
-
-        public UInt16 Reading(byte ModuleID, byte SensorID)
-        {
-            if (SensorID < 4 && ModuleID < 255)
-            {
-                return cReading[ModuleID, SensorID];
-            }
-            else
-            {
-                return 0;
-            }
         }
 
         public void UpdateActivity()
