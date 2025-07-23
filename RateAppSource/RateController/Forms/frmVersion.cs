@@ -26,7 +26,7 @@ namespace RateController.Forms
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
             await VC.HasVersionChanged();
-            mf.Tls.ShowMessage("Update request sent.", "Help", 5000);
+            mf.Tls.ShowMessage("Updating.", "Help", 5000);
         }
 
         private void frmVersion_FormClosed(object sender, FormClosedEventArgs e)

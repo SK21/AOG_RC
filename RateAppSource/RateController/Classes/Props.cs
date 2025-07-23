@@ -29,6 +29,7 @@ namespace RateController.Classes
         Nano_SwitchBox,
         ESP_Rate
     }
+
     public enum RateType
     { Applied, Target }
 
@@ -58,10 +59,10 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "22-Jun-2025";
+        private static string cAppDate = "23-Jun-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
-        private static string cAppVersion = "4.0.3";
+        private static string cAppVersion = "4.0.4";
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
@@ -125,24 +126,6 @@ namespace RateController.Classes
         public static event EventHandler UnitsChanged;
 
         #region MainProperties
-        public static string ParseDate(string input)
-        {
-            // input = ddmmy, no leading 0
-            // output = v2025.7.1, year, month, day
-            string Result = "";
-            if (input.Length > 3)
-            {
-                int YR = int.Parse(input.Substring(input.Length - 1)) + 2020;
-                int MN = int.Parse(input.Substring(input.Length - 3, 2));
-                int DY = int.Parse(input.Substring(0, input.Length - 3));
-
-                if (DY > 0 && DY < 32 && MN > 0 && MN < 13)
-                {
-                    Result = "v" + YR.ToString() + "." + MN.ToString() + "." + DY.ToString();
-                }
-            }
-            return Result;
-        }
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
@@ -549,6 +532,25 @@ namespace RateController.Classes
         {
             string name = CurrentDir() + "\\" + CurrentFileName() + "PressureData.csv";
             return name;
+        }
+
+        public static string ParseDate(string input)
+        {
+            // input = ddmmy, no leading 0
+            // output = v2025.7.1, year, month, day
+            string Result = "";
+            if (input.Length > 3)
+            {
+                int YR = int.Parse(input.Substring(input.Length - 1)) + 2020;
+                int MN = int.Parse(input.Substring(input.Length - 3, 2));
+                int DY = int.Parse(input.Substring(0, input.Length - 3));
+
+                if (DY > 0 && DY < 32 && MN > 0 && MN < 13)
+                {
+                    Result = "v" + YR.ToString() + "." + MN.ToString() + "." + DY.ToString();
+                }
+            }
+            return Result;
         }
 
         public static string VersionDate()
