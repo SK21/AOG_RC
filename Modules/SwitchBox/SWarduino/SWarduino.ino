@@ -3,8 +3,8 @@
 #include <SPI.h>
 
 // Nano board for rate control switches
-# define InoDescription "SWarduino  :  27-Jun-2025"
-const int16_t InoID = 27065;	// change to send defaults to eeprom
+# define InoDescription "SWarduino"
+const int16_t InoID = 23075;	// change to send defaults to eeprom
 const uint8_t InoType = 3;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 255		// not connected

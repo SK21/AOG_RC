@@ -5,7 +5,7 @@
 #include <EtherCard.h>
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
-// rate control with nano
+// rate control with arduino nano
 # define InoDescription "RCnano"
 const uint16_t InoID = 23075;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate

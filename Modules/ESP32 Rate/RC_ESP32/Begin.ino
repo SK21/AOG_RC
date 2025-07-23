@@ -15,23 +15,33 @@ void DoSetup()
 	Serial.println("");
 	Serial.println("");
 	Serial.println("");
-	Serial.println(InoDescription);
-	Serial.println("");
 
 	// eeprom
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
 
-	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
-
-	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
-
 	Serial.println("");
+	Serial.println(InoDescription);
+
+	// version
+	uint16_t yr = InoID % 10 + 2020;
+	uint16_t rest = InoID / 10;
+	uint8_t mn = rest % 100;
+	uint16_t dy = rest / 100;
+
+	Serial.print("Module Version: v");
+	Serial.print(yr);
+	Serial.print(".");
+	Serial.print(mn);
+	Serial.print(".");
+	Serial.println(dy);
+
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
-	Serial.print("Module Version: ");
-	Serial.println(InoID);
 	Serial.println("");
+
+	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
+	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
 	// I2C
 	Wire.begin();			// I2C on pins SCL 22, SDA 21

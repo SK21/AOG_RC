@@ -10,11 +10,25 @@ void DoSetup()
 	Serial.println("");
 	Serial.println("");
 	Serial.println("");
-	Serial.println(InoDescription);
-	Serial.println("");
 
 	// eeprom
 	LoadData();
+
+	Serial.println("");
+	Serial.println(InoDescription);
+
+	// version
+	uint16_t yr = InoID % 10 + 2020;
+	uint16_t rest = InoID / 10;
+	uint8_t mn = rest % 100;
+	uint16_t dy = rest / 100;
+
+	Serial.print("Module Version: v");
+	Serial.print(yr);
+	Serial.print(".");
+	Serial.print(mn);
+	Serial.print(".");
+	Serial.println(dy);
 
 	// pins
 	if (MDL.MasterOn < NC) pinMode(MDL.MasterOn, INPUT_PULLUP);
@@ -59,7 +73,6 @@ void DoSetup()
 		delay(500);
 		if (EthernetConnected())
 		{
-			Serial.println("");
 			ether.printIp("IP Address:     ", ether.myip);
 		}
 		else

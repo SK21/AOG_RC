@@ -1,9 +1,10 @@
 void SendData()
 {
 	//PGN32618, switch data
-	//0     HeaderLo    106
-	//1     HeaderHi    127
-	// 2    - bit 0 -
+	// 0   106
+	// 1   127
+	// 2   status
+	//      - bit 0 -
 	//      - bit 1 MasterOn
 	//      - bit 2 MasterOff
 	//      - bit 3 RateUp
@@ -11,12 +12,17 @@ void SendData()
 	//      - bit 5 AutoSection
 	//      - bit 6 AutoRate
 	//		- bit 7 Work switch
-	//3	    sw0 to sw7
-	//4     sw8 to sw15
-	//5	    CRC
+	// 3    sw0 to sw7
+	// 4    sw8 to sw15
+	// 5    InoID Lo
+	// 6    InoID Hi
+	// 7    -
+	// 8    crc
+
+	byte PGNlength = 9;
+	byte Data[PGNlength];
 
 	byte Pins[] = { 0,0,0,0,0,0,0,0 };
-	byte Data[6];
 	Data[0] = 106;
 	Data[1] = 127;
 
@@ -55,12 +61,15 @@ void SendData()
 		}
 	}
 
-	Data[5] = CRC(Data, 5, 0);
+	Data[5] = InoID;
+	Data[6] = InoID >> 8;
+
+	Data[PGNlength-1] = CRC(Data, PGNlength-1, 0);
 
 	if (EthernetConnected())
 	{
 		// send ethernet
-		ether.sendUdp(Data, 6, SourcePort, DestinationIP, DestinationPort);
+		ether.sendUdp(Data, PGNlength, SourcePort, DestinationIP, DestinationPort);
 	}
 }
 
