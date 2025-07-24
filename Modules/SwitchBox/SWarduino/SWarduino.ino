@@ -72,6 +72,8 @@ void loop()
 		SendData();
 	}
 
+	ReceiveSerial();
+
 	if (EthernetConnected())
 	{
 		//this must be called for ethercard functions to work.
