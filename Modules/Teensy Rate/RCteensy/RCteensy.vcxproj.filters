@@ -40,7 +40,6 @@
     <ClCompile Include="Receive.ino" />
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
-    <ClCompile Include="SerialESPcomm.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">

@@ -8,11 +8,7 @@
 uint8_t CurrentPin = 0;
 void ReadAnalog()
 {
-	if (MDL.PressurePin < NC)
-	{
-		PressureReading = analogRead(MDL.PressurePin);
-	}
-	else if (ADSfound)
+	if (ADSfound)
 	{
 		// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
 
@@ -82,6 +78,10 @@ void ReadAnalog()
 		//      00=1, 01=2, 10=4, 11=Disable this feature
 		Wire.write(0b11100011);	//860 samples/sec
 		Wire.endTransmission();
+	}
+	else if (MDL.PressurePin < NC)
+	{
+		PressureReading = analogRead(MDL.PressurePin);
 	}
 }
 

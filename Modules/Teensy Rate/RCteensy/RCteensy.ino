@@ -1,3 +1,6 @@
+
+// rate control with Teensy 4.1
+
 #include <Wire.h>
 #include <EEPROM.h> 
 #include <NativeEthernet.h>
@@ -9,9 +12,8 @@ extern "C" {
 #include "FlashTxx.h"		// TLC/T3x/T4x/TMM flash primitives
 }
 
-// rate control with Teensy 4.1
 # define InoDescription "RCteensy"
-const uint16_t InoID = 23075;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 7085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxReadBuffer 100	// bytes
@@ -22,10 +24,7 @@ const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano R
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
 const uint8_t PCF8574address = 0x20;
-
 uint8_t DefaultRelayPins[] = {8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC};		// pin numbers when GPIOs are used for relay control (1), default RC11
-char DefaultNetName[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-char DefaultNetPassword[ModStringLengths] = "111222333";
 
 struct ModuleConfig
 {
@@ -42,15 +41,11 @@ struct ModuleConfig
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
-	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
-	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-	char Password[ModStringLengths] = "111222333";
 	uint8_t WorkPin = 30;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
 	uint8_t PressurePin = 40;		
 	bool ADS1115Enabled = false;
-	uint8_t ESPserialPort = NC;		// serial port to connect to wifi module
 };
 
 ModuleConfig MDL;
@@ -105,9 +100,6 @@ bool PCA9555PW_found = false;
 
 bool MCP23017_found = false;
 
-uint32_t ESPtime;
-int8_t WifiStrength;
-
 // analog
 struct AnalogConfig
 {
@@ -118,14 +110,7 @@ struct AnalogConfig
 };
 AnalogConfig AINs;
 int PressureReading = 0;
-
 bool ADSfound = false;
-
-// WifiSwitches connection to ESP8266
-unsigned long WifiSwitchesTimer;
-bool WifiSwitchesEnabled = false;
-byte WifiSwitches[6];
-HardwareSerial* SerialESP;
 
 bool GoodPins = false;	// configuration pins correct
 bool WrkOn;
@@ -175,9 +160,7 @@ void setup()
 
 void loop()
 {
-	ReceiveSerial();
-	ReceiveUDPwired();
-	ReceiveESP();
+	ReceiveUDP();
 	ReceiveUpdate();
 	SetPWM();
 

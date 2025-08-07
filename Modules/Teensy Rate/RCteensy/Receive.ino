@@ -1,100 +1,12 @@
 
-byte SerialMSB;
-byte SerialLSB;
-unsigned int SerialPGN;
-byte SerialPGNlength;
-byte SerialReceive[40];
-bool PGNfound;
-
-uint16_t WDlength;
-uint8_t WD[50];
-
-void ReceiveSerial()
-{
-	if (Serial.available())
-	{
-		if (Serial.available() > 40)
-		{
-			// clear buffer and reset pgn
-			while (Serial.available())
-			{
-				Serial.read();
-			}
-			SerialPGN = 0;
-			PGNfound = false;
-		}
-
-		if (PGNfound)
-		{
-			if (Serial.available() > SerialPGNlength - 3)
-			{
-				for (int i = 2; i < SerialPGNlength; i++)
-				{
-					SerialReceive[i] = Serial.read();
-				}
-				ReadPGNs(SerialReceive, SerialPGNlength);
-
-				// reset pgn
-				SerialPGN = 0;
-				PGNfound = false;
-			}
-		}
-		else
-		{
-			switch (SerialPGN)
-			{
-			case 32500:
-				SerialPGNlength = 14;
-				PGNfound = true;
-				break;
-
-			case 32501:
-				SerialPGNlength = 10;
-				PGNfound = true;
-				break;
-
-			case 32502:
-				SerialPGNlength = 10;
-				PGNfound = true;
-				break;
-
-			case 32503:
-				SerialPGNlength = 6;
-				PGNfound = true;
-				break;
-
-			case 32700:
-				SerialPGNlength = 33;
-				PGNfound = true;
-				break;
-
-			case 32702:
-				SerialPGNlength = 33;
-				PGNfound = true;
-				break;
-
-			default:
-				// find pgn
-				SerialMSB = Serial.read();
-				SerialPGN = SerialMSB << 8 | SerialLSB;
-
-				SerialReceive[0] = SerialLSB;
-				SerialReceive[1] = SerialMSB;
-
-				SerialLSB = SerialMSB;
-				break;
-			}
-		}
-	}
-}
-
-void ReceiveUDPwired()
+void ReceiveUDP()
 {
 	if (Ethernet.linkStatus() == LinkON)
 	{
-		WDlength = UDPcomm.parsePacket();
+		uint16_t WDlength = UDPcomm.parsePacket();
 		if (WDlength > 0)
 		{
+			uint8_t WD[50];
 			if (WDlength > 50) WDlength = 50;
 			UDPcomm.read(WD, WDlength);
 			ReadPGNs(WD, WDlength);
@@ -277,36 +189,6 @@ void ReadPGNs(byte Data[], uint16_t len)
 		}
 		break;
 
-	case 32600:
-		//PGN32600, ESP status
-		// 0    88
-		// 1    127
-		// 2    MasterOn
-		// 3	switches 0-7
-		// 4	switches 8-15
-		// 5	switches changed
-		// 6	signal strength
-		// 7	crc
-
-		PGNlength = 8;
-
-		if (len > PGNlength - 1)
-		{
-			if (GoodCRC(Data, PGNlength))
-			{
-				WifiSwitches[2] = Data[2];
-				WifiSwitches[3] = Data[3];
-				WifiSwitches[4] = Data[4];
-				if (Data[5])
-				{
-					WifiSwitchesEnabled = true;
-					WifiSwitchesTimer = millis();
-				}
-				WifiStrength = Data[6];
-			}
-		}
-		break;
-
 	case 32700:
 		// module config
 		//0     HeaderLo    188
@@ -347,7 +229,6 @@ void ReadPGNs(byte Data[], uint16_t len)
 				byte tmp = Data[4];
 				MDL.InvertRelay = ((tmp & 1) == 1);
 				MDL.InvertFlow = ((tmp & 2) == 2);
-				MDL.WifiModeUseStation = ((tmp & 4) == 4);
 				MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
 				MDL.Is3Wire = ((tmp & 16) == 16);
 				MDL.ADS1115Enabled = ((tmp & 32) == 32);
@@ -368,38 +249,8 @@ void ReadPGNs(byte Data[], uint16_t len)
 				MDL.WorkPin = Data[29];
 				MDL.PressurePin = Data[30];
 
-				//SaveData();	saved in pgn 3702
-			}
-		}
-		break;
-
-	case 32702:
-		// PGN32702, network config
-		// 0        190
-		// 1        127
-		// 2-16     Network Name
-		// 17-31    Newtwork password
-		// 32       CRC
-
-		PGNlength = 33;
-
-		if (len > PGNlength - 1)
-		{
-			if (GoodCRC(Data, PGNlength))
-			{
-				// network name
-				memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
-				memcpy(MDL.SSID, &Data[2], 14);
-
-				// network password
-				memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
-				memcpy(MDL.Password, &Data[17], 14);
-
 				SaveData();
-				SendNetworkConfig();
-
-				//restart the Teensy
-				SCB_AIRCR = 0x05FA0004;
+				SCB_AIRCR = 0x05FA0004;	//restart the Teensy
 			}
 		}
 		break;

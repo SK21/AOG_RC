@@ -43,6 +43,7 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ADS1115
+	ADSfound = false;
 	if (MDL.ADS1115Enabled)
 	{
 		Serial.print("Starting ADS1115 at address ");
@@ -124,38 +125,6 @@ void DoSetup()
 		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
 		analogWriteFrequency(Sensor[i].PWMPin, 490);
 	}
-
-	//ESP8266 serial port
-	switch (MDL.ESPserialPort)
-	{
-		case 1:
-			SerialESP = &Serial1;
-			break;
-		case 2:
-			SerialESP = &Serial2;
-			break;
-		case 3:
-			SerialESP = &Serial3;
-			break;
-		case 4:
-			SerialESP = &Serial4;
-			break;
-		case 5:
-			SerialESP = &Serial5;
-			break;
-		case 6:
-			SerialESP = &Serial6;
-			break;
-		case 7:
-			SerialESP = &Serial7;
-			break;
-		case 8:
-			SerialESP = &Serial8;
-		default:
-			MDL.ESPserialPort = NC;
-			break;
-	}
-	if(MDL.ESPserialPort!=NC) SerialESP->begin(38400);
 
 	// Relays
 	switch (MDL.RelayControl)
@@ -373,21 +342,11 @@ void LoadDefaults()
 	MDL.IP2 = 1;
 	MDL.IP3 = 50;
 	MDL.RelayControl = 1;
-	MDL.ESPserialPort = NC;
-	MDL.WifiModeUseStation = false;
 	MDL.WorkPin = 30;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;
 	MDL.PressurePin = 40;
-
-	// network name
-	memset(MDL.SSID, '\0', sizeof(MDL.SSID)); // erase old name
-	memcpy(MDL.SSID, &DefaultNetName, 14);
-
-	// network password
-	memset(MDL.Password, '\0', sizeof(MDL.Password)); // erase old name
-	memcpy(MDL.Password, &DefaultNetPassword, 14);
 }
 
 bool ValidData()

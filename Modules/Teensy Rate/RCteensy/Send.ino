@@ -74,20 +74,6 @@ void SendComm()
                 UDPcomm.write(Data, 15);
                 UDPcomm.endPacket();
             }
-            else if (millis() - ESPtime > 5000)
-            {
-                // send serial
-                Serial.print(Data[0]);
-                for (int i = 1; i < 15; i++)
-                {
-                    Serial.print(",");
-                    Serial.print(Data[i]);
-                }
-                Serial.println("");
-            }
-
-            // send wifi
-            if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
         }
 
         //PGN32401, module info from module to RC
@@ -132,22 +118,6 @@ void SendComm()
         Data[13] = 0;
         if (WorkPinOn()) Data[13] |= 0b00000001;
 
-        if (millis() - ESPtime < 5000)
-        {
-            if (WifiStrength < -80)
-            {
-                Data[13] |= 0b00000010;
-            }
-            else if (WifiStrength < -70)
-            {
-                Data[13] |= 0b00000100;
-            }
-            else
-            {
-                Data[13] |= 0b00001000;
-            }
-        }
-
         if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
         if (GoodPins) Data[13] |= 0b00100000;
 
@@ -160,45 +130,6 @@ void SendComm()
             UDPcomm.write(Data, 15);
             UDPcomm.endPacket();
         }
-        else if (millis() - ESPtime > 5000)
-        {
-            // send serial
-            Serial.print(Data[0]);
-            for (int i = 1; i < 15; i++)
-            {
-                Serial.print(",");
-                Serial.print(Data[i]);
-            }
-            Serial.println("");
-        }
-
-        // send wifi
-        if (MDL.ESPserialPort != NC) SerialESP->write(Data, 15);
     }
 }
 
-void SendNetworkConfig()
-{
-    // PGN32702, network config to esp
-    // 0        190
-    // 1        127
-    // 2-16     Network Name
-    // 17-31    Newtwork password
-    // 32       CRC
-
-    int PGNlength = 33;
-    byte Data[PGNlength];
-    Data[0] = 190;
-    Data[1] = 127;
-
-    for (int i = 0; i < 15; i++)
-    {
-        Data[i + 2] = MDL.SSID[i];
-        Data[i + 17] = MDL.Password[i];
-    }
-
-    Data[32] = CRC(Data, PGNlength - 1, 0);
-    Serial.println(Data[32]);
-    Serial.println(GoodCRC(Data, PGNlength));
-    if (MDL.ESPserialPort != NC) SerialESP->write(Data, PGNlength);
-}

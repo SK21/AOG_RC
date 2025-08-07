@@ -129,7 +129,7 @@ void SendReceiveReady()
 //******************************************************************************
 // process_hex_record()    process record and return okay (0) or error (1)
 //******************************************************************************
-int process_hex_record(char* packetBuffer, int packetSize)
+int process_hex_record(const uint8_t* packetBuffer, int packetSize)
 {
 	if (packetSize < 5)
 	{
