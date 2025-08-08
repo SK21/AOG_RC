@@ -16,7 +16,6 @@ extern "C" {
 const uint16_t InoID = 7085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
-#define MaxReadBuffer 100	// bytes
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
@@ -59,7 +58,7 @@ struct SensorConfig
 	double UPM;				// sent as upm X 1000
 	double PWM;
 	uint32_t CommTime;
-	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan, 5 timed combo
+	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 -, 4 fan, 5 timed combo
 	uint32_t TotalPulses;
 	double TargetUPM;
 	double MeterCal;
@@ -213,12 +212,10 @@ bool GoodCRC(byte Data[], byte Length)
 byte CRC(byte Chk[], byte Length, byte Start)
 {
 	byte Result = 0;
-	int CK = 0;
 	for (int i = Start; i < Length; i++)
 	{
-		CK += Chk[i];
+		Result += Chk[i];
 	}
-	Result = (byte)CK;
 	return Result;
 }
 

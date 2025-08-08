@@ -44,7 +44,10 @@ uint32_t GetMedianPulseTime(uint8_t ID)
 	if (SamplesCount[ID] > 0)
 	{
 		uint32_t sorted[SampleSize];
+
+		noInterrupts();
 		memcpy(sorted, Samples[ID], sizeof(sorted));
+		interrupts();
 
 		// Insertion sort
 		for (int i = 1; i < SamplesCount[ID]; i++)

@@ -24,12 +24,19 @@ void DoSetup()
 	uint8_t mn = rest % 100;
 	uint16_t dy = rest / 100;
 
-	Serial.print("Module Version: v");
-	Serial.print(yr);
-	Serial.print(".");
-	Serial.print(mn);
-	Serial.print(".");
-	Serial.println(dy);
+	if (mn <= 12 && dy <= 31)
+	{
+		Serial.print("Module Version: v");
+		Serial.print(yr);
+		Serial.print(".");
+		Serial.print(mn);
+		Serial.print(".");
+		Serial.println(dy);
+	}
+	else
+	{
+		Serial.println("Module Version: invalid");
+	}
 
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
@@ -53,8 +60,7 @@ void DoSetup()
 			Wire.beginTransmission(ADS1115_Address);
 			Wire.write(0b00000000);	//Point to Conversion register
 			Wire.endTransmission();
-			Wire.requestFrom(ADS1115_Address, 2);
-			ADSfound = Wire.available();
+			ADSfound = (Wire.requestFrom(ADS1115_Address, 2) == 2);
 			Serial.print(".");
 			delay(500);
 			if (ErrorCount++ > 10) break;
@@ -354,6 +360,7 @@ bool ValidData()
 	bool Result = true;
 
 	if (MDL.WorkPin > 41 && MDL.WorkPin != NC) Result = false;
+	if (MDL.PressurePin > 41 && MDL.PressurePin != NC) Result = false;
 
 	if (Result)
 	{

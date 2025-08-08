@@ -32,7 +32,6 @@ void SetPWM()
 				break;
 
 			case 2:
-			case 3:
 			case 4:
 				// motor control
 				Sensor[i].PWM = PIDmotor(i);
