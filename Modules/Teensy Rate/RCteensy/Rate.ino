@@ -81,7 +81,6 @@ void GetUPM()
 		{
 			LastPulse[i] = millis();
 
-			// Local snapshots
 			uint32_t Snapshot[SampleSize];
 			int count = 0;
 

@@ -5,7 +5,7 @@ const double BrakePoint = 0.25;			// error amount where adjustment rate changes 
 const double FastAdjust = 100;			// fast adjustment factor
 const double SlowAdjust = 30;			// slow adjustment factor
 const double MaxMotorSlewRate = 2;		// slew rate limit. Max total pwm change per loop
-const double MaxValveIntegral = 40;		// max total integral pwm adjustment
+const double MaxValveIntegral = 100;	// max total integral pwm adjustment
 const double MaxIntegralChange = 0.05;	// for a motor  Ex: 0.05 = max 1 pwm/sec change at 50 ms sample time
 const double MinStart = 0.03;			// minimum start ratio. Used to quickly increase rate from 0.
 uint32_t TimedAdjustTime = 80;			// milliseconds
