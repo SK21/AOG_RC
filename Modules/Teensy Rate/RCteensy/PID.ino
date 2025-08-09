@@ -1,21 +1,21 @@
 
-const double SampleTime = 50;		// ms
-const double Deadband = 0.015;		// error amount below which no adjustment is made
-const double BrakePoint = 0.25;		// error amount where adjustment rate changes from fast to slow
-const double FastAdjust = 100;		// fast adjustment factor
-const double SlowAdjust = 30;		// slow adjustment factor
-const double MaxMotorSlewRate = 2;	// slew rate limit. Max total pwm change per loop
-const double MaxValveIntegral = 40;	// max total integral pwm adjustment
+const double SampleTime = 50;			// ms
+const double Deadband = 0.015;			// error amount below which no adjustment is made
+const double BrakePoint = 0.25;			// error amount where adjustment rate changes from fast to slow
+const double FastAdjust = 100;			// fast adjustment factor
+const double SlowAdjust = 30;			// slow adjustment factor
+const double MaxMotorSlewRate = 2;		// slew rate limit. Max total pwm change per loop
+const double MaxValveIntegral = 40;		// max total integral pwm adjustment
+const double MaxIntegralChange = 0.05;	// for a motor  Ex: 0.05 = max 1 pwm/sec change at 50 ms sample time
+const double MinStart = 0.03;			// minimum start ratio. Used to quickly increase rate from 0.
+uint32_t TimedAdjustTime = 80;			// milliseconds
+uint32_t TimedPauseTime = 400;			// milliseconds
 
 uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
 double IntegralSum[MaxProductCount];
-
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
-const double MinStart = 0.03;	// minimum start ratio. Used to quickly increase rate from 0.
-uint32_t TimedAdjustTime = 80;		// milliseconds
-uint32_t TimedPauseTime = 400;		// milliseconds
 
 void SetPWM()
 {
@@ -86,7 +86,7 @@ int PIDmotor(byte ID)
 
 				IntegralSum[ID] += RateError * Sensor[ID].Ki; 
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using Ki
-				IntegralSum[ID] = constrain(IntegralSum[ID], -0.05, 0.05);	// max 1 pwm/sec change at 50 ms sample time
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxIntegralChange, MaxIntegralChange);	
 
 				// check brakepoint
 				double BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * BrakePoint) ? FastAdjust : SlowAdjust;
