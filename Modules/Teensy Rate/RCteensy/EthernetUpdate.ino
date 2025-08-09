@@ -1,19 +1,26 @@
 
-uint16_t PacketLength;
+// based on https://github.com/joepasquariello/FlasherX
+
+enum UpdateStatus
+{
+	UpdateReady = 100,
+	WrongModuleID = 101,
+	WrongInoType = 102
+};
+
 uint8_t ReceivedData[500];
-int DisplayCount = 0;
 
 void ReceiveUpdate()
 {
 	// receive firmware update
 	if (Ethernet.linkStatus() == LinkON)
 	{
-		PacketLength = UpdateComm.parsePacket();
+		uint16_t PacketLength = UpdateComm.parsePacket();
 		if (PacketLength > 0)
 		{
 			if (PacketLength > 500) PacketLength = 500;
 			UpdateComm.read(ReceivedData, PacketLength);
-			if (UpdateMode)
+			if (FirmwareUpdateMode)
 			{
 				if (process_hex_record(ReceivedData, PacketLength))
 				{
@@ -56,14 +63,22 @@ void ReceiveUpdate()
 										Serial.printf("target = %s (%dK flash in %dK sectors)\n", FLASH_ID, FLASH_SIZE / 1024, FLASH_SECTOR_SIZE / 1024);
 										Serial.printf("buffer = %1luK %s (%08lX - %08lX)\n", buffer_size / 1024, IN_FLASH(buffer_addr) ? "FLASH" : "RAM", buffer_addr, buffer_addr + buffer_size);
 										Serial.println("waiting for hex lines...\n");
-										UpdateMode = true;
-										SendReceiveReady();
+										FirmwareUpdateMode = true;
+										SendUpdateStatus(UpdateReady);
 									}
 									else
 									{
 										Serial.println("Unable to create update buffer.");
 									}
 								}
+								else
+								{
+									SendUpdateStatus(WrongInoType);
+								}
+							}
+							else
+							{
+								SendUpdateStatus(WrongModuleID);
 							}
 						}
 					}
@@ -102,13 +117,13 @@ void SendLineCheck()
 	}
 }
 
-void SendReceiveReady()
+void SendUpdateStatus(byte Status)
 {
 	// PGN32802
 	//0		headerlo	34
 	//1		headerHi	128
 	//2		Module ID
-	//3		Status
+	//3		Status		
 	//4		CRC
 
 	if (Ethernet.linkStatus() == LinkON)
@@ -117,7 +132,7 @@ void SendReceiveReady()
 		data[0] = 34;
 		data[1] = 128;
 		data[2] = MDL.ID;
-		data[3] = 100;
+		data[3] = Status;
 		data[4] = CRC(data, 4, 0);
 
 		UpdateComm.beginPacket(DestinationIP, UpdateSendPort);
@@ -125,12 +140,13 @@ void SendReceiveReady()
 		UpdateComm.endPacket();
 	}
 }
-
 //******************************************************************************
 // process_hex_record()    process record and return okay (0) or error (1)
 //******************************************************************************
 int process_hex_record(const uint8_t* packetBuffer, int packetSize)
 {
+	static int DisplayCount = 0;
+
 	if (packetSize < 5)
 	{
 		return 1;

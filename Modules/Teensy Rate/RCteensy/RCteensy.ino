@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 7085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 9085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -112,9 +112,6 @@ int PressureReading = 0;
 bool ADSfound = false;
 
 bool GoodPins = false;	// configuration pins correct
-bool WrkOn;
-bool WrkLast;
-bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
 
@@ -123,7 +120,7 @@ EthernetUDP UpdateComm;
 uint16_t UpdateReceivePort = 29100;
 uint16_t UpdateSendPort = 29000;
 uint32_t buffer_addr, buffer_size;
-bool UpdateMode = false;
+bool FirmwareUpdateMode = false;
 
 //******************************************************************************
 // hex_info_t struct for hex record and hex file info
@@ -221,9 +218,12 @@ byte CRC(byte Chk[], byte Length, byte Start)
 
 bool WorkPinOn()
 {
+	static bool WrkOn = false;
+	static bool WrkLast = false;
+
 	if (MDL.WorkPin < NC)
 	{
-		WrkCurrent = digitalRead(MDL.WorkPin);
+		bool WrkCurrent = digitalRead(MDL.WorkPin);
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)
@@ -244,27 +244,21 @@ bool WorkPinOn()
 	return WrkOn;
 }
 
-bool State = false;
-elapsedMillis BlinkTmr;
-elapsedMicros LoopTmr;
-byte ReadReset;
-uint32_t MaxLoopTime;
-double FlowHz;
-
-//double debug1;
-//double debug2;
-//volatile double debug3;
-//double debug4;
-//double debug5;
-
 void Blink()
 {
+	static bool State = false;
+	static elapsedMillis BlinkTmr;
+	static elapsedMicros LoopTmr;
+	static byte Count = 0;
+	static uint32_t MaxLoopTime = 0;
+
 	if (BlinkTmr > 1000)
 	{
 		BlinkTmr = 0;
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
-		if (!UpdateMode)
+
+		if (!FirmwareUpdateMode)
 		{
 			Serial.print(" Micros: ");
 			Serial.print(MaxLoopTime);
@@ -272,28 +266,13 @@ void Blink()
 			Serial.print(", ");
 			Serial.print(Ethernet.localIP());
 
-			//Serial.print(", ");
-			//Serial.print(debug1,5);
-
-			//Serial.print(", ");
-			//Serial.print(debug2,5);
-
-			//Serial.print(", ");
-			//Serial.print(debug3);
-
-			//Serial.print(", ");
-			//Serial.print(debug4,5);
-
-			//Serial.print(", ");
-			//Serial.print(debug5);
-
 			Serial.println("");
+		}
 
-			if (ReadReset++ > 10)
-			{
-				ReadReset = 0;
-				MaxLoopTime = 0;
-			}
+		if (Count++ > 10)
+		{
+			Count = 0;
+			MaxLoopTime = 0;
 		}
 	}
 	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
