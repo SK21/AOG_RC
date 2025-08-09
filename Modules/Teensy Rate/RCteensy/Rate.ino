@@ -44,10 +44,10 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 	if (count > 0)
 	{
 		uint32_t sorted[SampleSize];
-		for (int i = 0; i < count; ++i) sorted[i] = buf[i];
+		for (int i = 0; i < count; i++) sorted[i] = buf[i];
 
 		// insertion sort
-		for (int i = 1; i < count; ++i)
+		for (int i = 1; i < count; i++)
 		{
 			uint32_t key = sorted[i];
 			int j = i - 1;
@@ -87,7 +87,6 @@ void GetUPM()
 			noInterrupts();
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
-
 			count = SamplesCount[i];
 			for (uint8_t k = 0; k < count; k++)
 			{
