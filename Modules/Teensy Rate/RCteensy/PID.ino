@@ -7,11 +7,12 @@ const double FastAdjust = 100;				// fast adjustment factor
 const double SlowAdjust = 30;				// slow adjustment factor
 
 const double MaxMotorSlewRate = 2;			// slew rate limit. Max total pwm change per loop
-const double MaxMotorIntegralChange = 0.05;	// for a motor  Ex: 0.05 = max 1 pwm/sec change at 50 ms sample time
+const double MaxMotorIntegral = 0.05;		// for a motor  Ex: 0.05 = max 1 pwm/sec change at 50 ms sample time
 
 const double MaxValveIntegral = 100;		// max total integral pwm adjustment
-const double MaxValveIntegralChange = 1.5;	// for a valve  Ex: 1.5 = max 30 pwm/sec change at 50 ms sample time
 
+bool PauseAdjust[MaxProductCount];
+uint32_t ComboTime[MaxProductCount];
 const double MinStart = 0.03;				// minimum start ratio. Used to quickly increase rate from 0. 
 uint32_t TimedAdjustTime = 80;				// milliseconds
 uint32_t TimedPauseTime = 400;				// milliseconds
@@ -19,8 +20,6 @@ uint32_t TimedPauseTime = 400;				// milliseconds
 uint32_t LastCheck[MaxProductCount];
 double LastPWM[MaxProductCount];
 double IntegralSum[MaxProductCount];
-bool PauseAdjust[MaxProductCount];
-uint32_t ComboTime[MaxProductCount];
 
 void SetPWM()
 {
@@ -91,10 +90,8 @@ int PIDmotor(byte ID)
 
 				if (Sensor[ID].Ki > 0)
 				{
-					double IntegralChange = RateError * Sensor[ID].Ki;
-					IntegralChange = constrain(IntegralChange, -1 * MaxMotorIntegralChange, MaxMotorIntegralChange);
-					IntegralSum[ID] += IntegralChange;
-					IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxMotorSlewRate, MaxMotorSlewRate);
+					IntegralSum[ID] += RateError * Sensor[ID].Ki;
+					IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxMotorIntegral, MaxMotorIntegral);
 				}
 				else
 				{
@@ -143,10 +140,8 @@ int PIDvalve(byte ID)
 
 				if (Sensor[ID].Ki > 0)
 				{
-					double IntegralChange = RateError * Sensor[ID].Ki;
-					IntegralChange = constrain(IntegralChange, -1 * MaxValveIntegralChange, MaxValveIntegralChange);
-					IntegralSum[ID] += IntegralChange;
-					IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxValveIntegral, MaxValveIntegral);
+					IntegralSum[ID] += RateError * Sensor[ID].Ki;
+					IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxValveIntegral, MaxValveIntegral);  // max total integral pwm
 				}
 				else
 				{
@@ -230,10 +225,8 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 
 						if (Sensor[ID].Ki > 0)
 						{
-							double IntegralChange = RateError * Sensor[ID].Ki;
-							IntegralChange = constrain(IntegralChange, -1 * MaxValveIntegralChange, MaxValveIntegralChange);
-							IntegralSum[ID] += IntegralChange;
-							IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxValveIntegral, MaxValveIntegral);
+							IntegralSum[ID] += RateError * Sensor[ID].Ki;
+							IntegralSum[ID] = constrain(IntegralSum[ID], -1 * MaxValveIntegral, MaxValveIntegral);  // max total integral pwm
 						}
 						else
 						{
