@@ -3,7 +3,7 @@ const double KiMultiplier = 10;
 
 void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
 {
-	byte PGNlength;
+	uint8_t PGNlength;
 	uint16_t PGN = Data[1] << 8 | Data[0];
 
 	switch (PGN)
