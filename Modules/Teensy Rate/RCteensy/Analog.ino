@@ -1,13 +1,8 @@
 
-//	RC11 config
-//	AIN0	pressure 0
-//	AIN1	pressure 1
-//	AIN2	-
-//	AIN3	-
-
-uint8_t CurrentPin = 0;
 void ReadAnalog()
 {
+	static uint8_t CurrentPin = 0;
+
 	if (ADSfound)
 	{
 		// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino

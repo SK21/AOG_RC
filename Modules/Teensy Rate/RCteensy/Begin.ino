@@ -26,7 +26,7 @@ void DoSetup()
 
 	if (mn <= 12 && dy <= 31)
 	{
-		Serial.print("Module Version: v");
+		Serial.print("Firmware Version: v");
 		Serial.print(yr);
 		Serial.print(".");
 		Serial.print(mn);
@@ -35,7 +35,7 @@ void DoSetup()
 	}
 	else
 	{
-		Serial.println("Module Version: invalid");
+		Serial.println("Firmware Version: invalid");
 	}
 
 	Serial.print("Module ID: ");
@@ -103,7 +103,6 @@ void DoSetup()
 	Serial.print("IP Address: ");
 	Serial.println(Ethernet.localIP());
 	DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
-	Serial.println("");
 
 	// UDP
 	UDPcomm.begin(ListeningPort);
@@ -285,14 +284,11 @@ void LoadData()
 			EEPROM.get(200 + i * 80, Sensor[i]);
 		}
 		IsValid = ValidData();
-		if (!IsValid)
-		{
-			Serial.println("Stored settings not valid.");
-		}
 	}
 
 	if (!IsValid)
 	{
+		Serial.println("Stored settings not valid.");
 		LoadDefaults();
 		SaveData();
 	}

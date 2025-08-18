@@ -5,7 +5,7 @@ void AdjustFlow()
     {
         int PWM = constrain(Sensor[i].PWM, -255, 255);
 
-        switch (Sensor[i].ControlType)  // case 3 is not used
+        switch (Sensor[i].ControlType)  
         {
         case 0:
             // standard valve, flow control only
@@ -71,6 +71,10 @@ void AdjustFlow()
                 // stop motor
                 analogWrite(Sensor[i].PWMPin, 0);
             }
+            break;
+
+        default:
+            // type 3 not used
             break;
         }
     }
