@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 18085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -100,14 +100,6 @@ bool PCA9555PW_found = false;
 bool MCP23017_found = false;
 
 // analog
-struct AnalogConfig
-{
-	int16_t AIN0;	// Pressure 0
-	int16_t AIN1;	// Pressure 1
-	int16_t AIN2;
-	int16_t AIN3;
-};
-AnalogConfig AINs;
 int PressureReading = 0;
 bool ADSfound = false;
 

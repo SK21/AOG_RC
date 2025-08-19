@@ -1,40 +1,38 @@
 
 void ReadAnalog()
 {
-	static uint8_t CurrentPin = 0;
+	static int16_t Aread;
+	static bool ConversionPending = false;
 
 	if (ADSfound)
 	{
-		// based on https://github.com/RalphBacon/ADS1115-ADC/blob/master/ADS1115_ADC_16_bit_SingleEnded.ino
+		// use ADS1115
+		//	AS15 config
+		//	AIN0	WAS 5V
+		//	AIN1	
+		//	AIN2	
+		//	AIN3	Current/pressure
+		// Only do one of either a read or a request per loop. Saves loop time and
+		// doesn't affect ADC read time that much.
 
-		// read current value
-		Wire.beginTransmission(ADS1115_Address);
-		Wire.write(0b00000000); //Point to Conversion register
-		Wire.endTransmission();
-		if (Wire.requestFrom(ADS1115_Address, 2) == 2)
+		if (ConversionPending)
 		{
-			uint16_t Aread = (Wire.read() << 8 | Wire.read());
-			Aread = Aread >> 1;
-
-			switch (CurrentPin)
+			// read value if available
+			Wire.beginTransmission(ADS1115_Address);
+			Wire.write(0b00000000); //Point to Conversion register
+			Wire.endTransmission();
+			if (Wire.requestFrom(ADS1115_Address, 2) == 2)
 			{
-			case 0:
-				AINs.AIN0 = Aread;
-				PressureReading = Aread;
-				break;
-			case 1:
-				AINs.AIN1 = Aread;
-				break;
-			case 2:
-				AINs.AIN2 = Aread;
-				break;
-			default:
-				AINs.AIN3 = Aread;
-				break;
+				Aread = (int16_t)(Wire.read() << 8 | Wire.read());
+				if (Aread < 0) Aread = 0;
+				uint16_t ScaledReading = (uint16_t)((uint16_t)Aread >> 1);
+				UpdatePressure(ScaledReading);
+				ConversionPending = false;
 			}
-
-
-			// do next conversion
+		}
+		else
+		{
+			// start new read
 			Wire.beginTransmission(ADS1115_Address);
 			Wire.write(0b00000001); // Point to Config Register
 
@@ -45,24 +43,7 @@ void ReadAnalog()
 			// Bits 11:9  Programmable Gain 000=6.144v 001=4.096v 010=2.048v .... 111=0.256v
 			// Bits 8     0=Continuous conversion mode, 1=Power down single shot
 
-			CurrentPin++;
-			if (CurrentPin > 3) CurrentPin = 0;
-			switch (CurrentPin)
-			{
-				// single ended
-			case 0:
-				Wire.write(0b01000000);	// AIN0
-				break;
-			case 1:
-				Wire.write(0b01010000);	// AIN1
-				break;
-			case 2:
-				Wire.write(0b01100000);	// AIN2
-				break;
-			case 3:
-				Wire.write(0b01110000);	// AIN3
-				break;
-			}
+			Wire.write(0b11000011);	// AIN0
 
 			// LSB: Bits 7:0
 			// Bits 7:5 Data Rate (Samples per second) 000=8, 001=16, 010=32, 011=64,
@@ -74,11 +55,66 @@ void ReadAnalog()
 			//      00=1, 01=2, 10=4, 11=Disable this feature
 			Wire.write(0b11100011);	//860 samples/sec
 			Wire.endTransmission();
+
+			ConversionPending = true;
 		}
 	}
-	else if (MDL.PressurePin < NC)
+	else
 	{
-		PressureReading = analogRead(MDL.PressurePin);
+		// use Teensy analog pins
+		if (MDL.PressurePin < NC) UpdatePressure((uint16_t)analogRead(MDL.PressurePin));
 	}
 }
+
+void UpdatePressure(uint16_t Reading)
+{
+	const uint16_t SampleSize = 11;
+	static uint16_t index = 0;
+	static uint16_t count = 0;
+	static uint16_t samples[SampleSize];
+
+	samples[index] = Reading;
+	index = (index + 1) % SampleSize;
+	if (count < SampleSize) count++;
+
+	PressureReading = MedianFromArray(samples, count, SampleSize);
+}
+
+uint16_t MedianFromArray(uint16_t buf[], int count, uint16_t SampleSize)
+{
+	uint16_t Result = 0;
+	if (count > 0)
+	{
+		uint16_t sorted[SampleSize];
+		for (int i = 0; i < count; i++) sorted[i] = buf[i];
+
+		// insertion sort
+		for (int i = 1; i < count; i++)
+		{
+			uint16_t key = sorted[i];
+			int j = i - 1;
+			while (j >= 0 && sorted[j] > key)
+			{
+				sorted[j + 1] = sorted[j];
+				j--;
+			}
+			sorted[j + 1] = key;
+		}
+
+		if (count % 2 == 1)
+		{
+			Result = sorted[count / 2];
+		}
+		else
+		{
+			int mid = count / 2;
+			// average of middle two
+			uint32_t sum = (uint32_t(sorted[mid - 1]) + uint32_t(sorted[mid])) / 2;
+			Result = uint16_t(sum);
+		}
+	}
+	return Result;
+}
+
+
 
