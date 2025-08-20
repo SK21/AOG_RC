@@ -243,14 +243,11 @@ void LoadData()
 			EEPROM.get(100 + i * 80, Sensor[i]);
 		}
 		IsValid = ValidData();
-		if (!IsValid)
-		{
-			Serial.println("Stored settings not valid.");
-		}
 	}
 
 	if (!IsValid)
 	{
+		Serial.println("Stored settings not valid.");
 		LoadDefaults();
 		SaveData();
 	}

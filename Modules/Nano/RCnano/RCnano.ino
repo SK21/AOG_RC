@@ -7,7 +7,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 23075;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 20085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -100,14 +100,10 @@ bool PCA9555PW_found = false;
 void(*resetFunc) (void) = 0;
 
 bool GoodPins;	// pin configuration correct
-bool WrkOn;
-bool WrkLast;
-bool WrkCurrent;
 
 int TimedCombo(byte, bool);	// function prototype
 
 int16_t PressureReading = 0;
-bool WorkSwitchOn = false;
 bool MCP23017_found = false;
 
 bool EthernetConnected()
@@ -151,7 +147,6 @@ void loop()
 		CheckRelays();
 		GetUPM();
 		AdjustFlow();
-		CheckWorkSwitch();
 		CheckPressure();
 	}
 
@@ -195,28 +190,32 @@ byte CRC(byte Chk[], byte Length, byte Start)
 	return Result;
 }
 
-void CheckWorkSwitch()
+bool WorkPinOn()
 {
+	static bool WrkOn = false;
+	static bool WrkLast = false;
+
 	if (MDL.WorkPin < NC)
 	{
-		WrkCurrent = digitalRead(MDL.WorkPin);
+		bool WrkCurrent = digitalRead(MDL.WorkPin);
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)
 			{
-				if (WrkCurrent) WorkSwitchOn = !WorkSwitchOn;	// only cycle when going from low to high
+				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
 				WrkLast = WrkCurrent;
 			}
 		}
 		else
 		{
-			WorkSwitchOn = WrkCurrent;
+			WrkOn = WrkCurrent;
 		}
 	}
 	else
 	{
-		WorkSwitchOn = false;
+		WrkOn = false;
 	}
+	return WrkOn;
 }
 
 void CheckPressure()

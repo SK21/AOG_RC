@@ -115,7 +115,7 @@ void SendData()
 
         // status
         Data[13] = 0;
-        if (WorkSwitchOn) Data[13] |= 0b00000001;
+        if (WorkPinOn()) Data[13] |= 0b00000001;
 
         if (EthernetConnected()) Data[13] |= 0b00010000;
 

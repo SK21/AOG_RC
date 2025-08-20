@@ -1,6 +1,4 @@
 
-const double KiMultiplier = 10;
-
 void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
 {
 	uint8_t PGNlength;
