@@ -7,7 +7,7 @@ const double FastAdjust = 100;				// fast adjustment factor
 const double SlowAdjust = 30;				// slow adjustment factor
 
 const double MaxMotorSlewRate = 2;			// slew rate limit. Max total pwm change per loop
-const double MaxMotorIntegral = 0.05;		// for a motor  Ex: 0.05 = max 1 pwm/sec change at 50 ms sample time
+const double MaxMotorIntegral = 0.1;		// for a motor  Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time
 
 const double MaxValveIntegral = 100;		// max total integral pwm adjustment
 

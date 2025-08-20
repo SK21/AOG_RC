@@ -100,7 +100,7 @@ bool PCA9555PW_found = false;
 bool MCP23017_found = false;
 
 // analog
-int PressureReading = 0;
+uint PressureReading = 0;
 bool ADSfound = false;
 
 bool GoodPins = false;	// configuration pins correct

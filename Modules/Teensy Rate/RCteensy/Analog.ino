@@ -8,10 +8,10 @@ void ReadAnalog()
 	{
 		// use ADS1115
 		//	AS15 config
-		//	AIN0	WAS 5V
+		//	AIN0	pressure
 		//	AIN1	
 		//	AIN2	
-		//	AIN3	Current/pressure
+		//	AIN3	
 		// Only do one of either a read or a request per loop. Saves loop time and
 		// doesn't affect ADC read time that much.
 
@@ -25,8 +25,7 @@ void ReadAnalog()
 			{
 				Aread = (int16_t)(Wire.read() << 8 | Wire.read());
 				if (Aread < 0) Aread = 0;
-				uint16_t ScaledReading = (uint16_t)((uint16_t)Aread >> 1);
-				UpdatePressure(ScaledReading);
+				PressureReading = (uint16_t)((uint16_t)Aread >> 1);
 				ConversionPending = false;
 			}
 		}
@@ -43,7 +42,7 @@ void ReadAnalog()
 			// Bits 11:9  Programmable Gain 000=6.144v 001=4.096v 010=2.048v .... 111=0.256v
 			// Bits 8     0=Continuous conversion mode, 1=Power down single shot
 
-			Wire.write(0b11000011);	// AIN0
+			Wire.write(0b11000001);	// AIN0
 
 			// LSB: Bits 7:0
 			// Bits 7:5 Data Rate (Samples per second) 000=8, 001=16, 010=32, 011=64,
@@ -62,59 +61,10 @@ void ReadAnalog()
 	else
 	{
 		// use Teensy analog pins
-		if (MDL.PressurePin < NC) UpdatePressure((uint16_t)analogRead(MDL.PressurePin));
+		if (MDL.PressurePin < NC) PressureReading = (uint16_t)analogRead(MDL.PressurePin);
 	}
 }
 
-void UpdatePressure(uint16_t Reading)
-{
-	const uint16_t SampleSize = 11;
-	static uint16_t index = 0;
-	static uint16_t count = 0;
-	static uint16_t samples[SampleSize];
-
-	samples[index] = Reading;
-	index = (index + 1) % SampleSize;
-	if (count < SampleSize) count++;
-
-	PressureReading = MedianFromArray(samples, count, SampleSize);
-}
-
-uint16_t MedianFromArray(uint16_t buf[], int count, uint16_t SampleSize)
-{
-	uint16_t Result = 0;
-	if (count > 0)
-	{
-		uint16_t sorted[SampleSize];
-		for (int i = 0; i < count; i++) sorted[i] = buf[i];
-
-		// insertion sort
-		for (int i = 1; i < count; i++)
-		{
-			uint16_t key = sorted[i];
-			int j = i - 1;
-			while (j >= 0 && sorted[j] > key)
-			{
-				sorted[j + 1] = sorted[j];
-				j--;
-			}
-			sorted[j + 1] = key;
-		}
-
-		if (count % 2 == 1)
-		{
-			Result = sorted[count / 2];
-		}
-		else
-		{
-			int mid = count / 2;
-			// average of middle two
-			uint32_t sum = (uint32_t(sorted[mid - 1]) + uint32_t(sorted[mid])) / 2;
-			Result = uint16_t(sum);
-		}
-	}
-	return Result;
-}
 
 
 
