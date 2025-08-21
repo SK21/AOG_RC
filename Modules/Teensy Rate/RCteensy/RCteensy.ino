@@ -55,19 +55,19 @@ struct SensorConfig
 	uint8_t DirPin;
 	uint8_t PWMPin;
 	bool FlowEnabled;
-	double UPM;				// sent as upm X 1000
-	double PWM;
+	float UPM;				// sent as upm X 1000
+	float PWM;
 	uint32_t CommTime;
 	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 -, 4 fan, 5 timed combo
 	uint32_t TotalPulses;
-	double TargetUPM;
-	double MeterCal;
-	double ManualAdjust;
-	double MaxPower;
-	double MinPower;
-	double Kp;
-	double Ki;
-	double Hz;
+	float TargetUPM;
+	float MeterCal;
+	float ManualAdjust;
+	float MaxPower;
+	float MinPower;
+	float Kp;
+	float Ki;
+	float Hz;
 };
 
 SensorConfig Sensor[2];
