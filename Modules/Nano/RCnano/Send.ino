@@ -1,5 +1,5 @@
 
-void SendData()
+void SendComm()
 {
     if (millis() - SendLast > SendTime)
     {

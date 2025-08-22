@@ -98,7 +98,7 @@ void GetUPM()
 
 			if (median > 0)
 			{
-				double hz = 1000000.0 / median;
+				float hz = 1000000.0 / median;
 				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
 				if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
 			}

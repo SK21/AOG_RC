@@ -1,7 +1,7 @@
 
 void DoSetup()
 {
-	uint8_t ErrorCount;
+	uint8_t ErrorCount = 0;
 
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
@@ -24,12 +24,19 @@ void DoSetup()
 	uint8_t mn = rest % 100;
 	uint16_t dy = rest / 100;
 
-	Serial.print("Module Version: v");
-	Serial.print(yr);
-	Serial.print(".");
-	Serial.print(mn);
-	Serial.print(".");
-	Serial.println(dy);
+	if (mn <= 12 && dy <= 31)
+	{
+		Serial.print("Firmware Version: v");
+		Serial.print(yr);
+		Serial.print(".");
+		Serial.print(mn);
+		Serial.print(".");
+		Serial.println(dy);
+	}
+	else
+	{
+		Serial.println("Firmware Version: invalid");
+	}
 
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);

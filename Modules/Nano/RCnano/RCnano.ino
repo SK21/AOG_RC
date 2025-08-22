@@ -7,7 +7,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 20085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 22085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -45,19 +45,19 @@ struct SensorConfig
 	uint8_t DirPin;
 	uint8_t PWMPin;
 	bool FlowEnabled;
-	double UPM;				// sent as upm X 1000
-	double PWM;
+	float UPM;				// sent as upm X 1000
+	float PWM;
 	uint32_t CommTime;
 	byte ControlType;		// flow control, 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan, 5 timed combo
 	uint32_t TotalPulses;
-	double TargetUPM;
-	double MeterCal;
-	double ManualAdjust;
-	double MaxPower;
-	double MinPower;
-	double Kp;
-	double Ki;
-	double Hz;
+	float TargetUPM;
+	float MeterCal;
+	float ManualAdjust;
+	float MaxPower;
+	float MinPower;
+	float Kp;
+	float Ki;
+	float Hz;
 };
 
 SensorConfig Sensor[2];
@@ -95,16 +95,15 @@ bool AutoOn = true;
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
-
-//reset function
-void(*resetFunc) (void) = 0;
+bool MCP23017_found = false;
+int16_t PressureReading = 0;
 
 bool GoodPins;	// pin configuration correct
 
 int TimedCombo(byte, bool);	// function prototype
 
-int16_t PressureReading = 0;
-bool MCP23017_found = false;
+//reset function
+void(*resetFunc) (void) = 0;
 
 bool EthernetConnected()
 {
@@ -150,7 +149,7 @@ void loop()
 		CheckPressure();
 	}
 
-	SendData();
+	SendComm();
 	//DebugTheIno();
 }
 
@@ -181,12 +180,10 @@ bool GoodCRC(byte Data[], byte Length)
 byte CRC(byte Chk[], byte Length, byte Start)
 {
 	byte Result = 0;
-	int CK = 0;
 	for (int i = Start; i < Length; i++)
 	{
-		CK += Chk[i];
+		Result += Chk[i];
 	}
-	Result = (byte)CK;
 	return Result;
 }
 
@@ -223,7 +220,7 @@ void CheckPressure()
 	PressureReading = 0;
 	if (MDL.PressurePin < NC)
 	{
-		PressureReading = analogRead(MDL.PressurePin);
+		PressureReading = analogRead(MDL.PressurePin);	// 10 bit, 0-1023
 	}
 }
 
@@ -232,11 +229,11 @@ void CheckPressure()
 //uint32_t LoopTmr;
 //byte ReadReset;
 //int MinMem = 2000;
-//double FlowHz;
-//double debug1;
-//volatile double debug2;
-//volatile double debug3;
-//double debug4;
+//float FlowHz;
+//float debug1;
+//volatile float debug2;
+//volatile float debug3;
+//float debug4;
 //
 //void DebugTheIno()
 //{

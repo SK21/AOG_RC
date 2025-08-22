@@ -136,8 +136,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 							Sensor[SensorID].Ki = 0;
 						}
 
-						Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
-						Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
+						Sensor[SensorID].MinPower = (float)(255.0 * Data[6] / 100.0);
+						Sensor[SensorID].MaxPower = (float)(255.0 * Data[7] / 100.0);
 
 						// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
 						Sensor[SensorID].Kp = pow(1.1, Data[8] - 120);
