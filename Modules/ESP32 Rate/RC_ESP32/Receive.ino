@@ -1,191 +1,8 @@
 
-const double KiMultiplier = 10;
-
-void SendComm()
-{
-    if (millis() - SendLast > SendTime)
-    {
-        SendLast = millis();
-
-        //PGN32400, Rate info from module to RC
-        //0     HeaderLo    144
-        //1     HeaderHi    126
-        //2     Mod/Sen ID          0-15/0-15
-        //3	    rate applied Lo 	1000 X actual
-        //4     rate applied Mid
-        //5	    rate applied Hi
-        //6	    acc.Quantity Lo		10 X actual
-        //7	    acc.Quantity Mid
-        //8     acc.Quantity Hi
-        //9     PWM Lo
-        //10    PWM Hi
-        //11    Status
-        //      bit 0   sensor connected
-        //12    Hz Lo
-        //13    Hz Hi
-        //14    CRC
-
-        byte Data[20];
-
-        for (int i = 0; i < MDL.SensorCount; i++)
-        {
-            Data[0] = 144;
-            Data[1] = 126;
-            Data[2] = BuildModSenID(MDL.ID, i);
-
-            // rate applied, 1000 X actual
-            uint32_t Applied = Sensor[i].UPM * 1000;
-            Data[3] = Applied;
-            Data[4] = Applied >> 8;
-            Data[5] = Applied >> 16;
-
-            // accumulated quantity, 10 X actual
-            if (Sensor[i].MeterCal > 0)
-            {
-                uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
-                Data[6] = Units;
-                Data[7] = Units >> 8;
-                Data[8] = Units >> 16;
-            }
-            else
-            {
-                Data[6] = 0;
-                Data[7] = 0;
-                Data[8] = 0;
-            }
-
-            //PWM
-            Data[9] = (int)Sensor[i].PWM;
-            Data[10] = (int)Sensor[i].PWM >> 8;
-
-
-            // status
-            Data[11] = 0;
-            if (millis() - Sensor[i].CommTime < 4000) Data[11] |= 0b00000001;
-
-            // Hz
-            uint16_t Hz = Sensor[i].Hz * 10;
-            Data[12] = Hz;
-            Data[13] = Hz >> 8;
-
-            // crc
-            Data[14] = CRC(Data, 14, 0);
-            bool Sent = false;
-
-            // ethernet
-            if (ChipFound)
-            {
-                if (Ethernet.linkStatus() == LinkON)
-                {
-                    UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-                    UDP_Ethernet.write(Data, 15);
-                    UDP_Ethernet.endPacket();
-                    Sent = true;
-                }
-            }
-
-            // wifi
-            if (!Sent)
-            {
-                UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-                UDP_Wifi.write(Data, 15);
-                UDP_Wifi.endPacket();
-            }
-        }
-
-        //PGN32401, module info from module to RC
-        //0     145
-        //1     126
-        //2     module ID
-        //3     Pressure Lo 
-        //4     Pressure Hi
-        //5     -
-        //6     -
-        //7     -
-        //8     -
-        //9     -
-        //10    InoType
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
-        //      bit 0   work switch
-        //      bit 1   wifi rssi < -80
-        //      bit 2	wifi rssi < -70
-        //      bit 3	wifi rssi < -65
-        //      bit 4   ethernet connected
-        //      bit 5   good pin configuration
-        //14    CRC
-
-        Data[0] = 145;
-        Data[1] = 126;
-        Data[2] = MDL.ID;
-        Data[3] = (byte)PressureReading;
-        Data[4] = (byte)(PressureReading >> 8);
-        Data[5] = 0;
-        Data[6] = 0;
-        Data[7] = 0;
-        Data[8] = 0;
-        Data[9] = 0;
-        Data[10] = InoType;
-        Data[11] = (byte)InoID;
-        Data[12] = (byte)(InoID >> 8);
-
-        // status
-        Data[13] = 0;
-        if (WorkSwitchOn) Data[13] |= 0b00000001;
-
-        if (WiFi.isConnected())
-        {
-            int8_t WifiStrength = WiFi.RSSI();
-            if (WifiStrength < -80)
-            {
-                Data[13] |= 0b00000010;
-            }
-            else if (WifiStrength < -70)
-            {
-                Data[13] |= 0b00000100;
-            }
-            else
-            {
-                Data[13] |= 0b00001000;
-            }
-        }
-
-        if (ChipFound)
-        {
-            if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
-        }
-
-        if (GoodPins) Data[13] |= 0b00100000;
-
-        Data[14] = CRC(Data, 14, 0);
-
-        bool Sent = false;
-        // ethernet
-        if (ChipFound)
-        {
-            if (Ethernet.linkStatus() == LinkON)
-            {
-
-                UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-                UDP_Ethernet.write(Data, 15);
-                UDP_Ethernet.endPacket();
-                Sent = true;
-            }
-        }
-
-        // wifi
-        if (!Sent)
-        {
-            UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-            UDP_Wifi.write(Data, 15);
-            UDP_Wifi.endPacket();
-        }
-    }
-}
-
 void ReceiveUDP()
 {
+    const uint8_t MaxReadBuffer = 100;	// bytes
+
     if (ChipFound)
     {
         if (Ethernet.linkStatus() == LinkON)
@@ -195,7 +12,7 @@ void ReceiveUDP()
             {
                 byte Data[MaxReadBuffer];
                 UDP_Ethernet.read(Data, MaxReadBuffer);
-                ParseData(Data, len);
+                ReadPGNs(Data, len);
             }
         }
     }
@@ -205,11 +22,11 @@ void ReceiveUDP()
     {
         byte Data[MaxReadBuffer];
         UDP_Wifi.read(Data, MaxReadBuffer);
-        ParseData(Data, len);
+        ReadPGNs(Data, len);
     }
 }
 
-void ParseData(byte Data[], uint16_t len)
+void ReadPGNs(byte Data[], uint16_t len)
 {
     uint16_t PGN = Data[1] << 8 | Data[0];
     byte PGNlength;
@@ -345,8 +162,8 @@ void ParseData(byte Data[], uint16_t len)
                             Sensor[SensorID].Ki = 0;
                         }
 
-                        Sensor[SensorID].MinPower = (double)(255.0 * Data[6] / 100.0);
-                        Sensor[SensorID].MaxPower = (double)(255.0 * Data[7] / 100.0);
+                        Sensor[SensorID].MinPower = (float)(255.0 * Data[6] / 100.0);
+                        Sensor[SensorID].MaxPower = (float)(255.0 * Data[7] / 100.0);
 
                         // 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
                         Sensor[SensorID].Kp = pow(1.1, Data[8] - 120);

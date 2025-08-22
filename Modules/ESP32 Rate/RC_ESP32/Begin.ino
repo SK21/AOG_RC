@@ -5,7 +5,7 @@ uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pin
 
 void DoSetup()
 {
-	uint8_t ErrorCount;
+	uint8_t ErrorCount = 0;
 
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
@@ -29,12 +29,19 @@ void DoSetup()
 	uint8_t mn = rest % 100;
 	uint16_t dy = rest / 100;
 
-	Serial.print("Module Version: v");
-	Serial.print(yr);
-	Serial.print(".");
-	Serial.print(mn);
-	Serial.print(".");
-	Serial.println(dy);
+	if (mn <= 12 && dy <= 31)
+	{
+		Serial.print("Firmware Version: v");
+		Serial.print(yr);
+		Serial.print(".");
+		Serial.print(mn);
+		Serial.print(".");
+		Serial.println(dy);
+	}
+	else
+	{
+		Serial.println("Firmware Version: invalid");
+	}
 
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
@@ -57,8 +64,7 @@ void DoSetup()
 			Wire.beginTransmission(ADS1115_Address);
 			Wire.write(0b00000000);	//Point to Conversion register
 			Wire.endTransmission();
-			Wire.requestFrom(ADS1115_Address, 2);
-			ADSfound = Wire.available();
+			ADSfound = (Wire.requestFrom(ADS1115_Address, 2) == 2);
 			Serial.print(".");
 			delay(500);
 			if (ErrorCount++ > 10) break;
@@ -132,6 +138,11 @@ void DoSetup()
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
 			break;
 		}
+
+		// pwm frequency change from default 5000 Hz to 490 Hz, required for some valves to work
+		// this matches a nano frequency and resolution
+		analogWriteFrequency(Sensor[i].FlowPin, 490);
+		analogWriteResolution(Sensor[i].FlowPin, 8);
 	}
 
 	// Relays
@@ -388,14 +399,11 @@ void LoadData()
 			EEPROM.get(300 + i * 80, Sensor[i]);
 		}
 		IsValid = ValidData();
-		if (!IsValid)
-		{
-			Serial.println("Stored settings not valid.");
-		}
 	}
 
 	if (!IsValid)
 	{
+		Serial.println("Stored settings not valid.");
 		LoadDefaults();
 		SaveData();
 	}
@@ -421,9 +429,6 @@ void LoadDefaults()
 	Serial.println("Loading default settings.");
 
 	// RC15
-	MDL.WorkPin = NC;
-	MDL.PressurePin = NC;
-
 	// default flow pins
 	Sensor[0].FlowPin = 17;
 	Sensor[0].IN1 = 32;
@@ -444,13 +449,23 @@ void LoadDefaults()
 	{
 		MDL.RelayControlPins[i] = NC;
 	}
+
+	// module settings
+	MDL.ID = 0;
 	MDL.SensorCount = 2;
+	MDL.InvertRelay = true;
+	MDL.InvertFlow = true;
+	MDL.IP0 = 192;
+	MDL.IP1 = 168;
+	MDL.IP2 = 1;
+	MDL.IP3 = 50;
 	MDL.RelayControl = 5;
-	MDL.WifiModeUseStation = false;
+	MDL.WorkPin = NC;
+	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = true;
-	MDL.InvertFlow = true;
-	MDL.InvertRelay = true;
+	MDL.PressurePin = NC;
+	MDL.WifiModeUseStation = false;
 }
 
 bool ValidData()

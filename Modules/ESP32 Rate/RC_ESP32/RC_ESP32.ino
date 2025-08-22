@@ -17,14 +17,15 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 23075;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 22085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
-const uint8_t MaxReadBuffer = 100;	// bytes
 const uint8_t MaxProductCount = 2;
+const uint8_t NC = 0xFF;		// Pin not connected
+const uint8_t ModStringLengths = 15;
+
 const uint16_t EEPROM_SIZE = 512;
-const uint8_t ModStringLengths = 20;
 
 // servo driver
 const uint8_t OutputEnablePin = 27;
@@ -34,7 +35,6 @@ const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
 const uint8_t PCF8574address = 0x20;
 const uint8_t W5500_SS = 5;		// W5500 SPI SS
-const uint8_t NC = 0xFF;		// Pin not connected
 
 struct ModuleConfig
 {
@@ -69,29 +69,27 @@ struct SensorConfig
 	uint8_t IN1;
 	uint8_t IN2;
 	bool FlowEnabled;
-	double UPM;				// sent as upm X 1000
-	double PWM;
+	float UPM;				// sent as upm X 1000
+	float PWM;
 	uint32_t CommTime;
 	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan, 5 timed combo
 	uint32_t TotalPulses;
-	double TargetUPM;
-	double MeterCal;
-	double ManualAdjust;
-	double MaxPower;
-	double MinPower;
-	double Kp;
-	double Ki;
-	double Hz;
+	float TargetUPM;
+	float MeterCal;
+	float ManualAdjust;
+	float MaxPower;
+	float MinPower;
+	float Kp;
+	float Ki;
+	float Hz;
 };
 
 SensorConfig Sensor[2];
 
-// network
-const uint16_t ListeningPort = 28888;
-const uint16_t DestinationPort = 29999;
-
 // ethernet
 EthernetUDP UDP_Ethernet;
+const uint16_t ListeningPort = 28888;
+const uint16_t DestinationPort = 29999;
 IPAddress Ethernet_DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
 bool ChipFound;
 
@@ -137,23 +135,16 @@ bool PCA9685_found = false;
 Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(PCA9685Address);
 
 // analog
-struct AnalogConfig
-{
-	int16_t AIN0;	// Pressure 0
-	int16_t AIN1;	
-	int16_t AIN2;
-	int16_t AIN3;
-};
-AnalogConfig AINs;
-
+int16_t PressureReading = 0;
 bool ADSfound = false;
 
 bool GoodPins;	// pin configuration correct
-bool WorkSwitchOn = false;
-bool WrkLast;
-bool WrkCurrent;
+
+int TimedCombo(byte, bool);	// function prototype
+void IRAM_ATTR ISR0();		// function prototype
+void IRAM_ATTR ISR1();
+
 uint8_t DisconnectCount = 0;
-int16_t PressureReading = 0;
 
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
@@ -189,10 +180,6 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	}
 }
 
-int TimedCombo(byte, bool);	// function prototype
-void IRAM_ATTR ISR0();		// function prototype
-void IRAM_ATTR ISR1();
-
 void setup()
 {
 	DoSetup();
@@ -218,8 +205,6 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		ReadAnalog();
-		CheckWorkSwitch();
-		CheckPressure();
 	}
 	SendComm();
 	server.handleClient();
@@ -253,50 +238,39 @@ bool GoodCRC(byte Data[], byte Length)
 byte CRC(byte Chk[], byte Length, byte Start)
 {
 	byte Result = 0;
-	int CK = 0;
 	for (int i = Start; i < Length; i++)
 	{
-		CK += Chk[i];
+		Result += Chk[i];
 	}
-	Result = (byte)CK;
 	return Result;
 }
 
-void CheckWorkSwitch()
+bool WorkPinOn()
 {
+	static bool WrkOn = false;
+	static bool WrkLast = false;
+
 	if (MDL.WorkPin < NC)
 	{
-		WrkCurrent = digitalRead(MDL.WorkPin);
+		bool WrkCurrent = digitalRead(MDL.WorkPin);
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)
 			{
-				if (WrkCurrent) WorkSwitchOn = !WorkSwitchOn;	// only cycle when going from low to high
+				if (WrkCurrent) WrkOn = !WrkOn;	// only cycle when going from low to high
 				WrkLast = WrkCurrent;
 			}
 		}
 		else
 		{
-			WorkSwitchOn = WrkCurrent;
+			WrkOn = WrkCurrent;
 		}
 	}
 	else
 	{
-		WorkSwitchOn = false;
+		WrkOn = false;
 	}
-}
-
-void CheckPressure()
-{
-	PressureReading = 0;
-	if (MDL.PressurePin < NC)
-	{
-		PressureReading = analogRead(MDL.PressurePin);
-	}
-	else if (ADSfound)
-	{
-		PressureReading = AINs.AIN0;
-	}
+	return WrkOn;
 }
 
 //bool State = false;
@@ -304,12 +278,12 @@ void CheckPressure()
 //uint32_t LastLoop;
 //byte ReadReset;
 //uint32_t MaxLoopTime;
-//double FlowHz;
-//double debug1;
-//double debug2;
-////double debug3;
-////double debug4;
-////double debug5;
+//float FlowHz;
+//float debug1;
+//float debug2;
+////float debug3;
+////float debug4;
+////float debug5;
 //
 //void Blink()
 //{
