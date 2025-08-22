@@ -3,7 +3,8 @@ void AdjustFlow()
 {
     for (int i = 0; i < MDL.SensorCount; i++)
     {
-        int PWM = constrain(Sensor[i].PWM, -255, 255);
+        float clamped = constrain(Sensor[i].PWM, -255.0, 255.0);
+        int PWM = (clamped >= 0.0) ? (int)(clamped + 0.5) : (int)(clamped - 0.5);
 
         switch (Sensor[i].ControlType)  
         {
