@@ -116,7 +116,6 @@ float PIDmotor(byte ID)
 	}
 	else
 	{
-		LastPWM[ID] = 0;
 		IntegralSum[ID] = 0;
 	}
 	return Result;
