@@ -59,10 +59,10 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "23-Jun-2025";
+        private static string cAppDate = "23-Aug-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
-        private static string cAppVersion = "4.0.4";
+        private static string cAppVersion = "4.0.5";
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;

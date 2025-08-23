@@ -14,6 +14,7 @@ namespace RateController.Classes
 {
     public class MapManager
     {
+        private const int MapRefreshSeconds = 2;
         private GMapOverlay AppliedOverlay;
         private System.Windows.Forms.Timer AppliedOverlayTimer;
         private bool cEditPolygons = false;
@@ -24,7 +25,7 @@ namespace RateController.Classes
         private Color cZoneColor;
         private double cZoneHectares;
         private string cZoneName = "Unnamed Zone";
-        private int[] cZoneRates = new int[4];
+        private double[] cZoneRates = new double[4];
         private GMapControl gmap;
         private GMapOverlay gpsMarkerOverlay;
         private bool isDragging = false;
@@ -35,7 +36,6 @@ namespace RateController.Classes
         private GMapOverlay tempMarkerOverlay;
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
-        const int MapRefreshSeconds = 2;
 
         public MapManager(FormStart main)
         {
@@ -271,9 +271,9 @@ namespace RateController.Classes
             return Result;
         }
 
-        public int GetRate(int RateID)
+        public double GetRate(int RateID)
         {
-            int Result = 0;
+            double Result = 0.0;
             if (RateID >= 0 && RateID < 4)
             {
                 Result = cZoneRates[RateID];
@@ -443,7 +443,7 @@ namespace RateController.Classes
             }
         }
 
-        public bool UpdateZone(string name, int Rt0, int Rt1, int Rt2, int Rt3, Color zoneColor)
+        public bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             // creating a zone
             bool Result = false;
@@ -462,7 +462,7 @@ namespace RateController.Classes
 
                 if (name == "") name = "Zone " + mapZones.Count.ToString();
 
-                var mapZone = new MapZone(name, polygon, new Dictionary<string, int>
+                var mapZone = new MapZone(name, polygon, new Dictionary<string, double>
                     {
                         { "ProductA", Rt0 },
                         { "ProductB", Rt1 },
@@ -486,7 +486,7 @@ namespace RateController.Classes
                     if (zone.Contains(cTractorPosition))
                     {
                         zone.Name = name;
-                        zone.Rates = new Dictionary<string, int>
+                        zone.Rates = new Dictionary<string, double>
                         {
                             { "ProductA", Rt0 },
                             { "ProductB", Rt1 },

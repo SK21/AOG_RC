@@ -14,7 +14,7 @@ namespace RateController.Classes
     {
         private FormStart mf;
 
-        public MapZone(string name, Polygon geometry, Dictionary<string, int> rates, Color zoneColor, FormStart mf)
+        public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor, FormStart mf)
         {
             Name = name;
             Geometry = geometry;
@@ -27,8 +27,7 @@ namespace RateController.Classes
 
         public string Name { get; set; }
 
-        public Dictionary<string, int> Rates { get; set; }
-
+        public Dictionary<string, double> Rates { get; set; }
         public Color ZoneColor { get; set; }
 
         public bool Contains(PointLatLng point)

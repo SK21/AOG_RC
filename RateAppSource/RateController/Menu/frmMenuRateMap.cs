@@ -59,7 +59,6 @@ namespace RateController.Menu
             //    frm.Show();
             //}
 
-
             Form frm = new frmCopyMap(mf);
             frm.ShowDialog();
             UpdateMap();
@@ -67,14 +66,14 @@ namespace RateController.Menu
 
         private void btnCreateZone_Click(object sender, EventArgs e)
         {
-            int RateA = 0;
-            int RateB = 0;
-            int RateC = 0;
-            int RateD = 0;
-            if (int.TryParse(tbP1.Text, out int p1)) RateA = p1;
-            if (int.TryParse(tbP2.Text, out int p2)) RateB = p2;
-            if (int.TryParse(tbP3.Text, out int p3)) RateC = p3;
-            if (int.TryParse(tbP4.Text, out int p4)) RateD = p4;
+            double RateA = 0;
+            double RateB = 0;
+            double RateC = 0;
+            double RateD = 0;
+            if (double.TryParse(tbP1.Text, out double p1)) RateA = p1;
+            if (double.TryParse(tbP2.Text, out double p2)) RateB = p2;
+            if (double.TryParse(tbP3.Text, out double p3)) RateC = p3;
+            if (double.TryParse(tbP4.Text, out double p4)) RateD = p4;
 
             if (!mf.Tls.Manager.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, GetSelectedColor()))
             {
@@ -116,12 +115,6 @@ namespace RateController.Menu
             saver.MapControl = mf.Tls.Manager.gmapObject;
             saver.LegendPanel = legendPanel;
             saver.SaveCompositeImageToFile(Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy"));
-        }
-
-        private void ckEdit_CheckedChanged(object sender, EventArgs e)
-        {
-            mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
-            EnableButtons();
         }
 
         private void ckEditPolygons_CheckedChanged(object sender, EventArgs e)
@@ -341,18 +334,6 @@ namespace RateController.Menu
             Props.SaveFormLocation(this);
         }
 
-        private void UpdateMap()
-        {
-            if (!pictureBox1.Controls.Contains(mf.Tls.Manager.gmapObject))
-            {
-                pictureBox1.Controls.Add(mf.Tls.Manager.gmapObject);
-            }
-            mf.Tls.Manager.LoadMap();
-            mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
-            mf.Tls.Manager.gmapObject.Refresh();
-        }
-
-
         private void mnuRateMap_Load(object sender, EventArgs e)
         {
             SubMenuLayout.SetFormLayout(this, MainMenu, null);
@@ -498,7 +479,7 @@ namespace RateController.Menu
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbP1.Text = form.ReturnValue.ToString("N0");
+                    tbP1.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
@@ -523,7 +504,7 @@ namespace RateController.Menu
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbP2.Text = form.ReturnValue.ToString("N0");
+                    tbP2.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
@@ -548,7 +529,7 @@ namespace RateController.Menu
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbP3.Text = form.ReturnValue.ToString("N0");
+                    tbP3.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
@@ -573,7 +554,7 @@ namespace RateController.Menu
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbP4.Text = form.ReturnValue.ToString("N0");
+                    tbP4.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }
@@ -595,10 +576,10 @@ namespace RateController.Menu
 
             mf.Tls.Manager.UpdateTargetRates();
             tbName.Text = mf.Tls.Manager.ZoneName;
-            tbP1.Text = mf.Tls.Manager.GetRate(0).ToString();
-            tbP2.Text = mf.Tls.Manager.GetRate(1).ToString();
-            tbP3.Text = mf.Tls.Manager.GetRate(2).ToString();
-            tbP4.Text = mf.Tls.Manager.GetRate(3).ToString();
+            tbP1.Text = mf.Tls.Manager.GetRate(0).ToString("N1");
+            tbP2.Text = mf.Tls.Manager.GetRate(1).ToString("N1");
+            tbP3.Text = mf.Tls.Manager.GetRate(2).ToString("N1");
+            tbP4.Text = mf.Tls.Manager.GetRate(3).ToString("N1");
             SetSelectedColor(mf.Tls.Manager.ZoneColor);
             if (!Props.UseMetric)
             {
@@ -620,6 +601,17 @@ namespace RateController.Menu
             ckEditPolygons.Checked = mf.Tls.Manager.EditModePolygons;
 
             Initializing = false;
+        }
+
+        private void UpdateMap()
+        {
+            if (!pictureBox1.Controls.Contains(mf.Tls.Manager.gmapObject))
+            {
+                pictureBox1.Controls.Add(mf.Tls.Manager.gmapObject);
+            }
+            mf.Tls.Manager.LoadMap();
+            mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
+            mf.Tls.Manager.gmapObject.Refresh();
         }
 
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)

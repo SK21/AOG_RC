@@ -176,9 +176,9 @@
             // 
             // tbP4
             // 
-            this.tbP4.Location = new System.Drawing.Point(343, 210);
+            this.tbP4.Location = new System.Drawing.Point(330, 210);
             this.tbP4.Name = "tbP4";
-            this.tbP4.Size = new System.Drawing.Size(67, 29);
+            this.tbP4.Size = new System.Drawing.Size(80, 29);
             this.tbP4.TabIndex = 10;
             this.tbP4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbP4.TextChanged += new System.EventHandler(this.tbName_TextChanged);
@@ -211,9 +211,9 @@
             // 
             // tbP3
             // 
-            this.tbP3.Location = new System.Drawing.Point(343, 164);
+            this.tbP3.Location = new System.Drawing.Point(330, 164);
             this.tbP3.Name = "tbP3";
-            this.tbP3.Size = new System.Drawing.Size(67, 29);
+            this.tbP3.Size = new System.Drawing.Size(80, 29);
             this.tbP3.TabIndex = 8;
             this.tbP3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbP3.TextChanged += new System.EventHandler(this.tbName_TextChanged);
@@ -230,9 +230,9 @@
             // 
             // tbP2
             // 
-            this.tbP2.Location = new System.Drawing.Point(343, 118);
+            this.tbP2.Location = new System.Drawing.Point(330, 118);
             this.tbP2.Name = "tbP2";
-            this.tbP2.Size = new System.Drawing.Size(67, 29);
+            this.tbP2.Size = new System.Drawing.Size(80, 29);
             this.tbP2.TabIndex = 6;
             this.tbP2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbP2.TextChanged += new System.EventHandler(this.tbName_TextChanged);
@@ -249,9 +249,9 @@
             // 
             // tbP1
             // 
-            this.tbP1.Location = new System.Drawing.Point(343, 72);
+            this.tbP1.Location = new System.Drawing.Point(330, 69);
             this.tbP1.Name = "tbP1";
-            this.tbP1.Size = new System.Drawing.Size(67, 29);
+            this.tbP1.Size = new System.Drawing.Size(80, 29);
             this.tbP1.TabIndex = 4;
             this.tbP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbP1.TextChanged += new System.EventHandler(this.tbName_TextChanged);

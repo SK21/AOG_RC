@@ -103,10 +103,10 @@ namespace RateController.Classes
         private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> attributeMapping)
         {
             string Name = "Unnamed Zone";
-            int RateA = 0;
-            int RateB = 0;
-            int RateC = 0;
-            int RateD = 0;
+            double RateA = 0.0;
+            double RateB = 0.0;
+            double RateC = 0.0;
+            double RateD = 0.0;
             Color ZoneColor = Color.Blue;
             MapZone NewZone = null;
 
@@ -116,10 +116,10 @@ namespace RateController.Classes
                 {
                     // loading RC shapefile
                     if (feature.Attributes.Exists("Name")) Name = feature.Attributes["Name"].ToString();
-                    if (feature.Attributes.Exists("ProductA") && int.TryParse(feature.Attributes["ProductA"]?.ToString(), out int ra)) RateA = ra;
-                    if (feature.Attributes.Exists("ProductB") && int.TryParse(feature.Attributes["ProductB"]?.ToString(), out int rb)) RateB = rb;
-                    if (feature.Attributes.Exists("ProductC") && int.TryParse(feature.Attributes["ProductC"]?.ToString(), out int rc)) RateC = rc;
-                    if (feature.Attributes.Exists("ProductD") && int.TryParse(feature.Attributes["ProductD"]?.ToString(), out int rd)) RateD = rd;
+                    if (feature.Attributes.Exists("ProductA") && double.TryParse(feature.Attributes["ProductA"]?.ToString(), out double ra)) RateA = ra;
+                    if (feature.Attributes.Exists("ProductB") && double.TryParse(feature.Attributes["ProductB"]?.ToString(), out double rb)) RateB = rb;
+                    if (feature.Attributes.Exists("ProductC") && double.TryParse(feature.Attributes["ProductC"]?.ToString(), out double rc)) RateC = rc;
+                    if (feature.Attributes.Exists("ProductD") && double.TryParse(feature.Attributes["ProductD"]?.ToString(), out double rd)) RateD = rd;
                     if (feature.Attributes.Exists("Color")) ZoneColor = ColorTranslator.FromHtml(feature.Attributes["Color"].ToString());
                 }
                 else
@@ -136,19 +136,19 @@ namespace RateController.Classes
                                     break;
 
                                 case "ProductA":
-                                    if (int.TryParse(feature.Attributes[kvp.Value].ToString(), out int ra)) RateA = ra;
+                                    if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double ra)) RateA = ra;
                                     break;
 
                                 case "ProductB":
-                                    if (int.TryParse(feature.Attributes[kvp.Value].ToString(), out int rb)) RateB = rb;
+                                    if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rb)) RateB = rb;
                                     break;
 
                                 case "ProductC":
-                                    if (int.TryParse(feature.Attributes[kvp.Value].ToString(), out int rc)) RateC = rc;
+                                    if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rc)) RateC = rc;
                                     break;
 
                                 case "ProductD":
-                                    if (int.TryParse(feature.Attributes[kvp.Value].ToString(), out int rd)) RateD = rd;
+                                    if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rd)) RateD = rd;
                                     break;
 
                                 case "Color":
@@ -159,7 +159,7 @@ namespace RateController.Classes
                     }
                 }
 
-                var rates = new Dictionary<string, int>
+                var rates = new Dictionary<string, double>
                 {
                 { "ProductA", RateA },
                 { "ProductB", RateB },
