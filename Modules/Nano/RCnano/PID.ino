@@ -2,14 +2,14 @@
 const uint32_t SampleTime = 50;				// ms
 
 const float Deadband = 0.015;				// error amount below which no adjustment is made
-const float BrakePoint = 0.25;				// error amount where adjustment rate changes from fast to slow
+const float BrakePoint = 0.35;				// error amount where adjustment rate changes from fast to slow
 const float FastAdjust = 100;				// fast adjustment factor
 const float SlowAdjust = 30;				// slow adjustment factor
 
 const float MaxMotorSlewRate = 2;			// slew rate limit. Max total pwm change per loop
-const float MaxMotorIntegral = 0.1;		// for a motor  Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time
+const float MaxMotorIntegral = 0.05;		// for a motor  Ex: 0.05 = max 1 pwm/sec change at 50 ms sample time
 
-const float MaxValveIntegral = 100;		// max total integral pwm adjustment
+const float MaxValveIntegral = 100;			// max total integral pwm adjustment
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
