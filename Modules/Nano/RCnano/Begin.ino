@@ -107,7 +107,15 @@ void DoSetup()
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
 			break;
 		}
+
+		#if defined(ARDUINO_TEENSY41)
+			// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
+			analogWriteFrequency(Sensor[i].PWMPin, PWM_FREQ);
+		#endif
 	}
+	#if defined(ESP32) || defined(ARDUINO_TEENSY41)
+		analogWriteResolution(PWM_BITS);
+	#endif
 
 	// Relays
 	switch (MDL.RelayControl)

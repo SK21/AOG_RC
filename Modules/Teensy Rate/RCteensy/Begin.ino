@@ -130,6 +130,7 @@ void DoSetup()
 		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
 		analogWriteFrequency(Sensor[i].PWMPin, 490);
 	}
+	analogWriteResolution(PWM_BITS);
 
 	// Relays
 	switch (MDL.RelayControl)

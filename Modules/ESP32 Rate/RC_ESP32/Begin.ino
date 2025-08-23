@@ -140,9 +140,8 @@ void DoSetup()
 		}
 
 		// pwm frequency change from default 5000 Hz to 490 Hz, required for some valves to work
-		// this matches a nano frequency and resolution
-		analogWriteFrequency(Sensor[i].FlowPin, 490);
-		analogWriteResolution(Sensor[i].FlowPin, 8);
+		analogWriteFrequency(Sensor[i].FlowPin, PWM_FREQ);
+		analogWriteResolution(Sensor[i].FlowPin,PWM_BITS);
 	}
 
 	// Relays

@@ -17,7 +17,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 22085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 23085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -35,6 +35,18 @@ const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
 const uint8_t PCF8574address = 0x20;
 const uint8_t W5500_SS = 5;		// W5500 SPI SS
+
+#if defined(ESP32)
+const int PWM_BITS = 12;
+const int PWM_FREQ = 490;
+#elif defined(ARDUINO_TEENSY41)
+const int PWM_BITS = 12;
+const int PWM_FREQ = 490;
+#else // Nano & similar AVR
+const int PWM_BITS = 8;
+const int PWM_FREQ = 490;  // Default
+uint8_t ditherCounter = 0; // for Nano dithering
+#endif
 
 struct ModuleConfig
 {
@@ -140,7 +152,7 @@ bool ADSfound = false;
 
 bool GoodPins;	// pin configuration correct
 
-int TimedCombo(byte, bool);	// function prototype
+float TimedCombo(byte, bool);	// function prototype
 void IRAM_ATTR ISR0();		// function prototype
 void IRAM_ATTR ISR1();
 

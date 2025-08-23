@@ -6,7 +6,7 @@ const float BrakePoint = 0.35;				// error amount where adjustment rate changes 
 const float FastAdjust = 100;				// fast adjustment factor
 const float SlowAdjust = 30;				// slow adjustment factor
 
-const float MaxMotorSlewRate = 2;			// slew rate limit. Max total pwm change per loop
+const float MaxMotorSlewRate = 6;			// slew rate limit. Max total pwm change per loop
 const float MaxMotorIntegral = 0.1;			// for a motor  Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time
 
 const float MaxValveIntegral = 100;			// max total integral pwm adjustment
@@ -71,7 +71,7 @@ void SetPWM()
 	}
 }
 
-int PIDmotor(byte ID)
+float PIDmotor(byte ID)
 {
 	float Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
@@ -119,10 +119,10 @@ int PIDmotor(byte ID)
 		LastPWM[ID] = 0;
 		IntegralSum[ID] = 0;
 	}
-	return (int)Result;
+	return Result;
 }
 
-int PIDvalve(byte ID)
+float PIDvalve(byte ID)
 {
 	float Result = 0;
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
@@ -170,10 +170,10 @@ int PIDvalve(byte ID)
 	}
 
 	LastPWM[ID] = Result;
-	return (int)Result;
+	return Result;
 }
 
-int TimedCombo(byte ID, bool ManualAdjust = false)
+float TimedCombo(byte ID, bool ManualAdjust = false)
 {
 	float Result = 0;
 	if ((Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0) || ManualAdjust)
@@ -256,5 +256,5 @@ int TimedCombo(byte ID, bool ManualAdjust = false)
 	{
 		IntegralSum[ID] = 0;
 	}
-	return (int)Result;
+	return Result;
 }

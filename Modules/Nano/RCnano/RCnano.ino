@@ -7,13 +7,24 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 22085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 23085;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins are not connected
 uint8_t MCP23017address;
 
+#if defined(ESP32)
+const int PWM_BITS = 12;
+const int PWM_FREQ = 490;
+#elif defined(ARDUINO_TEENSY41)
+const int PWM_BITS = 12;
+const int PWM_FREQ = 490;
+#else // Nano & similar AVR
+const int PWM_BITS = 8;
+const int PWM_FREQ = 490;  // Default
+uint8_t ditherCounter = 0; // for Nano dithering
+#endif
 
 // MCP23017 control pins, RC5, RC8	{ 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 }
 // MCP23017 control pins, RC12-3	{ 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 }
@@ -100,7 +111,7 @@ int16_t PressureReading = 0;
 
 bool GoodPins;	// pin configuration correct
 
-int TimedCombo(byte, bool);	// function prototype
+float TimedCombo(byte, bool);	// function prototype
 
 //reset function
 void(*resetFunc) (void) = 0;
