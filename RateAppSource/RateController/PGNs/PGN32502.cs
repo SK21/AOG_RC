@@ -3,16 +3,26 @@
     public class PGN32502
     {
         // PGN32502, Control settings from RC to module
-        // 0   246
-        // 1   126
-        // 2   Mod/Sen ID     0-15/0-15
-        // 3   Ki
-        // 4   -
-        // 5   -
-        // 6   MinAdjust
-        // 7   MaxAdjust
-        // 8   Scale Factor
-        // 9   CRC
+        // 0    246
+        // 1    126
+        // 2    Mod/Sen ID     0-15/0-15
+        // 3    Kp
+        // 4    Ki
+        // 5    MinAdjust
+        // 6    MaxAdjust
+        // 7    Deadband     %
+        // 8    Brakepoint   %
+        // 9    Slow Adjust  %
+        // 10   Slew Rate
+        // 11   Max Motor Integral      actual X 100
+        // 12   Max Valve Integral
+        // 13   Min Start
+        // 14   Adjust time Lo
+        // 15   Adjust time Hi
+        // 16   Pause time Lo
+        // 17   Pause time Hi
+        // 18   Sample time
+        // 19   CRC
 
         private const byte cByteCount = 10;
         private const byte HeaderHi = 126;

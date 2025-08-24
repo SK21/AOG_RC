@@ -327,7 +327,27 @@ namespace RateController.Menu
             HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
             HSintegral.Value = MainMenu.CurrentProduct.Integral;
             UpdateControlDisplay();
+            SetAdvanced();
             Initializing = false;
+        }
+
+        private void SetAdvanced()
+        {
+            if (ckAdvanced.Checked)
+            {
+                pnlAdvanced.Visible = true;
+                pnlMain.Top = 0;
+            }
+            else
+            {
+                pnlAdvanced.Visible = false;
+                pnlMain.Top = 115;
+            }
+        }
+
+        private void ckAdvanced_Click(object sender, EventArgs e)
+        {
+            SetAdvanced();
         }
     }
 }

@@ -752,6 +752,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\caret-circle-up.png" />
     <None Include="Resources\file-cloud.png" />
     <None Include="Resources\plus-square.png" />
     <None Include="Resources\minus-square.png" />
