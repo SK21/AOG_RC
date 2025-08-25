@@ -10,7 +10,7 @@
         // 4    Ki
         // 5    MinAdjust
         // 6    MaxAdjust
-        // 7    Deadband     %
+        // 7    Deadband     %          actual X 10
         // 8    Brakepoint   %
         // 9    Slow Adjust  %
         // 10   Slew Rate
@@ -24,7 +24,7 @@
         // 18   Sample time
         // 19   CRC
 
-        private const byte cByteCount = 10;
+        private const byte cByteCount = 20;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 246;
         private readonly clsProduct Prod;
@@ -41,13 +41,14 @@
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            Data[3] = (byte)Prod.Integral;
-            Data[4] = 0;
-            Data[5] = 0;
-            Data[6] = (byte)Prod.MinAdjust;
-            Data[7] = (byte)Prod.MaxAdjust;
-            Data[8] = (byte)Prod.ScalingFactor;
-            Data[9] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[3] = (byte)Prod.Proportional;
+            Data[4] = (byte)Prod.Integral;
+            Data[5] = (byte)Prod.MinAdjust;
+            Data[6] = (byte)Prod.MaxAdjust;
+            Data[7] = 0;
+            Data[8] = 0;
+
+            Data[19] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             Prod.mf.UDPmodules.SendUDPMessage(Data);
         }

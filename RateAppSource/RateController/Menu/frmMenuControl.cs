@@ -1,4 +1,5 @@
-﻿using RateController.Classes;
+﻿using AgOpenGPS;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.Drawing;
@@ -15,6 +16,10 @@ namespace RateController.Menu
         private frmMenu MainMenu;
         private FormStart mf;
         private Button[] RateButtons;
+        private System.Windows.Forms.TextBox[] Boxes;
+        private double[] BoxesMin;
+        private double[] BoxesMax;
+        private string[] BoxesFormat;
 
         public frmMenuControl(FormStart main, frmMenu menu)
         {
@@ -31,6 +36,39 @@ namespace RateController.Menu
                 btn.Click += Btn_Click;
                 btn.MouseDown += Btn_MouseDown;
                 btn.MouseUp += Btn_MouseUp;
+            }
+
+            Boxes = new System.Windows.Forms.TextBox[] { tbDeadband, tbBrakepoint, tbSlowAdj, tbSlewRate,
+                tbMaxMotorI, tbMaxValveI, tbMinStart, tbAdjustTm,tbPauseTm,tbSampleTime };
+
+            for (int i = 0; i < 8; i++)
+            {
+                Boxes[i].Tag = i;
+                Boxes[i].Enter += BoxEnter;
+                Boxes[i].TextChanged += BoxTextChanged;
+            }
+            BoxesMin = new double[] { 5, 5, 5, 1, 1, 0, 1, 10, 10, 10 };
+            BoxesMax = new double[] { 50, 50, 75, 50, 20, 255, 10, 1000, 1000, 255 };
+            BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N2", "N0", "N0", "N0", "N0", "N0" };
+        }
+
+        private void BoxTextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void BoxEnter(object sender, EventArgs e)
+        {
+            System.Windows.Forms.TextBox bx = (System.Windows.Forms.TextBox)sender;
+            double temp = 0;
+            if (double.TryParse(bx.Text.Trim(), out double vl)) temp = vl;
+            using (var form = new FormNumeric(BoxesMin[(int)bx.Tag], BoxesMax[(int)bx.Tag], temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    bx.Text = form.ReturnValue.ToString(BoxesFormat[(int)bx.Tag]);
+                }
             }
         }
 
@@ -158,8 +196,13 @@ namespace RateController.Menu
             {
                 MainMenu.CurrentProduct.MaxAdjust = HSmax.Value;
                 MainMenu.CurrentProduct.MinAdjust = HSmin.Value;
-                MainMenu.CurrentProduct.ScalingFactor = HSscaling.Value;
+                MainMenu.CurrentProduct.Proportional = HSscaling.Value;
                 MainMenu.CurrentProduct.Integral = HSintegral.Value;
+
+                if (byte.TryParse(tbDeadband.Text, out byte db)) MainMenu.CurrentProduct.Deadband = (byte)(db * 10);
+                if (byte.TryParse(tbBrakepoint.Text, out byte bp)) MainMenu.CurrentProduct.Brakepoint = bp;
+                if (byte.TryParse(tbSlowAdj.Text, out byte sa)) MainMenu.CurrentProduct.SlowAdjust = sa;
+
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
@@ -176,7 +219,7 @@ namespace RateController.Menu
         {
             HSmax.Value = Props.MaxAdjustDefault;
             HSmin.Value = Props.MinAdjustDefault;
-            HSscaling.Value = Props.ScalingDefault;
+            HSscaling.Value = Props.ProportionalDefault;
             HSintegral.Value = Props.IntegralDefault;
         }
 
@@ -324,7 +367,7 @@ namespace RateController.Menu
 
             HSmax.Value = MainMenu.CurrentProduct.MaxAdjust;
             HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
-            HSscaling.Value = MainMenu.CurrentProduct.ScalingFactor;
+            HSscaling.Value = MainMenu.CurrentProduct.Proportional;
             HSintegral.Value = MainMenu.CurrentProduct.Integral;
             UpdateControlDisplay();
             SetAdvanced();

@@ -110,14 +110,24 @@ namespace RateController.Classes
 
         #endregion pressure calibration
 
-        #region // flow adjustment defaults
+        #region  flow adjustment defaults
 
         public static readonly int IntegralDefault = 0;
         public static readonly int MaxAdjustDefault = 100;
         public static readonly int MinAdjustDefault = 0;
-        public static readonly int ScalingDefault = 50;
+        public static readonly int ProportionalDefault = 50;
+        public static readonly byte DeadbandDefault = 15;
+        public static readonly byte BrakepointDefault = 35;
+        public static readonly byte SlowAdjustDefault = 30;
+        public static readonly byte SlewRateDefault = 6;
+        public static readonly byte MaxMotorIntegralDefault = 5;
+        public static readonly byte MaxValveIntegralDefault = 100;
+        public static readonly byte MinStartDefault = 3;
+        public static readonly int AdjustTimeDefault = 80;
+        public static readonly int PauseTimeDefault = 400;
+        public static readonly byte SampleTimeDefault = 50;
 
-        #endregion // flow adjustment defaults
+        #endregion 
 
         public static event EventHandler JobChanged;
 
@@ -1029,7 +1039,7 @@ namespace RateController.Classes
 
                         P3.MaxAdjust = P0.MaxAdjust;
                         P3.MinAdjust = P0.MinAdjust;
-                        P3.ScalingFactor = P0.ScalingFactor;
+                        P3.Proportional = P0.Proportional;
 
                         mf.Products.Item(2).BumpButtons = false;
                         P0.ModuleID = 6;

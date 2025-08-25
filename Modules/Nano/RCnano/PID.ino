@@ -13,7 +13,7 @@ const float MaxValveIntegral = 100;			// max total integral pwm adjustment
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
-const float MinStart = 0.03;				// minimum start ratio. Used to quickly increase rate from 0. 
+const float MinStart = 0.03;				// minimum start ratio. Used to quickly increase rate from 0. Skip pause time.
 uint32_t TimedAdjustTime = 80;				// milliseconds
 uint32_t TimedPauseTime = 400;				// milliseconds
 

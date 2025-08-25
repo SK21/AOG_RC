@@ -26,11 +26,8 @@ namespace RateController
         private double cHectaresPerMinute;
         private double cHours1;
         private double cHours2;
-        private int cIntegral;
         private int cManualPWM;
-        private int cMaxAdjust;
         private double cMeterCal = 0;
-        private int cMinAdjust;
         private double cMinUPM;
         private double cMinUPMbySpeed;
         private int cModID;
@@ -44,7 +41,6 @@ namespace RateController
         private string cQuantityDescription = "Lbs";
         private double cRateAlt = 100;
         private double cRateSet = 0;
-        private int cScalingFactor;
         private int cSenID;
         private int cSerialPort;
         private int cShiftRange = 4;
@@ -58,6 +54,25 @@ namespace RateController
         private bool cUseOffRateAlarm;
         private PGN32502 ModuleControlSettings;
         private Stopwatch UpdateStopWatch;
+
+        #region Control Settings
+
+        private int cAdjustTime;
+        private byte cBrakepoint;
+        private byte cDeadband;
+        private int cIntegral;
+        private int cMaxAdjust;
+        private byte cMaxMotorIntegral;
+        private byte cMaxValveIntegral;
+        private int cMinAdjust;
+        private byte cMinStart;
+        private int cPauseTime;
+        private int cProportional;
+        private byte cSampleTime;
+        private byte cSlewRate;
+        private byte cSlowAdjust;
+
+        #endregion Control Settings
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -78,6 +93,133 @@ namespace RateController
 
             UpdateStopWatch = new Stopwatch();
         }
+
+        #region Control edit
+
+        public int AdjustTime
+        {
+            get { return cAdjustTime; }
+            set
+            {
+                if (value >= 10 && value <= 1000) cAdjustTime = value;
+            }
+        }
+
+        public byte Brakepoint
+        {
+            get { return cBrakepoint; }
+            set
+            {
+                if (value >= 5 && value <= 50) cBrakepoint = value;
+            }
+        }
+
+        public byte Deadband
+        {
+            get { return cDeadband; }
+            set
+            {
+                if (value >= 5 && value <= 50) cDeadband = value;   // actual X 10
+            }
+        }
+
+        public int Integral
+        {
+            get { return cIntegral; }
+            set
+            {
+                if (value >= 0 && value <= 100) cIntegral = value;
+            }
+        }
+
+        public int MaxAdjust
+        {
+            get { return cMaxAdjust; }
+            set
+            {
+                if (value >= 0 && value <= 100) cMaxAdjust = value;
+            }
+        }
+
+        public byte MaxMotorIntegral
+        {
+            get { return cMaxMotorIntegral; }
+            set
+            {
+                if (value >= 1 && value <= 20) cMaxMotorIntegral = value;   // actual X 100
+            }
+        }
+
+        public byte MaxValveIntegral
+        {
+            get { return cMaxValveIntegral; }
+            set { cMaxValveIntegral = value; }
+        }
+
+        public int MinAdjust
+        {
+            get { return cMinAdjust; }
+            set
+            {
+                if (value >= 0 && value <= 100) cMinAdjust = value;
+            }
+        }
+
+        public byte MinStart
+        {
+            get { return cMinStart; }
+            set
+            {
+                if (value >= 1 && value <= 10) cMinStart = value;
+            }
+        }
+
+        public int PauseTime
+        {
+            get { return cPauseTime; }
+            set
+            {
+                if (value >= 10 && value <= 1000) cPauseTime = value;
+            }
+        }
+
+        public int Proportional
+        {
+            get { return cProportional; }
+            set
+            {
+                if (value >= 0 && value <= 100) cProportional = value;
+            }
+        }
+
+        public byte SampleTime
+        {
+            get { return cSampleTime; }
+            set
+            {
+                if (value >= 10 && value <= 255) cSampleTime = value;
+            }
+        }
+
+        public byte SlewRate
+        {
+            get { return cSlewRate; }
+            set
+            {
+                if (value >= 1 && value <= 50) cSlewRate = value;
+            }
+        }
+
+        public byte SlowAdjust
+        {
+            get { return cSlowAdjust; }
+            set
+            {
+                if (value >= 5 && value <= 75) cSlowAdjust = value;
+            }
+        }
+
+        #endregion Control edit
 
         public ApplicationMode AppMode
         {
@@ -198,15 +340,6 @@ namespace RateController
         public int ID
         { get { return cProductID; } }
 
-        public int Integral
-        {
-            get { return cIntegral; }
-            set
-            {
-                if (value >= 0 && value <= 100) cIntegral = value;
-            }
-        }
-
         public int ManualPWM
         {
             get { return cManualPWM; }
@@ -228,15 +361,6 @@ namespace RateController
             }
         }
 
-        public int MaxAdjust
-        {
-            get { return cMaxAdjust; }
-            set
-            {
-                if (value >= 0 && value <= 100) cMaxAdjust = value;
-            }
-        }
-
         public double MeterCal
         {
             get { return cMeterCal; }
@@ -246,15 +370,6 @@ namespace RateController
                 {
                     cMeterCal = value;
                 }
-            }
-        }
-
-        public int MinAdjust
-        {
-            get { return cMinAdjust; }
-            set
-            {
-                if (value >= 0 && value <= 100) cMinAdjust = value;
             }
         }
 
@@ -408,15 +523,6 @@ namespace RateController
             set
             {
                 if (value >= 0 && value < 50001) cRateSet = value;
-            }
-        }
-
-        public int ScalingFactor
-        {
-            get { return cScalingFactor; }
-            set
-            {
-                if (value >= 0 && value <= 100) cScalingFactor = value;
             }
         }
 
@@ -627,22 +733,44 @@ namespace RateController
             if (int.TryParse(Props.GetProp("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
             if (double.TryParse(Props.GetProp("Hours1" + IDname), out double h1)) cHours1 = h1;
             if (double.TryParse(Props.GetProp("Hours2" + IDname), out double h2)) cHours2 = h2;
-
             if (Enum.TryParse(Props.GetProp("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
 
-            if (int.TryParse(Props.GetProp("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
-            if (int.TryParse(Props.GetProp("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
-            if (int.TryParse(Props.GetProp("Scaling" + IDname), out int sc)) cScalingFactor = sc;
+            #region Control Settings
 
+            if (int.TryParse(Props.GetProp("Proportional" + IDname), out int sc)) cProportional = sc;
             if (int.TryParse(Props.GetProp("Integral" + IDname), out int IG)) cIntegral = IG;
+            if (int.TryParse(Props.GetProp("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
+            if (int.TryParse(Props.GetProp("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
+            if (byte.TryParse(Props.GetProp("Deadband" + IDname), out byte db)) cDeadband = db;
+            if (byte.TryParse(Props.GetProp("Brakepoint" + IDname), out byte bp)) cBrakepoint = bp;
+            if (byte.TryParse(Props.GetProp("SlowAdjust" + IDname), out byte sa)) cSlowAdjust = sa;
+            if (byte.TryParse(Props.GetProp("SlewRate" + IDname), out byte slew)) cSlewRate = slew;
+            if (byte.TryParse(Props.GetProp("MaxMotorIntegral" + IDname), out byte mm)) cMaxMotorIntegral = mm;
+            if (byte.TryParse(Props.GetProp("MaxValveIntegral" + IDname), out byte mv)) cMaxValveIntegral = mv;
+            if (byte.TryParse(Props.GetProp("MinStart" + IDname), out byte min)) cMinStart = min;
+            if (int.TryParse(Props.GetProp("AdjustTime" + IDname), out int adj)) cAdjustTime = adj;
+            if (int.TryParse(Props.GetProp("PauseTime" + IDname), out int ps)) cPauseTime = ps;
+            if (byte.TryParse(Props.GetProp("SampleTime" + IDname), out byte st)) cSampleTime = st;
+
+            #endregion Control Settings
         }
 
         public void LoadDefaultControlSettings()
         {
             cMaxAdjust = Props.MaxAdjustDefault;
             cMinAdjust = Props.MinAdjustDefault;
-            cScalingFactor = Props.ScalingDefault;
+            cProportional = Props.ProportionalDefault;
             cIntegral = Props.IntegralDefault;
+            cDeadband = Props.DeadbandDefault;
+            cBrakepoint = Props.BrakepointDefault;
+            cSlowAdjust = Props.SlowAdjustDefault;
+            cSlewRate = Props.SlewRateDefault;
+            cMaxMotorIntegral = Props.MaxMotorIntegralDefault;
+            cMaxValveIntegral = Props.MaxValveIntegralDefault;
+            cMinStart = Props.MinStartDefault;
+            cAdjustTime = Props.AdjustTimeDefault;
+            cPauseTime = Props.PauseTimeDefault;
+            cSampleTime = Props.SampleTimeDefault;
         }
 
         public double MinUPMinUse()
@@ -845,11 +973,24 @@ namespace RateController
 
             Props.SetProp("AppMode" + IDname, cAppMode.ToString());
 
-            Props.SetProp("MaxAdjust" + IDname, cMaxAdjust.ToString());
-            Props.SetProp("MinAdjust" + IDname, cMinAdjust.ToString());
-            Props.SetProp("Scaling" + IDname, cScalingFactor.ToString());
+            #region Control Settings
 
+            Props.SetProp("Proportional" + IDname, cProportional.ToString());
             Props.SetProp("Integral" + IDname, cIntegral.ToString());
+            Props.SetProp("MinAdjust" + IDname, cMinAdjust.ToString());
+            Props.SetProp("MaxAdjust" + IDname, cMaxAdjust.ToString());
+            Props.SetProp("Deadband" + IDname, cDeadband.ToString());
+            Props.SetProp("Brakepoint" + IDname, cBrakepoint.ToString());
+            Props.SetProp("SlowAdjust" + IDname, cSlowAdjust.ToString());
+            Props.SetProp("SlewRate" + IDname, cSlewRate.ToString());
+            Props.SetProp("MaxMotorIntegral" + IDname, cMaxMotorIntegral.ToString());
+            Props.SetProp("MaxValveIntegral" + IDname, cMaxValveIntegral.ToString());
+            Props.SetProp("MinStart" + IDname, cMinStart.ToString());
+            Props.SetProp("AdjustTime" + IDname, cAdjustTime.ToString());
+            Props.SetProp("PauseTime" + IDname, cPauseTime.ToString());
+            Props.SetProp("SampleTime" + IDname, cSampleTime.ToString());
+
+            #endregion Control Settings
         }
 
         public void SendPID()
