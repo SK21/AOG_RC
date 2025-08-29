@@ -58,7 +58,14 @@ namespace RateController.Classes
             get { return cBrakePoint; }
             set
             {
-                if (value >= 0 && value <= 75) cBrakePoint = value;
+                if (value >= 0 && value <= 75)
+                {
+                    cBrakePoint = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -68,7 +75,14 @@ namespace RateController.Classes
             get { return cDeadband; }
             set
             {
-                if (value >= 0 && value <= 50) cDeadband = value;
+                if (value >= 0 && value <= 50)
+                {
+                    cDeadband = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -87,7 +101,14 @@ namespace RateController.Classes
             get { return cMaxMotorIntegral; }
             set
             {
-                if (value >= 0 && value <= 100) cMaxMotorIntegral = value;
+                if (value >= 0 && value <= 100)
+                {
+                    cMaxMotorIntegral = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -110,7 +131,14 @@ namespace RateController.Classes
             get { return cPIDslowAdjust; }
             set
             {
-                if (value >= 0 && value <= 100) cPIDslowAdjust = value;
+                if (value >= 0 && value <= 100)
+                {
+                    cPIDslowAdjust = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -119,7 +147,14 @@ namespace RateController.Classes
             get { return cPIDtime; }
             set
             {
-                if (value >= 10 && value <= 100) cPIDtime = value;
+                if (value >= 10 && value <= 100)
+                {
+                    cPIDtime = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -128,7 +163,14 @@ namespace RateController.Classes
             get { return cPulseMaxHz; }
             set
             {
-                if (value >= 10 && value <= 10000) cPulseMaxHz = value;
+                if (value >= 10 && value <= 10000)
+                {
+                    cPulseMaxHz = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -138,7 +180,86 @@ namespace RateController.Classes
             get { return cPulseMinHz; }
             set
             {
-                if (value >= 5) cPulseMinHz = value;
+                if (value >= 5)
+                {
+                    cPulseMinHz = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public byte PulseSampleSize
+        {
+            get { return cPulseSampleSize; }
+            set
+            {
+                if (value >= 4 && value <= 30)
+                {
+                    cPulseSampleSize = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public byte SlewRate
+        {
+            get { return cSlewRate; }
+            set
+            {
+                if (value >= 1 && value <= 20)
+                {
+                    cSlewRate = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public UInt16 TimedAdjust
+        {
+            get { return cTimedAdjust; }
+            set
+            {
+                if (value >= 20 && value <= 2000)
+                {
+                    cTimedAdjust = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public byte TimedMinStart
+        {
+            // actual X 100
+            get { return cTimedMinStart; }
+            set { cTimedMinStart = value; }
+        }
+
+        public UInt16 TimedPause
+        {
+            get { return cTimedPause; }
+
+            set
+            {
+                if (value >= 20 && value <= 2000)
+                {
+                    cTimedPause = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -161,5 +282,25 @@ namespace RateController.Classes
             cSlewRate = 6;
             cPIDslowAdjust = 30;
         }
+
+        public void Load()
+        {
+            if (byte.TryParse(Props.GetProp("BrakePoint" + cName), out byte T)) cBrakePoint = T;
+            if (byte.TryParse(Props.GetProp("DeadBand" + cName), out byte sw)) cDeadband = sw;
+            if (byte.TryParse(Props.GetProp("KP" + cName), out byte kp)) cKP = kp;
+            if (byte.TryParse(Props.GetProp("KI" + cName), out byte ki)) cKI = ki;
+            if (byte.TryParse(Props.GetProp("MaxMotorIntegral" + cName), out byte mi)) cMaxMotorIntegral = mi;
+            if (byte.TryParse(Props.GetProp("MaxPWM" + cName), out byte pwm)) cMaxPWM = pwm;
+        }
+
+        public void Save()
+        {
+            // Should only be called from clsRelays. Need to run sub
+            // BuildPowerRelays on change.
+            Props.SetProp("RelayType" + cName, cType.ToString());
+            Props.SetProp("RelaySection" + cName, cSectionID.ToString());
+            Props.SetProp("RelaySwitch" + cName, cSwitchID.ToString());
+        }
+
     }
 }
