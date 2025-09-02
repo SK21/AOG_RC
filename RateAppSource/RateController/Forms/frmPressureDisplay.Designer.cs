@@ -88,8 +88,10 @@
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmPressureDisplay_FormClosed);
             this.Load += new System.EventHandler(this.frmPressureDisplay_Load);
+            this.LocationChanged += new System.EventHandler(this.frmPressureDisplay_LocationChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmPressureDisplay_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

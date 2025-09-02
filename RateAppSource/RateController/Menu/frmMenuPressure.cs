@@ -218,9 +218,9 @@ namespace RateController.Menu
             Initializing = true;
 
             tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5).ToString("N0");
-            tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 1).ToString("N1");
+            tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 1).ToString("N2");
             tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 2).ToString("N0");
-            tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 3).ToString("N1");
+            tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 3).ToString("N2");
             tbZeroReading.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 4).ToString("N0");
 
             ckPressure.Checked = Props.ShowPressure;
@@ -233,7 +233,7 @@ namespace RateController.Menu
         {
             double Reading = mf.ModulesStatus.PressureReading(cbModules.SelectedIndex);
             lbRaw.Text = Reading.ToString("N0");
-            lbPressureReading.Text = Props.PressureReading(cbModules.SelectedIndex, Reading).ToString("N1");
+            lbPressureReading.Text = Props.PressureReading(cbModules.SelectedIndex, Reading).ToString("N2");
         }
     }
 }

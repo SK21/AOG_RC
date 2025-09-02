@@ -110,24 +110,25 @@ namespace RateController.Classes
 
         #endregion pressure calibration
 
-        #region  flow adjustment defaults
+        #region flow adjustment defaults
 
+        public static readonly int AdjustTimeDefault = 80;
+        public static readonly byte BrakepointDefault = 35;
+        public static readonly byte DeadbandDefault = 15;
         public static readonly int IntegralDefault = 0;
         public static readonly int MaxAdjustDefault = 100;
-        public static readonly int MinAdjustDefault = 0;
-        public static readonly int ProportionalDefault = 50;
-        public static readonly byte DeadbandDefault = 15;
-        public static readonly byte BrakepointDefault = 35;
-        public static readonly byte SlowAdjustDefault = 30;
-        public static readonly byte SlewRateDefault = 6;
         public static readonly byte MaxMotorIntegralDefault = 5;
         public static readonly byte MaxValveIntegralDefault = 100;
+        public static readonly int MinAdjustDefault = 0;
         public static readonly byte MinStartDefault = 3;
-        public static readonly int AdjustTimeDefault = 80;
         public static readonly int PauseTimeDefault = 400;
+        public static readonly int ProportionalDefault = 50;
         public static readonly byte SampleTimeDefault = 50;
+        public static readonly byte SlewRateDefault = 6;
+        public static readonly byte SlowAdjustDefault = 30;
+        #endregion flow adjustment defaults
 
-        #endregion 
+
 
         public static event EventHandler JobChanged;
 
@@ -654,6 +655,26 @@ namespace RateController.Classes
             return Result;
         }
 
+        public static bool CheckOnScreen(Form form, bool MakeOnScreen = true)
+        {
+            bool IsOnScreen = false;
+            try
+            {
+                // Create rectangle
+                Rectangle formRectangle = new Rectangle(form.Left, form.Top, form.Width, form.Height);
+
+                // Test
+                IsOnScreen = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle));
+
+                if (!IsOnScreen && MakeOnScreen) CenterForm(form);
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/CheckOnScreen: " + ex.Message);
+            }
+            return IsOnScreen;
+        }
+
         public static void DisplayPressure()
         {
             Form fs = IsFormOpen("frmPressureDisplay");
@@ -753,9 +774,16 @@ namespace RateController.Classes
 
         public static Form IsFormOpen(string Name, bool SetFocus = true)
         {
-            Form frm = Application.OpenForms[Name];
-            if (frm != null && SetFocus) frm.Focus();
-            return frm;
+            Form Result = null;
+            foreach (Form frm in Application.OpenForms)
+            {
+                if (frm.Name == Name)
+                {
+                    Result = frm;
+                    if (SetFocus) frm.Focus();
+                }
+            }
+            return Result;
         }
 
         public static bool IsPathSafeToDelete(string candidatePath)
@@ -1172,24 +1200,6 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 WriteErrorLog("Props/CenterForm: " + ex.Message);
-            }
-        }
-
-        private static void CheckOnScreen(Form form)
-        {
-            try
-            {
-                // Create rectangle
-                Rectangle formRectangle = new Rectangle(form.Left, form.Top, form.Width, form.Height);
-
-                // Test
-                bool IsOn = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle));
-
-                if (!IsOn) CenterForm(form);
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/CheckOnScreen: " + ex.Message);
             }
         }
 

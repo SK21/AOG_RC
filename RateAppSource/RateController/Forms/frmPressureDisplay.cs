@@ -7,14 +7,24 @@ namespace RateController
 {
     public partial class frmPressureDisplay : Form
     {
+        private bool IsManuallyMoved = false;
         private FormStart mf;
         private Point MouseDownLocation;
+        private Point Offset;
+        private bool PinForm = false;
 
         public frmPressureDisplay(FormStart CallingForm)
         {
             InitializeComponent();
             mf = CallingForm;
             mf.ColorChanged += Mf_ColorChanged;
+
+            if (PinToLargeScreen())
+            {
+                Offset = new Point(this.Location.X - mf.Lscrn.Location.X, this.Location.Y - mf.Lscrn.Location.Y);
+                PinForm = true;
+            }
+            if (Props.IsFormOpen("frmLargeScreen", false) != null) mf.Lscrn.LocationChanged += TrackLscrn;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -47,6 +57,31 @@ namespace RateController
             UpdateForm();
         }
 
+        private void frmPressureDisplay_LocationChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Props.IsFormOpen("frmLargeScreen", false) != null)
+                {
+                    if (PinForm && IsManuallyMoved)
+                    {
+                        Offset = new Point(this.Location.X - mf.Lscrn.Location.X, this.Location.Y - mf.Lscrn.Location.Y);
+                    }
+
+                    PinForm = PinToLargeScreen();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmPressureDisplay/locationChanged " + ex.Message);
+            }
+        }
+
+        private void frmPressureDisplay_MouseUp(object sender, MouseEventArgs e)
+        {
+            IsManuallyMoved = false;
+        }
+
         private void Mf_ColorChanged(object sender, EventArgs e)
         {
             lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
@@ -60,12 +95,52 @@ namespace RateController
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left)
+            {
+                this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+                IsManuallyMoved = true;
+            }
+        }
+
+        private bool PinToLargeScreen()
+        {
+            bool Result = false;
+            if (Props.IsFormOpen("frmLargeScreen", false) != null)
+            {
+                // only pin to Lscrn if this screen is intentionally over Lscrn
+                Rectangle RecThis = this.Bounds;
+                Rectangle RecLS = mf.Lscrn.Bounds;
+                Result = RecThis.IntersectsWith(RecLS);
+                this.Owner = mf.Lscrn;
+            }
+            return Result;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateForm();
+        }
+
+        private void TrackLscrn(object sender, EventArgs e)
+        {
+            if (PinForm)
+            {
+                Point desiredLocation = new Point(mf.Lscrn.Location.X + Offset.X, mf.Lscrn.Location.Y + Offset.Y);
+
+                // Only update if location has changed
+                if (this.Location != desiredLocation)
+                {
+                    Point oldLocation = this.Location;
+                    this.Location = desiredLocation;
+
+                    // Revert if new location is off-screen
+                    if (!Props.CheckOnScreen(this, false)) this.Location = oldLocation;
+
+                    // refresh
+                    this.TopMost = false;
+                    this.TopMost = true;
+                }
+            }
         }
 
         private void UpdateForm()
@@ -75,7 +150,7 @@ namespace RateController
             int ModuleID = mf.Products.Items[mf.CurrentProduct()].ModuleID;
             double RawData = mf.ModulesStatus.PressureReading(ModuleID);
             Pressure = Props.PressureReading(ModuleID, RawData);
-            lbPressureValue.Text = Pressure.ToString("N0");
+            lbPressureValue.Text = Pressure.ToString("N2");
         }
     }
 }
