@@ -40,6 +40,7 @@
             this.tbSimSpeed = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.ckSimSpeed = new System.Windows.Forms.CheckBox();
+            this.ckRateDisplay = new System.Windows.Forms.CheckBox();
             this.gbDisplay.SuspendLayout();
             this.gbOther.SuspendLayout();
             this.SuspendLayout();
@@ -82,14 +83,15 @@
             // 
             // gbDisplay
             // 
+            this.gbDisplay.Controls.Add(this.ckRateDisplay);
             this.gbDisplay.Controls.Add(this.ckReset);
             this.gbDisplay.Controls.Add(this.ckLargeScreen);
             this.gbDisplay.Controls.Add(this.ckSingle);
             this.gbDisplay.Controls.Add(this.ckTransparent);
             this.gbDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbDisplay.Location = new System.Drawing.Point(51, 140);
+            this.gbDisplay.Location = new System.Drawing.Point(51, 85);
             this.gbDisplay.Name = "gbDisplay";
-            this.gbDisplay.Size = new System.Drawing.Size(418, 144);
+            this.gbDisplay.Size = new System.Drawing.Size(418, 199);
             this.gbDisplay.TabIndex = 163;
             this.gbDisplay.TabStop = false;
             this.gbDisplay.Text = "Display";
@@ -100,7 +102,7 @@
             this.ckReset.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckReset.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckReset.Location = new System.Drawing.Point(241, 89);
+            this.ckReset.Location = new System.Drawing.Point(241, 88);
             this.ckReset.Name = "ckReset";
             this.ckReset.Size = new System.Drawing.Size(164, 34);
             this.ckReset.TabIndex = 333;
@@ -143,7 +145,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(22, 89);
+            this.ckTransparent.Location = new System.Drawing.Point(22, 88);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(164, 34);
             this.ckTransparent.TabIndex = 119;
@@ -222,6 +224,20 @@
             this.ckSimSpeed.UseVisualStyleBackColor = true;
             this.ckSimSpeed.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
             // 
+            // ckRateDisplay
+            // 
+            this.ckRateDisplay.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckRateDisplay.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckRateDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckRateDisplay.Location = new System.Drawing.Point(22, 148);
+            this.ckRateDisplay.Name = "ckRateDisplay";
+            this.ckRateDisplay.Size = new System.Drawing.Size(164, 34);
+            this.ckRateDisplay.TabIndex = 334;
+            this.ckRateDisplay.Text = "Rate";
+            this.ckRateDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRateDisplay.UseVisualStyleBackColor = true;
+            this.ckRateDisplay.CheckedChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
+            // 
             // frmMenuDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,5 +274,6 @@
         private System.Windows.Forms.TextBox tbSimSpeed;
         private System.Windows.Forms.Label lbSimUnits;
         private System.Windows.Forms.CheckBox ckSimSpeed;
+        private System.Windows.Forms.CheckBox ckRateDisplay;
     }
 }

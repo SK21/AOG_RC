@@ -1,4 +1,5 @@
-﻿using RateController.Language;
+﻿using RateController.Forms;
+using RateController.Language;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -92,10 +93,12 @@ namespace RateController.Classes
         private static bool cUseMetric;
         private static bool cUseTransparent = false;
         private static bool cUseVariableRate = false;
+        private static bool cUseRateDisplay = false;
         private static bool cUseZones = false;
         private static FormStart mf;
         private static frmPressureDisplay PressureDisplay;
         private static frmSwitches SwitchesForm;
+        private static frmRate RateDisplay;
 
         #region pressure calibration
 
@@ -473,6 +476,16 @@ namespace RateController.Classes
                 SetProp("UseTransparent", cUseTransparent.ToString());
             }
         }
+        public static bool UseRateDisplay
+        {
+            get { return cUseRateDisplay; }
+            set
+            {
+                cUseRateDisplay = value;
+                SetProp("UseRateDisplay",cUseRateDisplay.ToString());
+                DisplayRate();
+            }
+        }
 
         public static bool UseZones
         {
@@ -694,6 +707,22 @@ namespace RateController.Classes
                 if (fs != null) fs.Close();
             }
         }
+        public static void DisplayRate()
+        {
+            Form fs = IsFormOpen("frmRate");
+            if(cUseRateDisplay)
+            {
+                if(fs==null)
+                {
+                    RateDisplay = new frmRate(mf);
+                    RateDisplay.Show();
+                }
+            }
+            else
+            {
+                if(fs!=null) fs.Close();
+            }
+        }
 
         public static void DisplaySwitches()
         {
@@ -876,6 +905,7 @@ namespace RateController.Classes
             cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
             cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
             cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
+            cUseRateDisplay = bool.TryParse(GetProp("UseRateDisplay"), out bool rtd) ? rtd : false;
 
             for (int i = 0; i < 8; i++)
             {

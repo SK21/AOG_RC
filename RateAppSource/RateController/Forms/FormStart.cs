@@ -663,6 +663,7 @@ namespace RateController
                 if (Props.UseLargeScreen) Props.SwitchScreens();
                 Props.DisplaySwitches();
                 Props.DisplayPressure();
+                Props.DisplayRate();
 
                 timerMain.Enabled = true;
                 timerRates.Enabled = true;

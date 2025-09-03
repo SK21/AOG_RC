@@ -46,6 +46,7 @@ namespace RateController.Menu
                 Props.UseMetric = ckMetric.Checked;
                 Props.UseTransparent = ckTransparent.Checked;
                 Props.UseLargeScreen = ckLargeScreen.Checked;
+                Props.UseRateDisplay= ckRateDisplay.Checked;
                 if (ckSingle.Checked) Props.SwitchScreens(true);
                 SetButtons(false);
                 if (ckReset.Checked) mf.Products.Load(true);
@@ -153,6 +154,7 @@ namespace RateController.Menu
             gbOther.Text = Lang.lgOther;
             ckMetric.Text = Lang.lgMetric;
             ckSimSpeed.Text = Lang.lgSimulateSpeed;
+            ckRateDisplay.Text = Lang.lgCurrentRate;
         }
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
@@ -200,6 +202,7 @@ namespace RateController.Menu
             ckLargeScreen.Checked = Props.UseLargeScreen;
             ckReset.Checked = false;
             ckSingle.Checked = false;
+            ckRateDisplay.Checked = Props.UseRateDisplay;
 
             Initializing = false;
         }
