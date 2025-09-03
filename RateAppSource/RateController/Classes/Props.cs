@@ -136,6 +136,8 @@ namespace RateController.Classes
 
         public static event EventHandler UnitsChanged;
 
+        public static event EventHandler ScreensSwitched;
+
         #region MainProperties
 
         public static string ApplicationFolder
@@ -1101,6 +1103,7 @@ namespace RateController.Classes
                     // use standard screen
                     if (fs != null) mf.Lscrn.SwitchToStandard();
                 }
+                ScreensSwitched?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {

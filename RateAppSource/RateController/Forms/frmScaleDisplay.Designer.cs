@@ -46,7 +46,7 @@
             this.lbValue.Name = "lbValue";
             this.lbValue.Size = new System.Drawing.Size(121, 76);
             this.lbValue.TabIndex = 0;
-            this.lbValue.Text = " ";
+            this.lbValue.Text = "1234.56";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbValue.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbValue_HelpRequested);
             this.lbValue.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lbValue_MouseClick);

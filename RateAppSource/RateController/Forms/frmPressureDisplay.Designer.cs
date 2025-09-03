@@ -44,14 +44,13 @@
             // lbPressureValue
             // 
             this.lbPressureValue.BackColor = System.Drawing.Color.Transparent;
-            this.lbPressureValue.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPressureValue.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbPressureValue.ForeColor = System.Drawing.Color.Yellow;
             this.lbPressureValue.Location = new System.Drawing.Point(70, 0);
             this.lbPressureValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbPressureValue.Name = "lbPressureValue";
-            this.lbPressureValue.Size = new System.Drawing.Size(84, 62);
+            this.lbPressureValue.Size = new System.Drawing.Size(118, 62);
             this.lbPressureValue.TabIndex = 1;
-            this.lbPressureValue.Text = "0";
             this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbPressureValue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbPressureValue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
@@ -73,7 +72,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(154, 68);
+            this.ClientSize = new System.Drawing.Size(183, 68);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbPressureValue);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
