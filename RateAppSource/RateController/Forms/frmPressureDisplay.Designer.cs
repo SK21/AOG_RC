@@ -51,9 +51,11 @@
             this.lbPressureValue.Name = "lbPressureValue";
             this.lbPressureValue.Size = new System.Drawing.Size(118, 62);
             this.lbPressureValue.TabIndex = 1;
+            this.lbPressureValue.Text = "0.00";
             this.lbPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbPressureValue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbPressureValue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.lbPressureValue.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmPressureDisplay_MouseUp);
             // 
             // pictureBox1
             // 
@@ -66,6 +68,7 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmPressureDisplay_MouseUp);
             // 
             // frmPressureDisplay
             // 

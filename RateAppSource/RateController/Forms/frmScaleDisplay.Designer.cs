@@ -39,17 +39,18 @@
             // lbValue
             // 
             this.lbValue.BackColor = System.Drawing.Color.Transparent;
-            this.lbValue.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbValue.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbValue.ForeColor = System.Drawing.Color.Yellow;
-            this.lbValue.Location = new System.Drawing.Point(69, 9);
+            this.lbValue.Location = new System.Drawing.Point(69, 0);
             this.lbValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbValue.Name = "lbValue";
-            this.lbValue.Size = new System.Drawing.Size(121, 76);
+            this.lbValue.Size = new System.Drawing.Size(162, 81);
             this.lbValue.TabIndex = 0;
-            this.lbValue.Text = "1234.56";
+            this.lbValue.Text = "123456.7";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbValue.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.lbValue_HelpRequested);
             this.lbValue.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lbValue_MouseClick);
+            this.lbValue.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmScaleDisplay_MouseUp);
             // 
             // timer1
             // 
@@ -60,7 +61,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::RateController.Properties.Resources.Scale3;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 23);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 16);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(48, 49);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -70,13 +71,14 @@
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmScaleDisplay_MouseUp);
             // 
             // frmScaleDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(190, 90);
+            this.ClientSize = new System.Drawing.Size(246, 81);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbValue);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -90,8 +92,10 @@
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmScaleDisplay_FormClosed);
             this.Load += new System.EventHandler(this.frmScaleDisplay_Load);
+            this.LocationChanged += new System.EventHandler(this.frmScaleDisplay_LocationChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.frmScaleDisplay_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
