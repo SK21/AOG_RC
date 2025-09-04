@@ -206,7 +206,7 @@ void ReadPGNs(byte Data[], uint16_t len)
         //4     commands
         //      bit 0 - Invert relay control
         //      bit 1 - Invert flow control
-        //      bit 2 - wifi station/client mode enabled
+        //      bit 2 - 
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
         //      bit 5 - ADS1115 enabled
@@ -236,7 +236,6 @@ void ReadPGNs(byte Data[], uint16_t len)
                 byte tmp = Data[4];
                 MDL.InvertRelay = ((tmp & 1) == 1);
                 MDL.InvertFlow = ((tmp & 2) == 2);
-                MDL.WifiModeUseStation = ((tmp & 4) == 4);
                 MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
                 MDL.Is3Wire = ((tmp & 16) == 16);
                 MDL.ADS1115Enabled = ((tmp & 32) == 32);
@@ -257,48 +256,7 @@ void ReadPGNs(byte Data[], uint16_t len)
                 MDL.WorkPin = Data[29];
                 MDL.PressurePin = Data[30];
 
-                //SaveData();	saved in pgn 3702
-            }
-        }
-        break;
-
-    case 32702:
-        // PGN32702, wifi network config
-        // 0        190
-        // 1        127
-        // 2-16     Network Name (14 bytes)
-        // 17-31    Network password (14 bytes)
-        // 32       CRC
-
-        PGNlength = 33;
-
-        if (len > PGNlength - 1)
-        {
-            if (GoodCRC(Data, PGNlength))
-            {
-                char newSSID[15];
-                char newPassword[15];
-
-                memset(newSSID, '\0', sizeof(newSSID));
-                memcpy(newSSID, &Data[2], 14);
-
-                memset(newPassword, '\0', sizeof(newPassword));
-                memcpy(newPassword, &Data[17], 14);
-
-                // Check if SSID or password has changed by comparing to MDL's stored values
-                if (strcmp(newSSID, MDL.SSID) != 0 || strcmp(newPassword, MDL.Password) != 0)
-                {
-                    // Update MDL only if there is a change
-                    memset(MDL.SSID, '\0', sizeof(MDL.SSID));
-                    strncpy(MDL.SSID, newSSID, sizeof(MDL.SSID) - 1);
-
-                    memset(MDL.Password, '\0', sizeof(MDL.Password));
-                    strncpy(MDL.Password, newPassword, sizeof(MDL.Password) - 1);
-
-                    MDL.WifiModeUseStation = true;   // try the new access point
-                }
-
-                SaveData(); // needed here to save 3700 changes
+                SaveData(); 
                 ESP.restart();
             }
         }

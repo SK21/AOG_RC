@@ -8,7 +8,7 @@ String GetPage1()
 	st += "    <META content='text/html; charset=utf-8' http-equiv=Content-Type>";
 	st += "    <meta name=vs_targetSchema content='HTML 4.0'>";
 	st += "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-	st += "    <title>Wifi AOG</title>";
+	st += "    <title>Rate Control</title>";
 	st += "    <style>";
 	st += "      html {";
 	st += "        font-family: Helvetica;";
