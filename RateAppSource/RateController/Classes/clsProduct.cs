@@ -598,7 +598,7 @@ namespace RateController
                 cSenID = SenID;
                 Result = true;
             }
-            else if (ModID > -1 && ModID < Props.MaxModules && SenID > -1 && SenID < Props.MaxSensors)
+            else if (ModID > -1 && ModID < Props.MaxModules && SenID > -1 && SenID < Props.MaxSensorsPerModule)
             {
                 if (mf.Products.UniqueModSen(ModID, SenID, cProductID))
                 {

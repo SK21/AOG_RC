@@ -67,13 +67,13 @@ namespace RateController
         {
             get
             {
-                return ((cData[4] & 4) == 4);
+                return ((cData[4] & 0b0000_0100) == 0b0000_0100);
             }
             set
             {
                 if (value)
                 {
-                    cData[4] = (byte)(cData[4] | 4);
+                    cData[4] = (byte)(cData[4] | 0b0000_0100);
                 }
                 else
                 {

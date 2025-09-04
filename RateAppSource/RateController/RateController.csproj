@@ -190,6 +190,7 @@
     <Compile Include="Classes\clsCalibrates.cs" />
     <Compile Include="Classes\clsPressureRawData.cs" />
     <Compile Include="Classes\clsSensor.cs" />
+    <Compile Include="Classes\clsSensors.cs" />
     <Compile Include="Classes\clsVersionChecker.cs" />
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\MapImageSaver.cs" />

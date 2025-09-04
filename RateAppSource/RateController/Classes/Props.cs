@@ -54,7 +54,7 @@ namespace RateController.Classes
         public static readonly int MaxProducts = 6;
         public static readonly int MaxRelays = 16;
         public static readonly int MaxSections = 128;
-        public static readonly int MaxSensors = 8;
+        public static readonly int MaxSensorsPerModule = 16;
         public static readonly int MaxSwitches = 16;
         public static readonly double MPHtoKPH = 1.6092;
         public static bool cShowCoverageRemaining;

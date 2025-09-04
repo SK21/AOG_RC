@@ -21,11 +21,17 @@ namespace RateController.Classes
         // PulseMaxHz       maximum Hz of the flow sensor
         // PulseMinHz       minimum Hz of the flow sensor, actual X 10
         // PulseSampeSize   number of pulses used to get the median Hz reading
+        // DirPin           uC GPIO pin for flow control direction (increase/decrease)
+        // PWMPin           uc GPIO pin for rate of flow adjustment (0-255)
+        // FlowPin          uc GPIO pin that receives the flow meter pulses
 
-        private readonly int cID;
         private readonly FormStart mf;
         private byte cBrakePoint;
         private byte cDeadband;
+        private byte cDirPin;
+        private bool cEnabled = false;
+        private byte cFlowPin;
+        private int cID;
         private byte cKI;
         private byte cKP;
         private byte cMaxMotorIntegral;
@@ -39,6 +45,7 @@ namespace RateController.Classes
         private UInt16 cPulseMaxHz;
         private byte cPulseMinHz;
         private byte cPulseSampleSize;
+        private byte cPWMPin;
         private byte cSlewRate;
         private UInt16 cTimedAdjust;
         private byte cTimedMinStart;
@@ -84,6 +91,30 @@ namespace RateController.Classes
                     throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        public byte DirPin
+        {
+            get { return cDirPin; }
+            set { cDirPin = value; }
+        }
+
+        public bool Enabled
+        {
+            get { return cEnabled; }
+            set
+            {
+                if (cEnabled != value)
+                {
+                    cEnabled = value;
+                }
+            }
+        }
+
+        public byte FlowPin
+        {
+            get { return cFlowPin; }
+            set { cFlowPin = value; }
         }
 
         public int ID
@@ -207,6 +238,12 @@ namespace RateController.Classes
             }
         }
 
+        public byte PWMPin
+        {
+            get { return cPWMPin; }
+            set { cPWMPin = value; }
+        }
+
         public byte SlewRate
         {
             get { return cSlewRate; }
@@ -283,6 +320,10 @@ namespace RateController.Classes
             if (UInt16.TryParse(Props.GetProp("TimedAdjust" + cName), out UInt16 ta)) cTimedAdjust = ta;
             if (byte.TryParse(Props.GetProp("TimedMinStart" + cName), out byte ms)) cTimedMinStart = ms;
             if (UInt16.TryParse(Props.GetProp("TimedPause" + cName), out UInt16 tp)) cTimedPause = tp;
+            if (byte.TryParse(Props.GetProp("DirPin" + cName), out byte dir)) cDirPin = dir;
+            if (byte.TryParse(Props.GetProp("PWMPin" + cName), out byte pp)) cPWMPin = pp;
+            if (byte.TryParse(Props.GetProp("FlowPin" + cName), out byte Flow)) cFlowPin = Flow;
+            if (bool.TryParse(Props.GetProp("Enabled" + cName), out bool pa)) cEnabled = pa;
         }
 
         public void Save()
@@ -305,6 +346,10 @@ namespace RateController.Classes
             Props.SetProp("TimedAdjust" + cName, cTimedAdjust.ToString());
             Props.SetProp("TimedMinStart" + cName, cTimedMinStart.ToString());
             Props.SetProp("TimedPause" + cName, cTimedPause.ToString());
+            Props.SetProp("DirPin" + cName, cDirPin.ToString());
+            Props.SetProp("PWMPin" + cName, cPWMPin.ToString());
+            Props.SetProp("FlowPin" + cName, cFlowPin.ToString());
+            Props.SetProp("Enabled" + cName, cEnabled.ToString());
         }
 
         public void SetDefaults()
@@ -325,6 +370,9 @@ namespace RateController.Classes
             cPIDtime = 50;
             cSlewRate = 6;
             cPIDslowAdjust = 30;
+            cDirPin = 0;
+            cFlowPin = 0;
+            cPWMPin = 0;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GMap.NET;
+using Microsoft.Win32;
 using RateController.Classes;
 using RateController.Language;
 using RateController.PGNs;
@@ -56,7 +57,6 @@ namespace RateController
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
-
         public FormStart()
         {
             InitializeComponent();
@@ -618,15 +618,18 @@ namespace RateController
 
         private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected())
+            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected()
+                && e.CloseReason != CloseReason.WindowsShutDown && e.CloseReason != CloseReason.TaskManagerClosing)
             {
-                var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true);
-                Hlp.TopMost = true;
+                using (var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true))
+                {
+                    Hlp.TopMost = true;
 
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (!Result) e.Cancel = true;
+                    Hlp.ShowDialog();
+                    bool Result = Hlp.Result;
+                    Hlp.Close();
+                    if (!Result) e.Cancel = true;
+                }
             }
         }
 

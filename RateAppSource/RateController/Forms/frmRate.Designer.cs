@@ -80,6 +80,7 @@
             this.Controls.Add(this.lbRate);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmRate";
+            this.ShowInTaskbar = false;
             this.Text = "frmRate";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmRate_FormClosed);
             this.Load += new System.EventHandler(this.frmRate_Load);
