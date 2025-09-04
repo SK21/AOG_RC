@@ -33,7 +33,7 @@ namespace RateController
             this.mf = cf;
 
             Items = new Button[] { butProfiles, butJobs,  butRate, butControl, butSettings, butMode, butMonitor,
-                butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, butWifi,
+                butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, 
                 butValves, butDisplay, butPrimed, butSwitches, butLanguage, butColor,butRateData };
 
             ChangeProduct(ProductID);
@@ -477,7 +477,6 @@ namespace RateController
                 butConfig.Visible = !Expanded;
                 butPins.Visible = !Expanded;
                 butRelayPins.Visible = !Expanded;
-                butWifi.Visible = !Expanded;
                 butValves.Visible = !Expanded;
                 butUpdateModules.Visible = !Expanded;
 
@@ -520,10 +519,6 @@ namespace RateController
                     butRelayPins.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butRelayPins.Top = Pos;
-
-                    butWifi.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butWifi.Top = Pos;
 
                     butValves.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
@@ -887,7 +882,6 @@ namespace RateController
             try
             {
                 mf.ModuleConfig.Send();
-                mf.NetworkConfig.Send();
                 mf.Tls.ShowMessage("Settings sent to module", "Config", 10000);
 
                 HighlightUpdateButton(false);
@@ -1294,7 +1288,6 @@ namespace RateController
             butConfig.Text = Lang.lgConfig;
             butPins.Text = Lang.lgPins;
             butRelayPins.Text = Lang.lgRelayPins;
-            butWifi.Text = Lang.lgWifi;
             butValves.Text = Lang.lgValves;
             butUpdateModules.Text = Lang.lgSend;
             butDisplay.Text = Lang.lgDisplay;

@@ -29,7 +29,6 @@ namespace RateController.Classes
         private byte cBrakePoint;
         private byte cDeadband;
         private byte cDirPin;
-        private bool cEnabled = false;
         private byte cFlowPin;
         private int cID;
         private byte cKI;
@@ -99,17 +98,6 @@ namespace RateController.Classes
             set { cDirPin = value; }
         }
 
-        public bool Enabled
-        {
-            get { return cEnabled; }
-            set
-            {
-                if (cEnabled != value)
-                {
-                    cEnabled = value;
-                }
-            }
-        }
 
         public byte FlowPin
         {
@@ -323,7 +311,6 @@ namespace RateController.Classes
             if (byte.TryParse(Props.GetProp("DirPin" + cName), out byte dir)) cDirPin = dir;
             if (byte.TryParse(Props.GetProp("PWMPin" + cName), out byte pp)) cPWMPin = pp;
             if (byte.TryParse(Props.GetProp("FlowPin" + cName), out byte Flow)) cFlowPin = Flow;
-            if (bool.TryParse(Props.GetProp("Enabled" + cName), out bool pa)) cEnabled = pa;
         }
 
         public void Save()
@@ -349,7 +336,6 @@ namespace RateController.Classes
             Props.SetProp("DirPin" + cName, cDirPin.ToString());
             Props.SetProp("PWMPin" + cName, cPWMPin.ToString());
             Props.SetProp("FlowPin" + cName, cFlowPin.ToString());
-            Props.SetProp("Enabled" + cName, cEnabled.ToString());
         }
 
         public void SetDefaults()

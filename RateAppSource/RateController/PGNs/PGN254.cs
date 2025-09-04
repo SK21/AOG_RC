@@ -21,16 +21,10 @@ namespace RateController
         // 12   Relay Hi
         // 13   CRC
 
-        private readonly float KalProcess = 0.005F;
-        private readonly float KalVariance = 0.01F;
         private readonly FormStart mf;
         private byte CRelayHi;
         private byte cRelayLo;
         private float cSpeed;
-        private float KalG = 0.0F;
-        private float KalP = 1.0F;
-        private float KalPc = 0.0F;
-        private float KalResult = 0.0F;
         private DateTime ReceiveTime;
         private byte RelayHiLast;
         private byte RelayLoLast;
@@ -63,13 +57,6 @@ namespace RateController
                     if (mf.Tls.GoodCRC(Data, 2))
                     {
                         cSpeed = (float)((Data[6] << 8 | Data[5]) / 10.0);
-
-                        // Kalmen filter
-                        KalPc = KalP + KalProcess;
-                        KalG = KalPc / (KalPc + KalVariance);
-                        KalP = (1 - KalG) * KalPc;
-                        KalResult = KalG * (cSpeed - KalResult) + KalResult;
-                        cSpeed = KalResult;
                         cRelayLo = Data[11];
                         CRelayHi = Data[12];
                         if (Changed()) SectionsChanged?.Invoke(this, EventArgs.Empty);

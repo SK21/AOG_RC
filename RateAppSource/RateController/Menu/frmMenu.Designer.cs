@@ -40,7 +40,6 @@
             this.butRelays = new System.Windows.Forms.Button();
             this.butSections = new System.Windows.Forms.Button();
             this.butValves = new System.Windows.Forms.Button();
-            this.butWifi = new System.Windows.Forms.Button();
             this.butRelayPins = new System.Windows.Forms.Button();
             this.butPins = new System.Windows.Forms.Button();
             this.butConfig = new System.Windows.Forms.Button();
@@ -273,25 +272,6 @@
             this.butValves.UseVisualStyleBackColor = false;
             this.butValves.Visible = false;
             this.butValves.Click += new System.EventHandler(this.butValves_Click);
-            // 
-            // butWifi
-            // 
-            this.butWifi.BackColor = System.Drawing.Color.Transparent;
-            this.butWifi.FlatAppearance.BorderSize = 0;
-            this.butWifi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butWifi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butWifi.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butWifi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butWifi.Location = new System.Drawing.Point(759, 359);
-            this.butWifi.Name = "butWifi";
-            this.butWifi.Size = new System.Drawing.Size(158, 49);
-            this.butWifi.TabIndex = 26;
-            this.butWifi.Text = "Wifi";
-            this.butWifi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butWifi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butWifi.UseVisualStyleBackColor = false;
-            this.butWifi.Visible = false;
-            this.butWifi.Click += new System.EventHandler(this.butWifi_Click);
             // 
             // butRelayPins
             // 
@@ -776,7 +756,6 @@
             this.Controls.Add(this.butPrimed);
             this.Controls.Add(this.butDisplay);
             this.Controls.Add(this.butValves);
-            this.Controls.Add(this.butWifi);
             this.Controls.Add(this.butRelayPins);
             this.Controls.Add(this.butPins);
             this.Controls.Add(this.butConfig);
@@ -831,7 +810,6 @@
         private System.Windows.Forms.Button butRelays;
         private System.Windows.Forms.Button butSections;
         private System.Windows.Forms.Button butValves;
-        private System.Windows.Forms.Button butWifi;
         private System.Windows.Forms.Button butRelayPins;
         private System.Windows.Forms.Button butPins;
         private System.Windows.Forms.Button butConfig;

@@ -323,10 +323,6 @@ namespace RateController.Menu
             Set.RelayPins(Pins);
             Set.Save();
 
-            mf.NetworkConfig.NetworkName = "Tractor";
-            mf.NetworkConfig.NetworkPassword = "111222333";
-            mf.NetworkConfig.Save();
-
             MainMenu.DefaultsSet();
         }
 

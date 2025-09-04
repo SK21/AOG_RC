@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static System.Collections.Specialized.BitVector32;
 
 namespace RateController.Classes
 {
@@ -9,52 +8,27 @@ namespace RateController.Classes
         public IList<clsSensor> Items;
         private List<clsSensor> cSensors = new List<clsSensor>();
         private FormStart mf;
+        private byte[] SensorCounts = new byte[Props.MaxModules];
 
         public clsSensors(FormStart CallingForm)
         {
             mf = CallingForm;
             Items = cSensors.AsReadOnly();
+            LoadCounts();
+            if (SensorCounts[0] == 0) SensorCounts[0] = 1;  // default to at least one sensor
+            Load();
         }
 
-        public int Count
+        public byte Count(byte ModuleID)
         {
-            get
-            {
-                int tmp = 0;
-                for (int i = 0; i < Props.MaxSensorsPerModule; i++)
-                {
-                    if (cSensors[i].Enabled) tmp++;
-                }
-                return tmp;
-            }
-            set
-            {
-                if (value < 0 || value > Props.MaxSensorsPerModule)
-                {
-                    throw new ArgumentException("Invalid sensor number. (clsSensors)");
-                }
-                else
-                {
-                    for (int i = 0; i < Props.MaxSensorsPerModule; i++)
-                    {
-                        int Tmp = ListID(i);
-                        if (i < value)
-                        {
-                            cSensors[Tmp].Enabled = true;
-                        }
-                        else
-                        {
-                            cSensors[Tmp].Enabled = false;
-                        }
-                        cSensors[Tmp].Save();
-                    }
-                }
-            }
+            byte Result = 0;
+            if (ModuleID < Props.MaxModules) Result = SensorCounts[ModuleID];
+            return Result;
         }
 
-        public clsSensor Item(int SensorID)
+        public clsSensor Item(byte ModuleID, byte SensorID)
         {
-            int ID = ListID(SensorID);
+            int ID = ListID(ModuleID, SensorID);
             if (ID == -1) throw new ArgumentException("Invalid sensor number. (clsSensors)");
             return cSensors[ID];
         }
@@ -64,7 +38,7 @@ namespace RateController.Classes
             cSensors.Clear();
             for (int j = 0; j < Props.MaxModules; j++)
             {
-                for (int i = 0; i < Props.MaxSensorsPerModule; i++)
+                for (int i = 0; i < SensorCounts[j]; i++)
                 {
                     clsSensor Sen = new clsSensor(mf, i, j);
                     Sen.Load();
@@ -81,13 +55,50 @@ namespace RateController.Classes
             }
         }
 
-        private int ListID(int SectionID)
+        public void SetModuleSensorCount(byte ModuleID, byte Count)
+        {
+            if (Count > Props.MaxSensorsPerModule || ModuleID>Props.MaxModules)
+            {
+                throw new ArgumentException("Invalid sensor count.");
+            }
+            else
+            {
+                SensorCounts[ModuleID] = Count;
+                SaveCounts();
+                Load();
+            }
+        }
+
+        private int ListID(byte ModuleID, byte SensorID)
         {
             for (int i = 0; i < cSensors.Count; i++)
             {
-                if (cSensors[i].ID == SectionID) return i;
+                if (cSensors[i].ID == SensorID && cSensors[i].ModuleID == ModuleID) return i;
             }
             return -1;
+        }
+
+        private void LoadCounts()
+        {
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                if (byte.TryParse(Props.GetProp("ModuleSensorCount" + i.ToString()), out byte c))
+                {
+                    SensorCounts[i] = c;
+                }
+                else
+                {
+                    SensorCounts[i] = 0;
+                }
+            }
+        }
+
+        private void SaveCounts()
+        {
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                Props.SetProp("ModuleSensorCount" + i.ToString(), SensorCounts[i].ToString());
+            }
         }
     }
 }

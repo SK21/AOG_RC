@@ -515,7 +515,6 @@
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN254.cs" />
     <Compile Include="PGNs\PGN32700.cs" />
-    <Compile Include="PGNs\PGN32702.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\RCRestore.cs">
