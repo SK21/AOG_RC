@@ -481,12 +481,6 @@
     <Compile Include="Menu\frmMenuValves.Designer.cs">
       <DependentUpon>frmMenuValves.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu\frmMenuWifi.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Menu\frmMenuWifi.Designer.cs">
-      <DependentUpon>frmMenuWifi.cs</DependentUpon>
-    </Compile>
     <Compile Include="Menu\frmMenuPrimed.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -674,9 +668,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuValves.resx">
       <DependentUpon>frmMenuValves.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Menu\frmMenuWifi.resx">
-      <DependentUpon>frmMenuWifi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuPrimed.resx">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>

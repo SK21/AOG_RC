@@ -910,24 +910,6 @@ namespace RateController
             }
         }
 
-        private void butWifi_Click(object sender, EventArgs e)
-        {
-            cLastScreen = "frmMenuWifi";
-            if (sender is Button button) HighlightButton(button);
-            Form fs = Props.IsFormOpen(cLastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuWifi(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
-
         private bool CheckEdited()
         {
             bool Result = true;
@@ -1181,14 +1163,6 @@ namespace RateController
                             fs.Owner = this;
                             cLastScreen = Last;
                             HighlightButton(butRelayPins);
-                            fs.Show();
-                            break;
-
-                        case "frmMenuWifi":
-                            butModules.PerformClick();
-                            fs = new frmMenuWifi(mf, this);
-                            fs.Owner = this;
-                            cLastScreen = Last;
                             fs.Show();
                             break;
 
