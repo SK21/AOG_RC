@@ -635,9 +635,9 @@ namespace RateController
             if (lbName3.Text == "") lbName3.Text = "4";
 
             clsProduct Product = mf.Products.Item(0);
-            if (Product.RateSensor.ModuleSending())
+            if (Product.RateSensorData.ModuleSending())
             {
-                if (Product.RateSensor.ModuleReceiving())
+                if (Product.RateSensorData.ModuleReceiving())
                 {
                     lbName0.BackColor = Color.LightGreen;
                 }
@@ -653,9 +653,9 @@ namespace RateController
 
             // 1
             Product = mf.Products.Item(1);
-            if (Product.RateSensor.ModuleSending())
+            if (Product.RateSensorData.ModuleSending())
             {
-                if (Product.RateSensor.ModuleReceiving())
+                if (Product.RateSensorData.ModuleReceiving())
                 {
                     lbName1.BackColor = Color.LightGreen;
                 }
@@ -671,9 +671,9 @@ namespace RateController
 
             // 2
             Product = mf.Products.Item(2);
-            if (Product.RateSensor.ModuleSending())
+            if (Product.RateSensorData.ModuleSending())
             {
-                if (Product.RateSensor.ModuleReceiving())
+                if (Product.RateSensorData.ModuleReceiving())
                 {
                     lbName2.BackColor = Color.LightGreen;
                 }
@@ -689,9 +689,9 @@ namespace RateController
 
             // 3
             Product = mf.Products.Item(3);
-            if (Product.RateSensor.ModuleSending())
+            if (Product.RateSensorData.ModuleSending())
             {
-                if (Product.RateSensor.ModuleReceiving())
+                if (Product.RateSensorData.ModuleReceiving())
                 {
                     lbName3.BackColor = Color.LightGreen;
                 }
@@ -906,9 +906,9 @@ namespace RateController
                 lbRPM1.Text = prd.SmoothRate().ToString("N0") + " RPM";
             }
 
-            if (prd.RateSensor.ModuleSending())
+            if (prd.RateSensorData.ModuleSending())
             {
-                if (prd.RateSensor.ModuleReceiving())
+                if (prd.RateSensorData.ModuleReceiving())
                 {
                     lbFan1.BackColor = Color.LightGreen;
                 }
@@ -933,9 +933,9 @@ namespace RateController
                 lbRPM2.Text = prd.SmoothRate().ToString("N0") + " RPM";
             }
 
-            if (prd.RateSensor.ModuleSending())
+            if (prd.RateSensorData.ModuleSending())
             {
-                if (prd.RateSensor.ModuleReceiving())
+                if (prd.RateSensorData.ModuleReceiving())
                 {
                     lbFan2.BackColor = Color.LightGreen;
                 }

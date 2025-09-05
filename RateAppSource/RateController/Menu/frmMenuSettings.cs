@@ -48,7 +48,7 @@ namespace RateController.Menu
                 {
                     byte.TryParse(tbConID.Text, out byte tmp1);
                     byte.TryParse(tbSenID.Text, out byte tmp2);
-                    MainMenu.CurrentProduct.ChangeID(tmp1, tmp2);
+                    MainMenu.CurrentProduct.LoadSensor(tmp1, tmp2);
                     if (double.TryParse(tbMinUPM.Text, out double mu)) MainMenu.CurrentProduct.MinUPM = mu;
                     if (double.TryParse(tbUPMspeed.Text, out double sp)) MainMenu.CurrentProduct.MinUPMbySpeed = sp;
                     if (ckDefault.Checked) Props.DefaultProduct = MainMenu.CurrentProduct.ID;
@@ -220,7 +220,7 @@ namespace RateController.Menu
 
         private void SetModuleIndicator()
         {
-            if (mf.Products.Item(MainMenu.CurrentProduct.ID).RateSensor.Connected())
+            if (mf.Products.Item(MainMenu.CurrentProduct.ID).RateSensorData.Connected())
             {
                 ModuleIndicator.Image = Properties.Resources.On;
             }

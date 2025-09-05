@@ -1,49 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
 
 namespace RateController.Classes
 {
     public class clsSensors
     {
         public IList<clsSensor> Items;
+        private int cMaxRecID = 0;
         private List<clsSensor> cSensors = new List<clsSensor>();
         private FormStart mf;
-        private byte[] SensorCounts = new byte[Props.MaxModules];
 
         public clsSensors(FormStart CallingForm)
         {
             mf = CallingForm;
             Items = cSensors.AsReadOnly();
-            LoadCounts();
-            if (SensorCounts[0] == 0) SensorCounts[0] = 1;  // default to at least one sensor
+            LoadMaxRec();
             Load();
         }
 
-        public byte Count(byte ModuleID)
+        public clsSensor AddSensor(int ModuleID, int SensorID)
         {
-            byte Result = 0;
-            if (ModuleID < Props.MaxModules) Result = SensorCounts[ModuleID];
+            clsSensor Result = null;
+            if (!Exists(ModuleID, SensorID)
+                && ModuleID >= 0 && ModuleID < Props.MaxModules
+                && SensorID >= 0 && SensorID < Props.MaxSensorsPerModule)
+            {
+                cMaxRecID++;
+                clsSensor sensor = new clsSensor(mf, cMaxRecID);
+                sensor.SetModuleSensor(ModuleID, SensorID, this);
+                sensor.Save();
+                cSensors.Add(sensor);
+                Result = sensor;
+                SaveMaxRec();
+            }
             return Result;
         }
 
-        public clsSensor Item(byte ModuleID, byte SensorID)
+        public bool DeleteSensor(int ModuleID, int SensorID)
         {
-            int ID = ListID(ModuleID, SensorID);
-            if (ID == -1) throw new ArgumentException("Invalid sensor number. (clsSensors)");
-            return cSensors[ID];
+            bool Result = false;
+            clsSensor Sen = cSensors.FirstOrDefault(s => s.ModuleID == ModuleID && s.SensorID == SensorID);
+            if (Sen != null)
+            {
+                cSensors.Remove(Sen);
+
+                // set module ID and sensor ID to -1 to show it has been deleted
+                Sen.SetModuleSensor(-1, -1, this);
+                Sen.Save();
+                Result = true;
+            }
+            return Result;
+        }
+
+        public bool EditSensorIDs(clsSensor Sensor, int ModuleID, int SensorID)
+        {
+            bool Result = false;
+            if (!Exists(ModuleID, SensorID)
+                && ModuleID >= 0 && ModuleID < Props.MaxModules
+                && SensorID >= 0 && SensorID < Props.MaxSensorsPerModule)
+            {
+                Sensor.SetModuleSensor(ModuleID, SensorID, this);
+                Sensor.Save();
+                Result = true;
+            }
+            return Result;
+        }
+
+        public clsSensor Item(int ModuleID, int SensorID)
+        {
+            var sensor = cSensors.FirstOrDefault(s => s.ModuleID == ModuleID && s.SensorID == SensorID);
+            return sensor;
         }
 
         public void Load()
         {
-            cSensors.Clear();
-            for (int j = 0; j < Props.MaxModules; j++)
+            for (int i = 0; i <= cMaxRecID; i++)
             {
-                for (int i = 0; i < SensorCounts[j]; i++)
-                {
-                    clsSensor Sen = new clsSensor(mf, i, j);
-                    Sen.Load();
-                    cSensors.Add(Sen);
-                }
+                clsSensor Sen = new clsSensor(mf, i);
+                if (Sen.Load()) cSensors.Add(Sen);
             }
         }
 
@@ -55,50 +92,21 @@ namespace RateController.Classes
             }
         }
 
-        public void SetModuleSensorCount(byte ModuleID, byte Count)
+        private bool Exists(int moduleId, int sensorId, clsSensor except = null)
         {
-            if (Count > Props.MaxSensorsPerModule || ModuleID>Props.MaxModules)
-            {
-                throw new ArgumentException("Invalid sensor count.");
-            }
-            else
-            {
-                SensorCounts[ModuleID] = Count;
-                SaveCounts();
-                Load();
-            }
+            return cSensors.Any(s => s != except
+                                    && s.ModuleID == moduleId
+                                    && s.SensorID == sensorId);
         }
 
-        private int ListID(byte ModuleID, byte SensorID)
+        private void LoadMaxRec()
         {
-            for (int i = 0; i < cSensors.Count; i++)
-            {
-                if (cSensors[i].ID == SensorID && cSensors[i].ModuleID == ModuleID) return i;
-            }
-            return -1;
+            if (int.TryParse(Props.GetProp("RateSensorMaxID"), out int mx)) cMaxRecID = mx;
         }
 
-        private void LoadCounts()
+        private void SaveMaxRec()
         {
-            for (int i = 0; i < Props.MaxModules; i++)
-            {
-                if (byte.TryParse(Props.GetProp("ModuleSensorCount" + i.ToString()), out byte c))
-                {
-                    SensorCounts[i] = c;
-                }
-                else
-                {
-                    SensorCounts[i] = 0;
-                }
-            }
-        }
-
-        private void SaveCounts()
-        {
-            for (int i = 0; i < Props.MaxModules; i++)
-            {
-                Props.SetProp("ModuleSensorCount" + i.ToString(), SensorCounts[i].ToString());
-            }
+            Props.SetProp("RateSensorMaxID", cMaxRecID.ToString());
         }
     }
 }

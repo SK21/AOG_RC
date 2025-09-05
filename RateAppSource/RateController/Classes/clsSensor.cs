@@ -30,14 +30,14 @@ namespace RateController.Classes
         private byte cDeadband;
         private byte cDirPin;
         private byte cFlowPin;
-        private int cID;
+        private bool cIsNew = true;
         private byte cKI;
         private byte cKP;
         private byte cMaxMotorIntegral;
         private byte cMaxPWM;
         private byte cMaxValveIntegral;
         private byte cMinPWM;
-        private byte cModuleID;
+        private int cModuleID;
         private string cName;
         private byte cPIDslowAdjust;
         private byte cPIDtime;
@@ -45,17 +45,18 @@ namespace RateController.Classes
         private byte cPulseMinHz;
         private byte cPulseSampleSize;
         private byte cPWMPin;
+        private int cRecID;
+        private int cSensorID;
         private byte cSlewRate;
         private UInt16 cTimedAdjust;
         private byte cTimedMinStart;
         private UInt16 cTimedPause;
 
-        public clsSensor(FormStart main, int SensorID, int ModuleID)
+        public clsSensor(FormStart main, int ID)
         {
             mf = main;
-            cID = SensorID;
-            cModuleID = (byte)ModuleID;
-            cName = "_Sensor" + cID.ToString() + "_M" + cModuleID.ToString();
+            cRecID = ID;
+            cName = "_RateSensor_" + cRecID.ToString();
             SetDefaults();
         }
 
@@ -98,21 +99,46 @@ namespace RateController.Classes
             set { cDirPin = value; }
         }
 
-
         public byte FlowPin
         {
             get { return cFlowPin; }
             set { cFlowPin = value; }
         }
 
-        public int ID
-        { get { return cID; } }
+        public bool IsNew
+        { get { return cIsNew; } }
 
         public byte KI
-        { get { return cKI; } set { cKI = value; } }
+        {
+            get { return cKI; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    cKI = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public byte KP
-        { get { return cKP; } set { cKP = value; } }
+        {
+            get { return cKP; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    KP = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public byte MaxMotorIntegral
         {
@@ -132,13 +158,39 @@ namespace RateController.Classes
         }
 
         public byte MaxPWM
-        { get { return cMaxPWM; } set { cMaxPWM = value; } }
+        {
+            get { return cMaxPWM; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    cMaxPWM = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public byte MaxValveIntegral
         { get { return cMaxValveIntegral; } set { cMaxValveIntegral = value; } }
 
         public byte MinPWM
-        { get { return cMinPWM; } set { cMinPWM = value; } }
+        {
+            get { return cMinPWM; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    cMinPWM = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public int ModuleID
         {
@@ -232,6 +284,11 @@ namespace RateController.Classes
             set { cPWMPin = value; }
         }
 
+        public int SensorID
+        {
+            get { return cSensorID; }
+        }
+
         public byte SlewRate
         {
             get { return cSlewRate; }
@@ -288,29 +345,37 @@ namespace RateController.Classes
             }
         }
 
-        public void Load()
+        public bool Load()
         {
-            if (byte.TryParse(Props.GetProp("BrakePoint" + cName), out byte T)) cBrakePoint = T;
-            if (byte.TryParse(Props.GetProp("DeadBand" + cName), out byte sw)) cDeadband = sw;
-            if (byte.TryParse(Props.GetProp("KP" + cName), out byte kp)) cKP = kp;
-            if (byte.TryParse(Props.GetProp("KI" + cName), out byte ki)) cKI = ki;
-            if (byte.TryParse(Props.GetProp("MaxMotorIntegral" + cName), out byte mi)) cMaxMotorIntegral = mi;
-            if (byte.TryParse(Props.GetProp("MaxPWM" + cName), out byte pwm)) cMaxPWM = pwm;
-            if (byte.TryParse(Props.GetProp("MaxValveIntegral" + cName), out byte mv)) cMaxValveIntegral = mv;
-            if (byte.TryParse(Props.GetProp("MinPWM" + cName), out byte mp)) cMinPWM = mp;
-            if (byte.TryParse(Props.GetProp("ModuleID" + cName), out byte mn)) cModuleID = mn;
-            if (byte.TryParse(Props.GetProp("PIDslowAdjust" + cName), out byte sa)) cPIDslowAdjust = sa;
-            if (byte.TryParse(Props.GetProp("PIDtime" + cName), out byte pt)) cPIDtime = pt;
-            if (UInt16.TryParse(Props.GetProp("PulseMaxHz" + cName), out UInt16 mz)) cPulseMaxHz = mz;
-            if (byte.TryParse(Props.GetProp("PulseMinHz" + cName), out byte minz)) cPulseMinHz = minz;
-            if (byte.TryParse(Props.GetProp("PulseSampleSize" + cName), out byte sz)) cPulseSampleSize = sz;
-            if (byte.TryParse(Props.GetProp("SlewRate" + cName), out byte sr)) cSlewRate = sr;
-            if (UInt16.TryParse(Props.GetProp("TimedAdjust" + cName), out UInt16 ta)) cTimedAdjust = ta;
-            if (byte.TryParse(Props.GetProp("TimedMinStart" + cName), out byte ms)) cTimedMinStart = ms;
-            if (UInt16.TryParse(Props.GetProp("TimedPause" + cName), out UInt16 tp)) cTimedPause = tp;
-            if (byte.TryParse(Props.GetProp("DirPin" + cName), out byte dir)) cDirPin = dir;
-            if (byte.TryParse(Props.GetProp("PWMPin" + cName), out byte pp)) cPWMPin = pp;
-            if (byte.TryParse(Props.GetProp("FlowPin" + cName), out byte Flow)) cFlowPin = Flow;
+            bool Result = false;
+            if (int.TryParse(Props.GetProp("SensorID" + cName), out int sid)) cSensorID = sid;
+            if (int.TryParse(Props.GetProp("ModuleID" + cName), out int mn)) cModuleID = mn;
+            cIsNew = (cSensorID == -1 || cModuleID == -1);
+            if (!cIsNew)
+            {
+                if (byte.TryParse(Props.GetProp("BrakePoint" + cName), out byte T)) cBrakePoint = T;
+                if (byte.TryParse(Props.GetProp("DeadBand" + cName), out byte sw)) cDeadband = sw;
+                if (byte.TryParse(Props.GetProp("KP" + cName), out byte kp)) cKP = kp;
+                if (byte.TryParse(Props.GetProp("KI" + cName), out byte ki)) cKI = ki;
+                if (byte.TryParse(Props.GetProp("MaxMotorIntegral" + cName), out byte mi)) cMaxMotorIntegral = mi;
+                if (byte.TryParse(Props.GetProp("MaxPWM" + cName), out byte pwm)) cMaxPWM = pwm;
+                if (byte.TryParse(Props.GetProp("MaxValveIntegral" + cName), out byte mv)) cMaxValveIntegral = mv;
+                if (byte.TryParse(Props.GetProp("MinPWM" + cName), out byte mp)) cMinPWM = mp;
+                if (byte.TryParse(Props.GetProp("PIDslowAdjust" + cName), out byte sa)) cPIDslowAdjust = sa;
+                if (byte.TryParse(Props.GetProp("PIDtime" + cName), out byte pt)) cPIDtime = pt;
+                if (UInt16.TryParse(Props.GetProp("PulseMaxHz" + cName), out UInt16 mz)) cPulseMaxHz = mz;
+                if (byte.TryParse(Props.GetProp("PulseMinHz" + cName), out byte minz)) cPulseMinHz = minz;
+                if (byte.TryParse(Props.GetProp("PulseSampleSize" + cName), out byte sz)) cPulseSampleSize = sz;
+                if (byte.TryParse(Props.GetProp("SlewRate" + cName), out byte sr)) cSlewRate = sr;
+                if (UInt16.TryParse(Props.GetProp("TimedAdjust" + cName), out UInt16 ta)) cTimedAdjust = ta;
+                if (byte.TryParse(Props.GetProp("TimedMinStart" + cName), out byte ms)) cTimedMinStart = ms;
+                if (UInt16.TryParse(Props.GetProp("TimedPause" + cName), out UInt16 tp)) cTimedPause = tp;
+                if (byte.TryParse(Props.GetProp("DirPin" + cName), out byte dir)) cDirPin = dir;
+                if (byte.TryParse(Props.GetProp("PWMPin" + cName), out byte pp)) cPWMPin = pp;
+                if (byte.TryParse(Props.GetProp("FlowPin" + cName), out byte Flow)) cFlowPin = Flow;
+                Result = true;
+            }
+            return Result;
         }
 
         public void Save()
@@ -336,6 +401,7 @@ namespace RateController.Classes
             Props.SetProp("DirPin" + cName, cDirPin.ToString());
             Props.SetProp("PWMPin" + cName, cPWMPin.ToString());
             Props.SetProp("FlowPin" + cName, cFlowPin.ToString());
+            Props.SetProp("SensorID" + cName, cSensorID.ToString());
         }
 
         public void SetDefaults()
@@ -359,6 +425,22 @@ namespace RateController.Classes
             cDirPin = 0;
             cFlowPin = 0;
             cPWMPin = 0;
+            cModuleID = -1;
+            cSensorID = -1;
+            cIsNew = true;
+        }
+
+        public bool SetModuleSensor(int Mod, int Sen, object Caller)
+        {
+            bool Result = false;
+            if (Caller is clsSensors)
+            {
+                cSensorID = Sen;
+                cModuleID = Mod;
+                Result = true;
+            }
+            cIsNew = (cSensorID == -1 || cModuleID == -1);
+            return Result;
         }
     }
 }

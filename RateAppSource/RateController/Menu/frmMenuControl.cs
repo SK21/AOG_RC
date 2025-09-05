@@ -194,14 +194,14 @@ namespace RateController.Menu
         {
             try
             {
-                MainMenu.CurrentProduct.MaxAdjust = HSmax.Value;
-                MainMenu.CurrentProduct.MinAdjust = HSmin.Value;
-                MainMenu.CurrentProduct.Proportional = HSscaling.Value;
-                MainMenu.CurrentProduct.Integral = HSintegral.Value;
+                MainMenu.CurrentProduct.MaxPWMadjust = HSmax.Value;
+                MainMenu.CurrentProduct.MinPWMadjust = HSmin.Value;
+                MainMenu.CurrentProduct.KP = HSscaling.Value;
+                MainMenu.CurrentProduct.KI = HSintegral.Value;
 
                 if (byte.TryParse(tbDeadband.Text, out byte db)) MainMenu.CurrentProduct.Deadband = (byte)(db * 10);
                 if (byte.TryParse(tbBrakepoint.Text, out byte bp)) MainMenu.CurrentProduct.Brakepoint = bp;
-                if (byte.TryParse(tbSlowAdj.Text, out byte sa)) MainMenu.CurrentProduct.SlowAdjust = sa;
+                if (byte.TryParse(tbSlowAdj.Text, out byte sa)) MainMenu.CurrentProduct.PIDslowAdjust = sa;
 
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
@@ -365,10 +365,10 @@ namespace RateController.Menu
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
             }
 
-            HSmax.Value = MainMenu.CurrentProduct.MaxAdjust;
-            HSmin.Value = MainMenu.CurrentProduct.MinAdjust;
-            HSscaling.Value = MainMenu.CurrentProduct.Proportional;
-            HSintegral.Value = MainMenu.CurrentProduct.Integral;
+            HSmax.Value = MainMenu.CurrentProduct.MaxPWMadjust;
+            HSmin.Value = MainMenu.CurrentProduct.MinPWMadjust;
+            HSscaling.Value = MainMenu.CurrentProduct.KP;
+            HSintegral.Value = MainMenu.CurrentProduct.KI;
             UpdateControlDisplay();
             SetAdvanced();
             Initializing = false;

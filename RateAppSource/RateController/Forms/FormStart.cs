@@ -378,9 +378,9 @@ namespace RateController
                             break;
                     }
 
-                    if (Prd.RateSensor.ModuleSending())
+                    if (Prd.RateSensorData.ModuleSending())
                     {
-                        if (Prd.RateSensor.ModuleReceiving())
+                        if (Prd.RateSensorData.ModuleReceiving())
                         {
                             lbArduinoConnected.BackColor = Color.LightGreen;
                         }

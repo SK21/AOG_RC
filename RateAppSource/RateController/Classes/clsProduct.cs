@@ -11,7 +11,7 @@ namespace RateController
 
         public byte CoverageUnits = 0;
         public PGN32500 ModuleRateSettings;
-        public PGN32400 RateSensor;
+        public PGN32400 RateSensorData;
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
@@ -30,7 +30,6 @@ namespace RateController
         private double cMeterCal = 0;
         private double cMinUPM;
         private double cMinUPMbySpeed;
-        private int cModID;
         private byte cOffRateSetting;
         private bool cOnScreen;
         private double Coverage = 0;
@@ -40,8 +39,8 @@ namespace RateController
         private string cProductName = "";
         private string cQuantityDescription = "Lbs";
         private double cRateAlt = 100;
+        private clsSensor cRateSensor;
         private double cRateSet = 0;
-        private int cSenID;
         private int cSerialPort;
         private int cShiftRange = 4;
         private double cTankSize = 0;
@@ -55,33 +54,16 @@ namespace RateController
         private PGN32502 ModuleControlSettings;
         private Stopwatch UpdateStopWatch;
 
-        #region Control Settings
-
-        private int cAdjustTime;
-        private byte cBrakepoint;
-        private byte cDeadband;
-        private int cIntegral;
-        private int cMaxAdjust;
-        private byte cMaxMotorIntegral;
-        private byte cMaxValveIntegral;
-        private int cMinAdjust;
-        private byte cMinStart;
-        private int cPauseTime;
-        private int cProportional;
-        private byte cSampleTime;
-        private byte cSlewRate;
-        private byte cSlowAdjust;
-
-        #endregion Control Settings
-
         public clsProduct(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
             cProductID = ProdID;
-            cModID = ProdID / 2;
-            cSenID = (byte)(ProdID % 2);
+            //int Mod = ProdID / 2;
+            //int Sen = (byte)(ProdID % 2);
+            //cRateSensor = mf.RateSensors.Item(Mod, Sen);
+            //if (cRateSensor == null) cRateSensor = mf.RateSensors.AddSensor(Mod, Sen);
 
-            RateSensor = new PGN32400(this);
+            RateSensorData = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
             ModuleControlSettings = new PGN32502(this);
 
@@ -96,126 +78,129 @@ namespace RateController
 
         #region Control edit
 
-        public int AdjustTime
-        {
-            get { return cAdjustTime; }
-            set
-            {
-                if (value >= 10 && value <= 1000) cAdjustTime = value;
-            }
-        }
-
         public byte Brakepoint
         {
-            get { return cBrakepoint; }
+            get { return cRateSensor.BrakePoint; }
             set
             {
-                if (value >= 5 && value <= 50) cBrakepoint = value;
+                cRateSensor.BrakePoint = value;
             }
         }
 
         public byte Deadband
         {
-            get { return cDeadband; }
+            get { return cRateSensor.DeadBand; }
             set
             {
-                if (value >= 5 && value <= 50) cDeadband = value;   // actual X 10
+                cRateSensor.DeadBand = value;
             }
         }
 
-        public int Integral
+        public int KI
         {
-            get { return cIntegral; }
+            get { return cRateSensor.KI; }
             set
             {
-                if (value >= 0 && value <= 100) cIntegral = value;
+                cRateSensor.KI = (byte)value;
             }
         }
 
-        public int MaxAdjust
+        public int KP
         {
-            get { return cMaxAdjust; }
+            get { return cRateSensor.KP; }
             set
             {
-                if (value >= 0 && value <= 100) cMaxAdjust = value;
+                cRateSensor.KP = (byte)value;
             }
         }
 
         public byte MaxMotorIntegral
         {
-            get { return cMaxMotorIntegral; }
+            get { return cRateSensor.MaxMotorIntegral; }
             set
             {
-                if (value >= 1 && value <= 20) cMaxMotorIntegral = value;   // actual X 100
+                cRateSensor.MaxMotorIntegral = value;
+            }
+        }
+
+        public int MaxPWMadjust
+        {
+            get { return cRateSensor.MaxPWM; }
+            set
+            {
+                cRateSensor.MaxPWM = (byte)value;
             }
         }
 
         public byte MaxValveIntegral
         {
-            get { return cMaxValveIntegral; }
-            set { cMaxValveIntegral = value; }
+            get { return cRateSensor.MaxValveIntegral; }
+            set { cRateSensor.MaxValveIntegral = value; }
         }
 
-        public int MinAdjust
+        public int MinPWMadjust
         {
-            get { return cMinAdjust; }
+            get { return cRateSensor.MinPWM; }
             set
             {
-                if (value >= 0 && value <= 100) cMinAdjust = value;
+                cRateSensor.MinPWM = (byte)value;
             }
         }
 
-        public byte MinStart
+        public byte PIDslowAdjust
         {
-            get { return cMinStart; }
+            get { return cRateSensor.PIDslowAdjust; }
             set
             {
-                if (value >= 1 && value <= 10) cMinStart = value;
+                cRateSensor.PIDslowAdjust = value;
             }
         }
 
-        public int PauseTime
+        public byte PIDtime
         {
-            get { return cPauseTime; }
+            get { return cRateSensor.PIDtime; }
             set
             {
-                if (value >= 10 && value <= 1000) cPauseTime = value;
+                cRateSensor.PIDtime = value;
             }
         }
 
-        public int Proportional
-        {
-            get { return cProportional; }
-            set
-            {
-                if (value >= 0 && value <= 100) cProportional = value;
-            }
-        }
-
-        public byte SampleTime
-        {
-            get { return cSampleTime; }
-            set
-            {
-                if (value >= 10 && value <= 255) cSampleTime = value;
-            }
-        }
+        public clsSensor RateSensor
+        { get { return cRateSensor; } }
 
         public byte SlewRate
         {
-            get { return cSlewRate; }
+            get { return cRateSensor.SlewRate; }
             set
             {
-                if (value >= 1 && value <= 50) cSlewRate = value;
+                cRateSensor.SlewRate = value;
             }
         }
 
-        public byte SlowAdjust
+        public int TimedAdjust
         {
-            get { return cSlowAdjust; }
+            get { return cRateSensor.TimedAdjust; }
             set
             {
-                if (value >= 5 && value <= 75) cSlowAdjust = value;
+                cRateSensor.TimedAdjust = (ushort)value;
+            }
+        }
+
+        public byte TimedMinStart
+        {
+            get { return cRateSensor.TimedMinStart; }
+            set
+            {
+                cRateSensor.TimedMinStart = value;
+            }
+        }
+
+        public int TimedPause
+        {
+            get { return cRateSensor.TimedPause; }
+            set
+            {
+                cRateSensor.TimedPause = (ushort)value;
             }
         }
 
@@ -306,7 +291,7 @@ namespace RateController
         }
 
         public double ElapsedTime
-        { get { return RateSensor.ElapsedTime(); } }
+        { get { return RateSensorData.ElapsedTime(); } }
 
         public bool Enabled
         {
@@ -407,25 +392,11 @@ namespace RateController
 
         public int ModuleID
         {
-            get { return (byte)cModID; }
-            set
-            {
-                if (value > -1 && value < 255)
-                {
-                    if (mf.Products.UniqueModSen(value, cSenID, cProductID))
-                    {
-                        cModID = value;
-                    }
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid ModuleID.");
-                }
-            }
+            get { return cRateSensor.ModuleID; }
         }
 
         public bool ModuleSending
-        { get { return RateSensor.ModuleSending(); } }
+        { get { return RateSensorData.ModuleSending(); } }
 
         public byte OffRateSetting
         {
@@ -528,18 +499,7 @@ namespace RateController
 
         public byte SensorID
         {
-            get { return (byte)cSenID; }
-            set
-            {
-                if (value < 16)
-                {
-                    if (mf.Products.UniqueModSen(cModID, value, cProductID)) cSenID = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid SensorID.");
-                }
-            }
+            get { return (byte)cRateSensor.SensorID; }
         }
 
         public double TankSize
@@ -589,27 +549,6 @@ namespace RateController
             }
         }
 
-        public bool ChangeID(int ModID, int SenID, bool Override = false)
-        {
-            bool Result = false;
-            if (Override)
-            {
-                cModID = ModID;
-                cSenID = SenID;
-                Result = true;
-            }
-            else if (ModID > -1 && ModID < Props.MaxModules && SenID > -1 && SenID < Props.MaxSensorsPerModule)
-            {
-                if (mf.Products.UniqueModSen(ModID, SenID, cProductID))
-                {
-                    cModID = ModID;
-                    cSenID = SenID;
-                    Result = true;
-                }
-            }
-            return Result;
-        }
-
         public string CoverageDescription()
         {
             return mf.CoverageDescriptions[CoverageUnits];
@@ -639,9 +578,14 @@ namespace RateController
             }
         }
 
+        public bool EditSensorIDs(int ModID, int SenID)
+        {
+            return mf.RateSensors.EditSensorIDs(cRateSensor, ModID, SenID);
+        }
+
         public double Hz()
         {
-            return RateSensor.Hz;
+            return RateSensorData.Hz;
         }
 
         public bool IsNew()
@@ -686,7 +630,7 @@ namespace RateController
             int tmpModuleID = -1;
             if (int.TryParse(Props.GetProp("ModuleID" + IDname), out int tmp1)) tmpModuleID = tmp1;
             int.TryParse(Props.GetProp("SensorID" + IDname), out int tmp2);
-            ChangeID(tmpModuleID, tmp2);
+            LoadSensor(tmp1, tmp2);
 
             bool.TryParse(Props.GetProp("OffRateAlarm" + IDname), out cUseOffRateAlarm);
             byte.TryParse(Props.GetProp("OffRateSetting" + IDname), out cOffRateSetting);
@@ -734,43 +678,13 @@ namespace RateController
             if (double.TryParse(Props.GetProp("Hours1" + IDname), out double h1)) cHours1 = h1;
             if (double.TryParse(Props.GetProp("Hours2" + IDname), out double h2)) cHours2 = h2;
             if (Enum.TryParse(Props.GetProp("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
-
-            #region Control Settings
-
-            if (int.TryParse(Props.GetProp("Proportional" + IDname), out int sc)) cProportional = sc;
-            if (int.TryParse(Props.GetProp("Integral" + IDname), out int IG)) cIntegral = IG;
-            if (int.TryParse(Props.GetProp("MinAdjust" + IDname), out int mina)) cMinAdjust = mina;
-            if (int.TryParse(Props.GetProp("MaxAdjust" + IDname), out int ma)) cMaxAdjust = ma;
-            if (byte.TryParse(Props.GetProp("Deadband" + IDname), out byte db)) cDeadband = db;
-            if (byte.TryParse(Props.GetProp("Brakepoint" + IDname), out byte bp)) cBrakepoint = bp;
-            if (byte.TryParse(Props.GetProp("SlowAdjust" + IDname), out byte sa)) cSlowAdjust = sa;
-            if (byte.TryParse(Props.GetProp("SlewRate" + IDname), out byte slew)) cSlewRate = slew;
-            if (byte.TryParse(Props.GetProp("MaxMotorIntegral" + IDname), out byte mm)) cMaxMotorIntegral = mm;
-            if (byte.TryParse(Props.GetProp("MaxValveIntegral" + IDname), out byte mv)) cMaxValveIntegral = mv;
-            if (byte.TryParse(Props.GetProp("MinStart" + IDname), out byte min)) cMinStart = min;
-            if (int.TryParse(Props.GetProp("AdjustTime" + IDname), out int adj)) cAdjustTime = adj;
-            if (int.TryParse(Props.GetProp("PauseTime" + IDname), out int ps)) cPauseTime = ps;
-            if (byte.TryParse(Props.GetProp("SampleTime" + IDname), out byte st)) cSampleTime = st;
-
-            #endregion Control Settings
         }
 
-        public void LoadDefaultControlSettings()
+
+        public void LoadSensor(int ModID, int SenID)
         {
-            cMaxAdjust = Props.MaxAdjustDefault;
-            cMinAdjust = Props.MinAdjustDefault;
-            cProportional = Props.ProportionalDefault;
-            cIntegral = Props.IntegralDefault;
-            cDeadband = Props.DeadbandDefault;
-            cBrakepoint = Props.BrakepointDefault;
-            cSlowAdjust = Props.SlowAdjustDefault;
-            cSlewRate = Props.SlewRateDefault;
-            cMaxMotorIntegral = Props.MaxMotorIntegralDefault;
-            cMaxValveIntegral = Props.MaxValveIntegralDefault;
-            cMinStart = Props.MinStartDefault;
-            cAdjustTime = Props.AdjustTimeDefault;
-            cPauseTime = Props.PauseTimeDefault;
-            cSampleTime = Props.SampleTimeDefault;
+            cRateSensor = mf.RateSensors.Item(ModID, SenID);
+            if (cRateSensor == null) cRateSensor = mf.RateSensors.AddSensor(ModID, SenID);
         }
 
         public double MinUPMinUse()
@@ -792,11 +706,11 @@ namespace RateController
             bool Result = false;
             if (ControlType == ControlTypeEnum.Fan)
             {
-                Result = RateSensor.Connected();
+                Result = RateSensorData.Connected();
             }
             else
             {
-                Result = (RateSensor.Connected() && cHectaresPerMinute > 0);
+                Result = (RateSensorData.Connected() && cHectaresPerMinute > 0);
             }
             return Result;
         }
@@ -808,7 +722,7 @@ namespace RateController
 
         public double PWM()
         {
-            return RateSensor.PWMsetting;
+            return RateSensorData.PWMsetting;
         }
 
         public double RateApplied()
@@ -821,14 +735,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = RateSensor.UPM / (cHectaresPerMinute * 2.47);
+                        if (cHectaresPerMinute > 0) Result = RateSensorData.UPM / (cHectaresPerMinute * 2.47);
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = RateSensor.UPM / (HPM * 2.47);
+                        if (HPM > 0) Result = RateSensorData.UPM / (HPM * 2.47);
                     }
                     else
                     {
@@ -842,14 +756,14 @@ namespace RateController
                     if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
-                        if (cHectaresPerMinute > 0) Result = RateSensor.UPM / cHectaresPerMinute;
+                        if (cHectaresPerMinute > 0) Result = RateSensorData.UPM / cHectaresPerMinute;
                     }
                     else if (cAppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (HPM > 0) Result = RateSensor.UPM / HPM;
+                        if (HPM > 0) Result = RateSensorData.UPM / HPM;
                     }
                     else
                     {
@@ -867,7 +781,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = RateSensor.UPM;
+                        Result = RateSensorData.UPM;
                     }
                     break;
 
@@ -880,7 +794,7 @@ namespace RateController
                     }
                     else
                     {
-                        Result = RateSensor.UPM * 60;
+                        Result = RateSensorData.UPM * 60;
                     }
                     break;
             }
@@ -951,8 +865,8 @@ namespace RateController
 
             Props.SetProp("CountsRev" + IDname, cCountsRev.ToString());
 
-            Props.SetProp("ModuleID" + IDname, cModID.ToString());
-            Props.SetProp("SensorID" + IDname, cSenID.ToString());
+            Props.SetProp("ModuleID" + IDname, cRateSensor.ModuleID.ToString());
+            Props.SetProp("SensorID" + IDname, cRateSensor.SensorID.ToString());
 
             Props.SetProp("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
             Props.SetProp("OffRateSetting" + IDname, cOffRateSetting.ToString());
@@ -973,24 +887,7 @@ namespace RateController
 
             Props.SetProp("AppMode" + IDname, cAppMode.ToString());
 
-            #region Control Settings
-
-            Props.SetProp("Proportional" + IDname, cProportional.ToString());
-            Props.SetProp("Integral" + IDname, cIntegral.ToString());
-            Props.SetProp("MinAdjust" + IDname, cMinAdjust.ToString());
-            Props.SetProp("MaxAdjust" + IDname, cMaxAdjust.ToString());
-            Props.SetProp("Deadband" + IDname, cDeadband.ToString());
-            Props.SetProp("Brakepoint" + IDname, cBrakepoint.ToString());
-            Props.SetProp("SlowAdjust" + IDname, cSlowAdjust.ToString());
-            Props.SetProp("SlewRate" + IDname, cSlewRate.ToString());
-            Props.SetProp("MaxMotorIntegral" + IDname, cMaxMotorIntegral.ToString());
-            Props.SetProp("MaxValveIntegral" + IDname, cMaxValveIntegral.ToString());
-            Props.SetProp("MinStart" + IDname, cMinStart.ToString());
-            Props.SetProp("AdjustTime" + IDname, cAdjustTime.ToString());
-            Props.SetProp("PauseTime" + IDname, cPauseTime.ToString());
-            Props.SetProp("SampleTime" + IDname, cSampleTime.ToString());
-
-            #endregion Control Settings
+            cRateSensor.Save();
         }
 
         public void SendPID()
@@ -1126,7 +1023,7 @@ namespace RateController
                     switch (PGN)
                     {
                         case 32400:
-                            if (RateSensor.ParseByteData(data)) UpdateUnitsApplied();
+                            if (RateSensorData.ParseByteData(data)) UpdateUnitsApplied();
                             break;
                     }
                 }
@@ -1159,7 +1056,7 @@ namespace RateController
 
         public void Update()
         {
-            if (RateSensor.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
+            if (RateSensorData.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
             {
                 double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
                 UpdateStopWatch.Restart();
@@ -1211,14 +1108,14 @@ namespace RateController
                     byte[] Data = new byte[13];
                     Data[0] = 144;
                     Data[1] = 126;
-                    Data[2] = (byte)(cModID * 16 + cSenID);
+                    Data[2] = (byte)(cRateSensor.ModuleID * 16 + cRateSensor.SensorID);
                     double Hz = (TargetUPM() * MeterCal / 60.0) * 1000;
                     Data[3] = (byte)Hz;
                     Data[4] = (byte)((int)Hz >> 8);
                     Data[5] = (byte)((int)Hz >> 16);
                     Data[11] = 0b00000001; // sensor connected
                     Data[12] = mf.Tls.CRC(Data, 12);
-                    if (RateSensor.ParseByteData(Data)) UpdateUnitsApplied();
+                    if (RateSensorData.ParseByteData(Data)) UpdateUnitsApplied();
                 }
             }
             else
@@ -1235,7 +1132,7 @@ namespace RateController
 
         public double UPMapplied()
         {
-            return RateSensor.UPM;
+            return RateSensorData.UPM;
         }
 
         public double WorkRate()
@@ -1278,7 +1175,7 @@ namespace RateController
 
         private void UpdateUnitsApplied()
         {
-            double AccumulatedUnits = RateSensor.AccumulatedQuantity;
+            double AccumulatedUnits = RateSensorData.AccumulatedQuantity;
             double Diff = AccumulatedUnits - AccumulatedLast;
             if (Diff < 0 || Diff > 1000) Diff = 0;
             AccumulatedLast = AccumulatedUnits;

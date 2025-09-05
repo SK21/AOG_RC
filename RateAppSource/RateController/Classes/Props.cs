@@ -1097,13 +1097,13 @@ namespace RateController.Classes
                         P3.TankSize = P0.TankSize;
                         P3.TankStart = P0.TankStart;
 
-                        P3.MaxAdjust = P0.MaxAdjust;
-                        P3.MinAdjust = P0.MinAdjust;
-                        P3.Proportional = P0.Proportional;
+                        P3.MaxPWMadjust = P0.MaxPWMadjust;
+                        P3.MinPWMadjust = P0.MinPWMadjust;
+                        P3.KP = P0.KP;
 
                         mf.Products.Item(2).BumpButtons = false;
-                        P0.ModuleID = 6;
-                        P3.ChangeID(0, 0);
+                        P0.EditSensorIDs(6, 0);
+                        P3.LoadSensor(0, 0);
                         P3.OnScreen = true;
                         P3.AppMode = P0.AppMode;
                         P3.UseOffRateAlarm = P0.UseOffRateAlarm;

@@ -41,10 +41,10 @@
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            Data[3] = (byte)Prod.Proportional;
-            Data[4] = (byte)Prod.Integral;
-            Data[5] = (byte)Prod.MinAdjust;
-            Data[6] = (byte)Prod.MaxAdjust;
+            Data[3] = (byte)Prod.KP;
+            Data[4] = (byte)Prod.KI;
+            Data[5] = (byte)Prod.MinPWMadjust;
+            Data[6] = (byte)Prod.MaxPWMadjust;
             Data[7] = 0;
             Data[8] = 0;
 

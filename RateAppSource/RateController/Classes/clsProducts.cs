@@ -56,7 +56,7 @@ namespace RateController
                     // returns true if at least one module is connected
                     for (int i = 0; i < Props.MaxProducts; i++)
                     {
-                        if (cProducts[i].RateSensor.Connected())
+                        if (cProducts[i].RateSensorData.Connected())
                         {
                             Result = true;
                             break;
@@ -110,14 +110,13 @@ namespace RateController
                     Prd.RateAlt = 100;
                     Prd.TankSize = 1000;
                     Prd.TankStart = 1000;
-                    Prd.ChangeID(i / 2, (byte)(i % 2), true);
+                    Prd.LoadSensor(i / 2, (byte)(i % 2));
                     Prd.OnScreen = true;
                     Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;
                     Prd.MinUPM = 0;
                     Prd.BumpButtons = false;
                     Prd.CountsRev = 1;
-                    Prd.LoadDefaultControlSettings();
                     Prd.Save();
 
                     Props.DefaultProduct = 0;
@@ -144,7 +143,7 @@ namespace RateController
             double[] Result = new double[Props.MaxProducts - 2];
             for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
-                if (cProducts[i].RateSensor.Connected())
+                if (cProducts[i].RateSensorData.Connected())
                 {
                     Result[i] = cProducts[i].CurrentRate();
                 }
@@ -157,7 +156,7 @@ namespace RateController
             double[] Result = new double[Props.MaxProducts - 2];
             for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
-                if (cProducts[i].RateSensor.Connected())
+                if (cProducts[i].RateSensorData.Connected())
                 {
                     Result[i] = cProducts[i].TargetRate();
                 }
@@ -218,7 +217,7 @@ namespace RateController
         {
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].RateSensor.Connected()) cProducts[i].SendPID();
+                if (cProducts[i].RateSensorData.Connected()) cProducts[i].SendPID();
             }
         }
 
