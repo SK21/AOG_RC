@@ -57,7 +57,7 @@
             this.btMaxMinus = new System.Windows.Forms.Button();
             this.btMinMinus = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.tbSampleTime = new System.Windows.Forms.TextBox();
+            this.tbPIDtime = new System.Windows.Forms.TextBox();
             this.lbSampleTime = new System.Windows.Forms.Label();
             this.tbSlowAdj = new System.Windows.Forms.TextBox();
             this.lbSlowAdj = new System.Windows.Forms.Label();
@@ -80,6 +80,12 @@
             this.ckAdvanced = new System.Windows.Forms.CheckBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlAdvanced = new System.Windows.Forms.Panel();
+            this.tbMinHz = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbSampleSize = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbMaxHz = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pnlMain.SuspendLayout();
             this.pnlAdvanced.SuspendLayout();
@@ -177,7 +183,7 @@
             // lbMinValue
             // 
             this.lbMinValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinValue.Location = new System.Drawing.Point(459, 322);
+            this.lbMinValue.Location = new System.Drawing.Point(459, 301);
             this.lbMinValue.Name = "lbMinValue";
             this.lbMinValue.Size = new System.Drawing.Size(59, 23);
             this.lbMinValue.TabIndex = 184;
@@ -187,7 +193,7 @@
             // lbMaxValue
             // 
             this.lbMaxValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValue.Location = new System.Drawing.Point(459, 235);
+            this.lbMaxValue.Location = new System.Drawing.Point(459, 221);
             this.lbMaxValue.Name = "lbMaxValue";
             this.lbMaxValue.Size = new System.Drawing.Size(59, 23);
             this.lbMaxValue.TabIndex = 183;
@@ -207,7 +213,7 @@
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(16, 229);
+            this.lbMax.Location = new System.Drawing.Point(16, 215);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(82, 34);
             this.lbMax.TabIndex = 172;
@@ -217,7 +223,7 @@
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(16, 316);
+            this.lbMin.Location = new System.Drawing.Point(16, 295);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(82, 34);
             this.lbMin.TabIndex = 171;
@@ -239,7 +245,7 @@
             // HSmin
             // 
             this.HSmin.LargeChange = 1;
-            this.HSmin.Location = new System.Drawing.Point(185, 311);
+            this.HSmin.Location = new System.Drawing.Point(188, 290);
             this.HSmin.Name = "HSmin";
             this.HSmin.Size = new System.Drawing.Size(182, 45);
             this.HSmin.TabIndex = 333;
@@ -248,7 +254,7 @@
             // HSmax
             // 
             this.HSmax.LargeChange = 1;
-            this.HSmax.Location = new System.Drawing.Point(185, 224);
+            this.HSmax.Location = new System.Drawing.Point(185, 210);
             this.HSmax.Name = "HSmax";
             this.HSmax.Size = new System.Drawing.Size(182, 45);
             this.HSmax.TabIndex = 334;
@@ -272,7 +278,7 @@
             this.butGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.butGraph.Image = global::RateController.Properties.Resources.Chart;
             this.butGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butGraph.Location = new System.Drawing.Point(78, 603);
+            this.butGraph.Location = new System.Drawing.Point(4, 603);
             this.butGraph.Margin = new System.Windows.Forms.Padding(6);
             this.butGraph.Name = "butGraph";
             this.butGraph.Size = new System.Drawing.Size(70, 63);
@@ -283,7 +289,7 @@
             // HSintegral
             // 
             this.HSintegral.LargeChange = 1;
-            this.HSintegral.Location = new System.Drawing.Point(185, 137);
+            this.HSintegral.Location = new System.Drawing.Point(185, 130);
             this.HSintegral.Name = "HSintegral";
             this.HSintegral.Size = new System.Drawing.Size(182, 45);
             this.HSintegral.TabIndex = 342;
@@ -292,7 +298,7 @@
             // lbIntegral
             // 
             this.lbIntegral.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIntegral.Location = new System.Drawing.Point(459, 148);
+            this.lbIntegral.Location = new System.Drawing.Point(459, 141);
             this.lbIntegral.Name = "lbIntegral";
             this.lbIntegral.Size = new System.Drawing.Size(59, 23);
             this.lbIntegral.TabIndex = 341;
@@ -302,7 +308,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(16, 142);
+            this.label2.Location = new System.Drawing.Point(16, 135);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 34);
             this.label2.TabIndex = 340;
@@ -350,7 +356,7 @@
             this.btIntegralPlus.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btIntegralPlus.Image = global::RateController.Properties.Resources.plus_square;
             this.btIntegralPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btIntegralPlus.Location = new System.Drawing.Point(378, 128);
+            this.btIntegralPlus.Location = new System.Drawing.Point(378, 121);
             this.btIntegralPlus.Name = "btIntegralPlus";
             this.btIntegralPlus.Size = new System.Drawing.Size(70, 63);
             this.btIntegralPlus.TabIndex = 345;
@@ -366,7 +372,7 @@
             this.btMaxPlus.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btMaxPlus.Image = global::RateController.Properties.Resources.plus_square;
             this.btMaxPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btMaxPlus.Location = new System.Drawing.Point(378, 215);
+            this.btMaxPlus.Location = new System.Drawing.Point(378, 201);
             this.btMaxPlus.Name = "btMaxPlus";
             this.btMaxPlus.Size = new System.Drawing.Size(70, 63);
             this.btMaxPlus.TabIndex = 346;
@@ -382,7 +388,7 @@
             this.btMinPlus.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btMinPlus.Image = global::RateController.Properties.Resources.plus_square;
             this.btMinPlus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btMinPlus.Location = new System.Drawing.Point(378, 302);
+            this.btMinPlus.Location = new System.Drawing.Point(378, 281);
             this.btMinPlus.Name = "btMinPlus";
             this.btMinPlus.Size = new System.Drawing.Size(70, 63);
             this.btMinPlus.TabIndex = 347;
@@ -398,7 +404,7 @@
             this.btIntegralMinus.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btIntegralMinus.Image = global::RateController.Properties.Resources.minus_square;
             this.btIntegralMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btIntegralMinus.Location = new System.Drawing.Point(104, 128);
+            this.btIntegralMinus.Location = new System.Drawing.Point(104, 121);
             this.btIntegralMinus.Name = "btIntegralMinus";
             this.btIntegralMinus.Size = new System.Drawing.Size(70, 63);
             this.btIntegralMinus.TabIndex = 348;
@@ -414,7 +420,7 @@
             this.btMaxMinus.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btMaxMinus.Image = global::RateController.Properties.Resources.minus_square;
             this.btMaxMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btMaxMinus.Location = new System.Drawing.Point(104, 215);
+            this.btMaxMinus.Location = new System.Drawing.Point(104, 201);
             this.btMaxMinus.Name = "btMaxMinus";
             this.btMaxMinus.Size = new System.Drawing.Size(70, 63);
             this.btMaxMinus.TabIndex = 349;
@@ -430,7 +436,7 @@
             this.btMinMinus.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btMinMinus.Image = global::RateController.Properties.Resources.minus_square;
             this.btMinMinus.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btMinMinus.Location = new System.Drawing.Point(104, 302);
+            this.btMinMinus.Location = new System.Drawing.Point(104, 281);
             this.btMinMinus.Name = "btMinMinus";
             this.btMinMinus.Size = new System.Drawing.Size(70, 63);
             this.btMinMinus.TabIndex = 350;
@@ -441,25 +447,25 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // tbSampleTime
+            // tbPIDtime
             // 
-            this.tbSampleTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSampleTime.Location = new System.Drawing.Point(123, 170);
-            this.tbSampleTime.Name = "tbSampleTime";
-            this.tbSampleTime.Size = new System.Drawing.Size(54, 29);
-            this.tbSampleTime.TabIndex = 352;
-            this.tbSampleTime.TabStop = false;
-            this.tbSampleTime.Text = "50";
-            this.tbSampleTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPIDtime.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPIDtime.Location = new System.Drawing.Point(122, 184);
+            this.tbPIDtime.Name = "tbPIDtime";
+            this.tbPIDtime.Size = new System.Drawing.Size(54, 29);
+            this.tbPIDtime.TabIndex = 352;
+            this.tbPIDtime.TabStop = false;
+            this.tbPIDtime.Text = "50";
+            this.tbPIDtime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // lbSampleTime
             // 
             this.lbSampleTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSampleTime.Location = new System.Drawing.Point(5, 172);
+            this.lbSampleTime.Location = new System.Drawing.Point(5, 186);
             this.lbSampleTime.Name = "lbSampleTime";
             this.lbSampleTime.Size = new System.Drawing.Size(105, 24);
             this.lbSampleTime.TabIndex = 351;
-            this.lbSampleTime.Text = "Smp Time";
+            this.lbSampleTime.Text = "PID Time";
             // 
             // tbSlowAdj
             // 
@@ -504,7 +510,7 @@
             // tbSlewRate
             // 
             this.tbSlewRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSlewRate.Location = new System.Drawing.Point(123, 62);
+            this.tbSlewRate.Location = new System.Drawing.Point(123, 52);
             this.tbSlewRate.Name = "tbSlewRate";
             this.tbSlewRate.Size = new System.Drawing.Size(54, 29);
             this.tbSlewRate.TabIndex = 362;
@@ -515,7 +521,7 @@
             // lbSlewRate
             // 
             this.lbSlewRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSlewRate.Location = new System.Drawing.Point(5, 64);
+            this.lbSlewRate.Location = new System.Drawing.Point(5, 54);
             this.lbSlewRate.Name = "lbSlewRate";
             this.lbSlewRate.Size = new System.Drawing.Size(105, 24);
             this.lbSlewRate.TabIndex = 361;
@@ -544,7 +550,7 @@
             // tbMinStart
             // 
             this.tbMinStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinStart.Location = new System.Drawing.Point(123, 116);
+            this.tbMinStart.Location = new System.Drawing.Point(123, 96);
             this.tbMinStart.Name = "tbMinStart";
             this.tbMinStart.Size = new System.Drawing.Size(54, 29);
             this.tbMinStart.TabIndex = 372;
@@ -555,7 +561,7 @@
             // lbMinStart
             // 
             this.lbMinStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinStart.Location = new System.Drawing.Point(5, 118);
+            this.lbMinStart.Location = new System.Drawing.Point(5, 98);
             this.lbMinStart.Name = "lbMinStart";
             this.lbMinStart.Size = new System.Drawing.Size(105, 24);
             this.lbMinStart.TabIndex = 371;
@@ -564,7 +570,7 @@
             // tbPauseTm
             // 
             this.tbPauseTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPauseTm.Location = new System.Drawing.Point(483, 116);
+            this.tbPauseTm.Location = new System.Drawing.Point(483, 96);
             this.tbPauseTm.Name = "tbPauseTm";
             this.tbPauseTm.Size = new System.Drawing.Size(54, 29);
             this.tbPauseTm.TabIndex = 370;
@@ -575,7 +581,7 @@
             // lbPauseTm
             // 
             this.lbPauseTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPauseTm.Location = new System.Drawing.Point(370, 118);
+            this.lbPauseTm.Location = new System.Drawing.Point(370, 98);
             this.lbPauseTm.Name = "lbPauseTm";
             this.lbPauseTm.Size = new System.Drawing.Size(105, 24);
             this.lbPauseTm.TabIndex = 369;
@@ -584,7 +590,7 @@
             // tbMaxValveI
             // 
             this.tbMaxValveI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxValveI.Location = new System.Drawing.Point(483, 62);
+            this.tbMaxValveI.Location = new System.Drawing.Point(483, 52);
             this.tbMaxValveI.Name = "tbMaxValveI";
             this.tbMaxValveI.Size = new System.Drawing.Size(54, 29);
             this.tbMaxValveI.TabIndex = 368;
@@ -595,7 +601,7 @@
             // lbMaxValveI
             // 
             this.lbMaxValveI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValveI.Location = new System.Drawing.Point(370, 64);
+            this.lbMaxValveI.Location = new System.Drawing.Point(370, 54);
             this.lbMaxValveI.Name = "lbMaxValveI";
             this.lbMaxValveI.Size = new System.Drawing.Size(105, 24);
             this.lbMaxValveI.TabIndex = 367;
@@ -604,7 +610,7 @@
             // tbAdjustTm
             // 
             this.tbAdjustTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbAdjustTm.Location = new System.Drawing.Point(303, 116);
+            this.tbAdjustTm.Location = new System.Drawing.Point(303, 96);
             this.tbAdjustTm.Name = "tbAdjustTm";
             this.tbAdjustTm.Size = new System.Drawing.Size(54, 29);
             this.tbAdjustTm.TabIndex = 366;
@@ -615,7 +621,7 @@
             // lbAdjustTm
             // 
             this.lbAdjustTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAdjustTm.Location = new System.Drawing.Point(190, 118);
+            this.lbAdjustTm.Location = new System.Drawing.Point(190, 98);
             this.lbAdjustTm.Name = "lbAdjustTm";
             this.lbAdjustTm.Size = new System.Drawing.Size(105, 24);
             this.lbAdjustTm.TabIndex = 365;
@@ -624,7 +630,7 @@
             // tbMaxMotorI
             // 
             this.tbMaxMotorI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxMotorI.Location = new System.Drawing.Point(303, 62);
+            this.tbMaxMotorI.Location = new System.Drawing.Point(303, 52);
             this.tbMaxMotorI.Name = "tbMaxMotorI";
             this.tbMaxMotorI.Size = new System.Drawing.Size(54, 29);
             this.tbMaxMotorI.TabIndex = 364;
@@ -635,7 +641,7 @@
             // lbMaxMotorI
             // 
             this.lbMaxMotorI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxMotorI.Location = new System.Drawing.Point(190, 64);
+            this.lbMaxMotorI.Location = new System.Drawing.Point(190, 54);
             this.lbMaxMotorI.Name = "lbMaxMotorI";
             this.lbMaxMotorI.Size = new System.Drawing.Size(105, 24);
             this.lbMaxMotorI.TabIndex = 363;
@@ -649,12 +655,13 @@
             this.ckAdvanced.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckAdvanced.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckAdvanced.Image = global::RateController.Properties.Resources.caret_circle_up;
-            this.ckAdvanced.Location = new System.Drawing.Point(4, 603);
+            this.ckAdvanced.Location = new System.Drawing.Point(78, 603);
             this.ckAdvanced.Name = "ckAdvanced";
             this.ckAdvanced.Size = new System.Drawing.Size(70, 63);
             this.ckAdvanced.TabIndex = 374;
             this.ckAdvanced.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckAdvanced.UseVisualStyleBackColor = true;
+            this.ckAdvanced.CheckedChanged += new System.EventHandler(this.ckAdvanced_CheckedChanged);
             this.ckAdvanced.Click += new System.EventHandler(this.ckAdvanced_Click);
             // 
             // pnlMain
@@ -682,15 +689,20 @@
             this.pnlMain.Controls.Add(this.btMinMinus);
             this.pnlMain.Location = new System.Drawing.Point(0, 0);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(540, 379);
+            this.pnlMain.Size = new System.Drawing.Size(540, 356);
             this.pnlMain.TabIndex = 375;
             // 
             // pnlAdvanced
             // 
-            this.pnlAdvanced.Controls.Add(this.groupBox1);
+            this.pnlAdvanced.Controls.Add(this.tbMinHz);
+            this.pnlAdvanced.Controls.Add(this.label1);
+            this.pnlAdvanced.Controls.Add(this.tbSampleSize);
+            this.pnlAdvanced.Controls.Add(this.label3);
+            this.pnlAdvanced.Controls.Add(this.tbMaxHz);
+            this.pnlAdvanced.Controls.Add(this.label4);
             this.pnlAdvanced.Controls.Add(this.tbDeadband);
             this.pnlAdvanced.Controls.Add(this.lbSampleTime);
-            this.pnlAdvanced.Controls.Add(this.tbSampleTime);
+            this.pnlAdvanced.Controls.Add(this.tbPIDtime);
             this.pnlAdvanced.Controls.Add(this.tbSlowAdj);
             this.pnlAdvanced.Controls.Add(this.lbSlowAdj);
             this.pnlAdvanced.Controls.Add(this.tbMinStart);
@@ -708,14 +720,74 @@
             this.pnlAdvanced.Controls.Add(this.tbAdjustTm);
             this.pnlAdvanced.Controls.Add(this.lbMaxMotorI);
             this.pnlAdvanced.Controls.Add(this.lbAdjustTm);
-            this.pnlAdvanced.Location = new System.Drawing.Point(0, 383);
+            this.pnlAdvanced.Location = new System.Drawing.Point(0, 373);
             this.pnlAdvanced.Name = "pnlAdvanced";
-            this.pnlAdvanced.Size = new System.Drawing.Size(540, 214);
+            this.pnlAdvanced.Size = new System.Drawing.Size(540, 220);
             this.pnlAdvanced.TabIndex = 376;
+            // 
+            // tbMinHz
+            // 
+            this.tbMinHz.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMinHz.Location = new System.Drawing.Point(122, 140);
+            this.tbMinHz.Name = "tbMinHz";
+            this.tbMinHz.Size = new System.Drawing.Size(54, 29);
+            this.tbMinHz.TabIndex = 379;
+            this.tbMinHz.TabStop = false;
+            this.tbMinHz.Text = "3";
+            this.tbMinHz.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(4, 142);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(105, 24);
+            this.label1.TabIndex = 378;
+            this.label1.Text = "Min Hz";
+            // 
+            // tbSampleSize
+            // 
+            this.tbSampleSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSampleSize.Location = new System.Drawing.Point(482, 140);
+            this.tbSampleSize.Name = "tbSampleSize";
+            this.tbSampleSize.Size = new System.Drawing.Size(54, 29);
+            this.tbSampleSize.TabIndex = 377;
+            this.tbSampleSize.TabStop = false;
+            this.tbSampleSize.Text = "400";
+            this.tbSampleSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(369, 142);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(105, 24);
+            this.label3.TabIndex = 376;
+            this.label3.Text = "Smp Size";
+            // 
+            // tbMaxHz
+            // 
+            this.tbMaxHz.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMaxHz.Location = new System.Drawing.Point(302, 140);
+            this.tbMaxHz.Name = "tbMaxHz";
+            this.tbMaxHz.Size = new System.Drawing.Size(54, 29);
+            this.tbMaxHz.TabIndex = 375;
+            this.tbMaxHz.TabStop = false;
+            this.tbMaxHz.Text = "80";
+            this.tbMaxHz.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(189, 142);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(105, 24);
+            this.label4.TabIndex = 374;
+            this.label4.Text = "Max Hz";
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(5, 0);
+            this.groupBox1.Location = new System.Drawing.Point(4, 362);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(530, 5);
             this.groupBox1.TabIndex = 373;
@@ -732,6 +804,7 @@
             this.Controls.Add(this.butGraph);
             this.Controls.Add(this.btnPIDloadDefaults);
             this.Controls.Add(this.btnRight);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -780,7 +853,7 @@
         private System.Windows.Forms.Button btMaxMinus;
         private System.Windows.Forms.Button btMinMinus;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TextBox tbSampleTime;
+        private System.Windows.Forms.TextBox tbPIDtime;
         private System.Windows.Forms.Label lbSampleTime;
         private System.Windows.Forms.TextBox tbSlowAdj;
         private System.Windows.Forms.Label lbSlowAdj;
@@ -804,5 +877,11 @@
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Panel pnlAdvanced;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox tbMinHz;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbSampleSize;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbMaxHz;
+        private System.Windows.Forms.Label label4;
     }
 }

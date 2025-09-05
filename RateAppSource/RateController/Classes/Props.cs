@@ -115,23 +115,25 @@ namespace RateController.Classes
 
         #region flow adjustment defaults
 
-        public static readonly int AdjustTimeDefault = 80;
-        public static readonly byte BrakepointDefault = 35;
+        public static readonly byte BrakePointDefault = 35;
         public static readonly byte DeadbandDefault = 15;
-        public static readonly int IntegralDefault = 0;
-        public static readonly int MaxAdjustDefault = 100;
+        public static readonly byte KIdefault = 0;
+        public static readonly byte KPdefault = 50;
         public static readonly byte MaxMotorIntegralDefault = 5;
+        public static readonly byte MaxPWMdefault = 100;
         public static readonly byte MaxValveIntegralDefault = 100;
-        public static readonly int MinAdjustDefault = 0;
-        public static readonly byte MinStartDefault = 3;
-        public static readonly int PauseTimeDefault = 400;
-        public static readonly int ProportionalDefault = 50;
-        public static readonly byte SampleTimeDefault = 50;
+        public static readonly byte MinPWMdefault = 0;
+        public static readonly byte PIDslowAdjustDefault = 30;
+        public static readonly byte PIDtimeDefault = 50;
+        public static readonly UInt16 PulseMaxHzDefault = 3000;
+        public static readonly byte PulseMinHzDefault = 1;
+        public static readonly byte PulseSampleSizeDefault = 12;
         public static readonly byte SlewRateDefault = 6;
-        public static readonly byte SlowAdjustDefault = 30;
+        public static readonly byte TimedAdjustDefault = 80;
+        public static readonly byte TimedMinStartDefault = 3;
+        public static readonly UInt16 TimedPauseDefault = 400;
+
         #endregion flow adjustment defaults
-
-
 
         public static event EventHandler JobChanged;
 

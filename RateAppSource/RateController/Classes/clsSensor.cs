@@ -4,26 +4,27 @@ namespace RateController.Classes
 {
     public class clsSensor
     {
-        // PIDtime          time interval in ms the pid runs
+        // MaxPWM           maximum pwm value
+        // MinPWM           minimum pwm value
+        // KP               proportional adjustment
+        // KI               integral adjustment
         // Deadband         error % below which no adjustment is made, actual X 100
         // BrakePoint       error % where adjustment rate changes between 100% and the slow rate %
         // PIDslowAdjust    slow rate %
         // SlewRate         slew rate limit. Max total pwm change per loop. Used for motor only.
         // MaxMotorIntegral max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
         // MaxValveIntegral max total integral pwm change per loop for valve
-        // KP               proportional adjustment
-        // KI               integral adjustment
-        // MaxPWM           maximum pwm value
-        // MinPWM           minimum pwm value
         // TimedMinStart    minimum start ratio. Used to quickly increase from 0 for a timed combo valve. Actual X 100
-        // TimedPause       time in ms where there is no adjustment of the combo valve.
         // TimedAdjust      time in ms where there is adjustment of the combo valve.
-        // PulseMaxHz       maximum Hz of the flow sensor
+        // TimedPause       time in ms where there is no adjustment of the combo valve.
+        // PIDtime          time interval in ms the pid runs
         // PulseMinHz       minimum Hz of the flow sensor, actual X 10
+        // PulseMaxHz       maximum Hz of the flow sensor
         // PulseSampeSize   number of pulses used to get the median Hz reading
         // DirPin           uC GPIO pin for flow control direction (increase/decrease)
         // PWMPin           uc GPIO pin for rate of flow adjustment (0-255)
         // FlowPin          uc GPIO pin that receives the flow meter pulses
+
 
         private readonly FormStart mf;
         private byte cBrakePoint;
@@ -57,6 +58,7 @@ namespace RateController.Classes
             mf = main;
             cRecID = ID;
             cName = "RateSensor_" + cRecID.ToString() + "_";
+            SetNewRecord();
             SetDefaults();
         }
 
@@ -78,7 +80,7 @@ namespace RateController.Classes
 
         public byte DeadBand
         {
-            // actual X 100
+            // actual X 10
             get { return cDeadband; }
             set
             {
@@ -131,7 +133,7 @@ namespace RateController.Classes
             {
                 if (value >= 0 && value <= 100)
                 {
-                    KP = value;
+                    cKP = value;
                 }
                 else
                 {
@@ -353,7 +355,7 @@ namespace RateController.Classes
             cIsNew = (cSensorID == -1 || cModuleID == -1);
             if (!cIsNew)
             {
-                if (byte.TryParse(Props.GetProp(cName + "BrakePoint" ), out byte T)) cBrakePoint = T;
+                if (byte.TryParse(Props.GetProp(cName + "BrakePoint"), out byte T)) cBrakePoint = T;
                 if (byte.TryParse(Props.GetProp(cName + "DeadBand"), out byte sw)) cDeadband = sw;
                 if (byte.TryParse(Props.GetProp(cName + "KP"), out byte kp)) cKP = kp;
                 if (byte.TryParse(Props.GetProp(cName + "KI"), out byte ki)) cKI = ki;
@@ -380,13 +382,13 @@ namespace RateController.Classes
 
         public void Save()
         {
-            Props.SetProp(cName + "BrakePoint" , cBrakePoint.ToString());
+            Props.SetProp(cName + "BrakePoint", cBrakePoint.ToString());
             Props.SetProp(cName + "DeadBand", cDeadband.ToString());
-            Props.SetProp(cName + "KP" , cKP.ToString());
-            Props.SetProp(cName + "KI" , cKI.ToString());
-            Props.SetProp(cName + "MaxMotorIntegral" , cMaxMotorIntegral.ToString());
-            Props.SetProp(cName + "MaxPWM" , cMaxPWM.ToString());
-            Props.SetProp(cName + "MaxValveIntegral" , cMaxValveIntegral.ToString());
+            Props.SetProp(cName + "KP", cKP.ToString());
+            Props.SetProp(cName + "KI", cKI.ToString());
+            Props.SetProp(cName + "MaxMotorIntegral", cMaxMotorIntegral.ToString());
+            Props.SetProp(cName + "MaxPWM", cMaxPWM.ToString());
+            Props.SetProp(cName + "MaxValveIntegral", cMaxValveIntegral.ToString());
             Props.SetProp(cName + "MinPWM", cMinPWM.ToString());
             Props.SetProp(cName + "ModuleID", cModuleID.ToString());
             Props.SetProp(cName + "PIDslowAdjust", cPIDslowAdjust.ToString());
@@ -406,28 +408,24 @@ namespace RateController.Classes
 
         public void SetDefaults()
         {
-            cTimedAdjust = 80;
-            cDeadband = 15;
-            cKI = 0;
-            cKP = 50;
-            cMaxPWM = 100;
-            cMaxMotorIntegral = 1;
-            cMaxValveIntegral = 100;
-            cMinPWM = 0;
-            cTimedMinStart = 3;
-            cTimedPause = 400;
-            cPulseMaxHz = 4000;
-            cPulseMinHz = 1;
-            cPulseSampleSize = 12;
-            cPIDtime = 50;
-            cSlewRate = 6;
-            cPIDslowAdjust = 30;
-            cDirPin = 0;
-            cFlowPin = 0;
-            cPWMPin = 0;
-            cModuleID = -1;
-            cSensorID = -1;
-            cIsNew = true;
+            cBrakePoint = Props.BrakePointDefault;
+            cDeadband = Props.DeadbandDefault;
+            cKI = Props.KIdefault;
+            cKP = Props.KPdefault;
+            cMaxMotorIntegral = Props.MaxMotorIntegralDefault;
+            cMaxPWM = Props.MaxPWMdefault;
+            cMaxValveIntegral = Props.MaxValveIntegralDefault;
+            cPulseMinHz = Props.PulseMinHzDefault;
+            cMinPWM = Props.MinPWMdefault;
+            cPIDslowAdjust = Props.PIDslowAdjustDefault;
+            cPIDtime = Props.PIDtimeDefault;
+            cPulseMaxHz = Props.PulseMaxHzDefault;
+            cPulseMinHz = Props.PulseMinHzDefault;
+            cPulseSampleSize = Props.PulseSampleSizeDefault;
+            cSlewRate = Props.SlewRateDefault;
+            cTimedAdjust = Props.TimedAdjustDefault;
+            cTimedMinStart = Props.TimedMinStartDefault;
+            cTimedPause = Props.TimedPauseDefault;
         }
 
         public bool SetModuleSensor(int Mod, int Sen, object Caller)
@@ -441,6 +439,16 @@ namespace RateController.Classes
             }
             cIsNew = (cSensorID == -1 || cModuleID == -1);
             return Result;
+        }
+
+        private void SetNewRecord()
+        {
+            cDirPin = 0;
+            cFlowPin = 0;
+            cPWMPin = 0;
+            cModuleID = -1;
+            cSensorID = -1;
+            cIsNew = true;
         }
     }
 }
