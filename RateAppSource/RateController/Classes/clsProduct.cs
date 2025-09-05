@@ -533,7 +533,7 @@ namespace RateController
         { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
         private string IDname
-        { get { return cProductID.ToString(); } }
+        { get { return "Product_" + cProductID.ToString() + "_"; } }
 
         public double AverageRate()
         {
@@ -591,7 +591,7 @@ namespace RateController
         public bool IsNew()
         {
             bool Result = true;
-            if (bool.TryParse(Props.GetProp("IsNew" + IDname), out bool nw)) Result = nw;
+            if (bool.TryParse(Props.GetProp(IDname + "IsNew"), out bool nw)) Result = nw;
             return Result;
         }
 
@@ -599,52 +599,52 @@ namespace RateController
         {
             int tmp;
 
-            double.TryParse(Props.GetProp("Coverage" + IDname), out Coverage);
-            double.TryParse(Props.GetProp("Coverage2" + IDname), out Coverage2);
-            byte.TryParse(Props.GetProp("CoverageUnits" + IDname), out CoverageUnits);
+            double.TryParse(Props.GetProp(IDname + "Coverage"), out Coverage);
+            double.TryParse(Props.GetProp(IDname + "Coverage2"), out Coverage2);
+            byte.TryParse(Props.GetProp(IDname + "CoverageUnits"), out CoverageUnits);
 
-            double.TryParse(Props.GetProp("TankStart" + IDname), out cTankStart);
-            double.TryParse(Props.GetProp("QuantityApplied" + IDname), out cUnitsApplied);
-            double.TryParse(Props.GetProp("QuantityApplied2" + IDname), out cUnitsApplied2);
+            double.TryParse(Props.GetProp(IDname + "TankStart"), out cTankStart);
+            double.TryParse(Props.GetProp(IDname + "QuantityApplied"), out cUnitsApplied);
+            double.TryParse(Props.GetProp(IDname + "QuantityApplied2"), out cUnitsApplied2);
 
-            if (double.TryParse(Props.GetProp("AccumulatedLast" + IDname), out double oa)) AccumulatedLast = oa;
+            if (double.TryParse(Props.GetProp(IDname + "AccumulatedLast"), out double oa)) AccumulatedLast = oa;
 
-            cQuantityDescription = Props.GetProp("QuantityDescription" + IDname);
+            cQuantityDescription = Props.GetProp(IDname + "QuantityDescription");
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
 
-            double.TryParse(Props.GetProp("RateSet" + IDname), out cRateSet);
+            double.TryParse(Props.GetProp(IDname + "RateSet"), out cRateSet);
             if (cRateSet < 0 || cRateSet > 50000) cRateSet = 0;
 
-            double.TryParse(Props.GetProp("RateAlt" + IDname), out cRateAlt);
+            double.TryParse(Props.GetProp(IDname + "RateAlt"), out cRateAlt);
 
-            double.TryParse(Props.GetProp("cProdDensity" + IDname), out cProdDensity);
-            bool.TryParse(Props.GetProp("cEnableProdDensity" + IDname), out cEnableProdDensity);
+            double.TryParse(Props.GetProp(IDname + "cProdDensity"), out cProdDensity);
+            bool.TryParse(Props.GetProp(IDname + "cEnableProdDensity"), out cEnableProdDensity);
 
-            double.TryParse(Props.GetProp("FlowCal" + IDname), out cMeterCal);
-            if (double.TryParse(Props.GetProp("TankSize" + IDname), out double ts)) cTankSize = ts;
+            double.TryParse(Props.GetProp(IDname + "FlowCal"), out cMeterCal);
+            if (double.TryParse(Props.GetProp(IDname + "TankSize"), out double ts)) cTankSize = ts;
 
-            cProductName = Props.GetProp("ProductName" + IDname);
+            cProductName = Props.GetProp(IDname + "ProductName");
 
-            int.TryParse(Props.GetProp("CountsRev" + IDname), out cCountsRev);
+            int.TryParse(Props.GetProp(IDname + "CountsRev"), out cCountsRev);
 
             int tmpModuleID = -1;
-            if (int.TryParse(Props.GetProp("ModuleID" + IDname), out int tmp1)) tmpModuleID = tmp1;
-            int.TryParse(Props.GetProp("SensorID" + IDname), out int tmp2);
+            if (int.TryParse(Props.GetProp(IDname + "ModuleID"), out int tmp1)) tmpModuleID = tmp1;
+            int.TryParse(Props.GetProp(IDname + "SensorID"), out int tmp2);
             LoadSensor(tmp1, tmp2);
 
-            bool.TryParse(Props.GetProp("OffRateAlarm" + IDname), out cUseOffRateAlarm);
-            byte.TryParse(Props.GetProp("OffRateSetting" + IDname), out cOffRateSetting);
+            bool.TryParse(Props.GetProp(IDname + "OffRateAlarm"), out cUseOffRateAlarm);
+            byte.TryParse(Props.GetProp(IDname + "OffRateSetting"), out cOffRateSetting);
 
-            double.TryParse(Props.GetProp("MinUPM" + IDname), out cMinUPM);
-            double.TryParse(Props.GetProp("MinUPMbySpeed" + IDname), out cMinUPMbySpeed);
-            if (bool.TryParse(Props.GetProp("UseMinUPMbySpeed" + IDname), out bool ms)) cUseMinUPMbySpeed = ms;
+            double.TryParse(Props.GetProp(IDname + "MinUPM"), out cMinUPM);
+            double.TryParse(Props.GetProp(IDname + "MinUPMbySpeed"), out cMinUPMbySpeed);
+            if (bool.TryParse(Props.GetProp(IDname + "UseMinUPMbySpeed"), out bool ms)) cUseMinUPMbySpeed = ms;
 
             tmp = 0;
-            int.TryParse(Props.GetProp("SerialPort" + IDname), out tmp);
+            int.TryParse(Props.GetProp(IDname + "SerialPort"), out tmp);
             cSerialPort = tmp;
 
             tmp = 0;
-            int.TryParse(Props.GetProp("ManualPWM" + IDname), out tmp);
+            int.TryParse(Props.GetProp(IDname + "ManualPWM"), out tmp);
             cManualPWM = tmp;
 
             if (ID > Props.MaxProducts - 3)
@@ -653,10 +653,10 @@ namespace RateController
             }
             else
             {
-                Enum.TryParse(Props.GetProp("ValveType" + IDname), true, out cControlType);
+                Enum.TryParse(Props.GetProp(IDname + "ValveType"), true, out cControlType);
             }
 
-            if (bool.TryParse(Props.GetProp("OnScreen" + IDname), out bool OS))
+            if (bool.TryParse(Props.GetProp(IDname + "OnScreen"), out bool OS))
             {
                 cOnScreen = OS;
             }
@@ -665,7 +665,7 @@ namespace RateController
                 cOnScreen = true;
             }
 
-            if (bool.TryParse(Props.GetProp("BumpButtons" + IDname), out bool BB))
+            if (bool.TryParse(Props.GetProp(IDname + "BumpButtons"), out bool BB))
             {
                 cBumpButtons = BB;
             }
@@ -674,12 +674,11 @@ namespace RateController
                 cBumpButtons = false;
             }
 
-            if (int.TryParse(Props.GetProp("ShiftRange" + IDname), out int sr)) cShiftRange = sr;
-            if (double.TryParse(Props.GetProp("Hours1" + IDname), out double h1)) cHours1 = h1;
-            if (double.TryParse(Props.GetProp("Hours2" + IDname), out double h2)) cHours2 = h2;
-            if (Enum.TryParse(Props.GetProp("AppMode" + IDname), true, out ApplicationMode am)) cAppMode = am;
+            if (int.TryParse(Props.GetProp(IDname + "ShiftRange"), out int sr)) cShiftRange = sr;
+            if (double.TryParse(Props.GetProp(IDname + "Hours1"), out double h1)) cHours1 = h1;
+            if (double.TryParse(Props.GetProp(IDname + "Hours2"), out double h2)) cHours2 = h2;
+            if (Enum.TryParse(Props.GetProp(IDname + "AppMode"), true, out ApplicationMode am)) cAppMode = am;
         }
-
 
         public void LoadSensor(int ModID, int SenID)
         {
@@ -840,52 +839,52 @@ namespace RateController
 
         public void Save()
         {
-            Props.SetProp("IsNew" + IDname, "false");
-            Props.SetProp("Coverage" + IDname, Coverage.ToString());
-            Props.SetProp("Coverage2" + IDname, Coverage2.ToString());
-            Props.SetProp("CoverageUnits" + IDname, CoverageUnits.ToString());
+            Props.SetProp(IDname + "IsNew", "false");
+            Props.SetProp(IDname + "Coverage", Coverage.ToString());
+            Props.SetProp(IDname + "Coverage2", Coverage2.ToString());
+            Props.SetProp(IDname + "CoverageUnits", CoverageUnits.ToString());
 
-            Props.SetProp("TankStart" + IDname, cTankStart.ToString());
-            Props.SetProp("QuantityDescription" + IDname, cQuantityDescription);
+            Props.SetProp(IDname + "TankStart", cTankStart.ToString());
+            Props.SetProp(IDname + "QuantityDescription", cQuantityDescription);
 
-            Props.SetProp("QuantityApplied" + IDname, cUnitsApplied.ToString());
-            Props.SetProp("QuantityApplied2" + IDname, cUnitsApplied2.ToString());
-            Props.SetProp("AccumulatedLast" + IDname, AccumulatedLast.ToString());
+            Props.SetProp(IDname + "QuantityApplied", cUnitsApplied.ToString());
+            Props.SetProp(IDname + "QuantityApplied2", cUnitsApplied2.ToString());
+            Props.SetProp(IDname + "AccumulatedLast", AccumulatedLast.ToString());
 
-            Props.SetProp("cProdDensity" + IDname, cProdDensity.ToString());
-            Props.SetProp("cEnableProdDensity" + IDname, cEnableProdDensity.ToString());
+            Props.SetProp(IDname + "cProdDensity", cProdDensity.ToString());
+            Props.SetProp(IDname + "cEnableProdDensity", cEnableProdDensity.ToString());
 
-            Props.SetProp("RateSet" + IDname, cRateSet.ToString());
-            Props.SetProp("RateAlt" + IDname, cRateAlt.ToString());
-            Props.SetProp("FlowCal" + IDname, cMeterCal.ToString());
-            Props.SetProp("TankSize" + IDname, TankSize.ToString());
-            Props.SetProp("ValveType" + IDname, cControlType.ToString());
+            Props.SetProp(IDname + "RateSet", cRateSet.ToString());
+            Props.SetProp(IDname + "RateAlt", cRateAlt.ToString());
+            Props.SetProp(IDname + "FlowCal", cMeterCal.ToString());
+            Props.SetProp(IDname + "TankSize", TankSize.ToString());
+            Props.SetProp(IDname + "ValveType", cControlType.ToString());
 
-            Props.SetProp("ProductName" + IDname, cProductName);
+            Props.SetProp(IDname + "ProductName", cProductName);
 
-            Props.SetProp("CountsRev" + IDname, cCountsRev.ToString());
+            Props.SetProp(IDname + "CountsRev", cCountsRev.ToString());
 
-            Props.SetProp("ModuleID" + IDname, cRateSensor.ModuleID.ToString());
-            Props.SetProp("SensorID" + IDname, cRateSensor.SensorID.ToString());
+            Props.SetProp(IDname + "ModuleID", cRateSensor.ModuleID.ToString());
+            Props.SetProp(IDname + "SensorID", cRateSensor.SensorID.ToString());
 
-            Props.SetProp("OffRateAlarm" + IDname, cUseOffRateAlarm.ToString());
-            Props.SetProp("OffRateSetting" + IDname, cOffRateSetting.ToString());
+            Props.SetProp(IDname + "OffRateAlarm", cUseOffRateAlarm.ToString());
+            Props.SetProp(IDname + "OffRateSetting", cOffRateSetting.ToString());
 
-            Props.SetProp("MinUPM" + IDname, cMinUPM.ToString());
-            Props.SetProp("MinUPMbySpeed" + IDname, cMinUPMbySpeed.ToString());
-            Props.SetProp("UseMinUPMbySpeed" + IDname, cUseMinUPMbySpeed.ToString());
+            Props.SetProp(IDname + "MinUPM", cMinUPM.ToString());
+            Props.SetProp(IDname + "MinUPMbySpeed", cMinUPMbySpeed.ToString());
+            Props.SetProp(IDname + "UseMinUPMbySpeed", cUseMinUPMbySpeed.ToString());
 
-            Props.SetProp("SerialPort" + IDname, cSerialPort.ToString());
-            Props.SetProp("ManualPWM" + IDname, cManualPWM.ToString());
+            Props.SetProp(IDname + "SerialPort", cSerialPort.ToString());
+            Props.SetProp(IDname + "ManualPWM", cManualPWM.ToString());
 
-            Props.SetProp("OnScreen" + IDname, cOnScreen.ToString());
-            Props.SetProp("BumpButtons" + IDname, cBumpButtons.ToString());
+            Props.SetProp(IDname + "OnScreen", cOnScreen.ToString());
+            Props.SetProp(IDname + "BumpButtons", cBumpButtons.ToString());
 
-            Props.SetProp("ShiftRange" + IDname, cShiftRange.ToString());
-            Props.SetProp("Hours1" + IDname, cHours1.ToString());
-            Props.SetProp("Hours2" + IDname, cHours2.ToString());
+            Props.SetProp(IDname + "ShiftRange", cShiftRange.ToString());
+            Props.SetProp(IDname + "Hours1", cHours1.ToString());
+            Props.SetProp(IDname + "Hours2", cHours2.ToString());
 
-            Props.SetProp("AppMode" + IDname, cAppMode.ToString());
+            Props.SetProp(IDname + "AppMode", cAppMode.ToString());
 
             cRateSensor.Save();
         }
