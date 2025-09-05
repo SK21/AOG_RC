@@ -202,6 +202,16 @@ namespace RateController.Menu
                 if (byte.TryParse(tbDeadband.Text, out byte db)) MainMenu.CurrentProduct.Deadband = (byte)(db * 10);
                 if (byte.TryParse(tbBrakepoint.Text, out byte bp)) MainMenu.CurrentProduct.Brakepoint = bp;
                 if (byte.TryParse(tbSlowAdj.Text, out byte sa)) MainMenu.CurrentProduct.PIDslowAdjust = sa;
+                if(byte.TryParse(tbSlewRate.Text,out byte sr)) MainMenu.CurrentProduct.SlewRate= sr;
+                if (byte.TryParse(tbMaxMotorI.Text, out byte mm)) MainMenu.CurrentProduct.MaxMotorIntegral = mm;
+                if (byte.TryParse(tbMaxValveI.Text, out byte mv)) MainMenu.CurrentProduct.MaxValveIntegral = mv;
+                if (byte.TryParse(tbMinStart.Text, out byte ms)) MainMenu.CurrentProduct.TimedMinStart = ms;
+                if(byte.TryParse(tbAdjustTm.Text, out byte tm)) MainMenu.CurrentProduct.TimedAdjust = tm;
+                if(UInt16.TryParse(tbPauseTm.Text,out UInt16 pt))MainMenu.CurrentProduct.TimedPause = pt;
+                if (byte.TryParse(tbMinHz.Text, out byte mz)) MainMenu.CurrentProduct.PulseMinHz = mz;
+                if (byte.TryParse(tbMaxHz.Text, out byte max)) MainMenu.CurrentProduct.PulseMaxHz = max;
+                if (UInt16.TryParse(tbSampleSize.Text, out UInt16 sam)) MainMenu.CurrentProduct.PulseSampleSize = sam;
+                if (byte.TryParse(tbPIDtime.Text, out byte tim)) MainMenu.CurrentProduct.PIDtime = tim;
 
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
@@ -418,6 +428,21 @@ namespace RateController.Menu
             HSscaling.Value = MainMenu.CurrentProduct.KP;
             HSintegral.Value = MainMenu.CurrentProduct.KI;
             UpdateControlDisplay();
+
+            tbDeadband.Text = (MainMenu.CurrentProduct.Deadband / 10.0).ToString("N1");
+            tbBrakepoint.Text = MainMenu.CurrentProduct.Brakepoint.ToString();
+            tbSlowAdj.Text = MainMenu.CurrentProduct.PIDslowAdjust.ToString();
+            tbSlewRate.Text = MainMenu.CurrentProduct.SlewRate.ToString();
+            tbMaxMotorI.Text = MainMenu.CurrentProduct.MaxMotorIntegral.ToString();
+            tbMaxValveI.Text = MainMenu.CurrentProduct.MaxValveIntegral.ToString();
+            tbMinStart.Text = MainMenu.CurrentProduct.TimedMinStart.ToString();
+            tbAdjustTm.Text=MainMenu.CurrentProduct.TimedAdjust.ToString();
+            tbPauseTm.Text = MainMenu.CurrentProduct.TimedPause.ToString();
+            tbMinHz.Text = MainMenu.CurrentProduct.PulseMinHz.ToString();
+            tbMaxHz.Text=MainMenu.CurrentProduct.PulseMaxHz.ToString();
+            tbSampleSize.Text = MainMenu.CurrentProduct.PulseSampleSize.ToString();
+            tbPIDtime.Text = MainMenu.CurrentProduct.PIDtime.ToString();
+
             SetAdvanced();
             Initializing = false;
         }

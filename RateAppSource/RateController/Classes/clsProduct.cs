@@ -95,6 +95,22 @@ namespace RateController
                 cRateSensor.DeadBand = value;
             }
         }
+        public byte PulseMinHz
+        {
+            get { return cRateSensor.PulseMinHz; }
+            set
+            {  cRateSensor.PulseMinHz = value;}
+        }
+        public UInt16 PulseMaxHz
+        {
+            get { return cRateSensor.PulseMaxHz; }
+            set { cRateSensor.PulseMaxHz = value;}
+        }
+        public byte PulseSampleSize
+        {
+            get { return cRateSensor.PulseSampleSize; }
+            set { cRateSensor.PulseSampleSize=value;}
+        }
 
         public int KI
         {
