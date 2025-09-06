@@ -304,7 +304,7 @@ void SaveData()
 
 	for (int i = 0; i < MaxProductCount; i++)
 	{
-		EEPROM.put(200 + i * 80, Sensor[i]);
+		EEPROM.put(200 + i * 120, Sensor[i]);
 	}
 }
 

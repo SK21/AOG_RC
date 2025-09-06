@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 23085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 6095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -61,7 +61,7 @@ struct ModuleConfig
 
 ModuleConfig MDL;
 
-struct SensorConfig
+struct SensorConfig	// about 104 bytes
 {
 	uint8_t FlowPin;
 	uint8_t DirPin;
@@ -75,11 +75,24 @@ struct SensorConfig
 	float TargetUPM;
 	float MeterCal;
 	float ManualAdjust;
+	float Hz;
 	float MaxPower;
 	float MinPower;
 	float Kp;
 	float Ki;
-	float Hz;
+	float Deadband;
+	float BrakePoint;
+	float PIDslowAdjust;
+	float SlewRate;
+	float MaxMotorIntegral;
+	float MaxValveIntegral;
+	float TimedMinStart;
+	uint32_t TimedAdjust;
+	uint32_t TimedPause;
+	uint32_t PIDtime;
+	uint32_t PulseMin;
+	uint32_t PulseMax;
+	byte PulseSampleSize;
 };
 
 SensorConfig Sensor[2];
