@@ -31,7 +31,8 @@ void PulseISR(uint8_t ID)
 	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
 	ReadLast[ID] = ReadTime[ID];
 
-	if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)
+	if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax
+		&& (RelayLo > 0 || RelayHi > 0))
 	{
 		PulseCount[ID]++;
 		Samples[ID][SamplesIndex[ID]] = PulseTime[ID];

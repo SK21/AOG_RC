@@ -104,8 +104,8 @@ uint16_t DestinationPort = 29999;
 IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
 
 // Relays
-byte RelayLo = 0;	// sections 0-7
-byte RelayHi = 0;	// sections 8-15
+volatile byte RelayLo = 0;	// sections 0-7
+volatile byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
 byte InvertedLo;
