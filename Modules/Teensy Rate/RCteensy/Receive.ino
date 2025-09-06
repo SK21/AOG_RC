@@ -156,8 +156,8 @@ void ReadPGNs(byte data[], uint16_t len)
 					byte SensorID = ParseSenID(data[2]);
 					if (SensorID < MDL.SensorCount)
 					{
-						Sensor[SensorID].MaxPower = (float)(255.0 * data[3] / 100.0);
-						Sensor[SensorID].MinPower = (float)(255.0 * data[4] / 100.0);
+						Sensor[SensorID].MaxPWM = (float)(255.0 * data[3] / 100.0);
+						Sensor[SensorID].MinPWM = (float)(255.0 * data[4] / 100.0);
 
 						// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
 						Sensor[SensorID].Kp = pow(1.1, data[5] - 120);

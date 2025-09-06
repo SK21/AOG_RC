@@ -63,7 +63,7 @@ void SetPWM()
 				Sensor[i].PWM = Sensor[i].ManualAdjust;
 				float Direction = 1.0;
 				if (Sensor[i].PWM < 0) Direction = -1.0;
-				if (abs(Sensor[i].PWM) > Sensor[i].MaxPower) Sensor[i].PWM = Sensor[i].MaxPower * Direction;
+				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
 				break;
 			}
 		}
@@ -104,7 +104,7 @@ float PIDmotor(byte ID)
 				float Change = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
 				Change = constrain(Change, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
 				Result += Change;
-				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 			}
 			else
 			{
@@ -151,8 +151,8 @@ float PIDvalve(byte ID)
 				float Control = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
 				float Sign = (Control >= 0) ? 1.0 : -1.0;
 
-				Result = abs(Control) + Sensor[ID].MinPower;
-				Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+				Result = abs(Control) + Sensor[ID].MinPWM;
+				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 				Result *= Sign;
 			}
 			else
@@ -209,7 +209,7 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 					Result = Sensor[ID].ManualAdjust;
 					float Direction = 1.0;
 					if (Result < 0) Direction = -1.0;
-					if (abs(Result) > Sensor[ID].MaxPower) Result = Sensor[ID].MaxPower * Direction;
+					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
 				}
 				else
 				{
@@ -237,8 +237,8 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 						float Control = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
 						float Sign = (Control >= 0) ? 1.0 : -1.0;
 
-						Result = abs(Control) + Sensor[ID].MinPower;
-						Result = constrain(Result, Sensor[ID].MinPower, Sensor[ID].MaxPower);
+						Result = abs(Control) + Sensor[ID].MinPWM;
+						Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 						Result *= Sign;
 					}
 					else

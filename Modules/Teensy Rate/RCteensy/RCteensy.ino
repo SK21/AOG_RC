@@ -76,8 +76,8 @@ struct SensorConfig	// about 104 bytes
 	float MeterCal;
 	float ManualAdjust;
 	float Hz;
-	float MaxPower;
-	float MinPower;
+	float MaxPWM;
+	float MinPWM;
 	float Kp;
 	float Ki;
 	float Deadband;
