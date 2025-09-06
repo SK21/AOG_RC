@@ -88,7 +88,6 @@ namespace RateController.Classes
             }
         }
 
-
         public bool IsNew
         { get { return cIsNew; } }
 
@@ -262,7 +261,6 @@ namespace RateController.Classes
             }
         }
 
-
         public int SensorID
         {
             get { return cSensorID; }
@@ -414,9 +412,6 @@ namespace RateController.Classes
 
         private void SetNewRecord()
         {
-            cDirPin = 0;
-            cFlowPin = 0;
-            cPWMPin = 0;
             cModuleID = -1;
             cSensorID = -1;
             cIsNew = true;
