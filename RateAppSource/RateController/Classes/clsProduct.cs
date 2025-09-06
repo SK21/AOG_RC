@@ -51,7 +51,7 @@ namespace RateController
         private bool cUseAltRate = false;
         private bool cUseMinUPMbySpeed = false;
         private bool cUseOffRateAlarm;
-        private PGN32502 ModuleControlSettings;
+        private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
 
         public clsProduct(FormStart CallingForm, int ProdID)
@@ -65,7 +65,7 @@ namespace RateController
 
             RateSensorData = new PGN32400(this);
             ModuleRateSettings = new PGN32500(this);
-            ModuleControlSettings = new PGN32502(this);
+            SensorControlSettings = new PGN32502(this);
 
             if (cProductID > Props.MaxProducts - 3)
             {
@@ -193,12 +193,12 @@ namespace RateController
             }
         }
 
-        public int TimedAdjust
+        public UInt16 TimedAdjust
         {
             get { return cRateSensor.TimedAdjust; }
             set
             {
-                cRateSensor.TimedAdjust = (ushort)value;
+                cRateSensor.TimedAdjust = value;
             }
         }
 
@@ -905,9 +905,9 @@ namespace RateController
             cRateSensor.Save();
         }
 
-        public void SendPID()
+        public void SendSensorSettings()
         {
-            ModuleControlSettings.Send();
+            SensorControlSettings.Send();
         }
 
         public double SmoothRate()

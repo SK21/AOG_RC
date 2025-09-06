@@ -218,7 +218,7 @@ namespace RateController
                 Swt.Show();
             }
 
-            Products.UpdatePID();
+            Products.UpdateSensorSettings();
             UpdateStatus();
             DisplayScales();
         }
@@ -935,7 +935,7 @@ namespace RateController
 
         private void timerPIDs_Tick(object sender, EventArgs e)
         {
-            Products.UpdatePID();
+            Products.UpdateSensorSettings();
         }
 
         private void timerRates_Tick(object sender, EventArgs e)

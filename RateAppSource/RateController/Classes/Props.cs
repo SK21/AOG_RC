@@ -126,7 +126,7 @@ namespace RateController.Classes
         public static readonly byte PIDslowAdjustDefault = 30;
         public static readonly byte PIDtimeDefault = 50;
         public static readonly UInt16 PulseMaxHzDefault = 3000;
-        public static readonly byte PulseMinHzDefault = 1;
+        public static readonly byte PulseMinHzDefault = 10;
         public static readonly byte PulseSampleSizeDefault = 12;
         public static readonly byte SlewRateDefault = 6;
         public static readonly byte TimedAdjustDefault = 80;

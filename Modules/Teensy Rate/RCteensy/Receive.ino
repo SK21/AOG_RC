@@ -198,7 +198,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 		//4     commands
 		//      bit 0 - Invert relay control
 		//      bit 1 - Invert flow control
-		//      bit 2 - wifi station/client mode enabled
+		//      bit 2 - 
 		//      bit 3 - work pin is momentary
 		//      bit 4 - Is3Wire valve
 		//      bit 5 - ADS1115 enabled

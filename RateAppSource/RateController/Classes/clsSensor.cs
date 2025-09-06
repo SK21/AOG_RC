@@ -8,29 +8,23 @@ namespace RateController.Classes
         // MinPWM           minimum pwm value
         // KP               proportional adjustment
         // KI               integral adjustment
-        // Deadband         error % below which no adjustment is made, actual X 100
+        // Deadband         error % below which no adjustment is made, actual X 10
         // BrakePoint       error % where adjustment rate changes between 100% and the slow rate %
         // PIDslowAdjust    slow rate %
         // SlewRate         slew rate limit. Max total pwm change per loop. Used for motor only.
         // MaxMotorIntegral max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
         // MaxValveIntegral max total integral pwm change per loop for valve
-        // TimedMinStart    minimum start ratio. Used to quickly increase from 0 for a timed combo valve. Actual X 100
+        // TimedMinStart    minimum start ratio %. Used to quickly increase from 0 for a timed combo valve.
         // TimedAdjust      time in ms where there is adjustment of the combo valve.
         // TimedPause       time in ms where there is no adjustment of the combo valve.
         // PIDtime          time interval in ms the pid runs
         // PulseMinHz       minimum Hz of the flow sensor, actual X 10
         // PulseMaxHz       maximum Hz of the flow sensor
         // PulseSampeSize   number of pulses used to get the median Hz reading
-        // DirPin           uC GPIO pin for flow control direction (increase/decrease)
-        // PWMPin           uc GPIO pin for rate of flow adjustment (0-255)
-        // FlowPin          uc GPIO pin that receives the flow meter pulses
-
 
         private readonly FormStart mf;
         private byte cBrakePoint;
         private byte cDeadband;
-        private byte cDirPin;
-        private byte cFlowPin;
         private bool cIsNew = true;
         private byte cKI;
         private byte cKP;
@@ -45,7 +39,6 @@ namespace RateController.Classes
         private UInt16 cPulseMaxHz;
         private byte cPulseMinHz;
         private byte cPulseSampleSize;
-        private byte cPWMPin;
         private int cRecID;
         private int cSensorID;
         private byte cSlewRate;
@@ -73,7 +66,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("BrakePoint");
                 }
             }
         }
@@ -84,28 +77,17 @@ namespace RateController.Classes
             get { return cDeadband; }
             set
             {
-                if (value >= 0 && value <= 50)
+                if (value >= 0 && value <= 100)
                 {
                     cDeadband = value;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("DeadBand");
                 }
             }
         }
 
-        public byte DirPin
-        {
-            get { return cDirPin; }
-            set { cDirPin = value; }
-        }
-
-        public byte FlowPin
-        {
-            get { return cFlowPin; }
-            set { cFlowPin = value; }
-        }
 
         public bool IsNew
         { get { return cIsNew; } }
@@ -121,7 +103,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("KI");
                 }
             }
         }
@@ -137,7 +119,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("KP");
                 }
             }
         }
@@ -154,7 +136,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("MaxMotorIntegral");
                 }
             }
         }
@@ -170,7 +152,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("MaxPWM");
                 }
             }
         }
@@ -189,7 +171,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("MinPWM");
                 }
             }
         }
@@ -210,7 +192,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("PIDslowAdjust");
                 }
             }
         }
@@ -226,7 +208,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("PIDtime");
                 }
             }
         }
@@ -242,7 +224,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("PulseMaxHz");
                 }
             }
         }
@@ -253,13 +235,13 @@ namespace RateController.Classes
             get { return cPulseMinHz; }
             set
             {
-                if (value >= 5)
+                if (value >= 1)
                 {
                     cPulseMinHz = value;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("PulseMinHz");
                 }
             }
         }
@@ -275,16 +257,11 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("PulseSampleSize");
                 }
             }
         }
 
-        public byte PWMPin
-        {
-            get { return cPWMPin; }
-            set { cPWMPin = value; }
-        }
 
         public int SensorID
         {
@@ -302,7 +279,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("SlewRate");
                 }
             }
         }
@@ -318,7 +295,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("TimedAdjust");
                 }
             }
         }
@@ -342,7 +319,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("TimedPause");
                 }
             }
         }
@@ -372,9 +349,6 @@ namespace RateController.Classes
                 if (UInt16.TryParse(Props.GetProp(cName + "TimedAdjust"), out UInt16 ta)) cTimedAdjust = ta;
                 if (byte.TryParse(Props.GetProp(cName + "TimedMinStart"), out byte ms)) cTimedMinStart = ms;
                 if (UInt16.TryParse(Props.GetProp(cName + "TimedPause"), out UInt16 tp)) cTimedPause = tp;
-                if (byte.TryParse(Props.GetProp(cName + "DirPin"), out byte dir)) cDirPin = dir;
-                if (byte.TryParse(Props.GetProp(cName + "PWMPin"), out byte pp)) cPWMPin = pp;
-                if (byte.TryParse(Props.GetProp(cName + "FlowPin"), out byte Flow)) cFlowPin = Flow;
                 Result = true;
             }
             return Result;
@@ -400,9 +374,6 @@ namespace RateController.Classes
             Props.SetProp(cName + "TimedAdjust", cTimedAdjust.ToString());
             Props.SetProp(cName + "TimedMinStart", cTimedMinStart.ToString());
             Props.SetProp(cName + "TimedPause", cTimedPause.ToString());
-            Props.SetProp(cName + "DirPin", cDirPin.ToString());
-            Props.SetProp(cName + "PWMPin", cPWMPin.ToString());
-            Props.SetProp(cName + "FlowPin", cFlowPin.ToString());
             Props.SetProp(cName + "SensorID", cSensorID.ToString());
         }
 

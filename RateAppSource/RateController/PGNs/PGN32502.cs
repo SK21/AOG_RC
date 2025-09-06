@@ -1,4 +1,6 @@
-﻿namespace RateController
+﻿using RateController.Classes;
+
+namespace RateController
 {
     public class PGN32502
     {
@@ -6,25 +8,29 @@
         // 0    246
         // 1    126
         // 2    Mod/Sen ID     0-15/0-15
-        // 3    Kp
-        // 4    Ki
-        // 5    MinAdjust
-        // 6    MaxAdjust
-        // 7    Deadband     %          actual X 10
-        // 8    Brakepoint   %
-        // 9    Slow Adjust  %
+        // 3    MaxPWM
+        // 4    MinPWM
+        // 5    Kp
+        // 6    Ki
+        // 7    Deadband        %       actual X 10
+        // 8    Brakepoint      %
+        // 9    PIDslowAdjust   %
         // 10   Slew Rate
-        // 11   Max Motor Integral      actual X 100
+        // 11   Max Motor Integral      actual X 10
         // 12   Max Valve Integral
-        // 13   Min Start
-        // 14   Adjust time Lo
-        // 15   Adjust time Hi
-        // 16   Pause time Lo
-        // 17   Pause time Hi
-        // 18   Sample time
-        // 19   CRC
+        // 13   TimedMinStart
+        // 14   TimedAdjust Lo
+        // 15   TimedAdjust Hi
+        // 16   TimedPause Lo
+        // 17   TimedPause Hi
+        // 18   PIDtime
+        // 19   PulseMinHz              actual X 10
+        // 20   PulseMaxHz Lo
+        // 21   PulseMaxHz Hi
+        // 22   PulseSampleSize
+        // 23   CRC
 
-        private const byte cByteCount = 20;
+        private const byte cByteCount = 24;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 246;
         private readonly clsProduct Prod;
@@ -36,19 +42,34 @@
 
         public void Send()
         {
+            clsSensor Sen = Prod.RateSensor;
             byte[] Data = new byte[cByteCount];
             Data[0] = HeaderLo;
             Data[1] = HeaderHi;
             Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            Data[3] = (byte)Prod.KP;
-            Data[4] = (byte)Prod.KI;
-            Data[5] = (byte)Prod.MinPWMadjust;
-            Data[6] = (byte)Prod.MaxPWMadjust;
-            Data[7] = 0;
-            Data[8] = 0;
+            Data[3] = Sen.MaxPWM;
+            Data[4] = Sen.MinPWM;
+            Data[5] = Sen.KP;
+            Data[6] = Sen.KI;
+            Data[7] = Sen.DeadBand;
+            Data[8] = Sen.BrakePoint;
+            Data[9] = Sen.PIDslowAdjust;
+            Data[10] = Sen.SlewRate;
+            Data[11] = Sen.MaxMotorIntegral;
+            Data[12] = Sen.MaxValveIntegral;
+            Data[13] = Sen.TimedMinStart;
+            Data[14] = (byte)Sen.TimedAdjust;
+            Data[15] = (byte)(Sen.TimedAdjust >> 8);
+            Data[16] = (byte)Sen.TimedPause;
+            Data[17] = (byte)(Sen.TimedPause >> 8);
+            Data[18] = Sen.PIDtime;
+            Data[19] = Sen.PulseMinHz;
+            Data[20] = (byte)(Sen.PulseMaxHz);
+            Data[21] = (byte)(Sen.PulseMaxHz >> 8);
+            Data[22] = Sen.PulseSampleSize;
 
-            Data[19] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+            Data[23] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
             Prod.mf.UDPmodules.SendUDPMessage(Data);
         }

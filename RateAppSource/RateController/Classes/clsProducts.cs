@@ -213,11 +213,11 @@ namespace RateController
             return Result;
         }
 
-        public void UpdatePID()
+        public void UpdateSensorSettings()
         {
             for (int i = 0; i < cProducts.Count; i++)
             {
-                if (cProducts[i].RateSensorData.Connected()) cProducts[i].SendPID();
+                if (cProducts[i].RateSensorData.Connected()) cProducts[i].SendSensorSettings();
             }
         }
 
