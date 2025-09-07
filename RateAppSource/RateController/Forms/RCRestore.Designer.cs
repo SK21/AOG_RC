@@ -31,7 +31,7 @@ namespace RateController
         {
             this.components = new System.ComponentModel.Container();
             this.btRestore = new System.Windows.Forms.Button();
-            this.lbRateAmount = new System.Windows.Forms.Label();
+            this.lbRate = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -51,20 +51,20 @@ namespace RateController
             this.btRestore.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.btRestore.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
-            // lbRateAmount
+            // lbRate
             // 
-            this.lbRateAmount.BackColor = System.Drawing.Color.Transparent;
-            this.lbRateAmount.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRateAmount.ForeColor = System.Drawing.Color.Yellow;
-            this.lbRateAmount.Location = new System.Drawing.Point(70, 0);
-            this.lbRateAmount.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.lbRateAmount.Name = "lbRateAmount";
-            this.lbRateAmount.Size = new System.Drawing.Size(113, 62);
-            this.lbRateAmount.TabIndex = 200;
-            this.lbRateAmount.Text = "0.0";
-            this.lbRateAmount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbRateAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
-            this.lbRateAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.lbRate.BackColor = System.Drawing.Color.Transparent;
+            this.lbRate.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRate.ForeColor = System.Drawing.Color.Yellow;
+            this.lbRate.Location = new System.Drawing.Point(70, 0);
+            this.lbRate.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lbRate.Name = "lbRate";
+            this.lbRate.Size = new System.Drawing.Size(113, 62);
+            this.lbRate.TabIndex = 200;
+            this.lbRate.Text = "0.0";
+            this.lbRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbRate.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.lbRate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // timer1
             // 
@@ -78,7 +78,7 @@ namespace RateController
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(183, 68);
             this.ControlBox = false;
-            this.Controls.Add(this.lbRateAmount);
+            this.Controls.Add(this.lbRate);
             this.Controls.Add(this.btRestore);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -96,7 +96,7 @@ namespace RateController
         #endregion
 
         private System.Windows.Forms.Button btRestore;
-        private System.Windows.Forms.Label lbRateAmount;
+        private System.Windows.Forms.Label lbRate;
         private System.Windows.Forms.Timer timer1;
     }
 }

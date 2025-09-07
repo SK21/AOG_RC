@@ -138,7 +138,7 @@ namespace RateController.Forms
             UpdateForm();
         }
 
-        private void TrackingSetup()
+        public void TrackingSetup()
         {
             try
             {
@@ -153,6 +153,8 @@ namespace RateController.Forms
                     }
 
                     // refresh
+                    this.Show();
+                    this.WindowState= FormWindowState.Normal;
                     this.TopMost = false;
                     this.TopMost = true;
                 }
@@ -203,6 +205,11 @@ namespace RateController.Forms
             {
                 Props.WriteErrorLog("frmRate/UpdateForm: " + ex.Message);
             }
+        }
+
+        private void timer1_Tick_1(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
     }
 }

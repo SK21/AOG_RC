@@ -721,7 +721,7 @@ namespace RateController
             {
                 int prod = CurrentPage - 1;
                 if (prod < 0) prod = 0;
-                Form restoreform = new RCRestore(this, Props.UserRateType, Products.Item(prod), this);
+                Form restoreform = new RCRestore(this, Props.UserRateType,  this);
                 restoreform.Show();
             }
         }

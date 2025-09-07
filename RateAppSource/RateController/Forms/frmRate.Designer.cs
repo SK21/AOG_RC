@@ -52,7 +52,8 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 500;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
             // 
             // btRestore
             // 
@@ -82,6 +83,7 @@
             this.Name = "frmRate";
             this.ShowInTaskbar = false;
             this.Text = "frmRate";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmRate_FormClosed);
             this.Load += new System.EventHandler(this.frmRate_Load);
             this.LocationChanged += new System.EventHandler(this.frmRate_LocationChanged);

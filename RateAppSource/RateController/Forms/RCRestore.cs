@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RateController.Classes;
+using RateController.Forms;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,17 +8,17 @@ namespace RateController
 {
     public partial class RCRestore : Form
     {
-        private clsProduct cCurrentProduct;
         private int cRateType;
         private Form FormToHide;
+        private FormStart mf;
         private MouseButtons MouseButtonClicked;
         private Point MouseDownLocation;
 
-        public RCRestore(Form CallingForm, int RateType, clsProduct CurrentProduct, FormStart Main)
+        public RCRestore(Form CallingForm, int RateType, FormStart Main)
         {
+            mf = Main;
             FormToHide = CallingForm;
             cRateType = RateType;
-            cCurrentProduct = CurrentProduct;
             this.TransparencyKey = this.BackColor;
             Main.ColorChanged += Main_ColorChanged;
             InitializeComponent();
@@ -39,7 +41,7 @@ namespace RateController
 
         private void Main_ColorChanged(object sender, EventArgs e)
         {
-            lbRateAmount.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            lbRate.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
         }
 
@@ -63,7 +65,8 @@ namespace RateController
             FormToHide.WindowState = FormWindowState.Minimized;
             timer1.Enabled = true;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
-            lbRateAmount.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            lbRate.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            UpdateForm();
         }
 
         private void RestoreLC_Click(object sender, EventArgs e)
@@ -72,21 +75,32 @@ namespace RateController
             {
                 FormToHide.WindowState = FormWindowState.Normal;
                 timer1.Enabled = false;
+
+                frmRate RT = (frmRate)Props.IsFormOpen("frmRate", false);
+                if (RT != null)
+                {
+                    RT.TrackingSetup();
+                }
+
                 this.Close();
             }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            switch (cRateType)
-            {
-                case 1:
-                    lbRateAmount.Text = cCurrentProduct.CurrentRate().ToString("N1");
-                    break;
+            UpdateForm();
+        }
 
-                default:
-                    lbRateAmount.Text = cCurrentProduct.SmoothRate().ToString("N1");
-                    break;
+        private void UpdateForm()
+        {
+            try
+            {
+                double Rate = mf.Products.Items[mf.CurrentProduct()].CurrentRate();
+                lbRate.Text = Rate.ToString("N1");
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("RCRestore/UpdateForm: " + ex.Message);
             }
         }
     }
