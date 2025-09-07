@@ -166,10 +166,12 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						Sensor[SensorID].TimedAdjust = data[14] | data[15] << 8;
 						Sensor[SensorID].TimedPause = data[16] | data[17] << 8;
 						Sensor[SensorID].PIDtime = data[18];
-						Sensor[SensorID].PulseMin = 1000000 / data[19];	//Hz to micros
+						Sensor[SensorID].PulseMax = 10000000 / data[19];	//Hz * 10 to micros, minimum Hz - maximum pulse time
 						uint32_t tmp = data[20] | data[21] << 8;
-						Sensor[SensorID].PulseMax = 1000000 / tmp;
+						Sensor[SensorID].PulseMin = 1000000 / tmp;
 						Sensor[SensorID].PulseSampleSize = data[22];
+
+						SaveData();
 					}
 				}
 			}
