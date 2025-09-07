@@ -26,9 +26,9 @@ void ReceiveUDP()
     }
 }
 
-void ReadPGNs(byte Data[], uint16_t len)
+void ReadPGNs(byte data[], uint16_t len)
 {
-    uint16_t PGN = Data[1] << 8 | Data[0];
+    uint16_t PGN = data[1] << 8 | data[0];
     byte PGNlength;
     switch (PGN)
     {
@@ -59,23 +59,23 @@ void ReadPGNs(byte Data[], uint16_t len)
 
         if (len > PGNlength - 1)
         {
-            if (GoodCRC(Data, PGNlength))
+            if (GoodCRC(data, PGNlength))
             {
-                if (ParseModID(Data[2]) == MDL.ID)
+                if (ParseModID(data[2]) == MDL.ID)
                 {
-                    byte SensorID = ParseSenID(Data[2]);
+                    byte SensorID = ParseSenID(data[2]);
                     if (SensorID < MDL.SensorCount)
                     {
                         // rate setting, 1000 times actual
-                        uint32_t RateSet = Data[3] | (uint32_t)Data[4] << 8 | (uint32_t)Data[5] << 16;
+                        uint32_t RateSet = data[3] | (uint32_t)data[4] << 8 | (uint32_t)data[5] << 16;
                         Sensor[SensorID].TargetUPM = (float)(RateSet * 0.001);
 
                         // Meter Cal, 1000 times actual
-                        uint32_t Temp = Data[6] | (uint32_t)Data[7] << 8 | (uint32_t)Data[8] << 16;
+                        uint32_t Temp = data[6] | (uint32_t)data[7] << 8 | (uint32_t)data[8] << 16;
                         Sensor[SensorID].MeterCal = Temp * 0.001;
 
                         // command byte
-                        byte InCommand = Data[9];
+                        byte InCommand = data[9];
                         if ((InCommand & 1) == 1) Sensor[SensorID].TotalPulses = 0;	// reset accumulated count
 
                         Sensor[SensorID].ControlType = 0;
@@ -87,7 +87,7 @@ void ReadPGNs(byte Data[], uint16_t len)
 
                         AutoOn = ((InCommand & 64) == 64);
 
-                        int16_t tmp = Data[10] | Data[11] << 8;
+                        int16_t tmp = data[10] | data[11] << 8;
                         Sensor[SensorID].ManualAdjust = tmp;
 
                         Sensor[SensorID].CommTime = millis();
@@ -114,16 +114,16 @@ void ReadPGNs(byte Data[], uint16_t len)
 
         if (len > PGNlength - 1)
         {
-            if (GoodCRC(Data, PGNlength))
+            if (GoodCRC(data, PGNlength))
             {
-                if (ParseModID(Data[2]) == MDL.ID)
+                if (ParseModID(data[2]) == MDL.ID)
                 {
-                    RelayLo = Data[3];
-                    RelayHi = Data[4];
-                    PowerRelayLo = Data[5];
-                    PowerRelayHi = Data[6];
-                    InvertedLo = Data[7];
-                    InvertedHi = Data[8];
+                    RelayLo = data[3];
+                    RelayHi = data[4];
+                    PowerRelayLo = data[5];
+                    PowerRelayHi = data[6];
+                    InvertedLo = data[7];
+                    InvertedHi = data[8];
                 }
             }
         }
@@ -131,42 +131,73 @@ void ReadPGNs(byte Data[], uint16_t len)
 
     case 32502:
         // PGN32502, Control settings from RC to module
-        // 0   246
-        // 1   126
-        // 2   Mod/Sen ID     0-15/0-15
-        // 3   Ki
-        // 4   -
-        // 5   -
-        // 6   MinAdjust
-        // 7   MaxAdjust
-        // 8   Kp
-        // 9   CRC
+        // 0    246
+        // 1    126
+        // 2    Mod/Sen ID     0-15/0-15
+        // 3    MaxPWM
+        // 4    MinPWM
+        // 5    Kp
+        // 6    Ki
+        // 7    Deadband        %       actual X 10
+        // 8    Brakepoint      %
+        // 9    PIDslowAdjust   %
+        // 10   Slew Rate
+        // 11   Max Motor Integral      actual X 10
+        // 12   Max Valve Integral
+        // 13   TimedMinStart
+        // 14   TimedAdjust Lo
+        // 15   TimedAdjust Hi
+        // 16   TimedPause Lo
+        // 17   TimedPause Hi
+        // 18   PIDtime
+        // 19   PulseMinHz              actual X 10
+        // 20   PulseMaxHz Lo
+        // 21   PulseMaxHz Hi
+        // 22   PulseSampleSize
+        // 23   CRC
 
-        PGNlength = 10;
+        PGNlength = 24;
 
         if (len > PGNlength - 1)
         {
-            if (GoodCRC(Data, PGNlength))
+            if (GoodCRC(data, PGNlength))
             {
-                if (ParseModID(Data[2]) == MDL.ID)
+                if (ParseModID(data[2]) == MDL.ID)
                 {
-                    byte SensorID = ParseSenID(Data[2]);
+                    byte SensorID = ParseSenID(data[2]);
                     if (SensorID < MDL.SensorCount)
                     {
-                        if (Data[3] > 0)
+                        Sensor[SensorID].MaxPWM = (float)(255.0 * data[3] / 100.0);
+                        Sensor[SensorID].MinPWM = (float)(255.0 * data[4] / 100.0);
+
+                        // 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
+                        Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+
+                        if (data[6] > 0)
                         {
-                            Sensor[SensorID].Ki = pow(1.06, Data[3] - 120);
+                            Sensor[SensorID].Ki = pow(1.06, data[6] - 120);
                         }
                         else
                         {
                             Sensor[SensorID].Ki = 0;
                         }
 
-                        Sensor[SensorID].MinPower = (float)(255.0 * Data[6] / 100.0);
-                        Sensor[SensorID].MaxPower = (float)(255.0 * Data[7] / 100.0);
+                        Sensor[SensorID].Deadband = data[7] / 1000.0;
+                        Sensor[SensorID].BrakePoint = data[8] / 100.0;
+                        Sensor[SensorID].PIDslowAdjust = data[9] / 100.0;
+                        Sensor[SensorID].SlewRate = data[10];
+                        Sensor[SensorID].MaxMotorIntegral = data[11] / 10.0;
+                        Sensor[SensorID].MaxValveIntegral = data[12];
+                        Sensor[SensorID].TimedMinStart = data[13] / 100.0;
+                        Sensor[SensorID].TimedAdjust = data[14] | data[15] << 8;
+                        Sensor[SensorID].TimedPause = data[16] | data[17] << 8;
+                        Sensor[SensorID].PIDtime = data[18];
+                        Sensor[SensorID].PulseMax = 10000000 / data[19];	//Hz * 10 to micros, minimum Hz - maximum pulse time
+                        uint32_t tmp = data[20] | data[21] << 8;
+                        Sensor[SensorID].PulseMin = 1000000 / tmp;
+                        Sensor[SensorID].PulseSampleSize = data[22];
 
-                        // 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
-                        Sensor[SensorID].Kp = pow(1.1, Data[8] - 120);
+                        SaveData();
                     }
                 }
             }
@@ -185,14 +216,14 @@ void ReadPGNs(byte Data[], uint16_t len)
         PGNlength = 6;
         if (len > PGNlength - 1)
         {
-            if (GoodCRC(Data, PGNlength))
+            if (GoodCRC(data, PGNlength))
             {
-                MDL.IP0 = Data[2];
-                MDL.IP1 = Data[3];
-                MDL.IP2 = Data[4];
+                MDL.IP0 = data[2];
+                MDL.IP1 = data[3];
+                MDL.IP2 = data[4];
 
                 SaveData();
-                esp_restart();
+                ESP.restart();
             }
         }
         break;
@@ -228,33 +259,33 @@ void ReadPGNs(byte Data[], uint16_t len)
         PGNlength = 33;
         if (len > PGNlength - 1)
         {
-            if (GoodCRC(Data, PGNlength))
+            if (GoodCRC(data, PGNlength))
             {
-                MDL.ID = Data[2];
-                MDL.SensorCount = Data[3];
+                MDL.ID = data[2];
+                MDL.SensorCount = data[3];
 
-                byte tmp = Data[4];
+                byte tmp = data[4];
                 MDL.InvertRelay = ((tmp & 1) == 1);
                 MDL.InvertFlow = ((tmp & 2) == 2);
                 MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
                 MDL.Is3Wire = ((tmp & 16) == 16);
                 MDL.ADS1115Enabled = ((tmp & 32) == 32);
 
-                MDL.RelayControl = Data[5];
-                Sensor[0].FlowPin = Data[7];
-                Sensor[0].IN1 = Data[8];
-                Sensor[0].IN2 = Data[9];
-                Sensor[1].FlowPin = Data[10];
-                Sensor[1].IN1 = Data[11];
-                Sensor[1].IN2 = Data[12];
+                MDL.RelayControl = data[5];
+                Sensor[0].FlowPin = data[7];
+                Sensor[0].IN1 = data[8];
+                Sensor[0].IN2 = data[9];
+                Sensor[1].FlowPin = data[10];
+                Sensor[1].IN1 = data[11];
+                Sensor[1].IN2 = data[12];
 
                 for (int i = 0; i < 16; i++)
                 {
-                    MDL.RelayControlPins[i] = Data[13 + i];
+                    MDL.RelayControlPins[i] = data[13 + i];
                 }
 
-                MDL.WorkPin = Data[29];
-                MDL.PressurePin = Data[30];
+                MDL.WorkPin = data[29];
+                MDL.PressurePin = data[30];
 
                 SaveData(); 
                 ESP.restart();

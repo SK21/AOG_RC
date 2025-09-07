@@ -399,7 +399,7 @@ void LoadData()
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.get(300 + i * 80, Sensor[i]);
+			EEPROM.get(300 + i * 120, Sensor[i]);
 		}
 		IsValid = ValidData();
 	}
@@ -422,7 +422,7 @@ void SaveData()
 
 	for (int i = 0; i < MaxProductCount; i++)
 	{
-		EEPROM.put(300 + i * 80, Sensor[i]);
+		EEPROM.put(300 + i * 120, Sensor[i]);
 	}
 	EEPROM.commit();
 }
@@ -442,10 +442,26 @@ void LoadDefaults()
 	Sensor[1].IN2 = 26;
 
 	// default control settings
-	Sensor[0].MaxPower = 255;
-	Sensor[0].MinPower = 10;
-	Sensor[1].MaxPower = 255;
-	Sensor[1].MinPower = 10;
+	for (int i = 0; i < 2; i++)
+	{
+		Sensor[i].MaxPWM = 255;
+		Sensor[i].MinPWM = 10;
+		Sensor[i].Kp = 50;
+		Sensor[i].Ki = 0;
+		Sensor[i].Deadband = 0.15;
+		Sensor[i].BrakePoint = 0.35;
+		Sensor[i].PIDslowAdjust = 0.3;
+		Sensor[i].SlewRate = 6;
+		Sensor[i].MaxMotorIntegral = 0.1;
+		Sensor[i].MaxValveIntegral = 100;
+		Sensor[i].TimedMinStart = 0.03;
+		Sensor[i].TimedAdjust = 80;
+		Sensor[i].TimedPause = 400;
+		Sensor[i].PIDtime = 50;
+		Sensor[i].PulseMin = 250;		// 4000 Hz
+		Sensor[i].PulseMax = 1000000;	// 1 Hz
+		Sensor[i].PulseSampleSize = 12;
+	}
 
 	// relay pins
 	for (int i = 0; i < 16; i++)
