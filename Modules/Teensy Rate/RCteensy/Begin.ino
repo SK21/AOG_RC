@@ -24,19 +24,23 @@ void DoSetup()
 	uint8_t mn = rest % 100;
 	uint16_t dy = rest / 100;
 
+	String fwVer;
 	if (mn <= 12 && dy <= 31)
 	{
-		Serial.print("Firmware Version: v");
-		Serial.print(yr);
-		Serial.print(".");
-		Serial.print(mn);
-		Serial.print(".");
-		Serial.println(dy);
+		fwVer = "Firmware Version: v";
+		fwVer += String(yr);
+		fwVer += ".";
+		if (mn < 10) fwVer += "0";
+		fwVer += String(mn);
+		fwVer += ".";
+		if (dy < 10) fwVer += "0";
+		fwVer += String(dy);
 	}
 	else
 	{
-		Serial.println("Firmware Version: invalid");
+		fwVer = "Firmware Version: invalid";
 	}
+	Serial.println(fwVer);
 
 	Serial.print("Module ID: ");
 	Serial.println(MDL.ID);
@@ -282,7 +286,7 @@ void LoadData()
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.get(200 + i * 80, Sensor[i]);
+			EEPROM.get(200 + i * 120, Sensor[i]);
 		}
 		IsValid = ValidData();
 	}
