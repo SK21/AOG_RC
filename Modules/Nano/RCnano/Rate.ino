@@ -1,6 +1,8 @@
-const uint32_t PulseMin = 250;      // micros
-const uint32_t PulseMax = 1000000;	// 1 Hz
-const int SampleSize = 12;
+// PulseMinHz       minimum Hz of the flow sensor, actual X 10
+// PulseMaxHz       maximum Hz of the flow sensor
+// PulseSampeSize   number of pulses used to get the median Hz reading
+
+const int MaxSampleSize = 25;
 const uint32_t FlowTimeout = 4000;
 
 uint32_t LastPulse[2];
@@ -8,7 +10,7 @@ uint32_t ReadLast[2];
 uint32_t ReadTime[2];
 uint32_t PulseTime[2];
 
-volatile uint32_t Samples[2][SampleSize];
+volatile uint32_t Samples[2][MaxSampleSize];
 volatile uint16_t PulseCount[2];
 volatile uint8_t SamplesCount[2];
 volatile uint8_t SamplesIndex[2];
@@ -29,12 +31,13 @@ void PulseISR(uint8_t ID)
 	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
 	ReadLast[ID] = ReadTime[ID];
 
-	if (PulseTime[ID] > PulseMin && PulseTime[ID] < PulseMax)
+	if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax
+		&& (RelayLo > 0 || RelayHi > 0))
 	{
 		PulseCount[ID]++;
 		Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
-		SamplesIndex[ID] = (SamplesIndex[ID] + 1) % SampleSize;
-		if (SamplesCount[ID] < SampleSize) SamplesCount[ID]++;
+		SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
+		if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
 	}
 }
 
@@ -43,7 +46,7 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 	uint32_t Result = 0;
 	if (count > 0)
 	{
-		uint32_t sorted[SampleSize];
+		uint32_t sorted[MaxSampleSize];
 		for (int i = 0; i < count; i++) sorted[i] = buf[i];
 
 		// insertion sort
@@ -81,7 +84,7 @@ void GetUPM()
 		{
 			LastPulse[i] = millis();
 
-			uint32_t Snapshot[SampleSize];
+			uint32_t Snapshot[MaxSampleSize];
 			int count = 0;
 
 			noInterrupts();
@@ -113,7 +116,7 @@ void GetUPM()
 			noInterrupts();
 			SamplesCount[i] = 0;
 			SamplesIndex[i] = 0;
-			for (uint8_t k = 0; k < SampleSize; k++)
+			for (uint8_t k = 0; k < Sensor[i].PulseSampleSize; k++)
 			{
 				Samples[i][k] = 0;
 			}

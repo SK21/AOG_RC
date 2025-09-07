@@ -7,7 +7,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 23085;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 6095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -59,16 +59,29 @@ struct SensorConfig
 	float UPM;				// sent as upm X 1000
 	float PWM;
 	uint32_t CommTime;
-	byte ControlType;		// flow control, 0 standard, 1 combo close, 2 motor, 3 motor/weight, 4 fan, 5 timed combo
+	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 -, 4 fan, 5 timed combo
 	uint32_t TotalPulses;
 	float TargetUPM;
 	float MeterCal;
 	float ManualAdjust;
-	float MaxPower;
-	float MinPower;
+	float Hz;
+	float MaxPWM;
+	float MinPWM;
 	float Kp;
 	float Ki;
-	float Hz;
+	float Deadband;
+	float BrakePoint;
+	float PIDslowAdjust;
+	float SlewRate;
+	float MaxMotorIntegral;
+	float MaxValveIntegral;
+	float TimedMinStart;
+	uint32_t TimedAdjust;
+	uint32_t TimedPause;
+	uint32_t PIDtime;
+	uint32_t PulseMin;
+	uint32_t PulseMax;
+	byte PulseSampleSize;
 };
 
 SensorConfig Sensor[2];
@@ -80,7 +93,7 @@ SensorConfig Sensor[2];
 // and then mount the shield on top of the Nano.
 
 // ethernet
-byte Ethernet::buffer[100];			// udp send and receive buffer
+byte Ethernet::buffer[48];			// udp send and receive buffer
 static byte selectPin = 10;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
@@ -89,8 +102,8 @@ unsigned int SourcePort = 5123;		// to send from
 bool ENCfound;
 
 // Relays
-byte RelayLo = 0;	// sections 0-7
-byte RelayHi = 0;	// sections 8-15
+volatile byte RelayLo = 0;	// sections 0-7
+volatile byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
 byte InvertedLo;
