@@ -69,7 +69,6 @@ namespace RateController
             this.lbFanRate = new System.Windows.Forms.Label();
             this.lbCurrentRPM = new System.Windows.Forms.Label();
             this.lbFan = new System.Windows.Forms.Label();
-            this.timerPIDs = new System.Windows.Forms.Timer(this.components);
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
@@ -530,12 +529,6 @@ namespace RateController
             this.lbFan.TabIndex = 158;
             this.lbFan.Text = "Herbicide";
             // 
-            // timerPIDs
-            // 
-            this.timerPIDs.Enabled = true;
-            this.timerPIDs.Interval = 5000;
-            this.timerPIDs.Tick += new System.EventHandler(this.timerPIDs_Tick);
-            // 
             // btnRight
             // 
             this.btnRight.BackColor = System.Drawing.Color.Transparent;
@@ -688,7 +681,6 @@ namespace RateController
         private System.Windows.Forms.Label lbOff;
         private System.Windows.Forms.Label rt5;
         private System.Windows.Forms.Label prd5;
-        private System.Windows.Forms.Timer timerPIDs;
         private System.Windows.Forms.Button btnFan;
         private System.Windows.Forms.Timer timerRates;
     }

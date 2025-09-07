@@ -56,8 +56,24 @@ namespace RateController.Classes
         public string ModuleDescription(int ModuleID) =>
                     Modules.TryGetValue(ModuleID, out var info) ? info.Description : "Unknown";
 
-        public string ModuleVersion(int ModuleID) =>
-                            Modules.TryGetValue(ModuleID, out var info) ? info.Version : "N/A";
+        public string ModuleVersion(int ModuleID)
+        {
+            if (!Modules.TryGetValue(ModuleID, out var info) || string.IsNullOrWhiteSpace(info.Version))
+                return "N/A";
+
+            var version = info.Version.TrimStart('v');
+            var parts = version.Split('.');
+            if (parts.Length != 3) return info.Version;
+
+            if (int.TryParse(parts[0], out int year) &&
+                int.TryParse(parts[1], out int month) &&
+                int.TryParse(parts[2], out int day))
+            {
+                return $"v{year:D4}.{month:D2}.{day:D2}";
+            }
+
+            return info.Version;
+        }
 
         private void LoadFromFile(string filePath)
         {

@@ -60,10 +60,10 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "23-Aug-2025";
+        private static string cAppDate = "07-Sep-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
-        private static string cAppVersion = "4.0.5";
+        private static string cAppVersion = "4.1.0";
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
@@ -575,7 +575,7 @@ namespace RateController.Classes
 
                 if (DY > 0 && DY < 32 && MN > 0 && MN < 13)
                 {
-                    Result = "v" + YR.ToString() + "." + MN.ToString() + "." + DY.ToString();
+                    Result = "v" + YR.ToString() + "." + MN.ToString("D2") + "." + DY.ToString("D2");
                 }
             }
             return Result;

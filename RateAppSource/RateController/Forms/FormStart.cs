@@ -591,7 +591,6 @@ namespace RateController
                 UDPmodules.Close();
 
                 timerMain.Enabled = false;
-                timerPIDs.Enabled = false;
                 timerRates.Enabled = false;
                 Props.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
@@ -931,11 +930,6 @@ namespace RateController
             SendRelays();
             Products.Save();
             SectionControl.ReadRateSwitches();
-        }
-
-        private void timerPIDs_Tick(object sender, EventArgs e)
-        {
-            Products.UpdateSensorSettings();
         }
 
         private void timerRates_Tick(object sender, EventArgs e)

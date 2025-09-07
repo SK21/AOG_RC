@@ -448,5 +448,10 @@ namespace RateController.Menu
             SetAdvanced();
             Initializing = false;
         }
+
+        private void frmMenuControl_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mf.Products.UpdateSensorSettings();
+        }
     }
 }

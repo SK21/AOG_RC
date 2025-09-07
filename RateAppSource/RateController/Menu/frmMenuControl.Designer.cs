@@ -814,6 +814,7 @@
             this.ShowInTaskbar = false;
             this.Text = "frmMenuControl";
             this.Activated += new System.EventHandler(this.frmMenuControl_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuControl_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuControl_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuControl_Load);
             this.pnlMain.ResumeLayout(false);
