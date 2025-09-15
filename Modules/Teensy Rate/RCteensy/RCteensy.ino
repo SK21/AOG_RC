@@ -84,7 +84,7 @@ struct SensorConfig	// about 104 bytes
 	float BrakePoint;
 	float PIDslowAdjust;
 	float SlewRate;
-	float MaxMotorIntegral;
+	float MaxIntegral;
 	float MaxValveIntegral;
 	float TimedMinStart;
 	uint32_t TimedAdjust;
@@ -251,6 +251,11 @@ bool WorkPinOn()
 	return WrkOn;
 }
 
+float debug1;
+float debug2;
+float debug3;
+float debug4;
+
 void Blink()
 {
 	static bool State = false;
@@ -272,6 +277,18 @@ void Blink()
 
 			Serial.print(", ");
 			Serial.print(Ethernet.localIP());
+
+			Serial.print(", ");
+			Serial.print(debug1,5);
+
+			Serial.print(", ");
+			Serial.print(debug2);
+
+			Serial.print(", ");
+			Serial.print(debug3);
+
+			Serial.print(", ");
+			Serial.print(debug4,5);
 
 			Serial.println("");
 		}

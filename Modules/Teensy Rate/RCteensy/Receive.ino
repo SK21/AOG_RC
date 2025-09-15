@@ -175,7 +175,7 @@ void ReadPGNs(byte data[], uint16_t len)
 						Sensor[SensorID].BrakePoint = data[8] / 100.0;
 						Sensor[SensorID].PIDslowAdjust = data[9] / 100.0;
 						Sensor[SensorID].SlewRate = data[10];
-						Sensor[SensorID].MaxMotorIntegral = data[11] / 10.0;
+						Sensor[SensorID].MaxIntegral = data[11] / 10.0;
 						Sensor[SensorID].MaxValveIntegral = data[12];
 						Sensor[SensorID].TimedMinStart = data[13] / 100.0;
 						Sensor[SensorID].TimedAdjust = data[14] | data[15] << 8;

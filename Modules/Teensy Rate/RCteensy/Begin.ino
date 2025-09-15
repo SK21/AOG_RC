@@ -338,7 +338,7 @@ void LoadDefaults()
 		Sensor[i].BrakePoint = 0.35;
 		Sensor[i].PIDslowAdjust = 0.3;
 		Sensor[i].SlewRate = 6;
-		Sensor[i].MaxMotorIntegral = 0.1;
+		Sensor[i].MaxIntegral = 0.1;
 		Sensor[i].MaxValveIntegral = 100;
 		Sensor[i].TimedMinStart = 0.03;
 		Sensor[i].TimedAdjust = 80;
