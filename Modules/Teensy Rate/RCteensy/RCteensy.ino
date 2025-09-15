@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 7095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 14095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -153,15 +153,7 @@ void loop()
 	if (millis() - LoopLast >= LoopTime)
 	{
 		LoopLast = millis();
-
-		for (int i = 0; i < MDL.SensorCount; i++)
-		{
-			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 5000)
-				&& ((Sensor[i].TargetUPM > 0 && MasterOn)
-					|| ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
-					|| (!AutoOn && MasterOn));
-		}
-
+		SetSensorsEnabled();
 		CheckRelays();
 		GetUPM();
 		AdjustFlow();
@@ -170,6 +162,31 @@ void loop()
 
 	SendComm();
 	Blink();
+}
+
+void SetSensorsEnabled()
+{
+	for (int i = 0; i < MDL.SensorCount; i++)
+	{
+		bool Result = false;
+		if (millis() - Sensor[i].CommTime < 5000)
+		{
+			if (Sensor[i].TargetUPM > 0 && MasterOn)
+			{
+				Result = true;
+			}
+			else if (MasterOn && !AutoOn)
+			{
+				Result = true;
+			}
+			else if ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
+			{
+				// fan
+				Result = true;
+			}
+		}
+		Sensor[i].FlowEnabled = Result;
+	}
 }
 
 byte ParseModID(byte ID)

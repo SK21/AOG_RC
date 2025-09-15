@@ -987,6 +987,7 @@ namespace RateController
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        if (cHectaresPerMinute == 0) HPM = 0;   // all sections off
                         Result = TargetRate() * HPM * 2.47;
                     }
                     else
@@ -1003,6 +1004,7 @@ namespace RateController
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        if (cHectaresPerMinute == 0) HPM = 0;
                         Result = TargetRate() * HPM;
                     }
                     else

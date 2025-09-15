@@ -7,13 +7,118 @@ const uint32_t FlowTimeout = 4000;
 
 uint32_t LastPulse[2];
 uint32_t ReadLast[2];
-uint32_t ReadTime[2];
 uint32_t PulseTime[2];
 
 volatile uint32_t Samples[2][MaxSampleSize];
 volatile uint16_t PulseCount[2];
 volatile uint8_t SamplesCount[2];
 volatile uint8_t SamplesIndex[2];
+
+// record out of bounds pulses
+const uint8_t RawBufferSize = 7;
+const uint8_t MinRawCount = 9;
+volatile uint32_t RawIntervals[2][RawBufferSize];
+volatile uint8_t RawIndex[2];
+volatile uint8_t RawCount[2];
+
+void PulseISR(uint8_t ID)
+{
+	if (RelayLo > 0 || RelayHi > 0)
+	{
+		uint32_t ReadTime = micros();
+		PulseTime[ID] = ReadTime - ReadLast[ID];
+		ReadLast[ID] = ReadTime;
+
+		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)			
+		{
+			// valid pulses
+			PulseCount[ID]++;
+			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
+			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
+			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
+		}
+		else
+		{
+			// out of bounds pulses
+			RawIntervals[ID][RawIndex[ID]] = PulseTime[ID];
+			RawIndex[ID] = (RawIndex[ID] + 1) % RawBufferSize;
+			if (RawCount[ID] < RawBufferSize) RawCount[ID]++;
+		}
+	}
+}
+
+void GetUPM()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		if (PulseCount[i])
+		{
+			LastPulse[i] = millis();
+
+			noInterrupts();
+			Sensor[i].TotalPulses += PulseCount[i];
+			PulseCount[i] = 0;
+			uint16_t count = SamplesCount[i];
+			uint32_t Snapshot[MaxSampleSize];
+			for (uint16_t k = 0; k < count; k++)
+			{
+				Snapshot[k] = Samples[i][k];
+			}
+			interrupts();
+
+			uint32_t median = MedianFromArray(Snapshot, count);
+
+			if (median > 0)
+			{
+				float hz = 1000000.0 / median;
+				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
+				if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
+			}
+
+			RawCount[i] = 0;
+			RawIndex[i] = 0;
+		}
+		else
+		{
+			// prevent run-away adjust too low or too high
+			if (RawCount[i] >= MinRawCount)
+			{
+				noInterrupts();
+				uint16_t count = RawCount[i];
+				uint32_t Snapshot[RawBufferSize];
+				for (uint16_t ab = 0; ab < count; ab++)
+				{
+					Snapshot[ab] = RawIntervals[i][ab];
+				}
+				interrupts();
+				uint32_t median = MedianFromArray(Snapshot, count);
+
+				if (median > 0)
+				{
+					float hz = 1000000.0 / median;
+					Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
+					if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
+				}
+				LastPulse[i] = millis();
+			}
+
+			// No flow check
+			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
+			{
+				Sensor[i].UPM = 0;
+				Sensor[i].Hz = 0;
+
+				noInterrupts();
+				SamplesCount[i] = 0;
+				SamplesIndex[i] = 0;
+
+				RawCount[i] = 0;
+				RawIndex[i] = 0;
+				interrupts();
+			}
+		}
+	}
+}
 
 void ISR0()
 {
@@ -23,22 +128,6 @@ void ISR0()
 void ISR1()
 {
 	PulseISR(1);
-}
-
-void PulseISR(uint8_t ID)
-{
-	ReadTime[ID] = micros();
-	PulseTime[ID] = ReadTime[ID] - ReadLast[ID];
-	ReadLast[ID] = ReadTime[ID];
-
-	if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax
-		&& (RelayLo > 0 || RelayHi > 0))
-	{
-		PulseCount[ID]++;
-		Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
-		SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
-		if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
-	}
 }
 
 uint32_t MedianFromArray(uint32_t buf[], int count)
@@ -76,51 +165,3 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 	return Result;
 }
 
-void GetUPM()
-{
-	for (int i = 0; i < 2; i++)
-	{
-		if (PulseCount[i])
-		{
-			LastPulse[i] = millis();
-
-			uint32_t Snapshot[MaxSampleSize];
-			int count = 0;
-
-			noInterrupts();
-			Sensor[i].TotalPulses += PulseCount[i];
-			PulseCount[i] = 0;
-			count = SamplesCount[i];
-			for (uint8_t k = 0; k < count; k++)
-			{
-				Snapshot[k] = Samples[i][k];
-			}
-			interrupts();
-
-			uint32_t median = MedianFromArray(Snapshot, count);
-
-			if (median > 0)
-			{
-				float hz = 1000000.0 / median;
-				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
-				if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
-			}
-		}
-
-		// No flow check
-		if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
-		{
-			Sensor[i].UPM = 0;
-			Sensor[i].Hz = 0;
-
-			noInterrupts();
-			SamplesCount[i] = 0;
-			SamplesIndex[i] = 0;
-			for (uint8_t k = 0; k < Sensor[i].PulseSampleSize; k++)
-			{
-				Samples[i][k] = 0;
-			}
-			interrupts();
-		}
-	}
-}
