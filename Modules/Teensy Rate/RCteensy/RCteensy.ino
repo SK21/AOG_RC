@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 15095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 16095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -36,6 +36,15 @@ const int PWM_BITS = 8;
 const int PWM_FREQ = 490;  // Default
 uint8_t ditherCounter = 0; // for Nano dithering
 #endif
+
+enum ControlType
+{
+	StandardValve_ct = 0,
+	ComboClose_ct = 1,
+	Motor_ct = 2,
+	Fan_ct = 4,
+	TimedCombo_ct = 5
+};
 
 struct ModuleConfig
 {
@@ -179,7 +188,7 @@ void SetSensorsEnabled()
 			{
 				Result = true;
 			}
-			else if ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
+			else if ((Sensor[i].ControlType == Fan_ct) && (Sensor[i].TargetUPM > 0))
 			{
 				// fan
 				Result = true;

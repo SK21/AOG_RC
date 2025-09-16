@@ -28,17 +28,18 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
-			case 2:
-			case 4:
+			case Motor_ct:
+			case Fan_ct:
 				Sensor[i].PWM = DoPID(i, true);
 				break;
 
-			case 5:
+			case TimedCombo_ct:
 				// combo close timed adjustment
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
 			default:
+				// valve
 				Sensor[i].PWM = DoPID(i, false);
 				break;
 			}
@@ -51,7 +52,7 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
-			case 5:
+			case TimedCombo_ct:
 				// combo close timed adjustment
 				Sensor[i].PWM = TimedCombo(i, true);
 				break;
