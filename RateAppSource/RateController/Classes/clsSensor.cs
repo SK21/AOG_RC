@@ -12,8 +12,7 @@ namespace RateController.Classes
         // BrakePoint       error % where adjustment rate changes between 100% and the slow rate %
         // PIDslowAdjust    slow rate %
         // SlewRate         slew rate limit. Max total pwm change per loop. Used for motor only.
-        // MaxMotorIntegral max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
-        // MaxValveIntegral max total integral pwm change per loop for valve
+        // MaxIntegral max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
         // TimedMinStart    minimum start ratio %. Used to quickly increase from 0 for a timed combo valve.
         // TimedAdjust      time in ms where there is adjustment of the combo valve.
         // TimedPause       time in ms where there is no adjustment of the combo valve.
@@ -28,9 +27,8 @@ namespace RateController.Classes
         private bool cIsNew = true;
         private byte cKI;
         private byte cKP;
-        private byte cMaxMotorIntegral;
+        private byte cMaxIntegral;
         private byte cMaxPWM;
-        private byte cMaxValveIntegral;
         private byte cMinPWM;
         private int cModuleID;
         private string cName;
@@ -123,19 +121,19 @@ namespace RateController.Classes
             }
         }
 
-        public byte MaxMotorIntegral
+        public byte MaxIntegral
         {
             // actual X 10
-            get { return cMaxMotorIntegral; }
+            get { return cMaxIntegral; }
             set
             {
-                if (value >= 0 && value <= 100)
+                if (value >= 0 && value <= 250)
                 {
-                    cMaxMotorIntegral = value;
+                    cMaxIntegral = value;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("MaxMotorIntegral");
+                    throw new ArgumentOutOfRangeException("MaxIntegral");
                 }
             }
         }
@@ -155,9 +153,6 @@ namespace RateController.Classes
                 }
             }
         }
-
-        public byte MaxValveIntegral
-        { get { return cMaxValveIntegral; } set { cMaxValveIntegral = value; } }
 
         public byte MinPWM
         {
@@ -334,9 +329,8 @@ namespace RateController.Classes
                 if (byte.TryParse(Props.GetProp(cName + "DeadBand"), out byte sw)) cDeadband = sw;
                 if (byte.TryParse(Props.GetProp(cName + "KP"), out byte kp)) cKP = kp;
                 if (byte.TryParse(Props.GetProp(cName + "KI"), out byte ki)) cKI = ki;
-                if (byte.TryParse(Props.GetProp(cName + "MaxMotorIntegral"), out byte mi)) cMaxMotorIntegral = mi;
+                if (byte.TryParse(Props.GetProp(cName + "MaxIntegral"), out byte mi)) cMaxIntegral = mi;
                 if (byte.TryParse(Props.GetProp(cName + "MaxPWM"), out byte pwm)) cMaxPWM = pwm;
-                if (byte.TryParse(Props.GetProp(cName + "MaxValveIntegral"), out byte mv)) cMaxValveIntegral = mv;
                 if (byte.TryParse(Props.GetProp(cName + "MinPWM"), out byte mp)) cMinPWM = mp;
                 if (byte.TryParse(Props.GetProp(cName + "PIDslowAdjust"), out byte sa)) cPIDslowAdjust = sa;
                 if (byte.TryParse(Props.GetProp(cName + "PIDtime"), out byte pt)) cPIDtime = pt;
@@ -358,9 +352,8 @@ namespace RateController.Classes
             Props.SetProp(cName + "DeadBand", cDeadband.ToString());
             Props.SetProp(cName + "KP", cKP.ToString());
             Props.SetProp(cName + "KI", cKI.ToString());
-            Props.SetProp(cName + "MaxMotorIntegral", cMaxMotorIntegral.ToString());
+            Props.SetProp(cName + "MaxIntegral", cMaxIntegral.ToString());
             Props.SetProp(cName + "MaxPWM", cMaxPWM.ToString());
-            Props.SetProp(cName + "MaxValveIntegral", cMaxValveIntegral.ToString());
             Props.SetProp(cName + "MinPWM", cMinPWM.ToString());
             Props.SetProp(cName + "ModuleID", cModuleID.ToString());
             Props.SetProp(cName + "PIDslowAdjust", cPIDslowAdjust.ToString());
@@ -381,9 +374,8 @@ namespace RateController.Classes
             cDeadband = Props.DeadbandDefault;
             cKI = Props.KIdefault;
             cKP = Props.KPdefault;
-            cMaxMotorIntegral = Props.MaxMotorIntegralDefault;
+            cMaxIntegral = Props.MaxIntegralDefault;
             cMaxPWM = Props.MaxPWMdefault;
-            cMaxValveIntegral = Props.MaxValveIntegralDefault;
             cPulseMinHz = Props.PulseMinHzDefault;
             cMinPWM = Props.MinPWMdefault;
             cPIDslowAdjust = Props.PIDslowAdjustDefault;

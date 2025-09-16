@@ -71,8 +71,6 @@
             this.lbMinStart = new System.Windows.Forms.Label();
             this.tbPauseTm = new System.Windows.Forms.TextBox();
             this.lbPauseTm = new System.Windows.Forms.Label();
-            this.tbMaxValveI = new System.Windows.Forms.TextBox();
-            this.lbMaxValveI = new System.Windows.Forms.Label();
             this.tbAdjustTm = new System.Windows.Forms.TextBox();
             this.lbAdjustTm = new System.Windows.Forms.Label();
             this.tbMaxMotorI = new System.Windows.Forms.TextBox();
@@ -450,7 +448,7 @@
             // tbPIDtime
             // 
             this.tbPIDtime.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPIDtime.Location = new System.Drawing.Point(122, 184);
+            this.tbPIDtime.Location = new System.Drawing.Point(122, 65);
             this.tbPIDtime.Name = "tbPIDtime";
             this.tbPIDtime.Size = new System.Drawing.Size(54, 29);
             this.tbPIDtime.TabIndex = 352;
@@ -461,7 +459,7 @@
             // lbSampleTime
             // 
             this.lbSampleTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSampleTime.Location = new System.Drawing.Point(5, 186);
+            this.lbSampleTime.Location = new System.Drawing.Point(5, 67);
             this.lbSampleTime.Name = "lbSampleTime";
             this.lbSampleTime.Size = new System.Drawing.Size(105, 24);
             this.lbSampleTime.TabIndex = 351;
@@ -510,7 +508,7 @@
             // tbSlewRate
             // 
             this.tbSlewRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSlewRate.Location = new System.Drawing.Point(123, 52);
+            this.tbSlewRate.Location = new System.Drawing.Point(303, 65);
             this.tbSlewRate.Name = "tbSlewRate";
             this.tbSlewRate.Size = new System.Drawing.Size(54, 29);
             this.tbSlewRate.TabIndex = 362;
@@ -521,7 +519,7 @@
             // lbSlewRate
             // 
             this.lbSlewRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSlewRate.Location = new System.Drawing.Point(5, 54);
+            this.lbSlewRate.Location = new System.Drawing.Point(190, 67);
             this.lbSlewRate.Name = "lbSlewRate";
             this.lbSlewRate.Size = new System.Drawing.Size(105, 24);
             this.lbSlewRate.TabIndex = 361;
@@ -550,7 +548,7 @@
             // tbMinStart
             // 
             this.tbMinStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinStart.Location = new System.Drawing.Point(123, 96);
+            this.tbMinStart.Location = new System.Drawing.Point(123, 122);
             this.tbMinStart.Name = "tbMinStart";
             this.tbMinStart.Size = new System.Drawing.Size(54, 29);
             this.tbMinStart.TabIndex = 372;
@@ -561,7 +559,7 @@
             // lbMinStart
             // 
             this.lbMinStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMinStart.Location = new System.Drawing.Point(5, 98);
+            this.lbMinStart.Location = new System.Drawing.Point(5, 124);
             this.lbMinStart.Name = "lbMinStart";
             this.lbMinStart.Size = new System.Drawing.Size(105, 24);
             this.lbMinStart.TabIndex = 371;
@@ -570,7 +568,7 @@
             // tbPauseTm
             // 
             this.tbPauseTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPauseTm.Location = new System.Drawing.Point(483, 96);
+            this.tbPauseTm.Location = new System.Drawing.Point(483, 122);
             this.tbPauseTm.Name = "tbPauseTm";
             this.tbPauseTm.Size = new System.Drawing.Size(54, 29);
             this.tbPauseTm.TabIndex = 370;
@@ -581,36 +579,16 @@
             // lbPauseTm
             // 
             this.lbPauseTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPauseTm.Location = new System.Drawing.Point(370, 98);
+            this.lbPauseTm.Location = new System.Drawing.Point(370, 124);
             this.lbPauseTm.Name = "lbPauseTm";
             this.lbPauseTm.Size = new System.Drawing.Size(105, 24);
             this.lbPauseTm.TabIndex = 369;
             this.lbPauseTm.Text = "Pause Tm";
             // 
-            // tbMaxValveI
-            // 
-            this.tbMaxValveI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxValveI.Location = new System.Drawing.Point(483, 52);
-            this.tbMaxValveI.Name = "tbMaxValveI";
-            this.tbMaxValveI.Size = new System.Drawing.Size(54, 29);
-            this.tbMaxValveI.TabIndex = 368;
-            this.tbMaxValveI.TabStop = false;
-            this.tbMaxValveI.Text = "100";
-            this.tbMaxValveI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // lbMaxValveI
-            // 
-            this.lbMaxValveI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxValveI.Location = new System.Drawing.Point(370, 54);
-            this.lbMaxValveI.Name = "lbMaxValveI";
-            this.lbMaxValveI.Size = new System.Drawing.Size(105, 24);
-            this.lbMaxValveI.TabIndex = 367;
-            this.lbMaxValveI.Text = "Mx Valve I";
-            // 
             // tbAdjustTm
             // 
             this.tbAdjustTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbAdjustTm.Location = new System.Drawing.Point(303, 96);
+            this.tbAdjustTm.Location = new System.Drawing.Point(303, 122);
             this.tbAdjustTm.Name = "tbAdjustTm";
             this.tbAdjustTm.Size = new System.Drawing.Size(54, 29);
             this.tbAdjustTm.TabIndex = 366;
@@ -621,7 +599,7 @@
             // lbAdjustTm
             // 
             this.lbAdjustTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbAdjustTm.Location = new System.Drawing.Point(190, 98);
+            this.lbAdjustTm.Location = new System.Drawing.Point(190, 124);
             this.lbAdjustTm.Name = "lbAdjustTm";
             this.lbAdjustTm.Size = new System.Drawing.Size(105, 24);
             this.lbAdjustTm.TabIndex = 365;
@@ -630,7 +608,7 @@
             // tbMaxMotorI
             // 
             this.tbMaxMotorI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxMotorI.Location = new System.Drawing.Point(303, 52);
+            this.tbMaxMotorI.Location = new System.Drawing.Point(483, 65);
             this.tbMaxMotorI.Name = "tbMaxMotorI";
             this.tbMaxMotorI.Size = new System.Drawing.Size(54, 29);
             this.tbMaxMotorI.TabIndex = 364;
@@ -641,11 +619,11 @@
             // lbMaxMotorI
             // 
             this.lbMaxMotorI.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMaxMotorI.Location = new System.Drawing.Point(190, 54);
+            this.lbMaxMotorI.Location = new System.Drawing.Point(370, 67);
             this.lbMaxMotorI.Name = "lbMaxMotorI";
             this.lbMaxMotorI.Size = new System.Drawing.Size(105, 24);
             this.lbMaxMotorI.TabIndex = 363;
-            this.lbMaxMotorI.Text = "Mx Motor I";
+            this.lbMaxMotorI.Text = "Mx Integral";
             // 
             // ckAdvanced
             // 
@@ -713,9 +691,7 @@
             this.pnlAdvanced.Controls.Add(this.tbBrakepoint);
             this.pnlAdvanced.Controls.Add(this.lbPauseTm);
             this.pnlAdvanced.Controls.Add(this.tbMaxMotorI);
-            this.pnlAdvanced.Controls.Add(this.tbMaxValveI);
             this.pnlAdvanced.Controls.Add(this.lbSlewRate);
-            this.pnlAdvanced.Controls.Add(this.lbMaxValveI);
             this.pnlAdvanced.Controls.Add(this.tbSlewRate);
             this.pnlAdvanced.Controls.Add(this.tbAdjustTm);
             this.pnlAdvanced.Controls.Add(this.lbMaxMotorI);
@@ -728,7 +704,7 @@
             // tbMinHz
             // 
             this.tbMinHz.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinHz.Location = new System.Drawing.Point(122, 140);
+            this.tbMinHz.Location = new System.Drawing.Point(122, 179);
             this.tbMinHz.Name = "tbMinHz";
             this.tbMinHz.Size = new System.Drawing.Size(54, 29);
             this.tbMinHz.TabIndex = 379;
@@ -739,7 +715,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(4, 142);
+            this.label1.Location = new System.Drawing.Point(4, 181);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 24);
             this.label1.TabIndex = 378;
@@ -748,7 +724,7 @@
             // tbSampleSize
             // 
             this.tbSampleSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSampleSize.Location = new System.Drawing.Point(482, 140);
+            this.tbSampleSize.Location = new System.Drawing.Point(482, 179);
             this.tbSampleSize.Name = "tbSampleSize";
             this.tbSampleSize.Size = new System.Drawing.Size(54, 29);
             this.tbSampleSize.TabIndex = 377;
@@ -759,7 +735,7 @@
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(369, 142);
+            this.label3.Location = new System.Drawing.Point(369, 181);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(105, 24);
             this.label3.TabIndex = 376;
@@ -768,7 +744,7 @@
             // tbMaxHz
             // 
             this.tbMaxHz.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMaxHz.Location = new System.Drawing.Point(302, 140);
+            this.tbMaxHz.Location = new System.Drawing.Point(302, 179);
             this.tbMaxHz.Name = "tbMaxHz";
             this.tbMaxHz.Size = new System.Drawing.Size(54, 29);
             this.tbMaxHz.TabIndex = 375;
@@ -779,7 +755,7 @@
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(189, 142);
+            this.label4.Location = new System.Drawing.Point(189, 181);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(105, 24);
             this.label4.TabIndex = 374;
@@ -868,8 +844,6 @@
         private System.Windows.Forms.Label lbMinStart;
         private System.Windows.Forms.TextBox tbPauseTm;
         private System.Windows.Forms.Label lbPauseTm;
-        private System.Windows.Forms.TextBox tbMaxValveI;
-        private System.Windows.Forms.Label lbMaxValveI;
         private System.Windows.Forms.TextBox tbAdjustTm;
         private System.Windows.Forms.Label lbAdjustTm;
         private System.Windows.Forms.TextBox tbMaxMotorI;

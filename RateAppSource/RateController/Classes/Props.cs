@@ -60,7 +60,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "07-Sep-2025";
+        private static string cAppDate = "15-Sep-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.1.0";
@@ -117,18 +117,17 @@ namespace RateController.Classes
 
         public static readonly byte BrakePointDefault = 35;
         public static readonly byte DeadbandDefault = 15;
-        public static readonly byte KIdefault = 0;
-        public static readonly byte KPdefault = 50;
-        public static readonly byte MaxMotorIntegralDefault = 5;
+        public static readonly byte KIdefault = 5;
+        public static readonly byte KPdefault = 35;
+        public static readonly byte MaxIntegralDefault = 1;
         public static readonly byte MaxPWMdefault = 100;
-        public static readonly byte MaxValveIntegralDefault = 100;
         public static readonly byte MinPWMdefault = 0;
         public static readonly byte PIDslowAdjustDefault = 30;
         public static readonly byte PIDtimeDefault = 50;
         public static readonly UInt16 PulseMaxHzDefault = 3000;
         public static readonly byte PulseMinHzDefault = 10;
         public static readonly byte PulseSampleSizeDefault = 12;
-        public static readonly byte SlewRateDefault = 6;
+        public static readonly byte SlewRateDefault = 15;
         public static readonly byte TimedAdjustDefault = 80;
         public static readonly byte TimedMinStartDefault = 3;
         public static readonly UInt16 TimedPauseDefault = 400;

@@ -40,7 +40,7 @@ namespace RateController.Menu
             }
 
             Boxes = new System.Windows.Forms.TextBox[] { tbDeadband, tbBrakepoint, tbSlowAdj, tbSlewRate,
-                tbMaxMotorI, tbMaxValveI, tbMinStart, tbAdjustTm,tbPauseTm,tbMinHz,tbMaxHz,tbSampleSize,
+                tbMaxMotorI, tbMinStart, tbAdjustTm,tbPauseTm,tbMinHz,tbMaxHz,tbSampleSize,
                 tbPIDtime };
 
             for (int i = 0; i < Boxes.Count(); i++)
@@ -49,9 +49,9 @@ namespace RateController.Menu
                 Boxes[i].Enter += BoxEnter;
                 Boxes[i].TextChanged += BoxTextChanged;
             }
-            BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 10, 10, .1, 1, 1, 10 };
-            BoxesMax = new double[] { 10, 50, 75, 20, 2, 255, 10, 1000, 1000, 25, 3000, 25, 100 };
-            BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N1", "N0", "N0", "F0", "F0",
+            BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 10, .1, 1, 1, 10 };
+            BoxesMax = new double[] { 10, 50, 75, 20, 25,  10, 1000, 1000, 25, 3000, 25, 100 };
+            BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N1",  "N0", "F0", "F0",
                 "N1","F0","N0","N0" };
         }
 
@@ -207,7 +207,6 @@ namespace RateController.Menu
                 if (byte.TryParse(tbSlowAdj.Text, out byte sa)) MainMenu.CurrentProduct.PIDslowAdjust = sa;
                 if (byte.TryParse(tbSlewRate.Text, out byte sr)) MainMenu.CurrentProduct.SlewRate = sr;
                 if (double.TryParse(tbMaxMotorI.Text, out double mm)) MainMenu.CurrentProduct.MaxMotorIntegral = (byte)(mm * 10);
-                if (byte.TryParse(tbMaxValveI.Text, out byte mv)) MainMenu.CurrentProduct.MaxValveIntegral = mv;
                 if (byte.TryParse(tbMinStart.Text, out byte ms)) MainMenu.CurrentProduct.TimedMinStart = ms;
                 if (UInt16.TryParse(tbAdjustTm.Text, out UInt16 tm)) MainMenu.CurrentProduct.TimedAdjust = tm;
                 if (UInt16.TryParse(tbPauseTm.Text, out UInt16 pt)) MainMenu.CurrentProduct.TimedPause = pt;
@@ -238,8 +237,7 @@ namespace RateController.Menu
             tbBrakepoint.Text = Props.BrakePointDefault.ToString();
             tbSlowAdj.Text = Props.PIDslowAdjustDefault.ToString();
             tbSlewRate.Text = Props.SlewRateDefault.ToString();
-            tbMaxMotorI.Text = (Props.MaxMotorIntegralDefault / 10.0).ToString("N1");
-            tbMaxValveI.Text = Props.MaxValveIntegralDefault.ToString();
+            tbMaxMotorI.Text = (Props.MaxIntegralDefault / 10.0).ToString("N1");
             tbMinStart.Text = Props.TimedMinStartDefault.ToString();
             tbAdjustTm.Text = Props.TimedAdjustDefault.ToString();
             tbPauseTm.Text = Props.TimedPauseDefault.ToString();
@@ -436,7 +434,6 @@ namespace RateController.Menu
             tbSlowAdj.Text = MainMenu.CurrentProduct.PIDslowAdjust.ToString();
             tbSlewRate.Text = MainMenu.CurrentProduct.SlewRate.ToString();
             tbMaxMotorI.Text = (MainMenu.CurrentProduct.MaxMotorIntegral / 10.0).ToString("N1");
-            tbMaxValveI.Text = MainMenu.CurrentProduct.MaxValveIntegral.ToString();
             tbMinStart.Text = MainMenu.CurrentProduct.TimedMinStart.ToString();
             tbAdjustTm.Text = MainMenu.CurrentProduct.TimedAdjust.ToString();
             tbPauseTm.Text = MainMenu.CurrentProduct.TimedPause.ToString();

@@ -132,10 +132,10 @@ namespace RateController
 
         public byte MaxMotorIntegral
         {
-            get { return cRateSensor.MaxMotorIntegral; }
+            get { return cRateSensor.MaxIntegral; }
             set
             {
-                cRateSensor.MaxMotorIntegral = value;
+                cRateSensor.MaxIntegral = value;
             }
         }
 
@@ -146,12 +146,6 @@ namespace RateController
             {
                 cRateSensor.MaxPWM = (byte)value;
             }
-        }
-
-        public byte MaxValveIntegral
-        {
-            get { return cRateSensor.MaxValveIntegral; }
-            set { cRateSensor.MaxValveIntegral = value; }
         }
 
         public int MinPWMadjust

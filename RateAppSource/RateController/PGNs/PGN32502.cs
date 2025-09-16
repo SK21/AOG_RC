@@ -16,8 +16,8 @@ namespace RateController
         // 8    Brakepoint      %
         // 9    PIDslowAdjust   %
         // 10   Slew Rate
-        // 11   Max Motor Integral      actual X 10
-        // 12   Max Valve Integral
+        // 11   Max Integral      actual X 10
+        // 12   -
         // 13   TimedMinStart
         // 14   TimedAdjust Lo
         // 15   TimedAdjust Hi
@@ -56,8 +56,8 @@ namespace RateController
             Data[8] = Sen.BrakePoint;
             Data[9] = Sen.PIDslowAdjust;
             Data[10] = Sen.SlewRate;
-            Data[11] = Sen.MaxMotorIntegral;
-            Data[12] = Sen.MaxValveIntegral;
+            Data[11] = Sen.MaxIntegral;
+            Data[12] = 0;
             Data[13] = Sen.TimedMinStart;
             Data[14] = (byte)Sen.TimedAdjust;
             Data[15] = (byte)(Sen.TimedAdjust >> 8);
