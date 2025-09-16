@@ -14,13 +14,6 @@ volatile uint16_t PulseCount[2];
 volatile uint8_t SamplesCount[2];
 volatile uint8_t SamplesIndex[2];
 
-// record out of bounds pulses
-const uint8_t RawBufferSize = 7;
-const uint8_t MinRawCount = 9;
-volatile uint32_t RawIntervals[2][RawBufferSize];
-volatile uint8_t RawIndex[2];
-volatile uint8_t RawCount[2];
-
 void PulseISR(uint8_t ID)
 {
 	if (RelayLo > 0 || RelayHi > 0)
@@ -36,13 +29,6 @@ void PulseISR(uint8_t ID)
 			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
 			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
 			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
-		}
-		else
-		{
-			// out of bounds pulses
-			RawIntervals[ID][RawIndex[ID]] = PulseTime[ID];
-			RawIndex[ID] = (RawIndex[ID] + 1) % RawBufferSize;
-			if (RawCount[ID] < RawBufferSize) RawCount[ID]++;
 		}
 	}
 }
@@ -74,34 +60,9 @@ void GetUPM()
 				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
 				if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
 			}
-
-			RawCount[i] = 0;
-			RawIndex[i] = 0;
 		}
 		else
 		{
-			// prevent run-away adjust too low or too high
-			if (RawCount[i] >= MinRawCount)
-			{
-				noInterrupts();
-				uint16_t count = RawCount[i];
-				uint32_t Snapshot[RawBufferSize];
-				for (uint16_t ab = 0; ab < count; ab++)
-				{
-					Snapshot[ab] = RawIntervals[i][ab];
-				}
-				interrupts();
-				uint32_t median = MedianFromArray(Snapshot, count);
-
-				if (median > 0)
-				{
-					float hz = 1000000.0 / median;
-					Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
-					if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
-				}
-				LastPulse[i] = millis();
-			}
-
 			// No flow check
 			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
 			{
@@ -111,9 +72,6 @@ void GetUPM()
 				noInterrupts();
 				SamplesCount[i] = 0;
 				SamplesIndex[i] = 0;
-
-				RawCount[i] = 0;
-				RawIndex[i] = 0;
 				interrupts();
 			}
 		}

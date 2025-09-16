@@ -6,14 +6,13 @@
 // BrakePoint       error % where adjustment rate changes between 100% and the slow rate %
 // PIDslowAdjust    slow rate %
 // SlewRate         slew rate limit. Max total pwm change per loop. Used for motor only.
-// MaxIntegral max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
-// MaxValveIntegral max total integral pwm change per loop for valve
+// MaxIntegral		max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
 // TimedMinStart    minimum start ratio %. Used to quickly increase from 0 for a timed combo valve.
 // TimedAdjust      time in ms where there is adjustment of the combo valve.
 // TimedPause       time in ms where there is no adjustment of the combo valve.
 // PIDtime          time interval in ms the pid runs
 
-const float FastAdjust = 100;				// fast adjustment factor
+const float NormalAdjust = 1.0;				
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
@@ -29,13 +28,18 @@ void SetPWM()
 		{
 			switch (Sensor[i].ControlType)
 			{
+			case 2:
+			case 4:
+				Sensor[i].PWM = DoPID(i, true);
+				break;
+
 			case 5:
 				// combo close timed adjustment
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
 			default:
-				Sensor[i].PWM = DoPID(i, Sensor[i].ControlType);
+				Sensor[i].PWM = DoPID(i, false);
 				break;
 			}
 		}
@@ -56,16 +60,17 @@ void SetPWM()
 				Sensor[i].PWM = Sensor[i].ManualAdjust;
 				float Direction = 1.0;
 				if (Sensor[i].PWM < 0) Direction = -1.0;
-				if (abs(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
+				if (fabsf(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * Direction;
 				break;
 			}
 		}
 	}
 }
 
-float DoPID(byte ID, byte ControlType)
+float DoPID(byte ID, bool IsMotor)
 {
 	float Result = 0;
+
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
 	{
 		Result = LastPWM[ID];
@@ -75,7 +80,7 @@ float DoPID(byte ID, byte ControlType)
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
-			if (abs(RateError) > Sensor[ID].Deadband * Sensor[ID].TargetUPM)
+			if (fabsf(RateError) > Sensor[ID].Deadband * Sensor[ID].TargetUPM)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
@@ -89,20 +94,30 @@ float DoPID(byte ID, byte ControlType)
 					IntegralSum[ID] = 0;
 				}
 
-				float BrakeFactor = (abs(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint) ? FastAdjust : Sensor[ID].PIDslowAdjust;
+				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint) ? NormalAdjust : Sensor[ID].PIDslowAdjust;
 
-				float Change = RateError * Sensor[ID].Kp * BrakeFactor + IntegralSum[ID];
+				float Change = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
 				Change = constrain(Change, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
-				float Sign = (Change >= 0) ? 1.0 : -1.0;
 
-				Result = abs(Change) + Sensor[ID].MinPWM;
-				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
-				Result *= Sign;
+				if (IsMotor)
+				{
+					Result += Change;
+					Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+				}
+				else
+				{
+					// valve
+					float Sign = (Change >= 0.0f) ? 1.0f : -1.0f;
+					Result = fabsf(Change) + Sensor[ID].MinPWM;
+					Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+					Result *= Sign;
+				}
+				LastPWM[ID] = Result;
 			}
 			else
 			{
-				Result = 0;
-				IntegralSum[ID] = 0;
+				if (!IsMotor) Result = 0.0f;
+				IntegralSum[ID] = 0.0f;
 			}
 		}
 	}
@@ -110,39 +125,9 @@ float DoPID(byte ID, byte ControlType)
 	{
 		IntegralSum[ID] = 0;
 	}
-	debug4 = IntegralSum[0];
-	LastPWM[ID] = Result;
-	if (ControlType == 2 || ControlType == 4) Result = MotorControl(Result, ID);
 	return Result;
 }
 
-float MotorControl(float PWMchange, byte ID)
-{
-	static float MotorPWM;
-	static float LastPWM[MaxProductCount];
-	static uint32_t LastCheck[MaxProductCount];
-
-	MotorPWM = 0;
-	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
-	{
-		MotorPWM = LastPWM[ID];
-		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
-		{
-			LastCheck[ID] = millis();
-			debug3++;
-			MotorPWM += PWMchange;
-			MotorPWM = constrain(MotorPWM, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
-			LastPWM[ID] = MotorPWM;
-		}
-	}
-
-	if (ID == 0)
-	{
-		debug1 = PWMchange;
-		debug2 = MotorPWM;
-	}
-	return MotorPWM;
-}
 
 float TimedCombo(byte ID, bool ManualAdjust = false)
 {
@@ -182,13 +167,12 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 					Result = Sensor[ID].ManualAdjust;
 					float Direction = 1.0;
 					if (Result < 0) Direction = -1.0;
-					if (abs(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
+					if (fabsf(Result) > Sensor[ID].MaxPWM) Result = Sensor[ID].MaxPWM * Direction;
 				}
 				else
 				{
 					// auto adjust
-					Result = DoPID(ID, 5);
-					float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+					Result = DoPID(ID, false);
 				}
 			}
 		}

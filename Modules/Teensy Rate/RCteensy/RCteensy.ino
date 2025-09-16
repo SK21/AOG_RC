@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 14095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 15095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -85,7 +85,6 @@ struct SensorConfig	// about 104 bytes
 	float PIDslowAdjust;
 	float SlewRate;
 	float MaxIntegral;
-	float MaxValveIntegral;
 	float TimedMinStart;
 	uint32_t TimedAdjust;
 	uint32_t TimedPause;
@@ -131,6 +130,7 @@ bool ADSfound = false;
 bool GoodPins = false;	// configuration pins correct
 
 float TimedCombo(byte, bool);	// function prototype
+float DoPID(byte, bool);
 
 // firmware update
 EthernetUDP UpdateComm;
@@ -251,11 +251,6 @@ bool WorkPinOn()
 	return WrkOn;
 }
 
-float debug1;
-float debug2;
-float debug3;
-float debug4;
-
 void Blink()
 {
 	static bool State = false;
@@ -277,18 +272,6 @@ void Blink()
 
 			Serial.print(", ");
 			Serial.print(Ethernet.localIP());
-
-			Serial.print(", ");
-			Serial.print(debug1,5);
-
-			Serial.print(", ");
-			Serial.print(debug2);
-
-			Serial.print(", ");
-			Serial.print(debug3);
-
-			Serial.print(", ");
-			Serial.print(debug4,5);
 
 			Serial.println("");
 		}
