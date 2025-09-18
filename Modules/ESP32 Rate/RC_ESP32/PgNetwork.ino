@@ -101,7 +101,7 @@ String GetPage2()
     st += "              <div class='checkbox-row'>";
     st += "                <div class='checkbox-left'>";
     st += "                  <label style='display:inline-flex; align-items:center; gap:8px; cursor:pointer;'>";
-    st += "                    <input class='styled' type='checkbox' name='connect' value='1' " + String(MDL.WifiModeUseStation ? "checked" : "") + ">";
+    st += "                    <input class='styled' type='checkbox' name='connect' value='1' " + String(ClientNetwork.WifiModeUseStation ? "checked" : "") + ">";
     st += "                  </label>";
     st += "                </div>";
     st += "              </div>";
@@ -110,11 +110,11 @@ String GetPage2()
     st += "        </tr>";
     st += "        <tr>";
     st += "          <td class='label-col'><span class='label-normal'>Network</span></td>";
-    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ssid' size='20' name='prop1' value='" + String(MDL.SSID) + "'></div></td>";
+    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ssid' size='20' name='prop1' value='" + String(ClientNetwork.SSID) + "'></div></td>";
     st += "        </tr>";
     st += "        <tr>";
     st += "          <td class='label-col'><span class='label-normal'>Password</span></td>";
-    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='pass' size='20' name='prop2' value='" + String(MDL.Password) + "'></div></td>";
+    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='pass' size='20' name='prop2' value='" + String(ClientNetwork.Password) + "'></div></td>";
     st += "        </tr>";
     st += "      </table>";
     st += "";
@@ -123,7 +123,7 @@ String GetPage2()
     st += "    </form>";
     if (WiFi.isConnected())
     {
-        st += "<p>Wifi Connected to " + String(MDL.SSID) + "</p>";
+        st += "<p>Wifi Connected to " + String(ClientNetwork.SSID) + "</p>";
     }
     else
     {

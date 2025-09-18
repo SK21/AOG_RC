@@ -50,7 +50,7 @@ namespace RateController.Menu
                 Boxes[i].TextChanged += BoxTextChanged;
             }
             BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 10, .1, 1, 1, 10 };
-            BoxesMax = new double[] { 10, 50, 75, 20, 25,  10, 1000, 1000, 25, 3000, 25, 100 };
+            BoxesMax = new double[] { 10, 50, 75, 20, 25,  10, 1000, 1000, 25, 3000, 25, 250 };
             BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N1",  "N0", "F0", "F0",
                 "N1","F0","N0","N0" };
         }

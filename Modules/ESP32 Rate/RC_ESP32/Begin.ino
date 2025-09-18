@@ -19,6 +19,7 @@ void DoSetup()
 	// eeprom
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
+	LoadNetwork();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -369,14 +370,14 @@ void DoSetup()
 	Serial.println("OTA started.");
 
 	// wifi client mode
-	if (MDL.WifiModeUseStation)
+	if (ClientNetwork.WifiModeUseStation)
 	{
 		// connect to network
 		delay(1000);
 		WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 		WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 		WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
-		WiFi.begin(MDL.SSID, MDL.Password);
+		WiFi.begin(ClientNetwork.SSID, ClientNetwork.Password);
 		Serial.println();
 		Serial.println("Connecting to wifi network ...");
 	}
@@ -387,22 +388,30 @@ void DoSetup()
 	Serial.println("");
 }
 
+// eeprom map:
+// ID			0-1
+// module type	2
+// module data	23-147
+// network		168-232
+// sensor 1		253-356
+// sensor 2		377-480
+
 void LoadData()
 {
 	bool IsValid = false;
 	int16_t StoredID;
 	int8_t StoredType;
 	EEPROM.get(0, StoredID);
-	EEPROM.get(4, StoredType);
+	EEPROM.get(2, StoredType);
 	if (StoredID == InoID && StoredType == InoType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
-		EEPROM.get(110, MDL);
+		EEPROM.get(23, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.get(300 + i * 120, Sensor[i]);
+			EEPROM.get(253 + i * 124, Sensor[i]);
 		}
 		IsValid = ValidData();
 	}
@@ -420,13 +429,26 @@ void SaveData()
 	// update stored data
 	Serial.println("Updating stored settings.");
 	EEPROM.put(0, InoID);
-	EEPROM.put(4, InoType);
-	EEPROM.put(110, MDL);
+	EEPROM.put(2, InoType);
+	EEPROM.put(23, MDL);
 
 	for (int i = 0; i < MaxProductCount; i++)
 	{
-		EEPROM.put(300 + i * 120, Sensor[i]);
+		EEPROM.put(253 + i * 124, Sensor[i]);
 	}
+	EEPROM.commit();
+}
+
+void LoadNetwork()
+{
+	ModuleNetwork tmp;
+	EEPROM.get(168, tmp);
+	if (tmp.Identifier == ClientNetwork.Identifier) ClientNetwork = tmp;
+}
+
+void SaveNetwork()
+{
+	EEPROM.put(168, ClientNetwork);
 	EEPROM.commit();
 }
 
@@ -486,7 +508,6 @@ void LoadDefaults()
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = true;
 	MDL.PressurePin = NC;
-	MDL.WifiModeUseStation = false;
 }
 
 bool ValidData()

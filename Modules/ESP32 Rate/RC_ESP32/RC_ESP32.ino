@@ -17,7 +17,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 17095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 18095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -57,7 +57,7 @@ enum ControlType
 	TimedCombo_ct = 5
 };
 
-struct ModuleConfig
+struct ModuleConfig	// about 130 bytes
 {
 	// RC15
 	uint8_t ID = 0;
@@ -72,9 +72,6 @@ struct ModuleConfig
 	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "111222333";
-	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
-	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-	char Password[ModStringLengths] = "111222333";
 	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output1 only, Output2 is off
@@ -83,6 +80,16 @@ struct ModuleConfig
 };
 
 ModuleConfig MDL;
+
+struct ModuleNetwork
+{
+	uint16_t Identifier = 9876;
+	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
+	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
+	char Password[ModStringLengths] = "111222333";
+};
+
+ModuleNetwork ClientNetwork;
 
 struct SensorConfig	// about 104 bytes
 {
@@ -182,7 +189,7 @@ uint8_t DisconnectCount = 0;
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
 	Serial.print("Connected to '");
-	Serial.print(MDL.SSID);
+	Serial.print(ClientNetwork.SSID);
 	Serial.println("'");
 }
 
@@ -202,13 +209,13 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	Serial.print("Trying to Reconnect: ");
 	DisconnectCount++;
 	Serial.println(DisconnectCount);
-	WiFi.begin(MDL.SSID, MDL.Password);
+	WiFi.begin(ClientNetwork.SSID, ClientNetwork.Password);
 
 	if (DisconnectCount > 5)
 	{
 		// use AP mode only
-		MDL.WifiModeUseStation = false;
-		SaveData();
+		ClientNetwork.WifiModeUseStation = false;
+		SaveNetwork();
 		ESP.restart();
 	}
 }

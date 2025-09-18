@@ -196,7 +196,7 @@ namespace RateController.Classes
             get { return cPIDtime; }
             set
             {
-                if (value >= 10 && value <= 100)
+                if (value >= 10 && value <= 250)
                 {
                     cPIDtime = value;
                 }
