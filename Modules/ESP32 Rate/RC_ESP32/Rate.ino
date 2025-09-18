@@ -38,14 +38,12 @@ void GetUPM()
 		{
 			LastPulse[i] = millis();
 
-			uint32_t Snapshot[MaxSampleSize];
-			int count = 0;
-
 			noInterrupts();
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
-			count = SamplesCount[i];
-			for (uint8_t k = 0; k < count; k++)
+			uint16_t count = SamplesCount[i];
+			uint32_t Snapshot[MaxSampleSize];
+			for (uint16_t k = 0; k < count; k++)
 			{
 				Snapshot[k] = Samples[i][k];
 			}
@@ -59,7 +57,9 @@ void GetUPM()
 				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
 				if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
 			}
-
+		}
+		else
+		{
 			// No flow check
 			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
 			{
@@ -69,15 +69,12 @@ void GetUPM()
 				noInterrupts();
 				SamplesCount[i] = 0;
 				SamplesIndex[i] = 0;
-				for (uint8_t k = 0; k < Sensor[i].PulseSampleSize; k++)
-				{
-					Samples[i][k] = 0;
-				}
 				interrupts();
 			}
 		}
 	}
 }
+
 IRAM_ATTR void ISR0()
 {
 	PulseISR(0);

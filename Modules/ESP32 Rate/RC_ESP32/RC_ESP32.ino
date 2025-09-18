@@ -17,7 +17,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 14095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 17095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -47,6 +47,15 @@ const int PWM_BITS = 8;
 const int PWM_FREQ = 490;  // Default
 uint8_t ditherCounter = 0; // for Nano dithering
 #endif
+
+enum ControlType
+{
+	StandardValve_ct = 0,
+	ComboClose_ct = 1,
+	Motor_ct = 2,
+	Fan_ct = 4,
+	TimedCombo_ct = 5
+};
 
 struct ModuleConfig
 {
@@ -98,8 +107,7 @@ struct SensorConfig	// about 104 bytes
 	float BrakePoint;
 	float PIDslowAdjust;
 	float SlewRate;
-	float MaxMotorIntegral;
-	float MaxValveIntegral;
+	float MaxIntegral;
 	float TimedMinStart;
 	uint32_t TimedAdjust;
 	uint32_t TimedPause;
@@ -196,7 +204,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	Serial.println(DisconnectCount);
 	WiFi.begin(MDL.SSID, MDL.Password);
 
-	if (DisconnectCount > 10)
+	if (DisconnectCount > 5)
 	{
 		// use AP mode only
 		MDL.WifiModeUseStation = false;
@@ -243,7 +251,7 @@ void SetSensorsEnabled()
 			{
 				Result = true;
 			}
-			else if ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
+			else if ((Sensor[i].ControlType == Fan_ct) && (Sensor[i].TargetUPM > 0))
 			{
 				// fan
 				Result = true;

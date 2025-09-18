@@ -144,8 +144,11 @@ void DoSetup()
 		}
 
 		// pwm frequency change from default 5000 Hz to 490 Hz, required for some valves to work
-		analogWriteFrequency(Sensor[i].FlowPin, PWM_FREQ);
-		analogWriteResolution(Sensor[i].FlowPin,PWM_BITS);
+		ledcAttach(Sensor[i].IN1, PWM_FREQ, PWM_BITS);
+		ledcWrite(Sensor[i].IN1, 0);
+
+		ledcAttach(Sensor[i].IN2, PWM_FREQ, PWM_BITS);
+		ledcWrite(Sensor[i].IN2, 0);
 	}
 
 	// Relays
@@ -446,14 +449,13 @@ void LoadDefaults()
 	{
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 10;
-		Sensor[i].Kp = 50;
-		Sensor[i].Ki = 0;
-		Sensor[i].Deadband = 0.15;
+		Sensor[i].Kp = 0.0003;	// gain 35
+		Sensor[i].Ki = 0.00123;	// integral 5
+		Sensor[i].Deadband = 0.015;
 		Sensor[i].BrakePoint = 0.35;
 		Sensor[i].PIDslowAdjust = 0.3;
-		Sensor[i].SlewRate = 6;
-		Sensor[i].MaxMotorIntegral = 0.1;
-		Sensor[i].MaxValveIntegral = 100;
+		Sensor[i].SlewRate = 15;
+		Sensor[i].MaxIntegral = 0.1;
 		Sensor[i].TimedMinStart = 0.03;
 		Sensor[i].TimedAdjust = 80;
 		Sensor[i].TimedPause = 400;
