@@ -227,6 +227,7 @@ void setup()
 
 void loop()
 {
+	server.handleClient();
 	ReceiveUDP();
 	SetPWM();
 	if (millis() - LoopLast >= LoopTime)
@@ -239,7 +240,6 @@ void loop()
 		ReadAnalog();
 	}
 	SendComm();
-	server.handleClient();
 	//Blink();
 }
 
@@ -335,13 +335,8 @@ bool WorkPinOn()
 //uint32_t LastLoop;
 //byte ReadReset;
 //uint32_t MaxLoopTime;
-//float FlowHz;
-//float debug1;
-//float debug2;
-////float debug3;
-////float debug4;
-////float debug5;
 //
+//// max loop about 2500, 18/Sep/2025
 //void Blink()
 //{
 //	if (millis() - LastBlink > 1000)
@@ -350,24 +345,7 @@ bool WorkPinOn()
 //		State = !State;
 //		//digitalWrite(LED_BUILTIN, State);
 //
-//		//Serial.print(MaxLoopTime);
-//		//Serial.print(", ");
-//		//Serial.print(FlowHz);
-//
-//		//Serial.print(", ");
-//		Serial.print(debug1);
-//		
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug4);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug5);
+//		Serial.print(MaxLoopTime);
 //
 //		Serial.println("");
 //

@@ -350,6 +350,7 @@ void DoSetup()
 	// web server
 	Serial.println();
 	Serial.println("Starting Web Server");
+	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});	// keep Android connected
 	server.on("/", HandleRoot);
 	server.on("/page1", HandlePage1);
 	server.on("/page2", HandlePage2);
