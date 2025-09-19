@@ -138,7 +138,6 @@
             this.btnPwr0.TabIndex = 0;
             this.btnPwr0.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnPwr0.UseVisualStyleBackColor = false;
-            this.btnPwr0.Click += new System.EventHandler(this.btnPwr0_Click);
             // 
             // lbPulses0
             // 

@@ -85,7 +85,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
                         MasterOn = ((InCommand & 16) == 16);
 
-                        AutoOn = ((InCommand & 64) == 64);
+                        Sensor[SensorID].AutoOn = ((InCommand & 64) == 64);
 
                         int16_t tmp = data[10] | data[11] << 8;
                         Sensor[SensorID].ManualAdjust = tmp;

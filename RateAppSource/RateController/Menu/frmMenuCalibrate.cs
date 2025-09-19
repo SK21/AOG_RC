@@ -16,6 +16,7 @@ namespace RateController.Menu
         private frmMenu MainMenu;
         private FormStart mf;
         private bool Running;
+        private SimType StartSim;
 
         public frmMenuCalibrate(FormStart main, frmMenu menu)
         {
@@ -23,25 +24,27 @@ namespace RateController.Menu
             MainMenu = menu;
             mf = main;
             this.Tag = false;
+            StartSim=Props.SimMode;
             Cals = new clsCalibrates(mf);
             Cals.Edited += Cals_Edited;
         }
 
         private void btnCalStart_Click(object sender, EventArgs e)
         {
-            // btnCalStop needs to be next in tab order 
+            // btnCalStop needs to be next in tab order
             // after btnCalStart to receive the focus
             Props.SimMode = SimType.Sim_Speed;
             Running = true;
             SetButtons();
+            Props.RateCalibrationOn=true;
             Cals.Running(true);
         }
-
         private void btnCalStop_Click(object sender, EventArgs e)
         {
-            Props.SimMode = SimType.Sim_None;
+            Props.SimMode = StartSim;
             Running = false;
             SetButtons();
+            Props.RateCalibrationOn = false;
             Cals.Running(false);
         }
 
@@ -75,7 +78,7 @@ namespace RateController.Menu
         private void frmMenuCalibrate_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
-            Props.SimMode = SimType.Sim_None;
+            Props.SimMode = StartSim;
             btnCalStop.PerformClick();
             Cals.Close();
         }
@@ -261,11 +264,5 @@ namespace RateController.Menu
             tbSpeed.Text = Props.SimSpeed.ToString("N1");
             Initializing = false;
         }
-
-        private void btnPwr0_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

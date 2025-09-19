@@ -53,6 +53,7 @@ namespace RateController
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
+        private CalibrationMode cCalMode = CalibrationMode.Off;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -229,37 +230,55 @@ namespace RateController
             set { cBumpButtons = value; }
         }
 
-        public bool CalRun
-        {
-            // notifies module Master switch on for calibrate and use current meter cal in manual mode
-            // current meter position is used and not adjusted
+        //public bool CalRun
+        //{
+        //    // notifies module Master switch on for calibrate and use current meter cal in manual mode
+        //    // current meter position is used and not adjusted
 
-            get { return cCalRun; }
+        //    get { return cCalRun; }
+        //    set
+        //    {
+        //        cCalRun = value;
+        //        if (cCalRun) cCalSetMeter = false;
+        //    }
+        //}
+
+        //public bool CalSetMeter
+        //{
+        //    // notifies module Master switch on for calibrate and use auto mode to find meter cal
+        //    // adjusts meter position to match base rate
+
+        //    get { return cCalSetMeter; }
+        //    set
+        //    {
+        //        cCalSetMeter = value;
+        //        if (cCalSetMeter) cCalRun = false;
+        //    }
+        //}
+
+        //public bool CalUseBaseRate
+        //{
+        //    // use base rate for cal and not vr rate
+        //    get { return cCalUseBaseRate; }
+        //    set { cCalUseBaseRate = value; }
+        //}
+
+        public CalibrationMode CalMode
+        {
+            get { return cCalMode; }
             set
             {
-                cCalRun = value;
-                if (cCalRun) cCalSetMeter = false;
+                cCalMode = value;
+                if(cCalMode==CalibrationMode.Off)
+                {
+                    cCalUseBaseRate = false;
+                }
+                else
+                {
+                    // use base rate for cal and not vr rate
+                    cCalUseBaseRate = true;
+                }
             }
-        }
-
-        public bool CalSetMeter
-        {
-            // notifies module Master switch on for calibrate and use auto mode to find meter cal
-            // adjusts meter position to match base rate
-
-            get { return cCalSetMeter; }
-            set
-            {
-                cCalSetMeter = value;
-                if (cCalSetMeter) cCalRun = false;
-            }
-        }
-
-        public bool CalUseBaseRate
-        {
-            // use base rate for cal and not vr rate
-            get { return cCalUseBaseRate; }
-            set { cCalUseBaseRate = value; }
         }
 
         public ControlTypeEnum ControlType
@@ -719,7 +738,7 @@ namespace RateController
             }
             else
             {
-                Result = (RateSensorData.Connected() && cHectaresPerMinute > 0);
+                Result = (RateSensorData.Connected() && (cHectaresPerMinute > 0 || Props.RateCalibrationOn));
             }
             return Result;
         }
@@ -957,7 +976,7 @@ namespace RateController
         public double TargetRate()
         {
             double Result = 0;
-            if (!CalUseBaseRate && Props.VariableRateEnabled)
+            if (!cCalUseBaseRate && Props.VariableRateEnabled)
             {
                 Result = mf.Tls.Manager.GetRate(ID);
             }
@@ -981,7 +1000,7 @@ namespace RateController
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (cHectaresPerMinute == 0) HPM = 0;   // all sections off
+                        if (cHectaresPerMinute == 0 && cCalMode==CalibrationMode.Off) HPM = 0;   // all sections off
                         Result = TargetRate() * HPM * 2.47;
                     }
                     else
@@ -998,7 +1017,7 @@ namespace RateController
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
-                        if (cHectaresPerMinute == 0) HPM = 0;
+                        if (cHectaresPerMinute == 0 && cCalMode == CalibrationMode.Off) HPM = 0;
                         Result = TargetRate() * HPM;
                     }
                     else
@@ -1022,6 +1041,7 @@ namespace RateController
             // added this back in to change from lb/min to ft^3/min, Moved from PGN32614.
             if (cEnableProdDensity && cProdDensity > 0) { Result /= cProdDensity; }
 
+            //if (cProductID == 0) Debug.Print("Target: " + Result.ToString("N3"));
             return Result;
         }
 

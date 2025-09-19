@@ -1,6 +1,8 @@
 ﻿using RateController.Classes;
+using RateController.Menu;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace RateController
 {
@@ -152,7 +154,6 @@ namespace RateController
                 throw new ArgumentException("Relay definitions are not valid.");
             }
         }
-
         public int SetRelays(int ModuleID)
         {
             int Result = 0;
@@ -166,23 +167,30 @@ namespace RateController
                 bool MasterFound = false;
                 bool FlowEnabled = (mf.Products.Item(mf.CurrentProduct()).Speed() > 0.1);
 
-                if (mf.SwitchBox.Connected())
+                if (Props.RateCalibrationOn)
                 {
-                    if (mf.SwitchBox.AutoSectionOn)
-                    {
-                        // auto on when master switch is on and flow enabled
-                        MasterRelayOn = mf.SwitchBox.MasterOn && FlowEnabled;
-                    }
-                    else
-                    {
-                        // manual on when master switch is on
-                        MasterRelayOn = mf.SwitchBox.MasterOn;
-                    }
+                    MasterRelayOn = true;
                 }
                 else
                 {
-                    // no switchbox, set from aog
-                    MasterRelayOn = FlowEnabled;
+                    if (mf.SwitchBox.Connected())
+                    {
+                        if (mf.SwitchBox.AutoSectionOn)
+                        {
+                            // auto on when master switch is on and flow enabled
+                            MasterRelayOn = mf.SwitchBox.MasterOn && FlowEnabled;
+                        }
+                        else
+                        {
+                            // manual on when master switch is on
+                            MasterRelayOn = mf.SwitchBox.MasterOn;
+                        }
+                    }
+                    else
+                    {
+                        // no switchbox, set from aog
+                        MasterRelayOn = FlowEnabled;
+                    }
                 }
 
                 // set master relays
@@ -242,7 +250,14 @@ namespace RateController
                                     }
                                     else
                                     {
-                                        Rly.IsON = mf.Sections.Items[Rly.SectionID].IsON;
+                                        if(Rly.Type==RelayTypes.Section && Props.RateCalibrationOn)
+                                        {
+                                            Rly.IsON = true;
+                                        }
+                                        else
+                                        {
+                                            Rly.IsON = mf.Sections.Items[Rly.SectionID].IsON;
+                                        }
                                     }
                                 }
                                 break;

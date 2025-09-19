@@ -1,5 +1,7 @@
-﻿using RateController.Forms;
+﻿using GMap.NET.MapProviders;
+using RateController.Forms;
 using RateController.Language;
+using RateController.Menu;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +17,9 @@ namespace RateController.Classes
 {
     public enum ApplicationMode
     { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
+
+    public enum CalibrationMode
+    { Off, SettingPWM, TestingRate }
 
     public enum ControlTypeEnum
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
@@ -91,14 +96,15 @@ namespace RateController.Classes
         private static bool cUseDualAuto;
         private static bool cUseLargeScreen = false;
         private static bool cUseMetric;
+        private static bool cUseRateDisplay = false;
         private static bool cUseTransparent = false;
         private static bool cUseVariableRate = false;
-        private static bool cUseRateDisplay = false;
         private static bool cUseZones = false;
         private static FormStart mf;
         private static frmPressureDisplay PressureDisplay;
-        private static frmSwitches SwitchesForm;
         private static frmRate RateDisplay;
+        private static frmSwitches SwitchesForm;
+        private static bool cRateCalibrationOn = false;
 
         #region pressure calibration
 
@@ -138,9 +144,9 @@ namespace RateController.Classes
 
         public static event EventHandler RateDataSettingsChanged;
 
-        public static event EventHandler UnitsChanged;
-
         public static event EventHandler ScreensSwitched;
+
+        public static event EventHandler UnitsChanged;
 
         #region MainProperties
 
@@ -453,6 +459,17 @@ namespace RateController.Classes
             }
         }
 
+        public static bool UseRateDisplay
+        {
+            get { return cUseRateDisplay; }
+            set
+            {
+                cUseRateDisplay = value;
+                SetProp("UseRateDisplay", cUseRateDisplay.ToString());
+                DisplayRate();
+            }
+        }
+
         public static int UserRateType
         {
             // to show user
@@ -475,16 +492,6 @@ namespace RateController.Classes
             {
                 cUseTransparent = value;
                 SetProp("UseTransparent", cUseTransparent.ToString());
-            }
-        }
-        public static bool UseRateDisplay
-        {
-            get { return cUseRateDisplay; }
-            set
-            {
-                cUseRateDisplay = value;
-                SetProp("UseRateDisplay",cUseRateDisplay.ToString());
-                DisplayRate();
             }
         }
 
@@ -578,6 +585,25 @@ namespace RateController.Classes
                 }
             }
             return Result;
+        }
+
+        //public static bool RateCalibrationOn()
+        //{
+        //    bool Result = false;
+        //    foreach (Form frm in Application.OpenForms)
+        //    {
+        //        if (frm is frmMenuCalibrate CalForm)
+        //        {
+        //            Result = CalForm.CalsRunning();
+        //        }
+        //    }
+        //    return Result;
+        //}
+
+        public static bool RateCalibrationOn
+        {
+            get { return cRateCalibrationOn; }
+            set { cRateCalibrationOn = value; }
         }
 
         public static string VersionDate()
@@ -708,12 +734,13 @@ namespace RateController.Classes
                 if (fs != null) fs.Close();
             }
         }
+
         public static void DisplayRate()
         {
             Form fs = IsFormOpen("frmRate");
-            if(cUseRateDisplay)
+            if (cUseRateDisplay)
             {
-                if(fs==null)
+                if (fs == null)
                 {
                     RateDisplay = new frmRate(mf);
                     RateDisplay.Show();
@@ -721,7 +748,7 @@ namespace RateController.Classes
             }
             else
             {
-                if(fs!=null) fs.Close();
+                if (fs != null) fs.Close();
             }
         }
 

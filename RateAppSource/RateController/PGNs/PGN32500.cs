@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using System;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -19,7 +20,7 @@ namespace RateController
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2,3		control type 0-4
         //	        - bit 4		    MasterOn mode
-        //          - bit 5         MasterOn switch position
+        //          - bit 5         -
         //          - bit 6         AutoOn
         //          - bit 7         -
         //10    manual pwm Lo
@@ -51,15 +52,22 @@ namespace RateController
             cData[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
             // rate set
-            if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
-                || Prod.AppMode == ApplicationMode.DocumentApplied)
+            if (Prod.CalMode == CalibrationMode.Off)
             {
-                RateSet = 0;
+                if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
+                    || Prod.AppMode == ApplicationMode.DocumentApplied)
+                {
+                    RateSet = 0;
+                }
+                else
+                {
+                    RateSet = Prod.TargetUPM() * 1000.0;
+                    if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
+                }
             }
             else
             {
                 RateSet = Prod.TargetUPM() * 1000.0;
-                if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
             }
 
             if (Prod.Enabled)
@@ -113,46 +121,69 @@ namespace RateController
                     break;
             }
 
-            // master on
-            if (Prod.mf.SwitchBox.Connected())
+            if (!Props.RateCalibrationOn)
             {
-                if (Prod.mf.SectionControl.MasterOn || Prod.CalRun || Prod.CalSetMeter 
-                    || Props.MasterSwitchMode==MasterSwitchMode.Override 
-                    || Props.MasterSwitchMode==MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
+                 Debug.Print("Normal mode: "+Prod.ID.ToString());
+                // normal run
+                // master on
+                if (Prod.mf.SwitchBox.Connected())
+                {
+                    if (Prod.mf.SectionControl.MasterOn 
+                        || Props.MasterSwitchMode == MasterSwitchMode.Override
+                        || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
+                }
+                else
+                {
+                    cData[9] |= 0b00010000;
+                }
 
-                if (Prod.mf.SwitchBox.MasterOn) cData[9] |= 0b00100000;
+                if (Prod.mf.SwitchBox.AutoRateOn)
+                {
+                    // auto on
+                    cData[9] |= 0b01000000;
+
+                    if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
+                    {
+                        // keep manual motor setting the same as auto when not in use
+                        // for smooth transition from auto to manual control
+                        Prod.ManualPWM = (int)Prod.PWM();
+                    }
+                }
+
+                // manual 
+                if ((Prod.mf.SectionControl.MasterOn
+                    || Props.MasterSwitchMode == MasterSwitchMode.Override
+                    || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) && Prod.Enabled)
+                {
+                    cData[10] = (byte)Prod.ManualPWM;
+                    cData[11] = (byte)(Prod.ManualPWM >> 8);
+                }
             }
             else
             {
+               Debug.Print("Calibration: "+Prod.ID.ToString());
+                // calibrate
+                // master on
                 cData[9] |= 0b00010000;
-            }
 
-            if ((Prod.mf.SwitchBox.AutoRateOn || Prod.CalSetMeter) && !Prod.CalRun)
-            {
-                // auto on
-                cData[9] |= 0b01000000;
-
-                if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
+                if (Prod.CalMode == CalibrationMode.SettingPWM)
                 {
-                    // keep manual motor setting the same as auto when not in use
-                    // for smooth transition from auto to manual control
-                    Prod.ManualPWM = (int)Prod.PWM();
+                    // SettingPWM, auto on, find CalPWM
+                    cData[9] |= 0b01000000;
                 }
-            }
-
-            // manual cal
-            if ((Prod.mf.SectionControl.MasterOn
-                || Props.MasterSwitchMode == MasterSwitchMode.Override 
-                || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) && Prod.Enabled)
-            {
-                cData[10] = (byte)Prod.ManualPWM;
-                cData[11] = (byte)(Prod.ManualPWM >> 8);
+                else
+                {
+                    // TestingRate, run in manual at CalPWM
+                    cData[10] = (byte)Prod.ManualPWM;
+                    cData[11] = (byte)(Prod.ManualPWM >> 8);
+                }
             }
 
             // CRC
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
+            Debug.Print("PGN32500/command: " + cData[9].ToString() + ", " + Prod.ID.ToString());
             Prod.mf.UDPmodules.SendUDPMessage(cData);
 
             cSendTime = DateTime.Now;

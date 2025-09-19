@@ -486,6 +486,7 @@ void LoadDefaults()
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
 		Sensor[i].PulseSampleSize = 12;
+		Sensor[i].AutoOn = true;
 	}
 
 	// relay pins

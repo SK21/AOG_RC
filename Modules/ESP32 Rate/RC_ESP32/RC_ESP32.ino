@@ -17,7 +17,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 18095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -122,6 +122,7 @@ struct SensorConfig	// about 104 bytes
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
+	bool AutoOn;
 };
 
 SensorConfig Sensor[2];
@@ -159,7 +160,6 @@ const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
 bool MasterOn = false;
-bool AutoOn = true;
 
 PCF8574 PCF;
 bool PCF_found = false;
@@ -240,7 +240,7 @@ void loop()
 		ReadAnalog();
 	}
 	SendComm();
-	//Blink();
+	Blink();
 }
 
 void SetSensorsEnabled()
@@ -254,7 +254,7 @@ void SetSensorsEnabled()
 			{
 				Result = true;
 			}
-			else if (MasterOn && !AutoOn)
+			else if (MasterOn && !Sensor[i].AutoOn)
 			{
 				Result = true;
 			}
@@ -330,31 +330,39 @@ bool WorkPinOn()
 	return WrkOn;
 }
 
-//bool State = false;
-//uint32_t LastBlink;
-//uint32_t LastLoop;
-//byte ReadReset;
-//uint32_t MaxLoopTime;
-//
-//// max loop about 2500, 18/Sep/2025
-//void Blink()
-//{
-//	if (millis() - LastBlink > 1000)
-//	{
-//		LastBlink = millis();
-//		State = !State;
-//		//digitalWrite(LED_BUILTIN, State);
-//
-//		Serial.print(MaxLoopTime);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 5)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//		}
-//	}
-//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-//	LastLoop = micros();
-//}
+bool State = false;
+uint32_t LastBlink;
+uint32_t LastLoop;
+byte ReadReset;
+uint32_t MaxLoopTime;
+
+// max loop about 2500, 18/Sep/2025
+void Blink()
+{
+	if (millis() - LastBlink > 1000)
+	{
+		LastBlink = millis();
+		State = !State;
+
+		Serial.print(MaxLoopTime);
+
+		Serial.print(", ");
+		Serial.print(MasterOn);
+
+		Serial.print(", ");
+		Serial.print(Sensor[0].AutoOn);
+
+		Serial.print(", ");
+		Serial.print(RelayLo);
+
+		Serial.println("");
+
+		if (ReadReset++ > 5)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+		}
+	}
+	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+	LastLoop = micros();
+}

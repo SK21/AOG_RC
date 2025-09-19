@@ -94,7 +94,19 @@ namespace RateController
 
         public bool MasterOn
         {
-            get { return cMasterOn; }
+            get
+            {
+                bool Result = false;
+                if (Props.RateCalibrationOn)
+                {
+                    Result = true;
+                }
+                else
+                {
+                    Result = cMasterOn;
+                }
+                return Result;
+            }
             set { cMasterOn = value; }
         }
 
@@ -134,7 +146,17 @@ namespace RateController
 
         public bool Connected()
         {
-            return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
+            bool Result = false;
+            if (Props.RateCalibrationOn)
+            {
+                Result = true;
+            }
+            else
+            {
+                Result = (DateTime.Now - ReceiveTime).TotalSeconds < 4;
+            }
+
+            return Result;
         }
 
         public string ModuleVersion()
@@ -212,9 +234,16 @@ namespace RateController
         public bool SectionSwitchOn(int ID)
         {
             bool Result = false;
-            if ((ID >= 0) && (ID <= 15))
+            if (Props.RateCalibrationOn)
             {
-                Result = SW[ID + (int)SwIDs.sw0];
+                Result = true;
+            }
+            else
+            {
+                if ((ID >= 0) && (ID <= 15))
+                {
+                    Result = SW[ID + (int)SwIDs.sw0];
+                }
             }
             return Result;
         }

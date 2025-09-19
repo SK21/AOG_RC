@@ -16,17 +16,19 @@ volatile uint8_t SamplesIndex[2];
 
 IRAM_ATTR void PulseISR(uint8_t ID)
 {
-	uint32_t ReadTime = micros();
-	PulseTime[ID] = ReadTime - ReadLast[ID];
-	ReadLast[ID] = ReadTime;
-
-	if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax
-		&& (RelayLo > 0 || RelayHi > 0))
+	if (RelayLo > 0 || RelayHi > 0)
 	{
-		PulseCount[ID]++;
-		Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
-		SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
-		if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
+		uint32_t ReadTime = micros();
+		PulseTime[ID] = ReadTime - ReadLast[ID];
+		ReadLast[ID] = ReadTime;
+
+		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)			
+		{
+			PulseCount[ID]++;
+			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
+			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
+			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
+		}
 	}
 }
 

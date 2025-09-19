@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace RateController
@@ -180,8 +181,9 @@ namespace RateController
             // restore initial settings
             cProduct.Enabled = true;
             cProduct.AppMode = ApplicationModeStart;
+            cProduct.CalMode = CalibrationMode.Off;
             cProduct.Save();
-            cProduct.CalUseBaseRate = false;
+            //cProduct.CalUseBaseRate = false;
         }
 
         public void Load()
@@ -273,15 +275,23 @@ namespace RateController
                     }
                 }
 
-                cProduct.CalRun = cIsLocked;
-                cProduct.CalSetMeter = !cIsLocked;
+                if(cIsLocked)
+                {
+                    cProduct.CalMode = CalibrationMode.TestingRate;
+                }
+               else
+                {
+                    cProduct.CalMode = CalibrationMode.SettingPWM;
+                }
+                //    cProduct.CalRun = cIsLocked;
+                //cProduct.CalSetMeter = !cIsLocked;
                 cProduct.ManualPWM = CalPWM;
             }
             else
             {
                 Reset();
-                cProduct.CalRun = false;
-                cProduct.CalSetMeter = false;
+                //cProduct.CalRun = false;
+                //cProduct.CalSetMeter = false;
             }
 
             if (cIsLocked)
@@ -407,7 +417,7 @@ namespace RateController
                 cProduct.AppMode = ApplicationMode.ConstantUPM;
             }
             cEnabled = !cEnabled;
-            cProduct.CalUseBaseRate = cEnabled;
+            //cProduct.CalUseBaseRate = cEnabled;
             Update();
         }
 
