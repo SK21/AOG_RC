@@ -53,10 +53,6 @@ struct ModuleConfig
 	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction
-	uint8_t IP0 = 192;
-	uint8_t IP1 = 168;
-	uint8_t IP2 = 1;
-	uint8_t IP3 = 50;
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	uint8_t WorkPin = 30;
@@ -67,6 +63,20 @@ struct ModuleConfig
 };
 
 ModuleConfig MDL;
+
+struct ModuleNetwork
+{
+	uint16_t Identifier = 9876;
+	uint8_t IP0 = 192;
+	uint8_t IP1 = 168;
+	uint8_t IP2 = 1;
+	uint8_t IP3 = 50;
+	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
+	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
+	char Password[ModStringLengths] = "111222333";
+};
+
+ModuleNetwork MDLnetwork;
 
 struct SensorConfig	// about 104 bytes
 {
@@ -108,7 +118,7 @@ SensorConfig Sensor[2];
 EthernetUDP UDPcomm;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
-IPAddress DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
+IPAddress DestinationIP(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255);
 
 // Relays
 volatile byte RelayLo = 0;	// sections 0-7

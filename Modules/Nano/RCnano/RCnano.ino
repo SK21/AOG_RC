@@ -44,10 +44,6 @@ struct ModuleConfig
 	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
-	uint8_t IP0 = 192;
-	uint8_t IP1 = 168;
-	uint8_t IP2 = 1;
-	uint8_t IP3 = 50;
 	uint8_t RelayControlPins[16] = { 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 };	// MCP23017, RC12-3
 	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	uint8_t WorkPin = 14;
@@ -58,6 +54,17 @@ struct ModuleConfig
 };
 
 ModuleConfig MDL;
+
+struct ModuleNetwork
+{
+	uint16_t Identifier = 9876;
+	uint8_t IP0 = 192;
+	uint8_t IP1 = 168;
+	uint8_t IP2 = 1;
+	uint8_t IP3 = 50;
+};
+
+ModuleNetwork MDLnetwork;
 
 struct SensorConfig
 {
@@ -106,7 +113,7 @@ byte Ethernet::buffer[48];			// udp send and receive buffer
 static byte selectPin = 10;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
-byte DestinationIP[] = { MDL.IP0, MDL.IP1, MDL.IP2, 255 };	// broadcast 255
+byte DestinationIP[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255 };	// broadcast 255
 unsigned int SourcePort = 5123;		// to send from
 bool ENCfound;
 

@@ -24,26 +24,26 @@ void HandlePage2()
 
 void handleCredentials()
 {
-	bool OldMode = ClientNetwork.WifiModeUseStation;
-	String OldSSID = String(ClientNetwork.SSID);
-	String OldPassword = String(ClientNetwork.Password);
+	bool OldMode = MDLnetwork.WifiModeUseStation;
+	String OldSSID = String(MDLnetwork.SSID);
+	String OldPassword = String(MDLnetwork.Password);
 
 	String newSSID = server.arg("prop1");
 	newSSID.trim();  
 	String newPassword = server.arg("prop2");
 	newPassword.trim();
 
-	newSSID.toCharArray(ClientNetwork.SSID, sizeof(ClientNetwork.SSID));
-	newPassword.toCharArray(ClientNetwork.Password, sizeof(ClientNetwork.Password));
-	ClientNetwork.WifiModeUseStation = server.hasArg("connect");
+	newSSID.toCharArray(MDLnetwork.SSID, sizeof(MDLnetwork.SSID));
+	newPassword.toCharArray(MDLnetwork.Password, sizeof(MDLnetwork.Password));
+	MDLnetwork.WifiModeUseStation = server.hasArg("connect");
 
 	server.send(200, "text/html", GetPage0());
 
-	if (ClientNetwork.WifiModeUseStation != OldMode ||
-		String(ClientNetwork.SSID) != OldSSID ||
-		String(ClientNetwork.Password) != OldPassword)
+	if (MDLnetwork.WifiModeUseStation != OldMode ||
+		String(MDLnetwork.SSID) != OldSSID ||
+		String(MDLnetwork.Password) != OldPassword)
 	{
-		SaveNetwork();
+		SaveNetworks();
 		delay(3000);
 		ESP.restart();
 	}

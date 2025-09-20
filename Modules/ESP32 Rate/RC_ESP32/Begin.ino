@@ -19,7 +19,7 @@ void DoSetup()
 	// eeprom
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
-	LoadNetwork();
+	LoadNetworks();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -90,16 +90,16 @@ void DoSetup()
 
 	// ethernet 
 	Serial.println("Starting Ethernet ...");
-	MDL.IP3 = MDL.ID + 50;
-	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
-	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
+	MDLnetwork.IP3 = MDL.ID + 50;
+	IPAddress LocalIP(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, MDLnetwork.IP3);
+	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDLnetwork.IP3 };
 
 	Ethernet.init(W5500_SS);   // SS pin
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
 	IPAddress Mask(255, 255, 255, 0);
 	Ethernet.setSubnetMask(Mask);
-	IPAddress Gateway(MDL.IP0, MDL.IP1, MDL.IP2, 1);
+	IPAddress Gateway(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 1);
 	Ethernet.setGatewayIP(Gateway);
 
 	delay(1500);
@@ -122,7 +122,7 @@ void DoSetup()
 		Serial.println("Ethernet hardware not found.");
 	}
 
-	Ethernet_DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
+	Ethernet_DestinationIP = IPAddress(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255);	// update from saved data
 
 	// UDP
 	UDP_Ethernet.begin(ListeningPort);
@@ -371,14 +371,14 @@ void DoSetup()
 	Serial.println("OTA started.");
 
 	// wifi client mode
-	if (ClientNetwork.WifiModeUseStation)
+	if (MDLnetwork.WifiModeUseStation)
 	{
 		// connect to network
 		delay(1000);
 		WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 		WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 		WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
-		WiFi.begin(ClientNetwork.SSID, ClientNetwork.Password);
+		WiFi.begin(MDLnetwork.SSID, MDLnetwork.Password);
 		Serial.println();
 		Serial.println("Connecting to wifi network ...");
 	}
@@ -427,7 +427,6 @@ void LoadData()
 
 void SaveData()
 {
-	// update stored data
 	Serial.println("Updating stored settings.");
 	EEPROM.put(0, InoID);
 	EEPROM.put(2, InoType);
@@ -437,19 +436,6 @@ void SaveData()
 	{
 		EEPROM.put(253 + i * 124, Sensor[i]);
 	}
-	EEPROM.commit();
-}
-
-void LoadNetwork()
-{
-	ModuleNetwork tmp;
-	EEPROM.get(168, tmp);
-	if (tmp.Identifier == ClientNetwork.Identifier) ClientNetwork = tmp;
-}
-
-void SaveNetwork()
-{
-	EEPROM.put(168, ClientNetwork);
 	EEPROM.commit();
 }
 
@@ -500,10 +486,6 @@ void LoadDefaults()
 	MDL.SensorCount = 2;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
-	MDL.IP0 = 192;
-	MDL.IP1 = 168;
-	MDL.IP2 = 1;
-	MDL.IP3 = 50;
 	MDL.RelayControl = 5;
 	MDL.WorkPin = NC;
 	MDL.WorkPinIsMomentary = false;
@@ -613,6 +595,36 @@ bool ValidData()
 	}
 	GoodPins = Result;
 	return Result;
+}
+
+void LoadNetworks()
+{
+	ModuleNetwork tmp;
+	EEPROM.get(168, tmp);
+	if (tmp.Identifier == 9876)
+	{
+		MDLnetwork = tmp;
+	}
+	else
+	{
+		// load network defaults
+		MDLnetwork.Identifier = 9876;
+		MDLnetwork.IP0 = 192;
+		MDLnetwork.IP1 = 168;
+		MDLnetwork.IP2 = 1;
+		MDLnetwork.IP3 = 50;
+		MDLnetwork.WifiModeUseStation = false;
+		strcpy(MDLnetwork.SSID, "Tractor");
+		strcpy(MDLnetwork.Password, "111222333");
+
+		SaveNetworks();
+	}
+}
+
+void SaveNetworks()
+{
+	EEPROM.put(168, MDLnetwork);
+	EEPROM.commit();
 }
 
 

@@ -207,11 +207,11 @@ void ReadPGNs(byte data[], uint16_t len)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
-				MDL.IP0 = data[2];
-				MDL.IP1 = data[3];
-				MDL.IP2 = data[4];
+				MDLnetwork.IP0 = data[2];
+				MDLnetwork.IP1 = data[3];
+				MDLnetwork.IP2 = data[4];
 
-				SaveData();
+				SaveNetworks();
 
 				// restart the Teensy
 				SCB_AIRCR = 0x05FA0004;

@@ -14,6 +14,7 @@ void DoSetup()
 
 	// eeprom
 	LoadData();
+	LoadNetworks();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -88,9 +89,9 @@ void DoSetup()
 
 	// ethernet 
 	Serial.println("Starting Ethernet ...");
-	MDL.IP3 = MDL.ID + 50;
-	IPAddress LocalIP(MDL.IP0, MDL.IP1, MDL.IP2, MDL.IP3);
-	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDL.IP3 };
+	MDLnetwork.IP3 = MDL.ID + 50;
+	IPAddress LocalIP(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, MDLnetwork.IP3);
+	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDLnetwork.IP3 };
 
 	Ethernet.begin(LocalMac, 0);
 	Ethernet.setLocalIP(LocalIP);
@@ -106,7 +107,7 @@ void DoSetup()
 	}
 	Serial.print("IP Address: ");
 	Serial.println(Ethernet.localIP());
-	DestinationIP = IPAddress(MDL.IP0, MDL.IP1, MDL.IP2, 255);	// update from saved data
+	DestinationIP = IPAddress(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255);	// update from saved data
 
 	// UDP
 	UDPcomm.begin(ListeningPort);
@@ -270,23 +271,30 @@ void DoSetup()
 	Serial.println("");
 }
 
+// eeprom map:
+// ID			0-1
+// module type	2
+// module data	23-147
+// network		168-232
+// sensor 1		253-356
+// sensor 2		377-480
+
 void LoadData()
 {
 	bool IsValid = false;
 	int16_t StoredID;
 	int8_t StoredType;
 	EEPROM.get(0, StoredID);
-	EEPROM.get(4, StoredType);
-
+	EEPROM.get(2, StoredType);
 	if (StoredID == InoID && StoredType == InoType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
-		EEPROM.get(92, MDL);
+		EEPROM.get(23, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
 		{
-			EEPROM.get(200 + i * 120, Sensor[i]);
+			EEPROM.get(253 + i * 124, Sensor[i]);
 		}
 		IsValid = ValidData();
 	}
@@ -303,12 +311,12 @@ void SaveData()
 {
 	Serial.println("Updating stored settings.");
 	EEPROM.put(0, InoID);
-	EEPROM.put(4, InoType);
-	EEPROM.put(92, MDL);
+	EEPROM.put(2, InoType);
+	EEPROM.put(23, MDL);
 
 	for (int i = 0; i < MaxProductCount; i++)
 	{
-		EEPROM.put(200 + i * 120, Sensor[i]);
+		EEPROM.put(253 + i * 124, Sensor[i]);
 	}
 }
 
@@ -360,10 +368,6 @@ void LoadDefaults()
 	MDL.SensorCount = 2;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
-	MDL.IP0 = 192;
-	MDL.IP1 = 168;
-	MDL.IP2 = 1;
-	MDL.IP3 = 50;
 	MDL.RelayControl = 1;
 	MDL.WorkPin = 30;
 	MDL.WorkPinIsMomentary = false;
@@ -406,5 +410,34 @@ bool ValidData()
 
 	GoodPins = Result;
 	return Result;
+}
+
+void LoadNetworks()
+{
+	ModuleNetwork tmp;
+	EEPROM.get(168, tmp);
+	if (tmp.Identifier == 9876)
+	{
+		MDLnetwork = tmp;
+	}
+	else
+	{
+		// load network defaults
+		MDLnetwork.Identifier = 9876;
+		MDLnetwork.IP0 = 192;
+		MDLnetwork.IP1 = 168;
+		MDLnetwork.IP2 = 1;
+		MDLnetwork.IP3 = 50;
+		MDLnetwork.WifiModeUseStation = false;
+		strcpy(MDLnetwork.SSID, "Tractor");
+		strcpy(MDLnetwork.Password, "111222333");
+
+		SaveNetworks();
+	}
+}
+
+void SaveNetworks()
+{
+	EEPROM.put(168, MDLnetwork);
 }
 

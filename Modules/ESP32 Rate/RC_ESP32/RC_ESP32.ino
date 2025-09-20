@@ -64,10 +64,6 @@ struct ModuleConfig	// about 130 bytes
 	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
-	uint8_t IP0 = 192;
-	uint8_t IP1 = 168;
-	uint8_t IP2 = 1;
-	uint8_t IP3 = 50;
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
@@ -84,12 +80,16 @@ ModuleConfig MDL;
 struct ModuleNetwork
 {
 	uint16_t Identifier = 9876;
+	uint8_t IP0 = 192;
+	uint8_t IP1 = 168;
+	uint8_t IP2 = 1;
+	uint8_t IP3 = 50;
 	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
 };
 
-ModuleNetwork ClientNetwork;
+ModuleNetwork MDLnetwork;
 
 struct SensorConfig	// about 104 bytes
 {
@@ -131,7 +131,7 @@ SensorConfig Sensor[2];
 EthernetUDP UDP_Ethernet;
 const uint16_t ListeningPort = 28888;
 const uint16_t DestinationPort = 29999;
-IPAddress Ethernet_DestinationIP(MDL.IP0, MDL.IP1, MDL.IP2, 255);
+IPAddress Ethernet_DestinationIP(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255);
 bool ChipFound;
 
 // wifi
@@ -189,7 +189,7 @@ uint8_t DisconnectCount = 0;
 void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 {
 	Serial.print("Connected to '");
-	Serial.print(ClientNetwork.SSID);
+	Serial.print(MDLnetwork.SSID);
 	Serial.println("'");
 }
 
@@ -209,13 +209,13 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	Serial.print("Trying to Reconnect: ");
 	DisconnectCount++;
 	Serial.println(DisconnectCount);
-	WiFi.begin(ClientNetwork.SSID, ClientNetwork.Password);
+	WiFi.begin(MDLnetwork.SSID, MDLnetwork.Password);
 
 	if (DisconnectCount > 5)
 	{
 		// use AP mode only
-		ClientNetwork.WifiModeUseStation = false;
-		SaveNetwork();
+		MDLnetwork.WifiModeUseStation = false;
+		SaveNetworks();
 		ESP.restart();
 	}
 }
