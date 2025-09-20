@@ -20,7 +20,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//9	    Command
 		//	        - bit 0		    reset acc.Quantity
 		//	        - bit 1,2,3		control type 0-4
-		//	        - bit 4		    MasterSwitchOn
+		//	        - bit 4		    MasterOn
 		//          - bit 5         -
 		//          - bit 6         AutoOn
 		//          - bit 7         -
@@ -57,9 +57,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						if ((InCommand & 4) == 4) Sensor[SensorID].ControlType += 2;
 						if ((InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
-						MasterSwitchOn = ((InCommand & 16) == 16);
+						MasterOn = ((InCommand & 16) == 16);
 
-						AutoOn = ((InCommand & 64) == 64);
+						Sensor[SensorID].AutoOn = ((InCommand & 64) == 64);
 
 						int16_t tmp = data[10] | data[11] << 8;
 						Sensor[SensorID].ManualAdjust = tmp;
@@ -116,8 +116,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		// 8    Brakepoint      %
 		// 9    PIDslowAdjust   %
 		// 10   Slew Rate
-		// 11   Max Motor Integral      actual X 10
-		// 12   Max Valve Integral
+		// 11   Max Integral      actual X 10
+		// 12   -
 		// 13   TimedMinStart
 		// 14   TimedAdjust Lo
 		// 15   TimedAdjust Hi
@@ -160,8 +160,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						Sensor[SensorID].BrakePoint = data[8] / 100.0;
 						Sensor[SensorID].PIDslowAdjust = data[9] / 100.0;
 						Sensor[SensorID].SlewRate = data[10];
-						Sensor[SensorID].MaxMotorIntegral = data[11] / 10.0;
-						Sensor[SensorID].MaxValveIntegral = data[12];
+						Sensor[SensorID].MaxIntegral = data[11] / 10.0;
 						Sensor[SensorID].TimedMinStart = data[13] / 100.0;
 						Sensor[SensorID].TimedAdjust = data[14] | data[15] << 8;
 						Sensor[SensorID].TimedPause = data[16] | data[17] << 8;

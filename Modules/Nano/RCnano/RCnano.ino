@@ -7,7 +7,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 6095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -25,6 +25,15 @@ const int PWM_BITS = 8;
 const int PWM_FREQ = 490;  // Default
 uint8_t ditherCounter = 0; // for Nano dithering
 #endif
+
+enum ControlType
+{
+	StandardValve_ct = 0,
+	ComboClose_ct = 1,
+	Motor_ct = 2,
+	Fan_ct = 4,
+	TimedCombo_ct = 5
+};
 
 // MCP23017 control pins, RC5, RC8	{ 8,9,10,11,12,13,14,15,7,6,5,4,3,2,1,0 }
 // MCP23017 control pins, RC12-3	{ 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 }
@@ -73,8 +82,7 @@ struct SensorConfig
 	float BrakePoint;
 	float PIDslowAdjust;
 	float SlewRate;
-	float MaxMotorIntegral;
-	float MaxValveIntegral;
+	float MaxIntegral;
 	float TimedMinStart;
 	uint32_t TimedAdjust;
 	uint32_t TimedPause;
@@ -82,6 +90,7 @@ struct SensorConfig
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
+	bool AutoOn;
 };
 
 SensorConfig Sensor[2];
@@ -114,8 +123,7 @@ uint32_t LoopLast = LoopTime;
 const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
-bool MasterSwitchOn = false;
-bool AutoOn = true;
+bool MasterOn = false;
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
@@ -158,15 +166,7 @@ void loop()
 	if (millis() - LoopLast >= LoopTime)
 	{
 		LoopLast = millis();
-
-		for (int i = 0; i < MDL.SensorCount; i++)
-		{
-			Sensor[i].FlowEnabled = (millis() - Sensor[i].CommTime < 4000)
-				&& ((Sensor[i].TargetUPM > 0 && MasterSwitchOn)
-					|| ((Sensor[i].ControlType == 4) && (Sensor[i].TargetUPM > 0))
-					|| (!AutoOn && MasterSwitchOn));
-		}
-
+		SetSensorsEnabled();
 		CheckRelays();
 		GetUPM();
 		AdjustFlow();
@@ -175,6 +175,31 @@ void loop()
 
 	SendComm();
 	//DebugTheIno();
+}
+
+void SetSensorsEnabled()
+{
+	for (int i = 0; i < MDL.SensorCount; i++)
+	{
+		bool Result = false;
+		if (millis() - Sensor[i].CommTime < 5000)
+		{
+			if (Sensor[i].TargetUPM > 0 && MasterOn)
+			{
+				Result = true;
+			}
+			else if (MasterOn && !Sensor[i].AutoOn)
+			{
+				Result = true;
+			}
+			else if ((Sensor[i].ControlType == Fan_ct) && (Sensor[i].TargetUPM > 0))
+			{
+				// fan
+				Result = true;
+			}
+		}
+		Sensor[i].FlowEnabled = Result;
+	}
 }
 
 byte ParseModID(byte ID)

@@ -1,25 +1,25 @@
 
 void AdjustFlow()
 {
-    for (int i = 0; i < MDL.SensorCount; i++) 
+    for (int i = 0; i < MDL.SensorCount; i++)
     {
         float clamped = constrain(Sensor[i].PWM, -255.0f, 255.0f);
 
         switch (Sensor[i].ControlType)
         {
-        case 0:
+        case StandardValve_ct:
             // standard valve, flow control only
             if (Sensor[i].FlowEnabled) SetPWM(i, clamped);
             break;
 
-        case 1:
-        case 5:
+        case ComboClose_ct:
+        case TimedCombo_ct:
             // fast close valve or combo close timed, used for flow control and on/off
             SetPWM(i, Sensor[i].FlowEnabled ? clamped : -255.0f);
             break;
 
-        case 2:
-        case 4:
+        case Motor_ct:
+        case Fan_ct:
             // motor control
             SetPWM(i, Sensor[i].FlowEnabled ? clamped : 0.0f);
             break;
@@ -44,16 +44,17 @@ void SetPWM(byte ID, float pwmVal)
 
 
 #if defined(ESP32)
-    if (Increase) 
+    if (Increase)
     {
-        analogWrite(Sensor[ID].IN1, duty);
-        analogWrite(Sensor[ID].IN2, 0);
+        ledcWrite(Sensor[ID].IN1, duty);
+        ledcWrite(Sensor[ID].IN2, 0);
     }
-    else 
+    else
     {
-        analogWrite(Sensor[ID].IN1, 0);
-        analogWrite(Sensor[ID].IN2, duty);
+        ledcWrite(Sensor[ID].IN1, 0);
+        ledcWrite(Sensor[ID].IN2, duty);
     }
+
 #else
     digitalWrite(Sensor[ID].DirPin, Increase);
     analogWrite(Sensor[ID].PWMPin, duty);
