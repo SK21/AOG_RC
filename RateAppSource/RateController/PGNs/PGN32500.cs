@@ -121,14 +121,31 @@ namespace RateController
                     break;
             }
 
-            if (!Props.RateCalibrationOn)
+            if (Props.RateCalibrationOn)
             {
-                 Debug.Print("Normal mode: "+Prod.ID.ToString());
+                // calibrate
+                // master on
+                cData[9] |= 0b00010000;
+
+                if (Prod.CalMode == CalibrationMode.SettingPWM)
+                {
+                    // SettingPWM, auto on, find CalPWM
+                    cData[9] |= 0b01000000;
+                }
+                else
+                {
+                    // TestingRate, run in manual at CalPWM
+                    cData[10] = (byte)Prod.ManualPWM;
+                    cData[11] = (byte)(Prod.ManualPWM >> 8);
+                }
+            }
+            else
+            {
                 // normal run
                 // master on
                 if (Prod.mf.SwitchBox.Connected())
                 {
-                    if (Prod.mf.SectionControl.MasterOn 
+                    if (Prod.mf.SectionControl.MasterOn
                         || Props.MasterSwitchMode == MasterSwitchMode.Override
                         || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
                 }
@@ -150,30 +167,11 @@ namespace RateController
                     }
                 }
 
-                // manual 
+                // manual
                 if ((Prod.mf.SectionControl.MasterOn
                     || Props.MasterSwitchMode == MasterSwitchMode.Override
                     || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) && Prod.Enabled)
                 {
-                    cData[10] = (byte)Prod.ManualPWM;
-                    cData[11] = (byte)(Prod.ManualPWM >> 8);
-                }
-            }
-            else
-            {
-               Debug.Print("Calibration: "+Prod.ID.ToString());
-                // calibrate
-                // master on
-                cData[9] |= 0b00010000;
-
-                if (Prod.CalMode == CalibrationMode.SettingPWM)
-                {
-                    // SettingPWM, auto on, find CalPWM
-                    cData[9] |= 0b01000000;
-                }
-                else
-                {
-                    // TestingRate, run in manual at CalPWM
                     cData[10] = (byte)Prod.ManualPWM;
                     cData[11] = (byte)(Prod.ManualPWM >> 8);
                 }
@@ -183,7 +181,6 @@ namespace RateController
             cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
-            Debug.Print("PGN32500/command: " + cData[9].ToString() + ", " + Prod.ID.ToString());
             Prod.mf.UDPmodules.SendUDPMessage(cData);
 
             cSendTime = DateTime.Now;

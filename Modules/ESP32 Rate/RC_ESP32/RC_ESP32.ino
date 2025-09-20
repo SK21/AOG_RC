@@ -240,7 +240,7 @@ void loop()
 		ReadAnalog();
 	}
 	SendComm();
-	Blink();
+	//Blink();
 }
 
 void SetSensorsEnabled()
@@ -330,39 +330,33 @@ bool WorkPinOn()
 	return WrkOn;
 }
 
-bool State = false;
-uint32_t LastBlink;
-uint32_t LastLoop;
-byte ReadReset;
-uint32_t MaxLoopTime;
-
-// max loop about 2500, 18/Sep/2025
-void Blink()
-{
-	if (millis() - LastBlink > 1000)
-	{
-		LastBlink = millis();
-		State = !State;
-
-		Serial.print(MaxLoopTime);
-
-		Serial.print(", ");
-		Serial.print(MasterOn);
-
-		Serial.print(", ");
-		Serial.print(Sensor[0].AutoOn);
-
-		Serial.print(", ");
-		Serial.print(RelayLo);
-
-		Serial.println("");
-
-		if (ReadReset++ > 5)
-		{
-			ReadReset = 0;
-			MaxLoopTime = 0;
-		}
-	}
-	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
-	LastLoop = micros();
-}
+//bool State = false;
+//uint32_t LastBlink;
+//uint32_t LastLoop;
+//byte ReadReset;
+//uint32_t MaxLoopTime;
+//
+//// max loop about 2500, 18/Sep/2025
+//void Blink()
+//{
+//	if (millis() - LastBlink > 1000)
+//	{
+//		LastBlink = millis();
+//		State = !State;
+//
+//		Serial.print(MaxLoopTime);
+//
+//		Serial.print(", ");
+//		Serial.print(RelayLo);
+//
+//		Serial.println("");
+//
+//		if (ReadReset++ > 5)
+//		{
+//			ReadReset = 0;
+//			MaxLoopTime = 0;
+//		}
+//	}
+//	if (micros() - LastLoop > MaxLoopTime) MaxLoopTime = micros() - LastLoop;
+//	LastLoop = micros();
+//}

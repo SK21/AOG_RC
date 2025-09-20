@@ -78,6 +78,10 @@
             this.lbCalSpeed = new System.Windows.Forms.Label();
             this.btnCalStop = new System.Windows.Forms.Button();
             this.btnCalStart = new System.Windows.Forms.Button();
+            this.lbPWM0 = new System.Windows.Forms.Label();
+            this.lbPWM1 = new System.Windows.Forms.Label();
+            this.lbPWM2 = new System.Windows.Forms.Label();
+            this.lbPWM3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -653,11 +657,59 @@
             this.btnCalStart.UseVisualStyleBackColor = false;
             this.btnCalStart.Click += new System.EventHandler(this.btnCalStart_Click);
             // 
+            // lbPWM0
+            // 
+            this.lbPWM0.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWM0.Location = new System.Drawing.Point(458, 157);
+            this.lbPWM0.Name = "lbPWM0";
+            this.lbPWM0.Size = new System.Drawing.Size(58, 24);
+            this.lbPWM0.TabIndex = 366;
+            this.lbPWM0.Text = "19";
+            this.lbPWM0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbPWM0.Visible = false;
+            // 
+            // lbPWM1
+            // 
+            this.lbPWM1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWM1.Location = new System.Drawing.Point(458, 298);
+            this.lbPWM1.Name = "lbPWM1";
+            this.lbPWM1.Size = new System.Drawing.Size(58, 24);
+            this.lbPWM1.TabIndex = 367;
+            this.lbPWM1.Text = "19";
+            this.lbPWM1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbPWM1.Visible = false;
+            // 
+            // lbPWM2
+            // 
+            this.lbPWM2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWM2.Location = new System.Drawing.Point(458, 439);
+            this.lbPWM2.Name = "lbPWM2";
+            this.lbPWM2.Size = new System.Drawing.Size(58, 24);
+            this.lbPWM2.TabIndex = 368;
+            this.lbPWM2.Text = "19";
+            this.lbPWM2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbPWM2.Visible = false;
+            // 
+            // lbPWM3
+            // 
+            this.lbPWM3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPWM3.Location = new System.Drawing.Point(458, 580);
+            this.lbPWM3.Name = "lbPWM3";
+            this.lbPWM3.Size = new System.Drawing.Size(58, 24);
+            this.lbPWM3.TabIndex = 369;
+            this.lbPWM3.Text = "19";
+            this.lbPWM3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbPWM3.Visible = false;
+            // 
             // frmMenuCalibrate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbPWM3);
+            this.Controls.Add(this.lbPWM2);
+            this.Controls.Add(this.lbPWM1);
+            this.Controls.Add(this.lbPWM0);
             this.Controls.Add(this.lbSpeed);
             this.Controls.Add(this.tbSpeed);
             this.Controls.Add(this.lbCalSpeed);
@@ -771,5 +823,9 @@
         private System.Windows.Forms.Label lbCalSpeed;
         private System.Windows.Forms.Button btnCalStop;
         private System.Windows.Forms.Button btnCalStart;
+        private System.Windows.Forms.Label lbPWM0;
+        private System.Windows.Forms.Label lbPWM1;
+        private System.Windows.Forms.Label lbPWM2;
+        private System.Windows.Forms.Label lbPWM3;
     }
 }

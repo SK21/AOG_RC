@@ -15,8 +15,6 @@ namespace RateController
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
-        private bool cCalRun;
-        private bool cCalSetMeter;
         private bool cCalUseBaseRate;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
@@ -1041,7 +1039,6 @@ namespace RateController
             // added this back in to change from lb/min to ft^3/min, Moved from PGN32614.
             if (cEnableProdDensity && cProdDensity > 0) { Result /= cProdDensity; }
 
-            //if (cProductID == 0) Debug.Print("Target: " + Result.ToString("N3"));
             return Result;
         }
 
@@ -1214,7 +1211,7 @@ namespace RateController
             cUnitsApplied += Diff;
             cUnitsApplied2 += Diff;
 
-            if (cAppMode == ApplicationMode.ConstantUPM && mf.Sections.TotalWidth() > 0)
+            if (cAppMode == ApplicationMode.ConstantUPM && mf.Sections.TotalWidth() > 0 && !Props.RateCalibrationOn)
             {
                 // constant upm, subtract amount for sections that are off
                 double Offset = (1.0 - (mf.Sections.WorkingWidth() / mf.Sections.TotalWidth())) * Diff;

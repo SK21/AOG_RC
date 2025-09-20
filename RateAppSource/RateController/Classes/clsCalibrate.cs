@@ -24,6 +24,7 @@ namespace RateController
         private clsProduct cProduct;
         private ProgressBar cProgress;
         private Label cPulses;
+        private Label cPWMDisplay;
         private TextBox cRateBox;
         private bool cRunning;
         private Timer cTimer = new Timer();
@@ -42,10 +43,6 @@ namespace RateController
             FirstRun = true;
             cProduct = mf.Products.Item(cID);
             cCalFactor = cProduct.MeterCal;
-            //ApplicationModeStart = cProduct.AppMode;
-            //cProduct.Enabled = false;
-            //PulseCountStart = cProduct.Pulses();
-            //cProduct.AppMode = ApplicationMode.ConstantUPM;
 
             cTimer.Interval = 1000;
             cTimer.Enabled = false;
@@ -134,6 +131,30 @@ namespace RateController
 
         public Label Pulses
         { get { return cPulses; } set { cPulses = value; } }
+
+        public Label PWMDisplay
+        {
+            get { return cPWMDisplay; }
+            set
+            {
+                cPWMDisplay = value;
+
+                switch (cProduct.ControlType)
+                {
+                    case ControlTypeEnum.Valve:
+                    case ControlTypeEnum.ComboCloseTimed:
+                    case ControlTypeEnum.ComboClose:
+                        cPWMDisplay.Visible = false;
+                        break;
+
+                    case ControlTypeEnum.Motor:
+                    case ControlTypeEnum.MotorWeights:
+                    case ControlTypeEnum.Fan:
+                        cPWMDisplay.Visible = true;
+                        break;
+                }
+            }
+        }
 
         public TextBox RateBox
         {
@@ -269,29 +290,24 @@ namespace RateController
                         case ControlTypeEnum.Motor:
                         case ControlTypeEnum.MotorWeights:
                         case ControlTypeEnum.Fan:
-                            //cProduct.ManualPWM = (int)cProduct.PWM();
                             CalPWM = (int)cProduct.PWM();
                             break;
                     }
                 }
 
-                if(cIsLocked)
+                if (cIsLocked)
                 {
                     cProduct.CalMode = CalibrationMode.TestingRate;
                 }
-               else
+                else
                 {
                     cProduct.CalMode = CalibrationMode.SettingPWM;
                 }
-                //    cProduct.CalRun = cIsLocked;
-                //cProduct.CalSetMeter = !cIsLocked;
                 cProduct.ManualPWM = CalPWM;
             }
             else
             {
                 Reset();
-                //cProduct.CalRun = false;
-                //cProduct.CalSetMeter = false;
             }
 
             if (cIsLocked)
@@ -299,12 +315,14 @@ namespace RateController
                 cLocked.Image = Properties.Resources.ColorLocked;
                 cLocked.Visible = true;
                 cProgress.Visible = false;
+                cPWMDisplay.Text = CalPWM.ToString("N0");
             }
             else
             {
                 cLocked.Image = Properties.Resources.ColorUnlocked;
                 cLocked.Visible = !cRunning;
                 cProgress.Visible = cRunning;
+                cPWMDisplay.Text = cProduct.PWM().ToString("N0");
             }
 
             PulseCountTotal = cProduct.Pulses() - PulseCountStart;

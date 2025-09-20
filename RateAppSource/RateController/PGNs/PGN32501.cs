@@ -58,7 +58,6 @@ namespace RateController
             cData[cByteCount - 1] = mf.Tls.CRC(cData, cByteCount - 1);
 
             // send
-            //Debug.Print("Relays: " + cData[3].ToString() + ", " + cData[4].ToString()); 
             mf.UDPmodules.SendUDPMessage(cData);
 
             cSendTime = DateTime.Now;
