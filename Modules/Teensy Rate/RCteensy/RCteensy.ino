@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 16095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19095;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -59,8 +59,6 @@ struct ModuleConfig
 	uint8_t IP3 = 50;
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t RelayControl = 1;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
-	char APname[ModStringLengths] = "RateModule";
-	char APpassword[ModStringLengths] = "111222333";
 	uint8_t WorkPin = 30;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
@@ -101,6 +99,7 @@ struct SensorConfig	// about 104 bytes
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
+	bool AutoOn;
 };
 
 SensorConfig Sensor[2];
@@ -125,7 +124,6 @@ const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
 bool MasterOn = false;
-bool AutoOn = true;
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
@@ -184,7 +182,7 @@ void SetSensorsEnabled()
 			{
 				Result = true;
 			}
-			else if (MasterOn && !AutoOn)
+			else if (MasterOn && !Sensor[i].AutoOn)
 			{
 				Result = true;
 			}

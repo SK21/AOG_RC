@@ -21,11 +21,11 @@ float IntegralSum[MaxProductCount];
 
 void SetPWM()
 {
-	if (AutoOn)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		// auto control
-		for (int i = 0; i < MDL.SensorCount; i++)
+		if (Sensor[i].AutoOn)
 		{
+			// auto control
 			switch (Sensor[i].ControlType)
 			{
 			case Motor_ct:
@@ -44,12 +44,9 @@ void SetPWM()
 				break;
 			}
 		}
-	}
-	else
-	{
-		// manual control
-		for (int i = 0; i < MDL.SensorCount; i++)
+		else
 		{
+			// manual control
 			switch (Sensor[i].ControlType)
 			{
 			case TimedCombo_ct:
