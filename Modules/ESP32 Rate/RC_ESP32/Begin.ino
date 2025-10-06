@@ -2,7 +2,6 @@
 // valid pins for each processor
 uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pins 5,18,19,23 excluded for ethernet module
 
-
 void DoSetup()
 {
 	uint8_t ErrorCount = 0;
@@ -319,26 +318,25 @@ void DoSetup()
 	WiFi.disconnect(true);
 
 	// Access Point
-	IPAddress AP_LocalIP = IPAddress(192, 168, MDL.ID + 200, 1);
 	Wifi_DestinationIP = IPAddress(192, 168, MDL.ID + 200, 255);
+	IPAddress AP_LocalIP = IPAddress(192, 168, MDL.ID + 200, 1);
+	IPAddress AP_GateWay = AP_LocalIP;
+	IPAddress AP_Subnet(255, 255, 255, 0);
 
-	uint64_t macInt = ESP.getEfuseMac();
-	char macStr[18];
-	sprintf(macStr, "%02llX:%02llX:%02llX:%02llX:%02llX:%02llX",
-		(macInt >> 40) & 0xFF,
-		(macInt >> 32) & 0xFF,
-		(macInt >> 24) & 0xFF,
-		(macInt >> 16) & 0xFF,
-		(macInt >> 8) & 0xFF,
-		macInt & 0xFF);
+	uint64_t mac = ESP.getEfuseMac();
+	uint32_t low32 = (uint32_t)(mac & 0xFFFFFFFF);
+
+	char suffix[9]; // 8 hex + null
+	sprintf(suffix, "%08X", low32);
 
 	String AP = MDL.APname;
 	AP += "_";
-	AP += String(macStr);
+	AP += suffix;
 
-	WiFi.softAP(AP, MDL.APpassword, 1, 0, 2);
-	delay(500);
-	WiFi.softAPConfig(AP_LocalIP, AP_LocalIP, AP_Subnet);
+	WiFi.softAPConfig(AP_LocalIP, AP_GateWay, AP_Subnet);
+	WiFi.softAP(AP.c_str(), MDL.APpassword, 6, false, 4);
+	dnsServer.start(DNS_PORT, "*", AP_LocalIP);
+
 	UDP_Wifi.begin(ListeningPort);
 
 	Serial.println("");
@@ -350,12 +348,17 @@ void DoSetup()
 	// web server
 	Serial.println();
 	Serial.println("Starting Web Server");
-	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});	// keep Android connected
+
 	server.on("/", HandleRoot);
 	server.on("/page1", HandlePage1);
 	server.on("/page2", HandlePage2);
 	server.on("/ButtonPressed", ButtonPressed);
 	server.onNotFound(HandleRoot);
+
+	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});	
+	server.on("/fwlink", []() { server.send(200, "text/plain", "OK"); });	
+	server.on("/hotspot-detect.html", HTTP_GET, []() { server.send(200, "text/html", "<html><body>Portal</body></html>"); });
+	server.on("/ncsi.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft NCSI"); });
 
 	// OTA
 	server.on("/myurl", HTTP_GET, []() {

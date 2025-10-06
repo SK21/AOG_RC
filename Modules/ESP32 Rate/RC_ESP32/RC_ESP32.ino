@@ -4,6 +4,9 @@
 #include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
+#include <WebServer.h>
+#include <DNSServer.h>
+
 #include <WiFiUdp.h>
 #include <WiFiClient.h>
 #include <EEPROM.h> 
@@ -17,7 +20,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 19095;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 5105;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -137,9 +140,10 @@ bool ChipFound;
 // wifi
 WiFiUDP UDP_Wifi;
 IPAddress Wifi_DestinationIP(192, 168, 100, 255);
-IPAddress AP_Subnet(255, 255, 255, 0);
 WiFiClient client;
 WebServer server(80);
+DNSServer dnsServer;
+const byte DNS_PORT = 53;
 
 // control page
 bool WifiMasterOn = false;
@@ -227,6 +231,7 @@ void setup()
 
 void loop()
 {
+	dnsServer.processNextRequest();
 	server.handleClient();
 	ReceiveUDP();
 	SetPWM();
