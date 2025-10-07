@@ -6,7 +6,71 @@ byte SerialPGNlength;
 byte SerialReceive[35];
 bool PGNfound;
 
+void ReceiveSerial()
+{
+	if (Serial.available())
+	{
+		if (Serial.available() > 50)
+		{
+			// clear buffer and reset pgn
+			while (Serial.available())
+			{
+				Serial.read();
+			}
+			SerialPGN = 0;
+			PGNfound = false;
+		}
+
+		if (PGNfound)
+		{
+			if (Serial.available() > SerialPGNlength - 3)
+			{
+				for (int i = 2; i < SerialPGNlength; i++)
+				{
+					SerialReceive[i] = Serial.read();
+				}
+				ReadPGNs(SerialReceive, SerialPGNlength);
+
+				// reset pgn
+				SerialPGN = 0;
+				PGNfound = false;
+			}
+		}
+		else
+		{
+			switch (SerialPGN)
+			{
+			case 32503:
+				SerialPGNlength = 6;
+				PGNfound = true;
+				break;
+
+			case 32701:
+				SerialPGNlength = 25;
+				PGNfound = true;
+				break;
+
+			default:
+				// find pgn
+				SerialMSB = Serial.read();
+				SerialPGN = SerialMSB << 8 | SerialLSB;
+
+				SerialReceive[0] = SerialLSB;
+				SerialReceive[1] = SerialMSB;
+
+				SerialLSB = SerialMSB;
+				break;
+			}
+		}
+	}
+}
+
 void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, byte* Data, uint16_t len)
+{
+	ReadPGNs(Data, len);
+}
+
+void ReadPGNs(byte Data[], uint16_t len)
 {
 	byte PGNlength;
 	uint16_t PGN = Data[1] << 8 | Data[0];
