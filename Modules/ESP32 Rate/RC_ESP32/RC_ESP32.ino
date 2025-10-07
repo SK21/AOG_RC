@@ -340,6 +340,7 @@ bool WorkPinOn()
 //uint32_t LastLoop;
 //byte ReadReset;
 //uint32_t MaxLoopTime;
+//double debug1;
 //
 //// max loop about 2500, 18/Sep/2025
 //void Blink()
@@ -352,7 +353,13 @@ bool WorkPinOn()
 //		Serial.print(MaxLoopTime);
 //
 //		Serial.print(", ");
-//		Serial.print(RelayLo);
+//		Serial.print(debug1);
+//
+//		Serial.print(", ");
+//		Serial.print(WifiMasterOn);
+//
+//		Serial.print(", ");
+//		Serial.print(Button[0]);
 //
 //		Serial.println("");
 //

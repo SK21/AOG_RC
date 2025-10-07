@@ -471,7 +471,7 @@ void LoadDefaults()
 		Sensor[i].TimedMinStart = 0.03;
 		Sensor[i].TimedAdjust = 80;
 		Sensor[i].TimedPause = 400;
-		Sensor[i].PIDtime = 50;
+		Sensor[i].PIDtime = 100;
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
 		Sensor[i].PulseSampleSize = 12;
