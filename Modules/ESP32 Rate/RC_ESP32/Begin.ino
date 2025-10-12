@@ -387,6 +387,46 @@ void DoSetup()
 	}
 
 	delay(1500);
+
+	Serial.println("");
+	Serial.print("Sensors enabled: ");
+	Serial.println(MDL.SensorCount);
+	Serial.println("");
+	Serial.println("Sensor 1: ");
+	Serial.print("Enabled: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[0].FlowPin);
+	Serial.print("IN1 Pin: ");
+	Serial.println(Sensor[0].IN1);
+	Serial.print("IN2 Pin: ");
+	Serial.println(Sensor[0].IN2);
+
+	Serial.println("");
+	Serial.println("Sensor 2: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[1].FlowPin);
+	Serial.print("IN1 Pin: ");
+	Serial.println(Sensor[1].IN1);
+	Serial.print("IN2 Pin: ");
+	Serial.println(Sensor[1].IN2);
+
+	Serial.println("");
+	Serial.print("Work Switch Pin: ");
+	Serial.println(MDL.WorkPin);
+	Serial.print("Pressure Pin: ");
+	Serial.println(MDL.PressurePin);
+
+	Serial.println("");
+	Serial.print("ADS1115 enabled: ");
+	if (ADSfound)
+	{
+		Serial.println("true");
+	}
+	else
+	{
+		Serial.println("false");
+	}
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
@@ -486,7 +526,7 @@ void LoadDefaults()
 
 	// module settings
 	MDL.ID = 0;
-	MDL.SensorCount = 2;
+	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
 	MDL.RelayControl = 5;

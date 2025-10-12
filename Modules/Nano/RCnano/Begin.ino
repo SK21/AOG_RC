@@ -113,14 +113,14 @@ void DoSetup()
 			break;
 		}
 
-		#if defined(ARDUINO_TEENSY41)
-			// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
-			analogWriteFrequency(Sensor[i].PWMPin, PWM_FREQ);
-		#endif
+#if defined(ARDUINO_TEENSY41)
+		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
+		analogWriteFrequency(Sensor[i].PWMPin, PWM_FREQ);
+#endif
 	}
-	#if defined(ESP32) || defined(ARDUINO_TEENSY41)
-		analogWriteResolution(PWM_BITS);
-	#endif
+#if defined(ESP32) || defined(ARDUINO_TEENSY41)
+	analogWriteResolution(PWM_BITS);
+#endif
 
 	// Relays
 	switch (MDL.RelayControl)
@@ -226,19 +226,36 @@ void DoSetup()
 	}
 
 	Serial.println("");
+	Serial.print("Sensors enabled: ");
+	Serial.println(MDL.SensorCount);
+	Serial.println("");
+	Serial.println("Sensor 1: ");
+	Serial.print("Enabled: ");
 	Serial.print("Flow Pin: ");
 	Serial.println(Sensor[0].FlowPin);
 	Serial.print("DIR Pin: ");
 	Serial.println(Sensor[0].DirPin);
 	Serial.print("PWM Pin: ");
-	Serial.print(Sensor[0].PWMPin);
-	Serial.println("");
+	Serial.println(Sensor[0].PWMPin);
 
-	Serial.print("Work Pin: ");
+	Serial.println("");
+	Serial.println("Sensor 2: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[1].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[1].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.println(Sensor[1].PWMPin);
+
+	Serial.println("");
+	Serial.print("Work Switch Pin: ");
 	Serial.println(MDL.WorkPin);
 	Serial.print("Pressure Pin: ");
-	Serial.print(MDL.PressurePin);
+	Serial.println(MDL.PressurePin);
+
 	Serial.println("");
+	Serial.print("ADS1115 enabled: ");
+	Serial.println("false");
 
 	Serial.println("");
 	Serial.println("Finished setup.");
@@ -337,7 +354,7 @@ void LoadDefaults()
 	{
 		MDL.RelayControlPins[i] = NC;
 	}
-	MDL.SensorCount = 2;
+	MDL.SensorCount = 1;
 	MDL.RelayControl = 4;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;

@@ -5,7 +5,7 @@
 // Deadband         error % below which no adjustment is made, actual X 10
 // BrakePoint       error % where adjustment rate changes between 100% and the slow rate %
 // PIDslowAdjust    slow rate %
-// SlewRate         slew rate limit. Max total pwm change per loop. Used for motor only.
+// SlewRate         slew rate limit. Max total pwm change per loop. 
 // MaxIntegral		max integral pwm change per loop. Ex: 0.1 = max 2 pwm/sec change at 50 ms sample time, actual X 10
 // TimedMinStart    minimum start ratio %. Used to quickly increase from 0 for a timed combo valve.
 // TimedAdjust      time in ms where there is adjustment of the combo valve.
@@ -64,7 +64,6 @@ void SetPWM()
 		}
 	}
 }
-
 float DoPID(byte ID, bool IsMotor)
 {
 	float Result = 0;
@@ -114,7 +113,11 @@ float DoPID(byte ID, bool IsMotor)
 			}
 			else
 			{
-				if (!IsMotor) Result = 0.0f;
+				if (!IsMotor)
+				{
+					Result = 0.0f;
+					LastPWM[ID] = 0;
+				}
 				IntegralSum[ID] = 0.0f;
 			}
 		}
