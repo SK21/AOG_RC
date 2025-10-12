@@ -232,12 +232,13 @@ namespace RateController.Menu
                 case 1:
                     // RC11-2, Teensy
                     Set.ModuleID = 0;
-                    Set.SensorCount = 2;
+                    Set.SensorCount = 1;
                     Set.WifiPort = 255;
                     Set.RelayType = 1;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
+                    Set.ADS1115enabled = false;
                     Set.Sensor0Flow = 28;
                     Set.Sensor1Flow = 29;
                     Set.Sensor0Dir = 37;
@@ -262,12 +263,13 @@ namespace RateController.Menu
                 case 2:
                     // RC15, ESP32
                     Set.ModuleID = 0;
-                    Set.SensorCount = 2;
+                    Set.SensorCount = 1;
                     Set.WifiPort = 255;
                     Set.RelayType = 5;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
+                    Set.ADS1115enabled = true;
                     Set.Sensor0Flow = 17;
                     Set.Sensor1Flow = 16;
                     Set.Sensor0Dir = 32;
@@ -283,12 +285,13 @@ namespace RateController.Menu
                 default:
                     // RC12-3, Nano
                     Set.ModuleID = 0;
-                    Set.SensorCount = 2;
+                    Set.SensorCount = 1;
                     Set.WifiPort = 255;
                     Set.RelayType = 4;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
+                    Set.ADS1115enabled = false;
                     Set.Sensor0Flow = 3;
                     Set.Sensor1Flow = 2;
                     Set.Sensor0Dir = 4;

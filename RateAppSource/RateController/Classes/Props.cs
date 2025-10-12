@@ -65,7 +65,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "19-Sep-2025";
+        private static string cAppDate = "12-Oct-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.1.0";
@@ -129,7 +129,7 @@ namespace RateController.Classes
         public static readonly byte MaxPWMdefault = 100;
         public static readonly byte MinPWMdefault = 0;
         public static readonly byte PIDslowAdjustDefault = 30;
-        public static readonly byte PIDtimeDefault = 50;
+        public static readonly byte PIDtimeDefault = 100;
         public static readonly UInt16 PulseMaxHzDefault = 3000;
         public static readonly byte PulseMinHzDefault = 10;
         public static readonly byte PulseSampleSizeDefault = 12;
@@ -586,19 +586,6 @@ namespace RateController.Classes
             }
             return Result;
         }
-
-        //public static bool RateCalibrationOn()
-        //{
-        //    bool Result = false;
-        //    foreach (Form frm in Application.OpenForms)
-        //    {
-        //        if (frm is frmMenuCalibrate CalForm)
-        //        {
-        //            Result = CalForm.CalsRunning();
-        //        }
-        //    }
-        //    return Result;
-        //}
 
         public static bool RateCalibrationOn
         {

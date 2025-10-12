@@ -266,7 +266,7 @@ namespace RateController.Classes
             get { return cSlewRate; }
             set
             {
-                if (value >= 1 && value <= 20)
+                if (value >= 1 && value <= 50)
                 {
                     cSlewRate = value;
                 }
