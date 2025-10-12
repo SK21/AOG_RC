@@ -64,7 +64,6 @@ void SetPWM()
 		}
 	}
 }
-
 float DoPID(byte ID, bool IsMotor)
 {
 	float Result = 0;
@@ -114,7 +113,11 @@ float DoPID(byte ID, bool IsMotor)
 			}
 			else
 			{
-				if (!IsMotor) Result = 0.0f;
+				if (!IsMotor)
+				{
+					Result = 0.0f;
+					LastPWM[ID] = 0;
+				}
 				IntegralSum[ID] = 0.0f;
 			}
 		}

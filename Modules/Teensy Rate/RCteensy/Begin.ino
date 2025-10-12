@@ -243,7 +243,11 @@ void DoSetup()
 	pinMode(LED_BUILTIN, OUTPUT);
 
 	Serial.println("");
+	Serial.print("Sensors enabled: ");
+	Serial.println(MDL.SensorCount);
+	Serial.println("");
 	Serial.println("Sensor 1: ");
+	Serial.print("Enabled: ");
 	Serial.print("Flow Pin: ");
 	Serial.println(Sensor[0].FlowPin);
 	Serial.print("DIR Pin: ");
@@ -265,6 +269,17 @@ void DoSetup()
 	Serial.println(MDL.WorkPin);
 	Serial.print("Pressure Pin: ");
 	Serial.println(MDL.PressurePin);
+
+	Serial.println("");
+	Serial.print("ADS1115 enabled: ");
+	if (ADSfound)
+	{
+		Serial.println("true");
+	}
+	else
+	{
+		Serial.println("false");
+	}
 
 	Serial.println("");
 	Serial.println("Finished setup.");
@@ -324,8 +339,6 @@ void LoadDefaults()
 {
 	Serial.println("Loading default settings.");
 
-	MDL.WorkPin = NC;
-
 	// RC11-2
 	Sensor[0].FlowPin = 28;
 	Sensor[0].DirPin = 37;
@@ -365,7 +378,7 @@ void LoadDefaults()
 
 	// module settings
 	MDL.ID = 0;
-	MDL.SensorCount = 2;
+	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
 	MDL.RelayControl = 1;
