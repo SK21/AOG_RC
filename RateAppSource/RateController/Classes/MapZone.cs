@@ -69,7 +69,7 @@ namespace RateController.Classes
             }
             catch (System.Exception ex)
             {
-                mf.Tls.ShowMessage("MapZone.CalculateArea: " + ex.Message, "Help", 20000, true);
+                Props.ShowMessage("MapZone.CalculateArea: " + ex.Message, "Help", 20000, true);
             }
             return totalArea;
         }
@@ -133,7 +133,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage("MapZone.ToGMapPolygons: " + ex.Message, "Help", 20000, true);
+                Props.ShowMessage("MapZone.ToGMapPolygons: " + ex.Message, "Help", 20000, true);
             }
             return polygons;
         }

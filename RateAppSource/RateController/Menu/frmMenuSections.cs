@@ -111,7 +111,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, this.Text, 3000, true);
+                Props.ShowMessage(ex.Message, this.Text, 3000, true);
             }
         }
 
@@ -422,7 +422,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, this.Text, 3000, true);
+                Props.ShowMessage(ex.Message, this.Text, 3000, true);
                 LoadDGV();
             }
         }
@@ -466,7 +466,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, this.Text, 3000, true);
+                Props.ShowMessage(ex.Message, this.Text, 3000, true);
                 LoadDGV2();
             }
         }
@@ -551,7 +551,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, this.Text, 3000, true);
+                Props.ShowMessage(ex.Message, this.Text, 3000, true);
             }
         }
 
@@ -592,7 +592,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, this.Text, 3000, true);
+                Props.ShowMessage(ex.Message, this.Text, 3000, true);
             }
         }
 
@@ -633,7 +633,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, this.Text, 3000, true);
+                Props.ShowMessage(ex.Message, this.Text, 3000, true);
             }
         }
 

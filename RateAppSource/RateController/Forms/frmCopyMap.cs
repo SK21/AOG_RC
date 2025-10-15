@@ -64,12 +64,12 @@ namespace RateController.Forms
             {
                 if (CopyMap())
                 {
-                    mf.Tls.ShowMessage("Map copied successfully.");
+                    Props.ShowMessage("Map copied successfully.");
                     this.Close();
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Failed to copy map.");
+                    Props.ShowMessage("Failed to copy map.");
                     this.Close();
                 }
             }
@@ -96,7 +96,7 @@ namespace RateController.Forms
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No file selected.");
+                    Props.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)

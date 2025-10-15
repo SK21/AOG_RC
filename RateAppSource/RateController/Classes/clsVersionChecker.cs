@@ -48,7 +48,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage("Version update failed: " + ex.Message);
+                Props.ShowMessage("Version update failed: " + ex.Message);
             }
             return Result;
         }
@@ -103,7 +103,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage("Could not load version information: " + ex.Message, "Help", 5000);
+                Props.ShowMessage("Could not load version information: " + ex.Message, "Help", 5000);
             }
         }
 

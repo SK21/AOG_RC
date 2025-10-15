@@ -76,7 +76,7 @@ namespace RateController.Menu
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No file selected.");
+                    Props.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)
@@ -109,12 +109,12 @@ namespace RateController.Menu
                     }
                     else
                     {
-                        mf.Tls.ShowMessage("Can not delete file.", "Help", 20000, true);
+                        Props.ShowMessage("Can not delete file.", "Help", 20000, true);
                     }
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No file selected.");
+                    Props.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)
@@ -147,11 +147,11 @@ namespace RateController.Menu
                         {
                             if (FieldInUse)
                             {
-                                mf.Tls.ShowMessage("Can not delete, field is in use.");
+                                Props.ShowMessage("Can not delete, field is in use.");
                             }
                             else
                             {
-                                mf.Tls.ShowMessage("Field could not be deleted.");
+                                Props.ShowMessage("Field could not be deleted.");
                             }
                         }
                     }
@@ -207,7 +207,7 @@ namespace RateController.Menu
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No file selected.");
+                    Props.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)

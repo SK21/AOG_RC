@@ -5,7 +5,6 @@ using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -55,6 +54,7 @@ namespace RateController.Classes
 
             Props.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_MapShowRatesChanged;
+            Props.ResolutionChanged += (s, e) => RefreshZoneOverlay();
             LoadMap();
         }
 
@@ -319,6 +319,12 @@ namespace RateController.Classes
             return Result;
         }
 
+        public void SaveMapToFile(string filePath)
+        {
+            var shapefileHelper = new ShapefileHelper(mf);
+            shapefileHelper.SaveMapZones(filePath, mapZones);
+        }
+
         public void SetTractorPosition(PointLatLng NewLocation, double[] AppliedRates, double[] TargetRates)
         {
             if (!cMouseSetTractorPosition)
@@ -438,7 +444,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage("MapManager.UpdateRates: " + ex.Message, "Error", 20000, true);
+                Props.ShowMessage("MapManager.UpdateRates: " + ex.Message, "Error", 20000, true);
                 throw;
             }
         }
@@ -735,6 +741,17 @@ namespace RateController.Classes
             {
                 Props.WriteErrorLog("MapManager/RemoveLayer: " + ex.Message);
             }
+        }
+        public void RefreshZoneOverlay()
+        {
+            // Recreate the grid with the new resolution
+            RateGrid = CreateGrid(Props.RateDisplayResolution);
+
+            // Optionally, clear and re-add polygons if needed
+            RemoveOverlay(zoneOverlay);
+            AddOverlay(zoneOverlay);
+
+            gmap.Refresh();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace RateController.Menu
         {
             if (!Props.ShowLog("Activity Log.txt"))
             {
-                mf.Tls.ShowMessage("File not found.");
+                Props.ShowMessage("File not found.");
             }
         }
 
@@ -47,7 +47,7 @@ namespace RateController.Menu
         {
             if (!Props.ShowLog("Error Log.txt"))
             {
-                mf.Tls.ShowMessage("File not found.");
+                Props.ShowMessage("File not found.");
             }
         }
 
@@ -71,7 +71,7 @@ namespace RateController.Menu
             mf.UDPmodules.UpdateLog();
             if (!Props.ShowLog("Ethernet Log.txt"))
             {
-                mf.Tls.ShowMessage("File not found.");
+                Props.ShowMessage("File not found.");
             }
         }
 
@@ -124,7 +124,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
+                Props.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -137,7 +137,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
+                Props.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -150,7 +150,7 @@ namespace RateController.Menu
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
+                Props.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 

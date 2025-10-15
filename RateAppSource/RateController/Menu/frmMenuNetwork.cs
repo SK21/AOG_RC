@@ -61,19 +61,19 @@ namespace RateController.Menu
                 PGN32503 SetSubnet = new PGN32503(mf);
                 if (SetSubnet.Send(mf.UDPmodules.NetworkEP))
                 {
-                    mf.Tls.ShowMessage("New Subnet address sent.", "Subnet", 10000);
+                    Props.ShowMessage("New Subnet address sent.", "Subnet", 10000);
 
                     // set app subnet
                     mf.UDPmodules.NetworkEP = cbEthernet.Text;
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("New Subnet address not sent.", "Subnet", 10000);
+                    Props.ShowMessage("New Subnet address not sent.", "Subnet", 10000);
                 }
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, "frmModuleConfig/btnSendSubnet", 15000, true);
+                Props.ShowMessage(ex.Message, "frmModuleConfig/btnSendSubnet", 15000, true);
             }
         }
 
@@ -120,7 +120,7 @@ namespace RateController.Menu
                 if (mf.ModuleConfig.Sensor0Flow == 0 && mf.ModuleConfig.Sensor0Dir == 0 && mf.ModuleConfig.Sensor0PWM == 0
                     && mf.ModuleConfig.Sensor1Dir == 0 && mf.ModuleConfig.Sensor1Flow == 0 && mf.ModuleConfig.Sensor1PWM == 0)
                 {
-                    mf.Tls.ShowMessage("Empty settings, default values selected.", "Default Values");
+                    Props.ShowMessage("Empty settings, default values selected.", "Default Values");
                     ckDefaultModule.Checked = true;
                     SetButtons(true);
                 }

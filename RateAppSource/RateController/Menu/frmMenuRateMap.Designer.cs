@@ -53,7 +53,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ckEnable = new System.Windows.Forms.CheckBox();
             this.ckZones = new System.Windows.Forms.CheckBox();
-            this.btnPNG = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             this.ckRateData = new System.Windows.Forms.CheckBox();
             this.btnCopy = new System.Windows.Forms.Button();
             this.gbZone.SuspendLayout();
@@ -313,6 +313,7 @@
             this.VSzoom.Size = new System.Drawing.Size(45, 358);
             this.VSzoom.TabIndex = 349;
             this.VSzoom.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VSzoom_Scroll);
+            this.VSzoom.ValueChanged += new System.EventHandler(this.VSzoom_ValueChanged);
             // 
             // pictureBox1
             // 
@@ -352,15 +353,15 @@
             this.ckZones.UseVisualStyleBackColor = true;
             this.ckZones.CheckedChanged += new System.EventHandler(this.ckZones_CheckedChanged);
             // 
-            // btnPNG
+            // btnExport
             // 
-            this.btnPNG.Location = new System.Drawing.Point(8, 180);
-            this.btnPNG.Name = "btnPNG";
-            this.btnPNG.Size = new System.Drawing.Size(89, 64);
-            this.btnPNG.TabIndex = 356;
-            this.btnPNG.Text = "Save Image";
-            this.btnPNG.UseVisualStyleBackColor = true;
-            this.btnPNG.Click += new System.EventHandler(this.btnPNG_Click);
+            this.btnExport.Location = new System.Drawing.Point(8, 180);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(89, 64);
+            this.btnExport.TabIndex = 356;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // ckRateData
             // 
@@ -394,9 +395,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.ControlBox = false;
-            this.Controls.Add(this.legendPanel);
             this.Controls.Add(this.btnCopy);
-            this.Controls.Add(this.btnPNG);
+            this.Controls.Add(this.btnExport);
             this.Controls.Add(this.ckRateData);
             this.Controls.Add(this.ckSatView);
             this.Controls.Add(this.ckZones);
@@ -406,6 +406,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.VSzoom);
             this.Controls.Add(this.gbZone);
+            this.Controls.Add(this.legendPanel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6);
@@ -446,7 +447,7 @@
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.CheckBox ckSatView;
         private System.Windows.Forms.CheckBox ckZones;
-        private System.Windows.Forms.Button btnPNG;
+        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.CheckBox ckRateData;
         private System.Windows.Forms.Panel legendPanel;
         private System.Windows.Forms.Button btnCopy;

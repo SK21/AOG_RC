@@ -26,7 +26,7 @@ namespace RateController.Forms
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
             await VC.HasVersionChanged();
-            mf.Tls.ShowMessage("Updating.", "Help", 5000);
+            Props.ShowMessage("Updating.", "Help", 5000);
         }
 
         private void frmVersion_FormClosed(object sender, FormClosedEventArgs e)
@@ -58,7 +58,7 @@ namespace RateController.Forms
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
+                Props.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 
@@ -71,7 +71,7 @@ namespace RateController.Forms
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message, "Help", 15000, true);
+                Props.ShowMessage(ex.Message, "Help", 15000, true);
             }
         }
 

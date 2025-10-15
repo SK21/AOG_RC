@@ -26,6 +26,7 @@ namespace RateController.Menu
         private int PicWidth;
         private int PressureLeft = 0;
         private int PressureTop = 0;
+        private bool updatingZoom = false;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
@@ -77,7 +78,7 @@ namespace RateController.Menu
 
             if (!mf.Tls.Manager.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, GetSelectedColor()))
             {
-                mf.Tls.ShowMessage("Could not save Zone.");
+                Props.ShowMessage("Could not save Zone.");
             }
             btnCreateZone.FlatAppearance.BorderSize = 0;
             ckEditPolygons.Checked = false;
@@ -94,7 +95,7 @@ namespace RateController.Menu
             }
             else
             {
-                mf.Tls.ShowMessage("Zone could not be deleted.");
+                Props.ShowMessage("Zone could not be deleted.");
             }
         }
 
@@ -109,13 +110,6 @@ namespace RateController.Menu
             }
         }
 
-        private void btnPNG_Click(object sender, EventArgs e)
-        {
-            MapImageSaver saver = new MapImageSaver();
-            saver.MapControl = mf.Tls.Manager.gmapObject;
-            saver.LegendPanel = legendPanel;
-            saver.SaveCompositeImageToFile(Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy"));
-        }
 
         private void ckEditPolygons_CheckedChanged(object sender, EventArgs e)
         {
@@ -591,7 +585,13 @@ namespace RateController.Menu
             }
 
             GMapControl gmap = mf.Tls.Manager.gmapObject;
-            VSzoom.Value = (int)((gmap.Zoom - gmap.MinZoom) * 100) / (gmap.MaxZoom - gmap.MinZoom);
+            int newValue = (int)Math.Round((gmap.Zoom - gmap.MinZoom) * 100.0 / (gmap.MaxZoom - gmap.MinZoom));
+            if (VSzoom.Value != newValue)
+            {
+                updatingZoom = true;
+                VSzoom.Value = newValue;
+                updatingZoom = false;
+            }
 
             ckEnable.Checked = Props.VariableRateEnabled;
             ckSatView.Checked = mf.Tls.Manager.ShowTiles;
@@ -616,7 +616,77 @@ namespace RateController.Menu
 
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
-            mf.Tls.Manager.gmapObject.Zoom = (mf.Tls.Manager.gmapObject.MaxZoom - mf.Tls.Manager.gmapObject.MinZoom) * VSzoom.Value / 100 + mf.Tls.Manager.gmapObject.MinZoom;
+            if (!updatingZoom)
+                UpdateMapZoom();
+        }
+
+        private void VSzoom_ValueChanged(object sender, EventArgs e)
+        {
+            if (!updatingZoom)
+                UpdateMapZoom();
+        }
+
+        private void UpdateMapZoom()
+        {
+            var gmap = mf.Tls.Manager.gmapObject;
+            double zoom = (gmap.MaxZoom - gmap.MinZoom) * VSzoom.Value / 100.0 + gmap.MinZoom;
+            gmap.Zoom = Math.Round(zoom);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+
+            // Prompt user for file type
+            var result = MessageBox.Show(
+                "Do you want to save the map as a shapefile?\n\n" +
+                "Click Yes for Shapefile (*.shp), No for Image (*.png).",
+                "Save Map",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Cancel)
+                return;
+
+            if (result == DialogResult.Yes)
+            {
+                // Save as shapefile: show SaveFileDialog and save
+                using (var saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Title = "Save Shapefile As";
+                    saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                    saveFileDialog.DefaultExt = "shp";
+                    saveFileDialog.FileName = Name+".shp";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            mf.Tls.Manager.SaveMapToFile(saveFileDialog.FileName);
+                            MessageBox.Show("Shapefile saved successfully.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error saving shapefile: " + ex.Message, "Save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            else if (result == DialogResult.No)
+            {
+                // Save as image: 
+                try
+                {
+                    MapImageSaver saver = new MapImageSaver();
+                    saver.MapControl = mf.Tls.Manager.gmapObject;
+                    saver.LegendPanel = legendPanel;
+                    saver.SaveCompositeImageToFile(Name);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error saving image: " + ex.Message, "Save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

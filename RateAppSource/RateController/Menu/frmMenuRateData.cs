@@ -78,7 +78,7 @@ namespace RateController.Forms
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage(ex.Message);
+                Props.ShowMessage(ex.Message);
             }
         }
 

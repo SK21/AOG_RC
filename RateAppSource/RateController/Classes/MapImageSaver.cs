@@ -38,6 +38,7 @@ namespace RateController.Classes
 
                     compositeImage.Save(sfd.FileName, format);
                     MessageBox.Show("Image saved successfully.", "Save Image", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
                 }
             }
         }
@@ -49,18 +50,20 @@ namespace RateController.Classes
         private void CreateCompositeMapImage()
         {
             Bitmap mapBitmap = (Bitmap)MapControl.ToImage();
-
-            Bitmap legendBitmap = new Bitmap(LegendPanel.Width, LegendPanel.Height);
-            LegendPanel.DrawToBitmap(legendBitmap, new Rectangle(0, 0, LegendPanel.Width, LegendPanel.Height));
-
             compositeImage = new Bitmap(mapBitmap.Width, mapBitmap.Height);
 
             using (Graphics g = Graphics.FromImage(compositeImage))
             {
                 g.DrawImage(mapBitmap, 0, 0);
 
-                Point legendLocation = new Point(10, 10);
-                g.DrawImage(legendBitmap, legendLocation);
+                if (LegendPanel.Visible)
+                {
+                    Bitmap legendBitmap = new Bitmap(LegendPanel.Width, LegendPanel.Height);
+                    LegendPanel.DrawToBitmap(legendBitmap, new Rectangle(0, 0, LegendPanel.Width, LegendPanel.Height));
+
+                    Point legendLocation = new Point(10, 10);
+                    g.DrawImage(legendBitmap, legendLocation);
+                }
             }
         }
     }

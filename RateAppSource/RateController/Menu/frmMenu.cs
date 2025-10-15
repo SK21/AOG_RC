@@ -170,7 +170,7 @@ namespace RateController
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No help available.");
+                    Props.ShowMessage("No help available.");
                 }
             }
             catch (Exception ex)
@@ -882,13 +882,13 @@ namespace RateController
             try
             {
                 mf.ModuleConfig.Send();
-                mf.Tls.ShowMessage("Settings sent to module", "Config", 10000);
+                Props.ShowMessage("Settings sent to module", "Config", 10000);
 
                 HighlightUpdateButton(false);
             }
             catch (Exception ex)
             {
-                mf.Tls.ShowMessage("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
+                Props.ShowMessage("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
             }
         }
 

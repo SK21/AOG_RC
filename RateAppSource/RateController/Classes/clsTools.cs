@@ -16,8 +16,6 @@ namespace RateController
 {
     public class clsTools
     {
-        private string lastMessage;
-        private DateTime lastMessageTime;
         private FormStart mf;
 
         #region ScreenBitMap
@@ -34,8 +32,6 @@ namespace RateController
         {
             mf = CallingForm;
 
-            lastMessage = string.Empty;
-            lastMessageTime = DateTime.MinValue;
             cRateCollector = new DataCollector();
 
             _ = InitializeAsync();
@@ -198,30 +194,6 @@ namespace RateController
             else
             {
                 return false;
-            }
-        }
-
-        public void ShowMessage(string Message, string Title = "Help",
-            int timeInMsec = 20000, bool LogError = false, bool Modal = false
-            , bool PlayErrorSound = false)
-        {
-            if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60)
-            {
-                var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
-                if (Modal)
-                {
-                    Hlp.ShowDialog();
-                }
-                else
-                {
-                    Hlp.Show();
-                }
-
-                if (LogError) Props.WriteErrorLog(Message);
-                if (PlayErrorSound) SystemSounds.Exclamation.Play();
-
-                lastMessage = Message;
-                lastMessageTime = DateTime.Now;
             }
         }
 

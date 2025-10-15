@@ -37,12 +37,12 @@ namespace RateController.Forms
             {
                 if (SaveCrossReferencedShapefile())
                 {
-                    mf.Tls.ShowMessage("Cross-referenced shapefile saved successfully.");
+                    Props.ShowMessage("Cross-referenced shapefile saved successfully.");
                     this.Close();
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Failed to map attributes. File not saved.");
+                    Props.ShowMessage("Failed to map attributes. File not saved.");
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace RateController.Forms
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Please select a shapefile first.");
+                    Props.ShowMessage("Please select a shapefile first.");
                 }
             }
             catch (Exception ex)

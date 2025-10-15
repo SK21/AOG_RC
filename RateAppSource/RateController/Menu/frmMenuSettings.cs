@@ -65,7 +65,7 @@ namespace RateController.Menu
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Module ID / Sensor ID pair must be unique.", "Help", 3000);
+                    Props.ShowMessage("Module ID / Sensor ID pair must be unique.", "Help", 3000);
                 }
             }
             catch (Exception ex)

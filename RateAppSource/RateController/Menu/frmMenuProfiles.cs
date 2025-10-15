@@ -25,7 +25,7 @@ namespace RateController.Menu
         //    }
         //    else
         //    {
-        //        mf.Tls.ShowMessage("No file selected.");
+        //        Props.ShowMessage("No file selected.");
         //    }
         //}
         private void btnCopy_Click(object sender, EventArgs e)
@@ -58,12 +58,12 @@ namespace RateController.Menu
                     }
                     else
                     {
-                        mf.Tls.ShowMessage("No file selected.");
+                        Props.ShowMessage("No file selected.");
                     }
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Invalid file name.");
+                    Props.ShowMessage("Invalid file name.");
                 }
             }
             catch (Exception ex)
@@ -108,18 +108,18 @@ namespace RateController.Menu
                             }
                             else
                             {
-                                mf.Tls.ShowMessage("Can not delete file.", "Help", 20000, true);
+                                Props.ShowMessage("Can not delete file.", "Help", 20000, true);
                             }
                         }
                     }
                     else
                     {
-                        mf.Tls.ShowMessage("Can not delete file.", "Help", 20000, true);
+                        Props.ShowMessage("Can not delete file.", "Help", 20000, true);
                     }
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No file selected.");
+                    Props.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)
@@ -144,7 +144,7 @@ namespace RateController.Menu
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("No file selected.");
+                    Props.ShowMessage("No file selected.");
                 }
             }
             catch (Exception ex)
@@ -174,7 +174,7 @@ namespace RateController.Menu
                 }
                 else
                 {
-                    mf.Tls.ShowMessage("Invalid file name.");
+                    Props.ShowMessage("Invalid file name.");
                 }
             }
             catch (Exception ex)

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Reflection;
 using System.Security.Policy;
 using System.Windows.Forms;
@@ -84,6 +85,8 @@ namespace RateController.Classes
         private static double cPrimeTime = 0;
         private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
+        private static bool cRateCalibrationOn = false;
+        private static double cRateDisplayResolution;
         private static bool cRateRecordEnabled;
         private static double cRateRecordInterval;
         private static int cRateType;
@@ -100,11 +103,12 @@ namespace RateController.Classes
         private static bool cUseTransparent = false;
         private static bool cUseVariableRate = false;
         private static bool cUseZones = false;
+        private static string lastMessage = "";
+        private static DateTime lastMessageTime=DateTime.MinValue;
         private static FormStart mf;
         private static frmPressureDisplay PressureDisplay;
         private static frmRate RateDisplay;
         private static frmSwitches SwitchesForm;
-        private static bool cRateCalibrationOn = false;
 
         #region pressure calibration
 
@@ -149,6 +153,8 @@ namespace RateController.Classes
         public static event EventHandler UnitsChanged;
 
         #region MainProperties
+
+        public static event EventHandler ResolutionChanged;
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
@@ -304,6 +310,12 @@ namespace RateController.Classes
         public static string ProfilesFolder
         { get { return cProfilesFolder; } }
 
+        public static bool RateCalibrationOn
+        {
+            get { return cRateCalibrationOn; }
+            set { cRateCalibrationOn = value; }
+        }
+
         public static int RateDisplayProduct
         {
             get { return int.TryParse(GetProp("RatesProduct"), out int rs) ? rs : 0; }
@@ -316,6 +328,12 @@ namespace RateController.Classes
             set
             {
                 SetProp("RateDisplayResolution", value.ToString());
+
+                if (cRateDisplayResolution != value)
+                {
+                    cRateDisplayResolution = value;
+                    ResolutionChanged?.Invoke(null, EventArgs.Empty);
+                }
             }
         }
 
@@ -587,10 +605,28 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool RateCalibrationOn
+        public static void ShowMessage(string Message, string Title = "Help",
+                                                                                                                                                                                                                                                                                                                                                                            int timeInMsec = 20000, bool LogError = false, bool Modal = false
+            , bool PlayErrorSound = false)
         {
-            get { return cRateCalibrationOn; }
-            set { cRateCalibrationOn = value; }
+            if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60)
+            {
+                var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
+                if (Modal)
+                {
+                    Hlp.ShowDialog();
+                }
+                else
+                {
+                    Hlp.Show();
+                }
+
+                if (LogError) Props.WriteErrorLog(Message);
+                if (PlayErrorSound) SystemSounds.Exclamation.Play();
+
+                lastMessage = Message;
+                lastMessageTime = DateTime.Now;
+            }
         }
 
         public static string VersionDate()
