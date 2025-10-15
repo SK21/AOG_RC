@@ -1,9 +1,7 @@
-﻿using System;
+﻿using GMap.NET.WindowsForms;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using GMap.NET.WindowsForms;
-using GMap.NET;
 
 namespace RateController.Classes
 {
@@ -17,30 +15,9 @@ namespace RateController.Classes
         {
             CreateCompositeMapImage();
 
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "PNG Files|*.png|JPEG Files|*.jpg|Bitmap Files|*.bmp";
-                sfd.Title = "Save Composite Map Image";
-                sfd.FileName = Name;
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    ImageFormat format = ImageFormat.Png;
-                    string ext = System.IO.Path.GetExtension(sfd.FileName).ToLower();
-                    if (ext == ".jpg" || ext == ".jpeg")
-                    {
-                        format = ImageFormat.Jpeg;
-                    }
-                    else if (ext == ".bmp")
-                    {
-                        format = ImageFormat.Bmp;
-                    }
-
-                    compositeImage.Save(sfd.FileName, format);
-                    Props.ShowMessage("Image saved successfully.", "Save Image", 5000);
-                    
-                }
-            }
+            ImageFormat format = ImageFormat.Png;
+            compositeImage.Save(Name, format);
+            Props.ShowMessage("Image saved successfully.", "Save Image", 5000);
         }
 
         /// <summary>

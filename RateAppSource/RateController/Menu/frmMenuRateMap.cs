@@ -5,6 +5,7 @@ using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -113,55 +114,37 @@ namespace RateController.Menu
         {
             string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
 
-            var SaveType = new frmSaveType();
-            SaveType.ShowDialog();
-            int Result = SaveType.Result;
-            SaveType.Close();
-
-            switch (Result)
+            // Save as shapefile: show SaveFileDialog and save
+            using (var saveFileDialog = new SaveFileDialog())
             {
-                case 1:
-                    // Save as shapefile: show SaveFileDialog and save
-                    using (var saveFileDialog = new SaveFileDialog())
-                    {
-                        saveFileDialog.Title = "Save Shapefile As";
-                        saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
-                        saveFileDialog.DefaultExt = "shp";
-                        saveFileDialog.FileName = Name + ".shp";
+                saveFileDialog.Title = "Save Shapefile As";
+                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "shp";
+                saveFileDialog.FileName = Name + ".shp";
 
-                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            try
-                            {
-                                mf.Tls.Manager.SaveMapToFile(saveFileDialog.FileName);
-                                Props.ShowMessage("Shapefile saved successfully", "Save", 5000);
-                            }
-                            catch (Exception ex)
-                            {
-                                Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
-                            }
-                        }
-                    }
-                    break;
-
-                case 2:
-                    // Save as image:
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
                     try
                     {
+                        mf.Tls.Manager.SaveMapToFile(saveFileDialog.FileName);
+
+                        // save image
                         MapImageSaver saver = new MapImageSaver();
                         saver.MapControl = mf.Tls.Manager.gmapObject;
                         saver.LegendPanel = legendPanel;
-                        saver.SaveCompositeImageToFile(Name);
+
+                        string ImageName = Path.GetDirectoryName(saveFileDialog.FileName);
+                        ImageName = Path.Combine(ImageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName));
+                        ImageName += ".png";
+
+                        saver.SaveCompositeImageToFile(ImageName);
+                        Props.ShowMessage("File saved successfully", "Save", 5000);
                     }
                     catch (Exception ex)
                     {
-                        Props.ShowMessage("Error saving image: " + ex.Message, "Save", 10000, true);
+                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
                     }
-                    break;
-
-                default:
-                    // save cancelled
-                    break;
+                }
             }
         }
 
