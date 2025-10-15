@@ -37,7 +37,7 @@ namespace RateController.Classes
                     }
 
                     compositeImage.Save(sfd.FileName, format);
-                    MessageBox.Show("Image saved successfully.", "Save Image", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Props.ShowMessage("Image saved successfully.", "Save Image", 5000);
                     
                 }
             }

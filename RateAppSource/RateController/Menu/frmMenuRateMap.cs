@@ -663,11 +663,11 @@ namespace RateController.Menu
                         try
                         {
                             mf.Tls.Manager.SaveMapToFile(saveFileDialog.FileName);
-                            MessageBox.Show("Shapefile saved successfully.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Props.ShowMessage("Shapefile saved successfully", "Save", 5000);
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error saving shapefile: " + ex.Message, "Save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
                         }
                     }
                 }
@@ -684,7 +684,7 @@ namespace RateController.Menu
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error saving image: " + ex.Message, "Save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Props.ShowMessage("Error saving image: " + ex.Message, "Save", 10000, true);
                 }
             }
         }

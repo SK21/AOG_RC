@@ -67,11 +67,11 @@ namespace RateController.Forms
                         try
                         {
                             File.Copy(sourceFilePath, destinationFilePath, true);
-                            MessageBox.Show("File copied successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Props.ShowMessage("File copied successfully!", "Import", 5000);
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show($"Error copying file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Props.ShowMessage("Error copying file: " + ex.Message, "Import", 10000, true);
                         }
                     }
                 }
