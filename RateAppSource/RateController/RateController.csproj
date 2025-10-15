@@ -259,6 +259,12 @@
     <Compile Include="Forms\frmRate.Designer.cs">
       <DependentUpon>frmRate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmSaveType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSaveType.Designer.cs">
+      <DependentUpon>frmSaveType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmVersion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -539,6 +545,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmRate.resx">
       <DependentUpon>frmRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSaveType.resx">
+      <DependentUpon>frmSaveType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmVersion.resx">
       <DependentUpon>frmVersion.cs</DependentUpon>
