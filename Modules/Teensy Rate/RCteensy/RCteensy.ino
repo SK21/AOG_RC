@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 12105;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 16105;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -155,6 +155,8 @@ uint16_t UpdateReceivePort = 29100;
 uint16_t UpdateSendPort = 29000;
 uint32_t buffer_addr, buffer_size;
 bool FirmwareUpdateMode = false;
+
+bool CalibrationOn[] = { false,false };
 
 void setup()
 {

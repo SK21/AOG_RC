@@ -287,12 +287,12 @@ void DoSetup()
 }
 
 // eeprom map:
-// ID			0-1
-// module type	2
-// module data	23-147
-// network		168-232
-// sensor 1		253-356
-// sensor 2		377-480
+// ID					0-1
+// module type			2
+// module data			23-147
+// network				168-232
+// sensor 1				253-356
+// sensor 2				377-480
 
 void LoadData()
 {
