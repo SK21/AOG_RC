@@ -502,10 +502,12 @@
     <Compile Include="PGNs\PGN32296.cs" />
     <Compile Include="PGNs\PGN32400.cs" />
     <Compile Include="PGNs\PGN32401.cs" />
+    <Compile Include="PGNs\PGN32402.cs" />
     <Compile Include="PGNs\PGN32500.cs" />
     <Compile Include="PGNs\PGN32501.cs" />
     <Compile Include="PGNs\PGN32502.cs" />
     <Compile Include="PGNs\PGN32503.cs" />
+    <Compile Include="PGNs\PGN32504.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN254.cs" />
     <Compile Include="PGNs\PGN32700.cs" />

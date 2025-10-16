@@ -22,7 +22,7 @@ namespace RateController
         //	        - bit 4		    MasterOn mode
         //          - bit 5         -
         //          - bit 6         AutoOn
-        //          - bit 7         -
+        //          - bit 7         Calibration On
         //10    manual pwm Lo
         //11    manual pwm Hi
         //12    -
@@ -124,8 +124,7 @@ namespace RateController
             if (Props.RateCalibrationOn)
             {
                 // calibrate
-                // master on
-                cData[9] |= 0b00010000;
+                cData[9] |= 0b10010000; // calibration on bit 7, master on bit 4
 
                 if (Prod.CalMode == CalibrationMode.SettingPWM)
                 {
