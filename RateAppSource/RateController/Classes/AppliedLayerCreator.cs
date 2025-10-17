@@ -5,17 +5,19 @@ using System.Linq;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using RateController;
 
 namespace RateController.Classes
 {
     public class AppliedLayerCreator
     {
 
-
         /// <summary>
         /// Updates the GMapOverlay using a pre-computed grid of cells.
         /// For each cell, the average rate is computed from readings that fall within its bounds.
         /// Each cell is colored according to its computed average rate using a five‑shade green scheme.
+        /// If a non-null clsSections instance is provided the renderer will size each displayed cell
+        /// so its width matches the implement TotalWidth (meters) returned by clsSections.TotalWidth().
         /// </summary>
         /// <param name="overlay">GMapOverlay to update.</param>
         /// <param name="readings">List of RateReading data.</param>
@@ -23,6 +25,7 @@ namespace RateController.Classes
         /// <param name="legend">Output dictionary mapping range labels to colors.</param>
         /// <param name="selectedRateType">Specifies whether to use Applied or Target rates.</param>
         /// <param name="selectedRateIndex">Index (0‑based) of the rate to use.</param>
+        /// <param name="sections">Optional clsSections instance. When provided, sections.TotalWidth() (meters) is used as implement width.</param>
         /// <returns>True if update succeeds; otherwise, false.</returns>
         public bool UpdateRatesOverlay(
             ref GMapOverlay overlay,
@@ -30,7 +33,8 @@ namespace RateController.Classes
             List<RectLatLng> grid,
             out Dictionary<string, Color> legend,
             RateType selectedRateType = RateType.Applied,
-            int selectedRateIndex = 0)
+            int selectedRateIndex = 0,
+            clsSections sections = null)
         {
             bool Result = false;
             legend = new Dictionary<string, Color>();
@@ -39,22 +43,80 @@ namespace RateController.Classes
             if (readings == null || readings.Count == 0 || grid == null || grid.Count == 0)
                 return Result;
 
-            // Compute the average rate per grid cell.
-            // We'll use the index in the grid list as the key.
-            Dictionary<int, double> cellAverages = new Dictionary<int, double>();
+            // Determine implement width in meters (0.0 means use precomputed grid cell size).
+            double implementWidthMeters = 0.0;
+            if (sections != null)
+            {
+                try
+                {
+                    // clsSections.TotalWidth(false) returns meters when ReturnFeet==false
+                    implementWidthMeters = sections.TotalWidth(false);
+                }
+                catch
+                {
+                    implementWidthMeters = 0.0;
+                }
+            }
 
-            // For each grid cell, find the readings whose coordinates fall within the cell.
-            // (Assumes that RectLatLng exposes Bottom, Top, Left, and Right.)
-            for (int idx = 0; idx < grid.Count; idx++)
+            // Compute the average rate per grid cell.
+            // Also keep the bounds we used per cell so rendering matches aggregation.
+            Dictionary<int, double> cellAverages = new Dictionary<int, double>();
+            int cellCount = grid.Count;
+            double[] cellBottoms = new double[cellCount];
+            double[] cellTops = new double[cellCount];
+            double[] cellLefts = new double[cellCount];
+            double[] cellRights = new double[cellCount];
+
+            // Approximate conversion constants:
+            // 1 degree latitude ~= 111,320 meters
+            const double metersPerDegreeLat = 111320.0;
+
+            for (int idx = 0; idx < cellCount; idx++)
             {
                 RectLatLng cell = grid[idx];
-                List<RateReading> cellReadings = readings.FindAll(r =>
-                    r.Latitude >= cell.Bottom &&
-                    r.Latitude <= cell.Top &&
-                    r.Longitude >= cell.Left &&
-                    r.Longitude <= cell.Right);
 
-                // Select valid rates.
+                double cellBottom, cellTop, cellLeft, cellRight;
+
+                if (implementWidthMeters > 0.0)
+                {
+                    // center of the provided grid-cell
+                    double centerLat = (cell.Top + cell.Bottom) / 2.0;
+                    double centerLng = (cell.Left + cell.Right) / 2.0;
+
+                    // meters per degree longitude depends on latitude
+                    double metersPerDegreeLng = metersPerDegreeLat * Math.Max(0.000001, Math.Cos(centerLat * Math.PI / 180.0));
+
+                    double halfDegLat = (implementWidthMeters / 2.0) / metersPerDegreeLat;
+                    double halfDegLng = (implementWidthMeters / 2.0) / metersPerDegreeLng;
+
+                    cellBottom = centerLat - halfDegLat;
+                    cellTop = centerLat + halfDegLat;
+                    cellLeft = centerLng - halfDegLng;
+                    cellRight = centerLng + halfDegLng;
+                }
+                else
+                {
+                    // Use existing precomputed cell bounds
+                    cellBottom = cell.Bottom;
+                    cellTop = cell.Top;
+                    cellLeft = cell.Left;
+                    cellRight = cell.Right;
+                }
+
+                // store bounds so polygon drawing uses same area
+                cellBottoms[idx] = cellBottom;
+                cellTops[idx] = cellTop;
+                cellLefts[idx] = cellLeft;
+                cellRights[idx] = cellRight;
+
+                // Find readings within these bounds.
+                List<RateReading> cellReadings = readings.FindAll(r =>
+                    r.Latitude >= cellBottom &&
+                    r.Latitude <= cellTop &&
+                    r.Longitude >= cellLeft &&
+                    r.Longitude <= cellRight);
+
+                // Select valid rates for the chosen rate type and index.
                 var validRates = cellReadings.Where(r =>
                         (selectedRateType == RateType.Applied && r.AppliedRates.Length > selectedRateIndex) ||
                         (selectedRateType == RateType.Target && r.TargetRates.Length > selectedRateIndex))
@@ -92,18 +154,21 @@ namespace RateController.Classes
                 }
             }
 
-            // Create a polygon for each grid cell.
-            for (int idx = 0; idx < grid.Count; idx++)
+            // Create a polygon for each grid cell using the stored bounds.
+            for (int idx = 0; idx < cellCount; idx++)
             {
-                RectLatLng cell = grid[idx];
+                double cellBottom = cellBottoms[idx];
+                double cellTop = cellTops[idx];
+                double cellLeft = cellLefts[idx];
+                double cellRight = cellRights[idx];
 
-                // Define cell polygon points.
+                // Define cell polygon points (lat, lng).
                 List<PointLatLng> points = new List<PointLatLng>
                 {
-                    new PointLatLng(cell.Bottom, cell.Left),
-                    new PointLatLng(cell.Bottom, cell.Right),
-                    new PointLatLng(cell.Top, cell.Right),
-                    new PointLatLng(cell.Top, cell.Left)
+                    new PointLatLng(cellBottom, cellLeft),
+                    new PointLatLng(cellBottom, cellRight),
+                    new PointLatLng(cellTop, cellRight),
+                    new PointLatLng(cellTop, cellLeft)
                 };
 
                 GMapPolygon polygon = new GMapPolygon(points, $"Cell_{idx}");
@@ -115,6 +180,8 @@ namespace RateController.Classes
                     int rangeIndex = (int)Math.Floor((avgRate - overallMin) / rangeWidth);
                     if (rangeIndex >= 5)
                         rangeIndex = 4;
+                    if (rangeIndex < 0)
+                        rangeIndex = 0;
                     polygon.Stroke = new Pen(shadesOfGreen[rangeIndex], 2);
                     polygon.Fill = new SolidBrush(shadesOfGreen[rangeIndex]);
                 }

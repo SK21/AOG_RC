@@ -347,7 +347,8 @@ namespace RateController.Classes
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 AppliedLayerCreator creator = new AppliedLayerCreator();
 
-                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, RateGrid, out legend, Props.RateDisplayType, Props.RateDisplayProduct);
+                creator.UpdateRatesOverlay(ref AppliedOverlay, readings, RateGrid, out legend, 
+                    Props.RateDisplayType, Props.RateDisplayProduct,mf.Sections);
                 gmap.Refresh();
             }
             catch (Exception ex)
