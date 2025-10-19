@@ -295,9 +295,19 @@ namespace RateController.Classes
 
         public byte TimedMinStart
         {
-            // actual X 100
+            // actual X 100 (%)
             get { return cTimedMinStart; }
-            set { cTimedMinStart = value; }
+            set
+            {
+                if (value >= 0 && value <= 50)
+                {
+                    cTimedMinStart = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException("Timed Minimum Start");
+                }
+            }
         }
 
         public UInt16 TimedPause
