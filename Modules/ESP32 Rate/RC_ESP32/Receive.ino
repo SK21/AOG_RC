@@ -49,7 +49,7 @@ void ReadPGNs(byte data[], uint16_t len)
         //	        - bit 4		    MasterOn
         //          - bit 5         -
         //          - bit 6         AutoOn
-        //          - bit 7         -
+        //          - bit 7         calibration on
         //10    manual pwm Lo
         //11    manual pwm Hi
         //12    -
@@ -86,6 +86,8 @@ void ReadPGNs(byte data[], uint16_t len)
                         MasterOn = ((InCommand & 16) == 16);
 
                         Sensor[SensorID].AutoOn = ((InCommand & 64) == 64);
+
+                        CalibrationOn[SensorID] = ((InCommand & 128) == 128);
 
                         int16_t tmp = data[10] | data[11] << 8;
                         Sensor[SensorID].ManualAdjust = tmp;

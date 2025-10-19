@@ -104,10 +104,15 @@ float DoPID(byte ID, bool IsMotor)
 				else
 				{
 					// valve
-					float Sign = (Change >= 0.0f) ? 1.0f : -1.0f;
-					Result = fabsf(Change) + Sensor[ID].MinPWM;
-					Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
-					Result *= Sign;
+					if (Change == 0.0f)
+					{
+						Result = 0.0f;
+					}
+					else
+					{
+						Result = constrain(fabsf(Change) + Sensor[ID].MinPWM, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+						Result *= (Change >= 0.0f) ? 1.0f : -1.0f;
+					}
 				}
 				LastPWM[ID] = Result;
 			}
