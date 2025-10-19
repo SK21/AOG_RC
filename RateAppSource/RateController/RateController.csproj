@@ -192,6 +192,7 @@
     <Compile Include="Classes\clsSensor.cs" />
     <Compile Include="Classes\clsSensors.cs" />
     <Compile Include="Classes\clsVersionChecker.cs" />
+    <Compile Include="Classes\CoverageTrail.cs" />
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\MapImageSaver.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
