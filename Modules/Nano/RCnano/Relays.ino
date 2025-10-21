@@ -1,13 +1,14 @@
+#include <avr/pgmspace.h>
 
 bool RelayStatus[16];
-uint8_t Relays8[] = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW
-uint8_t Relays16[] = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW
+const uint8_t Relays8[] PROGMEM = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW
+const uint8_t Relays16[] PROGMEM = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW
 
 void CheckRelays()
 {
     uint8_t Rlys;
     bool BitState;
-    uint8_t IOpin;
+    uint8_t IOpin;      
 
     uint8_t NewLo = 0;
     uint8_t NewHi = 0;
@@ -52,7 +53,7 @@ void CheckRelays()
 
                 if (RelayStatus[i] != BitState)
                 {
-                    IOpin = Relays8[i];
+                    IOpin = pgm_read_byte(&Relays8[i]);
 
                     if (BitState)
                     {
@@ -87,7 +88,7 @@ void CheckRelays()
 
                 if (RelayStatus[i] != BitState)
                 {
-                    IOpin = Relays16[i];
+                    IOpin = pgm_read_byte(&Relays16[i]);
 
                     if (BitState)
                     {

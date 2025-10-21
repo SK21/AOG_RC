@@ -1,4 +1,3 @@
-
 void DoSetup()
 {
 	uint8_t ErrorCount = 0;
@@ -25,25 +24,23 @@ void DoSetup()
 	uint8_t mn = rest % 100;
 	uint16_t dy = rest / 100;
 
-	String fwVer;
 	if (mn <= 12 && dy <= 31)
 	{
-		fwVer = "Firmware Version: v";
-		fwVer += String(yr);
-		fwVer += ".";
-		if (mn < 10) fwVer += "0";
-		fwVer += String(mn);
-		fwVer += ".";
-		if (dy < 10) fwVer += "0";
-		fwVer += String(dy);
+		Serial.print(F("Firmware Version: v"));
+		Serial.print(yr);
+		Serial.print('.');
+		if (mn < 10) Serial.print('0');
+		Serial.print(mn);
+		Serial.print('.');
+		if (dy < 10) Serial.print('0');
+		Serial.println(dy);
 	}
 	else
 	{
-		fwVer = "Firmware Version: invalid";
+		Serial.println(F("Firmware Version: invalid"));
 	}
-	Serial.println(fwVer);
 
-	Serial.print("Module ID: ");
+	Serial.print(F("Module ID: "));
 	Serial.println(MDL.ID);
 	Serial.println("");
 
@@ -55,7 +52,7 @@ void DoSetup()
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
 
 	// ethernet 
-	Serial.println("Starting Ethernet ...");
+	Serial.println(F("Starting Ethernet ..."));
 	MDLnetwork.IP3 = MDL.ID + 50;
 	byte ArduinoIP[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, MDLnetwork.IP3 };
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDLnetwork.IP3 };
@@ -73,7 +70,7 @@ void DoSetup()
 	{
 		ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);
 		Serial.println("");
-		Serial.println("Ethernet controller found.");
+		Serial.println(F("Ethernet controller found."));
 		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
 
 		//register sub for received data
@@ -82,24 +79,24 @@ void DoSetup()
 		delay(500);
 		if (EthernetConnected())
 		{
-			ether.printIp("IP Address:     ", ether.myip);
+			ether.printIp(F("IP Address:     "), ether.myip);
 		}
 		else
 		{
-			Serial.println("Ethernet cable not connected.");
+			Serial.println(F("Ethernet cable not connected."));
 		}
 	}
 	else
 	{
 		Serial.println("");
-		Serial.println("Ethernet controller not found.");
+		Serial.println(F("Ethernet controller not found."));
 	}
 
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		//pinMode(Sensor[i].FlowPin, INPUT);	// for direct connection to inductive sensor, no opto
+		//pinMode(Sensor[i].FlowPin, INPUT); 	// for direct connection to inductive sensor, no opto
 		pinMode(Sensor[i].DirPin, OUTPUT);
 		pinMode(Sensor[i].PWMPin, OUTPUT);
 
@@ -140,11 +137,11 @@ void DoSetup()
 	case 3:
 		// PCA9555 I/O expander on default address 0x20
 		Serial.println("");
-		Serial.println("Starting PCA9555 I/O Expander ...");
+		Serial.println(F("Starting PCA9555 I/O Expander ..."));
 		ErrorCount = 0;
 		while (!PCA9555PW_found)
 		{
-			Serial.print(".");
+			Serial.print(F("."));
 			Wire.beginTransmission(0x20);
 			PCA9555PW_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
@@ -155,7 +152,7 @@ void DoSetup()
 		Serial.println("");
 		if (PCA9555PW_found)
 		{
-			Serial.println("PCA9555 expander found.");
+			Serial.println(F("PCA9555 expander found."));
 
 			PCA.attach(Wire);
 			PCA.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
@@ -164,7 +161,7 @@ void DoSetup()
 		}
 		else
 		{
-			Serial.println("PCA9555 expander not found.");
+			Serial.println(F("PCA9555 expander not found."));
 		}
 		Serial.println("");
 		break;
@@ -173,14 +170,14 @@ void DoSetup()
 		// MCP23017 I/O expander on 0x20, 0x21
 
 		Serial.println("");
-		Serial.println("Starting MCP23017 ...");
+		Serial.println(F("Starting MCP23017 ..."));
 
 		ErrorCount = 0;
 		MCP23017address = 0x21;
 		while (!MCP23017_found)
 		{
 			// RC12-3
-			Serial.print(".");
+			Serial.print(F("."));
 			Wire.beginTransmission(0x21);
 			MCP23017_found = (Wire.endTransmission() == 0);
 			ErrorCount++;
@@ -194,7 +191,7 @@ void DoSetup()
 			MCP23017address = 0x20;
 			while (!MCP23017_found)
 			{
-				Serial.print(".");
+				Serial.print(F("."));
 				Wire.beginTransmission(MCP23017address);
 				MCP23017_found = (Wire.endTransmission() == 0);
 				ErrorCount++;
@@ -216,49 +213,49 @@ void DoSetup()
 			Wire.write(0x00); // set all of port B to outputs
 			Wire.endTransmission();
 
-			Serial.println("MCP23017 found.");
+			Serial.println(F("MCP23017 found."));
 		}
 		else
 		{
-			Serial.println("MCP23017 not found.");
+			Serial.println(F("MCP23017 not found."));
 		}
 		break;
 	}
 
 	Serial.println("");
-	Serial.print("Sensors enabled: ");
+	Serial.print(F("Sensors enabled: "));
 	Serial.println(MDL.SensorCount);
 	Serial.println("");
-	Serial.println("Sensor 1: ");
-	Serial.print("Enabled: ");
-	Serial.print("Flow Pin: ");
+	Serial.println(F("Sensor 1: "));
+	Serial.print(F("Enabled: "));
+	Serial.print(F("Flow Pin: "));
 	Serial.println(Sensor[0].FlowPin);
-	Serial.print("DIR Pin: ");
+	Serial.print(F("DIR Pin: "));
 	Serial.println(Sensor[0].DirPin);
-	Serial.print("PWM Pin: ");
+	Serial.print(F("PWM Pin: "));
 	Serial.println(Sensor[0].PWMPin);
 
 	Serial.println("");
-	Serial.println("Sensor 2: ");
-	Serial.print("Flow Pin: ");
+	Serial.println(F("Sensor 2: "));
+	Serial.print(F("Flow Pin: "));
 	Serial.println(Sensor[1].FlowPin);
-	Serial.print("DIR Pin: ");
+	Serial.print(F("DIR Pin: "));
 	Serial.println(Sensor[1].DirPin);
-	Serial.print("PWM Pin: ");
+	Serial.print(F("PWM Pin: "));
 	Serial.println(Sensor[1].PWMPin);
 
 	Serial.println("");
-	Serial.print("Work Switch Pin: ");
+	Serial.print(F("Work Switch Pin: "));
 	Serial.println(MDL.WorkPin);
-	Serial.print("Pressure Pin: ");
+	Serial.print(F("Pressure Pin: "));
 	Serial.println(MDL.PressurePin);
 
 	Serial.println("");
-	Serial.print("ADS1115 enabled: ");
-	Serial.println("false");
+	Serial.print(F("ADS1115 enabled: "));
+	Serial.println(F("false"));
 
 	Serial.println("");
-	Serial.println("Finished setup.");
+	Serial.println(F("Finished setup."));
 	Serial.println("");
 }
 
@@ -280,7 +277,7 @@ void LoadData()
 	if (StoredID == InoID && StoredType == InoType)
 	{
 		// load stored data
-		Serial.println("Loading stored settings.");
+		Serial.println(F("Loading stored settings."));
 		EEPROM.get(23, MDL);
 
 		for (int i = 0; i < MaxProductCount; i++)
@@ -292,7 +289,7 @@ void LoadData()
 
 	if (!IsValid)
 	{
-		Serial.println("Stored settings not valid.");
+		Serial.println(F("Stored settings not valid."));
 		LoadDefaults();
 		SaveData();
 	}
@@ -300,7 +297,7 @@ void LoadData()
 
 void SaveData()
 {
-	Serial.println("Updating stored settings.");
+	Serial.println(F("Updating stored settings."));
 	EEPROM.put(0, InoID);
 	EEPROM.put(2, InoType);
 	EEPROM.put(23, MDL);
@@ -313,7 +310,7 @@ void SaveData()
 
 void LoadDefaults()
 {
-	Serial.println("Loading default settings.");
+	Serial.println(F("Loading default settings."));
 
 	MDL.WorkPin = 14;
 	MDL.PressurePin = 15;
@@ -332,8 +329,8 @@ void LoadDefaults()
 	{
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 10;
-		Sensor[i].Kp = 0.0003;	// gain 35
-		Sensor[i].Ki = 0.00123;	// integral 5
+		Sensor[i].Kp = 0.0003;    // gain 35
+		Sensor[i].Ki = 0.00123;   // integral 5
 		Sensor[i].Deadband = 0.015;
 		Sensor[i].BrakePoint = 0.35;
 		Sensor[i].PIDslowAdjust = 0.3;
@@ -343,8 +340,8 @@ void LoadDefaults()
 		Sensor[i].TimedAdjust = 80;
 		Sensor[i].TimedPause = 400;
 		Sensor[i].PIDtime = 100;
-		Sensor[i].PulseMin = 250;		// 4000 Hz
-		Sensor[i].PulseMax = 1000000;	// 1 Hz
+		Sensor[i].PulseMin = 250;      // 4000 Hz
+		Sensor[i].PulseMax = 1000000;  // 1 Hz
 		Sensor[i].PulseSampleSize = 12;
 		Sensor[i].AutoOn = true;
 	}
