@@ -2,8 +2,8 @@
 // PulseMaxHz       maximum Hz of the flow sensor
 // PulseSampeSize   number of pulses used to get the median Hz reading
 
-const int MaxSampleSize = 25;
-const uint32_t FlowTimeout = 4000;
+const int MaxSampleSize = 15;
+const uint32_t FlowTimeout = 4000UL;
 
 uint32_t LastPulse[2];
 uint32_t ReadLast[2];
@@ -56,18 +56,18 @@ void GetUPM()
 
 			if (median > 0)
 			{
-				float hz = 1000000.0 / median;
-				Sensor[i].Hz = hz * 0.8 + Sensor[i].Hz * 0.2;
-				if (Sensor[i].MeterCal > 0) Sensor[i].UPM = (60.0 * Sensor[i].Hz) / Sensor[i].MeterCal;
+				float hz = 1000000.0f / (float)median;
+				Sensor[i].Hz = hz * 0.8f + Sensor[i].Hz * 0.2f;
+				if (Sensor[i].MeterCal > 0.0f) Sensor[i].UPM = (60.0f * Sensor[i].Hz) / Sensor[i].MeterCal;
 			}
 		}
 		else
 		{
 			// No flow check
-			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
+			if ((millis() - LastPulse[i]) > FlowTimeout || (!Sensor[i].FlowEnabled))
 			{
-				Sensor[i].UPM = 0;
-				Sensor[i].Hz = 0;
+				Sensor[i].UPM = 0.0f;
+				Sensor[i].Hz = 0.0f;
 
 				noInterrupts();
 				SamplesCount[i] = 0;
