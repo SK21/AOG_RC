@@ -8,10 +8,10 @@ namespace RateController.Classes
     /// </summary>
     public static class ColorScale
     {
-        // Simple 5-stop scale (blue -> cyan -> green -> yellow -> red)
+        // Simple 5-stop scale (cornsilk -> cyan -> green -> yellow -> red)
         private static readonly Color[] Stops = new[]
         {
-            Color.FromArgb(0,  87, 255),   // Blue-ish
+            Color.FromArgb(255, 248, 220), // Cornsilk for zero/min rate
             Color.FromArgb(0, 191, 255),   // Deep sky
             Color.FromArgb(0, 200,  70),   // Green-ish
             Color.FromArgb(255, 215,  0),  // Gold

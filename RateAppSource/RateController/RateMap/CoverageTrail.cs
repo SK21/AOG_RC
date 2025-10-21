@@ -9,18 +9,24 @@ namespace RateController.Classes
     /// <summary>
     /// Maintains a list of coverage swath rectangles between successive GPS points,
     /// computed from implement width and motion vector. Provides rendering and legend.
+    /// Adds "turn wedges" to fill gaps that appear on sharp heading changes.
     /// </summary>
     public class CoverageTrail
     {
         private readonly object _lock = new object();
 
-        // One segment = a swath polygon drawn between two points for the current implement width and rate.
         private sealed class Segment
         {
-            public PointLatLng Prev { get; set; }
-            public PointLatLng Curr { get; set; }
-            public double Rate { get; set; }
-            public double ImplementWidthMeters { get; set; }
+            public PointLatLng Prev;
+            public PointLatLng Curr;
+            public double Rate;
+            public double ImplementWidthMeters;
+
+            // Rectangle corners (computed once to support "turn wedges")
+            public PointLatLng PrevLeft;
+            public PointLatLng PrevRight;
+            public PointLatLng CurrLeft;
+            public PointLatLng CurrRight;
         }
 
         private readonly List<Segment> _segments = new List<Segment>();
@@ -31,10 +37,6 @@ namespace RateController.Classes
         /// Add the next point of travel. Creates a segment with the implement swath coverage
         /// between previous and current points using the last known motion vector.
         /// </summary>
-        /// <param name="pos">Current position.</param>
-        /// <param name="headingDeg">Heading in degrees (0=N, 90=E). Only used for first segment when delta is tiny.</param>
-        /// <param name="rate">Rate at this sample.</param>
-        /// <param name="implementWidthMeters">Implement width (meters).</param>
         public void AddPoint(PointLatLng pos, double headingDeg, double rate, double implementWidthMeters)
         {
             lock (_lock)
@@ -46,7 +48,6 @@ namespace RateController.Classes
                     return;
                 }
 
-                // Ignore invalid widths
                 if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
 
                 // If no movement, synthesize a tiny forward movement based on heading, to avoid zero-area polygons.
@@ -63,7 +64,6 @@ namespace RateController.Classes
 
                 if (distMeters < 0.01)
                 {
-                    // Synthesize a very small forward move (2% of implement width) along heading.
                     double synth = Math.Max(implementWidthMeters * 0.02, 0.02);
                     double theta = headingDeg * Math.PI / 180.0;
                     double east = Math.Sin(theta);
@@ -73,12 +73,20 @@ namespace RateController.Classes
                     curr = new PointLatLng(prev.Lat + dLat, prev.Lng + dLng);
                 }
 
+                // Compute and store rectangle corners for the segment
+                PointLatLng prevLeft, prevRight, currLeft, currRight;
+                ComputeCorners(prev, curr, implementWidthMeters, out prevLeft, out prevRight, out currLeft, out currRight);
+
                 _segments.Add(new Segment
                 {
                     Prev = prev,
                     Curr = curr,
                     Rate = rate,
-                    ImplementWidthMeters = implementWidthMeters
+                    ImplementWidthMeters = implementWidthMeters,
+                    PrevLeft = prevLeft,
+                    PrevRight = prevRight,
+                    CurrLeft = currLeft,
+                    CurrRight = currRight
                 });
 
                 _prev = pos;
@@ -87,6 +95,7 @@ namespace RateController.Classes
 
         /// <summary>
         /// Draws the swath polygons on the provided overlay. Colors are mapped by rate against [minRate, maxRate].
+        /// Also fills the inner "wedge" gaps that happen on sharp turns between consecutive segments.
         /// </summary>
         public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate)
         {
@@ -96,10 +105,18 @@ namespace RateController.Classes
             {
                 overlay.Polygons.Clear();
 
-                foreach (var seg in _segments)
+                // Draw segment rectangles
+                for (int i = 0; i < _segments.Count; i++)
                 {
-                    var polyPoints = BuildRectangle(seg.Prev, seg.Curr, seg.ImplementWidthMeters);
-                    if (polyPoints == null || polyPoints.Count < 4) continue;
+                    var seg = _segments[i];
+                    var polyPoints = new List<PointLatLng>
+                    {
+                        seg.PrevLeft,
+                        seg.PrevRight,
+                        seg.CurrRight,
+                        seg.CurrLeft,
+                        seg.PrevLeft // close polygon
+                    };
 
                     var color = ColorScale.Interpolate(minRate, maxRate, seg.Rate);
                     var poly = new GMapPolygon(polyPoints, "swath")
@@ -108,6 +125,52 @@ namespace RateController.Classes
                         Fill = new SolidBrush(Color.FromArgb(70, color))
                     };
                     overlay.Polygons.Add(poly);
+                }
+
+                // Fill "turn wedges" between consecutive segments
+                for (int i = 1; i < _segments.Count; i++)
+                {
+                    var prev = _segments[i - 1];
+                    var curr = _segments[i];
+                    var center = curr.Prev; // shared center point between segments
+
+                    // If the left edges at the shared point diverge enough, fill the inner wedge
+                    if (ShouldFillWedge(prev.CurrLeft, curr.PrevLeft))
+                    {
+                        var leftWedge = new List<PointLatLng>
+                        {
+                            prev.CurrLeft,
+                            curr.PrevLeft,
+                            center,
+                            prev.CurrLeft
+                        };
+                        var c = ColorScale.Interpolate(minRate, maxRate, curr.Rate);
+                        var poly = new GMapPolygon(leftWedge, "turn_left")
+                        {
+                            Stroke = new Pen(Color.FromArgb(0, c), 0), // no visible stroke
+                            Fill = new SolidBrush(Color.FromArgb(70, c))
+                        };
+                        overlay.Polygons.Add(poly);
+                    }
+
+                    // Same for right edge wedge
+                    if (ShouldFillWedge(prev.CurrRight, curr.PrevRight))
+                    {
+                        var rightWedge = new List<PointLatLng>
+                        {
+                            prev.CurrRight,
+                            curr.PrevRight,
+                            center,
+                            prev.CurrRight
+                        };
+                        var c = ColorScale.Interpolate(minRate, maxRate, curr.Rate);
+                        var poly = new GMapPolygon(rightWedge, "turn_right")
+                        {
+                            Stroke = new Pen(Color.FromArgb(0, c), 0),
+                            Fill = new SolidBrush(Color.FromArgb(70, c))
+                        };
+                        overlay.Polygons.Add(poly);
+                    }
                 }
             }
         }
@@ -120,7 +183,6 @@ namespace RateController.Classes
             var legend = new Dictionary<string, Color>();
             if (steps < 1) steps = 1;
 
-            // Guard against bad ranges
             if (double.IsNaN(minRate) || double.IsNaN(maxRate) || maxRate <= minRate)
             {
                 legend.Add("No data", Color.Gray);
@@ -133,7 +195,7 @@ namespace RateController.Classes
                 double a = minRate + (i * step);
                 double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * step);
                 var color = ColorScale.Interpolate(minRate, maxRate, (a + b) / 2.0);
-                legend.Add($"{a:N1} - {b:N1}", color);
+                legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
             }
             return legend;
         }
@@ -151,44 +213,52 @@ namespace RateController.Classes
             }
         }
 
-        // Compute a rectangle swath between prev and curr, widened by implement width.
-        private static List<PointLatLng> BuildRectangle(PointLatLng prev, PointLatLng curr, double widthMeters)
+        private static bool ShouldFillWedge(PointLatLng a, PointLatLng b)
+        {
+            // Use a small geographic threshold to avoid creating degenerate tiny triangles.
+            // ~0.05 meters in lat/long degrees near mid-latitudes.
+            const double metersPerDegLat = 111320.0;
+            // Convert difference to meters assuming similar latitude for both points
+            double dLat = (a.Lat - b.Lat) * metersPerDegLat;
+            // Approximate meters/deg lng using latitude of point a
+            double metersPerDegLng = metersPerDegLat * Math.Cos(a.Lat * Math.PI / 180.0);
+            double dLng = (a.Lng - b.Lng) * metersPerDegLng;
+
+            double distMeters = Math.Sqrt(dLat * dLat + dLng * dLng);
+            return distMeters > 0.05; // threshold
+        }
+
+        private static void ComputeCorners(
+            PointLatLng prev,
+            PointLatLng curr,
+            double widthMeters,
+            out PointLatLng prevLeft,
+            out PointLatLng prevRight,
+            out PointLatLng currLeft,
+            out PointLatLng currRight)
         {
             const double metersPerDegLat = 111320.0;
             double latRad = prev.Lat * Math.PI / 180.0;
             double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
 
-            // Vector from prev to curr in meters (east, north)
             double dxMeters = (curr.Lng - prev.Lng) * metersPerDegLng;
             double dyMeters = (curr.Lat - prev.Lat) * metersPerDegLat;
 
             double len = Math.Sqrt(dxMeters * dxMeters + dyMeters * dyMeters);
-            if (len < 1e-6) len = 1e-6; // avoid division by zero
+            if (len < 1e-6) len = 1e-6;
 
-            // Unit vectors
-            double ux = dxMeters / len; // east component along-track
-            double uy = dyMeters / len; // north component along-track
+            double ux = dxMeters / len; // east along-track
+            double uy = dyMeters / len; // north along-track
 
-            // Perpendicular (to the left) unit vector in meters
-            double px = -uy; // east component
-            double py = ux;  // north component
+            double px = -uy; // east perpendicular (left)
+            double py = ux;  // north perpendicular (left)
 
             double halfWidth = Math.Max(widthMeters / 2.0, 0.005);
 
-            // Four corners: prevLeft, prevRight, currRight, currLeft
-            var prevLeft = Offset(prev, px * halfWidth, py * halfWidth, metersPerDegLng, metersPerDegLat);
-            var prevRight = Offset(prev, -px * halfWidth, -py * halfWidth, metersPerDegLng, metersPerDegLat);
-            var currLeft = Offset(curr, px * halfWidth, py * halfWidth, metersPerDegLng, metersPerDegLat);
-            var currRight = Offset(curr, -px * halfWidth, -py * halfWidth, metersPerDegLng, metersPerDegLat);
-
-            return new List<PointLatLng>
-            {
-                prevLeft,
-                prevRight,
-                currRight,
-                currLeft,
-                prevLeft // close polygon
-            };
+            prevLeft = Offset(prev, px * halfWidth, py * halfWidth, metersPerDegLng, metersPerDegLat);
+            prevRight = Offset(prev, -px * halfWidth, -py * halfWidth, metersPerDegLng, metersPerDegLat);
+            currLeft = Offset(curr, px * halfWidth, py * halfWidth, metersPerDegLng, metersPerDegLat);
+            currRight = Offset(curr, -px * halfWidth, -py * halfWidth, metersPerDegLng, metersPerDegLat);
         }
 
         private static PointLatLng Offset(PointLatLng src, double eastMeters, double northMeters, double metersPerDegLng, double metersPerDegLat)

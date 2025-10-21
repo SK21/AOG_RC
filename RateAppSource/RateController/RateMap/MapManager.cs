@@ -285,13 +285,13 @@ namespace RateController.Classes
             try
             {
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
-
                 if (readings == null || readings.Count == 0)
                 {
                     Props.WriteErrorLog("MapManager: No rate readings available");
                     return legend;
                 }
 
+                // Implement width (meters)
                 double implementWidth = 24.0;
                 if (mf.Sections != null)
                 {
@@ -299,6 +299,7 @@ namespace RateController.Classes
                     catch (Exception ex) { Props.WriteErrorLog($"MapManager: implement width - {ex.Message}"); }
                 }
 
+                // Try live incremental update
                 bool success = overlayService.UpdateRatesOverlay(
                     AppliedOverlay,
                     readings,
@@ -309,6 +310,26 @@ namespace RateController.Classes
                     Props.RateDisplayType,
                     Props.RateDisplayProduct
                 );
+
+                // Fallback: rebuild from saved history so past coverage renders immediately
+                if (!success || AppliedOverlay.Polygons.Count == 0 || (cTractorPosition.Lat == 0 && cTractorPosition.Lng == 0))
+                {
+                    Dictionary<string, Color> legendFromHistory;
+                    bool replay = overlayService.BuildFromHistory(
+                        AppliedOverlay,
+                        readings,
+                        implementWidth,
+                        Props.RateDisplayType,
+                        Props.RateDisplayProduct,
+                        out legendFromHistory
+                    );
+
+                    if (replay)
+                    {
+                        legend = legendFromHistory;
+                        success = true;
+                    }
+                }
 
                 if (!success)
                 {
@@ -668,7 +689,29 @@ namespace RateController.Classes
 
         private void Props_MapShowRatesChanged(object sender, EventArgs e)
         {
-            ShowAppliedRatesOverlay();
+            try
+            {
+                if (Props.MapShowRates)
+                {
+                    // Force a rebuild for new selection (product/type)
+                    overlayService.Reset();
+
+                    if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
+                    AddOverlay(AppliedOverlay);
+                    cLegend = ShowAppliedLayer();
+                }
+                else
+                {
+                    AppliedOverlayTimer.Enabled = false;
+                    overlayService.Reset();
+                    RemoveOverlay(AppliedOverlay);
+                    gmap.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/Props_MapShowRatesChanged: " + ex.Message);
+            }
         }
 
         private void RemoveOverlay(GMapOverlay overlay)
