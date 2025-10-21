@@ -37,9 +37,6 @@
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.rbProductA = new System.Windows.Forms.RadioButton();
             this.gbMap = new System.Windows.Forms.GroupBox();
-            this.HSresolution = new System.Windows.Forms.HScrollBar();
-            this.lbResolution = new System.Windows.Forms.Label();
-            this.lbResolutionDescription = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.gbCoverage = new System.Windows.Forms.GroupBox();
             this.ckRecord = new System.Windows.Forms.CheckBox();
@@ -156,37 +153,6 @@
             this.gbMap.Text = "Product to Display";
             this.gbMap.Paint += new System.Windows.Forms.PaintEventHandler(this.gbMap_Paint);
             // 
-            // HSresolution
-            // 
-            this.HSresolution.LargeChange = 1;
-            this.HSresolution.Location = new System.Drawing.Point(190, 271);
-            this.HSresolution.Minimum = 1;
-            this.HSresolution.Name = "HSresolution";
-            this.HSresolution.Size = new System.Drawing.Size(241, 45);
-            this.HSresolution.TabIndex = 374;
-            this.HSresolution.Value = 1;
-            this.HSresolution.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HSresolution_Scroll);
-            // 
-            // lbResolution
-            // 
-            this.lbResolution.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbResolution.Location = new System.Drawing.Point(436, 282);
-            this.lbResolution.Name = "lbResolution";
-            this.lbResolution.Size = new System.Drawing.Size(59, 23);
-            this.lbResolution.TabIndex = 373;
-            this.lbResolution.Text = "100";
-            this.lbResolution.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbResolutionDescription
-            // 
-            this.lbResolutionDescription.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbResolutionDescription.Location = new System.Drawing.Point(13, 282);
-            this.lbResolutionDescription.Name = "lbResolutionDescription";
-            this.lbResolutionDescription.Size = new System.Drawing.Size(170, 23);
-            this.lbResolutionDescription.TabIndex = 371;
-            this.lbResolutionDescription.Text = "Resolution (Acres)";
-            this.lbResolutionDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // btnCancel
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
@@ -209,10 +175,7 @@
             // 
             this.gbCoverage.Controls.Add(this.gbMap);
             this.gbCoverage.Controls.Add(this.rbApplied);
-            this.gbCoverage.Controls.Add(this.lbResolutionDescription);
             this.gbCoverage.Controls.Add(this.rbTarget);
-            this.gbCoverage.Controls.Add(this.HSresolution);
-            this.gbCoverage.Controls.Add(this.lbResolution);
             this.gbCoverage.Location = new System.Drawing.Point(12, 252);
             this.gbCoverage.Name = "gbCoverage";
             this.gbCoverage.Size = new System.Drawing.Size(516, 331);
@@ -351,9 +314,6 @@
         private System.Windows.Forms.RadioButton rbProductB;
         private System.Windows.Forms.RadioButton rbProductA;
         private System.Windows.Forms.GroupBox gbMap;
-        private System.Windows.Forms.HScrollBar HSresolution;
-        private System.Windows.Forms.Label lbResolution;
-        private System.Windows.Forms.Label lbResolutionDescription;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.GroupBox gbCoverage;
         private System.Windows.Forms.CheckBox ckRecord;

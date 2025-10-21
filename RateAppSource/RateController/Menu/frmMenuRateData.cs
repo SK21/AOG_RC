@@ -1,9 +1,7 @@
-﻿using GMap.NET.MapProviders;
-using RateController.Classes;
+﻿using RateController.Classes;
+using RateController.Language;
 using System;
 using System.Drawing;
-using System.IO;
-using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace RateController.Forms
@@ -14,12 +12,11 @@ namespace RateController.Forms
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
-        private double ResolutionDivisorAcres = 0.05;
 
         public frmMenuRateData(FormStart main, frmMenu menu)
         {
             InitializeComponent();
-            Props.UnitsChanged += Props_UnitsChanged;
+            // No resolution/unit subscriptions anymore
             MainMenu = menu;
             mf = main;
             this.Tag = false;
@@ -53,12 +50,11 @@ namespace RateController.Forms
             try
             {
                 string sourceFilePath = Props.CurrentRateDataPath;
-                string filename = Path.GetFileName(sourceFilePath);
                 using (SaveFileDialog saveFileDialog = new SaveFileDialog())
                 {
                     saveFileDialog.Title = "Save File As";
                     saveFileDialog.Filter = "All Files|*.csv";
-                    saveFileDialog.FileName = filename;
+                    saveFileDialog.FileName = System.IO.Path.GetFileName(sourceFilePath);
 
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
@@ -66,7 +62,7 @@ namespace RateController.Forms
 
                         try
                         {
-                            File.Copy(sourceFilePath, destinationFilePath, true);
+                            System.IO.File.Copy(sourceFilePath, destinationFilePath, true);
                             Props.ShowMessage("File copied successfully!", "Import", 5000);
                         }
                         catch (Exception ex)
@@ -88,35 +84,13 @@ namespace RateController.Forms
             {
                 try
                 {
-                    if (rbApplied.Checked)
-                    {
-                        Props.RateDisplayType = RateType.Applied;
-                    }
-                    else
-                    {
-                        Props.RateDisplayType = RateType.Target;
-                    }
-
+                    Props.RateDisplayType = rbApplied.Checked ? RateType.Applied : RateType.Target;
                     Props.RateRecordEnabled = ckRecord.Checked;
 
-                    Props.RateDisplayResolution = MapResolutionTo();
-
-                    if (rbProductA.Checked)
-                    {
-                        Props.RateDisplayProduct = 0;
-                    }
-                    else if (rbProductB.Checked)
-                    {
-                        Props.RateDisplayProduct = 1;
-                    }
-                    else if (rbProductC.Checked)
-                    {
-                        Props.RateDisplayProduct = 2;
-                    }
-                    else
-                    {
-                        Props.RateDisplayProduct = 3;
-                    }
+                    if (rbProductA.Checked) Props.RateDisplayProduct = 0;
+                    else if (rbProductB.Checked) Props.RateDisplayProduct = 1;
+                    else if (rbProductC.Checked) Props.RateDisplayProduct = 2;
+                    else Props.RateDisplayProduct = 3;
 
                     SetButtons(false);
                     UpdateForm();
@@ -146,62 +120,26 @@ namespace RateController.Forms
             SetLanguage();
             UpdateForm();
 
-            Font ValFont = new Font(lbResolution.Font.FontFamily, 14, FontStyle.Bold);
-            lbResolution.Font = ValFont;
-            lbDataPoints.Font = ValFont;
+            // Emphasize values that remain
+            var valFont = new Font(lbDataPoints.Font.FontFamily, 14, FontStyle.Bold);
+            lbDataPoints.Font = valFont;
         }
 
         private void gbMap_Paint(object sender, PaintEventArgs e)
         {
-            GroupBox box = sender as GroupBox;
+            var box = sender as GroupBox;
             Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void HSresolution_Scroll(object sender, ScrollEventArgs e)
         {
-            UpdateControlDisplay();
-            SetButtons(true);
+            // Resolution feature removed
+            // Intentionally left blank to satisfy any designer wiring
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
-        }
-
-        private int MapResolutionFrom(double Value)
-        {
-            int Result = 0;
-            if (Props.UseMetric)
-            {
-                Result = (int)(Value / ResolutionDivisorAcres * 0.4047);
-            }
-            else
-            {
-                Result = (int)(Value / ResolutionDivisorAcres);
-            }
-            if (Result < HSresolution.Minimum)
-            {
-                Result = HSresolution.Minimum;
-            }
-            else if (Result > HSresolution.Maximum)
-            {
-                Result = HSresolution.Maximum;
-            }
-            return Result;
-        }
-
-        private double MapResolutionTo()
-        {
-            double Result = 0;
-            if (Props.UseMetric)
-            {
-                Result = HSresolution.Value * ResolutionDivisorAcres * 0.4047;
-            }
-            else
-            {
-                Result = HSresolution.Value * ResolutionDivisorAcres;
-            }
-            return Result;
         }
 
         private void PositionForm()
@@ -212,6 +150,7 @@ namespace RateController.Forms
 
         private void Props_UnitsChanged(object sender, EventArgs e)
         {
+            // Resolution-based unit display removed; keep form consistent otherwise
             UpdateForm();
         }
 
@@ -242,14 +181,7 @@ namespace RateController.Forms
 
         private void SetLanguage()
         {
-            if (Props.UseMetric)
-            {
-                lbResolutionDescription.Text = "Resolution (Hectares)";
-            }
-            else
-            {
-                lbResolutionDescription.Text = "Resolution (Acres)";
-            }
+            // Removed resolution label updates
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -257,42 +189,31 @@ namespace RateController.Forms
             lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
         }
 
-        private void UpdateControlDisplay()
-        {
-            lbResolution.Text = MapResolutionTo().ToString("N2");
-        }
-
         private void UpdateForm()
         {
             try
             {
                 Initializing = true;
+
                 rbApplied.Checked = (Props.RateDisplayType == RateType.Applied);
                 rbTarget.Checked = !rbApplied.Checked;
                 ckRecord.Checked = Props.RateRecordEnabled;
-                HSresolution.Value = MapResolutionFrom(Props.RateDisplayResolution);
 
                 switch (Props.RateDisplayProduct)
                 {
                     case 1:
                         rbProductB.Checked = true;
                         break;
-
                     case 2:
                         rbProductC.Checked = true;
                         break;
-
                     case 3:
                         rbProductD.Checked = true;
                         break;
-
                     default:
                         rbProductA.Checked = true;
                         break;
                 }
-
-                UpdateControlDisplay();
-                SetLanguage();
             }
             catch (Exception ex)
             {

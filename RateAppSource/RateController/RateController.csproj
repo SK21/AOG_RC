@@ -184,7 +184,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\AppliedLayerCreator.cs" />
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
@@ -192,13 +191,10 @@
     <Compile Include="Classes\clsSensor.cs" />
     <Compile Include="Classes\clsSensors.cs" />
     <Compile Include="Classes\clsVersionChecker.cs" />
-    <Compile Include="Classes\CoverageTrail.cs" />
     <Compile Include="Classes\JobManager.cs" />
-    <Compile Include="Classes\MapImageSaver.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
     <Compile Include="Classes\Props.cs" />
     <Compile Include="Classes\DataCollector.cs" />
-    <Compile Include="Classes\RateReading.cs" />
     <Compile Include="Classes\clsProducts.cs" />
     <Compile Include="Classes\clsRelay.cs" />
     <Compile Include="Classes\clsRelays.cs" />
@@ -211,9 +207,6 @@
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\FileNameValidator.cs" />
-    <Compile Include="Classes\MapManager.cs" />
-    <Compile Include="Classes\MapZone.cs" />
-    <Compile Include="Classes\ShapefileHelper.cs" />
     <Compile Include="Classes\UDPcomm.cs" />
     <Compile Include="Controls\VerticalProgressBar.cs">
       <SubType>Component</SubType>
@@ -518,6 +511,14 @@
     <Compile Include="Forms\RCRestore.Designer.cs">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
+    <Compile Include="RateMap\ColorScale.cs" />
+    <Compile Include="RateMap\CoverageTrail.cs" />
+    <Compile Include="RateMap\MapImageSaver.cs" />
+    <Compile Include="RateMap\MapManager.cs" />
+    <Compile Include="RateMap\MapZone.cs" />
+    <Compile Include="RateMap\RateOverlayService.cs" />
+    <Compile Include="RateMap\RateReading.cs" />
+    <Compile Include="RateMap\ShapefileHelper.cs" />
     <EmbeddedResource Include="Forms\FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
       <SubType>Designer</SubType>
