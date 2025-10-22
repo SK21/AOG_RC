@@ -6,7 +6,7 @@ using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq; // added for Legend signature ordering
+using System.Linq; // Linq used throughout
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -36,16 +36,12 @@ namespace RateController.Classes
 
         // Legend overlay (bitmap marker anchored to top-right of the current view)
         private GMapOverlay legendOverlay;
-        private string lastLegendSignature = "";
 
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
-
-        // NEW: allow form to control legend visibility (only show in full-screen)
-        public bool LegendOverlayEnabled { get; set; } = false;
 
         public MapManager(FormStart main)
         {
@@ -82,12 +78,10 @@ namespace RateController.Classes
             }
         }
 
-        public PointLatLng GetTractorPosition => cTractorPosition;
-
         public GMapControl gmapObject => gmap;
 
-        // Expose legend bins/colors for any external consumers if needed (e.g., exports)
-        public Dictionary<string, Color> Legend => cLegend;
+        // NEW: allow form to control legend visibility (only show in full-screen)
+        public bool LegendOverlayEnabled { get; set; } = false;
 
         public bool MouseSetTractorPosition
         {
@@ -126,6 +120,23 @@ namespace RateController.Classes
                 {
                     cZoneName = "Unnamed Zone";
                 }
+            }
+        }
+
+        public void ClearAppliedRatesOverlay()
+        {
+            try
+            {
+                overlayService.Reset();
+                if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
+                if (legendOverlay != null) legendOverlay.Markers.Clear();
+                cLegend = null;
+                gmap.Refresh();
+                MapChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/ClearAppliedRatesOverlay: " + ex.Message);
             }
         }
 
@@ -359,24 +370,6 @@ namespace RateController.Classes
             return legend;
         }
 
-        public void ClearAppliedRatesOverlay()
-        {
-            try
-            {
-                overlayService.Reset();
-                if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
-                if (legendOverlay != null) legendOverlay.Markers.Clear();
-                cLegend = null;
-                lastLegendSignature = "";
-                gmap.Refresh();
-                MapChanged?.Invoke(this, EventArgs.Empty);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapManager/ClearAppliedRatesOverlay: " + ex.Message);
-            }
-        }
-
         public void ShowAppliedRatesOverlay()
         {
             if (Props.MapShowRates)
@@ -408,7 +401,6 @@ namespace RateController.Classes
                 overlayService.Reset();
                 RemoveOverlay(AppliedOverlay);
                 if (legendOverlay != null) legendOverlay.Markers.Clear();
-                lastLegendSignature = "";
                 gmap.Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -736,7 +728,6 @@ namespace RateController.Classes
                     overlayService.Reset();
                     RemoveOverlay(AppliedOverlay);
                     if (legendOverlay != null) legendOverlay.Markers.Clear();
-                    lastLegendSignature = "";
                     gmap.Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -776,9 +767,6 @@ namespace RateController.Classes
                 return;
             }
 
-            string sig = LegendSignature(cLegend);
-            lastLegendSignature = sig;
-
             // Build bitmap
             const int itemHeight = 25;
             const int leftMargin = 10;
@@ -813,12 +801,6 @@ namespace RateController.Classes
                 Offset = new System.Drawing.Point(-legendWidth - leftMargin, leftMargin)
             };
             legendOverlay.Markers.Add(marker);
-        }
-
-        private static string LegendSignature(Dictionary<string, Color> legend)
-        {
-            if (legend == null || legend.Count == 0) return "";
-            return string.Join("|", legend.OrderBy(kv => kv.Key).Select(kv => kv.Key + ":" + kv.Value.ToArgb()));
         }
     }
 }
