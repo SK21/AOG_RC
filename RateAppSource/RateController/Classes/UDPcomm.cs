@@ -226,15 +226,39 @@ namespace RateController
                 // Receive all data
                 int msgLen = recvSocket.EndReceiveFrom(asyncResult, ref epSender);
 
-                byte[] localMsg = new byte[msgLen];
-                Array.Copy(buffer, localMsg, msgLen);
+                byte[] localMsg = null;
+                int port = 0;
+
+                if (msgLen > 0)
+                {
+                    localMsg = new byte[msgLen];
+                    Array.Copy(buffer, localMsg, msgLen);
+                    port = ((IPEndPoint)epSender).Port;
+                }
 
                 // Listen for more connections again...
-                recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epSender, new AsyncCallback(ReceiveData), epSender);
+                try
+                {
+                    EndPoint nextSender = new IPEndPoint(IPAddress.Any, 0);
+                    recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(ReceiveData), recvSocket);
+                }
+                catch (System.ObjectDisposedException)
+                {
+                    // socket closed during shutdown
+                }
 
-                int port = ((IPEndPoint)epSender).Port;
-                // Update status through a delegate
-                mf.Invoke(HandleDataDelegate, new object[] { port, localMsg });
+                // Update status through a delegate (avoid blocking the socket thread)
+                if (msgLen > 0 && HandleDataDelegate != null && mf != null && mf.IsHandleCreated && !mf.IsDisposed)
+                {
+                    try
+                    {
+                        mf.BeginInvoke(HandleDataDelegate, new object[] { port, localMsg });
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // form might be closing/disposed
+                    }
+                }
             }
             catch (System.ObjectDisposedException)
             {
