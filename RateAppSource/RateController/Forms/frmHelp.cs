@@ -64,7 +64,6 @@ namespace RateController
         {
             timer1.Enabled = false;
             timer1.Dispose();
-            Dispose();
 
             Props.SaveFormLocation(this);
             Close();
