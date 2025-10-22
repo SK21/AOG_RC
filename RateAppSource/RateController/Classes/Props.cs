@@ -958,7 +958,7 @@ namespace RateController.Classes
             cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
             cUseRateDisplay = bool.TryParse(GetProp("UseRateDisplay"), out bool rtd) ? rtd : false;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 40; i++)
             {
                 string key = "PressureCal_" + i.ToString();
                 if (double.TryParse(GetProp(key), out double pc)) PressureCals[i] = pc;
@@ -993,7 +993,7 @@ namespace RateController.Classes
                 if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
 
                 cActivityFileName = Path.Combine(ApplicationFolder, "Activity Log.txt");
-                if (!File.Exists(cErrorsFileName)) File.WriteAllText(cErrorsFileName, "");
+                if (!File.Exists(cActivityFileName)) File.WriteAllText(cActivityFileName, "");
 
                 LoadProperties();
                 Result = true;
