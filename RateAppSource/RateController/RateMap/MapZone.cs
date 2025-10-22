@@ -128,7 +128,6 @@ namespace RateController.Classes
                     };
                     polygons.Add(holePolygon);
                 }
-
             }
             catch (Exception ex)
             {

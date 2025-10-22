@@ -9,55 +9,8 @@ namespace RateController.Classes
 {
     public sealed class RateOverlayService
     {
-        private readonly CoverageTrail _trail = new CoverageTrail();
         private const double RateEpsilon = 1e-6;
-
-        public bool UpdateRatesOverlay(
-            GMapOverlay overlay,
-            IReadOnlyList<RateReading> readings,
-            PointLatLng tractorPos,
-            double headingDegrees,
-            double implementWidthMeters,
-            out Dictionary<string, Color> legend,
-            RateType legendType,
-            int rateIndex)
-        {
-            legend = new Dictionary<string, Color>();
-
-            try
-            {
-                if (overlay == null) return false;
-                if (readings == null || readings.Count == 0) return false;
-                if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
-
-                var last = readings.Last();
-
-                // Legend series follows user selection (Applied or Target)
-                IEnumerable<double> baseSeries = (legendType == RateType.Applied)
-                    ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
-                    : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
-
-                if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
-                    return false;
-
-                // Coverage is always drawn based on Applied > 0
-                double currApplied = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
-                if (currApplied > RateEpsilon)
-                {
-                    _trail.AddPoint(tractorPos, headingDegrees, currApplied, implementWidthMeters);
-                }
-
-                _trail.DrawTrail(overlay, minRate, maxRate);
-                legend = _trail.CreateLegend(minRate, maxRate, 5);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog($"RateOverlayService: {ex.Message}");
-                return false;
-            }
-        }
+        private readonly CoverageTrail _trail = new CoverageTrail();
 
         public bool BuildFromHistory(
             GMapOverlay overlay,
@@ -114,6 +67,53 @@ namespace RateController.Classes
         }
 
         public void Reset() => _trail.Reset();
+
+        public bool UpdateRatesOverlay(
+                            GMapOverlay overlay,
+            IReadOnlyList<RateReading> readings,
+            PointLatLng tractorPos,
+            double headingDegrees,
+            double implementWidthMeters,
+            out Dictionary<string, Color> legend,
+            RateType legendType,
+            int rateIndex)
+        {
+            legend = new Dictionary<string, Color>();
+
+            try
+            {
+                if (overlay == null) return false;
+                if (readings == null || readings.Count == 0) return false;
+                if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
+
+                var last = readings.Last();
+
+                // Legend series follows user selection (Applied or Target)
+                IEnumerable<double> baseSeries = (legendType == RateType.Applied)
+                    ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
+                    : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
+
+                if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
+                    return false;
+
+                // Coverage is always drawn based on Applied > 0
+                double currApplied = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
+                if (currApplied > RateEpsilon)
+                {
+                    _trail.AddPoint(tractorPos, headingDegrees, currApplied, implementWidthMeters);
+                }
+
+                _trail.DrawTrail(overlay, minRate, maxRate);
+                legend = _trail.CreateLegend(minRate, maxRate, 5);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog($"RateOverlayService: {ex.Message}");
+                return false;
+            }
+        }
 
         private static double BearingDegrees(PointLatLng a, PointLatLng b)
         {

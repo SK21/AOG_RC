@@ -57,7 +57,7 @@
             this.rbTarget.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbTarget.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbTarget.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbTarget.Location = new System.Drawing.Point(273, 40);
+            this.rbTarget.Location = new System.Drawing.Point(273, 76);
             this.rbTarget.Name = "rbTarget";
             this.rbTarget.Size = new System.Drawing.Size(89, 64);
             this.rbTarget.TabIndex = 357;
@@ -71,7 +71,7 @@
             this.rbApplied.Checked = true;
             this.rbApplied.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbApplied.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbApplied.Location = new System.Drawing.Point(134, 40);
+            this.rbApplied.Location = new System.Drawing.Point(134, 76);
             this.rbApplied.Name = "rbApplied";
             this.rbApplied.Size = new System.Drawing.Size(89, 64);
             this.rbApplied.TabIndex = 358;
@@ -145,9 +145,9 @@
             this.gbMap.Controls.Add(this.rbProductD);
             this.gbMap.Controls.Add(this.rbProductC);
             this.gbMap.Controls.Add(this.rbProductB);
-            this.gbMap.Location = new System.Drawing.Point(64, 136);
+            this.gbMap.Location = new System.Drawing.Point(64, 185);
             this.gbMap.Name = "gbMap";
-            this.gbMap.Size = new System.Drawing.Size(367, 103);
+            this.gbMap.Size = new System.Drawing.Size(376, 103);
             this.gbMap.TabIndex = 364;
             this.gbMap.TabStop = false;
             this.gbMap.Text = "Product to Display";

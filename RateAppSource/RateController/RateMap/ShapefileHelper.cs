@@ -133,18 +133,23 @@ namespace RateController.Classes
                                 case "Name":
                                     Name = feature.Attributes[kvp.Value].ToString();
                                     break;
+
                                 case "ProductA":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double ra2)) RateA = ra2;
                                     break;
+
                                 case "ProductB":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rb2)) RateB = rb2;
                                     break;
+
                                 case "ProductC":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rc2)) RateC = rc2;
                                     break;
+
                                 case "ProductD":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rd2)) RateD = rd2;
                                     break;
+
                                 case "Color":
                                     ZoneColor = ColorTranslator.FromHtml(feature.Attributes[kvp.Value].ToString());
                                     break;
