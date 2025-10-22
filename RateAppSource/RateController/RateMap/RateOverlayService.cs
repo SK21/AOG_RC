@@ -19,7 +19,7 @@ namespace RateController.Classes
             double headingDegrees,
             double implementWidthMeters,
             out Dictionary<string, Color> legend,
-            RateType rateType,
+            RateType legendType,
             int rateIndex)
         {
             legend = new Dictionary<string, Color>();
@@ -32,30 +32,23 @@ namespace RateController.Classes
 
                 var last = readings.Last();
 
-                // Current selected rate
-                double currRate = 0.0;
-                if (rateType == RateType.Applied && last.AppliedRates.Length > rateIndex)
-                    currRate = last.AppliedRates[rateIndex];
-                else if (rateType == RateType.Target && last.TargetRates.Length > rateIndex)
-                    currRate = last.TargetRates[rateIndex];
-
-                // Build series for scaling (exclude zero/near-zero and invalids)
-                IEnumerable<double> baseSeries = (rateType == RateType.Applied)
+                // Legend series follows user selection (Applied or Target)
+                IEnumerable<double> baseSeries = (legendType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
 
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                // Add only non-zero rate points to the trail
-                if (currRate > RateEpsilon)
+                // Coverage is always drawn based on Applied > 0
+                double currApplied = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
+                if (currApplied > RateEpsilon)
                 {
-                    _trail.AddPoint(tractorPos, headingDegrees, currRate, implementWidthMeters);
+                    _trail.AddPoint(tractorPos, headingDegrees, currApplied, implementWidthMeters);
                 }
 
-                // Render with robust min/max
                 _trail.DrawTrail(overlay, minRate, maxRate);
-                legend = _trail.CreateLegend(minRate, maxRate);
+                legend = _trail.CreateLegend(minRate, maxRate, 5);
 
                 return true;
             }
@@ -70,7 +63,7 @@ namespace RateController.Classes
             GMapOverlay overlay,
             IReadOnlyList<RateReading> readings,
             double implementWidthMeters,
-            RateType rateType,
+            RateType legendType,
             int rateIndex,
             out Dictionary<string, Color> legend)
         {
@@ -80,17 +73,19 @@ namespace RateController.Classes
                 if (overlay == null || readings == null || readings.Count < 2) return false;
                 if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
 
-                int maxLen = readings.Max(r => rateType == RateType.Applied ? (r.AppliedRates?.Length ?? 0) : (r.TargetRates?.Length ?? 0));
+                int maxLen = readings.Max(r => (r.AppliedRates?.Length ?? 0));
                 if (maxLen == 0) return false;
                 if (rateIndex >= maxLen) rateIndex = 0;
 
-                IEnumerable<double> baseSeries = (rateType == RateType.Applied)
+                // Legend series per selection
+                IEnumerable<double> baseSeries = (legendType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
 
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
+                // Rebuild trail from Applied only, skipping zeroes
                 _trail.Reset();
                 PointLatLng prev = new PointLatLng(readings[0].Latitude, readings[0].Longitude);
                 for (int i = 0; i < readings.Count; i++)
@@ -99,21 +94,16 @@ namespace RateController.Classes
                     var curr = new PointLatLng(r.Latitude, r.Longitude);
                     double heading = i == 0 ? 0.0 : BearingDegrees(prev, curr);
 
-                    double rate = 0.0;
-                    if (rateType == RateType.Applied && r.AppliedRates.Length > rateIndex)
-                        rate = r.AppliedRates[rateIndex];
-                    else if (rateType == RateType.Target && r.TargetRates.Length > rateIndex)
-                        rate = r.TargetRates[rateIndex];
-
-                    if (rate > RateEpsilon)
+                    double applied = (r.AppliedRates.Length > rateIndex) ? r.AppliedRates[rateIndex] : 0.0;
+                    if (applied > RateEpsilon)
                     {
-                        _trail.AddPoint(curr, heading, rate, implementWidthMeters);
+                        _trail.AddPoint(curr, heading, applied, implementWidthMeters);
                     }
                     prev = curr;
                 }
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
-                legend = _trail.CreateLegend(minRate, maxRate);
+                legend = _trail.CreateLegend(minRate, maxRate, 5);
                 return true;
             }
             catch (Exception ex)
@@ -167,7 +157,6 @@ namespace RateController.Classes
                 }
             }
 
-            // If collapsed, pad by 5% (or at least 1 unit) for visible gradient
             if (Math.Abs(maxRate - minRate) < 1e-9)
             {
                 double pad = Math.Max(0.05 * maxRate, 1.0);

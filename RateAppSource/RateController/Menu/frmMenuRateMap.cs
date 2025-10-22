@@ -4,9 +4,12 @@ using RateController.Classes;
 using RateController.Forms;
 using RateController.Language;
 using System;
+using System.Collections.Generic; // FIX: needed for Dictionary<,>
 using System.Drawing;
 using System.IO;
+using System.Linq;                 // FIX: needed for OrderBy/Select in LegendSignature
 using System.Windows.Forms;
+using System.Reflection; // add
 
 namespace RateController.Menu
 {
@@ -28,6 +31,11 @@ namespace RateController.Menu
         private int PressureTop = 0;
         private bool updatingZoom = false;
 
+        // NEW: debounce + caching for legend
+        private System.Windows.Forms.Timer legendRefreshTimer;
+        private bool legendRefreshPending;
+        private string lastLegendSignature = "";
+
         public frmMenuRateMap(FormStart main, frmMenu menu)
         {
             InitializeComponent();
@@ -35,6 +43,13 @@ namespace RateController.Menu
             mf = main;
             this.Tag = false;
             InitializeColorComboBox();
+
+            // Legend debouncer
+            legendRefreshTimer = new System.Windows.Forms.Timer();
+            legendRefreshTimer.Interval = 150; // ms
+            legendRefreshTimer.Tick += LegendRefreshTimer_Tick;
+
+            EnableDoubleBuffering(legendPanel);
         }
 
         public void SetSelectedColor(Color color)
@@ -212,7 +227,7 @@ namespace RateController.Menu
                         fs.Top = PicTop + this.Top + mf.Height + 10;
                     }
                 }
-                if (Props.MapShowRates) ShowLegend();
+                if (Props.MapShowRates) RequestLegendRefresh();
             }
             else
             {
@@ -239,7 +254,7 @@ namespace RateController.Menu
                         fs.Top = PressureTop;
                     }
                 }
-                legendPanel.Visible = false;
+                legendPanel.Visible = false; // hide legend when not full screen
             }
             mf.Tls.Manager.ZoomToFit();
         }
@@ -253,6 +268,7 @@ namespace RateController.Menu
         {
             Props.MapShowRates = ckRateData.Checked;
             mf.Tls.Manager.ShowAppliedRatesOverlay();
+            RequestLegendRefresh(); // reflect visibility and new ranges
         }
 
         private void ckZones_CheckedChanged(object sender, EventArgs e)
@@ -355,9 +371,11 @@ namespace RateController.Menu
             PositionForm();
         }
 
+        // Rebuild the panel legend whenever the map/legend changes or the toggle is used
         private void Manager_MapChanged(object sender, EventArgs e)
         {
             UpdateForm();
+            RequestLegendRefresh();
         }
 
         private void mnuRateMap_FormClosed(object sender, FormClosedEventArgs e)
@@ -406,6 +424,8 @@ namespace RateController.Menu
             ckRateData.Checked = Props.MapShowRates;
             mf.Tls.Manager.LoadMap();
             mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
+
+            RequestLegendRefresh(); // initial legend (only if full-screen)
         }
 
         private void PositionForm()
@@ -426,66 +446,67 @@ namespace RateController.Menu
         {
             try
             {
-                // Position the legendPanel relative to pictureBox1.
+                // Get current legend from MapManager; if missing but rates are ON, force a one-time rebuild.
+                var legend = mf.Tls.Manager.Legend;
+                if (Props.MapShowRates && (legend == null || legend.Count == 0))
+                {
+                    // This will also not draw anything if there are no readings yet.
+                    mf.Tls.Manager.ShowAppliedLayer();
+                    legend = mf.Tls.Manager.Legend;
+                }
+
+                if (!Props.MapShowRates || legend == null || legend.Count == 0)
+                {
+                    legendPanel.Controls.Clear();
+                    legendPanel.Visible = false;
+                    return;
+                }
+
+                // Position relative to the map area and ensure it sits above it.
                 legendPanel.Left = pictureBox1.Left + 10;
                 legendPanel.Top = pictureBox1.Top + 10;
 
-                // Define constants for margins and component sizes.
-                int minPanelWidth = 150;            // Minimum fixed width.
-                int leftMargin = 10;                // Left margin inside the panel.
-                int colorBoxWidth = 20;             // Width of the color box.
-                int gapBetween = 10;                // Gap between the color box and label.
-                int rightMargin = 10;               // Right margin inside the panel.
+                int minPanelWidth = 150;
+                int leftMargin = 10;
+                int colorBoxWidth = 20;
+                int gapBetween = 10;
+                int rightMargin = 10;
 
-                // Initially, use the minimum panel width.
-                int panelWidth = minPanelWidth;
-
-                // Set a border on the legendPanel.
                 legendPanel.BorderStyle = BorderStyle.FixedSingle;
-
-                // Clear any existing legend items.
                 legendPanel.Controls.Clear();
 
                 int yOffset = 10;
-                int maxLabelWidth = 0;  // Track the widest label.
+                int maxLabelWidth = 0;
 
-                // Loop through each legend entry.
-                foreach (var entry in mf.Tls.Manager.Legend)
+                foreach (var entry in legend)
                 {
-                    // Create a color box.
-                    Panel colorBox = new Panel
+                    var colorBox = new Panel
                     {
                         Size = new Size(colorBoxWidth, 20),
                         BackColor = entry.Value,
-                        Location = new Point(leftMargin, yOffset) // Relative to legendPanel.
+                        Location = new Point(leftMargin, yOffset)
                     };
-
-                    // Create a label displaying the range.
-                    Label label = new Label
+                    var label = new Label
                     {
                         Text = entry.Key,
                         AutoSize = true,
                         Location = new Point(leftMargin + colorBoxWidth + gapBetween, yOffset)
                     };
 
-                    // Measure the text size of the label.
                     Size textSize = TextRenderer.MeasureText(entry.Key, label.Font);
-                    if (textSize.Width > maxLabelWidth)
-                        maxLabelWidth = textSize.Width;
+                    if (textSize.Width > maxLabelWidth) maxLabelWidth = textSize.Width;
 
                     legendPanel.Controls.Add(colorBox);
                     legendPanel.Controls.Add(label);
 
-                    yOffset += 20 + 10; // Increment y-offset for the next row.
+                    yOffset += 30;
                 }
 
-                // Calculate the required width: left margin + color box width + gap + widest label + right margin.
                 int requiredWidth = leftMargin + colorBoxWidth + gapBetween + maxLabelWidth + rightMargin;
-                panelWidth = Math.Max(minPanelWidth, requiredWidth);
+                legendPanel.Size = new Size(Math.Max(minPanelWidth, requiredWidth), yOffset);
 
-                // Set the legendPanel's size with the computed width and the computed height.
-                legendPanel.Size = new Size(panelWidth, yOffset);
-                legendPanel.Visible = Props.MapShowRates;
+                legendPanel.Visible = true;
+                legendPanel.BringToFront(); // make sure it’s not hidden behind the map control
             }
             catch (Exception ex)
             {
@@ -668,6 +689,143 @@ namespace RateController.Menu
         {
             if (!updatingZoom)
                 UpdateMapZoom();
+        }
+
+        private void RequestLegendRefresh()
+        {
+            // Only show legend in full-screen mode
+            if (!ckFullScreen.Checked)
+            {
+                legendPanel.Visible = false;
+                return;
+            }
+
+            // Defer updates to coalesce rapid map/legend changes
+            legendRefreshPending = true;
+            if (!legendRefreshTimer.Enabled) legendRefreshTimer.Start();
+        }
+
+        private void LegendRefreshTimer_Tick(object sender, EventArgs e)
+        {
+            if (!legendRefreshPending)
+            {
+                legendRefreshTimer.Stop();
+                return;
+            }
+            legendRefreshPending = false;
+            RebuildLegendPanel();
+        }
+
+        // Rebuilds the legend panel if needed. Call via RequestLegendRefresh().
+        private void RebuildLegendPanel()
+        {
+            try
+            {
+                // Only show legend in full-screen mode
+                if (!ckFullScreen.Checked || !Props.MapShowRates)
+                {
+                    legendPanel.Controls.Clear();
+                    legendPanel.Visible = false;
+                    return;
+                }
+
+                var legend = mf.Tls.Manager.Legend;
+                // If legend hasn't been generated yet but rates are on, try once to build from current overlay.
+                if (legend == null || legend.Count == 0)
+                {
+                    mf.Tls.Manager.ShowAppliedLayer(); // no-op if no readings; may update legend
+                    legend = mf.Tls.Manager.Legend;
+                }
+
+                if (legend == null || legend.Count == 0)
+                {
+                    legendPanel.Controls.Clear();
+                    legendPanel.Visible = false;
+                    return;
+                }
+
+                string sig = LegendSignature(legend);
+                if (sig == lastLegendSignature && legendPanel.Visible)
+                {
+                    // Only reposition to avoid flicker
+                    legendPanel.Left = pictureBox1.Left + 10;
+                    legendPanel.Top = pictureBox1.Top + 10;
+                    legendPanel.BringToFront();
+                    return;
+                }
+
+                lastLegendSignature = sig;
+
+                legendPanel.SuspendLayout();
+                legendPanel.Controls.Clear();
+
+                // Position relative to the map
+                legendPanel.Left = pictureBox1.Left + 10;
+                legendPanel.Top = pictureBox1.Top + 10;
+
+                int minPanelWidth = 150;
+                int leftMargin = 10;
+                int colorBoxWidth = 20;
+                int gapBetween = 10;
+                int rightMargin = 10;
+
+                legendPanel.BorderStyle = BorderStyle.FixedSingle;
+
+                int yOffset = 10;
+                int maxLabelWidth = 0;
+
+                foreach (var entry in legend)
+                {
+                    var colorBox = new Panel
+                    {
+                        Size = new Size(colorBoxWidth, 20),
+                        BackColor = entry.Value,
+                        Location = new Point(leftMargin, yOffset)
+                    };
+                    var label = new Label
+                    {
+                        Text = entry.Key,
+                        AutoSize = true,
+                        Location = new Point(leftMargin + colorBoxWidth + gapBetween, yOffset)
+                    };
+
+                    Size textSize = TextRenderer.MeasureText(entry.Key, label.Font);
+                    if (textSize.Width > maxLabelWidth) maxLabelWidth = textSize.Width;
+
+                    legendPanel.Controls.Add(colorBox);
+                    legendPanel.Controls.Add(label);
+
+                    yOffset += 30;
+                }
+
+                int requiredWidth = leftMargin + colorBoxWidth + gapBetween + maxLabelWidth + rightMargin;
+                legendPanel.Size = new Size(Math.Max(minPanelWidth, requiredWidth), yOffset);
+                legendPanel.Visible = true;
+                legendPanel.BringToFront();
+                legendPanel.ResumeLayout(true);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuRateMap/RebuildLegendPanel: " + ex.Message);
+            }
+        }
+
+        private static void EnableDoubleBuffering(Control c)
+        {
+            try
+            {
+                typeof(Control).GetProperty("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance)
+                               ?.SetValue(c, true, null);
+            }
+            catch { /* ignore if not supported */ }
+        }
+
+        private static string LegendSignature(Dictionary<string, Color> legend)
+        {
+            if (legend == null || legend.Count == 0) return "";
+            // Order for stable comparison
+            return string.Join("|", legend.OrderBy(kv => kv.Key)
+                                          .Select(kv => kv.Key + ":" + kv.Value.ToArgb()));
         }
     }
 }

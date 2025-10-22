@@ -17,7 +17,6 @@ namespace RateController.Classes
             public double Rate;
             public double ImplementWidthMeters;
 
-            // Rectangle corners (computed once to support "turn wedges")
             public PointLatLng PrevLeft;
             public PointLatLng PrevRight;
             public PointLatLng CurrLeft;
@@ -25,6 +24,16 @@ namespace RateController.Classes
         }
 
         private const double RateEpsilon = 1e-6;
+
+        // Distinctive green palette (light -> dark), avoiding near-white tones
+        private static readonly Color[] GreenPalette = new[]
+        {
+            Color.FromArgb(0xA1, 0xD9, 0x9B), // light green (no near-white)
+            Color.FromArgb(0x74, 0xC4, 0x76), // medium-light green
+            Color.FromArgb(0x31, 0xA3, 0x54), // medium green
+            Color.FromArgb(0x23, 0x8B, 0x45), // dark green
+            Color.FromArgb(0x00, 0x6D, 0x2C)  // very dark green
+        };
 
         private readonly List<Segment> _segments = new List<Segment>();
         private bool _hasPrev;
@@ -107,7 +116,7 @@ namespace RateController.Classes
                         seg.PrevLeft
                     };
 
-                    var color = ColorScale.Interpolate(minRate, maxRate, seg.Rate);
+                    var color = GetBandColor(minRate, maxRate, seg.Rate);
                     var poly = new GMapPolygon(polyPoints, "swath")
                     {
                         Stroke = new Pen(Color.FromArgb(160, color), 1),
@@ -116,7 +125,7 @@ namespace RateController.Classes
                     overlay.Polygons.Add(poly);
                 }
 
-                // Fill "turn wedges" only if both adjacent segments have non-zero rate
+                // Fill wedges only if both adjacent are non-zero
                 for (int i = 1; i < _segments.Count; i++)
                 {
                     var prev = _segments[i - 1];
@@ -134,7 +143,7 @@ namespace RateController.Classes
                             center,
                             prev.CurrLeft
                         };
-                        var c = ColorScale.Interpolate(minRate, maxRate, curr.Rate);
+                        var c = GetBandColor(minRate, maxRate, curr.Rate);
                         var poly = new GMapPolygon(leftWedge, "turn_left")
                         {
                             Stroke = new Pen(Color.FromArgb(0, c), 0),
@@ -152,7 +161,7 @@ namespace RateController.Classes
                             center,
                             prev.CurrRight
                         };
-                        var c = ColorScale.Interpolate(minRate, maxRate, curr.Rate);
+                        var c = GetBandColor(minRate, maxRate, curr.Rate);
                         var poly = new GMapPolygon(rightWedge, "turn_right")
                         {
                             Stroke = new Pen(Color.FromArgb(0, c), 0),
@@ -164,10 +173,11 @@ namespace RateController.Classes
             }
         }
 
-        public Dictionary<string, Color> CreateLegend(double minRate, double maxRate, int steps = 6)
+        public Dictionary<string, Color> CreateLegend(double minRate, double maxRate, int steps = 5)
         {
+            // Force exactly 5 steps with the palette above
+            steps = 5;
             var legend = new Dictionary<string, Color>();
-            if (steps < 1) steps = 1;
 
             if (double.IsNaN(minRate) || double.IsNaN(maxRate) || maxRate <= minRate)
             {
@@ -175,12 +185,12 @@ namespace RateController.Classes
                 return legend;
             }
 
-            double step = (maxRate - minRate) / steps;
+            double band = (maxRate - minRate) / steps;
             for (int i = 0; i < steps; i++)
             {
-                double a = minRate + (i * step);
-                double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * step);
-                var color = ColorScale.Interpolate(minRate, maxRate, (a + b) / 2.0);
+                double a = minRate + (i * band);
+                double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
+                var color = GreenPalette[Math.Min(i, GreenPalette.Length - 1)];
                 legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
             }
             return legend;
@@ -194,6 +204,15 @@ namespace RateController.Classes
                 _hasPrev = false;
                 _prev = new PointLatLng(0, 0);
             }
+        }
+
+        private static Color GetBandColor(double minRate, double maxRate, double value)
+        {
+            if (maxRate <= minRate) return GreenPalette[0];
+            double t = (value - minRate) / (maxRate - minRate);
+            if (t < 0) t = 0; if (t > 1) t = 1;
+            int idx = (int)Math.Min(GreenPalette.Length - 1, Math.Floor(t * GreenPalette.Length));
+            return GreenPalette[idx];
         }
 
         private static bool ShouldFillWedge(PointLatLng a, PointLatLng b)
