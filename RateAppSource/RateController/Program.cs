@@ -15,13 +15,15 @@ namespace RateController
         static void Main()
         {
             // check AOG language setting
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AgOpenGPS");
-            if (regKey != null)
+            using (var regKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AgOpenGPS"))
             {
-                Settings.Default.AOG_language = regKey.GetValue("Language").ToString();
-                Settings.Default.Save();
+                var lang = regKey?.GetValue("Language") as string;
+                if (!string.IsNullOrWhiteSpace(lang))
+                {
+                    Settings.Default.AOG_language = lang;
+                    Settings.Default.Save();
+                }
             }
-            regKey.Close();
 
             if (Settings.Default.setF_culture == "")
             {

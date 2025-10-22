@@ -85,22 +85,25 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 byte ModuleID = Data[2];
-                cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
-                cInoType[ModuleID] = Data[10];
-                cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
-                cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
+                if (ModuleID <= Props.MaxModules)
+                {
+                    cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
+                    cInoType[ModuleID] = Data[10];
+                    cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
+                    cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
 
-                // wifi strength
-                cWifiSignal[ModuleID] = 0;
-                if ((Data[13] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
-                if ((Data[13] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
-                if ((Data[13] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
+                    // wifi strength
+                    cWifiSignal[ModuleID] = 0;
+                    if ((Data[13] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
+                    if ((Data[13] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
+                    if ((Data[13] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
 
-                cEthernetConnected[ModuleID] = ((Data[13] & 0b00010000) == 0b00010000);
-                cGoodPins[ModuleID] = ((Data[13] & 0b00100000) == 0b00100000);
+                    cEthernetConnected[ModuleID] = ((Data[13] & 0b00010000) == 0b00010000);
+                    cGoodPins[ModuleID] = ((Data[13] & 0b00100000) == 0b00100000);
 
-                ReceiveTime[ModuleID] = DateTime.Now;
-                Result = true;
+                    ReceiveTime[ModuleID] = DateTime.Now;
+                    Result = true;
+                }
             }
             UpdateActivity();
             return Result;

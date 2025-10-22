@@ -413,3 +413,29 @@ fp-info-cache
 
 # Visual Micro stuff
 __vm/
+
+# Repo hygiene (explicit app paths)
+RateController/bin/
+RateController/obj/
+
+# VS "absolute path" file lists (should never be committed)
+**/*.csproj.FileListAbsolute.txt
+**/*.vbproj.FileListAbsolute.txt
+**/*.vcxproj.FileListAbsolute.txt
+
+# Visual Micro and Arduino/Teensy/ESP32 firmware artifacts (Modules only)
+__vm/
+*.vsarduino.h
+Modules/**/*.[Hh][Ee][Xx]
+Modules/**/*.[Ee][Ll][Ff]
+Modules/**/*.[Ee][Ee][Pp]
+Modules/**/*.[Bb][Ii][Nn]
+Modules/**/*.[Mm][Aa][Pp]
+Modules/**/[Bb]uild*/
+Modules/**/[Dd]ebug*/
+Modules/**/[Rr]elease*/
+
+# Optional: runtime logs (keep this narrow)
+RateController/**/Activity Log.txt
+RateController/**/Error Log.txt
+RateController/**/Ethernet Log.txt
