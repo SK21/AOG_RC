@@ -46,7 +46,6 @@
             this.lbP1 = new System.Windows.Forms.Label();
             this.tbP1 = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
-            this.legendPanel = new System.Windows.Forms.Panel();
             this.ckSatView = new System.Windows.Forms.CheckBox();
             this.ckFullScreen = new System.Windows.Forms.CheckBox();
             this.VSzoom = new System.Windows.Forms.VScrollBar();
@@ -267,14 +266,6 @@
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
             // 
-            // legendPanel
-            // 
-            this.legendPanel.Location = new System.Drawing.Point(133, 356);
-            this.legendPanel.Name = "legendPanel";
-            this.legendPanel.Size = new System.Drawing.Size(239, 245);
-            this.legendPanel.TabIndex = 359;
-            this.legendPanel.Visible = false;
-            // 
             // ckSatView
             // 
             this.ckSatView.Appearance = System.Windows.Forms.Appearance.Button;
@@ -406,7 +397,6 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.VSzoom);
             this.Controls.Add(this.gbZone);
-            this.Controls.Add(this.legendPanel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6);
@@ -449,7 +439,6 @@
         private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.CheckBox ckRateData;
-        private System.Windows.Forms.Panel legendPanel;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.CheckBox ckEditZones;
     }

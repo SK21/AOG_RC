@@ -6,7 +6,7 @@ using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
+using System.Linq; // added for Legend signature ordering
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -15,7 +15,6 @@ namespace RateController.Classes
     {
         private const int MapRefreshSeconds = 2;
 
-        // Overlay service for coverage
         private readonly RateOverlayService overlayService = new RateOverlayService();
 
         private GMapOverlay AppliedOverlay;
@@ -35,11 +34,18 @@ namespace RateController.Classes
         private bool isDragging = false;
         private System.Drawing.Point lastMousePosition;
 
+        // Legend overlay (bitmap marker anchored to top-right of the current view)
+        private GMapOverlay legendOverlay;
+        private string lastLegendSignature = "";
+
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
+
+        // NEW: allow form to control legend visibility (only show in full-screen)
+        public bool LegendOverlayEnabled { get; set; } = false;
 
         public MapManager(FormStart main)
         {
@@ -80,7 +86,7 @@ namespace RateController.Classes
 
         public GMapControl gmapObject => gmap;
 
-        // Expose legend bins/colors for the form panel legend
+        // Expose legend bins/colors for any external consumers if needed (e.g., exports)
         public Dictionary<string, Color> Legend => cLegend;
 
         public bool MouseSetTractorPosition
@@ -340,8 +346,11 @@ namespace RateController.Classes
                     gmap.Overlays.Add(AppliedOverlay);
                 }
 
+                // Draw/refresh legend overlay on the map (respects LegendOverlayEnabled)
+                UpdateLegendOverlay();
+
                 gmap.Refresh();
-                MapChanged?.Invoke(this, EventArgs.Empty); // notify UI legend to rebuild
+                MapChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -356,9 +365,11 @@ namespace RateController.Classes
             {
                 overlayService.Reset();
                 if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
+                if (legendOverlay != null) legendOverlay.Markers.Clear();
                 cLegend = null;
+                lastLegendSignature = "";
                 gmap.Refresh();
-                MapChanged?.Invoke(this, EventArgs.Empty); // update panel legend visibility
+                MapChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -396,8 +407,10 @@ namespace RateController.Classes
                 AppliedOverlayTimer.Enabled = false;
                 overlayService.Reset();
                 RemoveOverlay(AppliedOverlay);
+                if (legendOverlay != null) legendOverlay.Markers.Clear();
+                lastLegendSignature = "";
                 gmap.Refresh();
-                MapChanged?.Invoke(this, EventArgs.Empty); // hide panel legend
+                MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -638,7 +651,9 @@ namespace RateController.Classes
 
         private void Gmap_OnMapZoomChanged()
         {
-            MapChanged?.Invoke(this, EventArgs.Empty); // panel legend will reposition/refresh
+            // Reposition legend overlay with the current view
+            UpdateLegendOverlay();
+            MapChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void InitializeMap()
@@ -679,6 +694,7 @@ namespace RateController.Classes
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
             AppliedOverlay = new GMapOverlay("AppliedRates");
+            legendOverlay = new GMapOverlay("legend");
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green);
             gpsMarkerOverlay.Markers.Add(tractorMarker);
@@ -687,6 +703,7 @@ namespace RateController.Classes
             AddOverlay(tempMarkerOverlay);
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
+            AddOverlay(legendOverlay);
             gmap.Refresh();
         }
 
@@ -718,6 +735,8 @@ namespace RateController.Classes
                     AppliedOverlayTimer.Enabled = false;
                     overlayService.Reset();
                     RemoveOverlay(AppliedOverlay);
+                    if (legendOverlay != null) legendOverlay.Markers.Clear();
+                    lastLegendSignature = "";
                     gmap.Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -742,6 +761,64 @@ namespace RateController.Classes
             {
                 Props.WriteErrorLog("MapManager/RemoveLayer: " + ex.Message);
             }
+        }
+
+        private void UpdateLegendOverlay()
+        {
+            if (legendOverlay == null) return;
+
+            legendOverlay.Markers.Clear();
+
+            // Only render legend overlay if enabled, rates are on, and legend data available
+            if (!LegendOverlayEnabled || !Props.MapShowRates || cLegend == null || cLegend.Count == 0)
+            {
+                gmap.Refresh();
+                return;
+            }
+
+            string sig = LegendSignature(cLegend);
+            lastLegendSignature = sig;
+
+            // Build bitmap
+            const int itemHeight = 25;
+            const int leftMargin = 10;
+            const int swatch = 20;
+            const int gap = 10;
+            const int rightMargin = 10;
+            int legendHeight = (cLegend.Count * itemHeight) + (leftMargin * 2);
+            int legendWidth = Math.Max(120, leftMargin + swatch + gap + 80 + rightMargin);
+
+            var bmp = new Bitmap(legendWidth, legendHeight);
+            using (var g2 = Graphics.FromImage(bmp))
+            {
+                g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g2.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.White)), 0, 0, legendWidth, legendHeight);
+
+                int y = leftMargin;
+                foreach (var item in cLegend)
+                {
+                    using (var brush = new SolidBrush(item.Value))
+                    {
+                        g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
+                        g2.DrawRectangle(Pens.Black, leftMargin, y + 3, swatch, swatch);
+                    }
+                    g2.DrawString(item.Key, new Font("Arial", 8), Brushes.Black, new PointF(leftMargin + swatch + gap, y + 4));
+                    y += itemHeight;
+                }
+            }
+
+            // Anchor legend at top-right of the current view
+            var marker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Right), bmp)
+            {
+                Offset = new System.Drawing.Point(-legendWidth - leftMargin, leftMargin)
+            };
+            legendOverlay.Markers.Add(marker);
+        }
+
+        private static string LegendSignature(Dictionary<string, Color> legend)
+        {
+            if (legend == null || legend.Count == 0) return "";
+            return string.Join("|", legend.OrderBy(kv => kv.Key).Select(kv => kv.Key + ":" + kv.Value.ToArgb()));
         }
     }
 }
