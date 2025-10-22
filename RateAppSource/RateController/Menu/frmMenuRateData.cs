@@ -42,9 +42,11 @@ namespace RateController.Forms
             if (Result)
             {
                 mf.Tls.RateCollector.ClearReadings();
+
+                // Immediately clear coverage overlay and legend from the map
+                mf.Tls.Manager.ClearAppliedRatesOverlay();
             }
         }
-
         private void btnImport_Click(object sender, EventArgs e)
         {
             try

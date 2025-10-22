@@ -287,11 +287,11 @@ namespace RateController.Classes
                 var readings = mf.Tls.RateCollector.GetReadings().ToList();
                 if (readings == null || readings.Count == 0)
                 {
-                    Props.WriteErrorLog("MapManager: No rate readings available");
+                    // No data: clear coverage and legend
+                    ClearAppliedRatesOverlay();
                     return legend;
                 }
 
-                // Implement width (meters)
                 double implementWidth = 24.0;
                 if (mf.Sections != null)
                 {
@@ -299,7 +299,6 @@ namespace RateController.Classes
                     catch (Exception ex) { Props.WriteErrorLog($"MapManager: implement width - {ex.Message}"); }
                 }
 
-                // Try live incremental update
                 bool success = overlayService.UpdateRatesOverlay(
                     AppliedOverlay,
                     readings,
@@ -311,7 +310,6 @@ namespace RateController.Classes
                     Props.RateDisplayProduct
                 );
 
-                // Fallback: rebuild from saved history so past coverage renders immediately
                 if (!success || AppliedOverlay.Polygons.Count == 0 || (cTractorPosition.Lat == 0 && cTractorPosition.Lng == 0))
                 {
                     Dictionary<string, Color> legendFromHistory;
@@ -333,7 +331,9 @@ namespace RateController.Classes
 
                 if (!success)
                 {
-                    Props.WriteErrorLog("MapManager: Failed to update rates overlay");
+                    // All-zero series or failure: clear coverage so nothing stale remains
+                    ClearAppliedRatesOverlay();
+                    return legend;
                 }
 
                 cLegend = new Dictionary<string, Color>(legend);
@@ -360,6 +360,12 @@ namespace RateController.Classes
                 try
                 {
                     if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
+
+                    // Ensure a clean state when turning back on
+                    overlayService.Reset();
+                    AppliedOverlay.Polygons.Clear();
+                    if (legendOverlay != null) legendOverlay.Markers.Clear();
+
                     AddOverlay(AppliedOverlay);
                     cLegend = ShowAppliedLayer();
 
@@ -757,6 +763,22 @@ namespace RateController.Classes
             var legendMarker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Right), legendBitmap);
             legendMarker.Offset = new System.Drawing.Point(-LEGEND_WIDTH - LEGEND_MARGIN, LEGEND_MARGIN);
             legendOverlay.Markers.Add(legendMarker);
+        }
+
+        public void ClearAppliedRatesOverlay()
+        {
+            try
+            {
+                overlayService.Reset();
+                if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
+                if (legendOverlay != null) legendOverlay.Markers.Clear();
+                cLegend = null;
+                gmap.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/ClearAppliedRatesOverlay: " + ex.Message);
+            }
         }
     }
 }

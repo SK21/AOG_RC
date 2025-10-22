@@ -6,11 +6,6 @@ using GMap.NET.WindowsForms;
 
 namespace RateController.Classes
 {
-    /// <summary>
-    /// Maintains a list of coverage swath rectangles between successive GPS points,
-    /// computed from implement width and motion vector. Provides rendering and legend.
-    /// Adds "turn wedges" to fill gaps that appear on sharp heading changes.
-    /// </summary>
     public class CoverageTrail
     {
         private readonly object _lock = new object();
@@ -29,14 +24,12 @@ namespace RateController.Classes
             public PointLatLng CurrRight;
         }
 
+        private const double RateEpsilon = 1e-6;
+
         private readonly List<Segment> _segments = new List<Segment>();
         private bool _hasPrev;
         private PointLatLng _prev;
 
-        /// <summary>
-        /// Add the next point of travel. Creates a segment with the implement swath coverage
-        /// between previous and current points using the last known motion vector.
-        /// </summary>
         public void AddPoint(PointLatLng pos, double headingDeg, double rate, double implementWidthMeters)
         {
             lock (_lock)
@@ -50,7 +43,6 @@ namespace RateController.Classes
 
                 if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
 
-                // If no movement, synthesize a tiny forward movement based on heading, to avoid zero-area polygons.
                 var prev = _prev;
                 var curr = pos;
 
@@ -73,7 +65,6 @@ namespace RateController.Classes
                     curr = new PointLatLng(prev.Lat + dLat, prev.Lng + dLng);
                 }
 
-                // Compute and store rectangle corners for the segment
                 PointLatLng prevLeft, prevRight, currLeft, currRight;
                 ComputeCorners(prev, curr, implementWidthMeters, out prevLeft, out prevRight, out currLeft, out currRight);
 
@@ -93,10 +84,6 @@ namespace RateController.Classes
             }
         }
 
-        /// <summary>
-        /// Draws the swath polygons on the provided overlay. Colors are mapped by rate against [minRate, maxRate].
-        /// Also fills the inner "wedge" gaps that happen on sharp turns between consecutive segments.
-        /// </summary>
         public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate)
         {
             if (overlay == null) return;
@@ -105,17 +92,19 @@ namespace RateController.Classes
             {
                 overlay.Polygons.Clear();
 
-                // Draw segment rectangles
+                // Draw only non-zero-rate segments
                 for (int i = 0; i < _segments.Count; i++)
                 {
                     var seg = _segments[i];
+                    if (seg.Rate <= RateEpsilon) continue;
+
                     var polyPoints = new List<PointLatLng>
                     {
                         seg.PrevLeft,
                         seg.PrevRight,
                         seg.CurrRight,
                         seg.CurrLeft,
-                        seg.PrevLeft // close polygon
+                        seg.PrevLeft
                     };
 
                     var color = ColorScale.Interpolate(minRate, maxRate, seg.Rate);
@@ -127,14 +116,15 @@ namespace RateController.Classes
                     overlay.Polygons.Add(poly);
                 }
 
-                // Fill "turn wedges" between consecutive segments
+                // Fill "turn wedges" only if both adjacent segments have non-zero rate
                 for (int i = 1; i < _segments.Count; i++)
                 {
                     var prev = _segments[i - 1];
                     var curr = _segments[i];
-                    var center = curr.Prev; // shared center point between segments
+                    if (prev.Rate <= RateEpsilon || curr.Rate <= RateEpsilon) continue;
 
-                    // If the left edges at the shared point diverge enough, fill the inner wedge
+                    var center = curr.Prev;
+
                     if (ShouldFillWedge(prev.CurrLeft, curr.PrevLeft))
                     {
                         var leftWedge = new List<PointLatLng>
@@ -147,13 +137,12 @@ namespace RateController.Classes
                         var c = ColorScale.Interpolate(minRate, maxRate, curr.Rate);
                         var poly = new GMapPolygon(leftWedge, "turn_left")
                         {
-                            Stroke = new Pen(Color.FromArgb(0, c), 0), // no visible stroke
+                            Stroke = new Pen(Color.FromArgb(0, c), 0),
                             Fill = new SolidBrush(Color.FromArgb(70, c))
                         };
                         overlay.Polygons.Add(poly);
                     }
 
-                    // Same for right edge wedge
                     if (ShouldFillWedge(prev.CurrRight, curr.PrevRight))
                     {
                         var rightWedge = new List<PointLatLng>
@@ -175,9 +164,6 @@ namespace RateController.Classes
             }
         }
 
-        /// <summary>
-        /// Builds a simple N-step legend mapping textual ranges to representative colors.
-        /// </summary>
         public Dictionary<string, Color> CreateLegend(double minRate, double maxRate, int steps = 6)
         {
             var legend = new Dictionary<string, Color>();
@@ -200,9 +186,6 @@ namespace RateController.Classes
             return legend;
         }
 
-        /// <summary>
-        /// Clears all segments and previous position.
-        /// </summary>
         public void Reset()
         {
             lock (_lock)
@@ -215,17 +198,13 @@ namespace RateController.Classes
 
         private static bool ShouldFillWedge(PointLatLng a, PointLatLng b)
         {
-            // Use a small geographic threshold to avoid creating degenerate tiny triangles.
-            // ~0.05 meters in lat/long degrees near mid-latitudes.
             const double metersPerDegLat = 111320.0;
-            // Convert difference to meters assuming similar latitude for both points
             double dLat = (a.Lat - b.Lat) * metersPerDegLat;
-            // Approximate meters/deg lng using latitude of point a
             double metersPerDegLng = metersPerDegLat * Math.Cos(a.Lat * Math.PI / 180.0);
             double dLng = (a.Lng - b.Lng) * metersPerDegLng;
 
             double distMeters = Math.Sqrt(dLat * dLat + dLng * dLng);
-            return distMeters > 0.05; // threshold
+            return distMeters > 0.05;
         }
 
         private static void ComputeCorners(
@@ -247,11 +226,11 @@ namespace RateController.Classes
             double len = Math.Sqrt(dxMeters * dxMeters + dyMeters * dyMeters);
             if (len < 1e-6) len = 1e-6;
 
-            double ux = dxMeters / len; // east along-track
-            double uy = dyMeters / len; // north along-track
+            double ux = dxMeters / len;
+            double uy = dyMeters / len;
 
-            double px = -uy; // east perpendicular (left)
-            double py = ux;  // north perpendicular (left)
+            double px = -uy;
+            double py = ux;
 
             double halfWidth = Math.Max(widthMeters / 2.0, 0.005);
 

@@ -10,6 +10,7 @@ namespace RateController.Classes
     public sealed class RateOverlayService
     {
         private readonly CoverageTrail _trail = new CoverageTrail();
+        private const double RateEpsilon = 1e-6;
 
         public bool UpdateRatesOverlay(
             GMapOverlay overlay,
@@ -31,27 +32,28 @@ namespace RateController.Classes
 
                 var last = readings.Last();
 
-                // Get selected rate
+                // Current selected rate
                 double currRate = 0.0;
                 if (rateType == RateType.Applied && last.AppliedRates.Length > rateIndex)
                     currRate = last.AppliedRates[rateIndex];
                 else if (rateType == RateType.Target && last.TargetRates.Length > rateIndex)
                     currRate = last.TargetRates[rateIndex];
 
-                // Add latest point to trail
-                _trail.AddPoint(tractorPos, headingDegrees, currRate, implementWidthMeters);
-
-                // Determine min/max across available data for legend/color mapping
-                IEnumerable<double> series = (rateType == RateType.Applied)
+                // Build series for scaling (exclude zero/near-zero and invalids)
+                IEnumerable<double> baseSeries = (rateType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
 
-                if (!series.Any()) return false;
+                if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
+                    return false;
 
-                double minRate = series.Min();
-                double maxRate = series.Max();
+                // Add only non-zero rate points to the trail
+                if (currRate > RateEpsilon)
+                {
+                    _trail.AddPoint(tractorPos, headingDegrees, currRate, implementWidthMeters);
+                }
 
-                // Render
+                // Render with robust min/max
                 _trail.DrawTrail(overlay, minRate, maxRate);
                 legend = _trail.CreateLegend(minRate, maxRate);
 
@@ -64,7 +66,6 @@ namespace RateController.Classes
             }
         }
 
-        // NEW: Rebuild from saved readings so historical data is visible
         public bool BuildFromHistory(
             GMapOverlay overlay,
             IReadOnlyList<RateReading> readings,
@@ -79,21 +80,17 @@ namespace RateController.Classes
                 if (overlay == null || readings == null || readings.Count < 2) return false;
                 if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
 
-                // Clamp rate index to available series length
                 int maxLen = readings.Max(r => rateType == RateType.Applied ? (r.AppliedRates?.Length ?? 0) : (r.TargetRates?.Length ?? 0));
                 if (maxLen == 0) return false;
                 if (rateIndex >= maxLen) rateIndex = 0;
 
-                // Compute min/max across the full history
-                IEnumerable<double> series = (rateType == RateType.Applied)
+                IEnumerable<double> baseSeries = (rateType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
 
-                if (!series.Any()) return false;
-                double minRate = series.Min();
-                double maxRate = series.Max();
+                if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
+                    return false;
 
-                // Rebuild trail
                 _trail.Reset();
                 PointLatLng prev = new PointLatLng(readings[0].Latitude, readings[0].Longitude);
                 for (int i = 0; i < readings.Count; i++)
@@ -108,7 +105,10 @@ namespace RateController.Classes
                     else if (rateType == RateType.Target && r.TargetRates.Length > rateIndex)
                         rate = r.TargetRates[rateIndex];
 
-                    _trail.AddPoint(curr, heading, rate, implementWidthMeters);
+                    if (rate > RateEpsilon)
+                    {
+                        _trail.AddPoint(curr, heading, rate, implementWidthMeters);
+                    }
                     prev = curr;
                 }
 
@@ -135,6 +135,46 @@ namespace RateController.Classes
             double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
             double brng = Math.Atan2(y, x) * 180.0 / Math.PI;
             return (brng + 360.0) % 360.0;
+        }
+
+        // Robust scale estimator: 2nd–98th percentiles over non-zero values.
+        private static bool TryComputeScale(IEnumerable<double> values, out double minRate, out double maxRate)
+        {
+            var vals = values
+                .Where(v => v > RateEpsilon && !double.IsNaN(v) && !double.IsInfinity(v))
+                .OrderBy(v => v)
+                .ToArray();
+
+            minRate = 0; maxRate = 0;
+            if (vals.Length == 0) return false;
+
+            if (vals.Length < 10)
+            {
+                minRate = vals.First();
+                maxRate = vals.Last();
+            }
+            else
+            {
+                int loIdx = (int)Math.Floor(0.02 * (vals.Length - 1));
+                int hiIdx = (int)Math.Ceiling(0.98 * (vals.Length - 1));
+                minRate = vals[loIdx];
+                maxRate = vals[hiIdx];
+
+                if (maxRate <= minRate)
+                {
+                    minRate = vals.First();
+                    maxRate = vals.Last();
+                }
+            }
+
+            // If collapsed, pad by 5% (or at least 1 unit) for visible gradient
+            if (Math.Abs(maxRate - minRate) < 1e-9)
+            {
+                double pad = Math.Max(0.05 * maxRate, 1.0);
+                minRate = Math.Max(0, maxRate - pad);
+                maxRate = maxRate + pad;
+            }
+            return true;
         }
     }
 }
