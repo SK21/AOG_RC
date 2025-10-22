@@ -1,4 +1,3 @@
-
 #include <Wire.h>
 #include <EEPROM.h>
 #include <SPI.h>
@@ -109,7 +108,7 @@ SensorConfig Sensor[2];
 // and then mount the shield on top of the Nano.
 
 // ethernet
-byte Ethernet::buffer[48];			// udp send and receive buffer
+byte Ethernet::buffer[500];			// udp send and receive buffer (increased to prevent UDP payload truncation)
 static byte selectPin = 10;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
@@ -286,12 +285,8 @@ void CheckPressure()
 //uint32_t MaxLoopTime;
 //uint32_t LoopTmr;
 //byte ReadReset;
-//int MinMem = 2000;
-//float FlowHz;
 //float debug1;
-//volatile float debug2;
-//volatile float debug3;
-//float debug4;
+//float debug2;
 //
 //void DebugTheIno()
 //{
@@ -303,22 +298,13 @@ void CheckPressure()
 //		Serial.print(MaxLoopTime);
 //
 //		Serial.print(", ");
-//		Serial.print(MinMem);
+//		Serial.print(debug1);
 //
-//		//Serial.print(", ");
-//		//Serial.print(Sensor[0].Hz);
+//		Serial.print(", ");
+//		Serial.print(debug2);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug1);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug2);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
-//
-//		//Serial.print(", ");
-//		//Serial.print(debug4);
+//		Serial.print(", ");
+//		Serial.print(debug3);
 //
 //		Serial.println("");
 //
@@ -326,17 +312,9 @@ void CheckPressure()
 //		{
 //			ReadReset = 0;
 //			MaxLoopTime = 0;
-//			MinMem = 2000;
 //		}
 //	}
 //	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
 //	LoopTmr = micros();
-//	if (freeRam() < MinMem) MinMem = freeRam();
 //}
-//
-//int freeRam() {
-//	extern int __heap_start, * __brkval;
-//	int v;
-//	return (int)&v - (__brkval == 0
-//		? (int)&__heap_start : (int)__brkval);
-//}
+
