@@ -12,6 +12,7 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
+        private bool EditInProgress = false;
         private bool EditZones = false;
         private int FormHeight;
         private int FormWidth;
@@ -50,33 +51,19 @@ namespace RateController.Menu
             colorComboBox.SelectedIndex = 1;
         }
 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            SetEditInProgress(false);
+            ckEditPolygons.Checked = false;
+            EnableButtons();
+            UpdateForm();
+        }
+
         private void btnCopy_Click(object sender, EventArgs e)
         {
             Form frm = new frmCopyMap(mf);
             frm.ShowDialog();
             UpdateMap();
-        }
-
-        private void btnCreateZone_Click(object sender, EventArgs e)
-        {
-            double RateA = 0;
-            double RateB = 0;
-            double RateC = 0;
-            double RateD = 0;
-            if (double.TryParse(tbP1.Text, out double p1)) RateA = p1;
-            if (double.TryParse(tbP2.Text, out double p2)) RateB = p2;
-            if (double.TryParse(tbP3.Text, out double p3)) RateC = p3;
-            if (double.TryParse(tbP4.Text, out double p4)) RateD = p4;
-
-            if (!mf.Tls.Manager.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, GetSelectedColor()))
-            {
-                Props.ShowMessage("Could not save Zone.");
-            }
-            btnCreateZone.FlatAppearance.BorderSize = 0;
-            ckEditPolygons.Checked = false;
-            EnableButtons();
-            mf.Tls.Manager.SaveMap();
-            UpdateForm();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -100,6 +87,28 @@ namespace RateController.Menu
                 Form frm = new frmImport(mf);
                 frm.Show();
             }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            double RateA = 0;
+            double RateB = 0;
+            double RateC = 0;
+            double RateD = 0;
+            if (double.TryParse(tbP1.Text, out double p1)) RateA = p1;
+            if (double.TryParse(tbP2.Text, out double p2)) RateB = p2;
+            if (double.TryParse(tbP3.Text, out double p3)) RateC = p3;
+            if (double.TryParse(tbP4.Text, out double p4)) RateD = p4;
+
+            if (!mf.Tls.Manager.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, GetSelectedColor()))
+            {
+                Props.ShowMessage("Could not save Zone.");
+            }
+            SetEditInProgress(false);
+            ckEditPolygons.Checked = false;
+            EnableButtons();
+            mf.Tls.Manager.SaveMap();
+            UpdateForm();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -164,11 +173,15 @@ namespace RateController.Menu
             if (ckEditZones.Checked)
             {
                 ckEditZones.FlatAppearance.BorderSize = 1;
+                ckEditPolygons.Enabled = true;
+                btnDelete.Enabled = true;
             }
             else
             {
                 ckEditZones.FlatAppearance.BorderSize = 0;
                 mf.Tls.Manager.EditModePolygons = false;
+                ckEditPolygons.Enabled = false;
+                btnDelete.Enabled = false;
             }
         }
 
@@ -262,6 +275,11 @@ namespace RateController.Menu
             if (ckZones.Checked) mf.Tls.Manager.ZoomToFit();
         }
 
+        private void colorComboBox_Click(object sender, EventArgs e)
+        {
+           SetEditInProgress(true);
+        }
+
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
@@ -297,8 +315,6 @@ namespace RateController.Menu
             tbP2.Enabled = EditZones;
             tbP3.Enabled = EditZones;
             tbP4.Enabled = EditZones;
-            btnDelete.Enabled = EditZones;
-            btnCreateZone.Enabled = EditZones;
             colorComboBox.Enabled = EditZones;
             ckEditPolygons.Enabled = EditZones;
         }
@@ -322,12 +338,6 @@ namespace RateController.Menu
         {
             GroupBox box = sender as GroupBox;
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void HighlightZoneSave()
-        {
-            btnCreateZone.FlatAppearance.BorderSize = 2;
-            btnCreateZone.FlatAppearance.BorderColor = Color.Blue;
         }
 
         private void InitializeColorComboBox()
@@ -355,11 +365,9 @@ namespace RateController.Menu
             PositionForm();
         }
 
-        // Rebuild the panel legend whenever the map/legend changes or the toggle is used
         private void Manager_MapChanged(object sender, EventArgs e)
         {
             UpdateForm();
-            // No panel legend refresh; overlay legend is handled in MapManager
         }
 
         private void mnuRateMap_FormClosed(object sender, FormClosedEventArgs e)
@@ -420,6 +428,31 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
+        private void SetEditInProgress(bool InProgress)
+        {
+            if (InProgress != EditInProgress)
+            {
+                if (InProgress)
+                {
+                    EditInProgress = true;
+                    btnCancel.Enabled = true;
+                    btnOK.Enabled = true;
+                    ckEditZones.Enabled = false;
+                    ckEditPolygons.Enabled = false;
+                    btnDelete.Enabled = false;
+                }
+                else
+                {
+                    EditInProgress = false;
+                    btnCancel.Enabled = false;
+                    btnOK.Enabled = false;
+                    ckEditZones.Enabled = true;
+                    ckEditPolygons.Enabled = true;
+                    btnDelete.Enabled = true;
+                }
+            }
+        }
+
         private void SetLanguage()
         {
             btnImport.Text = Lang.lgImport;
@@ -428,16 +461,14 @@ namespace RateController.Menu
             gbZone.Text = Lang.lgZone;
         }
 
-        private void tbName_TextChanged(object sender, EventArgs e)
+        private void tbName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (ckEditPolygons.Checked)
-            {
-                HighlightZoneSave();
-            }
+            SetEditInProgress(true);
         }
 
         private void tbP1_Enter(object sender, EventArgs e)
         {
+            SetEditInProgress(true);
             double tempD;
             double.TryParse(tbP1.Text, out tempD);
             using (var form = new FormNumeric(0, 10000, tempD))
@@ -463,6 +494,7 @@ namespace RateController.Menu
 
         private void tbP2_Enter(object sender, EventArgs e)
         {
+            SetEditInProgress(true);
             double tempD;
             double.TryParse(tbP2.Text, out tempD);
             using (var form = new FormNumeric(0, 10000, tempD))
@@ -488,6 +520,7 @@ namespace RateController.Menu
 
         private void tbP3_Enter(object sender, EventArgs e)
         {
+            SetEditInProgress(true);
             double tempD;
             double.TryParse(tbP3.Text, out tempD);
             using (var form = new FormNumeric(0, 10000, tempD))
@@ -513,6 +546,7 @@ namespace RateController.Menu
 
         private void tbP4_Enter(object sender, EventArgs e)
         {
+            SetEditInProgress(true);
             double tempD;
             double.TryParse(tbP4.Text, out tempD);
             using (var form = new FormNumeric(0, 10000, tempD))
@@ -541,12 +575,17 @@ namespace RateController.Menu
             Initializing = true;
 
             mf.Tls.Manager.UpdateTargetRates();
-            tbName.Text = mf.Tls.Manager.ZoneName;
-            tbP1.Text = mf.Tls.Manager.GetRate(0).ToString("N1");
-            tbP2.Text = mf.Tls.Manager.GetRate(1).ToString("N1");
-            tbP3.Text = mf.Tls.Manager.GetRate(2).ToString("N1");
-            tbP4.Text = mf.Tls.Manager.GetRate(3).ToString("N1");
-            SetSelectedColor(mf.Tls.Manager.ZoneColor);
+
+            if (!EditInProgress)
+            {
+                tbName.Text = mf.Tls.Manager.ZoneName;
+                tbP1.Text = mf.Tls.Manager.GetRate(0).ToString("N1");
+                tbP2.Text = mf.Tls.Manager.GetRate(1).ToString("N1");
+                tbP3.Text = mf.Tls.Manager.GetRate(2).ToString("N1");
+                tbP4.Text = mf.Tls.Manager.GetRate(3).ToString("N1");
+                SetSelectedColor(mf.Tls.Manager.ZoneColor);
+            }
+
             if (!Props.UseMetric)
             {
                 lbArea.Text = (mf.Tls.Manager.ZoneHectares * 2.47).ToString("N1");
