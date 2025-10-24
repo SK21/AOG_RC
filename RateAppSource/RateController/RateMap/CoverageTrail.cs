@@ -3,6 +3,7 @@ using GMap.NET.WindowsForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace RateController.Classes
 {
@@ -27,6 +28,9 @@ namespace RateController.Classes
 
         // Use same epsilon as RateOverlayService
         private const double RateEpsilon = 1e-3;
+
+        // AgOpenGPS base color (#3B767E)
+        private static readonly Color AOGBase = Color.FromArgb(59, 118, 126);
 
         private readonly List<Segment> _segments = new List<Segment>();
         private bool _hasPrev;
@@ -112,72 +116,63 @@ namespace RateController.Classes
             {
                 overlay.Polygons.Clear();
 
-                for (int i = 0; i < _segments.Count; i++)
+                // Build banded ribbons to keep rate shading while preventing overlap/striping
+                const int steps = 5;
+
+                var runs = _segments
+                    .Where(s => s.Rate > RateEpsilon)
+                    .GroupBy(s => s.RunId)
+                    .OrderBy(g => g.Key);
+
+                foreach (var run in runs)
                 {
-                    var seg = _segments[i];
-                    if (seg.Rate <= RateEpsilon) continue;
+                    var segs = run.ToList();
+                    if (segs.Count == 0) continue;
 
-                    var polyPoints = new List<PointLatLng>
+                    // Walk contiguous segments grouped by band index
+                    int i = 0;
+                    while (i < segs.Count)
                     {
-                        seg.PrevLeft,
-                        seg.PrevRight,
-                        seg.CurrRight,
-                        seg.CurrLeft,
-                        seg.PrevLeft
-                    };
-
-                    var color = GetBandColor(minRate, maxRate, seg.Rate);
-                    var poly = new GMapPolygon(polyPoints, "swath")
-                    {
-                        Stroke = new Pen(Color.FromArgb(160, color), 1),
-                        Fill = new SolidBrush(Color.FromArgb(70, color))
-                    };
-                    overlay.Polygons.Add(poly);
-                }
-
-                for (int i = 1; i < _segments.Count; i++)
-                {
-                    var prev = _segments[i - 1];
-                    var curr = _segments[i];
-                    if (prev.Rate <= RateEpsilon || curr.Rate <= RateEpsilon) continue;
-                    if (prev.RunId != curr.RunId) continue;
-
-                    var center = curr.Prev;
-
-                    if (ShouldFillWedge(prev.CurrLeft, curr.PrevLeft))
-                    {
-                        var leftWedge = new List<PointLatLng>
+                        int band = BandIndex(minRate, maxRate, segs[i].Rate, steps);
+                        int j = i + 1;
+                        while (j < segs.Count && BandIndex(minRate, maxRate, segs[j].Rate, steps) == band)
                         {
-                            prev.CurrLeft,
-                            curr.PrevLeft,
-                            center,
-                            prev.CurrLeft
-                        };
-                        var c = GetBandColor(minRate, maxRate, curr.Rate);
-                        var poly = new GMapPolygon(leftWedge, "turn_left")
+                            j++;
+                        }
+
+                        // i..(j-1) is one contiguous band group
+                        var leftChain = new List<PointLatLng>();
+                        var rightChain = new List<PointLatLng>();
+
+                        leftChain.Add(segs[i].PrevLeft);
+                        rightChain.Add(segs[i].PrevRight);
+                        for (int k = i; k < j; k++)
+                        {
+                            leftChain.Add(segs[k].CurrLeft);
+                            rightChain.Add(segs[k].CurrRight);
+                        }
+                        rightChain.Reverse();
+
+                        var polyPoints = new List<PointLatLng>(leftChain.Count + rightChain.Count + 1);
+                        polyPoints.AddRange(leftChain);
+                        polyPoints.AddRange(rightChain);
+                        polyPoints.Add(leftChain[0]);
+
+                        var shade = ShadeForBand(band, steps, forLegend: false);
+
+                        // Make higher-rate bands more opaque to improve contrast on satellite tiles
+                        int alpha = 100 + (band * 22); // 0..4 -> 100..188
+                        if (alpha > 200) alpha = 200;
+                        var fill = Color.FromArgb(alpha, shade.R, shade.G, shade.B);
+
+                        var poly = new GMapPolygon(polyPoints, "aog_swath_band")
                         {
                             Stroke = Pens.Transparent,
-                            Fill = new SolidBrush(Color.FromArgb(70, c))
+                            Fill = new SolidBrush(fill)
                         };
                         overlay.Polygons.Add(poly);
-                    }
 
-                    if (ShouldFillWedge(prev.CurrRight, curr.PrevRight))
-                    {
-                        var rightWedge = new List<PointLatLng>
-                        {
-                            prev.CurrRight,
-                            curr.PrevRight,
-                            center,
-                            prev.CurrRight
-                        };
-                        var c = GetBandColor(minRate, maxRate, curr.Rate);
-                        var poly = new GMapPolygon(rightWedge, "turn_right")
-                        {
-                            Stroke = Pens.Transparent,
-                            Fill = new SolidBrush(Color.FromArgb(70, c))
-                        };
-                        overlay.Polygons.Add(poly);
+                        i = j;
                     }
                 }
             }
@@ -185,7 +180,6 @@ namespace RateController.Classes
 
         public Dictionary<string, Color> CreateLegend(double minRate, double maxRate, int steps = 5)
         {
-            steps = 5;
             var legend = new Dictionary<string, Color>();
 
             if (double.IsNaN(minRate) || double.IsNaN(maxRate) || maxRate <= minRate)
@@ -199,7 +193,7 @@ namespace RateController.Classes
             {
                 double a = minRate + (i * band);
                 double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
-                var color = GetBandColor(minRate, maxRate, a + 1e-6);
+                var color = ShadeForBand(i, steps, forLegend: true);
                 legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
             }
             return legend;
@@ -216,22 +210,51 @@ namespace RateController.Classes
             }
         }
 
-        private static Color GetBandColor(double minRate, double maxRate, double value)
+        private static int BandIndex(double minRate, double maxRate, double value, int steps)
         {
-            var palette = new[]
-            {
-                Color.FromArgb(0xA1, 0xD9, 0x9B),
-                Color.FromArgb(0x74, 0xC4, 0x76),
-                Color.FromArgb(0x31, 0xA3, 0x54),
-                Color.FromArgb(0x23, 0x8B, 0x45),
-                Color.FromArgb(0x00, 0x6D, 0x2C)
-            };
-
-            if (maxRate <= minRate) return palette[0];
+            if (maxRate <= minRate) return 0;
             double t = (value - minRate) / (maxRate - minRate);
             if (t < 0) t = 0; if (t > 1) t = 1;
-            int idx = (int)Math.Min(palette.Length - 1, Math.Floor(t * palette.Length));
-            return palette[idx];
+            int idx = (int)Math.Floor(t * steps);
+            if (idx == steps) idx = steps - 1;
+            return idx;
+        }
+
+        private static Color ShadeForBand(int index, int steps, bool forLegend)
+        {
+            // Darker range: reduce white blending, increase black blending
+            const double MaxWhite = 0.25; // low band darker
+            const double MaxBlack = 0.45; // high band deeper
+
+            double r = (steps <= 1) ? 1.0 : (double)index / (steps - 1); // 0..1
+
+            double blendWhite = (1.0 - r) * MaxWhite;
+            Color c1 = Lerp(AOGBase, Color.White, blendWhite);
+
+            double blendBlack = r * MaxBlack;
+            Color c2 = Lerp(c1, Color.Black, blendBlack);
+
+            if (forLegend)
+            {
+                return Color.FromArgb(255, c2); // opaque in legend
+            }
+            return c2; // caller handles polygon alpha
+        }
+
+        private static Color Lerp(Color a, Color b, double t)
+        {
+            if (t < 0) t = 0; if (t > 1) t = 1;
+            int r = (int)Math.Round(a.R + (b.R - a.R) * t);
+            int g = (int)Math.Round(a.G + (b.G - a.G) * t);
+            int bl = (int)Math.Round(a.B + (b.B - a.B) * t);
+            return Color.FromArgb(r, g, bl);
+        }
+
+        private static Color GetBandColor(double minRate, double maxRate, double value)
+        {
+            const int steps = 5;
+            int idx = BandIndex(minRate, maxRate, value, steps);
+            return ShadeForBand(idx, steps, forLegend: false);
         }
 
         private static bool ShouldFillWedge(PointLatLng a, PointLatLng b)

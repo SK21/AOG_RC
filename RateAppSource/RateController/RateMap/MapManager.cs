@@ -34,6 +34,7 @@ namespace RateController.Classes
         private bool isDragging = false;
         private System.Drawing.Point lastMousePosition;
         private bool cSuppressTrailUntilNextGps = false; // NEW: suppress CoverageTrail plotting until next GPS update
+        private double[] cLastAppliedRates = new double[5]; // NEW: keep last seen applied rates for live plotting
 
         // Legend overlay (bitmap marker anchored to top-right of the current view)
         private GMapOverlay legendOverlay;
@@ -272,10 +273,31 @@ namespace RateController.Classes
 
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
+
+                // Always record reading so zeros are captured immediately
+                var applied = (AppliedRates ?? new double[0]);
+                var target  = (TargetRates ?? new double[0]);
+                mf.Tls?.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
+
+                // NEW: cache latest applied array for live overlay update (no timer delay)
+                // ensure fixed length (5 max supported by recorder)
+                int len = Math.Min(applied.Length, 5);
+                if (len == 0) Array.Clear(cLastAppliedRates, 0, cLastAppliedRates.Length);
+                else
+                {
+                    if (cLastAppliedRates.Length != 5) cLastAppliedRates = new double[5];
+                    Array.Clear(cLastAppliedRates, 0, cLastAppliedRates.Length);
+                    Array.Copy(applied, cLastAppliedRates, len);
+                }
+
+                // Force immediate overlay update to remove timer lag
+                if (Props.MapShowRates)
+                {
+                    cLegend = ShowAppliedLayer();
+                }
+
                 gmap.Refresh();
                 UpdateTargetRates();
-                if (mf.Products.ProductsAreOn())
-                    mf.Tls.RateCollector.RecordReading(NewLocation.Lat, NewLocation.Lng, AppliedRates, TargetRates);
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -317,12 +339,19 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    success = overlayService.UpdateRatesOverlay(
+                    // NEW: live update uses the latest applied rate we just received with the GPS tick
+                    double? liveApplied = null;
+                    int ridx = Props.RateDisplayProduct;
+                    if (cLastAppliedRates != null && ridx >= 0 && ridx < cLastAppliedRates.Length)
+                        liveApplied = cLastAppliedRates[ridx];
+
+                    success = overlayService.UpdateRatesOverlayLive(
                         AppliedOverlay,
                         readings,
                         cTractorPosition,
                         cTravelHeading,
                         implementWidth,
+                        liveApplied,
                         out legend,
                         Props.RateDisplayType,
                         Props.RateDisplayProduct
@@ -361,7 +390,6 @@ namespace RateController.Classes
                     gmap.Overlays.Add(AppliedOverlay);
                 }
 
-                // Draw/refresh legend overlay on the map (respects LegendOverlayEnabled)
                 UpdateLegendOverlay();
 
                 gmap.Refresh();
@@ -553,6 +581,8 @@ namespace RateController.Classes
         {
             foreach (var polygon in polygons)
             {
+                // remove stroke to match AOG polygon look overlap-free
+                polygon.Stroke = Pens.Transparent;
                 overlay.Polygons.Add(polygon);
             }
             return overlay;

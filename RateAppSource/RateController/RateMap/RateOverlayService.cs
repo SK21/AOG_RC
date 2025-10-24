@@ -60,6 +60,8 @@ namespace RateController.Classes
                 }
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
+
+                // Keep legend: shades derived from AOG color
                 legend = _trail.CreateLegend(minRate, maxRate, 5);
                 return true;
             }
@@ -72,12 +74,13 @@ namespace RateController.Classes
 
         public void Reset() => _trail.Reset();
 
-        public bool UpdateRatesOverlay(
+        public bool UpdateRatesOverlayLive(
             GMapOverlay overlay,
             IReadOnlyList<RateReading> readings,
             PointLatLng tractorPos,
             double headingDegrees,
             double implementWidthMeters,
+            double? appliedOverride,
             out Dictionary<string, Color> legend,
             RateType legendType,
             int rateIndex)
@@ -99,11 +102,11 @@ namespace RateController.Classes
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                // Only draw when (a) applied > 0 and (b) last reading is at the current tractor position
-                double currApplied = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
+                // Prefer the live applied rate from SetTractorPosition
+                double currApplied = appliedOverride ?? ((last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0);
 
                 // Distance gate prevents “bridge” from historical last point to a new start/relocated tractor
-                const double maxSnapMeters = 5.0; // adjust if needed
+                const double maxSnapMeters = 5.0;
                 double distToLast = DistanceMeters(tractorPos, last.Latitude, last.Longitude);
 
                 if (currApplied > RateEpsilon && distToLast <= maxSnapMeters)
@@ -112,20 +115,37 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    // Product off or we’re not co-located with the last reading: do not draw and break continuity
                     _trail.Break();
                 }
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
+
+                // Keep legend: shades derived from AOG color
                 legend = _trail.CreateLegend(minRate, maxRate, 5);
 
                 return true;
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog($"RateOverlayService: {ex.Message}");
+                Props.WriteErrorLog($"RateOverlayService.UpdateRatesOverlayLive: {ex.Message}");
                 return false;
             }
+        }
+
+        public bool UpdateRatesOverlay(
+            GMapOverlay overlay,
+            IReadOnlyList<RateReading> readings,
+            PointLatLng tractorPos,
+            double headingDegrees,
+            double implementWidthMeters,
+            out Dictionary<string, Color> legend,
+            RateType legendType,
+            int rateIndex)
+        {
+            // kept for backward compatibility; delegate to live method without override
+            return UpdateRatesOverlayLive(
+                overlay, readings, tractorPos, headingDegrees, implementWidthMeters, null,
+                out legend, legendType, rateIndex);
         }
 
         private static double BearingDegrees(PointLatLng a, PointLatLng b)
