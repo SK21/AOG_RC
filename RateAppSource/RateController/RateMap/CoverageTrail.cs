@@ -29,8 +29,9 @@ namespace RateController.Classes
         // Use same epsilon as RateOverlayService
         private const double RateEpsilon = 1e-3;
 
-        // AgOpenGPS base color (#3B767E)
-        private static readonly Color AOGBase = Color.FromArgb(59, 118, 126);
+        // Base color for coverage shading: GreenYellow (#ADFF2F)
+        // Changed from AOG teal to GreenYellow to match requested theme
+        private static readonly Color CoverageBase = Color.GreenYellow;
 
         private readonly List<Segment> _segments = new List<Segment>();
         private bool _hasPrev;
@@ -222,14 +223,14 @@ namespace RateController.Classes
 
         private static Color ShadeForBand(int index, int steps, bool forLegend)
         {
-            // Darker range: reduce white blending, increase black blending
-            const double MaxWhite = 0.25; // low band darker
-            const double MaxBlack = 0.45; // high band deeper
+            // Darker range around GreenYellow: keep slight lightening at low band and darken more at high band
+            const double MaxWhite = 0.18; // subtle lift for lowest band
+            const double MaxBlack = 0.50; // deeper dark for highest band
 
             double r = (steps <= 1) ? 1.0 : (double)index / (steps - 1); // 0..1
 
             double blendWhite = (1.0 - r) * MaxWhite;
-            Color c1 = Lerp(AOGBase, Color.White, blendWhite);
+            Color c1 = Lerp(CoverageBase, Color.White, blendWhite);
 
             double blendBlack = r * MaxBlack;
             Color c2 = Lerp(c1, Color.Black, blendBlack);

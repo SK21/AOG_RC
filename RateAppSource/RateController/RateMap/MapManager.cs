@@ -39,6 +39,10 @@ namespace RateController.Classes
         // Legend overlay (bitmap marker anchored to top-right of the current view)
         private GMapOverlay legendOverlay;
 
+        // Dim tiles overlay (large semi-transparent bitmap covering the view)
+        private GMapOverlay tileDimOverlay;
+        private int _tileDimAlpha = 0; // 0 = off
+
         private List<MapZone> mapZones;
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
@@ -55,6 +59,7 @@ namespace RateController.Classes
             gmap.MouseMove += Gmap_MouseMove;
             gmap.MouseUp += Gmap_MouseUp;
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
+            gmap.OnPositionChanged += Gmap_OnPositionChanged;
 
             AppliedOverlayTimer = new System.Windows.Forms.Timer();
             AppliedOverlayTimer.Interval = 60000;
@@ -65,6 +70,8 @@ namespace RateController.Classes
             Props.RateDataSettingsChanged += Props_MapShowRatesChanged;
 
             LoadMap();
+            TilesGrayScale = true;
+            TileDimAlpha = 0;
         }
 
         public event EventHandler MapChanged;
@@ -85,6 +92,35 @@ namespace RateController.Classes
         // NEW: allow form to control legend visibility (only show in full-screen)
         public bool LegendOverlayEnabled { get; set; } = false;
 
+        // Make satellite tiles grayscale to reduce intensity
+        public bool TilesGrayScale
+        {
+            get => gmap?.GrayScaleMode ?? false;
+            set
+            {
+                if (gmap != null)
+                {
+                    gmap.GrayScaleMode = value;
+                    gmap.Refresh();
+                }
+            }
+        }
+
+        // Apply a semi-transparent white dim over the current view (0..220 recommended)
+        public int TileDimAlpha
+        {
+            get => _tileDimAlpha;
+            set
+            {
+                int v = Math.Max(0, Math.Min(220, value));
+                if (_tileDimAlpha != v)
+                {
+                    _tileDimAlpha = v;
+                    UpdateTileDimOverlay();
+                }
+            }
+        }
+
         public bool MouseSetTractorPosition
         {
             get { return cMouseSetTractorPosition; }
@@ -101,6 +137,7 @@ namespace RateController.Classes
                     ? (GMapProvider)GMapProviders.BingSatelliteMap
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 gmap.Refresh();
+                UpdateTileDimOverlay();
             }
         }
 
@@ -565,6 +602,7 @@ namespace RateController.Classes
             if (boundingBox != RectLatLng.Empty)
             {
                 gmap.SetZoomToFitRect(boundingBox);
+                UpdateTileDimOverlay();
             }
         }
 
@@ -683,7 +721,13 @@ namespace RateController.Classes
         {
             // Reposition legend overlay with the current view
             UpdateLegendOverlay();
+            UpdateTileDimOverlay();
             MapChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Gmap_OnPositionChanged(PointLatLng point)
+        {
+            UpdateTileDimOverlay();
         }
 
         private void InitializeMap()
@@ -725,6 +769,7 @@ namespace RateController.Classes
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
             AppliedOverlay = new GMapOverlay("AppliedRates");
             legendOverlay = new GMapOverlay("legend");
+            tileDimOverlay = new GMapOverlay("tileDim");
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green);
             gpsMarkerOverlay.Markers.Add(tractorMarker);
@@ -734,6 +779,7 @@ namespace RateController.Classes
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
             AddOverlay(legendOverlay);
+            AddOverlay(tileDimOverlay);
             gmap.Refresh();
         }
 
@@ -839,6 +885,34 @@ namespace RateController.Classes
                 Offset = new System.Drawing.Point(-legendWidth - leftMargin, leftMargin)
             };
             legendOverlay.Markers.Add(marker);
+        }
+
+        private void UpdateTileDimOverlay()
+        {
+            if (tileDimOverlay == null) return;
+
+            tileDimOverlay.Markers.Clear();
+
+            if (!Props.MapShowTiles || _tileDimAlpha <= 0)
+            {
+                gmap.Refresh();
+                return;
+            }
+
+            int w = Math.Max(1, gmap.Width);
+            int h = Math.Max(1, gmap.Height);
+            var bmp = new Bitmap(w, h);
+            using (var g2 = Graphics.FromImage(bmp))
+            {
+                g2.FillRectangle(new SolidBrush(Color.FromArgb(_tileDimAlpha, Color.White)), 0, 0, w, h);
+            }
+
+            var marker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Left), bmp)
+            {
+                Offset = new System.Drawing.Point(0, 0)
+            };
+            tileDimOverlay.Markers.Add(marker);
+            gmap.Refresh();
         }
     }
 }
