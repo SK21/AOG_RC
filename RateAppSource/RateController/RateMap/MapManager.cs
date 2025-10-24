@@ -33,6 +33,7 @@ namespace RateController.Classes
         private GMapOverlay gpsMarkerOverlay;
         private bool isDragging = false;
         private System.Drawing.Point lastMousePosition;
+        private bool cSuppressTrailUntilNextGps = false; // NEW: suppress CoverageTrail plotting until next GPS update
 
         // Legend overlay (bitmap marker anchored to top-right of the current view)
         private GMapOverlay legendOverlay;
@@ -254,6 +255,9 @@ namespace RateController.Classes
         {
             if (!cMouseSetTractorPosition)
             {
+                // Resume plotting on next overlay update since this is a real GPS update
+                cSuppressTrailUntilNextGps = false;
+
                 if (!cTractorPosition.IsEmpty)
                 {
                     double deltaLng = NewLocation.Lng - cTractorPosition.Lng;
@@ -297,7 +301,7 @@ namespace RateController.Classes
 
                 bool success = false;
 
-                if (cMouseSetTractorPosition)
+                if (cMouseSetTractorPosition || cSuppressTrailUntilNextGps)
                 {
                     Dictionary<string, Color> legendFromHistory;
                     success = overlayService.BuildFromHistory(
@@ -602,6 +606,10 @@ namespace RateController.Classes
                     PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
                     cTractorPosition = Location;
                     tractorMarker.Position = Location;
+
+                    // Prevent plotting at this clicked position in CoverageTrail until a real GPS update arrives
+                    cSuppressTrailUntilNextGps = true;
+
                     gmap.Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }

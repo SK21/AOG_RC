@@ -9,7 +9,8 @@ namespace RateController.Classes
 {
     public sealed class RateOverlayService
     {
-        private const double RateEpsilon = 1e-6;
+        // Match CoverageTrail deadband so "0" means no coverage
+        private const double RateEpsilon = 1e-3;
         private readonly CoverageTrail _trail = new CoverageTrail();
 
         public bool BuildFromHistory(
@@ -30,7 +31,6 @@ namespace RateController.Classes
                 if (maxLen == 0) return false;
                 if (rateIndex >= maxLen) rateIndex = 0;
 
-                // Legend series per selection
                 IEnumerable<double> baseSeries = (legendType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
@@ -38,7 +38,6 @@ namespace RateController.Classes
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                // Rebuild trail from Applied only, skipping zeroes
                 _trail.Reset();
                 PointLatLng prev = new PointLatLng(readings[0].Latitude, readings[0].Longitude);
                 for (int i = 0; i < readings.Count; i++)
@@ -52,6 +51,11 @@ namespace RateController.Classes
                     {
                         _trail.AddPoint(curr, heading, applied, implementWidthMeters);
                     }
+                    else
+                    {
+                        _trail.Break();
+                    }
+
                     prev = curr;
                 }
 
@@ -69,7 +73,7 @@ namespace RateController.Classes
         public void Reset() => _trail.Reset();
 
         public bool UpdateRatesOverlay(
-                            GMapOverlay overlay,
+            GMapOverlay overlay,
             IReadOnlyList<RateReading> readings,
             PointLatLng tractorPos,
             double headingDegrees,
@@ -88,7 +92,6 @@ namespace RateController.Classes
 
                 var last = readings.Last();
 
-                // Legend series follows user selection (Applied or Target)
                 IEnumerable<double> baseSeries = (legendType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
@@ -96,11 +99,21 @@ namespace RateController.Classes
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                // Coverage is always drawn based on Applied > 0
+                // Only draw when (a) applied > 0 and (b) last reading is at the current tractor position
                 double currApplied = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
-                if (currApplied > RateEpsilon)
+
+                // Distance gate prevents “bridge” from historical last point to a new start/relocated tractor
+                const double maxSnapMeters = 5.0; // adjust if needed
+                double distToLast = DistanceMeters(tractorPos, last.Latitude, last.Longitude);
+
+                if (currApplied > RateEpsilon && distToLast <= maxSnapMeters)
                 {
                     _trail.AddPoint(tractorPos, headingDegrees, currApplied, implementWidthMeters);
+                }
+                else
+                {
+                    // Product off or we’re not co-located with the last reading: do not draw and break continuity
+                    _trail.Break();
                 }
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
@@ -125,6 +138,17 @@ namespace RateController.Classes
             double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
             double brng = Math.Atan2(y, x) * 180.0 / Math.PI;
             return (brng + 360.0) % 360.0;
+        }
+
+        private static double DistanceMeters(PointLatLng a, double bLat, double bLng)
+        {
+            const double metersPerDegLat = 111320.0;
+            double latRad = a.Lat * Math.PI / 180.0;
+            double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
+
+            double dx = (bLng - a.Lng) * metersPerDegLng;
+            double dy = (bLat - a.Lat) * metersPerDegLat;
+            return Math.Sqrt(dx * dx + dy * dy);
         }
 
         // Robust scale estimator: 2nd–98th percentiles over non-zero values.

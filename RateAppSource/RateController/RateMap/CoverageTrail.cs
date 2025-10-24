@@ -1,8 +1,8 @@
+using GMap.NET;
+using GMap.NET.WindowsForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using GMap.NET;
-using GMap.NET.WindowsForms;
 
 namespace RateController.Classes
 {
@@ -21,28 +21,38 @@ namespace RateController.Classes
             public PointLatLng PrevRight;
             public PointLatLng CurrLeft;
             public PointLatLng CurrRight;
+
+            public int RunId;
         }
 
-        private const double RateEpsilon = 1e-6;
-
-        // Distinctive green palette (light -> dark), avoiding near-white tones
-        private static readonly Color[] GreenPalette = new[]
-        {
-            Color.FromArgb(0xA1, 0xD9, 0x9B), // light green (no near-white)
-            Color.FromArgb(0x74, 0xC4, 0x76), // medium-light green
-            Color.FromArgb(0x31, 0xA3, 0x54), // medium green
-            Color.FromArgb(0x23, 0x8B, 0x45), // dark green
-            Color.FromArgb(0x00, 0x6D, 0x2C)  // very dark green
-        };
+        // Use same epsilon as RateOverlayService
+        private const double RateEpsilon = 1e-3;
 
         private readonly List<Segment> _segments = new List<Segment>();
         private bool _hasPrev;
         private PointLatLng _prev;
+        private int _runId;
+
+        public void Break()
+        {
+            lock (_lock)
+            {
+                _hasPrev = false;
+                _runId++;
+            }
+        }
 
         public void AddPoint(PointLatLng pos, double headingDeg, double rate, double implementWidthMeters)
         {
             lock (_lock)
             {
+                if (rate <= RateEpsilon)
+                {
+                    _hasPrev = false;
+                    _prev = pos;
+                    return;
+                }
+
                 if (!_hasPrev)
                 {
                     _prev = pos;
@@ -86,7 +96,8 @@ namespace RateController.Classes
                     PrevLeft = prevLeft,
                     PrevRight = prevRight,
                     CurrLeft = currLeft,
-                    CurrRight = currRight
+                    CurrRight = currRight,
+                    RunId = _runId
                 });
 
                 _prev = pos;
@@ -101,7 +112,6 @@ namespace RateController.Classes
             {
                 overlay.Polygons.Clear();
 
-                // Draw only non-zero-rate segments
                 for (int i = 0; i < _segments.Count; i++)
                 {
                     var seg = _segments[i];
@@ -125,12 +135,12 @@ namespace RateController.Classes
                     overlay.Polygons.Add(poly);
                 }
 
-                // Fill wedges only if both adjacent are non-zero
                 for (int i = 1; i < _segments.Count; i++)
                 {
                     var prev = _segments[i - 1];
                     var curr = _segments[i];
                     if (prev.Rate <= RateEpsilon || curr.Rate <= RateEpsilon) continue;
+                    if (prev.RunId != curr.RunId) continue;
 
                     var center = curr.Prev;
 
@@ -146,7 +156,7 @@ namespace RateController.Classes
                         var c = GetBandColor(minRate, maxRate, curr.Rate);
                         var poly = new GMapPolygon(leftWedge, "turn_left")
                         {
-                            Stroke = new Pen(Color.FromArgb(0, c), 0),
+                            Stroke = Pens.Transparent,
                             Fill = new SolidBrush(Color.FromArgb(70, c))
                         };
                         overlay.Polygons.Add(poly);
@@ -164,7 +174,7 @@ namespace RateController.Classes
                         var c = GetBandColor(minRate, maxRate, curr.Rate);
                         var poly = new GMapPolygon(rightWedge, "turn_right")
                         {
-                            Stroke = new Pen(Color.FromArgb(0, c), 0),
+                            Stroke = Pens.Transparent,
                             Fill = new SolidBrush(Color.FromArgb(70, c))
                         };
                         overlay.Polygons.Add(poly);
@@ -175,7 +185,6 @@ namespace RateController.Classes
 
         public Dictionary<string, Color> CreateLegend(double minRate, double maxRate, int steps = 5)
         {
-            // Force exactly 5 steps with the palette above
             steps = 5;
             var legend = new Dictionary<string, Color>();
 
@@ -190,7 +199,7 @@ namespace RateController.Classes
             {
                 double a = minRate + (i * band);
                 double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
-                var color = GreenPalette[Math.Min(i, GreenPalette.Length - 1)];
+                var color = GetBandColor(minRate, maxRate, a + 1e-6);
                 legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
             }
             return legend;
@@ -203,16 +212,26 @@ namespace RateController.Classes
                 _segments.Clear();
                 _hasPrev = false;
                 _prev = new PointLatLng(0, 0);
+                _runId = 0;
             }
         }
 
         private static Color GetBandColor(double minRate, double maxRate, double value)
         {
-            if (maxRate <= minRate) return GreenPalette[0];
+            var palette = new[]
+            {
+                Color.FromArgb(0xA1, 0xD9, 0x9B),
+                Color.FromArgb(0x74, 0xC4, 0x76),
+                Color.FromArgb(0x31, 0xA3, 0x54),
+                Color.FromArgb(0x23, 0x8B, 0x45),
+                Color.FromArgb(0x00, 0x6D, 0x2C)
+            };
+
+            if (maxRate <= minRate) return palette[0];
             double t = (value - minRate) / (maxRate - minRate);
             if (t < 0) t = 0; if (t > 1) t = 1;
-            int idx = (int)Math.Min(GreenPalette.Length - 1, Math.Floor(t * GreenPalette.Length));
-            return GreenPalette[idx];
+            int idx = (int)Math.Min(palette.Length - 1, Math.Floor(t * palette.Length));
+            return palette[idx];
         }
 
         private static bool ShouldFillWedge(PointLatLng a, PointLatLng b)
@@ -221,7 +240,6 @@ namespace RateController.Classes
             double dLat = (a.Lat - b.Lat) * metersPerDegLat;
             double metersPerDegLng = metersPerDegLat * Math.Cos(a.Lat * Math.PI / 180.0);
             double dLng = (a.Lng - b.Lng) * metersPerDegLng;
-
             double distMeters = Math.Sqrt(dLat * dLat + dLng * dLng);
             return distMeters > 0.05;
         }
@@ -241,16 +259,13 @@ namespace RateController.Classes
 
             double dxMeters = (curr.Lng - prev.Lng) * metersPerDegLng;
             double dyMeters = (curr.Lat - prev.Lat) * metersPerDegLat;
-
             double len = Math.Sqrt(dxMeters * dxMeters + dyMeters * dyMeters);
             if (len < 1e-6) len = 1e-6;
 
             double ux = dxMeters / len;
             double uy = dyMeters / len;
-
             double px = -uy;
             double py = ux;
-
             double halfWidth = Math.Max(widthMeters / 2.0, 0.005);
 
             prevLeft = Offset(prev, px * halfWidth, py * halfWidth, metersPerDegLng, metersPerDegLat);
