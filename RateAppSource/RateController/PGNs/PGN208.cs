@@ -39,7 +39,7 @@ namespace RateController.PGNs
         {
             get
             {
-                if (Connected())
+                if (TWOLconnected())
                 {
                     return cLatitude;
                 }
@@ -54,7 +54,7 @@ namespace RateController.PGNs
         {
             get
             {
-                if (Connected())
+                if (TWOLconnected())
                 {
                     return cLongitude;
                 }
@@ -69,7 +69,7 @@ namespace RateController.PGNs
         {
             get
             {
-                if (Connected())
+                if (TWOLconnected())
                 {
                     return cKMH;
                 }
@@ -80,9 +80,21 @@ namespace RateController.PGNs
             }
         }
 
-        public bool Connected()
+        public bool TWOLconnected()
         {
             return (DateTime.Now - ReceiveTime).TotalSeconds < 4;
+        }
+
+        public bool Connected()
+        {
+            if(TWOLconnected())
+            {
+                return true;
+            }
+            else
+            {
+                return GPS0.Connected();
+            }
         }
 
         public void ParseByteData(byte[] Data)

@@ -397,13 +397,22 @@ namespace RateController
                     lbArduinoConnected.Visible = true;
                 }
 
-                if (AutoSteerPGN.Connected())
+                if (GPS.TWOLconnected())
                 {
+                    lbAogConnected.Text = "TWOL";
                     lbAogConnected.BackColor = Color.LightGreen;
                 }
                 else
                 {
-                    lbAogConnected.BackColor = Color.Red;
+                    lbAogConnected.Text = "AOG";
+                    if (AutoSteerPGN.Connected())
+                    {
+                        lbAogConnected.BackColor = Color.LightGreen;
+                    }
+                    else
+                    {
+                        lbAogConnected.BackColor = Color.Red;
+                    }
                 }
 
                 // alarm
