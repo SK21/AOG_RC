@@ -17,7 +17,7 @@ namespace RateController
         public PGN254 AutoSteerPGN;
         public string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
         public string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
-        public PGN100 GPS;
+        public PGN208 GPS;
         public bool LargeScreenExit = false;
         public frmLargeScreen Lscrn;
         public PGN238 MachineConfig;
@@ -110,7 +110,7 @@ namespace RateController
             AOGsections = new PGN229(this);
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
-            GPS = new PGN100(this);
+            GPS = new PGN208(this);
             RateSensors = new clsSensors(this);
         }
 
