@@ -18,6 +18,7 @@ uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
 float LastPWM[MaxProductCount];
 float IntegralSum[MaxProductCount];
+bool FlowWasEnabled[MaxProductCount] = { false };
 
 void SetPWM()
 {
@@ -35,14 +36,25 @@ void SetPWM()
 
 			case TimedCombo_ct:
 				// combo close timed adjustment
+				if (Sensor[i].FlowEnabled && !FlowWasEnabled[i])
+				{
+					LastPWM[i] = 0;
+					LastCheck[i] = 0;
+				}
 				Sensor[i].PWM = TimedCombo(i, false);
 				break;
 
 			default:
 				// valve
+				if (Sensor[i].FlowEnabled && !FlowWasEnabled[i])
+				{
+					LastPWM[i] = 0;
+					LastCheck[i] = 0;
+				}
 				Sensor[i].PWM = DoPID(i, false);
 				break;
 			}
+			FlowWasEnabled[i] = Sensor[i].FlowEnabled;
 		}
 		else
 		{
@@ -182,6 +194,10 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 				}
 			}
 		}
+	}
+	else
+	{
+		IntegralSum[ID] = 0;
 	}
 	return Result;
 }
