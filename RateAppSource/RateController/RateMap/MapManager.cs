@@ -263,8 +263,14 @@ namespace RateController.Classes
                 gmap.Refresh();
                 Result = true;
                 MapChanged?.Invoke(this, EventArgs.Empty);
-                ZoomToFit();
+
+                // Prefer centering on existing applied data (coverage) when opening
                 ShowAppliedRatesOverlay();
+                if (!CenterOnAppliedDataIfAvailable())
+                {
+                    // Fallback to zones coverage
+                    ZoomToFit();
+                }
             }
             catch (Exception ex)
             {
@@ -913,6 +919,53 @@ namespace RateController.Classes
             };
             tileDimOverlay.Markers.Add(marker);
             gmap.Refresh();
+        }
+
+        // Center to applied data area if there are recorded non-zero applied readings
+        private bool CenterOnAppliedDataIfAvailable()
+        {
+            try
+            {
+                var collector = mf?.Tls?.RateCollector;
+                if (collector == null) return false;
+
+                var readings = collector.GetReadings();
+                if (readings == null || readings.Count == 0) return false;
+
+                const double eps = 1e-3; // consider >0 as applied
+                double minLat = double.MaxValue, maxLat = double.MinValue;
+                double minLng = double.MaxValue, maxLng = double.MinValue;
+                bool any = false;
+                foreach (var r in readings)
+                {
+                    bool hasApplied = (r.AppliedRates != null && r.AppliedRates.Any(a => a > eps));
+                    if (!hasApplied) continue;
+                    any = true;
+                    if (r.Latitude < minLat) minLat = r.Latitude;
+                    if (r.Latitude > maxLat) maxLat = r.Latitude;
+                    if (r.Longitude < minLng) minLng = r.Longitude;
+                    if (r.Longitude > maxLng) maxLng = r.Longitude;
+                }
+
+                if (!any) return false;
+
+                double width = Math.Max(maxLng - minLng, 0.0008);   // ensure reasonable width
+                double height = Math.Max(maxLat - minLat, 0.0006);  // ensure reasonable height
+                // pad a little
+                double padW = width * 0.15;
+                double padH = height * 0.15;
+                var rect = new RectLatLng(maxLat + padH, minLng - padW, width + 2 * padW, height + 2 * padH);
+
+                gmap.SetZoomToFitRect(rect);
+                UpdateTileDimOverlay();
+                MapChanged?.Invoke(this, EventArgs.Empty);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog($"MapManager/CenterOnAppliedDataIfAvailable: {ex.Message}");
+                return false;
+            }
         }
     }
 }
