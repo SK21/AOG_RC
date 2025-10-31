@@ -3,6 +3,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Index.Strtree;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -38,16 +39,20 @@ namespace RateController.Classes
 
         // Legend overlay (bitmap marker anchored to top-right of the current view)
         private GMapOverlay legendOverlay;
-
-        // Dim tiles overlay (large semi-transparent bitmap covering the view)
-        private GMapOverlay tileDimOverlay;
-        private int _tileDimAlpha = 0; // 0 = off
+        private Bitmap legendBitmap;               // cache: rendered legend image
+        private string legendSignature;            // cache: signature of legend entries
 
         private List<MapZone> mapZones;
+        private STRtree<MapZone> zoneIndex;        // spatial index for fast zone lookup
+
         private FormStart mf;
         private GMapOverlay tempMarkerOverlay;
         private GMarkerGoogle tractorMarker;
         private GMapOverlay zoneOverlay;
+
+        // Throttle immediate applied overlay updates to avoid UI flooding
+        private DateTime lastAppliedOverlayUpdateUtc = DateTime.MinValue;
+        private static readonly TimeSpan MinAppliedOverlayUpdate = TimeSpan.FromMilliseconds(200);
 
         public MapManager(FormStart main)
         {
@@ -59,7 +64,6 @@ namespace RateController.Classes
             gmap.MouseMove += Gmap_MouseMove;
             gmap.MouseUp += Gmap_MouseUp;
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
-            gmap.OnPositionChanged += Gmap_OnPositionChanged;
 
             AppliedOverlayTimer = new System.Windows.Forms.Timer();
             AppliedOverlayTimer.Interval = 60000;
@@ -71,7 +75,6 @@ namespace RateController.Classes
 
             LoadMap();
             TilesGrayScale = true;
-            TileDimAlpha = 0;
         }
 
         public event EventHandler MapChanged;
@@ -106,21 +109,6 @@ namespace RateController.Classes
             }
         }
 
-        // Apply a semi-transparent white dim over the current view (0..220 recommended)
-        public int TileDimAlpha
-        {
-            get => _tileDimAlpha;
-            set
-            {
-                int v = Math.Max(0, Math.Min(220, value));
-                if (_tileDimAlpha != v)
-                {
-                    _tileDimAlpha = v;
-                    UpdateTileDimOverlay();
-                }
-            }
-        }
-
         public bool MouseSetTractorPosition
         {
             get { return cMouseSetTractorPosition; }
@@ -137,7 +125,6 @@ namespace RateController.Classes
                     ? (GMapProvider)GMapProviders.BingSatelliteMap
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 gmap.Refresh();
-                UpdateTileDimOverlay();
             }
         }
 
@@ -169,6 +156,12 @@ namespace RateController.Classes
                 overlayService.Reset();
                 if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
                 if (legendOverlay != null) legendOverlay.Markers.Clear();
+                if (legendBitmap != null)
+                {
+                    legendBitmap.Dispose();
+                    legendBitmap = null;
+                    legendSignature = null;
+                }
                 cLegend = null;
                 gmap.Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
@@ -202,6 +195,8 @@ namespace RateController.Classes
                             RemoveOverlay(zoneOverlay);
                             AddOverlay(zoneOverlay);
 
+                            BuildZoneIndex();
+
                             gmap.Refresh();
                             UpdateTargetRates();
                             SaveMap();
@@ -225,15 +220,22 @@ namespace RateController.Classes
 
                 foreach (var polygon in zoneOverlay.Polygons)
                 {
-                    if (polygon.Points.Count == 0) continue;
-
-                    minLat = Math.Min(minLat, polygon.Points.Min(p => p.Lat));
-                    maxLat = Math.Max(maxLat, polygon.Points.Max(p => p.Lat));
-                    minLng = Math.Min(minLng, polygon.Points.Min(p => p.Lng));
-                    maxLng = Math.Max(maxLng, polygon.Points.Max(p => p.Lng));
+                    var pts = polygon.Points;
+                    int count = pts.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        var p = pts[i];
+                        if (p.Lat < minLat) minLat = p.Lat;
+                        if (p.Lat > maxLat) maxLat = p.Lat;
+                        if (p.Lng < minLng) minLng = p.Lng;
+                        if (p.Lng > maxLng) maxLng = p.Lng;
+                    }
                 }
 
-                Result = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
+                if (minLat != double.MaxValue)
+                {
+                    Result = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
+                }
             }
             return Result;
         }
@@ -259,6 +261,8 @@ namespace RateController.Classes
                 {
                     zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
                 }
+
+                BuildZoneIndex();
 
                 gmap.Refresh();
                 Result = true;
@@ -318,8 +322,8 @@ namespace RateController.Classes
                 tractorMarker.Position = NewLocation;
 
                 // Always record reading so zeros are captured immediately
-                var applied = (AppliedRates ?? new double[0]);
-                var target  = (TargetRates ?? new double[0]);
+                var applied = (AppliedRates ?? Array.Empty<double>());
+                var target  = (TargetRates ?? Array.Empty<double>());
                 mf.Tls?.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
 
                 // NEW: cache latest applied array for live overlay update (no timer delay)
@@ -333,10 +337,15 @@ namespace RateController.Classes
                     Array.Copy(applied, cLastAppliedRates, len);
                 }
 
-                // Force immediate overlay update to remove timer lag
+                // Force immediate overlay update with a small throttle to avoid flooding UI
                 if (Props.MapShowRates)
                 {
-                    cLegend = ShowAppliedLayer();
+                    var now = DateTime.UtcNow;
+                    if (now - lastAppliedOverlayUpdateUtc >= MinAppliedOverlayUpdate)
+                    {
+                        cLegend = ShowAppliedLayer();
+                        lastAppliedOverlayUpdateUtc = now;
+                    }
                 }
 
                 gmap.Refresh();
@@ -350,7 +359,7 @@ namespace RateController.Classes
             Dictionary<string, Color> legend = new Dictionary<string, Color>();
             try
             {
-                var readings = mf.Tls.RateCollector.GetReadings().ToList();
+                var readings = mf.Tls.RateCollector.GetReadings();
                 if (readings == null || readings.Count == 0)
                 {
                     ClearAppliedRatesOverlay();
@@ -476,6 +485,12 @@ namespace RateController.Classes
                 overlayService.Reset();
                 RemoveOverlay(AppliedOverlay);
                 if (legendOverlay != null) legendOverlay.Markers.Clear();
+                if (legendBitmap != null)
+                {
+                    legendBitmap.Dispose();
+                    legendBitmap = null;
+                    legendSignature = null;
+                }
                 gmap.Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -509,22 +524,54 @@ namespace RateController.Classes
             try
             {
                 bool Found = false;
-                for (int i = mapZones.Count - 1; i >= 0; i--)
+
+                if (zoneIndex != null)
                 {
-                    var zone = mapZones[i];
-                    if (zone.Contains(cTractorPosition))
+                    // Query spatial index for candidate zones near the tractor
+                    var ptEnv = new Envelope(cTractorPosition.Lng, cTractorPosition.Lng, cTractorPosition.Lat, cTractorPosition.Lat);
+                    var candidates = zoneIndex.Query(ptEnv);
+                    if (candidates != null && candidates.Count > 0)
                     {
-                        cZoneName = zone.Name;
-                        cZoneRates[0] = zone.Rates["ProductA"];
-                        cZoneRates[1] = zone.Rates["ProductB"];
-                        cZoneRates[2] = zone.Rates["ProductC"];
-                        cZoneRates[3] = zone.Rates["ProductD"];
-                        cZoneColor = zone.ZoneColor;
-                        cZoneHectares = zone.Hectares();
-                        Found = true;
-                        break;
+                        // emulate previous last-wins behavior: zones added later have priority
+                        foreach (var zone in candidates.OrderByDescending(z => mapZones.IndexOf(z)))
+                        {
+                            if (zone.Contains(cTractorPosition))
+                            {
+                                cZoneName = zone.Name;
+                                cZoneRates[0] = zone.Rates["ProductA"];
+                                cZoneRates[1] = zone.Rates["ProductB"];
+                                cZoneRates[2] = zone.Rates["ProductC"];
+                                cZoneRates[3] = zone.Rates["ProductD"];
+                                cZoneColor = zone.ZoneColor;
+                                cZoneHectares = zone.Hectares();
+                                Found = true;
+                                break;
+                            }
+                        }
                     }
                 }
+
+                if (!Found)
+                {
+                    // Fallback to linear scan if index empty or no candidate matched
+                    for (int i = mapZones.Count - 1; i >= 0; i--)
+                    {
+                        var zone = mapZones[i];
+                        if (zone.Contains(cTractorPosition))
+                        {
+                            cZoneName = zone.Name;
+                            cZoneRates[0] = zone.Rates["ProductA"];
+                            cZoneRates[1] = zone.Rates["ProductB"];
+                            cZoneRates[2] = zone.Rates["ProductC"];
+                            cZoneRates[3] = zone.Rates["ProductD"];
+                            cZoneColor = zone.ZoneColor;
+                            cZoneHectares = zone.Hectares();
+                            Found = true;
+                            break;
+                        }
+                    }
+                }
+
                 if (!Found)
                 {
                     cZoneName = "-";
@@ -572,6 +619,8 @@ namespace RateController.Classes
 
                 currentZoneVertices.Clear();
                 tempMarkerOverlay.Markers.Clear();
+
+                BuildZoneIndex();
                 Result = true;
             }
             else
@@ -608,7 +657,6 @@ namespace RateController.Classes
             if (boundingBox != RectLatLng.Empty)
             {
                 gmap.SetZoomToFitRect(boundingBox);
-                UpdateTileDimOverlay();
             }
         }
 
@@ -727,13 +775,8 @@ namespace RateController.Classes
         {
             // Reposition legend overlay with the current view
             UpdateLegendOverlay();
-            UpdateTileDimOverlay();
+            gmap.Refresh();
             MapChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void Gmap_OnPositionChanged(PointLatLng point)
-        {
-            UpdateTileDimOverlay();
         }
 
         private void InitializeMap()
@@ -775,7 +818,6 @@ namespace RateController.Classes
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
             AppliedOverlay = new GMapOverlay("AppliedRates");
             legendOverlay = new GMapOverlay("legend");
-            tileDimOverlay = new GMapOverlay("tileDim");
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green);
             gpsMarkerOverlay.Markers.Add(tractorMarker);
@@ -785,7 +827,6 @@ namespace RateController.Classes
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
             AddOverlay(legendOverlay);
-            AddOverlay(tileDimOverlay);
             gmap.Refresh();
         }
 
@@ -818,6 +859,12 @@ namespace RateController.Classes
                     overlayService.Reset();
                     RemoveOverlay(AppliedOverlay);
                     if (legendOverlay != null) legendOverlay.Markers.Clear();
+                    if (legendBitmap != null)
+                    {
+                        legendBitmap.Dispose();
+                        legendBitmap = null;
+                        legendSignature = null;
+                    }
                     gmap.Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -853,11 +900,29 @@ namespace RateController.Classes
             // Only render legend overlay if enabled, rates are on, and legend data available
             if (!LegendOverlayEnabled || !Props.MapShowRates || cLegend == null || cLegend.Count == 0)
             {
-                gmap.Refresh();
+                if (legendBitmap != null)
+                {
+                    legendBitmap.Dispose();
+                    legendBitmap = null;
+                    legendSignature = null;
+                }
                 return;
             }
 
-            // Build bitmap
+            // Build a signature to detect changes in legend content (order + color)
+            string newSig;
+            unchecked
+            {
+                var parts = new List<string>(cLegend.Count);
+                foreach (var kv in cLegend)
+                {
+                    var col = kv.Value;
+                    parts.Add(kv.Key + "#" + col.ToArgb().ToString("X8"));
+                }
+                newSig = string.Join("|", parts);
+            }
+
+            // Rebuild bitmap only when legend content changes
             const int itemHeight = 25;
             const int leftMargin = 10;
             const int swatch = 20;
@@ -866,59 +931,44 @@ namespace RateController.Classes
             int legendHeight = (cLegend.Count * itemHeight) + (leftMargin * 2);
             int legendWidth = Math.Max(120, leftMargin + swatch + gap + 80 + rightMargin);
 
-            var bmp = new Bitmap(legendWidth, legendHeight);
-            using (var g2 = Graphics.FromImage(bmp))
+            if (legendBitmap == null || !string.Equals(newSig, legendSignature, StringComparison.Ordinal))
             {
-                g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g2.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.White)), 0, 0, legendWidth, legendHeight);
-
-                int y = leftMargin;
-                foreach (var item in cLegend)
+                if (legendBitmap != null)
                 {
-                    using (var brush = new SolidBrush(item.Value))
-                    {
-                        g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
-                        g2.DrawRectangle(Pens.Black, leftMargin, y + 3, swatch, swatch);
-                    }
-                    g2.DrawString(item.Key, new Font("Arial", 8), Brushes.Black, new PointF(leftMargin + swatch + gap, y + 4));
-                    y += itemHeight;
+                    legendBitmap.Dispose();
+                    legendBitmap = null;
                 }
+
+                legendBitmap = new Bitmap(legendWidth, legendHeight);
+                using (var g2 = Graphics.FromImage(legendBitmap))
+                using (var backBrush = new SolidBrush(Color.FromArgb(200, Color.White)))
+                using (var font = new Font("Arial", 8))
+                {
+                    g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
+
+                    int y = leftMargin;
+                    foreach (var item in cLegend)
+                    {
+                        using (var brush = new SolidBrush(item.Value))
+                        {
+                            g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
+                            g2.DrawRectangle(Pens.Black, leftMargin, y + 3, swatch, swatch);
+                        }
+                        g2.DrawString(item.Key, font, Brushes.Black, new PointF(leftMargin + swatch + gap, y + 4));
+                        y += itemHeight;
+                    }
+                }
+
+                legendSignature = newSig;
             }
 
-            // Anchor legend at top-right of the current view
-            var marker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Right), bmp)
+            // Anchor legend at top-right of the current view (re-use cached bitmap)
+            var marker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Right), legendBitmap)
             {
                 Offset = new System.Drawing.Point(-legendWidth - leftMargin, leftMargin)
             };
             legendOverlay.Markers.Add(marker);
-        }
-
-        private void UpdateTileDimOverlay()
-        {
-            if (tileDimOverlay == null) return;
-
-            tileDimOverlay.Markers.Clear();
-
-            if (!Props.MapShowTiles || _tileDimAlpha <= 0)
-            {
-                gmap.Refresh();
-                return;
-            }
-
-            int w = Math.Max(1, gmap.Width);
-            int h = Math.Max(1, gmap.Height);
-            var bmp = new Bitmap(w, h);
-            using (var g2 = Graphics.FromImage(bmp))
-            {
-                g2.FillRectangle(new SolidBrush(Color.FromArgb(_tileDimAlpha, Color.White)), 0, 0, w, h);
-            }
-
-            var marker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Left), bmp)
-            {
-                Offset = new System.Drawing.Point(0, 0)
-            };
-            tileDimOverlay.Markers.Add(marker);
-            gmap.Refresh();
         }
 
         // Center to applied data area if there are recorded non-zero applied readings
@@ -957,7 +1007,6 @@ namespace RateController.Classes
                 var rect = new RectLatLng(maxLat + padH, minLng - padW, width + 2 * padW, height + 2 * padH);
 
                 gmap.SetZoomToFitRect(rect);
-                UpdateTileDimOverlay();
                 MapChanged?.Invoke(this, EventArgs.Empty);
                 return true;
             }
@@ -965,6 +1014,30 @@ namespace RateController.Classes
             {
                 Props.WriteErrorLog($"MapManager/CenterOnAppliedDataIfAvailable: {ex.Message}");
                 return false;
+            }
+        }
+
+        private void BuildZoneIndex()
+        {
+            try
+            {
+                zoneIndex = new STRtree<MapZone>();
+                if (mapZones != null)
+                {
+                    foreach (var z in mapZones)
+                    {
+                        if (z?.Geometry == null) continue;
+                        var env = z.Geometry.EnvelopeInternal;
+                        if (env == null) continue;
+                        zoneIndex.Insert(env, z);
+                    }
+                    zoneIndex.Build();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/BuildZoneIndex: " + ex.Message);
+                zoneIndex = null; // fallback gracefully
             }
         }
     }
