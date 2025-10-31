@@ -25,7 +25,6 @@ G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\nl\RateController.resourc
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\pl\RateController.resources.dll
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateControllerApp\ru\RateController.resources.dll
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.csproj.AssemblyReference.cache
-G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.exe.config
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\AgOpenGPS.FormNumeric.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.FormStart.resources
 G:\Sync\Documents\GitHub\SK21\AOG_RC\RateAppSource\RateController\obj\Debug\RateController.Forms.frmCopyMap.resources
