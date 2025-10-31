@@ -202,11 +202,6 @@ namespace RateController
             cManager = new MapManager(mf);
         }
 
-        private async Task InitializeAsync()
-        {
-            await Task.Run(() => CreateColorBitmap());
-        }
-
         #region ScreenBitMapCode
 
         public Bitmap ScreenBitmap
@@ -273,6 +268,11 @@ namespace RateController
                     cScreenBitmap.SetPixel(x, y, color);
                 }
             }
+        }
+
+        private async Task InitializeAsync()
+        {
+            await Task.Run(() => CreateColorBitmap());
         }
 
         #endregion ScreenBitMapCode

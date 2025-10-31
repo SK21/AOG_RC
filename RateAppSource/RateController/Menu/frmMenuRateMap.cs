@@ -253,7 +253,7 @@ namespace RateController.Menu
                 mf.Tls.Manager.LegendOverlayEnabled = false;
                 mf.Tls.Manager.ShowAppliedLayer(); // clears legend overlay via flag
             }
-            mf.Tls.Manager.ZoomToFit();
+            mf.Tls.Manager.CenterMap();
         }
 
         private void ckMap_CheckedChanged(object sender, EventArgs e)
@@ -277,7 +277,7 @@ namespace RateController.Menu
 
         private void colorComboBox_Click(object sender, EventArgs e)
         {
-           SetEditInProgress(true);
+            SetEditInProgress(true);
         }
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)

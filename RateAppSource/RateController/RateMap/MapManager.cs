@@ -16,13 +16,16 @@ namespace RateController.Classes
     {
         private const int MapRefreshSeconds = 2;
 
+        private static readonly TimeSpan MinAppliedOverlayUpdate = TimeSpan.FromMilliseconds(200);
         private readonly RateOverlayService overlayService = new RateOverlayService();
 
         private GMapOverlay AppliedOverlay;
         private System.Windows.Forms.Timer AppliedOverlayTimer;
         private bool cEditPolygons = false;
+        private double[] cLastAppliedRates = new double[5];
         private Dictionary<string, Color> cLegend;
         private bool cMouseSetTractorPosition = false;
+        private bool cSuppressTrailUntilNextGps = false;
         private PointLatLng cTractorPosition;
         private double cTravelHeading;
         private List<PointLatLng> currentZoneVertices;
@@ -33,26 +36,26 @@ namespace RateController.Classes
         private GMapControl gmap;
         private GMapOverlay gpsMarkerOverlay;
         private bool isDragging = false;
-        private System.Drawing.Point lastMousePosition;
-        private bool cSuppressTrailUntilNextGps = false; // NEW: suppress CoverageTrail plotting until next GPS update
-        private double[] cLastAppliedRates = new double[5]; // NEW: keep last seen applied rates for live plotting
-
-        // Legend overlay (bitmap marker anchored to top-right of the current view)
-        private GMapOverlay legendOverlay;
-        private Bitmap legendBitmap;               // cache: rendered legend image
-        private string legendSignature;            // cache: signature of legend entries
-
-        private List<MapZone> mapZones;
-        private STRtree<MapZone> zoneIndex;        // spatial index for fast zone lookup
-
-        private FormStart mf;
-        private GMapOverlay tempMarkerOverlay;
-        private GMarkerGoogle tractorMarker;
-        private GMapOverlay zoneOverlay;
 
         // Throttle immediate applied overlay updates to avoid UI flooding
         private DateTime lastAppliedOverlayUpdateUtc = DateTime.MinValue;
-        private static readonly TimeSpan MinAppliedOverlayUpdate = TimeSpan.FromMilliseconds(200);
+
+        private System.Drawing.Point lastMousePosition;
+
+        private Bitmap legendBitmap;
+
+        // Legend overlay (bitmap marker anchored to top-right of the current view)
+        private GMapOverlay legendOverlay;
+
+        // cache: rendered legend image
+        private string legendSignature;            // cache: signature of legend entries
+
+        private List<MapZone> mapZones;
+        private FormStart mf;
+        private GMapOverlay tempMarkerOverlay;
+        private GMarkerGoogle tractorMarker;
+        private STRtree<MapZone> zoneIndex;        // spatial index for fast zone lookup
+        private GMapOverlay zoneOverlay;
 
         public MapManager(FormStart main)
         {
@@ -95,20 +98,6 @@ namespace RateController.Classes
         // NEW: allow form to control legend visibility (only show in full-screen)
         public bool LegendOverlayEnabled { get; set; } = false;
 
-        // Make satellite tiles grayscale to reduce intensity
-        public bool TilesGrayScale
-        {
-            get => gmap?.GrayScaleMode ?? false;
-            set
-            {
-                if (gmap != null)
-                {
-                    gmap.GrayScaleMode = value;
-                    gmap.Refresh();
-                }
-            }
-        }
-
         public bool MouseSetTractorPosition
         {
             get { return cMouseSetTractorPosition; }
@@ -125,6 +114,20 @@ namespace RateController.Classes
                     ? (GMapProvider)GMapProviders.BingSatelliteMap
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 gmap.Refresh();
+            }
+        }
+
+        // Make satellite tiles grayscale to reduce intensity
+        public bool TilesGrayScale
+        {
+            get => gmap?.GrayScaleMode ?? false;
+            set
+            {
+                if (gmap != null)
+                {
+                    gmap.GrayScaleMode = value;
+                    gmap.Refresh();
+                }
             }
         }
 
@@ -247,6 +250,15 @@ namespace RateController.Classes
             return Result;
         }
 
+        public void CenterMap()
+        {
+            if (!CenterOnAppliedDataIfAvailable())
+            {
+                // Fallback to zones coverage
+                ZoomToFit();
+            }
+        }
+
         public bool LoadMap()
         {
             bool Result = false;
@@ -270,11 +282,7 @@ namespace RateController.Classes
 
                 // Prefer centering on existing applied data (coverage) when opening
                 ShowAppliedRatesOverlay();
-                if (!CenterOnAppliedDataIfAvailable())
-                {
-                    // Fallback to zones coverage
-                    ZoomToFit();
-                }
+                CenterMap();
             }
             catch (Exception ex)
             {
@@ -323,7 +331,7 @@ namespace RateController.Classes
 
                 // Always record reading so zeros are captured immediately
                 var applied = (AppliedRates ?? Array.Empty<double>());
-                var target  = (TargetRates ?? Array.Empty<double>());
+                var target = (TargetRates ?? Array.Empty<double>());
                 mf.Tls?.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
 
                 // NEW: cache latest applied array for live overlay update (no timer delay)
@@ -713,6 +721,76 @@ namespace RateController.Classes
             cLegend = ShowAppliedLayer();
         }
 
+        private void BuildZoneIndex()
+        {
+            try
+            {
+                zoneIndex = new STRtree<MapZone>();
+                if (mapZones != null)
+                {
+                    foreach (var z in mapZones)
+                    {
+                        if (z?.Geometry == null) continue;
+                        var env = z.Geometry.EnvelopeInternal;
+                        if (env == null) continue;
+                        zoneIndex.Insert(env, z);
+                    }
+                    zoneIndex.Build();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/BuildZoneIndex: " + ex.Message);
+                zoneIndex = null; // fallback gracefully
+            }
+        }
+
+        // Center to applied data area if there are recorded non-zero applied readings
+        private bool CenterOnAppliedDataIfAvailable()
+        {
+            try
+            {
+                var collector = mf?.Tls?.RateCollector;
+                if (collector == null) return false;
+
+                var readings = collector.GetReadings();
+                if (readings == null || readings.Count == 0) return false;
+
+                const double eps = 1e-3; // consider >0 as applied
+                double minLat = double.MaxValue, maxLat = double.MinValue;
+                double minLng = double.MaxValue, maxLng = double.MinValue;
+                bool any = false;
+                foreach (var r in readings)
+                {
+                    bool hasApplied = (r.AppliedRates != null && r.AppliedRates.Any(a => a > eps));
+                    if (!hasApplied) continue;
+                    any = true;
+                    if (r.Latitude < minLat) minLat = r.Latitude;
+                    if (r.Latitude > maxLat) maxLat = r.Latitude;
+                    if (r.Longitude < minLng) minLng = r.Longitude;
+                    if (r.Longitude > maxLng) maxLng = r.Longitude;
+                }
+
+                if (!any) return false;
+
+                double width = Math.Max(maxLng - minLng, 0.0008);   // ensure reasonable width
+                double height = Math.Max(maxLat - minLat, 0.0006);  // ensure reasonable height
+                // pad a little
+                double padW = width * 0.15;
+                double padH = height * 0.15;
+                var rect = new RectLatLng(maxLat + padH, minLng - padW, width + 2 * padW, height + 2 * padH);
+
+                gmap.SetZoomToFitRect(rect);
+                MapChanged?.Invoke(this, EventArgs.Empty);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog($"MapManager/CenterOnAppliedDataIfAvailable: {ex.Message}");
+                return false;
+            }
+        }
+
         private void Gmap_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -787,22 +865,16 @@ namespace RateController.Classes
                 CacheLocation = Props.MapCache
             };
 
-            double Lat = 200;
-            double Lng = 200;
+            double Lat = 0;
+            double Lng = TimeZoneInfo.Local.BaseUtcOffset.TotalHours * 15.0;    // estimated longitude
             if (double.TryParse(Props.GetProp("LastMapLat"), out double latpos)) Lat = latpos;
             if (double.TryParse(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
-
-            if (Lat < -90 || Lat > 90 || Lng < -180 || Lng > 180)
-            {
-                Lat = 52.157902;
-                Lng = -106.670158;
-            }
 
             gmap = new GMapControl
             {
                 Dock = DockStyle.Fill,
                 Position = new PointLatLng(Lat, Lng),
-                MinZoom = 3,
+                MinZoom = 2,
                 MaxZoom = 20,
                 Zoom = 16,
                 ShowCenter = false
@@ -813,13 +885,15 @@ namespace RateController.Classes
                 : (GMapProvider)GMapProviders.EmptyProvider;
             gmap.MouseClick += Gmap_MouseClick;
 
+            gmap.Zoom = 2;
+
             zoneOverlay = new GMapOverlay("mapzones");
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
             AppliedOverlay = new GMapOverlay("AppliedRates");
             legendOverlay = new GMapOverlay("legend");
 
-            tractorMarker = new GMarkerGoogle(new PointLatLng(0, 0), GMarkerGoogleType.green);
+            tractorMarker = new GMarkerGoogle(new PointLatLng(Lat, Lng), GMarkerGoogleType.green);
             gpsMarkerOverlay.Markers.Add(tractorMarker);
 
             AddOverlay(gpsMarkerOverlay);
@@ -969,76 +1043,6 @@ namespace RateController.Classes
                 Offset = new System.Drawing.Point(-legendWidth - leftMargin, leftMargin)
             };
             legendOverlay.Markers.Add(marker);
-        }
-
-        // Center to applied data area if there are recorded non-zero applied readings
-        private bool CenterOnAppliedDataIfAvailable()
-        {
-            try
-            {
-                var collector = mf?.Tls?.RateCollector;
-                if (collector == null) return false;
-
-                var readings = collector.GetReadings();
-                if (readings == null || readings.Count == 0) return false;
-
-                const double eps = 1e-3; // consider >0 as applied
-                double minLat = double.MaxValue, maxLat = double.MinValue;
-                double minLng = double.MaxValue, maxLng = double.MinValue;
-                bool any = false;
-                foreach (var r in readings)
-                {
-                    bool hasApplied = (r.AppliedRates != null && r.AppliedRates.Any(a => a > eps));
-                    if (!hasApplied) continue;
-                    any = true;
-                    if (r.Latitude < minLat) minLat = r.Latitude;
-                    if (r.Latitude > maxLat) maxLat = r.Latitude;
-                    if (r.Longitude < minLng) minLng = r.Longitude;
-                    if (r.Longitude > maxLng) maxLng = r.Longitude;
-                }
-
-                if (!any) return false;
-
-                double width = Math.Max(maxLng - minLng, 0.0008);   // ensure reasonable width
-                double height = Math.Max(maxLat - minLat, 0.0006);  // ensure reasonable height
-                // pad a little
-                double padW = width * 0.15;
-                double padH = height * 0.15;
-                var rect = new RectLatLng(maxLat + padH, minLng - padW, width + 2 * padW, height + 2 * padH);
-
-                gmap.SetZoomToFitRect(rect);
-                MapChanged?.Invoke(this, EventArgs.Empty);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog($"MapManager/CenterOnAppliedDataIfAvailable: {ex.Message}");
-                return false;
-            }
-        }
-
-        private void BuildZoneIndex()
-        {
-            try
-            {
-                zoneIndex = new STRtree<MapZone>();
-                if (mapZones != null)
-                {
-                    foreach (var z in mapZones)
-                    {
-                        if (z?.Geometry == null) continue;
-                        var env = z.Geometry.EnvelopeInternal;
-                        if (env == null) continue;
-                        zoneIndex.Insert(env, z);
-                    }
-                    zoneIndex.Build();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapManager/BuildZoneIndex: " + ex.Message);
-                zoneIndex = null; // fallback gracefully
-            }
         }
     }
 }
