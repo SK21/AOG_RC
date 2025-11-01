@@ -9,11 +9,9 @@ namespace RateController.Classes
 {
     public class ShapefileHelper
     {
-        private FormStart mf;
 
-        public ShapefileHelper(FormStart mf)
+        public ShapefileHelper()
         {
-            this.mf = mf;
         }
 
         public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping = null)
@@ -166,7 +164,7 @@ namespace RateController.Classes
                     { "ProductD", RateD }
                 };
 
-                NewZone = new MapZone(Name, polygon, rates, ZoneColor, mf);
+                NewZone = new MapZone(Name, polygon, rates, ZoneColor);
             }
             catch (Exception ex)
             {

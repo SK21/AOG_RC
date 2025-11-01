@@ -264,7 +264,7 @@ namespace RateController.Classes
             bool Result = false;
             try
             {
-                var shapefileHelper = new ShapefileHelper(mf);
+                var shapefileHelper = new ShapefileHelper();
 
                 mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapPath);
 
@@ -294,7 +294,7 @@ namespace RateController.Classes
         public bool SaveMap(bool UpdateCache = true)
         {
             bool Result = false;
-            var shapefileHelper = new ShapefileHelper(mf);
+            var shapefileHelper = new ShapefileHelper();
             shapefileHelper.SaveMapZones(Props.CurrentMapPath, mapZones);
             if (UpdateCache) AddToCache();
             Result = true;
@@ -303,7 +303,7 @@ namespace RateController.Classes
 
         public void SaveMapToFile(string filePath)
         {
-            var shapefileHelper = new ShapefileHelper(mf);
+            var shapefileHelper = new ShapefileHelper();
             shapefileHelper.SaveMapZones(filePath, mapZones);
         }
 
@@ -621,7 +621,7 @@ namespace RateController.Classes
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
-                    }, zoneColor, mf);
+                    }, zoneColor);
                 mapZones.Add(mapZone);
                 zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
 

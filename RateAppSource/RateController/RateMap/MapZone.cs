@@ -11,15 +11,13 @@ namespace RateController.Classes
 {
     public class MapZone
     {
-        private FormStart mf;
 
-        public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor, FormStart mf)
+        public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor)
         {
             Name = name;
             Geometry = geometry;
             Rates = rates;
             ZoneColor = zoneColor;
-            this.mf = mf;
         }
 
         public Polygon Geometry { get; set; }

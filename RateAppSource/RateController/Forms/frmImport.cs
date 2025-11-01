@@ -66,7 +66,7 @@ namespace RateController.Forms
 
         private void LoadShapefileAttributes(DataGridView dgvMapping)
         {
-            var shapefileHelper = new ShapefileHelper(mf);
+            var shapefileHelper = new ShapefileHelper();
             var shapefileAttributes = shapefileHelper.GetShapefileAttributes(selectedShapefilePath);
 
             // add shapefile attribute names
@@ -108,7 +108,7 @@ namespace RateController.Forms
                         }
                     }
 
-                    var shapefileHelper = new ShapefileHelper(mf);
+                    var shapefileHelper = new ShapefileHelper();
                     var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
 
                     string MapPath = JobManager.MapPath(Props.CurrentJobID);
