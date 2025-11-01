@@ -101,12 +101,15 @@ namespace RateController.PGNs
         {
             try
             {
-                if ((Data.Length > Overhead) && (Data.Length == Data[4] + Overhead))
+                if ((Props.SimMode == SimType.Sim_None) && (Data.Length > Overhead) && (Data.Length == Data[4] + Overhead))
                 {
-                    cLongitude = BitConverter.ToDouble(Data, 5);
-                    cLatitude = BitConverter.ToDouble(Data, 13);
-                    cKMH = (BitConverter.ToDouble(Data, 21) * 0.1) + (cKMH * 0.9);
-                    ReceiveTime = DateTime.Now;
+                    if (mf.Tls.GoodCRC(Data, 2))
+                    {
+                        cLongitude = BitConverter.ToDouble(Data, 5);
+                        cLatitude = BitConverter.ToDouble(Data, 13);
+                        cKMH = (BitConverter.ToDouble(Data, 21) * 0.1) + (cKMH * 0.9);
+                        ReceiveTime = DateTime.Now;
+                    }
                 }
             }
             catch (Exception ex)
