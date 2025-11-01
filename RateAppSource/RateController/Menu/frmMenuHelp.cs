@@ -112,7 +112,13 @@ namespace RateController.Menu
             lbAppVersion.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             lbDate.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             lbFile.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
+            lbLon.Font= new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
+            lbLat.Font= new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             ModuleIndicator.BackColor = this.BackColor;
+        }
+
+        private void label27_Click(object sender, EventArgs e)
+        {
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -207,6 +213,9 @@ namespace RateController.Menu
             {
                 ModuleIndicator.Image = Properties.Resources.Off;
             }
+
+            lbLon.Text = mf.GPS.Longitude.ToString("N7");
+            lbLat.Text = mf.GPS.Latitude.ToString("N7");
         }
 
         private void VisitLink(string Link)

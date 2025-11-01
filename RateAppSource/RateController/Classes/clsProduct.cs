@@ -959,13 +959,13 @@ namespace RateController
             }
             else
             {
-                if (!Props.UseMetric)
+                if (Props.UseMetric)
                 {
-                    Result = mf.AutoSteerPGN.Speed_KMH() * 0.621371;
+                    Result = mf.GPS.Speed_KMH;
                 }
                 else
                 {
-                    Result = mf.AutoSteerPGN.Speed_KMH();
+                    Result = mf.GPS.Speed_KMH * 0.621371;
                 }
             }
             return Result;
@@ -1196,7 +1196,7 @@ namespace RateController
             }
             else
             {
-                Result = mf.AutoSteerPGN.Speed_KMH();
+                Result = mf.GPS.Speed_KMH;
             }
             return Result;
         }

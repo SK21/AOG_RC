@@ -178,6 +178,11 @@ namespace RateController
                             {
                                 case 100:
                                     // AOG roll corrected lat,lon
+                                    mf.GPS.GPS0.ParseByteData(Data);
+                                    break;
+
+                                case 208:
+                                    // Twol gps
                                     mf.GPS.ParseByteData(Data);
                                     break;
 
