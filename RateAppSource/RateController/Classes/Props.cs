@@ -109,6 +109,7 @@ namespace RateController.Classes
         private static frmPressureDisplay PressureDisplay;
         private static frmRate RateDisplay;
         private static frmSwitches SwitchesForm;
+        private static string cCurrentMenuName;
 
         #region pressure calibration
 
@@ -775,6 +776,11 @@ namespace RateController.Classes
             }
         }
 
+        public static string CurrentMenuName
+        {
+            get { return cCurrentMenuName; }
+            set { cCurrentMenuName = value; }
+        }
         public static void DisplaySwitches()
         {
             Form fs = Props.IsFormOpen("frmSwitches");
@@ -863,7 +869,36 @@ namespace RateController.Classes
                 {
                     Result = frm;
                     if (SetFocus) frm.Focus();
+                    break;
                 }
+            }
+            return Result;
+        }
+
+        public static bool IsRateMapVisible()
+        {
+            bool Result = true;
+            try
+            {
+                Form frm = IsFormOpen("frmMenuRateMap", false);
+                if ((frm == null) || (cCurrentMenuName != "frmMenuRateMap") || !frm.Visible || (frm.WindowState == FormWindowState.Minimized))
+                {
+                    Result = false;
+                }
+                //else
+                //{
+                //    var FormRect = frm.Bounds;
+                //    bool OnScreen = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(FormRect));
+                //    if (!OnScreen)
+                //    {
+                //        Result = false;
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/IsRateMapVisible: " + ex.Message);
+                Result = false;
             }
             return Result;
         }

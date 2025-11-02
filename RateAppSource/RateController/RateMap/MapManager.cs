@@ -113,6 +113,14 @@ namespace RateController.Classes
                 gmap.MapProvider = value
                     ? (GMapProvider)GMapProviders.BingSatelliteMap
                     : (GMapProvider)GMapProviders.EmptyProvider;
+                Refresh();
+            }
+        }
+
+        private void Refresh()
+        {
+            if(Props.IsRateMapVisible())
+            {
                 gmap.Refresh();
             }
         }
@@ -126,7 +134,7 @@ namespace RateController.Classes
                 if (gmap != null)
                 {
                     gmap.GrayScaleMode = value;
-                    gmap.Refresh();
+                    Refresh();
                 }
             }
         }
@@ -166,7 +174,7 @@ namespace RateController.Classes
                     legendSignature = null;
                 }
                 cLegend = null;
-                gmap.Refresh();
+                Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -200,7 +208,7 @@ namespace RateController.Classes
 
                             BuildZoneIndex();
 
-                            gmap.Refresh();
+                            Refresh();
                             UpdateTargetRates();
                             SaveMap();
                             Result = true;
@@ -276,7 +284,7 @@ namespace RateController.Classes
 
                 BuildZoneIndex();
 
-                gmap.Refresh();
+                Refresh();
                 Result = true;
                 MapChanged?.Invoke(this, EventArgs.Empty);
 
@@ -356,7 +364,7 @@ namespace RateController.Classes
                     }
                 }
 
-                gmap.Refresh();
+                Refresh();
                 UpdateTargetRates();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -452,7 +460,7 @@ namespace RateController.Classes
 
                 UpdateLegendOverlay();
 
-                gmap.Refresh();
+                Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -499,7 +507,7 @@ namespace RateController.Classes
                     legendBitmap = null;
                     legendSignature = null;
                 }
-                gmap.Refresh();
+                Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -513,7 +521,7 @@ namespace RateController.Classes
                 {
                     if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
                     AddOverlay(zoneOverlay);
-                    gmap.Refresh();
+                    Refresh();
                 }
                 catch (Exception ex)
                 {
@@ -523,7 +531,7 @@ namespace RateController.Classes
             else
             {
                 RemoveOverlay(zoneOverlay);
-                gmap.Refresh();
+                Refresh();
             }
         }
 
@@ -810,7 +818,7 @@ namespace RateController.Classes
                     // Prevent plotting at this clicked position in CoverageTrail until a real GPS update arrives
                     cSuppressTrailUntilNextGps = true;
 
-                    gmap.Refresh();
+                    Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -853,7 +861,7 @@ namespace RateController.Classes
         {
             // Reposition legend overlay with the current view
             UpdateLegendOverlay();
-            gmap.Refresh();
+            Refresh();
             MapChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -901,7 +909,7 @@ namespace RateController.Classes
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
             AddOverlay(legendOverlay);
-            gmap.Refresh();
+            Refresh();
         }
 
         private void InitializeMapZones()
@@ -939,7 +947,7 @@ namespace RateController.Classes
                         legendBitmap = null;
                         legendSignature = null;
                     }
-                    gmap.Refresh();
+                    Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
             }

@@ -26,14 +26,13 @@ namespace RateController
         private FormStart mf;
         private Point MouseDownLocation;
 
-
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
             this.mf = cf;
 
             Items = new Button[] { butProfiles, butJobs,  butRate, butControl, butSettings, butMode, butMonitor,
-                butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins, 
+                butData, butSections, butRelays, butCalibrate, butNetwork, butConfig, butPins, butRelayPins,
                 butValves, butDisplay, butPrimed, butSwitches, butLanguage, butColor,butRateData };
 
             ChangeProduct(ProductID);
@@ -157,7 +156,7 @@ namespace RateController
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string FileName = exeDirectory + "Help\\" + cLastScreen + ".pdf";
 
-            if (cLastScreen == "frmMenuPins"||cLastScreen== "frmMenuRelayPins")
+            if (cLastScreen == "frmMenuPins" || cLastScreen == "frmMenuRelayPins")
             {
                 FileName = exeDirectory + "Help\\frmMenuConfig.pdf";
             }
@@ -181,7 +180,7 @@ namespace RateController
 
         private void btnPressure_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuPressure";
+            SaveLastScreen("frmMenuPressure");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -195,7 +194,7 @@ namespace RateController
 
         private void butCalibrate_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuCalibrate";
+            SaveLastScreen("frmMenuCalibrate");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -214,7 +213,7 @@ namespace RateController
 
         private void butColor_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuColor";
+            SaveLastScreen("frmMenuColor");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -228,7 +227,7 @@ namespace RateController
 
         private void butConfig_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuConfig";
+            SaveLastScreen("frmMenuConfig");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -244,7 +243,7 @@ namespace RateController
         {
             if (CheckEdited())
             {
-                cLastScreen = "frmMenuControl";
+                SaveLastScreen("frmMenuControl");
                 if (sender is Button button) HighlightButton(button);
                 Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -259,7 +258,7 @@ namespace RateController
 
         private void butData_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuData";
+            SaveLastScreen("frmMenuData");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -273,7 +272,7 @@ namespace RateController
 
         private void butDisplay_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuDisplay";
+            SaveLastScreen("frmMenuDisplay");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -329,7 +328,7 @@ namespace RateController
 
         private void butHelpScreen_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuHelp";
+            SaveLastScreen("frmMenuHelp");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -343,7 +342,7 @@ namespace RateController
 
         private void butJobs_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuJobs";
+            SaveLastScreen("frmMenuJobs");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -361,7 +360,7 @@ namespace RateController
 
         private void butLanguage_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuLanguage";
+            SaveLastScreen("frmMenuLanguage");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -439,7 +438,7 @@ namespace RateController
 
         private void butMap_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuRateMap";
+            SaveLastScreen("frmMenuRateMap");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -453,7 +452,7 @@ namespace RateController
 
         private void butMode_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuMode";
+            SaveLastScreen("frmMenuMode");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -535,7 +534,7 @@ namespace RateController
 
         private void butMonitor_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuMonitoring";
+            SaveLastScreen("frmMenuMonitoring");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -554,7 +553,7 @@ namespace RateController
 
         private void butNetwork_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuNetwork";
+            SaveLastScreen("frmMenuNetwork");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -621,7 +620,7 @@ namespace RateController
 
         private void butPins_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuPins";
+            SaveLastScreen("frmMenuPins");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -644,7 +643,7 @@ namespace RateController
 
         private void butPrimed_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuPrimed";
+            SaveLastScreen("frmMenuPrimed");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -736,7 +735,7 @@ namespace RateController
 
         private void butProfiles_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuProfiles";
+            SaveLastScreen("frmMenuProfiles");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -756,7 +755,7 @@ namespace RateController
         {
             if (CheckEdited())
             {
-                cLastScreen = "frmMenuRate";
+                SaveLastScreen("frmMenuRate");
                 if (sender is Button button) HighlightButton(button);
                 Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -775,7 +774,7 @@ namespace RateController
 
         private void butRateData_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuRateData";
+            SaveLastScreen("frmMenuRateData");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -789,7 +788,7 @@ namespace RateController
 
         private void butRelayPins_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuRelayPins";
+            SaveLastScreen("frmMenuRelayPins");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -807,7 +806,7 @@ namespace RateController
 
         private void butRelays_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuRelays";
+            SaveLastScreen("frmMenuRelays");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -825,7 +824,7 @@ namespace RateController
 
         private void butSections_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuSections";
+            SaveLastScreen("frmMenuSections");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -843,7 +842,7 @@ namespace RateController
 
         private void butSettings_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuSettings";
+            SaveLastScreen("frmMenuSettings");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -861,7 +860,7 @@ namespace RateController
 
         private void butSwitches_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuSwitches";
+            SaveLastScreen("frmMenuSwitches");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -894,7 +893,7 @@ namespace RateController
 
         private void butValves_Click(object sender, EventArgs e)
         {
-            cLastScreen = "frmMenuValves";
+            SaveLastScreen("frmMenuValves");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
@@ -1025,7 +1024,7 @@ namespace RateController
                             butFile.PerformClick();
                             fs = new frmMenuJobs(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butJobs);
                             fs.Show();
                             break;
@@ -1034,7 +1033,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuControl(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butControl);
                             fs.Show();
                             break;
@@ -1043,7 +1042,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuSettings(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butSettings);
                             fs.Show();
                             break;
@@ -1052,7 +1051,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuMode(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butMode);
                             fs.Show();
                             break;
@@ -1061,7 +1060,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuMonitoring(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butMonitor);
                             fs.Show();
                             break;
@@ -1070,7 +1069,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuData(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butData);
                             fs.Show();
                             break;
@@ -1079,7 +1078,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuRateMap(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butMap);
                             fs.Show();
                             break;
@@ -1088,7 +1087,7 @@ namespace RateController
                             butProducts.PerformClick();
                             fs = new frmMenuRateData(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butRateData);
                             fs.Show();
                             break;
@@ -1102,7 +1101,7 @@ namespace RateController
                             butMachine.PerformClick();
                             fs = new frmMenuRelays(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butRelays);
                             fs.Show();
                             break;
@@ -1111,7 +1110,7 @@ namespace RateController
                             butMachine.PerformClick();
                             fs = new frmMenuPrimed(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butPrimed);
                             fs.Show();
                             break;
@@ -1120,7 +1119,7 @@ namespace RateController
                             butMachine.PerformClick();
                             fs = new frmMenuCalibrate(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butCalibrate);
                             fs.Show();
                             break;
@@ -1129,7 +1128,7 @@ namespace RateController
                             butMachine.PerformClick();
                             fs = new frmMenuSwitches(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butSwitches);
                             fs.Show();
                             break;
@@ -1143,7 +1142,7 @@ namespace RateController
                             butModules.PerformClick();
                             fs = new frmMenuConfig(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butNetwork);
                             fs.Show();
                             break;
@@ -1152,7 +1151,7 @@ namespace RateController
                             butModules.PerformClick();
                             fs = new frmMenuPins(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butPins);
                             fs.Show();
                             break;
@@ -1161,7 +1160,7 @@ namespace RateController
                             butModules.PerformClick();
                             fs = new frmMenuRelayPins(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butRelayPins);
                             fs.Show();
                             break;
@@ -1170,7 +1169,7 @@ namespace RateController
                             butModules.PerformClick();
                             fs = new frmMenuValves(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butValves);
                             fs.Show();
                             break;
@@ -1184,7 +1183,7 @@ namespace RateController
                             butMachine.PerformClick();
                             fs = new frmMenuPressure(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(btnPressure);
                             fs.Show();
                             break;
@@ -1193,7 +1192,7 @@ namespace RateController
                             butOptions.PerformClick();
                             fs = new frmMenuLanguage(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butLanguage);
                             fs.Show();
                             break;
@@ -1202,7 +1201,7 @@ namespace RateController
                             butOptions.PerformClick();
                             fs = new frmMenuColor(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             HighlightButton(butColor);
                             fs.Show();
                             break;
@@ -1210,7 +1209,7 @@ namespace RateController
                         case "frmMenuHelp":
                             fs = new frmMenuHelp(mf, this);
                             fs.Owner = this;
-                            cLastScreen = Last;
+                            SaveLastScreen(Last);
                             fs.Show();
                             break;
 
@@ -1231,6 +1230,12 @@ namespace RateController
         private void Props_JobChanged(object sender, EventArgs e)
         {
             ShowProfile();
+        }
+
+        private void SaveLastScreen(string Name)
+        {
+            cLastScreen = Name;
+            Props.CurrentMenuName = cLastScreen;
         }
 
         private void SetLanguage()
