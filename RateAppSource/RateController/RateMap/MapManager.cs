@@ -17,7 +17,8 @@ namespace RateController.Classes
     {
         private const int MapRefreshSeconds = 2;
 
-        private static readonly TimeSpan MinAppliedOverlayUpdate = TimeSpan.FromMilliseconds(200);
+        // Increased throttle to reduce UI redraws
+        private static readonly TimeSpan MinAppliedOverlayUpdate = TimeSpan.FromMilliseconds(400);
         private readonly RateOverlayService overlayService = new RateOverlayService();
 
         private GMapOverlay AppliedOverlay;
@@ -57,6 +58,9 @@ namespace RateController.Classes
         private GMarkerGoogle tractorMarker;
         private STRtree<MapZone> zoneIndex;        // spatial index for fast zone lookup
         private GMapOverlay zoneOverlay;
+
+        // Cache legend font to avoid recreating on each draw
+        private Font legendFont;
 
         public MapManager(FormStart main)
         {
@@ -732,7 +736,10 @@ namespace RateController.Classes
 
         private void AppliedOverlayTimer_Tick(object sender, EventArgs e)
         {
+            // Avoid rebuilding overlay if a recent live update already refreshed it
+            if (DateTime.UtcNow - lastAppliedOverlayUpdateUtc < MinAppliedOverlayUpdate) return;
             cLegend = ShowAppliedLayer();
+            lastAppliedOverlayUpdateUtc = DateTime.UtcNow;
         }
 
         private void BuildZoneIndex()
@@ -867,7 +874,6 @@ namespace RateController.Classes
         {
             // Reposition legend overlay with the current view
             UpdateLegendOverlay();
-            Refresh();
             MapChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -894,6 +900,8 @@ namespace RateController.Classes
                 ShowCenter = false
             };
 
+            // (no LevelsKeepInMemmory property on this GMap version) keep other performance tweaks elsewhere
+
             gmap.MapProvider = Props.MapShowTiles
                 ? (GMapProvider)GMapProviders.BingSatelliteMap
                 : (GMapProvider)GMapProviders.EmptyProvider;
@@ -916,6 +924,9 @@ namespace RateController.Classes
             AddOverlay(AppliedOverlay);
             AddOverlay(legendOverlay);
             Refresh();
+
+            // create legend font once
+            legendFont = new Font("Arial", 8);
         }
 
         private void InitializeMapZones()
@@ -1002,7 +1013,7 @@ namespace RateController.Classes
             unchecked
             {
                 var parts = new List<string>(cLegend.Count);
-                foreach (var kv in cLegend)
+                foreach (var kv in cLegend.OrderBy(k => k.Key))
                 {
                     var col = kv.Value;
                     parts.Add(kv.Key + "#" + col.ToArgb().ToString("X8"));
@@ -1030,20 +1041,20 @@ namespace RateController.Classes
                 legendBitmap = new Bitmap(legendWidth, legendHeight);
                 using (var g2 = Graphics.FromImage(legendBitmap))
                 using (var backBrush = new SolidBrush(Color.FromArgb(200, Color.White)))
-                using (var font = new Font("Arial", 8))
                 {
-                    g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    // use faster rendering for small legend bitmap
+                    g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                     g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
 
                     int y = leftMargin;
-                    foreach (var item in cLegend)
+                    foreach (var item in cLegend.OrderBy(k => k.Key))
                     {
                         using (var brush = new SolidBrush(item.Value))
                         {
                             g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
                             g2.DrawRectangle(Pens.Black, leftMargin, y + 3, swatch, swatch);
                         }
-                        g2.DrawString(item.Key, font, Brushes.Black, new PointF(leftMargin + swatch + gap, y + 4));
+                        g2.DrawString(item.Key, legendFont, Brushes.Black, new PointF(leftMargin + swatch + gap, y + 4));
                         y += itemHeight;
                     }
                 }
@@ -1052,9 +1063,10 @@ namespace RateController.Classes
             }
 
             // Anchor legend at top-right of the current view (re-use cached bitmap)
+            const int lm = 10; // leftMargin for offset calculation
             var marker = new GMarkerGoogle(new PointLatLng(gmap.ViewArea.Top, gmap.ViewArea.Right), legendBitmap)
             {
-                Offset = new System.Drawing.Point(-legendWidth - leftMargin, leftMargin)
+                Offset = new System.Drawing.Point(-legendWidth - lm, lm)
             };
             legendOverlay.Markers.Add(marker);
         }
