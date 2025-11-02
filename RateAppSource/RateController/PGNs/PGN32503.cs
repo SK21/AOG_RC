@@ -37,63 +37,56 @@ namespace RateController
             // CRC
             cData[5] = mf.Tls.CRC(cData, 5);
 
-            // send serial
-            //cf.mf.SendSerial(cData);
-
-            if (!Result)
+            // based on AGIO/FormUDP
+            IPEndPoint epModuleSet = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 28888);
+            IPAddress IP;
+            if (IPAddress.TryParse(EP, out IP))
             {
-                // send UDP
-                // based on AGIO/FormUDP
-                IPEndPoint epModuleSet = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 28888);
-                IPAddress IP;
-                if (IPAddress.TryParse(EP, out IP))
+                //loop thru all interfaces
+                foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
                 {
-                    //loop thru all interfaces
-                    foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
+                    if (nic.Supports(NetworkInterfaceComponent.IPv4) && nic.OperationalStatus == OperationalStatus.Up)
                     {
-                        if (nic.Supports(NetworkInterfaceComponent.IPv4) && nic.OperationalStatus == OperationalStatus.Up)
+                        foreach (var info in nic.GetIPProperties().UnicastAddresses)
                         {
-                            foreach (var info in nic.GetIPProperties().UnicastAddresses)
+                            // Only InterNetwork and not loopback which have a subnetmask
+                            if (info.Address.AddressFamily == AddressFamily.InterNetwork &&
+                                !IPAddress.IsLoopback(info.Address) &&
+                                info.IPv4Mask != null)
                             {
-                                // Only InterNetwork and not loopback which have a subnetmask
-                                if (info.Address.AddressFamily == AddressFamily.InterNetwork &&
-                                    !IPAddress.IsLoopback(info.Address) &&
-                                    info.IPv4Mask != null)
+                                Socket scanSocket;
+                                try
                                 {
-                                    Socket scanSocket;
-                                    try
+                                    if (nic.OperationalStatus == OperationalStatus.Up
+                                        && info.IPv4Mask != null)
                                     {
-                                        if (nic.OperationalStatus == OperationalStatus.Up
-                                            && info.IPv4Mask != null)
+                                        scanSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                                        scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+                                        scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                                        scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
+
+                                        try
                                         {
-                                            scanSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                                            scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-                                            scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                                            scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
-
-                                            try
-                                            {
-                                                scanSocket.Bind(new IPEndPoint(info.Address, 9578));
-                                                scanSocket.SendTo(cData, 0, cData.Length, SocketFlags.None, epModuleSet);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                Props.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
-                                            }
-
-                                            scanSocket.Dispose();
+                                            scanSocket.Bind(new IPEndPoint(info.Address, 9578));
+                                            scanSocket.SendTo(cData, 0, cData.Length, SocketFlags.None, epModuleSet);
                                         }
+                                        catch (Exception ex)
+                                        {
+                                            Props.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
+                                        }
+
+                                        scanSocket.Dispose();
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        Props.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Props.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
                                 }
                             }
                         }
                     }
-                    Result = true;
                 }
+                Result = true;
             }
             return Result;
         }
