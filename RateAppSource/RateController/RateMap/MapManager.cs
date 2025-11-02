@@ -6,6 +6,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq; // Linq used throughout
 using System.Windows.Forms;
@@ -119,7 +120,7 @@ namespace RateController.Classes
 
         private void Refresh()
         {
-            if(Props.IsRateMapVisible())
+            if(Props.RateMapIsVisible())
             {
                 gmap.Refresh();
             }
@@ -354,7 +355,8 @@ namespace RateController.Classes
                 }
 
                 // Force immediate overlay update with a small throttle to avoid flooding UI
-                if (Props.MapShowRates)
+                // Only update the applied overlay live if the map is visible
+                if (Props.MapShowRates && Props.RateMapIsVisible())
                 {
                     var now = DateTime.UtcNow;
                     if (now - lastAppliedOverlayUpdateUtc >= MinAppliedOverlayUpdate)
@@ -372,6 +374,10 @@ namespace RateController.Classes
 
         public Dictionary<string, Color> ShowAppliedLayer()
         {
+            // Do nothing when not visible (avoid CPU). Return last legend if any.
+            if (!Props.RateMapIsVisible())
+                return cLegend ?? new Dictionary<string, Color>();
+
             Dictionary<string, Color> legend = new Dictionary<string, Color>();
             try
             {
@@ -472,7 +478,7 @@ namespace RateController.Classes
 
         public void ShowAppliedRatesOverlay()
         {
-            if (Props.MapShowRates)
+            if (Props.MapShowRates && Props.RateMapIsVisible())
             {
                 try
                 {

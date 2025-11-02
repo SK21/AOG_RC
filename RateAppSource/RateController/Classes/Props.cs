@@ -875,25 +875,23 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool IsRateMapVisible()
+        public static bool RateMapIsVisible()
         {
             bool Result = true;
             try
             {
-                Form frm = IsFormOpen("frmMenuRateMap", false);
-                if ((frm == null) || (cCurrentMenuName != "frmMenuRateMap") || !frm.Visible || (frm.WindowState == FormWindowState.Minimized))
+                if (cCurrentMenuName != "frmMenuRateMap")
                 {
                     Result = false;
                 }
-                //else
-                //{
-                //    var FormRect = frm.Bounds;
-                //    bool OnScreen = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(FormRect));
-                //    if (!OnScreen)
-                //    {
-                //        Result = false;
-                //    }
-                //}
+                else
+                {
+                    Form frm = IsFormOpen("frmMenuRateMap", false);
+                    if ((frm == null) || !frm.Visible || (frm.WindowState == FormWindowState.Minimized))
+                    {
+                        Result = false;
+                    }
+                }
             }
             catch (Exception ex)
             {
