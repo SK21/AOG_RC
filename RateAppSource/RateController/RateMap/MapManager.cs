@@ -196,35 +196,55 @@ namespace RateController.Classes
         public bool DeleteZone(string name)
         {
             bool Result = false;
-            var zoneToRemove = mapZones.FirstOrDefault(zone => zone.Name == name);
-
-            if (zoneToRemove != null)
+            try
             {
-                List<GMapPolygon> polygonsToRemove = zoneToRemove.ToGMapPolygons();
-                foreach (var polygonToRemove in polygonsToRemove)
+                if (string.IsNullOrEmpty(name) || mapZones == null || zoneOverlay == null) return false;
+
+                // collect all zones with the given name (multi-polygons often share the same name)
+                var zonesToRemove = mapZones.Where(z => string.Equals(z.Name, name, StringComparison.Ordinal)).ToList();
+                if (zonesToRemove.Count == 0) return false;
+
+                foreach (var zone in zonesToRemove)
                 {
-                    if (polygonToRemove != null)
+                    // remove polygons from overlay that match the ones created for this zone
+                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons();
+                    foreach (var polygonToRemove in polygonsToRemove)
                     {
+                        if (polygonToRemove == null) continue;
+
                         var polygonInOverlay = zoneOverlay.Polygons
                             .FirstOrDefault(polygon => polygon.Points.SequenceEqual(polygonToRemove.Points));
 
                         if (polygonInOverlay != null)
                         {
                             zoneOverlay.Polygons.Remove(polygonInOverlay);
-                            mapZones.Remove(zoneToRemove);
-
-                            RemoveOverlay(zoneOverlay);
-                            AddOverlay(zoneOverlay);
-
-                            BuildZoneIndex();
-
-                            Refresh();
-                            UpdateTargetRates();
-                            SaveMap();
                             Result = true;
                         }
                     }
                 }
+
+                // also remove any remaining polygons in the overlay that carry this name (safety)
+                var leftovers = zoneOverlay.Polygons.Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) || (p.Name != null && p.Name.StartsWith(name + "_hole", StringComparison.Ordinal))).ToList();
+                foreach (var p in leftovers) zoneOverlay.Polygons.Remove(p);
+
+                // remove zones from the internal list
+                mapZones.RemoveAll(z => string.Equals(z.Name, name, StringComparison.Ordinal));
+
+                if (Result)
+                {
+                    RemoveOverlay(zoneOverlay);
+                    AddOverlay(zoneOverlay);
+
+                    BuildZoneIndex();
+
+                    Refresh();
+                    UpdateTargetRates();
+                    SaveMap();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/DeleteZone: " + ex.Message);
             }
             return Result;
         }

@@ -4,6 +4,7 @@ using NetTopologySuite.IO.Esri;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace RateController.Classes
 {
@@ -89,12 +90,54 @@ namespace RateController.Classes
                     Shapefile.WriteAllFeatures(features, shapefilePath);
                     Result = true;
                 }
+                else
+                {
+                    // No zones to save: remove existing shapefile so deleted zones don't reappear on reload
+                    try
+                    {
+                        if (Props.IsPathSafeToDelete(shapefilePath))
+                        {
+                            string shp = Path.ChangeExtension(shapefilePath, ".shp");
+                            string dbf = Path.ChangeExtension(shapefilePath, ".dbf");
+                            string shx = Path.ChangeExtension(shapefilePath, ".shx");
+                            string prj = Path.ChangeExtension(shapefilePath, ".prj");
+                            string qix = Path.ChangeExtension(shapefilePath, ".qix");
+
+                            DeleteIfExists(shp);
+                            DeleteIfExists(dbf);
+                            DeleteIfExists(shx);
+                            DeleteIfExists(prj);
+                            DeleteIfExists(qix);
+                        }
+                        Result = true; // treated as successful save of an empty set
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.WriteErrorLog("ShapefileHelper/DeleteEmptyShapefile: " + ex.Message);
+                        Result = false;
+                    }
+                }
             }
             catch (System.Exception ex)
             {
                 Props.WriteErrorLog("ShapefileHelper/SaveMapZones: " + ex.Message);
             }
             return Result;
+        }
+
+        private static void DeleteIfExists(string path)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ShapefileHelper/DeleteIfExists: " + ex.Message);
+            }
         }
 
         private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> attributeMapping)
