@@ -342,7 +342,77 @@ namespace RateController.Classes
         public void SaveMapToFile(string filePath)
         {
             var shapefileHelper = new ShapefileHelper();
-            shapefileHelper.SaveMapZones(filePath, mapZones);
+
+            // If zones exist, save them as-is
+            if (mapZones != null && mapZones.Count > 0)
+            {
+                shapefileHelper.SaveMapZones(filePath, mapZones);
+                return;
+            }
+
+            // No zones available: try to export applied map data (coverage)
+            try
+            {
+                if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
+
+                // Ensure the overlay is populated at least from history
+                var readings = mf?.Tls?.RateCollector?.GetReadings();
+                if (readings != null && readings.Count > 0)
+                {
+                    AppliedOverlay.Polygons.Clear();
+
+                    double implementWidth = 24.0;
+                    if (mf.Sections != null)
+                    {
+                        try { implementWidth = mf.Sections.TotalWidth(false); }
+                        catch (Exception ex) { Props.WriteErrorLog($"MapManager: implement width - {ex.Message}"); }
+                    }
+
+                    // Rebuild from history for a full consistent overlay
+                    Dictionary<string, Color> legendFromHistory;
+                    bool ok = overlayService.BuildFromHistory(
+                        AppliedOverlay,
+                        readings,
+                        implementWidth,
+                        Props.RateDisplayType,
+                        Props.RateDisplayProduct,
+                        out legendFromHistory
+                    );
+
+                    if (ok && AppliedOverlay.Polygons.Count > 0)
+                    {
+                        shapefileHelper.SaveOverlayPolygons(filePath, AppliedOverlay);
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/SaveMapToFile coverage fallback: " + ex.Message);
+            }
+
+            // Nothing to export, ensure any existing file is removed for cleanliness
+            try
+            {
+                if (Props.IsPathSafeToDelete(filePath))
+                {
+                    string shp = System.IO.Path.ChangeExtension(filePath, ".shp");
+                    string dbf = System.IO.Path.ChangeExtension(filePath, ".dbf");
+                    string shx = System.IO.Path.ChangeExtension(filePath, ".shx");
+                    string prj = System.IO.Path.ChangeExtension(filePath, ".prj");
+                    string qix = System.IO.Path.ChangeExtension(filePath, ".qix");
+
+                    if (System.IO.File.Exists(shp)) System.IO.File.Delete(shp);
+                    if (System.IO.File.Exists(dbf)) System.IO.File.Delete(dbf);
+                    if (System.IO.File.Exists(shx)) System.IO.File.Delete(shx);
+                    if (System.IO.File.Exists(prj)) System.IO.File.Delete(prj);
+                    if (System.IO.File.Exists(qix)) System.IO.File.Delete(qix);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/SaveMapToFile cleanup: " + ex.Message);
+            }
         }
 
         public void SetTractorPosition(PointLatLng NewLocation, double[] AppliedRates, double[] TargetRates)

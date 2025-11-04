@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using GMap.NET.WindowsForms; // added for overlay export
 
 namespace RateController.Classes
 {
@@ -123,6 +124,74 @@ namespace RateController.Classes
                 Props.WriteErrorLog("ShapefileHelper/SaveMapZones: " + ex.Message);
             }
             return Result;
+        }
+
+        // NEW: Save polygons from a GMap overlay (e.g., applied coverage) to a shapefile
+        public bool SaveOverlayPolygons(string shapefilePath, GMapOverlay overlay)
+        {
+            bool result = false;
+            try
+            {
+                if (overlay == null || overlay.Polygons == null || overlay.Polygons.Count == 0) return false;
+
+                var features = new List<IFeature>();
+                foreach (var gp in overlay.Polygons)
+                {
+                    try
+                    {
+                        if (gp == null || gp.Points == null || gp.Points.Count < 3) continue;
+
+                        // build ring coordinates in (lng, lat)
+                        var coords = new List<Coordinate>(gp.Points.Count + 1);
+                        for (int i = 0; i < gp.Points.Count; i++)
+                        {
+                            var p = gp.Points[i];
+                            coords.Add(new Coordinate(p.Lng, p.Lat));
+                        }
+                        // ensure closed
+                        if (!coords[0].Equals2D(coords[coords.Count - 1]))
+                        {
+                            coords.Add(coords[0]);
+                        }
+
+                        var ring = new LinearRing(coords.ToArray());
+                        var poly = new Polygon(ring);
+
+                        // Attributes: carry over color if available
+                        Color fillColor = Color.Transparent;
+                        try
+                        {
+                            var sb = gp.Fill as SolidBrush;
+                            if (sb != null) fillColor = sb.Color;
+                        }
+                        catch { }
+
+                        var atts = new AttributesTable
+                        {
+                            { "Name", string.IsNullOrEmpty(gp.Name) ? "Coverage" : gp.Name },
+                            { "Color", ColorTranslator.ToHtml(Color.FromArgb(255, fillColor)) },
+                            { "Alpha", fillColor.A }
+                        };
+
+                        features.Add(new Feature(poly, atts));
+                    }
+                    catch (Exception exi)
+                    {
+                        Props.WriteErrorLog("ShapefileHelper/SaveOverlayPolygons item: " + exi.Message);
+                    }
+                }
+
+                if (features.Count > 0)
+                {
+                    Shapefile.WriteAllFeatures(features, shapefilePath);
+                    result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ShapefileHelper/SaveOverlayPolygons: " + ex.Message);
+            }
+            return result;
         }
 
         private static void DeleteIfExists(string path)
