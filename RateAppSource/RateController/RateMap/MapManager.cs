@@ -1059,14 +1059,20 @@ namespace RateController.Classes
                     int y = leftMargin;
                     foreach (var item in cLegend.OrderBy(k => k.Key))
                     {
+                        string label = FormatLegendLabelNoDecimals(item.Key);
+                        var textSize = g2.MeasureString(label, legendFont);
+                        int contentWidth = swatch + gap + (int)Math.Ceiling(textSize.Width);
+                        int startX = Math.Max(leftMargin, (legendWidth - contentWidth) / 2);
+
+                        int swatchTop = y + (itemHeight - swatch) / 2;
                         using (var brush = new SolidBrush(item.Value))
                         {
-                            g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
-                            g2.DrawRectangle(Pens.White, leftMargin, y + 3, swatch, swatch);
+                            g2.FillRectangle(brush, startX, swatchTop, swatch, swatch);
+                            g2.DrawRectangle(Pens.White, startX, swatchTop, swatch, swatch);
                         }
 
-                        string label = FormatLegendLabelNoDecimals(item.Key);
-                        g2.DrawString(label, legendFont, Brushes.White, new PointF(leftMargin + swatch + gap, y + 4));
+                        float textY = y + (itemHeight - textSize.Height) / 2f;
+                        g2.DrawString(label, legendFont, Brushes.White, new PointF(startX + swatch + gap, textY));
                         y += itemHeight;
                     }
                 }
