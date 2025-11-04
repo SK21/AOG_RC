@@ -692,6 +692,8 @@ namespace RateController.Classes
             {
                 bool overlayExists = gmap.Overlays.Any(o => o.Id == NewOverlay.Id);
                 if (!overlayExists) gmap.Overlays.Add(NewOverlay);
+                // keep legend overlay on top
+                EnsureLegendTop();
             }
         }
 
@@ -982,6 +984,8 @@ namespace RateController.Classes
                 {
                     var overlaysToRemove = gmap.Overlays.Where(o => o.Id == overlay.Id).ToList();
                     foreach (var o in overlaysToRemove) gmap.Overlays.Remove(o);
+                    // keep legend overlay on top after any removal
+                    EnsureLegendTop();
                 }
             }
             catch (Exception ex)
@@ -1040,7 +1044,7 @@ namespace RateController.Classes
 
                 legendBitmap = new Bitmap(legendWidth, legendHeight);
                 using (var g2 = Graphics.FromImage(legendBitmap))
-                using (var backBrush = new SolidBrush(Color.FromArgb(200, Color.White)))
+                using (var backBrush = new SolidBrush(Color.Black))
                 {
                     // use faster rendering for small legend bitmap
                     g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
@@ -1052,9 +1056,9 @@ namespace RateController.Classes
                         using (var brush = new SolidBrush(item.Value))
                         {
                             g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
-                            g2.DrawRectangle(Pens.Black, leftMargin, y + 3, swatch, swatch);
+                            g2.DrawRectangle(Pens.White, leftMargin, y + 3, swatch, swatch);
                         }
-                        g2.DrawString(item.Key, legendFont, Brushes.Black, new PointF(leftMargin + swatch + gap, y + 4));
+                        g2.DrawString(item.Key, legendFont, Brushes.White, new PointF(leftMargin + swatch + gap, y + 4));
                         y += itemHeight;
                     }
                 }
@@ -1069,6 +1073,29 @@ namespace RateController.Classes
                 Offset = new System.Drawing.Point(-legendWidth - lm, lm)
             };
             legendOverlay.Markers.Add(marker);
+
+            // Ensure legend overlay renders on top
+            EnsureLegendTop();
+        }
+
+        private void EnsureLegendTop()
+        {
+            try
+            {
+                if (legendOverlay != null && gmap != null && gmap.Overlays != null && gmap.Overlays.Contains(legendOverlay))
+                {
+                    int lastIndex = gmap.Overlays.Count - 1;
+                    if (lastIndex >= 0 && !object.ReferenceEquals(gmap.Overlays[lastIndex], legendOverlay))
+                    {
+                        gmap.Overlays.Remove(legendOverlay);
+                        gmap.Overlays.Add(legendOverlay);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/EnsureLegendTop: " + ex.Message);
+            }
         }
     }
 }
