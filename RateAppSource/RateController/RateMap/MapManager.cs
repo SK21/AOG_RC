@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq; // Linq used throughout
 using System.Windows.Forms;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace RateController.Classes
 {
@@ -61,6 +63,9 @@ namespace RateController.Classes
 
         // Cache legend font to avoid recreating on each draw
         private Font legendFont;
+
+        // Regex to find standalone numeric tokens (with optional decimals) and not part of alpha words (e.g., avoid P1)
+        private static readonly Regex LegendNumberRegex = new Regex(@"(?<![A-Za-z])(-?\d+(?:[\.,]\d+)?)(?![A-Za-z])", RegexOptions.Compiled);
 
         public MapManager(FormStart main)
         {
@@ -928,7 +933,7 @@ namespace RateController.Classes
             Refresh();
 
             // create legend font once
-            legendFont = new Font("Arial", 8);
+            legendFont = new Font("Arial", 11);
         }
 
         private void InitializeMapZones()
@@ -1020,7 +1025,8 @@ namespace RateController.Classes
                 foreach (var kv in cLegend.OrderBy(k => k.Key))
                 {
                     var col = kv.Value;
-                    parts.Add(kv.Key + "#" + col.ToArgb().ToString("X8"));
+                    string key = FormatLegendLabelNoDecimals(kv.Key);
+                    parts.Add(key + "#" + col.ToArgb().ToString("X8"));
                 }
                 newSig = string.Join("|", parts);
             }
@@ -1058,7 +1064,9 @@ namespace RateController.Classes
                             g2.FillRectangle(brush, leftMargin, y + 3, swatch, swatch);
                             g2.DrawRectangle(Pens.White, leftMargin, y + 3, swatch, swatch);
                         }
-                        g2.DrawString(item.Key, legendFont, Brushes.White, new PointF(leftMargin + swatch + gap, y + 4));
+
+                        string label = FormatLegendLabelNoDecimals(item.Key);
+                        g2.DrawString(label, legendFont, Brushes.White, new PointF(leftMargin + swatch + gap, y + 4));
                         y += itemHeight;
                     }
                 }
@@ -1076,6 +1084,22 @@ namespace RateController.Classes
 
             // Ensure legend overlay renders on top
             EnsureLegendTop();
+        }
+
+        private static string FormatLegendLabelNoDecimals(string label)
+        {
+            if (string.IsNullOrEmpty(label)) return label ?? string.Empty;
+            return LegendNumberRegex.Replace(label, m =>
+            {
+                var s = m.Groups[1].Value.Replace(',', '.');
+                double val;
+                if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
+                {
+                    int ival = (int)Math.Round(val);
+                    return ival.ToString(CultureInfo.InvariantCulture);
+                }
+                return m.Value;
+            });
         }
 
         private void EnsureLegendTop()
