@@ -1022,8 +1022,9 @@ namespace RateController.Classes
             unchecked
             {
                 var orderedForSig = OrderLegend(cLegend);
-                var parts = new List<string>(orderedForSig.Count);
-                foreach (var kv in orderedForSig)
+                var adjustedForSig = AdjustLegendLabels(orderedForSig);
+                var parts = new List<string>(adjustedForSig.Count);
+                foreach (var kv in adjustedForSig)
                 {
                     var col = kv.Value;
                     string key = FormatLegendLabelNoDecimals(kv.Key);
@@ -1041,10 +1042,11 @@ namespace RateController.Classes
 
             // order items numerically by the lower (and then upper) bound extracted from the label
             var orderedItems = OrderLegend(cLegend);
+            var adjustedItems = AdjustLegendLabels(orderedItems);
 
             // measure max text width to center the widest item and align others to it
             int maxTextWidth = 0;
-            foreach (var item in orderedItems)
+            foreach (var item in adjustedItems)
             {
                 string label = FormatLegendLabelNoDecimals(item.Key);
                 // TextRenderer works without a Graphics context and fits WinForms rendering
@@ -1076,7 +1078,7 @@ namespace RateController.Classes
                     int anchorStartX = Math.Max(leftMargin, (legendWidth - maxContentWidth) / 2);
 
                     int y = leftMargin;
-                    foreach (var item in orderedItems)
+                    foreach (var item in adjustedItems)
                     {
                         string label = FormatLegendLabelNoDecimals(item.Key);
                         var textSize = g2.MeasureString(label, legendFont);
@@ -1159,6 +1161,62 @@ namespace RateController.Classes
                 .ToList();
 
             return ordered;
+        }
+
+        // Adjust legend labels so that each range starts strictly greater than the previous range's end
+        // Example: 50-55, 56-62, 63-98
+        private static List<KeyValuePair<string, Color>> AdjustLegendLabels(List<KeyValuePair<string, Color>> orderedLegend)
+        {
+            var result = new List<KeyValuePair<string, Color>>();
+            if (orderedLegend == null || orderedLegend.Count == 0) return result;
+
+            int? prevEnd = null; // last upper bound used (integer, rounded)
+
+            foreach (var kv in orderedLegend)
+            {
+                var nums = ExtractLegendNumbers(kv.Key);
+                string newLabel = kv.Key;
+
+                if (nums.Count >= 2)
+                {
+                    int lower = (int)Math.Round(nums[0]);
+                    int upper = (int)Math.Round(nums[1]);
+
+                    if (prevEnd.HasValue && lower <= prevEnd.Value)
+                    {
+                        lower = prevEnd.Value + 1;
+                    }
+
+                    if (lower > upper)
+                    {
+                        // Ensure range is valid and strictly non-overlapping
+                        upper = lower;
+                    }
+
+                    newLabel = (lower == upper) ? lower.ToString(CultureInfo.InvariantCulture)
+                                                : string.Format(CultureInfo.InvariantCulture, "{0}-{1}", lower, upper);
+                    prevEnd = upper;
+                }
+                else if (nums.Count == 1)
+                {
+                    int val = (int)Math.Round(nums[0]);
+                    if (prevEnd.HasValue && val <= prevEnd.Value)
+                    {
+                        val = prevEnd.Value + 1;
+                    }
+                    newLabel = val.ToString(CultureInfo.InvariantCulture);
+                    prevEnd = val;
+                }
+                else
+                {
+                    // Non-numeric label, keep as-is and do not change prevEnd
+                    newLabel = kv.Key;
+                }
+
+                result.Add(new KeyValuePair<string, Color>(newLabel, kv.Value));
+            }
+
+            return result;
         }
 
         private void EnsureLegendTop()
