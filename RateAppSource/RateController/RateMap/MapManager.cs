@@ -1021,8 +1021,9 @@ namespace RateController.Classes
             string newSig;
             unchecked
             {
-                var parts = new List<string>(cLegend.Count);
-                foreach (var kv in cLegend.OrderBy(k => k.Key))
+                var orderedForSig = OrderLegend(cLegend);
+                var parts = new List<string>(orderedForSig.Count);
+                foreach (var kv in orderedForSig)
                 {
                     var col = kv.Value;
                     string key = FormatLegendLabelNoDecimals(kv.Key);
@@ -1037,8 +1038,23 @@ namespace RateController.Classes
             const int swatch = 20;
             const int gap = 10;
             const int rightMargin = 10;
+
+            // order items numerically by the lower (and then upper) bound extracted from the label
+            var orderedItems = OrderLegend(cLegend);
+
+            // measure max text width to center the widest item and align others to it
+            int maxTextWidth = 0;
+            foreach (var item in orderedItems)
+            {
+                string label = FormatLegendLabelNoDecimals(item.Key);
+                // TextRenderer works without a Graphics context and fits WinForms rendering
+                var sz = TextRenderer.MeasureText(label, legendFont);
+                if (sz.Width > maxTextWidth) maxTextWidth = sz.Width;
+            }
+            int maxContentWidth = swatch + gap + maxTextWidth;
+
             int legendHeight = (cLegend.Count * itemHeight) + (leftMargin * 2);
-            int legendWidth = Math.Max(120, leftMargin + swatch + gap + 80 + rightMargin);
+            int legendWidth = Math.Max(120, leftMargin + maxContentWidth + rightMargin);
 
             if (legendBitmap == null || !string.Equals(newSig, legendSignature, StringComparison.Ordinal))
             {
@@ -1056,13 +1072,16 @@ namespace RateController.Classes
                     g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                     g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
 
+                    // anchor so that the widest (max content) is centered
+                    int anchorStartX = Math.Max(leftMargin, (legendWidth - maxContentWidth) / 2);
+
                     int y = leftMargin;
-                    foreach (var item in cLegend.OrderBy(k => k.Key))
+                    foreach (var item in orderedItems)
                     {
                         string label = FormatLegendLabelNoDecimals(item.Key);
                         var textSize = g2.MeasureString(label, legendFont);
-                        int contentWidth = swatch + gap + (int)Math.Ceiling(textSize.Width);
-                        int startX = Math.Max(leftMargin, (legendWidth - contentWidth) / 2);
+
+                        int startX = anchorStartX; // left-align all to the centered widest item
 
                         int swatchTop = y + (itemHeight - swatch) / 2;
                         using (var brush = new SolidBrush(item.Value))
@@ -1106,6 +1125,40 @@ namespace RateController.Classes
                 }
                 return m.Value;
             });
+        }
+
+        // Extract all numbers found in a legend label for ordering
+        private static List<double> ExtractLegendNumbers(string label)
+        {
+            var nums = new List<double>();
+            if (string.IsNullOrEmpty(label)) return nums;
+            foreach (Match m in LegendNumberRegex.Matches(label))
+            {
+                var s = m.Groups[1].Value.Replace(',', '.');
+                double val;
+                if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
+                {
+                    nums.Add(val);
+                }
+            }
+            return nums;
+        }
+
+        // Order legend items numerically by their lower then upper bounds (fallback to string order when not numeric)
+        private static List<KeyValuePair<string, Color>> OrderLegend(Dictionary<string, Color> legend)
+        {
+            if (legend == null || legend.Count == 0) return new List<KeyValuePair<string, Color>>();
+
+            var ordered = legend
+                .Select(kv => new { kv.Key, kv.Value, nums = ExtractLegendNumbers(kv.Key) })
+                .OrderBy(x => x.nums.Count > 0 ? 0 : 1)                             // numeric first
+                .ThenBy(x => x.nums.Count > 0 ? x.nums[0] : double.MaxValue)        // lower bound
+                .ThenBy(x => x.nums.Count > 1 ? x.nums[1] : double.MaxValue)        // upper bound
+                .ThenBy(x => x.Key, StringComparer.Ordinal)                          // deterministic tie-break
+                .Select(x => new KeyValuePair<string, Color>(x.Key, x.Value))
+                .ToList();
+
+            return ordered;
         }
 
         private void EnsureLegendTop()
