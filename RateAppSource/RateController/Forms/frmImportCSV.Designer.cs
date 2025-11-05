@@ -66,7 +66,6 @@
             // 
             this.btnOK.BackColor = System.Drawing.Color.Transparent;
             this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOK.Enabled = false;
             this.btnOK.FlatAppearance.BorderSize = 0;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
@@ -83,7 +82,6 @@
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
             this.btnCancel.FlatAppearance.BorderSize = 0;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
@@ -145,6 +143,7 @@
             this.btnNotesUp.Size = new System.Drawing.Size(41, 41);
             this.btnNotesUp.TabIndex = 403;
             this.btnNotesUp.UseVisualStyleBackColor = true;
+            this.btnNotesUp.Click += new System.EventHandler(this.btnNotesUp_Click);
             // 
             // btnNotesDown
             // 
@@ -156,6 +155,7 @@
             this.btnNotesDown.Size = new System.Drawing.Size(41, 41);
             this.btnNotesDown.TabIndex = 402;
             this.btnNotesDown.UseVisualStyleBackColor = true;
+            this.btnNotesDown.Click += new System.EventHandler(this.btnNotesDown_Click);
             // 
             // cbField
             // 

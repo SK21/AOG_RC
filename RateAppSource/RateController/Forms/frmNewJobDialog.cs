@@ -125,5 +125,23 @@ namespace RateController.Forms
             public string Name { get; set; }
             public override string ToString() => Name;
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // frmNewJobDialog
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "frmNewJobDialog";
+            this.Load += new System.EventHandler(this.frmNewJobDialog_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        private void frmNewJobDialog_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
