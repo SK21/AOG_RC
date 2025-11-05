@@ -3,6 +3,7 @@ using RateController.Language;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 namespace RateController.Forms
 {
@@ -125,6 +126,9 @@ namespace RateController.Forms
             // Emphasize values that remain
             var valFont = new Font(lbDataPoints.Font.FontFamily, 14, FontStyle.Bold);
             lbDataPoints.Font = valFont;
+
+            // Hook import button
+            btnImport.Click += btnImport_Click;
         }
 
         private void gbMap_Paint(object sender, PaintEventArgs e)
@@ -222,6 +226,40 @@ namespace RateController.Forms
                 Props.WriteErrorLog("frmRates/UpdateForm: " + ex.Message);
             }
             Initializing = false;
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var ofd = new OpenFileDialog { Filter = "CSV Files (*.csv)|*.csv", Title = "Select Rate Data CSV" })
+                {
+                    if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                    string csvPath = ofd.FileName;
+                    if (!File.Exists(csvPath))
+                    {
+                        Props.ShowMessage("Selected file not found.", "Import", 8000, true);
+                        return;
+                    }
+
+                    // Use frmImportCSV to create a job and attach the CSV
+                    using (var dlg = new frmImportCSV())
+                    {
+                        dlg.CsvPath = csvPath;
+                        if (dlg.ShowDialog(this) != DialogResult.OK)
+                            return;
+
+                        // After dialog creates and switches job, refresh display
+                        lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuRateData/btnImport_Click: " + ex.Message);
+                Props.ShowMessage("Import failed: " + ex.Message, "Import", 15000, true, true);
+            }
         }
     }
 }

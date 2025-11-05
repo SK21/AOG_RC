@@ -193,6 +193,18 @@
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
     <Compile Include="Classes\Props.cs" />
+    <Compile Include="Forms\frmImportCSV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmImportCSV.Designer.cs">
+      <DependentUpon>frmImportCSV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmNewJobDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmTextInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="RateMap\DataCollector.cs" />
     <Compile Include="Classes\clsProducts.cs" />
     <Compile Include="Classes\clsRelay.cs" />
@@ -535,6 +547,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmImport.resx">
       <DependentUpon>frmImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmImportCSV.resx">
+      <DependentUpon>frmImportCSV.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
