@@ -47,7 +47,7 @@ namespace RateController.Forms
                 mf.Tls.Manager.ClearAppliedRatesOverlay();
             }
         }
-        private void btnImport_Click(object sender, EventArgs e)
+        private void btnExport_Click(object sender, EventArgs e)
         {
             try
             {
