@@ -1,4 +1,3 @@
-
 // valid pins for each processor
 uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pins 5,18,19,23 excluded for ethernet module
 
@@ -334,7 +333,17 @@ void DoSetup()
 	AP += suffix;
 
 	WiFi.softAPConfig(AP_LocalIP, AP_GateWay, AP_Subnet);
-	WiFi.softAP(AP.c_str(), MDL.APpassword, 6, false, 4);
+	if (strlen(MDL.APpassword) >= 8) 
+	{
+		// WPA2-PSK
+		WiFi.softAP(AP.c_str(), MDL.APpassword, 6, false, 4);
+	}
+	else
+	{
+		// Fallback: invalid WPA passphrase length -> force open
+		WiFi.softAP(AP.c_str(), nullptr, 6, false, 4);
+	}
+
 	dnsServer.start(DNS_PORT, "*", AP_LocalIP);
 
 	UDP_Wifi.begin(ListeningPort);
@@ -393,7 +402,6 @@ void DoSetup()
 	Serial.println(MDL.SensorCount);
 	Serial.println("");
 	Serial.println("Sensor 1: ");
-	Serial.print("Enabled: ");
 	Serial.print("Flow Pin: ");
 	Serial.println(Sensor[0].FlowPin);
 	Serial.print("IN1 Pin: ");
