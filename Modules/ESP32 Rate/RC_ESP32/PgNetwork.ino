@@ -87,6 +87,7 @@ String GetPage2()
     st += "      input[type=checkbox].styled:focus { box-shadow: 0 0 0 3px rgba(179,132,201,0.22); }";
     st += "";
     st += "      .label-normal { font-weight:normal; }";
+    st += "      .hint { font-size: 12px; color: #333; margin-top: 4px; }";
     st += "    </style>";
     st += "  </head>";
     st += "";
@@ -116,6 +117,17 @@ String GetPage2()
     st += "          <td class='label-col'><span class='label-normal'>Password</span></td>";
     st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='pass' size='20' name='prop2' value='" + String(MDLnetwork.Password) + "'></div></td>";
     st += "        </tr>";
+
+    // Separator and Hotspot section
+    st += "        <tr><td colspan='2'><hr></td></tr>";
+    st += "        <tr>";
+    st += "          <td class='label-col'><span class='label-normal'>Hotspot Password</span></td>";
+    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ap_pass' size='20' name='prop3' value='" + String(MDL.APpassword) + "'></div></td>";
+    st += "        </tr>";
+    st += "        <tr>";
+    st += "          <td colspan='2'><div class='control-width'><div class='hint'>This is the rate module hotspot (Access Point) password. Leave empty for an open hotspot; use 8 to 10 characters.</div></div></td>";
+    st += "        </tr>";
+
     st += "      </table>";
     st += "";
     st += "      <p><div class='control-width'><input class='button-72' id='submitBtn' type='submit' value='Save/Restart'></div></p>";
@@ -129,8 +141,7 @@ String GetPage2()
     {
         st += "<p>Wifi Not Connected</p>";
     }
-    st += "</body>";
-    st += "";
+    st += "  </BODY>";
     st += "</HTML>";
 
     return st;
