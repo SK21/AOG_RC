@@ -70,11 +70,13 @@ namespace RateController.Classes
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.1.2";
+        private static string cCurrentMenuName;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
+        private static bool cShowJobs;
         private static string cJobsDataPath;
         private static string cJobsFolder;
         private static bool cMapShowRates;
@@ -88,7 +90,6 @@ namespace RateController.Classes
         private static bool cRateCalibrationOn = false;
         private static double cRateDisplayResolution;
         private static bool cRateRecordEnabled;
-        private static double cRateRecordInterval;
         private static int cRateType;
         private static bool cReadOnly = false;
         private static bool cResumeAfterPrime;
@@ -104,12 +105,11 @@ namespace RateController.Classes
         private static bool cUseVariableRate = false;
         private static bool cUseZones = false;
         private static string lastMessage = "";
-        private static DateTime lastMessageTime=DateTime.MinValue;
+        private static DateTime lastMessageTime = DateTime.MinValue;
         private static FormStart mf;
         private static frmPressureDisplay PressureDisplay;
         private static frmRate RateDisplay;
         private static frmSwitches SwitchesForm;
-        private static string cCurrentMenuName;
 
         #region pressure calibration
 
@@ -167,8 +167,8 @@ namespace RateController.Classes
                 Job current = JobManager.SearchJob(Props.CurrentJobID);
                 string fld = "";
                 Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
-                if (currentParcel != null) fld = currentParcel.Name;
-                return current.Name + " - " + fld;
+                if (currentParcel != null && currentParcel.Name.Trim()!="") fld = " - " + currentParcel.Name;
+                return current.Name + fld;
             }
         }
 
@@ -450,6 +450,16 @@ namespace RateController.Classes
             }
         }
 
+        public static bool ShowJobs
+        {
+            get { return cShowJobs; }
+            set
+            {
+                cShowJobs = value;
+                SetProp("ShowJobs", cShowJobs.ToString());
+            }
+        }
+
         public static bool UseLargeScreen
         {
             get { return cUseLargeScreen; }
@@ -649,6 +659,12 @@ namespace RateController.Classes
 
         #endregion MainProperties
 
+        public static string CurrentMenuName
+        {
+            get { return cCurrentMenuName; }
+            set { cCurrentMenuName = value; }
+        }
+
         public static bool CheckFolders()
         {
             bool Result = false;
@@ -682,7 +698,6 @@ namespace RateController.Classes
                 if (!File.Exists(Properties.Settings.Default.CurrentFile))
                 {
                     Properties.Settings.Default.CurrentFile = DefaultProfile + "\\Default.rcs";
-                    Properties.Settings.Default.UseJobs = true;
                     Properties.Settings.Default.Save();
                 }
 
@@ -776,11 +791,6 @@ namespace RateController.Classes
             }
         }
 
-        public static string CurrentMenuName
-        {
-            get { return cCurrentMenuName; }
-            set { cCurrentMenuName = value; }
-        }
         public static void DisplaySwitches()
         {
             Form fs = Props.IsFormOpen("frmSwitches");
@@ -875,32 +885,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool RateMapIsVisible()
-        {
-            bool Result = true;
-            try
-            {
-                if (cCurrentMenuName != "frmMenuRateMap")
-                {
-                    Result = false;
-                }
-                else
-                {
-                    Form frm = IsFormOpen("frmMenuRateMap", false);
-                    if ((frm == null) || !frm.Visible || (frm.WindowState == FormWindowState.Minimized))
-                    {
-                        Result = false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/IsRateMapVisible: " + ex.Message);
-                Result = false;
-            }
-            return Result;
-        }
-
         public static bool IsPathSafeToDelete(string candidatePath)
         {
             bool result = false;
@@ -984,12 +968,12 @@ namespace RateController.Classes
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
             cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
             cUseMetric = bool.TryParse(GetProp("UseMetric"), out bool mt) ? mt : false;
-            cRateRecordInterval = double.TryParse(GetProp("RateRecordInterval"), out double rr) ? rr : 10;
             cRateRecordEnabled = bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : true;
             cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
             cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
             cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
             cUseRateDisplay = bool.TryParse(GetProp("UseRateDisplay"), out bool rtd) ? rtd : false;
+            cShowJobs = bool.TryParse(GetProp("ShowJobs"), out bool ja) ? ja : false;
 
             for (int i = 0; i < 40; i++)
             {
@@ -1086,6 +1070,32 @@ namespace RateController.Classes
         public static void RaiseRateDataSettingsChanged()
         {
             RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static bool RateMapIsVisible()
+        {
+            bool Result = true;
+            try
+            {
+                if (cCurrentMenuName != "frmMenuRateMap")
+                {
+                    Result = false;
+                }
+                else
+                {
+                    Form frm = IsFormOpen("frmMenuRateMap", false);
+                    if ((frm == null) || !frm.Visible || (frm.WindowState == FormWindowState.Minimized))
+                    {
+                        Result = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/IsRateMapVisible: " + ex.Message);
+                Result = false;
+            }
+            return Result;
         }
 
         public static void SaveFormLocation(Form frm, string Instance = "")

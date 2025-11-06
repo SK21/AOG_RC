@@ -57,6 +57,7 @@ namespace RateController
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         public clsSensors RateSensors;
+        private int RunOnce = 0;
         public FormStart()
         {
             InitializeComponent();
@@ -688,11 +689,6 @@ namespace RateController
             SetLanguage();
             Props.WriteActivityLog("Started", true);
             cStartTime = DateTime.Now;
-
-            if (Properties.Settings.Default.UseJobs)
-            {
-                // to do open jobs screen
-            }
         }
 
         private void FormStart_Resize(object sender, EventArgs e)
@@ -730,7 +726,7 @@ namespace RateController
             {
                 int prod = CurrentPage - 1;
                 if (prod < 0) prod = 0;
-                Form restoreform = new RCRestore(this, Props.UserRateType,  this);
+                Form restoreform = new RCRestore(this, Props.UserRateType, this);
                 restoreform.Show();
             }
         }
@@ -848,12 +844,12 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             MouseButtonClicked = e.Button;
-            if (e.Button == MouseButtons.Right ) MouseDownLocation = e.Location;
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right ) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void SetDisplay()
@@ -960,6 +956,35 @@ namespace RateController
         private void lbProduct_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            if (RunOnce == 0)
+            {
+                RunOnce = 1;
+                if (Props.ShowJobs)
+                {
+                    // show jobs menu
+                    var menuForm = Props.IsFormOpen("frmMenu", false) as frmMenu;
+                    if (menuForm == null)
+                    {
+                        int prd = CurrentProduct();
+                        menuForm = new frmMenu(this, prd);
+                        menuForm.Show();
+                    }
+
+                    if (Props.IsFormOpen("frmMenuJobs", false) == null)
+                    {
+                        var jobsForm = new RateController.Menu.frmMenuJobs(this, menuForm);
+                        jobsForm.Owner = menuForm;
+                        jobsForm.Show();
+                        Props.CurrentMenuName = "frmMenuJobs";
+                    }
+                }
+            }
         }
     }
 }

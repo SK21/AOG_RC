@@ -36,7 +36,6 @@
             this.lb1 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lbFieldName = new System.Windows.Forms.Label();
-            this.ckJobs = new System.Windows.Forms.CheckBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbDate = new System.Windows.Forms.TextBox();
@@ -58,6 +57,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbField = new System.Windows.Forms.ComboBox();
+            this.ckResume = new System.Windows.Forms.CheckBox();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -117,7 +117,7 @@
             this.tbNotes.Multiline = true;
             this.tbNotes.Name = "tbNotes";
             this.tbNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbNotes.Size = new System.Drawing.Size(373, 78);
+            this.tbNotes.Size = new System.Drawing.Size(258, 78);
             this.tbNotes.TabIndex = 5;
             this.tbNotes.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
@@ -150,22 +150,6 @@
             this.lbFieldName.Text = "Field:";
             this.lbFieldName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ckJobs
-            // 
-            this.ckJobs.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckJobs.Checked = true;
-            this.ckJobs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckJobs.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckJobs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckJobs.Location = new System.Drawing.Point(6, 228);
-            this.ckJobs.Name = "ckJobs";
-            this.ckJobs.Size = new System.Drawing.Size(89, 64);
-            this.ckJobs.TabIndex = 376;
-            this.ckJobs.Text = "Use Jobs";
-            this.ckJobs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckJobs.UseVisualStyleBackColor = true;
-            this.ckJobs.CheckedChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
-            // 
             // btnCancel
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
@@ -176,7 +160,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(368, 229);
+            this.btnCancel.Location = new System.Drawing.Point(450, 79);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 379;
@@ -194,7 +178,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(444, 229);
+            this.btnOK.Location = new System.Drawing.Point(450, 148);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 6;
@@ -216,7 +200,7 @@
             this.btnCalender.FlatAppearance.BorderSize = 0;
             this.btnCalender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalender.Image = global::RateController.Properties.Resources.calendar___large;
-            this.btnCalender.Location = new System.Drawing.Point(376, 42);
+            this.btnCalender.Location = new System.Drawing.Point(358, 43);
             this.btnCalender.Name = "btnCalender";
             this.btnCalender.Size = new System.Drawing.Size(82, 64);
             this.btnCalender.TabIndex = 383;
@@ -240,7 +224,7 @@
             this.btnJobsDown.FlatAppearance.BorderSize = 0;
             this.btnJobsDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnJobsDown.Image = global::RateController.Properties.Resources.arrow_down;
-            this.btnJobsDown.Location = new System.Drawing.Point(479, 274);
+            this.btnJobsDown.Location = new System.Drawing.Point(479, 298);
             this.btnJobsDown.Name = "btnJobsDown";
             this.btnJobsDown.Size = new System.Drawing.Size(41, 41);
             this.btnJobsDown.TabIndex = 386;
@@ -252,7 +236,7 @@
             this.btnNotesDown.FlatAppearance.BorderSize = 0;
             this.btnNotesDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesDown.Image = global::RateController.Properties.Resources.arrow_down;
-            this.btnNotesDown.Location = new System.Drawing.Point(473, 170);
+            this.btnNotesDown.Location = new System.Drawing.Point(379, 170);
             this.btnNotesDown.Name = "btnNotesDown";
             this.btnNotesDown.Size = new System.Drawing.Size(41, 41);
             this.btnNotesDown.TabIndex = 387;
@@ -264,7 +248,7 @@
             this.btnNotesUp.FlatAppearance.BorderSize = 0;
             this.btnNotesUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNotesUp.Image = global::RateController.Properties.Resources.arrow_up;
-            this.btnNotesUp.Location = new System.Drawing.Point(473, 115);
+            this.btnNotesUp.Location = new System.Drawing.Point(379, 115);
             this.btnNotesUp.Name = "btnNotesUp";
             this.btnNotesUp.Size = new System.Drawing.Size(41, 41);
             this.btnNotesUp.TabIndex = 388;
@@ -285,7 +269,7 @@
             this.gbJobs.Controls.Add(this.btnLoad);
             this.gbJobs.Controls.Add(this.btnCopy);
             this.gbJobs.Controls.Add(this.btnDelete);
-            this.gbJobs.Location = new System.Drawing.Point(6, 304);
+            this.gbJobs.Location = new System.Drawing.Point(6, 226);
             this.gbJobs.Name = "gbJobs";
             this.gbJobs.Size = new System.Drawing.Size(528, 362);
             this.gbJobs.TabIndex = 390;
@@ -382,7 +366,6 @@
             this.gbCurrentJob.Controls.Add(this.tbName);
             this.gbCurrentJob.Controls.Add(this.btnOK);
             this.gbCurrentJob.Controls.Add(this.btnCancel);
-            this.gbCurrentJob.Controls.Add(this.ckJobs);
             this.gbCurrentJob.Controls.Add(this.label1);
             this.gbCurrentJob.Controls.Add(this.tbDate);
             this.gbCurrentJob.Controls.Add(this.btnCalender);
@@ -394,7 +377,7 @@
             this.gbCurrentJob.Controls.Add(this.tbNotes);
             this.gbCurrentJob.Location = new System.Drawing.Point(6, 0);
             this.gbCurrentJob.Name = "gbCurrentJob";
-            this.gbCurrentJob.Size = new System.Drawing.Size(528, 298);
+            this.gbCurrentJob.Size = new System.Drawing.Size(528, 220);
             this.gbCurrentJob.TabIndex = 391;
             this.gbCurrentJob.TabStop = false;
             this.gbCurrentJob.Text = "Current Job";
@@ -432,11 +415,28 @@
             this.cbField.TabIndex = 4;
             this.cbField.TextChanged += new System.EventHandler(this.ckJobs_CheckedChanged);
             // 
+            // ckResume
+            // 
+            this.ckResume.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckResume.Checked = true;
+            this.ckResume.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckResume.Location = new System.Drawing.Point(212, 602);
+            this.ckResume.Name = "ckResume";
+            this.ckResume.Size = new System.Drawing.Size(108, 64);
+            this.ckResume.TabIndex = 392;
+            this.ckResume.Text = "Show at Start-Up";
+            this.ckResume.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckResume.UseVisualStyleBackColor = true;
+            this.ckResume.CheckedChanged += new System.EventHandler(this.ckResume_CheckedChanged);
+            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.ckResume);
             this.Controls.Add(this.gbCurrentJob);
             this.Controls.Add(this.gbJobs);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -463,7 +463,6 @@
         private System.Windows.Forms.Label lb1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbFieldName;
-        private System.Windows.Forms.CheckBox ckJobs;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TextBox tbDate;
@@ -485,5 +484,6 @@
         private System.Windows.Forms.ListView lvJobs;
         private System.Windows.Forms.ColumnHeader HdrName;
         private System.Windows.Forms.ColumnHeader HdrDate;
+        private System.Windows.Forms.CheckBox ckResume;
     }
 }

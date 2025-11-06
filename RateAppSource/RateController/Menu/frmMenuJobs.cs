@@ -245,9 +245,6 @@ namespace RateController.Menu
         {
             try
             {
-                Properties.Settings.Default.UseJobs = ckJobs.Checked;
-                Properties.Settings.Default.Save();
-
                 // save parcel
                 int? selectedFieldID = cbField.SelectedValue as int?;
                 Parcel selectedParcel = selectedFieldID.HasValue
@@ -258,7 +255,7 @@ namespace RateController.Menu
                 if (selectedParcel == null)
                 {
                     // Use the text from the combo as the new parcel name.
-                    selectedParcel = new Parcel { Name = cbField.Text };
+                    selectedParcel = new Parcel { Name = cbField.Text.Trim()};
                     ParcelManager.AddParcel(selectedParcel);
                 }
                 else
@@ -314,6 +311,12 @@ namespace RateController.Menu
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+
+        private void ckResume_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) Props.ShowJobs = ckResume.Checked;
         }
 
         private void FillCombos()
@@ -579,7 +582,6 @@ namespace RateController.Menu
 
                 tbNotes.SelectionStart = tbNotes.Text.Length;
                 tbNotes.ScrollToCaret();
-                ckJobs.Checked = Properties.Settings.Default.UseJobs;
 
                 // Trigger a repaint
                 gbCurrentJob.Invalidate();
@@ -595,6 +597,7 @@ namespace RateController.Menu
                         break;
                     }
                 }
+                ckResume.Checked = Props.ShowJobs;
 
                 Initializing = false;
             }

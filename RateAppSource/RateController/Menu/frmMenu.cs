@@ -290,6 +290,13 @@ namespace RateController
             {
                 butProfiles.Visible = !Expanded;
                 butJobs.Visible = !Expanded;
+                butMap.Visible = !Expanded;
+                butRateData.Visible = !Expanded;
+                butDisplay.Visible = !Expanded;
+                butLanguage.Visible = !Expanded;
+                butColor.Visible = !Expanded;
+                gbSpacer1.Visible = !Expanded;
+                gbSpacer2.Visible = !Expanded;
                 if (Expanded)
                 {
                     Expanded = false;
@@ -297,7 +304,6 @@ namespace RateController
                     butProducts.Visible = true;
                     butMachine.Visible = true;
                     butModules.Visible = true;
-                    butOptions.Visible = true;
                     butHelpScreen.Visible = true;
                 }
                 else
@@ -307,7 +313,6 @@ namespace RateController
                     butProducts.Visible = false;
                     butMachine.Visible = false;
                     butModules.Visible = false;
-                    butOptions.Visible = false;
                     butHelpScreen.Visible = false;
 
                     int Pos = butFile.Top;
@@ -320,6 +325,32 @@ namespace RateController
                     butJobs.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butJobs.Top = Pos;
+
+                    gbSpacer1.Left=butFile.Left+ SubOffset;
+                    gbSpacer1.Top = Pos + SubSpacing;
+
+                    butMap.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing + 5;
+                    butMap.Top = Pos;
+
+                    butRateData.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butRateData.Top = Pos;
+
+                    gbSpacer2.Left = butFile.Left + SubOffset;
+                    gbSpacer2.Top = Pos + SubSpacing;
+
+                    butDisplay.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing + 5;
+                    butDisplay.Top = Pos;
+
+                    butLanguage.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butLanguage.Top = Pos;
+
+                    butColor.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
+                    butColor.Top = Pos;
 
                     butProfiles.PerformClick();
                 }
@@ -390,7 +421,6 @@ namespace RateController
                     butProducts.Visible = true;
                     butMachine.Visible = true;
                     butModules.Visible = true;
-                    butOptions.Visible = true;
                     butHelpScreen.Visible = true;
                     butMachine.Top = (int)butMachine.Tag;
                 }
@@ -401,7 +431,6 @@ namespace RateController
                     butProducts.Visible = false;
                     butMachine.Visible = true;
                     butModules.Visible = false;
-                    butOptions.Visible = false;
                     butHelpScreen.Visible = false;
                     butMachine.Tag = butMachine.Top;
                     butMachine.Top = butFile.Top;
@@ -486,7 +515,6 @@ namespace RateController
                     butProducts.Visible = true;
                     butMachine.Visible = true;
                     butModules.Visible = true;
-                    butOptions.Visible = true;
                     butHelpScreen.Visible = true;
                     butModules.Top = (int)butModules.Tag;
                 }
@@ -497,7 +525,6 @@ namespace RateController
                     butProducts.Visible = false;
                     butMachine.Visible = false;
                     butModules.Visible = true;
-                    butOptions.Visible = false;
                     butHelpScreen.Visible = false;
                     butModules.Tag = butModules.Top;
                     butModules.Top = butFile.Top;
@@ -569,54 +596,6 @@ namespace RateController
             }
         }
 
-        private void butOptions_Click(object sender, EventArgs e)
-        {
-            if (ClosedOwned())
-            {
-                butDisplay.Visible = !Expanded;
-                butLanguage.Visible = !Expanded;
-                butColor.Visible = !Expanded;
-
-                if (Expanded)
-                {
-                    Expanded = false;
-                    butFile.Visible = true;
-                    butProducts.Visible = true;
-                    butMachine.Visible = true;
-                    butModules.Visible = true;
-                    butOptions.Visible = true;
-                    butHelpScreen.Visible = true;
-                    butOptions.Top = (int)butOptions.Tag;
-                }
-                else
-                {
-                    Expanded = true;
-                    butFile.Visible = false;
-                    butProducts.Visible = false;
-                    butMachine.Visible = false;
-                    butModules.Visible = false;
-                    butOptions.Visible = true;
-                    butHelpScreen.Visible = false;
-                    butOptions.Tag = butOptions.Top;
-                    butOptions.Top = butFile.Top;
-
-                    int Pos = butFile.Top;
-                    butDisplay.Left = butFile.Left + SubOffset;
-                    Pos += SubFirstSpacing;
-                    butDisplay.Top = Pos;
-
-                    butLanguage.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butLanguage.Top = Pos;
-
-                    butColor.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butColor.Top = Pos;
-
-                    butDisplay.PerformClick();
-                }
-            }
-        }
 
         private void butPins_Click(object sender, EventArgs e)
         {
@@ -669,8 +648,6 @@ namespace RateController
                 butMode.Visible = !Expanded;
                 butMonitor.Visible = !Expanded;
                 butData.Visible = !Expanded;
-                butMap.Visible = !Expanded;
-                butRateData.Visible = !Expanded;
 
                 if (Expanded)
                 {
@@ -679,7 +656,6 @@ namespace RateController
                     butProducts.Visible = true;
                     butMachine.Visible = true;
                     butModules.Visible = true;
-                    butOptions.Visible = true;
                     butHelpScreen.Visible = true;
                     butProducts.Top = (int)butProducts.Tag;
                 }
@@ -690,7 +666,6 @@ namespace RateController
                     butProducts.Visible = true;
                     butMachine.Visible = false;
                     butModules.Visible = false;
-                    butOptions.Visible = false;
                     butHelpScreen.Visible = false;
                     butProducts.Tag = butProducts.Top;
                     butProducts.Top = butFile.Top;
@@ -719,14 +694,6 @@ namespace RateController
                     butData.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butData.Top = Pos;
-
-                    butMap.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butMap.Top = Pos;
-
-                    butRateData.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butRateData.Top = Pos;
 
                     butRate.PerformClick();
                 }
@@ -1075,7 +1042,7 @@ namespace RateController
                             break;
 
                         case "frmMenuRateMap":
-                            butProducts.PerformClick();
+                            butFile.PerformClick();
                             fs = new frmMenuRateMap(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
@@ -1084,7 +1051,7 @@ namespace RateController
                             break;
 
                         case "frmMenuRateData":
-                            butProducts.PerformClick();
+                            butFile.PerformClick();
                             fs = new frmMenuRateData(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
@@ -1175,8 +1142,12 @@ namespace RateController
                             break;
 
                         case "frmMenuDisplay":
-                            butOptions.PerformClick();  // frmMenuDisplay opened by default
+                            butFile.PerformClick();  
+                            fs = new frmMenuDisplay(mf, this);
+                            fs.Owner = this;
+                            SaveLastScreen(Last);
                             HighlightButton(butDisplay);
+                            fs.Show();
                             break;
 
                         case "frmMenuPressure":
@@ -1189,7 +1160,7 @@ namespace RateController
                             break;
 
                         case "frmMenuLanguage":
-                            butOptions.PerformClick();
+                            butFile.PerformClick();
                             fs = new frmMenuLanguage(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
@@ -1198,7 +1169,7 @@ namespace RateController
                             break;
 
                         case "frmMenuColor":
-                            butOptions.PerformClick();
+                            butFile.PerformClick();
                             fs = new frmMenuColor(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
@@ -1244,7 +1215,6 @@ namespace RateController
             butProducts.Text = Lang.lgProductsMenu;
             butMachine.Text = Lang.lgMachine;
             butModules.Text = Lang.lgModules;
-            butOptions.Text = Lang.lgOptions;
             butHelpScreen.Text = Lang.lgHelp;
 
             butJobs.Text = Lang.lgJobs;
