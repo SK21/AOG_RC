@@ -2,7 +2,7 @@
 
 namespace RateController.Classes
 {
-    public class clsSensor
+    public class clsSensorSettings
     {
         // MaxPWM           maximum pwm value
         // MinPWM           minimum pwm value
@@ -29,7 +29,6 @@ namespace RateController.Classes
         private byte cMaxIntegral;
         private byte cMaxPWM;
         private byte cMinPWM;
-        private int cModuleID;
         private string cName;
         private byte cPIDslowAdjust;
         private byte cPIDtime;
@@ -37,18 +36,24 @@ namespace RateController.Classes
         private byte cPulseMinHz;
         private byte cPulseSampleSize;
         private int cRecID;
-        private int cSensorID;
         private byte cSlewRate;
         private UInt16 cTimedAdjust;
         private byte cTimedMinStart;
         private UInt16 cTimedPause;
 
-        public clsSensor(int ID)
+        public clsSensorSettings(int ID)
         {
             cRecID = ID;
-            cName = "RateSensor_" + cRecID.ToString() + "_";
-            SetNewRecord();
+            cName = "SensorSettings" + cRecID.ToString() + "_";
             SetDefaults();
+            cIsNew = true;
+            Load();
+            if (cIsNew)
+            {
+                cRecID = Props.NextSensorSettingsID;
+                cName = "SensorSettings" + cRecID.ToString() + "_";
+                Save();
+            }
         }
 
         public byte BrakePoint
@@ -168,10 +173,6 @@ namespace RateController.Classes
             }
         }
 
-        public int ModuleID
-        {
-            get { return cModuleID; }
-        }
 
         public byte PIDslowAdjust
         {
@@ -254,9 +255,9 @@ namespace RateController.Classes
             }
         }
 
-        public int SensorID
+        public int ID
         {
-            get { return cSensorID; }
+            get { return cRecID; }
         }
 
         public byte SlewRate
@@ -328,12 +329,14 @@ namespace RateController.Classes
         public bool Load()
         {
             bool Result = false;
-            if (int.TryParse(Props.GetProp(cName + "SensorID"), out int sid)) cSensorID = sid;
-            if (int.TryParse(Props.GetProp(cName + "ModuleID"), out int mn)) cModuleID = mn;
-            cIsNew = (cSensorID == -1 || cModuleID == -1);
+
+            if (byte.TryParse(Props.GetProp(cName + "BrakePoint"), out byte BP))
+            {
+                cIsNew = false;
+            }
             if (!cIsNew)
             {
-                if (byte.TryParse(Props.GetProp(cName + "BrakePoint"), out byte T)) cBrakePoint = T;
+                cBrakePoint = BP;
                 if (byte.TryParse(Props.GetProp(cName + "DeadBand"), out byte sw)) cDeadband = sw;
                 if (byte.TryParse(Props.GetProp(cName + "KP"), out byte kp)) cKP = kp;
                 if (byte.TryParse(Props.GetProp(cName + "KI"), out byte ki)) cKI = ki;
@@ -363,7 +366,6 @@ namespace RateController.Classes
             Props.SetProp(cName + "MaxIntegral", cMaxIntegral.ToString());
             Props.SetProp(cName + "MaxPWM", cMaxPWM.ToString());
             Props.SetProp(cName + "MinPWM", cMinPWM.ToString());
-            Props.SetProp(cName + "ModuleID", cModuleID.ToString());
             Props.SetProp(cName + "PIDslowAdjust", cPIDslowAdjust.ToString());
             Props.SetProp(cName + "PIDtime", cPIDtime.ToString());
             Props.SetProp(cName + "PulseMaxHz", cPulseMaxHz.ToString());
@@ -373,7 +375,7 @@ namespace RateController.Classes
             Props.SetProp(cName + "TimedAdjust", cTimedAdjust.ToString());
             Props.SetProp(cName + "TimedMinStart", cTimedMinStart.ToString());
             Props.SetProp(cName + "TimedPause", cTimedPause.ToString());
-            Props.SetProp(cName + "SensorID", cSensorID.ToString());
+            cIsNew = false;
         }
 
         public void SetDefaults()
@@ -394,26 +396,6 @@ namespace RateController.Classes
             cTimedAdjust = Props.TimedAdjustDefault;
             cTimedMinStart = Props.TimedMinStartDefault;
             cTimedPause = Props.TimedPauseDefault;
-        }
-
-        public bool SetModuleSensor(int Mod, int Sen, object Caller)
-        {
-            bool Result = false;
-            if (Caller is clsSensors)
-            {
-                cSensorID = Sen;
-                cModuleID = Mod;
-                Result = true;
-            }
-            cIsNew = (cSensorID == -1 || cModuleID == -1);
-            return Result;
-        }
-
-        private void SetNewRecord()
-        {
-            cModuleID = -1;
-            cSensorID = -1;
-            cIsNew = true;
         }
     }
 }

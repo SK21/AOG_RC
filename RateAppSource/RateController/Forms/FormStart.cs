@@ -56,7 +56,6 @@ namespace RateController
         private Label[] ProdName;
         private Label[] Rates;
         private PGN32501[] RelaySettings;
-        public clsSensors RateSensors;
         private int RunOnce = 0;
         public FormStart()
         {
@@ -112,7 +111,6 @@ namespace RateController
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
             GPS = new PGN208(this);
-            RateSensors = new clsSensors(this);
         }
 
         public event EventHandler ColorChanged;

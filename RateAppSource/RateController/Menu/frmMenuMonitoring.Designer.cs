@@ -76,7 +76,6 @@
             this.sec1 = new System.Windows.Forms.Label();
             this.sec0 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.lbHzData = new System.Windows.Forms.Label();
             this.lbHz = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -739,7 +738,6 @@
         private System.Windows.Forms.Label sec1;
         private System.Windows.Forms.Label sec0;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label lbHzData;
         private System.Windows.Forms.Label lbHz;
     }

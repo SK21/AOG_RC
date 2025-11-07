@@ -443,7 +443,18 @@ namespace RateController.Menu
             tbPIDtime.Text = MainMenu.CurrentProduct.PIDtime.ToString();
 
             SetAdvanced();
+            SetEnabled();
+
             Initializing = false;
+        }
+        private void SetEnabled()
+        {
+            bool Enabled = MainMenu.CurrentProduct.Enabled;
+
+            pnlAdvanced.Enabled = Enabled;
+            pnlMain.Enabled = Enabled;
+            butGraph.Enabled = Enabled;
+            btnPIDloadDefaults.Enabled = Enabled;
         }
 
         private void frmMenuControl_FormClosing(object sender, FormClosingEventArgs e)

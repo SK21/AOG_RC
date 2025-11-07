@@ -110,18 +110,49 @@ namespace RateController
                     Prd.RateAlt = 100;
                     Prd.TankSize = 1000;
                     Prd.TankStart = 1000;
-                    Prd.LoadSensor(i / 2, (byte)(i % 2));
+                    Prd.LoadSensorSettings();
                     Prd.OnScreen = true;
                     Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;
                     Prd.MinUPM = 0;
                     Prd.BumpButtons = false;
                     Prd.CountsRev = 1;
+                    Prd.Enabled = false;
                     Prd.Save();
 
                     Props.DefaultProduct = 0;
                 }
             }
+
+            bool OneEnabled = false;
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                clsProduct Prod = cProducts[i];
+                Prod.Load();
+                if (Prod.Enabled)
+                {
+                    OneEnabled = true;
+                    break;
+                }
+            }
+            if (!OneEnabled)
+            {
+                cProducts[0].Enabled = true;
+                cProducts[0].Save();
+            }
+        }
+
+        public double[] ProductAppliedRates()
+        {
+            double[] Result = new double[Props.MaxProducts - 2];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].RateSensorData.Connected())
+                {
+                    Result[i] = cProducts[i].CurrentRate();
+                }
+            }
+            return Result;
         }
 
         public bool ProductsAreOn()
@@ -133,19 +164,6 @@ namespace RateController
                 {
                     Result = true;
                     break;
-                }
-            }
-            return Result;
-        }
-
-        public double[] ProductAppliedRates()
-        {
-            double[] Result = new double[Props.MaxProducts - 2];
-            for (int i = 0; i < Props.MaxProducts - 2; i++)
-            {
-                if (cProducts[i].RateSensorData.Connected())
-                {
-                    Result[i] = cProducts[i].CurrentRate();
                 }
             }
             return Result;

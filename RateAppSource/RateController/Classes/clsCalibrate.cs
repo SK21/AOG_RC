@@ -1,7 +1,6 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
 using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace RateController
@@ -35,6 +34,7 @@ namespace RateController
         private double PulseCountStart;
         private double PulseCountTotal;
         private int SetCount;
+        private bool ProductEnabledStart;
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
@@ -200,11 +200,10 @@ namespace RateController
         public void Close()
         {
             // restore initial settings
-            cProduct.Enabled = true;
+            cProduct.Enabled = ProductEnabledStart;
             cProduct.AppMode = ApplicationModeStart;
             cProduct.CalMode = CalibrationMode.Off;
             cProduct.Save();
-            //cProduct.CalUseBaseRate = false;
         }
 
         public void Load()
@@ -430,6 +429,7 @@ namespace RateController
                 FirstRun = false;
                 cCalFactor = cProduct.MeterCal;
                 ApplicationModeStart = cProduct.AppMode;
+                ProductEnabledStart = cProduct.Enabled;
                 cProduct.Enabled = false;
                 PulseCountStart = cProduct.Pulses();
                 cProduct.AppMode = ApplicationMode.ConstantUPM;

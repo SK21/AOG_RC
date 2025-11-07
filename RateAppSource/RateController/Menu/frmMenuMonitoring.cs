@@ -97,14 +97,14 @@ namespace RateController.Menu
             timer1.Enabled = true;
         }
 
-        private void MainMenu_ProductChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
-        }
-
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void PositionForm()
@@ -135,6 +135,13 @@ namespace RateController.Menu
                 cEdited = Edited;
                 this.Tag = cEdited;
             }
+        }
+
+        private void SetEnabled()
+        {
+            bool Enabled = MainMenu.CurrentProduct.Enabled;
+
+            tbCountsRev.Enabled = Enabled;
         }
 
         private void SetLanguage()
@@ -277,6 +284,8 @@ namespace RateController.Menu
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
             }
             tbCountsRev.Text = (MainMenu.CurrentProduct.CountsRev.ToString("N0"));
+            SetEnabled();
+
             Initializing = false;
         }
     }

@@ -76,7 +76,6 @@ namespace RateController.Classes
         private static string cFieldNames;
         private static SortedDictionary<string, string> cFormProps = new SortedDictionary<string, string>();
         private static string cFormPropsFileName = "";
-        private static bool cShowJobs;
         private static string cJobsDataPath;
         private static string cJobsFolder;
         private static bool cMapShowRates;
@@ -93,6 +92,8 @@ namespace RateController.Classes
         private static int cRateType;
         private static bool cReadOnly = false;
         private static bool cResumeAfterPrime;
+        private static int cSensorSettingsMaxID = -1;
+        private static bool cShowJobs;
         private static bool cShowPressure;
         private static bool cShowSwitches;
         private static SimType cSimMode = SimType.Sim_None;
@@ -167,7 +168,7 @@ namespace RateController.Classes
                 Job current = JobManager.SearchJob(Props.CurrentJobID);
                 string fld = "";
                 Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
-                if (currentParcel != null && currentParcel.Name.Trim()!="") fld = " - " + currentParcel.Name;
+                if (currentParcel != null && currentParcel.Name.Trim() != "") fld = " - " + currentParcel.Name;
                 return current.Name + fld;
             }
         }
@@ -282,6 +283,16 @@ namespace RateController.Classes
             }
         }
 
+        public static int NextSensorSettingsID
+        {
+            get
+            {
+                cSensorSettingsMaxID++;
+                SetProp("SensorSettingsMaxID", cSensorSettingsMaxID.ToString());
+                return cSensorSettingsMaxID;
+            }
+        }
+
         public static int PrimeDelay
         {
             get { return cPrimeDelay; }
@@ -385,6 +396,16 @@ namespace RateController.Classes
             }
         }
 
+        public static bool ShowJobs
+        {
+            get { return cShowJobs; }
+            set
+            {
+                cShowJobs = value;
+                SetProp("ShowJobs", cShowJobs.ToString());
+            }
+        }
+
         public static bool ShowPressure
         {
             get { return cShowPressure; }
@@ -447,16 +468,6 @@ namespace RateController.Classes
             {
                 cUseDualAuto = value;
                 SetProp("UseDualAuto", cUseDualAuto.ToString());
-            }
-        }
-
-        public static bool ShowJobs
-        {
-            get { return cShowJobs; }
-            set
-            {
-                cShowJobs = value;
-                SetProp("ShowJobs", cShowJobs.ToString());
             }
         }
 
@@ -974,6 +985,7 @@ namespace RateController.Classes
             cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
             cUseRateDisplay = bool.TryParse(GetProp("UseRateDisplay"), out bool rtd) ? rtd : false;
             cShowJobs = bool.TryParse(GetProp("ShowJobs"), out bool ja) ? ja : false;
+            cSensorSettingsMaxID = int.TryParse(GetProp("SensorSettingsMaxID"), out int mi) ? mi : 0;
 
             for (int i = 0; i < 40; i++)
             {
@@ -1196,8 +1208,8 @@ namespace RateController.Classes
                         P3.KP = P0.KP;
 
                         mf.Products.Item(2).BumpButtons = false;
-                        P0.EditSensorIDs(6, 0);
-                        P3.LoadSensor(0, 0);
+                        //P0.EditSensorIDs(6, 0);
+                        //P3.LoadSensorSettings(0, 0);
                         P3.OnScreen = true;
                         P3.AppMode = P0.AppMode;
                         P3.UseOffRateAlarm = P0.UseOffRateAlarm;

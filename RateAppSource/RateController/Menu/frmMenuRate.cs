@@ -562,6 +562,8 @@ namespace RateController.Menu
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Text = MainMenu.CurrentProduct.TankStart.ToString("N0");
 
+            SetEnabled();
+
             Initializing = false;
         }
 
@@ -572,6 +574,14 @@ namespace RateController.Menu
             TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             TankRemain.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
             btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
+        }
+        private void SetEnabled()
+        {
+            bool Enabled = MainMenu.CurrentProduct.Enabled;
+
+            pnlFan.Enabled = Enabled;
+            pnlMain.Enabled = Enabled;
+            btnResetTank.Enabled = Enabled;
         }
     }
 }

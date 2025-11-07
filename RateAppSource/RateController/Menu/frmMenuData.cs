@@ -131,14 +131,14 @@ namespace RateController.Menu
             timer1.Enabled = true;
         }
 
-        private void MainMenu_ProductChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
-        }
-
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void PositionForm()
@@ -218,8 +218,20 @@ namespace RateController.Menu
             ckQuantity2.Checked = false;
             ckHours1.Checked = false;
             ckHours2.Checked = false;
+            SetEnabled();
 
             Initializing = false;
+        }
+        private void SetEnabled()
+        {
+            bool Enabled = MainMenu.CurrentProduct.Enabled;
+
+            ckArea1.Enabled = Enabled;
+            ckArea2.Enabled = Enabled;
+            ckQuantity1.Enabled = Enabled;
+            ckQuantity2.Enabled= Enabled;
+            ckHours1.Enabled = Enabled;
+            ckHours2.Enabled = Enabled;
         }
     }
 }

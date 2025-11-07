@@ -42,7 +42,7 @@ namespace RateController
 
         public void Send()
         {
-            clsSensor Sen = Prod.RateSensor;
+            clsSensorSettings Sen = Prod.RateSensor;
             byte[] Data = new byte[cByteCount];
             Data[0] = HeaderLo;
             Data[1] = HeaderHi;

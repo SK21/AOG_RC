@@ -1,4 +1,5 @@
-﻿using RateController.Classes;
+﻿using NetTopologySuite.Planargraph;
+using RateController.Classes;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -89,14 +90,14 @@ namespace RateController.Menu
             UpdateForm();
         }
 
-        private void MainMenu_ProductChanged(object sender, EventArgs e)
-        {
-            UpdateForm();
-        }
-
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private void MainMenu_ProductChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void PositionForm()
@@ -155,6 +156,16 @@ namespace RateController.Menu
             }
         }
 
+        private void SetEnabled()
+        {
+            bool Enabled = MainMenu.CurrentProduct.Enabled;
+
+            rbModeApplied.Enabled = Enabled;
+            rbModeConstant.Enabled = Enabled;
+            rbModeControlledUPM.Enabled = Enabled;
+            rbModeTarget.Enabled = Enabled;
+        }
+
         private void SetLanguage()
         {
         }
@@ -190,6 +201,7 @@ namespace RateController.Menu
                     rbModeControlledUPM.Checked = true;
                     break;
             }
+            SetEnabled();
 
             Initializing = false;
         }

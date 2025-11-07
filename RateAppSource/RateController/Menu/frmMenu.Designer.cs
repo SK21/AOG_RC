@@ -727,6 +727,7 @@
             this.gbSpacer1.Size = new System.Drawing.Size(158, 3);
             this.gbSpacer1.TabIndex = 171;
             this.gbSpacer1.TabStop = false;
+            this.gbSpacer1.Visible = false;
             // 
             // gbSpacer2
             // 
@@ -737,6 +738,7 @@
             this.gbSpacer2.Size = new System.Drawing.Size(158, 3);
             this.gbSpacer2.TabIndex = 172;
             this.gbSpacer2.TabStop = false;
+            this.gbSpacer2.Visible = false;
             // 
             // frmMenu
             // 
