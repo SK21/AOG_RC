@@ -29,7 +29,7 @@ namespace RateController.Classes
                 && SensorID >= 0 && SensorID < Props.MaxSensorsPerModule)
             {
                 cMaxRecID++;
-                clsSensor sensor = new clsSensor(mf, cMaxRecID);
+                clsSensor sensor = new clsSensor(cMaxRecID);
                 sensor.SetModuleSensor(ModuleID, SensorID, this);
                 sensor.Save();
                 cSensors.Add(sensor);
@@ -79,7 +79,7 @@ namespace RateController.Classes
         {
             for (int i = 0; i <= cMaxRecID; i++)
             {
-                clsSensor Sen = new clsSensor(mf, i);
+                clsSensor Sen = new clsSensor( i);
                 if (Sen.Load()) cSensors.Add(Sen);
             }
         }

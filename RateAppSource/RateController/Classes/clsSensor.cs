@@ -21,7 +21,6 @@ namespace RateController.Classes
         // PulseMaxHz       maximum Hz of the flow sensor
         // PulseSampeSize   number of pulses used to get the median Hz reading
 
-        private readonly FormStart mf;
         private byte cBrakePoint;
         private byte cDeadband;
         private bool cIsNew = true;
@@ -44,9 +43,8 @@ namespace RateController.Classes
         private byte cTimedMinStart;
         private UInt16 cTimedPause;
 
-        public clsSensor(FormStart main, int ID)
+        public clsSensor(int ID)
         {
-            mf = main;
             cRecID = ID;
             cName = "RateSensor_" + cRecID.ToString() + "_";
             SetNewRecord();
@@ -386,7 +384,6 @@ namespace RateController.Classes
             cKP = Props.KPdefault;
             cMaxIntegral = Props.MaxIntegralDefault;
             cMaxPWM = Props.MaxPWMdefault;
-            cPulseMinHz = Props.PulseMinHzDefault;
             cMinPWM = Props.MinPWMdefault;
             cPIDslowAdjust = Props.PIDslowAdjustDefault;
             cPIDtime = Props.PIDtimeDefault;
