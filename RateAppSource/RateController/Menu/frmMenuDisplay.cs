@@ -47,9 +47,7 @@ namespace RateController.Menu
                 Props.UseTransparent = ckTransparent.Checked;
                 Props.UseLargeScreen = ckLargeScreen.Checked;
                 Props.UseRateDisplay= ckRateDisplay.Checked;
-                if (ckSingle.Checked) Props.SwitchScreens(true);
                 SetButtons(false);
-                if (ckReset.Checked) mf.Products.Load(true);
                 UpdateForm();
             }
             catch (Exception ex)
@@ -63,31 +61,7 @@ namespace RateController.Menu
             SetButtons(true);
         }
 
-        private void ckReset_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ckReset.Checked)
-            {
-                var Hlp = new frmMsgBox(mf, "Confirm reset all products to default values?", "Reset", true);
-                Hlp.TopMost = true;
 
-                Hlp.ShowDialog();
-                bool Result = Hlp.Result;
-                Hlp.Close();
-                if (Result)
-                {
-                    SetButtons(true);
-                }
-                else
-                {
-                    ckReset.Checked = false;
-                }
-            }
-        }
-
-        private void ckSingle_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ckSingle.Checked) SetButtons(true);
-        }
 
         private void frmMenuDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -146,12 +120,8 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            gbDisplay.Text = Lang.lgDisplay;
             ckLargeScreen.Text = Lang.lgLargeScreen;
             ckTransparent.Text = Lang.lgTransparent;
-            ckSingle.Text = Lang.lgSingleProduct;
-            ckReset.Text = Lang.lgResetProducts;
-            gbOther.Text = Lang.lgOther;
             ckMetric.Text = Lang.lgMetric;
             ckSimSpeed.Text = Lang.lgSimulateSpeed;
             ckRateDisplay.Text = Lang.lgCurrentRate;
@@ -200,8 +170,6 @@ namespace RateController.Menu
             ckMetric.Checked = Props.UseMetric;
             ckTransparent.Checked = Props.UseTransparent;
             ckLargeScreen.Checked = Props.UseLargeScreen;
-            ckReset.Checked = false;
-            ckSingle.Checked = false;
             ckRateDisplay.Checked = Props.UseRateDisplay;
 
             Initializing = false;

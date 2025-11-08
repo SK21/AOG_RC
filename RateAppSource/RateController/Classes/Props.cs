@@ -1174,54 +1174,13 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static void SwitchScreens(bool SingleProduct = false)
+        public static void SwitchScreens()
         {
             try
             {
                 Form fs = IsFormOpen("frmLargeScreen");
                 if (cUseLargeScreen)
                 {
-                    if (SingleProduct)
-                    {
-                        // hide unused items, set product 4 as default, set product 4 id to 0
-                        foreach (clsProduct Prd in mf.Products.Items)
-                        {
-                            Prd.OnScreen = false;
-                        }
-                        clsProduct P0 = mf.Products.Items[0];
-                        clsProduct P3 = mf.Products.Items[3];
-
-                        P3.ProductName = P0.ProductName;
-                        P3.ControlType = P0.ControlType;
-                        P3.QuantityDescription = P0.QuantityDescription;
-                        P3.CoverageUnits = P0.CoverageUnits;
-                        P3.MeterCal = P0.MeterCal;
-                        P3.ProdDensity = P0.ProdDensity;
-                        P3.EnableProdDensity = P0.EnableProdDensity;
-                        P3.RateSet = P0.RateSet;
-                        P3.RateAlt = P0.RateAlt;
-                        P3.TankSize = P0.TankSize;
-                        P3.TankStart = P0.TankStart;
-
-                        P3.MaxPWMadjust = P0.MaxPWMadjust;
-                        P3.MinPWMadjust = P0.MinPWMadjust;
-                        P3.KP = P0.KP;
-
-                        mf.Products.Item(2).BumpButtons = false;
-                        //P0.EditSensorIDs(6, 0);
-                        //P3.LoadSensorSettings(0, 0);
-                        P3.OnScreen = true;
-                        P3.AppMode = P0.AppMode;
-                        P3.UseOffRateAlarm = P0.UseOffRateAlarm;
-                        P3.OffRateSetting = P0.OffRateSetting;
-                        P3.MinUPM = P0.MinUPM;
-                        P3.BumpButtons = false;
-
-                        P3.CountsRev = P0.CountsRev;
-                        Props.DefaultProduct = 3;
-                        UseTransparent = true;
-                    }
-
                     if (fs == null)
                     {
                         mf.LargeScreenExit = false;

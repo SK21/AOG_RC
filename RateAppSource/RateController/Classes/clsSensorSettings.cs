@@ -43,9 +43,9 @@ namespace RateController.Classes
 
         public clsSensorSettings(int ID)
         {
+            SetDefaults();
             cRecID = ID;
             cName = "SensorSettings" + cRecID.ToString() + "_";
-            SetDefaults();
             cIsNew = true;
             Load();
             if (cIsNew)

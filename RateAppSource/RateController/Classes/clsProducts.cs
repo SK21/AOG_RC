@@ -83,21 +83,17 @@ namespace RateController
             return cProducts[IDX];
         }
 
-        public void Load(bool Reset = false)
+        public void Load()
         {
             cProducts.Clear();
 
             for (int i = 0; i < Props.MaxProducts; i++)
             {
-                clsProduct Prod = new clsProduct(mf, i);
-                cProducts.Add(Prod);
-                Prod.Load();
-            }
+                clsProduct Prd = new clsProduct(mf, i);
+                cProducts.Add(Prd);
+                Prd.Load();
 
-            for (int i = 0; i < Props.MaxProducts; i++)
-            {
-                clsProduct Prd = cProducts[i];
-                if (Prd.IsNew() || Reset)
+                if (Prd.IsNew())
                 {
                     Prd.ProductName = "Product  " + (char)(65 + i);
                     Prd.ControlType = ControlTypeEnum.Valve;
@@ -111,7 +107,6 @@ namespace RateController
                     Prd.TankSize = 1000;
                     Prd.TankStart = 1000;
                     Prd.LoadSensorSettings();
-                    Prd.OnScreen = true;
                     Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;
                     Prd.MinUPM = 0;
@@ -119,29 +114,41 @@ namespace RateController
                     Prd.CountsRev = 1;
                     Prd.Enabled = false;
                     Prd.Save();
-
-                    Props.DefaultProduct = 0;
                 }
             }
+            SetEnabledDefault();
+        }
 
-            bool OneEnabled = false;
-            for (int i = 0; i < Props.MaxProducts; i++)
+        public int NextEnabledProduct(int CurrentProduct)
+        {
+            int Result = CurrentProduct;
+            int EnabledID = -1;
+            for (int i = CurrentProduct + 1; i < Props.MaxProducts - 2; i++)
             {
-                clsProduct Prod = cProducts[i];
-                Prod.Load();
-                if (Prod.Enabled)
+                if (cProducts[i].Enabled)
                 {
-                    OneEnabled = true;
+                    EnabledID = i;
                     break;
                 }
             }
-            if (!OneEnabled)
-            {
-                cProducts[0].Enabled = true;
-                cProducts[0].Save();
-            }
+            if (EnabledID != -1) Result = EnabledID;
+            return Result;
         }
-
+        public int PreviousEnabledProduct(int CurrentProduct)
+        {
+            int Result = CurrentProduct;
+            int EnabledID = -1;
+            for (int i=CurrentProduct-1;i>=0;i--)
+            {
+                if(cProducts[i].Enabled)
+                {
+                    EnabledID = i;
+                    break;
+                }
+            }
+            if (EnabledID != -1) Result = EnabledID;
+            return Result;
+        }
         public double[] ProductAppliedRates()
         {
             double[] Result = new double[Props.MaxProducts - 2];
@@ -216,13 +223,38 @@ namespace RateController
             }
         }
 
+        public void SetEnabledDefault()
+        {
+            // check for at least one product enabled and for default product
+            bool DefaultFound = false;
+            int EnabledID = -1;
+
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            {
+                clsProduct Prod = cProducts[i];
+                if (Prod.Enabled)
+                {
+                    EnabledID = i;
+                    if (Props.DefaultProduct == i) DefaultFound = true;
+                }
+            }
+            if (EnabledID == -1)
+            {
+                // no enabled products found, enable product 0
+                cProducts[0].Enabled = true;
+                cProducts[0].Save();
+                EnabledID = 0;
+            }
+            if (!DefaultFound) Props.DefaultProduct = EnabledID;
+        }
+
         public bool UniqueModSen(int ModID, int SenID, int ProdID)
         {
             // checks if product module ID/sensor ID pair are unique
             bool Result = true;
-            for (int i = 0; i < Count(); i++)
+            for (int i = 0; i < Props.MaxProducts; i++)
             {
-                if ((cProducts[i].ID != ProdID) && (cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID))
+                if (cProducts[i].Enabled && cProducts[i].ID != ProdID && cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID)
                 {
                     Result = false;
                     break;

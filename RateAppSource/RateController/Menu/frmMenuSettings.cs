@@ -46,10 +46,12 @@ namespace RateController.Menu
 
                 if (mf.Products.UniqueModSen(ModID, SenID, MainMenu.CurrentProduct.ID))
                 {
+                    MainMenu.CurrentProduct.ModuleID = ModID;
+                    MainMenu.CurrentProduct.SensorID = SenID;
+
                     if (double.TryParse(tbMinUPM.Text, out double mu)) MainMenu.CurrentProduct.MinUPM = mu;
                     if (double.TryParse(tbUPMspeed.Text, out double sp)) MainMenu.CurrentProduct.MinUPMbySpeed = sp;
                     if (ckDefault.Checked) Props.DefaultProduct = MainMenu.CurrentProduct.ID;
-                    MainMenu.CurrentProduct.OnScreen = ckOnScreen.Checked;
                     MainMenu.CurrentProduct.BumpButtons = ckBumpButtons.Checked;
                     mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
                     MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
@@ -63,7 +65,7 @@ namespace RateController.Menu
                 }
                 else
                 {
-                    Props.ShowMessage("Module ID / Sensor ID pair must be unique.", "Help", 3000);
+                    Props.ShowMessage("Sensor already assigned to a product.", "Help", 3000);
                 }
             }
             catch (Exception ex)
@@ -85,6 +87,7 @@ namespace RateController.Menu
 
         private void ckEnabled_CheckedChanged(object sender, EventArgs e)
         {
+            SetEnabled();
             SetButtons(true);
         }
 
@@ -206,6 +209,19 @@ namespace RateController.Menu
             }
         }
 
+        private void SetEnabled()
+        {
+            bool Enabled = ckEnabled.Checked;
+
+            grpSensor.Enabled = Enabled;
+            grpMinUPM.Enabled = Enabled;
+            ckOffRate.Enabled = Enabled;
+            tbOffRate.Enabled = Enabled;
+            ckDefault.Enabled = Enabled;
+            ckBumpButtons.Enabled = Enabled;
+            ckScale.Enabled = Enabled;
+        }
+
         private void SetLanguage()
         {
             grpSensor.Text = Lang.lgSensorLocation;
@@ -217,7 +233,6 @@ namespace RateController.Menu
             ckDefault.Text = Lang.lgDefaultProduct;
             ckBumpButtons.Text = Lang.lgBumpButtons;
             ckOffRate.Text = Lang.lgOffRate;
-            ckOnScreen.Text = Lang.lgOnScreen;
             ckScale.Text = Lang.lgScaleWeight;
         }
 
@@ -350,6 +365,9 @@ namespace RateController.Menu
         {
             Initializing = true;
 
+            if (!MainMenu.CurrentProduct.Enabled) mf.Products.SetEnabledDefault();
+            ckEnabled.Checked = MainMenu.CurrentProduct.Enabled;
+
             SetModuleIndicator();
             if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
@@ -360,14 +378,14 @@ namespace RateController.Menu
                 ckBumpButtons.Visible = false;
                 ckScale.Visible = false;
 
-                ckOnScreen.Left = 185;
-                ckOnScreen.Top = 205;
-                ckOffRate.Left = 86;
-                ckOffRate.Top = 257;
-                tbOffRate.Left = 235;
-                tbOffRate.Top = 259;
-                lbPercent.Left = 286;
-                lbPercent.Top = 259;
+                ckOffRate.Left = 180;
+                ckOffRate.Top = 290;
+
+                tbOffRate.Left = ckOffRate.Left + 149;
+                tbOffRate.Top = ckOffRate.Top + 3;
+
+                lbPercent.Left = ckOffRate.Left + 200;
+                lbPercent.Top = ckOffRate.Top + 7;
             }
             else
             {
@@ -378,50 +396,40 @@ namespace RateController.Menu
                 ckBumpButtons.Visible = true;
                 ckScale.Visible = true;
 
-                ckOnScreen.Left = 305;
-                ckOnScreen.Top = 386;
-                ckOffRate.Left = 75;
-                ckOffRate.Top = 516;
-                tbOffRate.Left = 224;
-                tbOffRate.Top = 518;
-                lbPercent.Left = 275;
-                lbPercent.Top = 521;
+                ckOffRate.Left = 66;
+                ckOffRate.Top = 465;
+
+                tbOffRate.Left = ckOffRate.Left + 149;
+                tbOffRate.Top = ckOffRate.Top + 3;
+
+                lbPercent.Left = ckOffRate.Left + 200;
+                lbPercent.Top = ckOffRate.Top + 7;
+
                 ckScale.Checked = mf.ShowScale(MainMenu.CurrentProduct.ID);
             }
+
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !MainMenu.CurrentProduct.UseMinUPMbySpeed;
             ckDefault.Checked = (Props.DefaultProduct == MainMenu.CurrentProduct.ID);
-            ckOnScreen.Checked = MainMenu.CurrentProduct.OnScreen;
             ckBumpButtons.Checked = MainMenu.CurrentProduct.BumpButtons;
             ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
             tbOffRate.Text = MainMenu.CurrentProduct.OffRateSetting.ToString("N0");
             tbMinUPM.Text = MainMenu.CurrentProduct.MinUPM.ToString("N1");
             tbUPMspeed.Text = MainMenu.CurrentProduct.MinUPMbySpeed.ToString("N1");
-
-            string tmp = MainMenu.CurrentProduct.ModuleID.ToString();
-            if (tmp == "99") tmp = "";
-            tbConID.Text = tmp;
-
             ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
-            tbSenID.Text = MainMenu.CurrentProduct.SensorID.ToString();
-            ckEnabled.Checked=MainMenu.CurrentProduct.Enabled;
-            SetEnabled();
+
+            if (MainMenu.CurrentProduct.Enabled)
+            {
+                tbConID.Text = MainMenu.CurrentProduct.ModuleID.ToString();
+                tbSenID.Text = MainMenu.CurrentProduct.SensorID.ToString();
+            }
+            else
+            {
+                tbConID.Text = "";
+                tbSenID.Text = "";
+            }
 
             Initializing = false;
-        }
-
-        private void SetEnabled()
-        {
-            bool Enabled = MainMenu.CurrentProduct.Enabled;
-
-            grpSensor.Enabled = Enabled;
-            grpMinUPM.Enabled = Enabled;
-            ckOffRate.Enabled = Enabled;
-            tbOffRate.Enabled = Enabled;
-            ckDefault.Enabled = Enabled;
-            ckOnScreen.Enabled = Enabled;
-            ckBumpButtons.Enabled = Enabled;
-            ckScale.Enabled = Enabled;
         }
     }
 }

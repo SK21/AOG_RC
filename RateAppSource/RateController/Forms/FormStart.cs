@@ -57,6 +57,7 @@ namespace RateController
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         private int RunOnce = 0;
+
         public FormStart()
         {
             InitializeComponent();
@@ -201,9 +202,9 @@ namespace RateController
             Sections.CheckSwitchDefinitions();
 
             Products.Load();
-            RelayObjects.Load();
+            CurrentPage = Props.DefaultProduct + 1;
 
-            LoadDefaultProduct();
+            RelayObjects.Load();
             Zones.Load();
 
             Props.DisplaySwitches();
@@ -282,12 +283,13 @@ namespace RateController
                     // summary
                     for (int i = 0; i < Props.MaxProducts; i++)
                     {
+                        ProdName[i].Visible = Products.Item(i).Enabled;
                         ProdName[i].Text = Products.Item(i).ProductName;
-
                         ProdName[i].BackColor = Color.Transparent;
                         ProdName[i].ForeColor = Properties.Settings.Default.DisplayForeColour;
                         ProdName[i].BorderStyle = BorderStyle.None;
 
+                        Rates[i].Visible = Products.Item(i).Enabled;
                         Rates[i].Text = Products.Item(i).SmoothRate().ToString("N1");
                     }
                     lbArduinoConnected.Visible = false;
@@ -454,6 +456,35 @@ namespace RateController
             }
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            if (RunOnce == 0)
+            {
+                RunOnce = 1;
+                if (Props.ShowJobs)
+                {
+                    // show jobs menu
+                    var menuForm = Props.IsFormOpen("frmMenu", false) as frmMenu;
+                    if (menuForm == null)
+                    {
+                        int prd = CurrentProduct();
+                        menuForm = new frmMenu(this, prd);
+                        menuForm.Show();
+                    }
+
+                    if (Props.IsFormOpen("frmMenuJobs", false) == null)
+                    {
+                        var jobsForm = new RateController.Menu.frmMenuJobs(this, menuForm);
+                        jobsForm.Owner = menuForm;
+                        jobsForm.Show();
+                        Props.CurrentMenuName = "frmMenuJobs";
+                    }
+                }
+            }
+        }
+
         private void AreaDone_Click(object sender, EventArgs e)
         {
             if (MouseButtonClicked == MouseButtons.Left)
@@ -485,11 +516,10 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (CurrentPage > 0)
-                {
-                    CurrentPage--;
-                    UpdateStatus();
-                }
+                int cp = CurrentPage;
+                CurrentPage = Products.PreviousEnabledProduct(CurrentPage - 1) + 1;
+                if (CurrentPage == cp) CurrentPage = 0; // show summary page
+                UpdateStatus();
             }
         }
 
@@ -497,11 +527,8 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                if (CurrentPage < Props.MaxProducts)
-                {
-                    CurrentPage++;
-                    UpdateStatus();
-                }
+                CurrentPage = Products.NextEnabledProduct(CurrentPage - 1) + 1;
+                UpdateStatus();
             }
         }
 
@@ -757,6 +784,17 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
+        private void lbProduct_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseButtonClicked = e.Button;
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
+        }
+
+        private void lbProduct_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+        }
+
         private void lbRate_Click(object sender, EventArgs e)
         {
             if (MouseButtonClicked == MouseButtons.Left)
@@ -820,23 +858,6 @@ namespace RateController
 
             Props.ShowMessage(Message, "Target Rate");
             hlpevent.Handled = true;
-        }
-
-        private void LoadDefaultProduct()
-        {
-            int count = 0;
-            int tmp = 0;
-            foreach (clsProduct Prd in Products.Items)
-            {
-                if (Prd.OnScreen && Prd.ID < Props.MaxProducts - 2)
-                {
-                    count++;
-                    tmp = Prd.ID;
-                }
-            }
-            if (count == 1) Props.DefaultProduct = tmp;
-
-            CurrentPage = Props.DefaultProduct + 1;
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -943,46 +964,6 @@ namespace RateController
                 Tls.Manager.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
             }
             Tls.Manager.UpdateTargetRates();
-        }
-
-        private void lbProduct_MouseDown(object sender, MouseEventArgs e)
-        {
-            MouseButtonClicked = e.Button;
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
-        }
-
-        private void lbProduct_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-
-            if (RunOnce == 0)
-            {
-                RunOnce = 1;
-                if (Props.ShowJobs)
-                {
-                    // show jobs menu
-                    var menuForm = Props.IsFormOpen("frmMenu", false) as frmMenu;
-                    if (menuForm == null)
-                    {
-                        int prd = CurrentProduct();
-                        menuForm = new frmMenu(this, prd);
-                        menuForm.Show();
-                    }
-
-                    if (Props.IsFormOpen("frmMenuJobs", false) == null)
-                    {
-                        var jobsForm = new RateController.Menu.frmMenuJobs(this, menuForm);
-                        jobsForm.Owner = menuForm;
-                        jobsForm.Show();
-                        Props.CurrentMenuName = "frmMenuJobs";
-                    }
-                }
-            }
         }
     }
 }

@@ -469,38 +469,38 @@ namespace RateController
         private void ShowProducts()
         {
             clsProduct Prd = mf.Products.Item(0);
-            lbName0.Visible = Prd.OnScreen;
-            pnlRate0.Visible = Prd.OnScreen;
-            pnlQuantity0.Visible = Prd.OnScreen;
-            pnlSelect0.Visible = Prd.OnScreen;
+            lbName0.Visible = Prd.Enabled;
+            pnlRate0.Visible = Prd.Enabled;
+            pnlQuantity0.Visible = Prd.Enabled;
+            pnlSelect0.Visible = Prd.Enabled;
 
             Prd = mf.Products.Item(1);
-            lbName1.Visible = Prd.OnScreen;
-            pnlRate1.Visible = Prd.OnScreen;
-            pnlQuantity1.Visible = Prd.OnScreen;
-            pnlSelect1.Visible = Prd.OnScreen;
+            lbName1.Visible = Prd.Enabled;
+            pnlRate1.Visible = Prd.Enabled;
+            pnlQuantity1.Visible = Prd.Enabled;
+            pnlSelect1.Visible = Prd.Enabled;
 
             Prd = mf.Products.Item(2);
-            lbName2.Visible = Prd.OnScreen;
-            pnlRate2.Visible = Prd.OnScreen;
-            pnlQuantity2.Visible = Prd.OnScreen;
-            pnlSelect2.Visible = Prd.OnScreen;
+            lbName2.Visible = Prd.Enabled;
+            pnlRate2.Visible = Prd.Enabled;
+            pnlQuantity2.Visible = Prd.Enabled;
+            pnlSelect2.Visible = Prd.Enabled;
 
             Prd = mf.Products.Item(3);
-            lbName3.Visible = Prd.OnScreen;
-            pnlRate3.Visible = Prd.OnScreen;
-            pnlQuantity3.Visible = Prd.OnScreen;
-            pnlSelect3.Visible = Prd.OnScreen;
+            lbName3.Visible = Prd.Enabled;
+            pnlRate3.Visible = Prd.Enabled;
+            pnlQuantity3.Visible = Prd.Enabled;
+            pnlSelect3.Visible = Prd.Enabled;
 
             Prd = mf.Products.Item(4);
-            lbFan1.Visible = Prd.OnScreen;
-            lbRPM1.Visible = Prd.OnScreen;
-            btnFan1.Visible = Prd.OnScreen;
+            lbFan1.Visible = Prd.Enabled;
+            lbRPM1.Visible = Prd.Enabled;
+            btnFan1.Visible = Prd.Enabled;
 
             Prd = mf.Products.Item(5);
-            lbFan2.Visible = Prd.OnScreen;
-            lbRPM2.Visible = Prd.OnScreen;
-            btnFan2.Visible = Prd.OnScreen;
+            lbFan2.Visible = Prd.Enabled;
+            lbRPM2.Visible = Prd.Enabled;
+            btnFan2.Visible = Prd.Enabled;
 
             for (int i = 0; i < 5; i++)
             {

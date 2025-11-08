@@ -671,17 +671,17 @@ namespace RateController
                     butProducts.Top = butFile.Top;
 
                     int Pos = butFile.Top;
-                    butRate.Left = butFile.Left + SubOffset;
+                    butSettings.Left = butFile.Left + SubOffset;
                     Pos += SubFirstSpacing;
+                    butSettings.Top = Pos;
+
+                    butRate.Left = butFile.Left + SubOffset;
+                    Pos += SubSpacing;
                     butRate.Top = Pos;
 
                     butControl.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;
                     butControl.Top = Pos;
-
-                    butSettings.Left = butFile.Left + SubOffset;
-                    Pos += SubSpacing;
-                    butSettings.Top = Pos;
 
                     butMode.Left = butFile.Left + SubOffset;
                     Pos += SubSpacing;

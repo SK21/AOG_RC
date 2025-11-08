@@ -389,6 +389,13 @@ namespace RateController
         public int ModuleID
         {
             get { return cModuleID; }
+            set
+            {
+                if(value>=0 && value<Props.MaxProducts)
+                {
+                    cModuleID= value;
+                }
+            }
         }
 
         public bool ModuleSending
@@ -410,11 +417,6 @@ namespace RateController
             }
         }
 
-        public bool OnScreen
-        {
-            get { return cOnScreen; }
-            set { cOnScreen = value; }
-        }
 
         public double ProdDensity
         { get { return cProdDensity; } set { cProdDensity = value; } }
@@ -496,6 +498,10 @@ namespace RateController
         public byte SensorID
         {
             get { return (byte)cSensorID; }
+            set
+            {
+                if(value>=0 && value<Props.MaxSensorsPerModule) cSensorID = value;
+            }
         }
 
         public double TankSize
