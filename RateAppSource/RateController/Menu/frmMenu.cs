@@ -695,7 +695,7 @@ namespace RateController
                     Pos += SubSpacing;
                     butData.Top = Pos;
 
-                    butRate.PerformClick();
+                    butSettings.PerformClick();
                 }
             }
         }

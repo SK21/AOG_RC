@@ -255,7 +255,7 @@ namespace RateController.Menu
                 if (selectedParcel == null)
                 {
                     // Use the text from the combo as the new parcel name.
-                    selectedParcel = new Parcel { Name = cbField.Text.Trim()};
+                    selectedParcel = new Parcel { Name = cbField.Text.Trim() };
                     ParcelManager.AddParcel(selectedParcel);
                 }
                 else
@@ -303,6 +303,21 @@ namespace RateController.Menu
             }
         }
 
+        private void btnResetField_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Clear field and year filters
+                cbSearchField.SelectedIndex = -1;
+                tbSearchYear.Text = string.Empty;
+                FillJobsList();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnResetField_Click: " + ex.Message);
+            }
+        }
+
         private void cbSearchField_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillJobsList();
@@ -312,7 +327,6 @@ namespace RateController.Menu
         {
             SetButtons(true);
         }
-
 
         private void ckResume_CheckedChanged(object sender, EventArgs e)
         {
@@ -623,21 +637,6 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
-            }
-        }
-
-        private void btnResetField_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Clear field and year filters
-                cbSearchField.SelectedIndex = -1;
-                tbSearchYear.Text = string.Empty;
-                FillJobsList();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/btnResetField_Click: " + ex.Message);
             }
         }
     }
