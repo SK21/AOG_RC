@@ -82,14 +82,12 @@ namespace RateController
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.Top += TransTopOffset;
                 this.Left += TransLeftOffset;
-                //SetDisplay(Properties.Settings.Default.ForeColour);
                 SetDisplay(Color.Yellow);
             }
             else
             {
                 this.Text = "RateController";
-                this.TransparencyKey = Color.Transparent;
-                //this.Opacity = 100;
+                this.TransparencyKey = Color.Empty;
                 this.HelpButton = true;
                 this.ControlBox = true;
                 this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -193,15 +191,20 @@ namespace RateController
 
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Props.SaveFormLocation(this);
-
+            mf.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
+            mf.ColorChanged -= Mf_ColorChanged; 
+            
             timerMain.Enabled = false;
+            tmrRelease.Enabled = false;
+            tmrBorder.Enabled = false;
+
             if (Props.UseTransparent)
             {
                 // move the window back to the default location
                 this.Top += -TransTopOffset;
                 this.Left += -TransLeftOffset;
             }
+            Props.SaveFormLocation(this);
 
             if (Props.UseLargeScreen) mf.LargeScreenExit = true;
             mf.WindowState = FormWindowState.Normal;

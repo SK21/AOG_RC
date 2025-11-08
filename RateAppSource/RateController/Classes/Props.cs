@@ -1,7 +1,5 @@
-﻿using GMap.NET.MapProviders;
-using RateController.Forms;
+﻿using RateController.Forms;
 using RateController.Language;
-using RateController.Menu;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Reflection;
-using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -1178,10 +1175,11 @@ namespace RateController.Classes
         {
             try
             {
-                Form fs = IsFormOpen("frmLargeScreen");
+                bool LargeScreenOpen = mf?.Lscrn != null && !mf.Lscrn.IsDisposed && mf.Lscrn.Visible;
+
                 if (cUseLargeScreen)
                 {
-                    if (fs == null)
+                    if (!LargeScreenOpen)
                     {
                         mf.LargeScreenExit = false;
                         mf.Restart = false;
@@ -1196,7 +1194,7 @@ namespace RateController.Classes
                 else
                 {
                     // use standard screen
-                    if (fs != null) mf.Lscrn.SwitchToStandard();
+                    if (LargeScreenOpen) mf.Lscrn.SwitchToStandard();
                 }
                 ScreensSwitched?.Invoke(null, EventArgs.Empty);
             }
