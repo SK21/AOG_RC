@@ -85,7 +85,7 @@ namespace RateController
             if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && mf.Tls.GoodCRC(Data))
             {
                 byte ModuleID = Data[2];
-                if (ModuleID <= Props.MaxModules)
+                if (ModuleID < Props.MaxModules)
                 {
                     cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
                     cInoType[ModuleID] = Data[10];

@@ -2,7 +2,6 @@
 // PulseMaxHz       maximum Hz of the flow sensor
 // PulseSampeSize   number of pulses used to get the median Hz reading
 
-const int MaxSampleSize = 15;
 const uint32_t FlowTimeout = 4000UL;
 
 uint32_t LastPulse[2];

@@ -43,146 +43,149 @@ namespace RateController
 
         public void Send()
         {
-            double Tmp = 0;
-            double RateSet;
-            Array.Clear(cData, 0, cByteCount);
-            cData[0] = 244;
-            cData[1] = 126;
-
-            cData[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
-
-            // rate set
-            if (Prod.CalMode == CalibrationMode.Off)
+            if (Prod.ModuleID >= 0 && Prod.SensorID >= 0)
             {
-                if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
-                    || Prod.AppMode == ApplicationMode.DocumentApplied)
+                double Tmp = 0;
+                double RateSet;
+                Array.Clear(cData, 0, cByteCount);
+                cData[0] = 244;
+                cData[1] = 126;
+
+                cData[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
+
+                // rate set
+                if (Prod.CalMode == CalibrationMode.Off)
                 {
-                    RateSet = 0;
+                    if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
+                        || Prod.AppMode == ApplicationMode.DocumentApplied)
+                    {
+                        RateSet = 0;
+                    }
+                    else
+                    {
+                        RateSet = Prod.TargetUPM() * 1000.0;
+                        if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
+                    }
                 }
                 else
                 {
                     RateSet = Prod.TargetUPM() * 1000.0;
-                    if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
-                }
-            }
-            else
-            {
-                RateSet = Prod.TargetUPM() * 1000.0;
-            }
-
-            if (Prod.Enabled)
-            {
-                cData[3] = (byte)RateSet;
-                cData[4] = (byte)((int)RateSet >> 8);
-                cData[5] = (byte)((int)RateSet >> 16);
-            }
-
-            // flow cal
-            Tmp = Prod.MeterCal * 1000.0;
-            cData[6] = (byte)Tmp;
-            cData[7] = (byte)((int)Tmp >> 8);
-            cData[8] = (byte)((int)Tmp >> 16);
-
-            // command byte
-            cData[9] = 0;
-            if (Prod.EraseAccumulatedUnits) cData[9] |= 0b00000001;
-            Prod.EraseAccumulatedUnits = false;
-
-            switch (Prod.ControlType)
-            {
-                case ControlTypeEnum.ComboClose:
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00000010; // set bit 1
-                    break;
-
-                case ControlTypeEnum.Motor:
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00000100; // set bit 2
-                    break;
-
-                case ControlTypeEnum.MotorWeights:
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00000110; // set bit 1, 2
-                    break;
-
-                case ControlTypeEnum.Fan:
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00001000; // set bit 3
-                    break;
-
-                case ControlTypeEnum.ComboCloseTimed:
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    cData[9] |= 0b00001010; // set bit 1, 3
-                    break;
-
-                default:
-                    // standard valve
-                    cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                    break;
-            }
-
-            if (Props.RateCalibrationOn)
-            {
-                // calibrate
-                cData[9] |= 0b10010000; // calibration on bit 7, master on bit 4
-
-                if (Prod.CalMode == CalibrationMode.SettingPWM)
-                {
-                    // SettingPWM, auto on, find CalPWM
-                    cData[9] |= 0b01000000;
-                }
-                else
-                {
-                    // TestingRate, run in manual at CalPWM
-                    cData[10] = (byte)Prod.ManualPWM;
-                    cData[11] = (byte)(Prod.ManualPWM >> 8);
-                }
-            }
-            else
-            {
-                // normal run
-                // master on
-                if (Prod.mf.SwitchBox.Connected())
-                {
-                    if (Prod.mf.SectionControl.MasterOn
-                        || Props.MasterSwitchMode == MasterSwitchMode.Override
-                        || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
-                }
-                else
-                {
-                    cData[9] |= 0b00010000;
                 }
 
-                if (Prod.mf.SwitchBox.AutoRateOn)
+                if (Prod.Enabled)
                 {
-                    // auto on
-                    cData[9] |= 0b01000000;
+                    cData[3] = (byte)RateSet;
+                    cData[4] = (byte)((int)RateSet >> 8);
+                    cData[5] = (byte)((int)RateSet >> 16);
+                }
 
-                    if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
+                // flow cal
+                Tmp = Prod.MeterCal * 1000.0;
+                cData[6] = (byte)Tmp;
+                cData[7] = (byte)((int)Tmp >> 8);
+                cData[8] = (byte)((int)Tmp >> 16);
+
+                // command byte
+                cData[9] = 0;
+                if (Prod.EraseAccumulatedUnits) cData[9] |= 0b00000001;
+                Prod.EraseAccumulatedUnits = false;
+
+                switch (Prod.ControlType)
+                {
+                    case ControlTypeEnum.ComboClose:
+                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        cData[9] |= 0b00000010; // set bit 1
+                        break;
+
+                    case ControlTypeEnum.Motor:
+                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        cData[9] |= 0b00000100; // set bit 2
+                        break;
+
+                    case ControlTypeEnum.MotorWeights:
+                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        cData[9] |= 0b00000110; // set bit 1, 2
+                        break;
+
+                    case ControlTypeEnum.Fan:
+                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        cData[9] |= 0b00001000; // set bit 3
+                        break;
+
+                    case ControlTypeEnum.ComboCloseTimed:
+                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        cData[9] |= 0b00001010; // set bit 1, 3
+                        break;
+
+                    default:
+                        // standard valve
+                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        break;
+                }
+
+                if (Props.RateCalibrationOn)
+                {
+                    // calibrate
+                    cData[9] |= 0b10010000; // calibration on bit 7, master on bit 4
+
+                    if (Prod.CalMode == CalibrationMode.SettingPWM)
                     {
-                        // keep manual motor setting the same as auto when not in use
-                        // for smooth transition from auto to manual control
-                        Prod.ManualPWM = (int)Prod.PWM();
+                        // SettingPWM, auto on, find CalPWM
+                        cData[9] |= 0b01000000;
+                    }
+                    else
+                    {
+                        // TestingRate, run in manual at CalPWM
+                        cData[10] = (byte)Prod.ManualPWM;
+                        cData[11] = (byte)(Prod.ManualPWM >> 8);
+                    }
+                }
+                else
+                {
+                    // normal run
+                    // master on
+                    if (Prod.mf.SwitchBox.Connected())
+                    {
+                        if (Prod.mf.SectionControl.MasterOn
+                            || Props.MasterSwitchMode == MasterSwitchMode.Override
+                            || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
+                    }
+                    else
+                    {
+                        cData[9] |= 0b00010000;
+                    }
+
+                    if (Prod.mf.SwitchBox.AutoRateOn)
+                    {
+                        // auto on
+                        cData[9] |= 0b01000000;
+
+                        if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
+                        {
+                            // keep manual motor setting the same as auto when not in use
+                            // for smooth transition from auto to manual control
+                            Prod.ManualPWM = (int)Prod.PWM();
+                        }
+                    }
+
+                    // manual
+                    if ((Prod.mf.SectionControl.MasterOn
+                        || Props.MasterSwitchMode == MasterSwitchMode.Override
+                        || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) && Prod.Enabled)
+                    {
+                        cData[10] = (byte)Prod.ManualPWM;
+                        cData[11] = (byte)(Prod.ManualPWM >> 8);
                     }
                 }
 
-                // manual
-                if ((Prod.mf.SectionControl.MasterOn
-                    || Props.MasterSwitchMode == MasterSwitchMode.Override
-                    || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) && Prod.Enabled)
-                {
-                    cData[10] = (byte)Prod.ManualPWM;
-                    cData[11] = (byte)(Prod.ManualPWM >> 8);
-                }
+                // CRC
+                cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
+
+                // send
+                Prod.mf.UDPmodules.SendUDPMessage(cData);
+
+                cSendTime = DateTime.Now;
             }
-
-            // CRC
-            cData[cByteCount - 1] = Prod.mf.Tls.CRC(cData, cByteCount - 1);
-
-            // send
-            Prod.mf.UDPmodules.SendUDPMessage(cData);
-
-            cSendTime = DateTime.Now;
         }
     }
 }

@@ -42,36 +42,39 @@ namespace RateController
 
         public void Send()
         {
-            clsSensorSettings Sen = Prod.RateSensor;
-            byte[] Data = new byte[cByteCount];
-            Data[0] = HeaderLo;
-            Data[1] = HeaderHi;
-            Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
+            if (Prod.ModuleID >= 0 && Prod.SensorID >= 0)
+            {
+                clsSensorSettings Sen = Prod.RateSensor;
+                byte[] Data = new byte[cByteCount];
+                Data[0] = HeaderLo;
+                Data[1] = HeaderHi;
+                Data[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
 
-            Data[3] = Sen.MaxPWM;
-            Data[4] = Sen.MinPWM;
-            Data[5] = Sen.KP;
-            Data[6] = Sen.KI;
-            Data[7] = Sen.DeadBand;
-            Data[8] = Sen.BrakePoint;
-            Data[9] = Sen.PIDslowAdjust;
-            Data[10] = Sen.SlewRate;
-            Data[11] = Sen.MaxIntegral;
-            Data[12] = 0;
-            Data[13] = Sen.TimedMinStart;
-            Data[14] = (byte)Sen.TimedAdjust;
-            Data[15] = (byte)(Sen.TimedAdjust >> 8);
-            Data[16] = (byte)Sen.TimedPause;
-            Data[17] = (byte)(Sen.TimedPause >> 8);
-            Data[18] = Sen.PIDtime;
-            Data[19] = Sen.PulseMinHz;
-            Data[20] = (byte)(Sen.PulseMaxHz);
-            Data[21] = (byte)(Sen.PulseMaxHz >> 8);
-            Data[22] = Sen.PulseSampleSize;
+                Data[3] = Sen.MaxPWM;
+                Data[4] = Sen.MinPWM;
+                Data[5] = Sen.KP;
+                Data[6] = Sen.KI;
+                Data[7] = Sen.DeadBand;
+                Data[8] = Sen.BrakePoint;
+                Data[9] = Sen.PIDslowAdjust;
+                Data[10] = Sen.SlewRate;
+                Data[11] = Sen.MaxIntegral;
+                Data[12] = 0;
+                Data[13] = Sen.TimedMinStart;
+                Data[14] = (byte)Sen.TimedAdjust;
+                Data[15] = (byte)(Sen.TimedAdjust >> 8);
+                Data[16] = (byte)Sen.TimedPause;
+                Data[17] = (byte)(Sen.TimedPause >> 8);
+                Data[18] = Sen.PIDtime;
+                Data[19] = Sen.PulseMinHz;
+                Data[20] = (byte)(Sen.PulseMaxHz);
+                Data[21] = (byte)(Sen.PulseMaxHz >> 8);
+                Data[22] = Sen.PulseSampleSize;
 
-            Data[23] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
+                Data[23] = Prod.mf.Tls.CRC(Data, cByteCount - 1);
 
-            Prod.mf.UDPmodules.SendUDPMessage(Data);
+                Prod.mf.UDPmodules.SendUDPMessage(Data);
+            }
         }
     }
 }

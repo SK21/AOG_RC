@@ -177,7 +177,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
                         if (data[6] > 0)
                         {
-                            Sensor[SensorID].Ki = pow(1.1, data[6] - 120);
+                            Sensor[SensorID].Ki = pow(1.06, data[6] - 120);
                         }
                         else
                         {
@@ -197,6 +197,7 @@ void ReadPGNs(byte data[], uint16_t len)
                         uint32_t tmp = data[20] | data[21] << 8;
                         Sensor[SensorID].PulseMin = 1000000 / tmp;
                         Sensor[SensorID].PulseSampleSize = data[22];
+                        if (Sensor[SensorID].PulseSampleSize > MaxSampleSize) Sensor[SensorID].PulseSampleSize = MaxSampleSize;
 
                         SaveData();
                     }

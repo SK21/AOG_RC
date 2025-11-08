@@ -6,12 +6,13 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 21105;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 71105;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins are not connected
 uint8_t MCP23017address;
+const int MaxSampleSize = 15;
 
 #if defined(ESP32)
 const int PWM_BITS = 12;

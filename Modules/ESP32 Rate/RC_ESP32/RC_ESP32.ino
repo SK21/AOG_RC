@@ -20,13 +20,14 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 6115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 7115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
 const uint8_t MaxProductCount = 2;
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
+const int MaxSampleSize = 25;
 
 const uint16_t EEPROM_SIZE = 512;
 

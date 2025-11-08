@@ -171,6 +171,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						uint32_t tmp = data[20] | data[21] << 8;
 						Sensor[SensorID].PulseMin = 1000000 / tmp;
 						Sensor[SensorID].PulseSampleSize = data[22];
+						if (Sensor[SensorID].PulseSampleSize > MaxSampleSize) Sensor[SensorID].PulseSampleSize = MaxSampleSize;
 
 						SaveData();
 					}

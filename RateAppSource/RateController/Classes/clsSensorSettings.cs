@@ -244,7 +244,7 @@ namespace RateController.Classes
             get { return cPulseSampleSize; }
             set
             {
-                if (value >= 4 && value <= 30)
+                if (value >= 4 && value <= 25)
                 {
                     cPulseSampleSize = value;
                 }

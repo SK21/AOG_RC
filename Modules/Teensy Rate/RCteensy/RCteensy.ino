@@ -13,12 +13,13 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 4115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 7115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
+const int MaxSampleSize = 25;
 
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
