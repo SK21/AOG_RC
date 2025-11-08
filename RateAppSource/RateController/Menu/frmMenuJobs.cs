@@ -374,26 +374,45 @@ namespace RateController.Menu
         {
             lvJobs.Items.Clear();
 
+            // Determine date range
+            DateTime startDate;
+            DateTime endDate;
+
             int yr;
-            if (!int.TryParse(tbSearchYear.Text, out yr)) yr = DateTime.Now.Year;
+            if (string.IsNullOrWhiteSpace(tbSearchYear.Text))
+            {
+                // No year filter -> include all dates
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MaxValue;
+            }
+            else if (int.TryParse(tbSearchYear.Text, out yr))
+            {
+                startDate = new DateTime(yr, 1, 1);
+                endDate = new DateTime(yr, 12, 31);
+            }
+            else
+            {
+                // Fallback to current year if invalid input
+                yr = DateTime.Now.Year;
+                startDate = new DateTime(yr, 1, 1);
+                endDate = new DateTime(yr, 12, 31);
+            }
 
-            DateTime startDate = new DateTime(yr, 1, 1);
-            DateTime endDate = new DateTime(yr, 12, 31);
-
+            // Field filter: if nothing selected, pass null -> no field filtering
             Parcel selectedParcel = cbSearchField.SelectedItem as Parcel;
-            int? SelectedParcelID = selectedParcel?.ID;
+            int? SelectedParcelID = (cbSearchField.SelectedIndex > -1) ? selectedParcel?.ID : null;
 
-            List<Job> filteredJobs = JobManager.FilterJobs(startDate, endDate, SelectedParcelID)
-                             .OrderBy(job => job.Date)
-                             .ThenBy(job => job.Name)
-                             .ToList();
+            List<Job> filteredJobs = JobManager
+                .FilterJobs(startDate, endDate, SelectedParcelID)
+                .OrderBy(job => job.Date)
+                .ThenBy(job => job.Name)
+                .ToList();
 
             foreach (var job in filteredJobs)
             {
-                var item = new ListViewItem(job.Name);  // First column
-                item.SubItems.Add(job.Date.ToString("dd-MMM"));  // Second column
-
-                item.Tag = job;  // Store the Job object for later retrieval
+                var item = new ListViewItem(job.Name);
+                item.SubItems.Add(job.Date.ToString("dd-MMM-yy"));
+                item.Tag = job;
                 lvJobs.Items.Add(item);
             }
         }
@@ -604,6 +623,21 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
+            }
+        }
+
+        private void btnResetField_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Clear field and year filters
+                cbSearchField.SelectedIndex = -1;
+                tbSearchYear.Text = string.Empty;
+                FillJobsList();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuJobs/btnResetField_Click: " + ex.Message);
             }
         }
     }

@@ -58,6 +58,7 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckResume = new System.Windows.Forms.CheckBox();
+            this.btnResetField = new System.Windows.Forms.Button();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -257,6 +258,7 @@
             // 
             // gbJobs
             // 
+            this.gbJobs.Controls.Add(this.btnResetField);
             this.gbJobs.Controls.Add(this.lvJobs);
             this.gbJobs.Controls.Add(this.cbSearchField);
             this.gbJobs.Controls.Add(this.btnDeleteField);
@@ -320,7 +322,7 @@
             this.btnDeleteField.FlatAppearance.BorderSize = 0;
             this.btnDeleteField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteField.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteField.Location = new System.Drawing.Point(376, 25);
+            this.btnDeleteField.Location = new System.Drawing.Point(434, 20);
             this.btnDeleteField.Name = "btnDeleteField";
             this.btnDeleteField.Size = new System.Drawing.Size(82, 64);
             this.btnDeleteField.TabIndex = 389;
@@ -339,7 +341,7 @@
             // 
             // tbSearchYear
             // 
-            this.tbSearchYear.Location = new System.Drawing.Point(10, 54);
+            this.tbSearchYear.Location = new System.Drawing.Point(10, 55);
             this.tbSearchYear.Name = "tbSearchYear";
             this.tbSearchYear.Size = new System.Drawing.Size(63, 29);
             this.tbSearchYear.TabIndex = 386;
@@ -431,6 +433,22 @@
             this.ckResume.UseVisualStyleBackColor = true;
             this.ckResume.CheckedChanged += new System.EventHandler(this.ckResume_CheckedChanged);
             // 
+            // btnResetField
+            // 
+            this.btnResetField.BackColor = System.Drawing.Color.Transparent;
+            this.btnResetField.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnResetField.FlatAppearance.BorderSize = 0;
+            this.btnResetField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetField.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetField.Image = global::RateController.Properties.Resources.Update;
+            this.btnResetField.Location = new System.Drawing.Point(358, 21);
+            this.btnResetField.Name = "btnResetField";
+            this.btnResetField.Size = new System.Drawing.Size(70, 63);
+            this.btnResetField.TabIndex = 393;
+            this.btnResetField.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnResetField.UseVisualStyleBackColor = false;
+            this.btnResetField.Click += new System.EventHandler(this.btnResetField_Click);
+            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -485,5 +503,6 @@
         private System.Windows.Forms.ColumnHeader HdrName;
         private System.Windows.Forms.ColumnHeader HdrDate;
         private System.Windows.Forms.CheckBox ckResume;
+        private System.Windows.Forms.Button btnResetField;
     }
 }
