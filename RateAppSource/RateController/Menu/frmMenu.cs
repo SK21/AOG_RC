@@ -89,6 +89,15 @@ namespace RateController
             string Nm = Props.CurrentFileName().Length <= max ? Props.CurrentFileName() : Props.CurrentFileName().Substring(0, max) + "...";
             lbFileName.Text = "[" + Nm + "]";
 
+            if (Props.ReadOnly)
+            {
+                lbFileName.BackColor = Color.Red;
+            }
+            else
+            {
+                lbFileName.BackColor = Properties.Settings.Default.MainBackColour;
+            }
+
             string job = Props.CurrentJobDescription;
             Nm = job.Length <= max ? job : job.Substring(0, max) + "...";
             lbJob.Text = "[" + Nm + "]";
@@ -329,7 +338,7 @@ namespace RateController
                         Pos += SubSpacing;
                         butJobs.Top = Pos;
 
-                        gbSpacer1.Left=butFile.Left+ SubOffset;
+                        gbSpacer1.Left = butFile.Left + SubOffset;
                         gbSpacer1.Top = Pos + SubSpacing;
 
                         butMap.Left = butFile.Left + SubOffset;
@@ -621,7 +630,6 @@ namespace RateController
                 fs.Focus();
             }
         }
-
 
         private void butPins_Click(object sender, EventArgs e)
         {
@@ -1011,14 +1019,14 @@ namespace RateController
         {
             try
             {
-                string Last = Props.GetProp("LastScreen");
-                if (Props.IsFormNameValid(Last))
+                string Last = Props.CurrentMenuName;
+                if (Props.IsFormNameValid(Last) || Last == "")
                 {
                     Form fs;
                     switch (Last)
                     {
                         case "frmMenuProfiles":
-                            butFile.PerformClick(); // frmMenuProfiles opened by default
+                            butFile.PerformClick();
                             HighlightButton(butProfiles);
                             break;
 
@@ -1177,7 +1185,7 @@ namespace RateController
                             break;
 
                         case "frmMenuDisplay":
-                            butFile.PerformClick();  
+                            butFile.PerformClick();
                             fs = new frmMenuDisplay(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
@@ -1221,7 +1229,7 @@ namespace RateController
 
                         case "frmMenuRate":
                             butProducts.PerformClick();
-                            fs=new frmMenuRate(mf, this);
+                            fs = new frmMenuRate(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butRate);
@@ -1230,10 +1238,10 @@ namespace RateController
 
                         default:
                             butFile.PerformClick();
-                            fs = new frmMenuJobs(mf, this);
+                            fs = new frmMenuLanguage(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
-                            HighlightButton(butJobs);
+                            HighlightButton(butLanguage);
                             fs.Show();
                             break;
                     }

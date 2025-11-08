@@ -67,7 +67,7 @@ namespace RateController.Classes
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static string cAppVersion = "4.1.2";
-        private static string cCurrentMenuName;
+        private static string cCurrentMenuName = "";
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
@@ -670,7 +670,10 @@ namespace RateController.Classes
         public static string CurrentMenuName
         {
             get { return cCurrentMenuName; }
-            set { cCurrentMenuName = value; }
+            set
+            {
+                cCurrentMenuName = value;
+            }
         }
 
         public static bool CheckFolders()
@@ -699,13 +702,13 @@ namespace RateController.Classes
 
                 string ExampleProfile = name + "\\" + "Example";
                 if (!Directory.Exists(ExampleProfile)) Directory.CreateDirectory(ExampleProfile);
-                if (!File.Exists(ExampleProfile + "\\Example.rcs")) File.WriteAllBytes(ExampleProfile + "\\Example.rcs", Properties.Resources.Default);
+                if (!File.Exists(ExampleProfile + "\\Example.rcs")) File.WriteAllBytes(ExampleProfile + "\\Example.rcs", Properties.Resources.Example);
                 if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
 
                 // check user files, current profile
                 if (!File.Exists(Properties.Settings.Default.CurrentFile))
                 {
-                    Properties.Settings.Default.CurrentFile = DefaultProfile + "\\Default.rcs";
+                    Properties.Settings.Default.CurrentFile = ExampleProfile + "\\Example.rcs";
                     Properties.Settings.Default.Save();
                 }
 
@@ -983,6 +986,7 @@ namespace RateController.Classes
             cUseRateDisplay = bool.TryParse(GetProp("UseRateDisplay"), out bool rtd) ? rtd : false;
             cShowJobs = bool.TryParse(GetProp("ShowJobs"), out bool ja) ? ja : false;
             cSensorSettingsMaxID = int.TryParse(GetProp("SensorSettingsMaxID"), out int mi) ? mi : 0;
+            cCurrentMenuName = GetProp("LastScreen");
 
             for (int i = 0; i < 40; i++)
             {
