@@ -95,7 +95,9 @@ namespace RateController
 
                 if (Prd.IsNew())
                 {
-                    Prd.ProductName = "Product  " + (char)(65 + i);
+                    AssignNextUnusedModSen(Prd);
+
+                    Prd.ProductName = "Prod  " + (char)(65 + i);
                     Prd.ControlType = ControlTypeEnum.Valve;
                     Prd.QuantityDescription = "Gallons";
                     Prd.CoverageUnits = 0;
@@ -134,13 +136,14 @@ namespace RateController
             if (EnabledID != -1) Result = EnabledID;
             return Result;
         }
+
         public int PreviousEnabledProduct(int CurrentProduct)
         {
             int Result = CurrentProduct;
             int EnabledID = -1;
-            for (int i=CurrentProduct-1;i>=0;i--)
+            for (int i = CurrentProduct - 1; i >= 0; i--)
             {
-                if(cProducts[i].Enabled)
+                if (cProducts[i].Enabled)
                 {
                     EnabledID = i;
                     break;
@@ -149,6 +152,7 @@ namespace RateController
             if (EnabledID != -1) Result = EnabledID;
             return Result;
         }
+
         public double[] ProductAppliedRates()
         {
             double[] Result = new double[Props.MaxProducts - 2];
@@ -268,6 +272,45 @@ namespace RateController
             for (int i = 0; i < cProducts.Count; i++)
             {
                 if (cProducts[i].RateSensorData.Connected()) cProducts[i].SendSensorSettings();
+            }
+        }
+
+        private void AssignNextUnusedModSen(clsProduct product)
+        {
+            try
+            {
+                // Map used pairs
+                bool[,] used = new bool[Props.MaxModules, Props.MaxSensorsPerModule];
+                for (int i = 0; i < cProducts.Count; i++)
+                {
+                    int mod = cProducts[i].ModuleID;
+                    int sen = cProducts[i].SensorID;
+                    if (mod >= 0 && mod < Props.MaxModules && sen >= 0 && sen < Props.MaxSensorsPerModule)
+                    {
+                        used[mod, sen] = true;
+                    }
+                }
+
+                // Find the first available pair in Module-major, Sensor-minor order
+                for (int mod = 0; mod < Props.MaxModules; mod++)
+                {
+                    for (int sen = 0; sen < Props.MaxSensorsPerModule; sen++)
+                    {
+                        if (!used[mod, sen])
+                        {
+                            product.ModuleID = mod;
+                            product.SensorID = (byte)sen;
+                            return;
+                        }
+                    }
+                }
+
+                // No free pair found; leave as-is
+                Props.WriteErrorLog("AssignNextUnusedModSen: No available ModuleID/SensorID pair found.");
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("AssignNextUnusedModSen: " + ex.Message);
             }
         }
 
