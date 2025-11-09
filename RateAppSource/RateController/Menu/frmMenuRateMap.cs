@@ -6,6 +6,7 @@ using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
@@ -135,16 +136,12 @@ namespace RateController.Menu
                     {
                         mf.Tls.Manager.SaveMapToFile(saveFileDialog.FileName);
 
-                        MapImageSaver saver = new MapImageSaver
-                        {
-                            MapControl = mf.Tls.Manager.gmapObject
-                        };
-
                         string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
-                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName));
-                        imageName += ".png";
+                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
 
-                        saver.SaveCompositeImageToFile(imageName);
+                        // Capture including legend
+                        SaveMapImageWithLegend(imageName);
+
                         Props.ShowMessage("File saved successfully", "Save", 5000);
                     }
                     catch (Exception ex)
@@ -761,6 +758,29 @@ namespace RateController.Menu
             {
                 UpdateMapZoom();
             }
+        }
+
+        private void SaveMapImageWithLegend(string imageFilePath)
+        {
+            var ctrl = mf.Tls.Manager.gmapObject;
+            bool prevLegend = mf.Tls.Manager.LegendOverlayEnabled;
+
+            // Ensure legend is enabled for capture
+            mf.Tls.Manager.LegendOverlayEnabled = true;
+
+            // Force a synchronous repaint so legend is drawn
+            ctrl.Refresh();
+            ctrl.Update();
+            Application.DoEvents();
+
+            using (var bmp = new Bitmap(ctrl.Width, ctrl.Height))
+            {
+                ctrl.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                bmp.Save(imageFilePath, ImageFormat.Png);
+            }
+
+            // Restore previous state
+            mf.Tls.Manager.LegendOverlayEnabled = prevLegend;
         }
     }
 }
