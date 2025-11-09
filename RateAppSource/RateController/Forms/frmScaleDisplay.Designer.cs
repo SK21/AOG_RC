@@ -39,12 +39,12 @@
             // lbValue
             // 
             this.lbValue.BackColor = System.Drawing.Color.Transparent;
-            this.lbValue.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbValue.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbValue.ForeColor = System.Drawing.Color.Yellow;
             this.lbValue.Location = new System.Drawing.Point(69, 0);
             this.lbValue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbValue.Name = "lbValue";
-            this.lbValue.Size = new System.Drawing.Size(162, 81);
+            this.lbValue.Size = new System.Drawing.Size(244, 117);
             this.lbValue.TabIndex = 0;
             this.lbValue.Text = "123456.7";
             this.lbValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -61,7 +61,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::RateController.Properties.Resources.Scale3;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 16);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 32);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(48, 49);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -78,7 +78,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(246, 81);
+            this.ClientSize = new System.Drawing.Size(338, 115);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbValue);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

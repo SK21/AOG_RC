@@ -10,6 +10,7 @@ namespace RateController
         private bool IsManuallyMoved = false;
         private FormStart mf;
         private Point MouseDownLocation;
+        private string NumberFormat;
         private Point Offset;
         private bool PinForm = false;
 
@@ -57,6 +58,19 @@ namespace RateController
             timer1.Enabled = true;
             lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+
+            if (Props.UseMetric)
+            {
+                this.Width = 230;
+                NumberFormat = "N2";
+            }
+            else
+            {
+                this.Width = 210;
+                NumberFormat = "N0";
+            }
+            lbPressureValue.Width = this.Width - 79;
+
             UpdateForm();
         }
 
@@ -201,7 +215,7 @@ namespace RateController
                 int ModuleID = mf.Products.Items[mf.CurrentProduct()].ModuleID;
                 double RawData = mf.ModulesStatus.PressureReading(ModuleID);
                 Pressure = Props.PressureReading(ModuleID, RawData);
-                lbPressureValue.Text = Pressure.ToString("N2");
+                lbPressureValue.Text = Pressure.ToString(NumberFormat);
             }
             catch (Exception ex)
             {

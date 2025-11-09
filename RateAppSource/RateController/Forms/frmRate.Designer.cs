@@ -37,12 +37,12 @@
             // lbRate
             // 
             this.lbRate.BackColor = System.Drawing.Color.Transparent;
-            this.lbRate.Font = new System.Drawing.Font("Tahoma", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRate.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRate.ForeColor = System.Drawing.Color.Yellow;
-            this.lbRate.Location = new System.Drawing.Point(70, 0);
+            this.lbRate.Location = new System.Drawing.Point(65, 0);
             this.lbRate.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbRate.Name = "lbRate";
-            this.lbRate.Size = new System.Drawing.Size(118, 62);
+            this.lbRate.Size = new System.Drawing.Size(159, 62);
             this.lbRate.TabIndex = 2;
             this.lbRate.Text = "0.0";
             this.lbRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -76,7 +76,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(183, 68);
+            this.ClientSize = new System.Drawing.Size(230, 68);
             this.Controls.Add(this.btRestore);
             this.Controls.Add(this.lbRate);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
