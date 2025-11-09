@@ -1,4 +1,5 @@
 ﻿using AgOpenGPS;
+using GMap.NET;
 using GMap.NET.WindowsForms;
 using RateController.Classes;
 using RateController.Forms;
@@ -12,6 +13,9 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
+        // Pan scale (pixels moved per scrollbar unit)
+        private const int PanScalePxPerUnit = 5;
+
         private bool EditInProgress = false;
         private bool EditZones = false;
         private int FormHeight;
@@ -27,6 +31,7 @@ namespace RateController.Menu
         private int PicWidth;
         private int PressureLeft = 0;
         private int PressureTop = 0;
+        private bool suppressPan = false; // prevents initial centering from panning
         private bool updatingZoom = false;
 
         public frmMenuRateMap(FormStart main, frmMenu menu)
@@ -48,6 +53,7 @@ namespace RateController.Menu
                     return;
                 }
             }
+
             colorComboBox.SelectedIndex = 1;
         }
 
@@ -81,7 +87,6 @@ namespace RateController.Menu
         private void btnImport_Click(object sender, EventArgs e)
         {
             Form fs = Props.IsFormOpen("frmImport");
-
             if (fs == null)
             {
                 Form frm = new frmImport(mf);
@@ -95,6 +100,7 @@ namespace RateController.Menu
             double RateB = 0;
             double RateC = 0;
             double RateD = 0;
+
             if (double.TryParse(tbP1.Text, out double p1)) RateA = p1;
             if (double.TryParse(tbP2.Text, out double p2)) RateB = p2;
             if (double.TryParse(tbP3.Text, out double p3)) RateC = p3;
@@ -104,6 +110,7 @@ namespace RateController.Menu
             {
                 Props.ShowMessage("Could not save Zone.");
             }
+
             SetEditInProgress(false);
             ckEditPolygons.Checked = false;
             EnableButtons();
@@ -115,7 +122,6 @@ namespace RateController.Menu
         {
             string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
 
-            // Save as shapefile: show SaveFileDialog and save
             using (var saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Title = "Save Shapefile As";
@@ -129,17 +135,16 @@ namespace RateController.Menu
                     {
                         mf.Tls.Manager.SaveMapToFile(saveFileDialog.FileName);
 
-                        // save image
                         MapImageSaver saver = new MapImageSaver
                         {
                             MapControl = mf.Tls.Manager.gmapObject
                         };
 
-                        string ImageName = Path.GetDirectoryName(saveFileDialog.FileName);
-                        ImageName = Path.Combine(ImageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName));
-                        ImageName += ".png";
+                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
+                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName));
+                        imageName += ".png";
 
-                        saver.SaveCompositeImageToFile(ImageName);
+                        saver.SaveCompositeImageToFile(imageName);
                         Props.ShowMessage("File saved successfully", "Save", 5000);
                     }
                     catch (Exception ex)
@@ -150,18 +155,36 @@ namespace RateController.Menu
             }
         }
 
+        private void CenterPanScrollbars()
+        {
+            if (hsPan.Maximum <= hsPan.Minimum || vsPan.Maximum <= vsPan.Minimum)
+            {
+                return;
+            }
+
+            int hMid = (hsPan.Maximum + hsPan.Minimum) / 2;
+            int vMid = (vsPan.Maximum + vsPan.Minimum) / 2;
+
+            suppressPan = true;
+            try
+            {
+                hsPan.Value = Math.Max(hsPan.Minimum, Math.Min(hMid, hsPan.Maximum));
+                vsPan.Value = Math.Max(vsPan.Minimum, Math.Min(vMid, vsPan.Maximum));
+            }
+            catch
+            {
+                // ignore invalid assignment
+            }
+            finally
+            {
+                suppressPan = false;
+            }
+        }
+
         private void ckEditPolygons_CheckedChanged(object sender, EventArgs e)
         {
             mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
-
-            if (ckEditPolygons.Checked)
-            {
-                ckEditPolygons.FlatAppearance.BorderSize = 1;
-            }
-            else
-            {
-                ckEditPolygons.FlatAppearance.BorderSize = 0;
-            }
+            ckEditPolygons.FlatAppearance.BorderSize = ckEditPolygons.Checked ? 1 : 0;
         }
 
         private void ckEditZones_CheckedChanged(object sender, EventArgs e)
@@ -199,7 +222,7 @@ namespace RateController.Menu
             {
                 this.Bounds = Screen.GetWorkingArea(this);
                 pictureBox1.Size = new Size(this.ClientSize.Width - 565, this.ClientSize.Height - 28);
-                pictureBox1.Location = new System.Drawing.Point(550, 14);
+                pictureBox1.Location = new Point(550, 14);
 
                 if (Props.UseLargeScreen)
                 {
@@ -219,16 +242,16 @@ namespace RateController.Menu
                     }
                 }
 
-                // Show legend overlay only in full-screen
                 mf.Tls.Manager.LegendOverlayEnabled = true;
-                mf.Tls.Manager.ShowAppliedLayer(); // refresh coverage + legend overlay
+                mf.Tls.Manager.ShowAppliedLayer();
             }
             else
             {
                 this.Width = FormWidth;
                 this.Height = FormHeight;
+
                 pictureBox1.Size = new Size(PicWidth, PicHeight);
-                pictureBox1.Location = new System.Drawing.Point(PicLeft, PicTop);
+                pictureBox1.Location = new Point(PicLeft, PicTop);
                 PositionForm();
 
                 if (Props.UseLargeScreen)
@@ -249,10 +272,14 @@ namespace RateController.Menu
                     }
                 }
 
-                // Hide legend overlay when not full-screen
                 mf.Tls.Manager.LegendOverlayEnabled = false;
-                mf.Tls.Manager.ShowAppliedLayer(); // clears legend overlay via flag
+                mf.Tls.Manager.ShowAppliedLayer();
             }
+
+            LayoutScrollBars();
+            hsPan.BringToFront();
+            vsPan.BringToFront();
+            CenterPanScrollbars();
             mf.Tls.Manager.CenterMap();
         }
 
@@ -264,15 +291,17 @@ namespace RateController.Menu
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
             Props.MapShowRates = ckRateData.Checked;
-            mf.Tls.Manager.ShowAppliedRatesOverlay(); // this will update legend overlay if enabled
-            // No panel legend; overlay legend is updated inside ShowAppliedRatesOverlay/ShowAppliedLayer
+            mf.Tls.Manager.ShowAppliedRatesOverlay();
         }
 
         private void ckZones_CheckedChanged(object sender, EventArgs e)
         {
             gbZone.Enabled = ckZones.Checked;
             mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
-            if (ckZones.Checked) mf.Tls.Manager.ZoomToFit();
+            if (ckZones.Checked)
+            {
+                mf.Tls.Manager.ZoomToFit();
+            }
         }
 
         private void colorComboBox_Click(object sender, EventArgs e)
@@ -282,29 +311,21 @@ namespace RateController.Menu
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0)
-                return;
+            if (e.Index < 0) return;
 
-            // Get the color object to draw
             Color color = (Color)colorComboBox.Items[e.Index];
 
-            // Draw the background
             e.DrawBackground();
 
-            // Draw a rectangle filled with the color
             using (Brush brush = new SolidBrush(color))
             {
                 int rectSize = e.Bounds.Height - 2;
                 Rectangle rect = new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 1, rectSize, rectSize);
-
                 e.Graphics.FillRectangle(brush, rect);
                 e.Graphics.DrawRectangle(Pens.Black, rect);
             }
 
-            // Draw the color name next to the rectangle
             e.Graphics.DrawString(color.Name, e.Font, Brushes.Black, e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y);
-
-            // Draw focus rectangle if the combo box has focus
             e.DrawFocusRectangle();
         }
 
@@ -324,14 +345,14 @@ namespace RateController.Menu
             pictureBox1.Controls.Remove(mf.Tls.Manager.gmapObject);
         }
 
+        private void frmMenuRateMap_Resize(object sender, EventArgs e)
+        {
+            LayoutScrollBars();
+        }
+
         private Color GetSelectedColor()
         {
-            Color Result = Color.Blue;
-            if (colorComboBox.SelectedItem != null)
-            {
-                Result = (Color)colorComboBox.SelectedItem;
-            }
-            return Result;
+            return (Color)(colorComboBox.SelectedItem ?? Color.Blue);
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)
@@ -340,24 +361,58 @@ namespace RateController.Menu
             mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void InitializeColorComboBox()
+        private void hsPan_Scroll(object sender, ScrollEventArgs e)
         {
-            // Clear any existing items
-            colorComboBox.Items.Clear();
-
-            // Iterate through the KnownColor enum to get all known colors
-            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
+            if (suppressPan)
             {
-                Color color = Color.FromKnownColor(knownColor);
-                colorComboBox.Items.Add(color);
+                return;
             }
 
-            // Optionally set a default selected item
-            colorComboBox.SelectedIndex = 0;
+            int delta = e.NewValue - e.OldValue;
+            if (delta != 0)
+            {
+                PanMap(delta * PanScalePxPerUnit, 0);
+            }
+        }
 
-            // Attach the DrawItem event
+        private void InitializeColorComboBox()
+        {
+            colorComboBox.Items.Clear();
+
+            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
+            {
+                colorComboBox.Items.Add(Color.FromKnownColor(knownColor));
+            }
+
+            colorComboBox.SelectedIndex = 0;
             colorComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             colorComboBox.DrawItem += new DrawItemEventHandler(colorComboBox_DrawItem);
+        }
+
+        private void LayoutScrollBars()
+        {
+            if (pictureBox1.Width <= 0 || pictureBox1.Height <= 0)
+            {
+                return;
+            }
+
+            int scale = ckFullScreen.Checked ? 2 : 1;
+            int hThickness = Math.Max(10, SystemInformation.HorizontalScrollBarHeight * scale);
+            int vThickness = Math.Max(10, SystemInformation.VerticalScrollBarWidth * scale);
+
+            hsPan.Left = 0;
+            hsPan.Top = pictureBox1.Height - hThickness;
+            hsPan.Width = Math.Max(10, pictureBox1.Width - vThickness);
+            hsPan.Height = hThickness;
+
+            vsPan.Left = pictureBox1.Width - vThickness;
+            vsPan.Top = 0;
+            vsPan.Width = vThickness;
+            vsPan.Height = Math.Max(10, pictureBox1.Height - hThickness);
+
+            bool visible = pictureBox1.Width > 50 && pictureBox1.Height > 50;
+            hsPan.Visible = visible;
+            vsPan.Visible = visible;
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -380,8 +435,10 @@ namespace RateController.Menu
             SubMenuLayout.SetFormLayout(this, MainMenu, null);
             pictureBox1.Controls.Add(mf.Tls.Manager.gmapObject);
             SetLanguage();
+
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             mf.Tls.Manager.MapChanged += Manager_MapChanged;
+
             this.BackColor = Properties.Settings.Default.MainBackColour;
             MainMenu.StyleControls(this);
             PositionForm();
@@ -411,15 +468,43 @@ namespace RateController.Menu
                 MainLeft = mf.LSLeft;
                 MainTop = mf.LSTop;
             }
+
             ckZones.Checked = Props.MapShowZones;
             ckSatView.Checked = Props.MapShowTiles;
             ckRateData.Checked = Props.MapShowRates;
+
             mf.Tls.Manager.LoadMap();
             mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
-
-            // Initialize legend overlay visibility based on current full-screen state
             mf.Tls.Manager.LegendOverlayEnabled = ckFullScreen.Checked;
             mf.Tls.Manager.ShowAppliedLayer();
+
+            hsPan.Parent = pictureBox1;
+            vsPan.Parent = pictureBox1;
+            hsPan.BringToFront();
+            vsPan.BringToFront();
+
+            this.Resize += frmMenuRateMap_Resize;
+            pictureBox1.Resize += pictureBox1_Resize;
+
+            LayoutScrollBars();
+            CenterPanScrollbars();
+        }
+
+        private void PanMap(int dxPixels, int dyPixels)
+        {
+            var gmap = mf.Tls.Manager.gmapObject;
+
+            int cx = gmap.Width / 2;
+            int cy = gmap.Height / 2;
+
+            PointLatLng newCenter = gmap.FromLocalToLatLng(cx - dxPixels, cy - dyPixels);
+            gmap.Position = newCenter;
+            gmap.Refresh();
+        }
+
+        private void pictureBox1_Resize(object sender, EventArgs e)
+        {
+            LayoutScrollBars();
         }
 
         private void PositionForm()
@@ -430,27 +515,19 @@ namespace RateController.Menu
 
         private void SetEditInProgress(bool InProgress)
         {
-            if (InProgress != EditInProgress)
+            if (InProgress == EditInProgress)
             {
-                if (InProgress)
-                {
-                    EditInProgress = true;
-                    btnCancel.Enabled = true;
-                    btnOK.Enabled = true;
-                    ckEditZones.Enabled = false;
-                    ckEditPolygons.Enabled = false;
-                    btnDelete.Enabled = false;
-                }
-                else
-                {
-                    EditInProgress = false;
-                    btnCancel.Enabled = false;
-                    btnOK.Enabled = false;
-                    ckEditZones.Enabled = true;
-                    ckEditPolygons.Enabled = true;
-                    btnDelete.Enabled = true;
-                }
+                return;
             }
+
+            EditInProgress = InProgress;
+
+            btnCancel.Enabled = InProgress;
+            btnOK.Enabled = InProgress;
+
+            ckEditZones.Enabled = !InProgress;
+            ckEditPolygons.Enabled = !InProgress;
+            btnDelete.Enabled = !InProgress;
         }
 
         private void SetLanguage()
@@ -469,12 +546,13 @@ namespace RateController.Menu
         private void tbP1_Enter(object sender, EventArgs e)
         {
             SetEditInProgress(true);
+
             double tempD;
             double.TryParse(tbP1.Text, out tempD);
+
             using (var form = new FormNumeric(0, 10000, tempD))
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
                     tbP1.Text = form.ReturnValue.ToString("N1");
                 }
@@ -485,6 +563,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbP1.Text, out tempD);
+
             if (tempD < 0 || tempD > 10000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -495,12 +574,13 @@ namespace RateController.Menu
         private void tbP2_Enter(object sender, EventArgs e)
         {
             SetEditInProgress(true);
+
             double tempD;
             double.TryParse(tbP2.Text, out tempD);
+
             using (var form = new FormNumeric(0, 10000, tempD))
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
                     tbP2.Text = form.ReturnValue.ToString("N1");
                 }
@@ -511,6 +591,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbP2.Text, out tempD);
+
             if (tempD < 0 || tempD > 10000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -521,12 +602,13 @@ namespace RateController.Menu
         private void tbP3_Enter(object sender, EventArgs e)
         {
             SetEditInProgress(true);
+
             double tempD;
             double.TryParse(tbP3.Text, out tempD);
+
             using (var form = new FormNumeric(0, 10000, tempD))
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
                     tbP3.Text = form.ReturnValue.ToString("N1");
                 }
@@ -537,6 +619,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbP3.Text, out tempD);
+
             if (tempD < 0 || tempD > 10000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -547,12 +630,13 @@ namespace RateController.Menu
         private void tbP4_Enter(object sender, EventArgs e)
         {
             SetEditInProgress(true);
+
             double tempD;
             double.TryParse(tbP4.Text, out tempD);
+
             using (var form = new FormNumeric(0, 10000, tempD))
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
                     tbP4.Text = form.ReturnValue.ToString("N1");
                 }
@@ -563,6 +647,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbP4.Text, out tempD);
+
             if (tempD < 0 || tempD > 10000)
             {
                 System.Media.SystemSounds.Exclamation.Play();
@@ -596,6 +681,7 @@ namespace RateController.Menu
             }
 
             GMapControl gmap = mf.Tls.Manager.gmapObject;
+
             int newValue = (int)Math.Round((gmap.Zoom - gmap.MinZoom) * 100.0 / (gmap.MaxZoom - gmap.MinZoom));
             if (VSzoom.Value != newValue)
             {
@@ -620,6 +706,7 @@ namespace RateController.Menu
             {
                 pictureBox1.Controls.Add(mf.Tls.Manager.gmapObject);
             }
+
             mf.Tls.Manager.LoadMap();
             mf.Tls.Manager.ShowZoneOverlay(ckZones.Checked);
             mf.Tls.Manager.gmapObject.Refresh();
@@ -632,16 +719,34 @@ namespace RateController.Menu
             gmap.Zoom = Math.Round(zoom);
         }
 
+        private void vsPan_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (suppressPan)
+            {
+                return;
+            }
+
+            int delta = e.NewValue - e.OldValue;
+            if (delta != 0)
+            {
+                PanMap(0, -delta * PanScalePxPerUnit);
+            }
+        }
+
         private void VSzoom_Scroll(object sender, ScrollEventArgs e)
         {
             if (!updatingZoom)
+            {
                 UpdateMapZoom();
+            }
         }
 
         private void VSzoom_ValueChanged(object sender, EventArgs e)
         {
             if (!updatingZoom)
+            {
                 UpdateMapZoom();
+            }
         }
     }
 }

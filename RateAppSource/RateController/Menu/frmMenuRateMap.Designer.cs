@@ -56,6 +56,8 @@
             this.btnExport = new System.Windows.Forms.Button();
             this.ckRateData = new System.Windows.Forms.CheckBox();
             this.btnCopy = new System.Windows.Forms.Button();
+            this.hsPan = new System.Windows.Forms.HScrollBar();
+            this.vsPan = new System.Windows.Forms.VScrollBar();
             this.gbZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -334,7 +336,8 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(154, 308);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(379, 358);
+            // Shrink to make room for scroll bars
+            this.pictureBox1.Size = new System.Drawing.Size(359, 338);
             this.pictureBox1.TabIndex = 350;
             this.pictureBox1.TabStop = false;
             // 
@@ -404,12 +407,32 @@
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
+            // hsPan
+            // 
+            this.hsPan.Location = new System.Drawing.Point(154, 649);
+            this.hsPan.Maximum = 1000;
+            this.hsPan.Name = "hsPan";
+            this.hsPan.Size = new System.Drawing.Size(359, 17);
+            this.hsPan.TabIndex = 360;
+            this.hsPan.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hsPan_Scroll);
+            // 
+            // vsPan
+            // 
+            this.vsPan.Location = new System.Drawing.Point(516, 308);
+            this.vsPan.Maximum = 1000;
+            this.vsPan.Name = "vsPan";
+            this.vsPan.Size = new System.Drawing.Size(17, 338);
+            this.vsPan.TabIndex = 361;
+            this.vsPan.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vsPan_Scroll);
+            // 
             // frmMenuRateMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.ControlBox = false;
+            this.Controls.Add(this.vsPan);
+            this.Controls.Add(this.hsPan);
             this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.btnExport);
             this.Controls.Add(this.ckRateData);
@@ -466,5 +489,7 @@
         private System.Windows.Forms.CheckBox ckEditZones;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.HScrollBar hsPan;
+        private System.Windows.Forms.VScrollBar vsPan;
     }
 }
