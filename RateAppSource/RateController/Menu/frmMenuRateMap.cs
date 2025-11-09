@@ -20,7 +20,7 @@ namespace RateController.Menu
         private bool EditZones = false;
         private int FormHeight;
         private int FormWidth;
-        private bool Initializing = false;
+        private bool Initializing = true;
         private int MainLeft = 0;
         private frmMenu MainMenu;
         private int MainTop = 0;
@@ -185,6 +185,7 @@ namespace RateController.Menu
         {
             mf.Tls.Manager.EditModePolygons = ckEditPolygons.Checked;
             ckEditPolygons.FlatAppearance.BorderSize = ckEditPolygons.Checked ? 1 : 0;
+            if (ckEditPolygons.Checked && !Initializing) SetEditInProgress(true);
         }
 
         private void ckEditZones_CheckedChanged(object sender, EventArgs e)
@@ -327,6 +328,11 @@ namespace RateController.Menu
 
             e.Graphics.DrawString(color.Name, e.Font, Brushes.Black, e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y);
             e.DrawFocusRectangle();
+        }
+
+        private void colorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          if(!Initializing)  SetEditInProgress(true);
         }
 
         private void EnableButtons()
@@ -525,19 +531,17 @@ namespace RateController.Menu
 
         private void SetEditInProgress(bool InProgress)
         {
-            if (InProgress == EditInProgress)
+            if (InProgress != EditInProgress)
             {
-                return;
+                EditInProgress = InProgress;
+
+                btnCancel.Enabled = InProgress;
+                btnOK.Enabled = InProgress;
+
+                ckEditZones.Enabled = !InProgress;
+                ckEditPolygons.Enabled = !InProgress;
+                btnDelete.Enabled = !InProgress;
             }
-
-            EditInProgress = InProgress;
-
-            btnCancel.Enabled = InProgress;
-            btnOK.Enabled = InProgress;
-
-            ckEditZones.Enabled = !InProgress;
-            ckEditPolygons.Enabled = !InProgress;
-            btnDelete.Enabled = !InProgress;
         }
 
         private void SetLanguage()

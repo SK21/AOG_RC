@@ -162,6 +162,7 @@
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(162, 32);
             this.colorComboBox.TabIndex = 340;
+            this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.colorComboBox_SelectedIndexChanged);
             this.colorComboBox.Click += new System.EventHandler(this.colorComboBox_Click);
             // 
             // btnDelete
@@ -336,7 +337,6 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(154, 308);
             this.pictureBox1.Name = "pictureBox1";
-            // Shrink to make room for scroll bars
             this.pictureBox1.Size = new System.Drawing.Size(359, 338);
             this.pictureBox1.TabIndex = 350;
             this.pictureBox1.TabStop = false;
