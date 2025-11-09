@@ -25,6 +25,51 @@ namespace RateController
         private FormStart mf;
         private Point MouseDownLocation;
 
+        // Prevent intermediate repaints while updating visibility/positions
+        private const int WM_SETREDRAW = 0x000B;
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+        private sealed class RedrawScope : IDisposable
+        {
+            private readonly Control _control;
+            public RedrawScope(Control control)
+            {
+                _control = control;
+                if (control.IsHandleCreated)
+                    SendMessage(control.Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+            }
+            public void Dispose()
+            {
+                if (_control != null && _control.IsHandleCreated)
+                {
+                    SendMessage(_control.Handle, WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
+                    _control.Refresh();
+                }
+            }
+        }
+
+        // Reduce flicker across parent/children by clipping and composited painting
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.Style |= 0x02000000;     // WS_CLIPCHILDREN
+                cp.ExStyle |= 0x02000000;   // WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+        // Avoid background erase flicker; paint background ourselves
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            using (var b = new SolidBrush(Properties.Settings.Default.MainBackColour))
+            {
+                e.Graphics.FillRectangle(b, this.ClientRectangle);
+            }
+        }
+
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
             InitializeComponent();
@@ -296,80 +341,83 @@ namespace RateController
         {
             if (ClosedOwned())
             {
-                // Suspend layout to avoid multiple repaints while changing many control properties
-                this.SuspendLayout();
-                try
+                using (new RedrawScope(this))
                 {
-                    butProfiles.Visible = !Expanded;
-                    butJobs.Visible = !Expanded;
-                    butMap.Visible = !Expanded;
-                    butRateData.Visible = !Expanded;
-                    butDisplay.Visible = !Expanded;
-                    butLanguage.Visible = !Expanded;
-                    butColor.Visible = !Expanded;
-                    gbSpacer1.Visible = !Expanded;
-                    gbSpacer2.Visible = !Expanded;
-                    if (Expanded)
+                    // Suspend layout to avoid multiple repaints while changing many control properties
+                    this.SuspendLayout();
+                    try
                     {
-                        Expanded = false;
-                        butFile.Visible = true;
-                        butProducts.Visible = true;
-                        butMachine.Visible = true;
-                        butModules.Visible = true;
-                        butHelpScreen.Visible = true;
+                        butProfiles.Visible = !Expanded;
+                        butJobs.Visible = !Expanded;
+                        butMap.Visible = !Expanded;
+                        butRateData.Visible = !Expanded;
+                        butDisplay.Visible = !Expanded;
+                        butLanguage.Visible = !Expanded;
+                        butColor.Visible = !Expanded;
+                        gbSpacer1.Visible = !Expanded;
+                        gbSpacer2.Visible = !Expanded;
+                        if (Expanded)
+                        {
+                            Expanded = false;
+                            butFile.Visible = true;
+                            butProducts.Visible = true;
+                            butMachine.Visible = true;
+                            butModules.Visible = true;
+                            butHelpScreen.Visible = true;
+                        }
+                        else
+                        {
+                            Expanded = true;
+                            butFile.Visible = true;
+                            butProducts.Visible = false;
+                            butMachine.Visible = false;
+                            butModules.Visible = false;
+                            butHelpScreen.Visible = false;
+
+                            int Pos = butFile.Top;
+                            butProfiles.Visible = true;
+                            butProfiles.Left = butFile.Left + SubOffset;
+                            Pos += SubFirstSpacing;
+                            butProfiles.Top = Pos;
+
+                            butJobs.Visible = true;
+                            butJobs.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butJobs.Top = Pos;
+
+                            gbSpacer1.Left = butFile.Left + SubOffset;
+                            gbSpacer1.Top = Pos + SubSpacing;
+
+                            butMap.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing + 5;
+                            butMap.Top = Pos;
+
+                            butRateData.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butRateData.Top = Pos;
+
+                            gbSpacer2.Left = butFile.Left + SubOffset;
+                            gbSpacer2.Top = Pos + SubSpacing;
+
+                            butDisplay.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing + 5;
+                            butDisplay.Top = Pos;
+
+                            butLanguage.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butLanguage.Top = Pos;
+
+                            butColor.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butColor.Top = Pos;
+
+                            butProfiles.PerformClick();
+                        }
                     }
-                    else
+                    finally
                     {
-                        Expanded = true;
-                        butFile.Visible = true;
-                        butProducts.Visible = false;
-                        butMachine.Visible = false;
-                        butModules.Visible = false;
-                        butHelpScreen.Visible = false;
-
-                        int Pos = butFile.Top;
-                        butProfiles.Visible = true;
-                        butProfiles.Left = butFile.Left + SubOffset;
-                        Pos += SubFirstSpacing;
-                        butProfiles.Top = Pos;
-
-                        butJobs.Visible = true;
-                        butJobs.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butJobs.Top = Pos;
-
-                        gbSpacer1.Left = butFile.Left + SubOffset;
-                        gbSpacer1.Top = Pos + SubSpacing;
-
-                        butMap.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing + 5;
-                        butMap.Top = Pos;
-
-                        butRateData.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butRateData.Top = Pos;
-
-                        gbSpacer2.Left = butFile.Left + SubOffset;
-                        gbSpacer2.Top = Pos + SubSpacing;
-
-                        butDisplay.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing + 5;
-                        butDisplay.Top = Pos;
-
-                        butLanguage.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butLanguage.Top = Pos;
-
-                        butColor.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butColor.Top = Pos;
-
-                        butProfiles.PerformClick();
+                        this.ResumeLayout(true);
                     }
-                }
-                finally
-                {
-                    this.ResumeLayout(true);
                 }
             }
         }
@@ -424,69 +472,72 @@ namespace RateController
         {
             if (ClosedOwned())
             {
-                // Suspend layout to avoid flicker while repositioning and showing submenu items
-                this.SuspendLayout();
-                try
+                using (new RedrawScope(this))
                 {
-                    butSections.Visible = !Expanded;
-                    butRelays.Visible = !Expanded;
-                    butCalibrate.Visible = !Expanded;
-                    butSwitches.Visible = !Expanded;
-                    butPrimed.Visible = !Expanded;
-                    btnPressure.Visible = !Expanded;
-
-                    if (Expanded)
+                    // Suspend layout to avoid flicker while repositioning and showing submenu items
+                    this.SuspendLayout();
+                    try
                     {
-                        Expanded = false;
-                        butFile.Visible = true;
-                        butProducts.Visible = true;
-                        butMachine.Visible = true;
-                        butModules.Visible = true;
-                        butHelpScreen.Visible = true;
-                        butMachine.Top = (int)butMachine.Tag;
+                        butSections.Visible = !Expanded;
+                        butRelays.Visible = !Expanded;
+                        butCalibrate.Visible = !Expanded;
+                        butSwitches.Visible = !Expanded;
+                        butPrimed.Visible = !Expanded;
+                        btnPressure.Visible = !Expanded;
+
+                        if (Expanded)
+                        {
+                            Expanded = false;
+                            butFile.Visible = true;
+                            butProducts.Visible = true;
+                            butMachine.Visible = true;
+                            butModules.Visible = true;
+                            butHelpScreen.Visible = true;
+                            butMachine.Top = (int)butMachine.Tag;
+                        }
+                        else
+                        {
+                            Expanded = true;
+                            butFile.Visible = false;
+                            butProducts.Visible = false;
+                            butMachine.Visible = true;
+                            butModules.Visible = false;
+                            butHelpScreen.Visible = false;
+                            butMachine.Tag = butMachine.Top;
+                            butMachine.Top = butFile.Top;
+
+                            int Pos = butFile.Top;
+                            butSections.Left = butFile.Left + SubOffset;
+                            Pos += SubFirstSpacing;
+                            butSections.Top = Pos;
+
+                            butRelays.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butRelays.Top = Pos;
+
+                            butSwitches.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butSwitches.Top = Pos;
+
+                            btnPressure.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            btnPressure.Top = Pos;
+
+                            butPrimed.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butPrimed.Top = Pos;
+
+                            butCalibrate.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butCalibrate.Top = Pos;
+
+                            butSections.PerformClick();
+                        }
                     }
-                    else
+                    finally
                     {
-                        Expanded = true;
-                        butFile.Visible = false;
-                        butProducts.Visible = false;
-                        butMachine.Visible = true;
-                        butModules.Visible = false;
-                        butHelpScreen.Visible = false;
-                        butMachine.Tag = butMachine.Top;
-                        butMachine.Top = butFile.Top;
-
-                        int Pos = butFile.Top;
-                        butSections.Left = butFile.Left + SubOffset;
-                        Pos += SubFirstSpacing;
-                        butSections.Top = Pos;
-
-                        butRelays.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butRelays.Top = Pos;
-
-                        butSwitches.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butSwitches.Top = Pos;
-
-                        btnPressure.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        btnPressure.Top = Pos;
-
-                        butPrimed.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butPrimed.Top = Pos;
-
-                        butCalibrate.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butCalibrate.Top = Pos;
-
-                        butSections.PerformClick();
+                        this.ResumeLayout(true);
                     }
-                }
-                finally
-                {
-                    this.ResumeLayout(true);
                 }
             }
         }
@@ -527,69 +578,72 @@ namespace RateController
         {
             if (ClosedOwned())
             {
-                // Suspend layout to prevent multiple layout passes while updating module submenu
-                this.SuspendLayout();
-                try
+                using (new RedrawScope(this))
                 {
-                    butNetwork.Visible = !Expanded;
-                    butConfig.Visible = !Expanded;
-                    butPins.Visible = !Expanded;
-                    butRelayPins.Visible = !Expanded;
-                    butValves.Visible = !Expanded;
-                    butUpdateModules.Visible = !Expanded;
-
-                    if (Expanded)
+                    // Suspend layout to prevent multiple layout passes while updating module submenu
+                    this.SuspendLayout();
+                    try
                     {
-                        Expanded = false;
-                        butFile.Visible = true;
-                        butProducts.Visible = true;
-                        butMachine.Visible = true;
-                        butModules.Visible = true;
-                        butHelpScreen.Visible = true;
-                        butModules.Top = (int)butModules.Tag;
+                        butNetwork.Visible = !Expanded;
+                        butConfig.Visible = !Expanded;
+                        butPins.Visible = !Expanded;
+                        butRelayPins.Visible = !Expanded;
+                        butValves.Visible = !Expanded;
+                        butUpdateModules.Visible = !Expanded;
+
+                        if (Expanded)
+                        {
+                            Expanded = false;
+                            butFile.Visible = true;
+                            butProducts.Visible = true;
+                            butMachine.Visible = true;
+                            butModules.Visible = true;
+                            butHelpScreen.Visible = true;
+                            butModules.Top = (int)butModules.Tag;
+                        }
+                        else
+                        {
+                            Expanded = true;
+                            butFile.Visible = false;
+                            butProducts.Visible = false;
+                            butMachine.Visible = false;
+                            butModules.Visible = true;
+                            butHelpScreen.Visible = false;
+                            butModules.Tag = butModules.Top;
+                            butModules.Top = butFile.Top;
+
+                            int Pos = butFile.Top;
+                            butNetwork.Left = butFile.Left + SubOffset;
+                            Pos += SubFirstSpacing;
+                            butNetwork.Top = Pos;
+
+                            butConfig.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butConfig.Top = Pos;
+
+                            butPins.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butPins.Top = Pos;
+
+                            butRelayPins.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butRelayPins.Top = Pos;
+
+                            butValves.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butValves.Top = Pos;
+
+                            butUpdateModules.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butUpdateModules.Top = Pos;
+
+                            butNetwork.PerformClick();
+                        }
                     }
-                    else
+                    finally
                     {
-                        Expanded = true;
-                        butFile.Visible = false;
-                        butProducts.Visible = false;
-                        butMachine.Visible = false;
-                        butModules.Visible = true;
-                        butHelpScreen.Visible = false;
-                        butModules.Tag = butModules.Top;
-                        butModules.Top = butFile.Top;
-
-                        int Pos = butFile.Top;
-                        butNetwork.Left = butFile.Left + SubOffset;
-                        Pos += SubFirstSpacing;
-                        butNetwork.Top = Pos;
-
-                        butConfig.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butConfig.Top = Pos;
-
-                        butPins.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butPins.Top = Pos;
-
-                        butRelayPins.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butRelayPins.Top = Pos;
-
-                        butValves.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butValves.Top = Pos;
-
-                        butUpdateModules.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butUpdateModules.Top = Pos;
-
-                        butNetwork.PerformClick();
+                        this.ResumeLayout(true);
                     }
-                }
-                finally
-                {
-                    this.ResumeLayout(true);
                 }
             }
         }
@@ -676,69 +730,72 @@ namespace RateController
         {
             if (ClosedOwned())
             {
-                // Suspend layout to reduce repaints while arranging product submenu
-                this.SuspendLayout();
-                try
+                using (new RedrawScope(this))
                 {
-                    butRate.Visible = !Expanded;
-                    butControl.Visible = !Expanded;
-                    butSettings.Visible = !Expanded;
-                    butMode.Visible = !Expanded;
-                    butMonitor.Visible = !Expanded;
-                    butData.Visible = !Expanded;
-
-                    if (Expanded)
+                    // Suspend layout to reduce repaints while arranging product submenu
+                    this.SuspendLayout();
+                    try
                     {
-                        Expanded = false;
-                        butFile.Visible = true;
-                        butProducts.Visible = true;
-                        butMachine.Visible = true;
-                        butModules.Visible = true;
-                        butHelpScreen.Visible = true;
-                        butProducts.Top = (int)butProducts.Tag;
+                        butRate.Visible = !Expanded;
+                        butControl.Visible = !Expanded;
+                        butSettings.Visible = !Expanded;
+                        butMode.Visible = !Expanded;
+                        butMonitor.Visible = !Expanded;
+                        butData.Visible = !Expanded;
+
+                        if (Expanded)
+                        {
+                            Expanded = false;
+                            butFile.Visible = true;
+                            butProducts.Visible = true;
+                            butMachine.Visible = true;
+                            butModules.Visible = true;
+                            butHelpScreen.Visible = true;
+                            butProducts.Top = (int)butProducts.Tag;
+                        }
+                        else
+                        {
+                            Expanded = true;
+                            butFile.Visible = false;
+                            butProducts.Visible = true;
+                            butMachine.Visible = false;
+                            butModules.Visible = false;
+                            butHelpScreen.Visible = false;
+                            butProducts.Tag = butProducts.Top;
+                            butProducts.Top = butFile.Top;
+
+                            int Pos = butFile.Top;
+                            butSettings.Left = butFile.Left + SubOffset;
+                            Pos += SubFirstSpacing;
+                            butSettings.Top = Pos;
+
+                            butRate.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butRate.Top = Pos;
+
+                            butControl.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butControl.Top = Pos;
+
+                            butMode.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butMode.Top = Pos;
+
+                            butMonitor.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butMonitor.Top = Pos;
+
+                            butData.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butData.Top = Pos;
+
+                            butSettings.PerformClick();
+                        }
                     }
-                    else
+                    finally
                     {
-                        Expanded = true;
-                        butFile.Visible = false;
-                        butProducts.Visible = true;
-                        butMachine.Visible = false;
-                        butModules.Visible = false;
-                        butHelpScreen.Visible = false;
-                        butProducts.Tag = butProducts.Top;
-                        butProducts.Top = butFile.Top;
-
-                        int Pos = butFile.Top;
-                        butSettings.Left = butFile.Left + SubOffset;
-                        Pos += SubFirstSpacing;
-                        butSettings.Top = Pos;
-
-                        butRate.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butRate.Top = Pos;
-
-                        butControl.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butControl.Top = Pos;
-
-                        butMode.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butMode.Top = Pos;
-
-                        butMonitor.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butMonitor.Top = Pos;
-
-                        butData.Left = butFile.Left + SubOffset;
-                        Pos += SubSpacing;
-                        butData.Top = Pos;
-
-                        butSettings.PerformClick();
+                        this.ResumeLayout(true);
                     }
-                }
-                finally
-                {
-                    this.ResumeLayout(true);
                 }
             }
         }
