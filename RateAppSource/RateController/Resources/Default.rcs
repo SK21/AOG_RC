@@ -366,3 +366,4 @@ ShowAdvancedSettings=False
 ShowPressure=False
 ShowScale_0=False
 SimMode=Sim_None
+SimSpeed=5

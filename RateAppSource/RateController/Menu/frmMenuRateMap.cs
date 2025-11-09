@@ -14,7 +14,7 @@ namespace RateController.Menu
     public partial class frmMenuRateMap : Form
     {
         // Pan scale (pixels moved per scrollbar unit)
-        private const int PanScalePxPerUnit = 5;
+        private const int PanScalePxPerUnit = 3;
 
         private bool EditInProgress = false;
         private bool EditZones = false;
