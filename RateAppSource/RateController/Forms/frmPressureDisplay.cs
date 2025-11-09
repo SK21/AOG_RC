@@ -20,6 +20,7 @@ namespace RateController
             mf = CallingForm;
             mf.ColorChanged += Mf_ColorChanged;
             Props.ScreensSwitched += Props_ScreensSwitched;
+            Props.UnitsChanged += Props_UnitsChanged;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -58,18 +59,7 @@ namespace RateController
             timer1.Enabled = true;
             lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
-
-            if (Props.UseMetric)
-            {
-                this.Width = 230;
-                NumberFormat = "N2";
-            }
-            else
-            {
-                this.Width = 210;
-                NumberFormat = "N0";
-            }
-            lbPressureValue.Width = this.Width - 79;
+            SetForUnits();
 
             UpdateForm();
         }
@@ -145,6 +135,26 @@ namespace RateController
         private void Props_ScreensSwitched(object sender, EventArgs e)
         {
             TrackingSetup();
+        }
+
+        private void Props_UnitsChanged(object sender, EventArgs e)
+        {
+            SetForUnits();
+        }
+
+        private void SetForUnits()
+        {
+            if (Props.UseMetric)
+            {
+                this.Width = 230;
+                NumberFormat = "N2";
+            }
+            else
+            {
+                this.Width = 210;
+                NumberFormat = "N0";
+            }
+            lbPressureValue.Width = this.Width - 79;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
