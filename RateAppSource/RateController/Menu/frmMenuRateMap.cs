@@ -342,7 +342,13 @@ namespace RateController.Menu
 
         private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
         {
-            pictureBox1.Controls.Remove(mf.Tls.Manager.gmapObject);
+            try { mf.Tls.Manager.Dispose(); } catch { }
+            try
+            {
+                if (pictureBox1.Controls.Contains(mf.Tls.Manager.gmapObject))
+                    pictureBox1.Controls.Remove(mf.Tls.Manager.gmapObject);
+            }
+            catch { }
         }
 
         private void frmMenuRateMap_Resize(object sender, EventArgs e)
@@ -363,15 +369,12 @@ namespace RateController.Menu
 
         private void hsPan_Scroll(object sender, ScrollEventArgs e)
         {
-            if (suppressPan)
-            {
-                return;
-            }
-
+            if (suppressPan) return;
             int delta = e.NewValue - e.OldValue;
             if (delta != 0)
             {
-                PanMap(delta * PanScalePxPerUnit, 0);
+                // Use negative to match intuitive drag-left = move map right
+                PanMap(-delta * PanScalePxPerUnit, 0);
             }
         }
 
@@ -413,6 +416,13 @@ namespace RateController.Menu
             bool visible = pictureBox1.Width > 50 && pictureBox1.Height > 50;
             hsPan.Visible = visible;
             vsPan.Visible = visible;
+
+            // Update legend right margin to avoid clipping behind the vertical scrollbar
+            try
+            {
+                mf.Tls.Manager.LegendRightMarginPx = visible ? vThickness : 0;
+            }
+            catch { }
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
