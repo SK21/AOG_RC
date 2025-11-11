@@ -10,7 +10,7 @@ namespace RateController.Classes
 {
     public class DataCollector
     {
-        private const int RecordIntervalMS = 500;
+        private const int RecordIntervalMS = 1000;
         private readonly object _lock = new object();
 
         private readonly List<RateReading> Readings = new List<RateReading>();

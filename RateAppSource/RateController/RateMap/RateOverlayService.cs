@@ -31,6 +31,7 @@ namespace RateController.Classes
                 if (maxLen == 0) return false;
                 if (rateIndex >= maxLen) rateIndex = 0;
 
+                // Choose the series (applied or target) for scale computation based on legend type
                 IEnumerable<double> baseSeries = (legendType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
@@ -46,10 +47,14 @@ namespace RateController.Classes
                     var curr = new PointLatLng(r.Latitude, r.Longitude);
                     double heading = i == 0 ? 0.0 : BearingDegrees(prev, curr);
 
-                    double applied = (r.AppliedRates.Length > rateIndex) ? r.AppliedRates[rateIndex] : 0.0;
-                    if (applied > RateEpsilon)
+                    // Use the selected rate type value for trail generation (was always applied before)
+                    double rateValue = legendType == RateType.Applied
+                        ? (r.AppliedRates.Length > rateIndex ? r.AppliedRates[rateIndex] : 0.0)
+                        : (r.TargetRates.Length > rateIndex ? r.TargetRates[rateIndex] : 0.0);
+
+                    if (rateValue > RateEpsilon)
                     {
-                        _trail.AddPoint(curr, heading, applied, implementWidthMeters);
+                        _trail.AddPoint(curr, heading, rateValue, implementWidthMeters);
                     }
                     else
                     {
@@ -95,6 +100,7 @@ namespace RateController.Classes
 
                 var last = readings.Last();
 
+                // Select series for scale computation based on legend type
                 IEnumerable<double> baseSeries = (legendType == RateType.Applied)
                     ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
                     : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
@@ -102,16 +108,25 @@ namespace RateController.Classes
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                // Prefer the live applied rate from SetTractorPosition
-                double currApplied = appliedOverride ?? ((last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0);
+                // Choose current value based on legend type; appliedOverride only applies to Applied view
+                double currValue;
+                if (legendType == RateType.Applied)
+                {
+                    double appliedBase = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
+                    currValue = appliedOverride ?? appliedBase;
+                }
+                else
+                {
+                    currValue = (last.TargetRates.Length > rateIndex) ? last.TargetRates[rateIndex] : 0.0;
+                }
 
-                // Distance gate prevents “bridge” from historical last point to a new start/relocated tractor
+                // Distance gate prevents trail bridging after relocation
                 const double maxSnapMeters = 5.0;
                 double distToLast = DistanceMeters(tractorPos, last.Latitude, last.Longitude);
 
-                if (currApplied > RateEpsilon && distToLast <= maxSnapMeters)
+                if (currValue > RateEpsilon && distToLast <= maxSnapMeters)
                 {
-                    _trail.AddPoint(tractorPos, headingDegrees, currApplied, implementWidthMeters);
+                    _trail.AddPoint(tractorPos, headingDegrees, currValue, implementWidthMeters);
                 }
                 else
                 {
