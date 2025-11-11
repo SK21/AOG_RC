@@ -518,6 +518,7 @@
     </Compile>
     <Compile Include="RateMap\ColorScale.cs" />
     <Compile Include="RateMap\CoverageTrail.cs" />
+    <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapImageSaver.cs" />
     <Compile Include="RateMap\MapManager.cs" />
     <Compile Include="RateMap\MapZone.cs" />

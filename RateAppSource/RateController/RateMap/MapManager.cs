@@ -21,6 +21,7 @@ namespace RateController.Classes
 
         // Increased throttle to reduce UI redraws
         private static readonly TimeSpan MinAppliedOverlayUpdate = TimeSpan.FromMilliseconds(400);
+
         private readonly RateOverlayService overlayService = new RateOverlayService();
 
         private GMapOverlay AppliedOverlay;
@@ -37,6 +38,7 @@ namespace RateController.Classes
         private double cZoneHectares;
         private string cZoneName = "Unnamed Zone";
         private double[] cZoneRates = new double[4];
+        private bool disposed;
         private GMapControl gmap;
         private GMapOverlay gpsMarkerOverlay;
         private bool isDragging = false;
@@ -46,14 +48,8 @@ namespace RateController.Classes
 
         private System.Drawing.Point lastMousePosition;
 
-        private Bitmap legendBitmap;
-
-        // Legend overlay (bitmap marker anchored to top-right of the current view)
-        private GMapOverlay legendOverlay;
-        private PictureBox legendHost; // fixed-position host for legend bitmap
-
-        // cache: rendered legend image
-        private string legendSignature;            // cache: signature of legend entries
+        // Legend manager to handle legend rendering and layout
+        private LegendManager legendManager;
 
         private List<MapZone> mapZones;
         private FormStart mf;
@@ -61,12 +57,6 @@ namespace RateController.Classes
         private GMarkerGoogle tractorMarker;
         private STRtree<MapZone> zoneIndex;        // spatial index for fast zone lookup
         private GMapOverlay zoneOverlay;
-
-        // Cache legend font to avoid recreating on each draw
-        private Font legendFont;
-
-        // Regex to find standalone numeric tokens (with optional decimals) and not part of alpha words (e.g., avoid P1)
-        private static readonly Regex LegendNumberRegex = new Regex(@"(?<![A-Za-z])(-?\d+(?:[\.,]\d+)?)(?![A-Za-z])", RegexOptions.Compiled);
 
         public MapManager(FormStart main)
         {
@@ -106,8 +96,18 @@ namespace RateController.Classes
 
         public GMapControl gmapObject => gmap;
 
-        // NEW: allow form to control legend visibility (only show in full-screen)
-        public bool LegendOverlayEnabled { get; set; } = false;
+        // allow form to control legend visibility (only show in full-screen)
+        public bool LegendOverlayEnabled
+        {
+            get { return legendManager != null && legendManager.LegendOverlayEnabled; }
+            set { if (legendManager != null) { legendManager.LegendOverlayEnabled = value; legendManager.UpdateLegend(cLegend); } }
+        }
+
+        public int LegendRightMarginPx
+        {
+            get { return legendManager != null ? legendManager.LegendRightMarginPx : 0; }
+            set { if (legendManager != null) { legendManager.LegendRightMarginPx = value; legendManager.UpdateLegend(cLegend); } }
+        }
 
         public bool MouseSetTractorPosition
         {
@@ -125,14 +125,6 @@ namespace RateController.Classes
                     ? (GMapProvider)GMapProviders.BingSatelliteMap
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 Refresh();
-            }
-        }
-
-        private void Refresh()
-        {
-            if(Props.RateMapIsVisible())
-            {
-                gmap.Refresh();
             }
         }
 
@@ -171,14 +163,22 @@ namespace RateController.Classes
             }
         }
 
+        public void CenterMap()
+        {
+            if (!CenterOnAppliedDataIfAvailable())
+            {
+                // Fallback to zones coverage
+                ZoomToFit();
+            }
+        }
+
         public void ClearAppliedRatesOverlay()
         {
             try
             {
                 overlayService.Reset();
                 if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
-                if (legendOverlay != null) legendOverlay.Markers.Clear();
-                ClearLegendResources();
+                legendManager?.Clear();
                 cLegend = null;
                 Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
@@ -245,6 +245,36 @@ namespace RateController.Classes
             return Result;
         }
 
+        public void Dispose()
+        {
+            if (disposed) return;
+            disposed = true;
+            try
+            {
+                AppliedOverlayTimer.Enabled = false;
+                AppliedOverlayTimer.Tick -= AppliedOverlayTimer_Tick;
+                Props.JobChanged -= Props_JobChanged;
+                Props.RateDataSettingsChanged -= Props_MapShowRatesChanged;
+                if (gmap != null)
+                {
+                    gmap.MouseDown -= Gmap_MouseDown;
+                    gmap.MouseMove -= Gmap_MouseMove;
+                    gmap.MouseUp -= Gmap_MouseUp;
+                    gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
+                }
+
+                legendManager?.Dispose();
+
+                AppliedOverlay?.Polygons.Clear();
+                zoneOverlay?.Polygons.Clear();
+                tempMarkerOverlay?.Markers.Clear();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/Dispose: " + ex.Message);
+            }
+        }
+
         public RectLatLng GetOverallRectLatLng()
         {
             RectLatLng Result = RectLatLng.Empty;
@@ -282,15 +312,6 @@ namespace RateController.Classes
             double Result = 0.0;
             if (RateID >= 0 && RateID < 4) Result = cZoneRates[RateID];
             return Result;
-        }
-
-        public void CenterMap()
-        {
-            if (!CenterOnAppliedDataIfAvailable())
-            {
-                // Fallback to zones coverage
-                ZoomToFit();
-            }
         }
 
         public bool LoadMap()
@@ -559,7 +580,7 @@ namespace RateController.Classes
                     gmap.Overlays.Add(AppliedOverlay);
                 }
 
-                UpdateLegendOverlay();
+                legendManager?.UpdateLegend(cLegend);
 
                 Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
@@ -601,8 +622,7 @@ namespace RateController.Classes
                 AppliedOverlayTimer.Enabled = false;
                 overlayService.Reset();
                 RemoveOverlay(AppliedOverlay);
-                if (legendOverlay != null) legendOverlay.Markers.Clear();
-                ClearLegendResources();
+                legendManager?.Clear();
                 Refresh();
                 MapChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -778,7 +798,7 @@ namespace RateController.Classes
             {
                 bool overlayExists = gmap.Overlays.Any(o => o.Id == NewOverlay.Id);
                 if (!overlayExists) gmap.Overlays.Add(NewOverlay);
-                // keep legend overlay on top
+                // keep legend host on top
                 EnsureLegendTop();
             }
         }
@@ -900,6 +920,18 @@ namespace RateController.Classes
             }
         }
 
+        private void EnsureLegendTop()
+        {
+            try
+            {
+                legendManager?.EnsureLegendTop();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/EnsureLegendTop: " + ex.Message);
+            }
+        }
+
         private void Gmap_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -961,7 +993,7 @@ namespace RateController.Classes
         private void Gmap_OnMapZoomChanged()
         {
             // Reposition legend overlay with the current view
-            UpdateLegendOverlay();
+            legendManager?.OnMapZoomChanged();
             MapChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -999,7 +1031,6 @@ namespace RateController.Classes
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
             tempMarkerOverlay = new GMapOverlay("tempMarkers");
             AppliedOverlay = new GMapOverlay("AppliedRates");
-            legendOverlay = new GMapOverlay("legend"); // kept for backward compatibility (unused for rendering now)
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(Lat, Lng), GMarkerGoogleType.green);
             gpsMarkerOverlay.Markers.Add(tractorMarker);
@@ -1008,22 +1039,10 @@ namespace RateController.Classes
             AddOverlay(tempMarkerOverlay);
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
-            AddOverlay(legendOverlay);
             Refresh();
 
-            // create legend font once
-            legendFont = new Font("Arial", 11);
-
-            // create fixed-position legend host control
-            legendHost = new PictureBox
-            {
-                BackColor = Color.Transparent,
-                SizeMode = PictureBoxSizeMode.AutoSize,
-                Visible = false
-            };
-            gmap.Controls.Add(legendHost);
-            legendHost.BringToFront();
-            gmap.SizeChanged += (s, e) => PositionLegendHost();
+            // Initialize legend manager and host
+            legendManager = new LegendManager(gmap);
         }
 
         private void InitializeMapZones()
@@ -1054,8 +1073,7 @@ namespace RateController.Classes
                     AppliedOverlayTimer.Enabled = false;
                     overlayService.Reset();
                     RemoveOverlay(AppliedOverlay);
-                    if (legendOverlay != null) legendOverlay.Markers.Clear();
-                    ClearLegendResources();
+                    legendManager?.Clear();
                     Refresh();
                     MapChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -1063,6 +1081,14 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapManager/Props_MapShowRatesChanged: " + ex.Message);
+            }
+        }
+
+        private void Refresh()
+        {
+            if (Props.RateMapIsVisible())
+            {
+                gmap.Refresh();
             }
         }
 
@@ -1074,315 +1100,13 @@ namespace RateController.Classes
                 {
                     var overlaysToRemove = gmap.Overlays.Where(o => o.Id == overlay.Id).ToList();
                     foreach (var o in overlaysToRemove) gmap.Overlays.Remove(o);
-                    // keep legend overlay on top after any removal
+                    // keep legend host on top after any removal
                     EnsureLegendTop();
                 }
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapManager/RemoveLayer: " + ex.Message);
-            }
-        }
-
-        private void UpdateLegendOverlay()
-        {
-            // Fixed legend implementation: render in legendHost control instead of map marker so it does not pan.
-            if (legendHost == null) return;
-
-            // Clear previous dynamic state when legend disabled or no data
-            if (!LegendOverlayEnabled || cLegend == null || cLegend.Count == 0)
-            {
-                ClearLegendResources();
-                return;
-            }
-
-            // Build a signature to detect changes in legend content (order + color)
-            string newSig;
-            unchecked
-            {
-                var orderedForSig = OrderLegend(cLegend);
-                var adjustedForSig = AdjustLegendLabels(orderedForSig);
-                var parts = new List<string>(adjustedForSig.Count);
-                foreach (var kv in adjustedForSig)
-                {
-                    var col = kv.Value;
-                    string key = FormatLegendLabelNoDecimals(kv.Key);
-                    parts.Add(key + "#" + col.ToArgb().ToString("X8"));
-                }
-                newSig = string.Join("|", parts);
-            }
-
-            const int itemHeight = 25;
-            const int leftMargin = 10;
-            const int swatch = 20;
-            const int gap = 10;
-            const int rightMargin = 10;
-
-            var orderedItems = OrderLegend(cLegend);
-            var adjustedItems = AdjustLegendLabels(orderedItems);
-
-            int maxTextWidth = 0;
-            foreach (var item in adjustedItems)
-            {
-                string label = FormatLegendLabelNoDecimals(item.Key);
-                var sz = TextRenderer.MeasureText(label, legendFont);
-                if (sz.Width > maxTextWidth) maxTextWidth = sz.Width;
-            }
-            int maxContentWidth = swatch + gap + maxTextWidth;
-
-            int legendHeight = (cLegend.Count * itemHeight) + (leftMargin * 2);
-            int legendWidth = Math.Max(120, leftMargin + maxContentWidth + rightMargin);
-
-            if (legendBitmap == null || !string.Equals(newSig, legendSignature, StringComparison.Ordinal))
-            {
-                if (legendBitmap != null)
-                {
-                    legendBitmap.Dispose();
-                    legendBitmap = null;
-                }
-
-                legendBitmap = new Bitmap(legendWidth, legendHeight);
-                using (var g2 = Graphics.FromImage(legendBitmap))
-                using (var backBrush = new SolidBrush(Color.Black))
-                {
-                    g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                    g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
-
-                    int anchorStartX = Math.Max(leftMargin, (legendWidth - maxContentWidth) / 2);
-                    int y = leftMargin;
-                    foreach (var item in adjustedItems)
-                    {
-                        string label = FormatLegendLabelNoDecimals(item.Key);
-                        var textSize = g2.MeasureString(label, legendFont);
-                        int startX = anchorStartX;
-                        int swatchTop = y + (itemHeight - swatch) / 2;
-                        using (var brush = new SolidBrush(item.Value))
-                        {
-                            g2.FillRectangle(brush, startX, swatchTop, swatch, swatch);
-                            g2.DrawRectangle(Pens.White, startX, swatchTop, swatch, swatch);
-                        }
-                        float textY = y + (itemHeight - textSize.Height) / 2f;
-                        g2.DrawString(label, legendFont, Brushes.White, new PointF(startX + swatch + gap, textY));
-                        y += itemHeight;
-                    }
-                }
-                legendSignature = newSig;
-            }
-
-            legendHost.Image = legendBitmap;
-            legendHost.Visible = true;
-            PositionLegendHost();
-        }
-
-        private void PositionLegendHost()
-        {
-            if (legendHost == null || legendBitmap == null || !legendHost.Visible || gmap == null) return;
-            int marginTop = 10;
-            int marginRight = 10 + legendRightMarginPx; // include scrollbar margin
-            legendHost.Left = gmap.Width - legendHost.Width - marginRight;
-            legendHost.Top = marginTop;
-            legendHost.BringToFront();
-        }
-
-        private static string FormatLegendLabelNoDecimals(string label)
-        {
-            if (string.IsNullOrEmpty(label)) return label ?? string.Empty;
-            return LegendNumberRegex.Replace(label, m =>
-            {
-                var s = m.Groups[1].Value.Replace(',', '.');
-                double val;
-                if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
-                {
-                    int ival = (int)Math.Round(val);
-                    return ival.ToString(CultureInfo.InvariantCulture);
-                }
-                return m.Value;
-            });
-        }
-
-        private static List<double> ExtractLegendNumbers(string label)
-        {
-            var nums = new List<double>();
-            if (string.IsNullOrEmpty(label)) return nums;
-            foreach (Match m in LegendNumberRegex.Matches(label))
-            {
-                var s = m.Groups[1].Value.Replace(',', '.');
-                double val;
-                if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
-                {
-                    nums.Add(val);
-                }
-            }
-            return nums;
-        }
-
-        private static List<KeyValuePair<string, Color>> OrderLegend(Dictionary<string, Color> legend)
-        {
-            if (legend == null || legend.Count == 0) return new List<KeyValuePair<string, Color>>();
-
-            var ordered = legend
-                .Select(kv => new { kv.Key, kv.Value, nums = ExtractLegendNumbers(kv.Key) })
-                .OrderBy(x => x.nums.Count > 0 ? 0 : 1)
-                .ThenBy(x => x.nums.Count > 0 ? x.nums[0] : double.MaxValue)
-                .ThenBy(x => x.nums.Count > 1 ? x.nums[1] : double.MaxValue)
-                .ThenBy(x => x.Key, StringComparer.Ordinal)
-                .Select(x => new KeyValuePair<string, Color>(x.Key, x.Value))
-                .ToList();
-
-            return ordered;
-        }
-
-        private static List<KeyValuePair<string, Color>> AdjustLegendLabels(List<KeyValuePair<string, Color>> orderedLegend)
-        {
-            var result = new List<KeyValuePair<string, Color>>();
-            if (orderedLegend == null || orderedLegend.Count == 0) return result;
-
-            int? prevEnd = null;
-
-            foreach (var kv in orderedLegend)
-            {
-                var nums = ExtractLegendNumbers(kv.Key);
-                string newLabel = kv.Key;
-
-                if (nums.Count >= 2)
-                {
-                    int lower = (int)Math.Round(nums[0]);
-                    int upper = (int)Math.Round(nums[1]);
-
-                    if (prevEnd.HasValue && lower <= prevEnd.Value)
-                    {
-                        lower = prevEnd.Value + 1;
-                    }
-
-                    if (lower > upper)
-                    {
-                        upper = lower;
-                    }
-
-                    newLabel = (lower == upper) ? lower.ToString(CultureInfo.InvariantCulture)
-                                                : string.Format(CultureInfo.InvariantCulture, "{0}-{1}", lower, upper);
-                    prevEnd = upper;
-                }
-                else if (nums.Count == 1)
-                {
-                    int val = (int)Math.Round(nums[0]);
-                    if (prevEnd.HasValue && val <= prevEnd.Value)
-                    {
-                        val = prevEnd.Value + 1;
-                    }
-                    newLabel = val.ToString(CultureInfo.InvariantCulture);
-                    prevEnd = val;
-                }
-                else
-                {
-                    newLabel = kv.Key;
-                }
-
-                result.Add(new KeyValuePair<string, Color>(newLabel, kv.Value));
-            }
-
-            return result;
-        }
-
-        private void EnsureLegendTop()
-        {
-            try
-            {
-                if (legendOverlay != null && gmap != null && gmap.Overlays != null && gmap.Overlays.Contains(legendOverlay))
-                {
-                    int lastIndex = gmap.Overlays.Count - 1;
-                    if (lastIndex >= 0 && !object.ReferenceEquals(gmap.Overlays[lastIndex], legendOverlay))
-                    {
-                        gmap.Overlays.Remove(legendOverlay);
-                        gmap.Overlays.Add(legendOverlay);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapManager/EnsureLegendTop: " + ex.Message);
-            }
-        }
-
-        private int legendRightMarginPx = 0; // external margin (e.g., scroll bar width) to keep legend from being clipped
-        public int LegendRightMarginPx
-        {
-            get { return legendRightMarginPx; }
-            set
-            {
-                if (legendRightMarginPx != value)
-                {
-                    legendRightMarginPx = value < 0 ? 0 : value;
-                    UpdateLegendOverlay();
-                }
-            }
-        }
-
-        private bool disposed;
-
-        public void Dispose()
-        {
-            if (disposed) return;
-            disposed = true;
-            try
-            {
-                AppliedOverlayTimer.Enabled = false;
-                AppliedOverlayTimer.Tick -= AppliedOverlayTimer_Tick;
-                Props.JobChanged -= Props_JobChanged;
-                Props.RateDataSettingsChanged -= Props_MapShowRatesChanged;
-                if (gmap != null)
-                {
-                    gmap.MouseDown -= Gmap_MouseDown;
-                    gmap.MouseMove -= Gmap_MouseMove;
-                    gmap.MouseUp -= Gmap_MouseUp;
-                    gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
-                }
-                if (legendHost != null)
-                {
-                    if (gmap != null && gmap.Controls.Contains(legendHost))
-                    {
-                        gmap.Controls.Remove(legendHost);
-                    }
-                    legendHost.Image = null;
-                    legendHost.Dispose();
-                    legendHost = null;
-                }
-                if (legendBitmap != null)
-                {
-                    legendBitmap.Dispose();
-                    legendBitmap = null;
-                }
-                legendSignature = null;
-                AppliedOverlay?.Polygons.Clear();
-                zoneOverlay?.Polygons.Clear();
-                tempMarkerOverlay?.Markers.Clear();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapManager/Dispose: " + ex.Message);
-            }
-        }
-
-        private void ClearLegendResources()
-        {
-            try
-            {
-                if (legendHost != null)
-                {
-                    // Detach image first so layout code won't query a disposed bitmap.
-                    if (legendHost.Image != null) legendHost.Image = null;
-                    legendHost.Visible = false;
-                }
-                if (legendBitmap != null)
-                {
-                    legendBitmap.Dispose();
-                    legendBitmap = null;
-                }
-                legendSignature = null;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapManager/ClearLegendResources: " + ex.Message);
             }
         }
     }

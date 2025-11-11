@@ -10,10 +10,11 @@ namespace RateController.Classes
 {
     public class DataCollector
     {
+        private const int RecordIntervalMS = 500;
         private readonly object _lock = new object();
 
         private readonly List<RateReading> Readings = new List<RateReading>();
-        private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(15);
+        private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(30);
         private readonly Stopwatch SaveStopWatch = new Stopwatch();
         private string cFilePath;
         private double LastLatitude = 0;
@@ -21,7 +22,6 @@ namespace RateController.Classes
         private int lastSavedIndex = 0;
         private bool ReadyForNewData = false;
         private Timer RecordTimer;
-        const int RecordIntervalMS = 500;
 
         public DataCollector()
         {
