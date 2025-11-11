@@ -11,7 +11,6 @@ namespace RateController.Classes
 {
     public class ShapefileHelper
     {
-
         public ShapefileHelper()
         {
         }
