@@ -227,7 +227,6 @@ void DoSetup()
 	Serial.println(MDL.SensorCount);
 	Serial.println("");
 	Serial.println(F("Sensor 1: "));
-	Serial.print(F("Enabled: "));
 	Serial.print(F("Flow Pin: "));
 	Serial.println(Sensor[0].FlowPin);
 	Serial.print(F("DIR Pin: "));
