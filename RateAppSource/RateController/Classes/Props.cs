@@ -43,6 +43,9 @@ namespace RateController.Classes
     public enum SimType
     { Sim_None, Sim_Speed }
 
+    public enum SpeedType
+    { GPS,Wheel,Simulated}
+
     public enum SwIDs
     {
         // 0 Used to be AutoSwitch. It was replaced with AutoSection and AutoRate.
@@ -108,6 +111,7 @@ namespace RateController.Classes
         private static frmPressureDisplay PressureDisplay;
         private static frmRate RateDisplay;
         private static frmSwitches SwitchesForm;
+        private static SpeedType cSpeedMode = SpeedType.GPS;
 
         #region pressure calibration
 
@@ -442,6 +446,16 @@ namespace RateController.Classes
             {
                 cSimMode = value;
                 SetProp("SimMode", cSimMode.ToString());
+            }
+        }
+
+        public static SpeedType SpeedMode
+        {
+            get { return cSpeedMode; }
+            set
+            {
+                cSpeedMode = value;
+                SetProp("SpeedMode", cSpeedMode.ToString());
             }
         }
 
@@ -970,8 +984,6 @@ namespace RateController.Classes
             cResumeAfterPrime = bool.TryParse(GetProp("ResumeAfterPrime"), out bool rp) ? rp : false;
             cShowPressure = bool.TryParse(GetProp("ShowPressure"), out bool sp) ? sp : false;
             cShowSwitches = bool.TryParse(GetProp("ShowSwitches"), out bool ss) ? ss : false;
-            cSimMode = Enum.TryParse(GetProp("SimMode"), out SimType sm) ? sm : SimType.Sim_None;
-            cSimSpeed = double.TryParse(GetProp("SimSpeed"), out double spd) ? spd : 0;
             cUseDualAuto = bool.TryParse(GetProp("UseDualAuto"), out bool da) ? da : false;
             cUseLargeScreen = bool.TryParse(GetProp("UseLargeScreen"), out bool ls) ? ls : false;
             cUseTransparent = bool.TryParse(GetProp("UseTransparent"), out bool utr) ? utr : false;
@@ -987,6 +999,8 @@ namespace RateController.Classes
             cShowJobs = bool.TryParse(GetProp("ShowJobs"), out bool ja) ? ja : false;
             cSensorSettingsMaxID = int.TryParse(GetProp("SensorSettingsMaxID"), out int mi) ? mi : 0;
             cCurrentMenuName = GetProp("LastScreen");
+            cSimSpeed = double.TryParse(GetProp("SimSpeed"), out double spd) ? spd : 0;
+            cSpeedMode = Enum.TryParse(GetProp("SpeedMode"), out SpeedType spt) ? spt : SpeedType.GPS;
 
             for (int i = 0; i < 40; i++)
             {

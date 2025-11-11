@@ -271,7 +271,7 @@ namespace RateController.Menu
         {
             int tempInt;
             int.TryParse(tbConID.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 15)
+            if (tempInt < 0 || tempInt > 7)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;

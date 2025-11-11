@@ -383,11 +383,11 @@
     <Compile Include="Menu\frmMenuData.Designer.cs">
       <DependentUpon>frmMenuData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu\frmMenuDisplay.cs">
+    <Compile Include="Menu\frmMenuOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Menu\frmMenuDisplay.Designer.cs">
-      <DependentUpon>frmMenuDisplay.cs</DependentUpon>
+    <Compile Include="Menu\frmMenuOptions.Designer.cs">
+      <DependentUpon>frmMenuOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Menu\frmMenuHelp.cs">
       <SubType>Form</SubType>
@@ -632,8 +632,8 @@
     <EmbeddedResource Include="Menu\frmMenuData.resx">
       <DependentUpon>frmMenuData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Menu\frmMenuDisplay.resx">
-      <DependentUpon>frmMenuDisplay.cs</DependentUpon>
+    <EmbeddedResource Include="Menu\frmMenuOptions.resx">
+      <DependentUpon>frmMenuOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuHelp.resx">
       <DependentUpon>frmMenuHelp.cs</DependentUpon>

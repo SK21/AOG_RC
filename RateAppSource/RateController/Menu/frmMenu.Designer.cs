@@ -419,7 +419,7 @@
             this.butDisplay.Name = "butDisplay";
             this.butDisplay.Size = new System.Drawing.Size(158, 49);
             this.butDisplay.TabIndex = 28;
-            this.butDisplay.Text = "Display";
+            this.butDisplay.Text = "Options";
             this.butDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.butDisplay.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butDisplay.UseVisualStyleBackColor = false;

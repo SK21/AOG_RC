@@ -325,13 +325,13 @@ namespace RateController
 
         private void butDisplay_Click(object sender, EventArgs e)
         {
-            SaveLastScreen("frmMenuDisplay");
+            SaveLastScreen("frmMenuOptions");
             if (sender is Button button) HighlightButton(button);
             Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
             {
-                Form frm = new frmMenuDisplay(mf, this);
+                Form frm = new frmMenuOptions(mf, this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -1241,9 +1241,9 @@ namespace RateController
                             fs.Show();
                             break;
 
-                        case "frmMenuDisplay":
+                        case "frmMenuOptions":
                             butFile.PerformClick();
-                            fs = new frmMenuDisplay(mf, this);
+                            fs = new frmMenuOptions(mf, this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butDisplay);
@@ -1351,7 +1351,7 @@ namespace RateController
             butRelayPins.Text = Lang.lgRelayPins;
             butValves.Text = Lang.lgValves;
             butUpdateModules.Text = Lang.lgSend;
-            butDisplay.Text = Lang.lgDisplay;
+            butDisplay.Text = Lang.lgOptions;
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
             btnPressure.Text = Lang.lgPressure;
