@@ -45,6 +45,10 @@ namespace RateController.Menu
                 {
                     Props.SpeedMode = SpeedType.Simulated;
                 }
+
+                if (int.TryParse(tbWheelModule.Text, out int wm)) Props.WheelModule = wm;
+                if (int.TryParse(tbWheelPin.Text, out int wp)) Props.WheelPin = wp;
+                if (double.TryParse(tbWheelCal.Text, out double wc)) Props.WheelCal = wc;
                 if (double.TryParse(tbSimSpeed.Text, out double Speed)) Props.SimSpeed = Speed;
 
                 Props.UseMetric = ckMetric.Checked;
@@ -89,11 +93,6 @@ namespace RateController.Menu
             mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
@@ -109,6 +108,27 @@ namespace RateController.Menu
         {
             SetButtons(true);
             SetBoxes();
+        }
+
+        private void SetBoxes()
+        {
+            if (rbAOG.Checked)
+            {
+                rbAOG.Checked = true;
+            }
+            else if (rbWheel.Checked)
+            {
+                rbWheel.Checked = true;
+            }
+            else
+            {
+                rbSimulated.Checked = true;
+            }
+
+            tbWheelModule.Enabled = rbWheel.Checked;
+            tbWheelPin.Enabled = rbWheel.Checked;
+            tbWheelCal.Enabled = rbWheel.Checked;
+            tbSimSpeed.Enabled = rbSimulated.Checked;
         }
 
         private void SetButtons(bool Edited)
@@ -137,7 +157,6 @@ namespace RateController.Menu
             ckTransparent.Text = Lang.lgTransparent;
             ckMetric.Text = Lang.lgMetric;
             rbSimulated.Text = Lang.lgSimulateSpeed;
-            //ckRateDisplay.Text = Lang.lgCurrentRate;
         }
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
@@ -239,27 +258,6 @@ namespace RateController.Menu
                 e.Cancel = true;
             }
         }
-        private void SetBoxes()
-        {
-
-            if(rbAOG.Checked)
-            {
-                rbAOG.Checked = true;
-            }
-            else if(rbWheel.Checked)
-            {
-                rbWheel.Checked = true;
-            }
-            else
-            {
-                rbSimulated.Checked = true;
-            }
-
-                tbWheelModule.Enabled = rbWheel.Checked;
-            tbWheelPin.Enabled = rbWheel.Checked;
-            tbWheelCal.Enabled = rbWheel.Checked;
-            tbSimSpeed.Enabled = rbSimulated.Checked;
-        }
 
         private void UpdateForm()
         {
@@ -280,7 +278,11 @@ namespace RateController.Menu
                     break;
             }
 
+            tbWheelModule.Text = Props.WheelModule.ToString("N0");
+            tbWheelPin.Text = Props.WheelPin.ToString("N0");
+            tbWheelCal.Text = Props.WheelCal.ToString("N3");
             tbSimSpeed.Text = Props.SimSpeed.ToString("N1");
+
             if (Props.UseMetric)
             {
                 lbSimUnits.Text = "KMH";

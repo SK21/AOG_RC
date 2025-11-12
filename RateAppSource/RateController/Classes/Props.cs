@@ -112,6 +112,9 @@ namespace RateController.Classes
         private static frmRate RateDisplay;
         private static frmSwitches SwitchesForm;
         private static SpeedType cSpeedMode = SpeedType.GPS;
+        private static int cWheelModule = 0;
+        private static int cWheelPin = 0;
+        private static double cWheelCal;
 
         #region pressure calibration
 
@@ -456,6 +459,45 @@ namespace RateController.Classes
             {
                 cSpeedMode = value;
                 SetProp("SpeedMode", cSpeedMode.ToString());
+            }
+        }
+
+        public static int WheelModule
+        {
+            get { return cWheelModule; }
+            set
+            {
+                if (value>=0 && value<MaxModules)
+                {
+                    cWheelModule= value;
+                    SetProp("WheelModule", cWheelModule.ToString());
+                }
+            }
+        }
+
+        public static int WheelPin
+        {
+            get { return cWheelPin; }
+            set
+            {
+                if(value>=0 && value <=50)
+                {
+                    cWheelPin= value;
+                    SetProp("WheelPin",cWheelPin.ToString());
+                }
+            }
+        }
+
+        public static double WheelCal
+        {
+            get { return cWheelCal; }
+            set
+            {
+                if(value>=0.01 && value<=16700)
+                {
+                    cWheelCal = value;
+                    SetProp("WheelCal", cWheelCal.ToString());
+                }
             }
         }
 
@@ -999,8 +1041,11 @@ namespace RateController.Classes
             cShowJobs = bool.TryParse(GetProp("ShowJobs"), out bool ja) ? ja : false;
             cSensorSettingsMaxID = int.TryParse(GetProp("SensorSettingsMaxID"), out int mi) ? mi : 0;
             cCurrentMenuName = GetProp("LastScreen");
-            cSimSpeed = double.TryParse(GetProp("SimSpeed"), out double spd) ? spd : 0;
+            cSimSpeed = double.TryParse(GetProp("SimSpeed"), out double spd) ? spd : 5;
             cSpeedMode = Enum.TryParse(GetProp("SpeedMode"), out SpeedType spt) ? spt : SpeedType.GPS;
+            cWheelModule = int.TryParse(GetProp("WheelModule"), out int wm) ? wm : 0;
+            cWheelPin = int.TryParse(GetProp("WheelPin"), out int wp) ? wp : 0;
+            cWheelCal = double.TryParse(GetProp("WheelCal"), out double wc) ? wc : 1;
 
             for (int i = 0; i < 40; i++)
             {
