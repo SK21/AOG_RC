@@ -57,6 +57,7 @@ namespace RateController
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         private int RunOnce = 0;
+        public PGN32504 WheelSpeed;
 
         public FormStart()
         {
@@ -112,6 +113,7 @@ namespace RateController
             SectionControl = new clsSectionControl(this);
             ScaleIndicator = new PGN32296(this);
             GPS = new PGN208(this);
+            WheelSpeed = new PGN32504(this);
         }
 
         public event EventHandler ColorChanged;

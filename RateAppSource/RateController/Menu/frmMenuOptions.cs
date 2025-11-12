@@ -46,9 +46,9 @@ namespace RateController.Menu
                     Props.SpeedMode = SpeedType.Simulated;
                 }
 
-                if (int.TryParse(tbWheelModule.Text, out int wm)) Props.WheelModule = wm;
-                if (int.TryParse(tbWheelPin.Text, out int wp)) Props.WheelPin = wp;
-                if (double.TryParse(tbWheelCal.Text, out double wc)) Props.WheelCal = wc;
+                if (int.TryParse(tbWheelModule.Text, out int wm)) mf.WheelSpeed.WheelModule = wm;
+                if (int.TryParse(tbWheelPin.Text, out int wp)) mf.WheelSpeed.WheelPin = wp;
+                if (double.TryParse(tbWheelCal.Text, out double wc)) mf.WheelSpeed.WheelCal = wc;
                 if (double.TryParse(tbSimSpeed.Text, out double Speed)) Props.SimSpeed = Speed;
 
                 Props.UseMetric = ckMetric.Checked;
@@ -278,9 +278,9 @@ namespace RateController.Menu
                     break;
             }
 
-            tbWheelModule.Text = Props.WheelModule.ToString("N0");
-            tbWheelPin.Text = Props.WheelPin.ToString("N0");
-            tbWheelCal.Text = Props.WheelCal.ToString("N3");
+            tbWheelModule.Text = mf.WheelSpeed.WheelModule.ToString("N0");
+            tbWheelPin.Text = mf.WheelSpeed.WheelPin.ToString("N0");
+            tbWheelCal.Text = mf.WheelSpeed.WheelCal.ToString("N3");
             tbSimSpeed.Text = Props.SimSpeed.ToString("N1");
 
             if (Props.UseMetric)
