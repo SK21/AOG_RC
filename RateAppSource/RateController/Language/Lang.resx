@@ -598,7 +598,7 @@
     <value>Show</value>
   </data>
   <data name="lgSimulateSpeed" xml:space="preserve">
-    <value>Simulate Speed (No AOG)</value>
+    <value>Simulated Speed</value>
   </data>
   <data name="lgSingleProduct" xml:space="preserve">
     <value>Single Product</value>

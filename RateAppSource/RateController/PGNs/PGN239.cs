@@ -74,7 +74,7 @@ namespace RateController
 
         public void ParseByteData(byte[] Data)
         {
-            if ((Props.SimMode == SimType.Sim_None) && (Data.Length > totalHeaderByteCount))
+            if ((Props.SpeedMode == SpeedType.GPS) && (Data.Length > totalHeaderByteCount))
             {
                 if (Data.Length == Data[4] + totalHeaderByteCount + 1)
                 {

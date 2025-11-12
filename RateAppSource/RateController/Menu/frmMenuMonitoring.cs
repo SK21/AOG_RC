@@ -223,17 +223,19 @@ namespace RateController.Menu
                 lbRPM.Text = "0";
             }
 
-            lbSpeedData.Text = MainMenu.CurrentProduct.Speed().ToString("N1");
-            if (!Props.UseMetric)
+            if (Props.UseMetric)
             {
-                lbSpeed.Text = Lang.lgMPH;
+                lbSpeed.Text = Lang.lgKPH;
+                lbSpeedData.Text = Props.Speed_KMH.ToString("N1");
             }
             else
             {
-                lbSpeed.Text = Lang.lgKPH;
+                lbSpeed.Text = Lang.lgMPH;
+                double speed = Props.Speed_KMH / Props.MPHtoKPH;
+                lbSpeedData.Text = speed.ToString("N1");
             }
 
-            lbWidthData.Text = mf.Sections.WorkingWidth(!Props.UseMetric).ToString("N1");
+                lbWidthData.Text = mf.Sections.WorkingWidth(!Props.UseMetric).ToString("N1");
             if (!Props.UseMetric)
             {
                 lbWidth.Text = Lang.lgWorkingWidthFT;

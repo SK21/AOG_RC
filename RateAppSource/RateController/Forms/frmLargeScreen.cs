@@ -769,7 +769,7 @@ namespace RateController
             lbQuantity.Text = Prd.QuantityDescription;
 
             // aog
-            if (Props.SimMode == SimType.Sim_Speed)
+            if (Props.SpeedMode==SpeedType.Simulated)
             {
                 btnMenu.Image = Properties.Resources.SimGear;
             }

@@ -561,7 +561,7 @@ namespace RateController
             }
             else
             {
-                if (mf.Products.Item(mf.CurrentProduct()).Speed() < 0.1)
+                if (Props.Speed_KMH < 0.1)
                 {
                     PrimeInitialized = true;
                     OnFirstPressed = DateTime.Now;

@@ -14,6 +14,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
         private FormStart mf;
+        private bool WheelSpeedChanged = false;
 
         public frmMenuOptions(FormStart main, frmMenu menu)
         {
@@ -27,6 +28,8 @@ namespace RateController.Menu
         {
             UpdateForm();
             SetButtons(false);
+            WheelSpeedChanged = false;
+            butUpdateModules.Enabled = rbWheel.Checked;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -49,12 +52,31 @@ namespace RateController.Menu
                 if (int.TryParse(tbWheelModule.Text, out int wm)) mf.WheelSpeed.WheelModule = wm;
                 if (int.TryParse(tbWheelPin.Text, out int wp)) mf.WheelSpeed.WheelPin = wp;
                 if (double.TryParse(tbWheelCal.Text, out double wc)) mf.WheelSpeed.WheelCal = wc;
-                if (double.TryParse(tbSimSpeed.Text, out double Speed)) Props.SimSpeed = Speed;
+
+                if (double.TryParse(tbSimSpeed.Text, out double Speed))
+                {
+                    if (Props.UseMetric)
+                    {
+                        Props.SimSpeed_KMH = Speed;
+                    }
+                    else
+                    {
+                        Props.SimSpeed_KMH = Speed * Props.MPHtoKPH;
+                    }
+                }
 
                 Props.UseMetric = ckMetric.Checked;
                 Props.UseTransparent = ckTransparent.Checked;
                 Props.UseLargeScreen = ckLargeScreen.Checked;
                 Props.UseRateDisplay = ckRateDisplay.Checked;
+
+                if (WheelSpeedChanged)
+                {
+                    mf.WheelSpeed.Send();
+                    WheelSpeedChanged = false;
+                    butUpdateModules.Enabled = rbWheel.Checked;
+                }
+
                 SetButtons(false);
                 UpdateForm();
             }
@@ -62,6 +84,11 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuDisplay/btnOk_Click: " + ex.Message);
             }
+        }
+
+        private void butUpdateModules_Click(object sender, EventArgs e)
+        {
+            mf.WheelSpeed.Send();
         }
 
         private void ckLargeScreen_CheckedChanged(object sender, EventArgs e)
@@ -110,25 +137,26 @@ namespace RateController.Menu
             SetBoxes();
         }
 
+        private void rbWheel_CheckedChanged(object sender, EventArgs e)
+        {
+            WheelSpeedChanged = true;
+            SetButtons(true);
+            SetBoxes();
+            butUpdateModules.Enabled = false;
+        }
+
         private void SetBoxes()
         {
-            if (rbAOG.Checked)
-            {
-                rbAOG.Checked = true;
-            }
-            else if (rbWheel.Checked)
-            {
-                rbWheel.Checked = true;
-            }
-            else
-            {
-                rbSimulated.Checked = true;
-            }
-
             tbWheelModule.Enabled = rbWheel.Checked;
             tbWheelPin.Enabled = rbWheel.Checked;
             tbWheelCal.Enabled = rbWheel.Checked;
             tbSimSpeed.Enabled = rbSimulated.Checked;
+            lbCal.Enabled = rbWheel.Checked;
+            lbModule.Enabled = rbWheel.Checked;
+            lbPin.Enabled = rbWheel.Checked;
+            butUpdateModules.Enabled = rbWheel.Checked;
+            lbWheelUnits.Enabled= rbWheel.Checked;
+            lbWunits.Enabled = rbWheel.Checked;
         }
 
         private void SetButtons(bool Edited)
@@ -281,15 +309,17 @@ namespace RateController.Menu
             tbWheelModule.Text = mf.WheelSpeed.WheelModule.ToString("N0");
             tbWheelPin.Text = mf.WheelSpeed.WheelPin.ToString("N0");
             tbWheelCal.Text = mf.WheelSpeed.WheelCal.ToString("N3");
-            tbSimSpeed.Text = Props.SimSpeed.ToString("N1");
+            tbSimSpeed.Text = Props.SimSpeed_KMH.ToString("N1");
 
             if (Props.UseMetric)
             {
                 lbSimUnits.Text = "KMH";
+                lbWheelUnits.Text = "KMH";
             }
             else
             {
                 lbSimUnits.Text = "MPH";
+                lbWheelUnits.Text = "MPH";
             }
 
             ckMetric.Checked = Props.UseMetric;

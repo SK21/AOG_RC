@@ -743,7 +743,7 @@ namespace RateController
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
-                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        double HPM = mf.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = RateSensorData.UPM / (HPM * 2.47105);
                     }
                     else
@@ -764,7 +764,7 @@ namespace RateController
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
-                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        double HPM = mf.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = RateSensorData.UPM / HPM;
                     }
                     else
@@ -929,27 +929,6 @@ namespace RateController
             return Result;
         }
 
-        public double Speed()
-        {
-            double Result = 0;
-            if (Props.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
-            {
-                Result = Props.SimSpeed;
-            }
-            else
-            {
-                if (Props.UseMetric)
-                {
-                    Result = mf.GPS.Speed_KMH;
-                }
-                else
-                {
-                    Result = mf.GPS.Speed_KMH * 0.621371;
-                }
-            }
-            return Result;
-        }
-
         public double TargetRate()
         {
             double Result = 0;
@@ -976,7 +955,7 @@ namespace RateController
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
-                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        double HPM = mf.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (cHectaresPerMinute == 0 && cCalMode == CalibrationMode.Off) HPM = 0;   // all sections off
                         Result = TargetRate() * HPM * 2.47105;
                     }
@@ -993,7 +972,7 @@ namespace RateController
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
-                        double HPM = mf.Sections.TotalWidth(false) * KMH() / 600.0;
+                        double HPM = mf.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (cHectaresPerMinute == 0 && cCalMode == CalibrationMode.Off) HPM = 0;
                         Result = TargetRate() * HPM;
                     }
@@ -1069,7 +1048,7 @@ namespace RateController
                 UpdateStopWatch.Restart();
 
                 // update worked area
-                cHectaresPerMinute = mf.Sections.WorkingWidth(false) * KMH() / 600.0;
+                cHectaresPerMinute = mf.Sections.WorkingWidth(false) * Props.Speed_KMH / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
 
                 //coverage
@@ -1155,27 +1134,6 @@ namespace RateController
                 {
                     Result = cHectaresPerMinute * 60.0;
                 }
-            }
-            return Result;
-        }
-
-        private double KMH()
-        {
-            double Result = 0;
-            if (Props.SimMode == SimType.Sim_Speed || mf.SectionControl.PrimeOn)
-            {
-                if (!Props.UseMetric)
-                {
-                    Result = Props.SimSpeed / 0.621371;  // convert mph back to kmh
-                }
-                else
-                {
-                    Result = Props.SimSpeed;
-                }
-            }
-            else
-            {
-                Result = mf.GPS.Speed_KMH;
             }
             return Result;
         }

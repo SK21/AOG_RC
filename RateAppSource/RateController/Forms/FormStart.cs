@@ -262,7 +262,7 @@ namespace RateController
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
 
-                if (Props.SimMode == SimType.Sim_Speed || SectionControl.PrimeOn)
+                if (Props.SpeedMode==SpeedType.Simulated || SectionControl.PrimeOn)
                 {
                     btnSettings.Image = Properties.Resources.SimGear;
                 }

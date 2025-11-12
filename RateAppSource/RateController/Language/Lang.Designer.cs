@@ -1501,7 +1501,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Simulate Speed (No AOG).
+        ///   Looks up a localized string similar to Simulated Speed.
         /// </summary>
         internal static string lgSimulateSpeed {
             get {

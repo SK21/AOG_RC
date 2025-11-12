@@ -37,17 +37,20 @@
             this.tbSimSpeed = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.gbNetwork = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.butUpdateModules = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbSimulated = new System.Windows.Forms.RadioButton();
+            this.rbWheel = new System.Windows.Forms.RadioButton();
+            this.rbAOG = new System.Windows.Forms.RadioButton();
+            this.tbWheelModule = new System.Windows.Forms.TextBox();
+            this.lbModule = new System.Windows.Forms.Label();
             this.tbWheelCal = new System.Windows.Forms.TextBox();
             this.tbWheelPin = new System.Windows.Forms.TextBox();
-            this.lbSubnet = new System.Windows.Forms.Label();
-            this.lbIP = new System.Windows.Forms.Label();
-            this.tbWheelModule = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.rbAOG = new System.Windows.Forms.RadioButton();
-            this.rbWheel = new System.Windows.Forms.RadioButton();
-            this.rbSimulated = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lbPin = new System.Windows.Forms.Label();
+            this.lbCal = new System.Windows.Forms.Label();
+            this.lbWheelUnits = new System.Windows.Forms.Label();
+            this.lbWunits = new System.Windows.Forms.Label();
             this.gbNetwork.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,7 +97,7 @@
             this.ckRateDisplay.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRateDisplay.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRateDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateDisplay.Location = new System.Drawing.Point(290, 471);
+            this.ckRateDisplay.Location = new System.Drawing.Point(281, 461);
             this.ckRateDisplay.Margin = new System.Windows.Forms.Padding(6);
             this.ckRateDisplay.Name = "ckRateDisplay";
             this.ckRateDisplay.Size = new System.Drawing.Size(192, 36);
@@ -110,7 +113,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(35, 546);
+            this.ckLargeScreen.Location = new System.Drawing.Point(26, 536);
             this.ckLargeScreen.Margin = new System.Windows.Forms.Padding(6);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(192, 36);
@@ -125,7 +128,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(290, 546);
+            this.ckTransparent.Location = new System.Drawing.Point(281, 536);
             this.ckTransparent.Margin = new System.Windows.Forms.Padding(6);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(192, 36);
@@ -141,7 +144,7 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(35, 471);
+            this.ckMetric.Location = new System.Drawing.Point(26, 461);
             this.ckMetric.Margin = new System.Windows.Forms.Padding(6);
             this.ckMetric.Name = "ckMetric";
             this.ckMetric.Size = new System.Drawing.Size(192, 36);
@@ -155,7 +158,7 @@
             // 
             this.tbSimSpeed.Enabled = false;
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(63, 346);
+            this.tbSimSpeed.Location = new System.Drawing.Point(203, 155);
             this.tbSimSpeed.Margin = new System.Windows.Forms.Padding(6);
             this.tbSimSpeed.MaxLength = 8;
             this.tbSimSpeed.Name = "tbSimSpeed";
@@ -172,7 +175,7 @@
             this.lbSimUnits.AutoSize = true;
             this.lbSimUnits.Enabled = false;
             this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(153, 349);
+            this.lbSimUnits.Location = new System.Drawing.Point(293, 158);
             this.lbSimUnits.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbSimUnits.Name = "lbSimUnits";
             this.lbSimUnits.Size = new System.Drawing.Size(48, 24);
@@ -182,7 +185,10 @@
             // 
             // gbNetwork
             // 
-            this.gbNetwork.Controls.Add(this.groupBox2);
+            this.gbNetwork.Controls.Add(this.lbWunits);
+            this.gbNetwork.Controls.Add(this.lbWheelUnits);
+            this.gbNetwork.Controls.Add(this.groupBox3);
+            this.gbNetwork.Controls.Add(this.butUpdateModules);
             this.gbNetwork.Controls.Add(this.groupBox1);
             this.gbNetwork.Controls.Add(this.rbSimulated);
             this.gbNetwork.Controls.Add(this.tbSimSpeed);
@@ -190,94 +196,81 @@
             this.gbNetwork.Controls.Add(this.rbAOG);
             this.gbNetwork.Controls.Add(this.lbSimUnits);
             this.gbNetwork.Controls.Add(this.tbWheelModule);
-            this.gbNetwork.Controls.Add(this.label1);
+            this.gbNetwork.Controls.Add(this.lbModule);
             this.gbNetwork.Controls.Add(this.tbWheelCal);
             this.gbNetwork.Controls.Add(this.tbWheelPin);
-            this.gbNetwork.Controls.Add(this.lbSubnet);
-            this.gbNetwork.Controls.Add(this.lbIP);
+            this.gbNetwork.Controls.Add(this.lbPin);
+            this.gbNetwork.Controls.Add(this.lbCal);
             this.gbNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbNetwork.Location = new System.Drawing.Point(122, 34);
+            this.gbNetwork.Location = new System.Drawing.Point(12, 29);
             this.gbNetwork.Name = "gbNetwork";
-            this.gbNetwork.Size = new System.Drawing.Size(264, 392);
+            this.gbNetwork.Size = new System.Drawing.Size(516, 400);
             this.gbNetwork.TabIndex = 341;
             this.gbNetwork.TabStop = false;
             this.gbNetwork.Text = "Speed Source";
             this.gbNetwork.Paint += new System.Windows.Forms.PaintEventHandler(this.gbNetwork_Paint);
             // 
-            // tbWheelCal
+            // groupBox3
             // 
-            this.tbWheelCal.Enabled = false;
-            this.tbWheelCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWheelCal.Location = new System.Drawing.Point(137, 234);
-            this.tbWheelCal.Name = "tbWheelCal";
-            this.tbWheelCal.Size = new System.Drawing.Size(100, 29);
-            this.tbWheelCal.TabIndex = 240;
-            this.tbWheelCal.TabStop = false;
-            this.tbWheelCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbWheelCal.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
-            this.tbWheelCal.Enter += new System.EventHandler(this.tbWheelCal_Enter);
-            this.tbWheelCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelCal_Validating);
+            this.groupBox3.Location = new System.Drawing.Point(18, 203);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(480, 3);
+            this.groupBox3.TabIndex = 344;
+            this.groupBox3.TabStop = false;
             // 
-            // tbWheelPin
+            // butUpdateModules
             // 
-            this.tbWheelPin.Enabled = false;
-            this.tbWheelPin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWheelPin.Location = new System.Drawing.Point(179, 187);
-            this.tbWheelPin.Name = "tbWheelPin";
-            this.tbWheelPin.Size = new System.Drawing.Size(58, 29);
-            this.tbWheelPin.TabIndex = 239;
-            this.tbWheelPin.TabStop = false;
-            this.tbWheelPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbWheelPin.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
-            this.tbWheelPin.Enter += new System.EventHandler(this.tbWheelPin_Enter);
-            this.tbWheelPin.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelPin_Validating);
+            this.butUpdateModules.BackColor = System.Drawing.Color.Transparent;
+            this.butUpdateModules.FlatAppearance.BorderSize = 0;
+            this.butUpdateModules.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butUpdateModules.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butUpdateModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butUpdateModules.Image = global::RateController.Properties.Resources.UpArrow64;
+            this.butUpdateModules.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.butUpdateModules.Location = new System.Drawing.Point(165, 314);
+            this.butUpdateModules.Name = "butUpdateModules";
+            this.butUpdateModules.Size = new System.Drawing.Size(187, 71);
+            this.butUpdateModules.TabIndex = 342;
+            this.butUpdateModules.Text = "Send to Module";
+            this.butUpdateModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butUpdateModules.UseVisualStyleBackColor = false;
+            this.butUpdateModules.Click += new System.EventHandler(this.butUpdateModules_Click);
             // 
-            // lbSubnet
+            // groupBox1
             // 
-            this.lbSubnet.AutoSize = true;
-            this.lbSubnet.Enabled = false;
-            this.lbSubnet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSubnet.Location = new System.Drawing.Point(44, 189);
-            this.lbSubnet.Name = "lbSubnet";
-            this.lbSubnet.Size = new System.Drawing.Size(37, 24);
-            this.lbSubnet.TabIndex = 221;
-            this.lbSubnet.Text = "Pin";
+            this.groupBox1.Location = new System.Drawing.Point(18, 83);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(480, 3);
+            this.groupBox1.TabIndex = 342;
+            this.groupBox1.TabStop = false;
             // 
-            // lbIP
+            // rbSimulated
             // 
-            this.lbIP.AutoSize = true;
-            this.lbIP.Enabled = false;
-            this.lbIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(44, 236);
-            this.lbIP.Name = "lbIP";
-            this.lbIP.Size = new System.Drawing.Size(52, 24);
-            this.lbIP.TabIndex = 223;
-            this.lbIP.Text = "Cal #";
+            this.rbSimulated.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbSimulated.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbSimulated.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbSimulated.Location = new System.Drawing.Point(165, 104);
+            this.rbSimulated.Name = "rbSimulated";
+            this.rbSimulated.Size = new System.Drawing.Size(187, 36);
+            this.rbSimulated.TabIndex = 246;
+            this.rbSimulated.Text = "Simulated Speed";
+            this.rbSimulated.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbSimulated.UseVisualStyleBackColor = true;
+            this.rbSimulated.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
             // 
-            // tbWheelModule
+            // rbWheel
             // 
-            this.tbWheelModule.Enabled = false;
-            this.tbWheelModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWheelModule.Location = new System.Drawing.Point(179, 140);
-            this.tbWheelModule.Name = "tbWheelModule";
-            this.tbWheelModule.Size = new System.Drawing.Size(58, 29);
-            this.tbWheelModule.TabIndex = 243;
-            this.tbWheelModule.TabStop = false;
-            this.tbWheelModule.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbWheelModule.TextChanged += new System.EventHandler(this.ckLargeScreen_CheckedChanged);
-            this.tbWheelModule.Enter += new System.EventHandler(this.tbWheelModule_Enter);
-            this.tbWheelModule.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelModule_Validating);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Enabled = false;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(44, 142);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 24);
-            this.label1.TabIndex = 242;
-            this.label1.Text = "Module";
+            this.rbWheel.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbWheel.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbWheel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbWheel.Location = new System.Drawing.Point(165, 219);
+            this.rbWheel.Name = "rbWheel";
+            this.rbWheel.Size = new System.Drawing.Size(187, 36);
+            this.rbWheel.TabIndex = 245;
+            this.rbWheel.Text = "Wheel Sensor";
+            this.rbWheel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbWheel.UseVisualStyleBackColor = true;
+            this.rbWheel.CheckedChanged += new System.EventHandler(this.rbWheel_CheckedChanged);
             // 
             // rbAOG
             // 
@@ -285,7 +278,7 @@
             this.rbAOG.Checked = true;
             this.rbAOG.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbAOG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbAOG.Location = new System.Drawing.Point(40, 33);
+            this.rbAOG.Location = new System.Drawing.Point(165, 33);
             this.rbAOG.Name = "rbAOG";
             this.rbAOG.Size = new System.Drawing.Size(187, 36);
             this.rbAOG.TabIndex = 244;
@@ -295,49 +288,104 @@
             this.rbAOG.UseVisualStyleBackColor = true;
             this.rbAOG.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
             // 
-            // rbWheel
+            // tbWheelModule
             // 
-            this.rbWheel.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbWheel.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbWheel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbWheel.Location = new System.Drawing.Point(40, 92);
-            this.rbWheel.Name = "rbWheel";
-            this.rbWheel.Size = new System.Drawing.Size(187, 36);
-            this.rbWheel.TabIndex = 245;
-            this.rbWheel.Text = "Wheel Sensor";
-            this.rbWheel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbWheel.UseVisualStyleBackColor = true;
-            this.rbWheel.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
+            this.tbWheelModule.Enabled = false;
+            this.tbWheelModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbWheelModule.Location = new System.Drawing.Point(98, 271);
+            this.tbWheelModule.Name = "tbWheelModule";
+            this.tbWheelModule.Size = new System.Drawing.Size(58, 29);
+            this.tbWheelModule.TabIndex = 243;
+            this.tbWheelModule.TabStop = false;
+            this.tbWheelModule.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelModule.TextChanged += new System.EventHandler(this.rbWheel_CheckedChanged);
+            this.tbWheelModule.Enter += new System.EventHandler(this.tbWheelModule_Enter);
+            this.tbWheelModule.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelModule_Validating);
             // 
-            // rbSimulated
+            // lbModule
             // 
-            this.rbSimulated.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbSimulated.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbSimulated.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSimulated.Location = new System.Drawing.Point(40, 295);
-            this.rbSimulated.Name = "rbSimulated";
-            this.rbSimulated.Size = new System.Drawing.Size(187, 36);
-            this.rbSimulated.TabIndex = 246;
-            this.rbSimulated.Text = "Simulated Speed";
-            this.rbSimulated.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbSimulated.UseVisualStyleBackColor = true;
-            this.rbSimulated.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
+            this.lbModule.AutoSize = true;
+            this.lbModule.Enabled = false;
+            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModule.Location = new System.Drawing.Point(18, 273);
+            this.lbModule.Name = "lbModule";
+            this.lbModule.Size = new System.Drawing.Size(74, 24);
+            this.lbModule.TabIndex = 242;
+            this.lbModule.Text = "Module";
             // 
-            // groupBox1
+            // tbWheelCal
             // 
-            this.groupBox1.Location = new System.Drawing.Point(18, 79);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(230, 3);
-            this.groupBox1.TabIndex = 342;
-            this.groupBox1.TabStop = false;
+            this.tbWheelCal.Enabled = false;
+            this.tbWheelCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbWheelCal.Location = new System.Drawing.Point(394, 271);
+            this.tbWheelCal.Name = "tbWheelCal";
+            this.tbWheelCal.Size = new System.Drawing.Size(100, 29);
+            this.tbWheelCal.TabIndex = 240;
+            this.tbWheelCal.TabStop = false;
+            this.tbWheelCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelCal.TextChanged += new System.EventHandler(this.rbWheel_CheckedChanged);
+            this.tbWheelCal.Enter += new System.EventHandler(this.tbWheelCal_Enter);
+            this.tbWheelCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelCal_Validating);
             // 
-            // groupBox2
+            // tbWheelPin
             // 
-            this.groupBox2.Location = new System.Drawing.Point(18, 280);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(230, 3);
-            this.groupBox2.TabIndex = 343;
-            this.groupBox2.TabStop = false;
+            this.tbWheelPin.Enabled = false;
+            this.tbWheelPin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbWheelPin.Location = new System.Drawing.Point(242, 271);
+            this.tbWheelPin.Name = "tbWheelPin";
+            this.tbWheelPin.Size = new System.Drawing.Size(58, 29);
+            this.tbWheelPin.TabIndex = 239;
+            this.tbWheelPin.TabStop = false;
+            this.tbWheelPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelPin.TextChanged += new System.EventHandler(this.rbWheel_CheckedChanged);
+            this.tbWheelPin.Enter += new System.EventHandler(this.tbWheelPin_Enter);
+            this.tbWheelPin.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelPin_Validating);
+            // 
+            // lbPin
+            // 
+            this.lbPin.AutoSize = true;
+            this.lbPin.Enabled = false;
+            this.lbPin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPin.Location = new System.Drawing.Point(199, 273);
+            this.lbPin.Name = "lbPin";
+            this.lbPin.Size = new System.Drawing.Size(37, 24);
+            this.lbPin.TabIndex = 221;
+            this.lbPin.Text = "Pin";
+            // 
+            // lbCal
+            // 
+            this.lbCal.AutoSize = true;
+            this.lbCal.Enabled = false;
+            this.lbCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCal.Location = new System.Drawing.Point(336, 273);
+            this.lbCal.Name = "lbCal";
+            this.lbCal.Size = new System.Drawing.Size(52, 24);
+            this.lbCal.TabIndex = 223;
+            this.lbCal.Text = "Cal #";
+            // 
+            // lbWheelUnits
+            // 
+            this.lbWheelUnits.AutoSize = true;
+            this.lbWheelUnits.Enabled = false;
+            this.lbWheelUnits.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbWheelUnits.Location = new System.Drawing.Point(78, 338);
+            this.lbWheelUnits.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lbWheelUnits.Name = "lbWheelUnits";
+            this.lbWheelUnits.Size = new System.Drawing.Size(48, 24);
+            this.lbWheelUnits.TabIndex = 345;
+            this.lbWheelUnits.Text = "mph";
+            this.lbWheelUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbWunits
+            // 
+            this.lbWunits.AutoSize = true;
+            this.lbWunits.Enabled = false;
+            this.lbWunits.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWunits.Location = new System.Drawing.Point(18, 338);
+            this.lbWunits.Name = "lbWunits";
+            this.lbWunits.Size = new System.Drawing.Size(51, 24);
+            this.lbWunits.TabIndex = 346;
+            this.lbWunits.Text = "Units";
             // 
             // frmMenuOptions
             // 
@@ -378,14 +426,17 @@
         private System.Windows.Forms.GroupBox gbNetwork;
         private System.Windows.Forms.TextBox tbWheelCal;
         private System.Windows.Forms.TextBox tbWheelPin;
-        private System.Windows.Forms.Label lbSubnet;
-        private System.Windows.Forms.Label lbIP;
+        private System.Windows.Forms.Label lbPin;
+        private System.Windows.Forms.Label lbCal;
         private System.Windows.Forms.RadioButton rbSimulated;
         private System.Windows.Forms.RadioButton rbWheel;
         private System.Windows.Forms.RadioButton rbAOG;
         private System.Windows.Forms.TextBox tbWheelModule;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lbModule;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button butUpdateModules;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label lbWunits;
+        private System.Windows.Forms.Label lbWheelUnits;
     }
 }

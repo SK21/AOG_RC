@@ -78,7 +78,15 @@ namespace RateController.PGNs
             cData[0] = 248;
             cData[1] = 126;
             cData[2] = (byte)cWheelModule;
-            cData[3] = (byte)cWheelPin;
+
+            if (Props.SpeedMode == SpeedType.Wheel)
+            {
+                cData[3] = (byte)cWheelPin;
+            }
+            else
+            {
+                cData[3] = 255; // disable wheel sensor
+            }
 
             double Tmp = cWheelCal * 1000.0;
             cData[4] = (byte)Tmp;

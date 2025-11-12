@@ -32,7 +32,17 @@ namespace RateController.Menu
         {
             try
             {
-                if (double.TryParse(tbSpeed.Text, out double Spd)) Props.SimSpeed = Spd;
+                if (double.TryParse(tbSpeed.Text, out double Spd))
+                {
+                    if (Props.UseMetric)
+                    {
+                        Props.SimSpeed_KMH = Spd;
+                    }
+                    else
+                    {
+                        Props.SimSpeed_KMH = Spd * Props.MPHtoKPH;
+                    }
+                }
                 if (double.TryParse(tbTime.Text, out double Time)) Props.PrimeTime = Time;
                 if (int.TryParse(tbDelay.Text, out int Delay)) Props.PrimeDelay = Delay;
                 Props.ResumeAfterPrime = ckResume.Checked;
@@ -194,7 +204,10 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            tbSpeed.Text = Props.SimSpeed.ToString("N1");
+
+            double displaySpeed = Props.UseMetric ? Props.SimSpeed_KMH : Props.SimSpeed_KMH / Props.MPHtoKPH;
+            tbSpeed.Text = displaySpeed.ToString("N1");
+
             tbTime.Text = Props.PrimeTime.ToString("N0");
             tbDelay.Text = Props.PrimeDelay.ToString("N0");
 

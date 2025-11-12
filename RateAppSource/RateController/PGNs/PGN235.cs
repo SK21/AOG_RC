@@ -30,7 +30,7 @@ namespace RateController
         {
             bool ValidData = true;
             int Width;
-            if ((Props.SimMode == SimType.Sim_None) && (Data.Length > 5))
+            if ((Props.SpeedMode==SpeedType.GPS) && (Data.Length > 5))
             {
                 if (Data.Length == Data[4] + 6)
                 {

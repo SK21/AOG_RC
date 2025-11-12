@@ -40,11 +40,8 @@ namespace RateController.Classes
     public enum RelayTypes
     { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master };
 
-    public enum SimType
-    { Sim_None, Sim_Speed }
-
     public enum SpeedType
-    { GPS,Wheel,Simulated}
+    { GPS, Wheel, Simulated }
 
     public enum SwIDs
     {
@@ -96,8 +93,8 @@ namespace RateController.Classes
         private static bool cShowJobs;
         private static bool cShowPressure;
         private static bool cShowSwitches;
-        private static SimType cSimMode = SimType.Sim_None;
         private static double cSimSpeed = 0;
+        private static SpeedType cSpeedMode = SpeedType.GPS;
         private static bool cUseDualAuto;
         private static bool cUseLargeScreen = false;
         private static bool cUseMetric;
@@ -111,10 +108,6 @@ namespace RateController.Classes
         private static frmPressureDisplay PressureDisplay;
         private static frmRate RateDisplay;
         private static frmSwitches SwitchesForm;
-        private static SpeedType cSpeedMode = SpeedType.GPS;
-        private static int cWheelModule = 0;
-        private static int cWheelPin = 0;
-        private static double cWheelCal;
 
         #region pressure calibration
 
@@ -442,13 +435,53 @@ namespace RateController.Classes
             }
         }
 
-        public static SimType SimMode
+        public static double SimSpeed_KMH
         {
-            get { return cSimMode; }
+            get { return cSimSpeed; }
             set
             {
-                cSimMode = value;
-                SetProp("SimMode", cSimMode.ToString());
+                if (value >= 0 && value < 40)
+                {
+                    cSimSpeed = value;
+                    SetProp("SimSpeed", cSimSpeed.ToString());
+                }
+            }
+        }
+
+        public static double Speed_KMH
+        {
+            get
+            {
+                double Result = 0;
+                if (mf.SectionControl.PrimeOn)
+                {
+                    Result = SimSpeed_KMH;
+                }
+                else
+                {
+                    switch (cSpeedMode)
+                    {
+                        case SpeedType.Wheel:
+                            if (UseMetric)
+                            {
+                                Result = mf.ModulesStatus.WheelSpeed(mf.WheelSpeed.WheelModule);
+                            }
+                            else
+                            {
+                                Result = mf.ModulesStatus.WheelSpeed(mf.WheelSpeed.WheelModule) * MPHtoKPH;
+                            }
+                            break;
+
+                        case SpeedType.Simulated:
+                            Result = SimSpeed_KMH;
+                            break;
+
+                        default:
+                            Result = mf.GPS.Speed_KMH;
+                            break;
+                    }
+                }
+                return Result;
             }
         }
 
@@ -459,20 +492,6 @@ namespace RateController.Classes
             {
                 cSpeedMode = value;
                 SetProp("SpeedMode", cSpeedMode.ToString());
-            }
-        }
-
-
-        public static double SimSpeed
-        {
-            get { return cSimSpeed; }
-            set
-            {
-                if (value >= 0 && value < 40)
-                {
-                    cSimSpeed = value;
-                    SetProp("SimSpeed", cSimSpeed.ToString());
-                }
             }
         }
 
