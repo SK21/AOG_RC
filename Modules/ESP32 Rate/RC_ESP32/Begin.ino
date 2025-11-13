@@ -4,6 +4,7 @@ uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pin
 void DoSetup()
 {
 	uint8_t ErrorCount = 0;
+	bool WheelMatch = false;
 
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
@@ -148,6 +149,15 @@ void DoSetup()
 
 		ledcAttach(Sensor[i].IN2, PWM_FREQ, PWM_BITS);
 		ledcWrite(Sensor[i].IN2, 0);
+
+		if (Sensor[i].FlowPin == MDL.WheelSpeedPin) WheelMatch = true;
+	}
+
+	// wheel speed sensor
+	if (MDL.WheelSpeedPin != NC && !WheelMatch)
+	{
+		pinMode(MDL.WheelSpeedPin, INPUT_PULLUP);
+		attachInterrupt(digitalPinToInterrupt(MDL.WheelSpeedPin), ISR_Speed, FALLING);
 	}
 
 	// Relays
@@ -425,6 +435,17 @@ void DoSetup()
 	Serial.println(MDL.PressurePin);
 
 	Serial.println("");
+	Serial.print("Wheel Speed Pin: ");
+	if (WheelMatch)
+	{
+		Serial.println("error, duplicate flow pin");
+	}
+	else
+	{
+		Serial.println(MDL.WheelSpeedPin);
+	}
+
+	Serial.println("");
 	Serial.print("ADS1115 enabled: ");
 	if (ADSfound)
 	{
@@ -543,6 +564,8 @@ void LoadDefaults()
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = true;
 	MDL.PressurePin = NC;
+	MDL.WheelCal = 0;
+	MDL.WheelSpeedPin = NC;
 }
 
 bool ValidData()
@@ -573,6 +596,20 @@ bool ValidData()
 			for (int j = 0; j < sizeof(ValidPins0); j++)
 			{
 				if (MDL.PressurePin == ValidPins0[j])
+				{
+					Result = true;
+					break;
+				}
+			}
+			if (!Result) break;
+		}
+
+		// wheel speed pin
+		if (Result && MDL.WheelSpeedPin < NC)
+		{
+			for (int j = 0; j < sizeof(ValidPins0); j++)
+			{
+				if (MDL.WheelSpeedPin == ValidPins0[j])
 				{
 					Result = true;
 					break;

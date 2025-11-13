@@ -1,6 +1,7 @@
 void DoSetup()
 {
 	uint8_t ErrorCount = 0;
+	bool WheelMatch = false;
 
 	Sensor[0].FlowEnabled = false;
 	Sensor[1].FlowEnabled = false;
@@ -114,7 +115,17 @@ void DoSetup()
 		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
 		analogWriteFrequency(Sensor[i].PWMPin, PWM_FREQ);
 #endif
+
+		if (Sensor[i].FlowPin == MDL.WheelSpeedPin) WheelMatch = true;
 	}
+
+	// wheel speed sensor
+	if (MDL.WheelSpeedPin != NC && !WheelMatch)
+	{
+		pinMode(MDL.WheelSpeedPin, INPUT_PULLUP);
+		attachInterrupt(digitalPinToInterrupt(MDL.WheelSpeedPin), ISR_Speed, FALLING);
+	}
+
 #if defined(ESP32) || defined(ARDUINO_TEENSY41)
 	analogWriteResolution(PWM_BITS);
 #endif
@@ -250,6 +261,17 @@ void DoSetup()
 	Serial.println(MDL.PressurePin);
 
 	Serial.println("");
+	Serial.print("Wheel Speed Pin: ");
+	if (WheelMatch)
+	{
+		Serial.println("error, duplicate flow pin");
+	}
+	else
+	{
+		Serial.println(MDL.WheelSpeedPin);
+	}
+
+	Serial.println("");
 	Serial.print(F("ADS1115 enabled: "));
 	Serial.println(F("false"));
 
@@ -356,6 +378,8 @@ void LoadDefaults()
 	MDL.ADS1115Enabled = false;
 	MDL.InvertFlow = true;
 	MDL.InvertRelay = true;
+	MDL.WheelCal = 0;
+	MDL.WheelSpeedPin = NC;
 }
 
 bool ValidData()
@@ -363,6 +387,7 @@ bool ValidData()
 	bool Result = true;
 
 	if (MDL.WorkPin > 21 && MDL.WorkPin != NC) Result = false;
+	if (MDL.WheelSpeedPin > 21 && MDL.PressurePin != NC) Result = false;
 
 	if (Result)
 	{

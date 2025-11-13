@@ -13,13 +13,14 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 7115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 12115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
 const int MaxSampleSize = 25;
+const uint32_t FlowTimeout = 4000;
 
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
@@ -61,6 +62,8 @@ struct ModuleConfig
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
 	uint8_t PressurePin = 40;		
 	bool ADS1115Enabled = false;
+	uint8_t WheelSpeedPin = NC;
+	float WheelCal = 0;
 };
 
 ModuleConfig MDL;
@@ -158,6 +161,7 @@ uint32_t buffer_addr, buffer_size;
 bool FirmwareUpdateMode = false;
 
 bool CalibrationOn[] = { false,false };
+float WheelSpeed = 0;
 
 void setup()
 {
@@ -178,6 +182,7 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		ReadAnalog();
+		if (MDL.WheelSpeedPin != NC) GetSpeed();
 	}
 
 	SendComm();
@@ -269,6 +274,41 @@ bool WorkPinOn()
 		WrkOn = false;
 	}
 	return WrkOn;
+}
+
+uint32_t MedianFromArray(uint32_t buf[], int count)
+{
+	uint32_t Result = 0;
+	if (count > 0)
+	{
+		uint32_t sorted[MaxSampleSize];
+		for (int i = 0; i < count; i++) sorted[i] = buf[i];
+
+		// insertion sort
+		for (int i = 1; i < count; i++)
+		{
+			uint32_t key = sorted[i];
+			int j = i - 1;
+			while (j >= 0 && sorted[j] > key)
+			{
+				sorted[j + 1] = sorted[j];
+				j--;
+			}
+			sorted[j + 1] = key;
+		}
+
+		if (count % 2 == 1)
+		{
+			Result = sorted[count / 2];
+		}
+		else
+		{
+			int mid = count / 2;
+			// average of middle two
+			Result = (sorted[mid - 1] + sorted[mid]) / 2;
+		}
+	}
+	return Result;
 }
 
 void Blink()

@@ -6,13 +6,14 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 11115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 12115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins are not connected
 uint8_t MCP23017address;
-const int MaxSampleSize = 15;
+const int MaxSampleSize = 11;
+const uint32_t FlowTimeout = 4000UL;
 
 #if defined(ESP32)
 const int PWM_BITS = 12;
@@ -51,6 +52,8 @@ struct ModuleConfig
 	bool Is3Wire = true;			// False - powered on/off, True - powered on only
 	uint8_t PressurePin = 15;		
 	bool ADS1115Enabled = false;
+	uint8_t WheelSpeedPin = NC;
+	float WheelCal = 0;
 };
 
 ModuleConfig MDL;
@@ -156,6 +159,7 @@ bool EthernetConnected()
 }
 
 bool CalibrationOn[] = { false,false };
+float WheelSpeed = 0;
 
 void setup()
 {
@@ -180,6 +184,7 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		CheckPressure();
+		if (MDL.WheelSpeedPin != NC) GetSpeed();
 	}
 
 	SendComm();
@@ -280,6 +285,41 @@ void CheckPressure()
 	{
 		PressureReading = analogRead(MDL.PressurePin);	// 10 bit, 0-1023
 	}
+}
+
+uint32_t MedianFromArray(uint32_t buf[], int count)
+{
+	uint32_t Result = 0;
+	if (count > 0)
+	{
+		uint32_t sorted[MaxSampleSize];
+		for (int i = 0; i < count; i++) sorted[i] = buf[i];
+
+		// insertion sort
+		for (int i = 1; i < count; i++)
+		{
+			uint32_t key = sorted[i];
+			int j = i - 1;
+			while (j >= 0 && sorted[j] > key)
+			{
+				sorted[j + 1] = sorted[j];
+				j--;
+			}
+			sorted[j + 1] = key;
+		}
+
+		if (count % 2 == 1)
+		{
+			Result = sorted[count / 2];
+		}
+		else
+		{
+			int mid = count / 2;
+			// average of middle two
+			Result = (sorted[mid - 1] + sorted[mid]) / 2;
+		}
+	}
+	return Result;
 }
 
 //uint32_t DebugTime;

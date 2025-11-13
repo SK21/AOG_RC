@@ -2,8 +2,6 @@
 // PulseMaxHz       maximum Hz of the flow sensor
 // PulseSampeSize   number of pulses used to get the median Hz reading
 
-const uint32_t FlowTimeout = 4000;
-
 uint32_t LastPulse[2];
 uint32_t ReadLast[2];
 uint32_t PulseTime[2];
@@ -87,38 +85,4 @@ void ISR1()
 	PulseISR(1);
 }
 
-uint32_t MedianFromArray(uint32_t buf[], int count)
-{
-	uint32_t Result = 0;
-	if (count > 0)
-	{
-		uint32_t sorted[MaxSampleSize];
-		for (int i = 0; i < count; i++) sorted[i] = buf[i];
-
-		// insertion sort
-		for (int i = 1; i < count; i++)
-		{
-			uint32_t key = sorted[i];
-			int j = i - 1;
-			while (j >= 0 && sorted[j] > key)
-			{
-				sorted[j + 1] = sorted[j];
-				j--;
-			}
-			sorted[j + 1] = key;
-		}
-
-		if (count % 2 == 1)
-		{
-			Result = sorted[count / 2];
-		}
-		else
-		{
-			int mid = count / 2;
-			// average of middle two
-			Result = (sorted[mid - 1] + sorted[mid]) / 2;
-		}
-	}
-	return Result;
-}
 

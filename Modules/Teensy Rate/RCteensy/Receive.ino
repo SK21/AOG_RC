@@ -222,6 +222,37 @@ void ReadPGNs(byte data[], uint16_t len)
 		}
 		break;
 
+	case 32504:
+		// PGN32504, Wheel Speed sensor settings from RC to module
+		//0     HeaderLo    248
+		//1     HeaderHi    126
+		//2     ModuleID    0-7
+		//3     GPIO pin    0-50
+		//4     Cal Lo      actual X 1000
+		//5     Cal Mid
+		//6     Cal Hi
+		//7     CRC
+
+		PGNlength = 8;
+		
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			{
+				bool NewPin = (data[3] != MDL.WheelSpeedPin);
+
+				MDL.WheelSpeedPin = data[3];
+
+				// cal setting, 1000 times actual
+				uint32_t CalSet = data[4] | (uint32_t)data[5] << 8 | (uint32_t)data[6] << 16;
+				MDL.WheelCal = (float)(CalSet * 0.001);
+
+				SaveData();
+				if(NewPin) SCB_AIRCR = 0x05FA0004;	// restart
+			}
+		}
+		break;
+
 	case 32700:
 		// module config
 		//0     HeaderLo    188

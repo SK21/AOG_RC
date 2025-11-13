@@ -49,8 +49,7 @@
             this.tbWheelPin = new System.Windows.Forms.TextBox();
             this.lbPin = new System.Windows.Forms.Label();
             this.lbCal = new System.Windows.Forms.Label();
-            this.lbWheelUnits = new System.Windows.Forms.Label();
-            this.lbWunits = new System.Windows.Forms.Label();
+            this.lbPulses = new System.Windows.Forms.Label();
             this.gbNetwork.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -185,8 +184,7 @@
             // 
             // gbNetwork
             // 
-            this.gbNetwork.Controls.Add(this.lbWunits);
-            this.gbNetwork.Controls.Add(this.lbWheelUnits);
+            this.gbNetwork.Controls.Add(this.lbPulses);
             this.gbNetwork.Controls.Add(this.groupBox3);
             this.gbNetwork.Controls.Add(this.butUpdateModules);
             this.gbNetwork.Controls.Add(this.groupBox1);
@@ -363,29 +361,16 @@
             this.lbCal.TabIndex = 223;
             this.lbCal.Text = "Cal #";
             // 
-            // lbWheelUnits
+            // lbPulses
             // 
-            this.lbWheelUnits.AutoSize = true;
-            this.lbWheelUnits.Enabled = false;
-            this.lbWheelUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbWheelUnits.Location = new System.Drawing.Point(78, 338);
-            this.lbWheelUnits.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lbWheelUnits.Name = "lbWheelUnits";
-            this.lbWheelUnits.Size = new System.Drawing.Size(48, 24);
-            this.lbWheelUnits.TabIndex = 345;
-            this.lbWheelUnits.Text = "mph";
-            this.lbWheelUnits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lbWunits
-            // 
-            this.lbWunits.AutoSize = true;
-            this.lbWunits.Enabled = false;
-            this.lbWunits.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWunits.Location = new System.Drawing.Point(18, 338);
-            this.lbWunits.Name = "lbWunits";
-            this.lbWunits.Size = new System.Drawing.Size(51, 24);
-            this.lbWunits.TabIndex = 346;
-            this.lbWunits.Text = "Units";
+            this.lbPulses.Enabled = false;
+            this.lbPulses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPulses.Location = new System.Drawing.Point(394, 301);
+            this.lbPulses.Name = "lbPulses";
+            this.lbPulses.Size = new System.Drawing.Size(100, 29);
+            this.lbPulses.TabIndex = 345;
+            this.lbPulses.Text = "(pulses/mile)";
+            this.lbPulses.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // frmMenuOptions
             // 
@@ -436,7 +421,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button butUpdateModules;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label lbWunits;
-        private System.Windows.Forms.Label lbWheelUnits;
+        private System.Windows.Forms.Label lbPulses;
     }
 }

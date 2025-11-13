@@ -20,7 +20,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 7115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 12115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
@@ -28,6 +28,7 @@ const uint8_t MaxProductCount = 2;
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
 const int MaxSampleSize = 25;
+const uint32_t FlowTimeout = 4000;
 
 const uint16_t EEPROM_SIZE = 512;
 
@@ -77,6 +78,8 @@ struct ModuleConfig	// about 130 bytes
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output1 only, Output2 is off
 	uint8_t PressurePin = NC;		// NC - no pressure pin
 	bool ADS1115Enabled = true;
+	uint8_t WheelSpeedPin = NC;
+	float WheelCal = 0;
 };
 
 ModuleConfig MDL;
@@ -226,6 +229,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 }
 
 bool CalibrationOn[] = { false,false };
+float WheelSpeed = 0;
 
 void setup()
 {
@@ -246,6 +250,7 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		ReadAnalog();
+		if (MDL.WheelSpeedPin != NC) GetSpeed();
 	}
 	SendComm();
 	//Blink();
@@ -336,6 +341,41 @@ bool WorkPinOn()
 		WrkOn = false;
 	}
 	return WrkOn;
+}
+
+uint32_t MedianFromArray(uint32_t buf[], int count)
+{
+	uint32_t Result = 0;
+	if (count > 0)
+	{
+		uint32_t sorted[MaxSampleSize];
+		for (int i = 0; i < count; i++) sorted[i] = buf[i];
+
+		// insertion sort
+		for (int i = 1; i < count; i++)
+		{
+			uint32_t key = sorted[i];
+			int j = i - 1;
+			while (j >= 0 && sorted[j] > key)
+			{
+				sorted[j + 1] = sorted[j];
+				j--;
+			}
+			sorted[j + 1] = key;
+		}
+
+		if (count % 2 == 1)
+		{
+			Result = sorted[count / 2];
+		}
+		else
+		{
+			int mid = count / 2;
+			// average of middle two
+			Result = (sorted[mid - 1] + sorted[mid]) / 2;
+		}
+	}
+	return Result;
 }
 
 //bool State = false;

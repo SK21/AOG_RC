@@ -82,8 +82,8 @@ void SendComm()
         //2     module ID
         //3     Pressure Lo
         //4     Pressure Hi
-        //5     -
-        //6     -
+        //5     wheel speed Lo  actual * 100
+        //6     wheel speed Hi
         //7     -
         //8     -
         //9     -
@@ -105,8 +105,12 @@ void SendComm()
 
         Data[3] = (byte)PressureReading;
         Data[4] = (byte)(PressureReading >> 8);
-        Data[5] = 0;
-        Data[6] = 0;
+
+        // wheel speed, 1000 X actual
+        uint32_t Speed = WheelSpeed * 100.0;
+        Data[5] = Speed;
+        Data[6] = Speed >> 8;
+
         Data[7] = 0;
         Data[8] = 0;
         Data[9] = 0;

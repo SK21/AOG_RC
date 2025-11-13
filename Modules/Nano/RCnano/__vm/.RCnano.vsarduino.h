@@ -26,5 +26,6 @@
 #include "..\Receive.ino"
 #include "..\Relays.ino"
 #include "..\Send.ino"
+#include "..\WheelSensor.ino"
 #endif
 #endif

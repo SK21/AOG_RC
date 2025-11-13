@@ -11,9 +11,9 @@ namespace RateController
         //2     module ID
         //3     Pressure Lo
         //4     Pressure Hi
-        //5     wheel speed Lo  actual * 10
-        //6     wheel speed mid
-        //7     wheel speed Hi
+        //5     wheel speed Lo  actual * 100
+        //6     wheel speed Hi
+        //7     -
         //8     -
         //9     -
         //10    InoType
@@ -91,7 +91,7 @@ namespace RateController
                 {
                     cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
 
-                    cWheelSpeed[ModuleID] = ((double)(Data[5] | Data[6] << 8 | Data[7] << 16)) / 10.0;
+                    cWheelSpeed[ModuleID] = ((double)(Data[5] | Data[6] << 8)) / 100.0;
 
                     cInoType[ModuleID] = Data[10];
                     cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);

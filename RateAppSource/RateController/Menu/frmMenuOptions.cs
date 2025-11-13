@@ -111,6 +111,8 @@ namespace RateController.Menu
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
+            lbPulses.Font = new Font(lbPulses.Font.FontFamily, 12f, lbPulses.Font.Style,
+                                lbPulses.Font.Unit, lbPulses.Font.GdiCharSet, lbPulses.Font.GdiVerticalFont);
             PositionForm();
             UpdateForm();
         }
@@ -155,8 +157,7 @@ namespace RateController.Menu
             lbModule.Enabled = rbWheel.Checked;
             lbPin.Enabled = rbWheel.Checked;
             butUpdateModules.Enabled = rbWheel.Checked;
-            lbWheelUnits.Enabled= rbWheel.Checked;
-            lbWunits.Enabled = rbWheel.Checked;
+            lbPulses.Enabled = rbWheel.Checked;
         }
 
         private void SetButtons(bool Edited)
@@ -308,18 +309,19 @@ namespace RateController.Menu
 
             tbWheelModule.Text = mf.WheelSpeed.WheelModule.ToString("N0");
             tbWheelPin.Text = mf.WheelSpeed.WheelPin.ToString("N0");
-            tbWheelCal.Text = mf.WheelSpeed.WheelCal.ToString("N3");
-            tbSimSpeed.Text = Props.SimSpeed_KMH.ToString("N1");
+            tbWheelCal.Text = mf.WheelSpeed.WheelCal.ToString("N1");
 
             if (Props.UseMetric)
             {
                 lbSimUnits.Text = "KMH";
-                lbWheelUnits.Text = "KMH";
+                lbPulses.Text = "(pulses/km)";
+                tbSimSpeed.Text = Props.SimSpeed_KMH.ToString("N1");
             }
             else
             {
                 lbSimUnits.Text = "MPH";
-                lbWheelUnits.Text = "MPH";
+                lbPulses.Text = "(pulses/mile)";
+                tbSimSpeed.Text = (Props.SimSpeed_KMH / Props.MPHtoKPH).ToString("N1");
             }
 
             ckMetric.Checked = Props.UseMetric;
