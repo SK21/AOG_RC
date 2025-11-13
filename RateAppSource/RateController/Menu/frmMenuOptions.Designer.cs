@@ -37,6 +37,8 @@
             this.tbSimSpeed = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.gbNetwork = new System.Windows.Forms.GroupBox();
+            this.btnCal = new System.Windows.Forms.Button();
+            this.lbPulses = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.butUpdateModules = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -49,7 +51,6 @@
             this.tbWheelPin = new System.Windows.Forms.TextBox();
             this.lbPin = new System.Windows.Forms.Label();
             this.lbCal = new System.Windows.Forms.Label();
-            this.lbPulses = new System.Windows.Forms.Label();
             this.gbNetwork.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,7 +97,7 @@
             this.ckRateDisplay.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckRateDisplay.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRateDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateDisplay.Location = new System.Drawing.Point(281, 461);
+            this.ckRateDisplay.Location = new System.Drawing.Point(297, 461);
             this.ckRateDisplay.Margin = new System.Windows.Forms.Padding(6);
             this.ckRateDisplay.Name = "ckRateDisplay";
             this.ckRateDisplay.Size = new System.Drawing.Size(192, 36);
@@ -112,7 +113,7 @@
             this.ckLargeScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckLargeScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckLargeScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckLargeScreen.Location = new System.Drawing.Point(26, 536);
+            this.ckLargeScreen.Location = new System.Drawing.Point(42, 536);
             this.ckLargeScreen.Margin = new System.Windows.Forms.Padding(6);
             this.ckLargeScreen.Name = "ckLargeScreen";
             this.ckLargeScreen.Size = new System.Drawing.Size(192, 36);
@@ -127,7 +128,7 @@
             this.ckTransparent.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckTransparent.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckTransparent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTransparent.Location = new System.Drawing.Point(281, 536);
+            this.ckTransparent.Location = new System.Drawing.Point(297, 536);
             this.ckTransparent.Margin = new System.Windows.Forms.Padding(6);
             this.ckTransparent.Name = "ckTransparent";
             this.ckTransparent.Size = new System.Drawing.Size(192, 36);
@@ -143,7 +144,7 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(26, 461);
+            this.ckMetric.Location = new System.Drawing.Point(42, 461);
             this.ckMetric.Margin = new System.Windows.Forms.Padding(6);
             this.ckMetric.Name = "ckMetric";
             this.ckMetric.Size = new System.Drawing.Size(192, 36);
@@ -184,6 +185,7 @@
             // 
             // gbNetwork
             // 
+            this.gbNetwork.Controls.Add(this.btnCal);
             this.gbNetwork.Controls.Add(this.lbPulses);
             this.gbNetwork.Controls.Add(this.groupBox3);
             this.gbNetwork.Controls.Add(this.butUpdateModules);
@@ -208,6 +210,35 @@
             this.gbNetwork.Text = "Speed Source";
             this.gbNetwork.Paint += new System.Windows.Forms.PaintEventHandler(this.gbNetwork_Paint);
             // 
+            // btnCal
+            // 
+            this.btnCal.BackColor = System.Drawing.Color.Transparent;
+            this.btnCal.FlatAppearance.BorderSize = 0;
+            this.btnCal.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnCal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCal.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCal.Image = global::RateController.Properties.Resources.clock;
+            this.btnCal.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCal.Location = new System.Drawing.Point(285, 323);
+            this.btnCal.Name = "btnCal";
+            this.btnCal.Size = new System.Drawing.Size(192, 71);
+            this.btnCal.TabIndex = 346;
+            this.btnCal.Text = "Calibrate";
+            this.btnCal.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCal.UseVisualStyleBackColor = false;
+            this.btnCal.Click += new System.EventHandler(this.btnCal_Click);
+            // 
+            // lbPulses
+            // 
+            this.lbPulses.Enabled = false;
+            this.lbPulses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPulses.Location = new System.Drawing.Point(394, 301);
+            this.lbPulses.Name = "lbPulses";
+            this.lbPulses.Size = new System.Drawing.Size(100, 29);
+            this.lbPulses.TabIndex = 345;
+            this.lbPulses.Text = "(pulses/mile)";
+            this.lbPulses.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // groupBox3
             // 
             this.groupBox3.Location = new System.Drawing.Point(18, 203);
@@ -225,9 +256,9 @@
             this.butUpdateModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butUpdateModules.Image = global::RateController.Properties.Resources.UpArrow64;
             this.butUpdateModules.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.butUpdateModules.Location = new System.Drawing.Point(165, 314);
+            this.butUpdateModules.Location = new System.Drawing.Point(30, 323);
             this.butUpdateModules.Name = "butUpdateModules";
-            this.butUpdateModules.Size = new System.Drawing.Size(187, 71);
+            this.butUpdateModules.Size = new System.Drawing.Size(192, 71);
             this.butUpdateModules.TabIndex = 342;
             this.butUpdateModules.Text = "Send to Module";
             this.butUpdateModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -361,17 +392,6 @@
             this.lbCal.TabIndex = 223;
             this.lbCal.Text = "Cal #";
             // 
-            // lbPulses
-            // 
-            this.lbPulses.Enabled = false;
-            this.lbPulses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPulses.Location = new System.Drawing.Point(394, 301);
-            this.lbPulses.Name = "lbPulses";
-            this.lbPulses.Size = new System.Drawing.Size(100, 29);
-            this.lbPulses.TabIndex = 345;
-            this.lbPulses.Text = "(pulses/mile)";
-            this.lbPulses.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // frmMenuOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -422,5 +442,6 @@
         private System.Windows.Forms.Button butUpdateModules;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label lbPulses;
+        private System.Windows.Forms.Button btnCal;
     }
 }

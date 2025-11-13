@@ -15,13 +15,16 @@ namespace RateController.PGNs
         //1     HeaderHi    126
         //2     ModuleID    0-7
         //3     GPIO pin    0-50
-        //4     Cal Lo      actual X 1000
+        //4     Cal Lo
         //5     Cal Mid
         //6     Cal Hi
-        //7     CRC
+        //7     Commands
+        //          - bit 0, erase counts
+        //8     CRC
 
-        private const byte cByteCount = 8;
+        private const byte cByteCount = 9;
         private byte[] cData = new byte[cByteCount];
+        private bool cEraseCounts = false;
         private double cWheelCal;
         private int cWheelModule;
         private int cWheelPin;
@@ -33,12 +36,15 @@ namespace RateController.PGNs
             LoadData();
         }
 
+        public bool EraseCounts
+        { set { cEraseCounts = value; } }
+
         public double WheelCal
         {
             get { return cWheelCal; }
             set
             {
-                if (value >= 0.01 && value <= 16700)
+                if (value >= 0 && value <= 0xffffff)
                 {
                     cWheelCal = value;
                     Props.SetProp("WheelCal", cWheelCal.ToString());
@@ -64,7 +70,7 @@ namespace RateController.PGNs
             get { return cWheelPin; }
             set
             {
-                if (value >= 0 && value <= 50)
+                if ((value >= 0 && value <= 50) || value == 255)
                 {
                     cWheelPin = value;
                     Props.SetProp("WheelPin", cWheelPin.ToString());
@@ -88,13 +94,16 @@ namespace RateController.PGNs
                 cData[3] = 255; // disable wheel sensor
             }
 
-            double Tmp = cWheelCal * 1000.0;
-            cData[4] = (byte)Tmp;
-            cData[5] = (byte)((int)Tmp >> 8);
-            cData[6] = (byte)((int)Tmp >> 16);
+            cData[4] = (byte)cWheelCal;
+            cData[5] = (byte)((int)cWheelCal >> 8);
+            cData[6] = (byte)((int)cWheelCal >> 16);
+
+            cData[7] = 0;
+            if (cEraseCounts) cData[7] = 1;
 
             cData[cByteCount - 1] = mf.Tls.CRC(cData, cByteCount - 1);
             mf.UDPmodules.SendUDPMessage(cData);
+            cEraseCounts = false;
         }
 
         private void LoadData()

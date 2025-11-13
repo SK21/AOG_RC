@@ -198,6 +198,12 @@
     <Compile Include="Forms\frmImportCSV.Designer.cs">
       <DependentUpon>frmImportCSV.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmSpeedCal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSpeedCal.Designer.cs">
+      <DependentUpon>frmSpeedCal.cs</DependentUpon>
+    </Compile>
     <Compile Include="PGNs\PGN32504.cs" />
     <Compile Include="RateMap\DataCollector.cs" />
     <Compile Include="Classes\clsProducts.cs" />
@@ -552,6 +558,9 @@
     <EmbeddedResource Include="Forms\frmRate.resx">
       <DependentUpon>frmRate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSpeedCal.resx">
+      <DependentUpon>frmSpeedCal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmVersion.resx">
       <DependentUpon>frmVersion.cs</DependentUpon>
     </EmbeddedResource>
@@ -766,6 +775,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\clock.png" />
     <None Include="Documentation\APPLIED_COVERAGE.md" />
     <None Include="Resources\caret-circle-up.png" />
     <None Include="Resources\file-cloud.png" />

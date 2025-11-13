@@ -24,6 +24,21 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
+        private void btnCal_Click(object sender, EventArgs e)
+        {
+            double calNumber = 0;
+            bool wasCanceled = true;
+
+            using (var dlg = new RateController.Forms.frmSpeedCal(mf))
+            {
+                var result = dlg.ShowDialog(this);
+                wasCanceled = (result != DialogResult.OK) || dlg.Canceled;
+                calNumber = dlg.CalNumber;
+            }
+
+            if (!wasCanceled) tbWheelCal.Text = calNumber.ToString("N0");
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
@@ -50,7 +65,16 @@ namespace RateController.Menu
                 }
 
                 if (int.TryParse(tbWheelModule.Text, out int wm)) mf.WheelSpeed.WheelModule = wm;
-                if (int.TryParse(tbWheelPin.Text, out int wp)) mf.WheelSpeed.WheelPin = wp;
+
+                if (int.TryParse(tbWheelPin.Text, out int wp) && (ValidPin(wp)))
+                {
+                    mf.WheelSpeed.WheelPin = wp;
+                }
+                else
+                {
+                    mf.WheelSpeed.WheelPin = 255;
+                }
+
                 if (double.TryParse(tbWheelCal.Text, out double wc)) mf.WheelSpeed.WheelCal = wc;
 
                 if (double.TryParse(tbSimSpeed.Text, out double Speed))
@@ -114,6 +138,7 @@ namespace RateController.Menu
             lbPulses.Font = new Font(lbPulses.Font.FontFamily, 12f, lbPulses.Font.Style,
                                 lbPulses.Font.Unit, lbPulses.Font.GdiCharSet, lbPulses.Font.GdiVerticalFont);
             PositionForm();
+            SetBoxes();
             UpdateForm();
         }
 
@@ -144,7 +169,6 @@ namespace RateController.Menu
             WheelSpeedChanged = true;
             SetButtons(true);
             SetBoxes();
-            butUpdateModules.Enabled = false;
         }
 
         private void SetBoxes()
@@ -158,6 +182,7 @@ namespace RateController.Menu
             lbPin.Enabled = rbWheel.Checked;
             butUpdateModules.Enabled = rbWheel.Checked;
             lbPulses.Enabled = rbWheel.Checked;
+            btnCal.Enabled = rbWheel.Checked;
         }
 
         private void SetButtons(bool Edited)
@@ -217,7 +242,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbWheelCal.Text, out tempD);
-            using (var form = new FormNumeric(0.01, 16700, tempD))
+            using (var form = new FormNumeric(0, 0xffffff, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -231,7 +256,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbWheelCal.Text, out tempD);
-            if (tempD < 0.01 || tempD > 16700)
+            if (tempD < 0 || tempD > 0xffffff)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -265,14 +290,22 @@ namespace RateController.Menu
 
         private void tbWheelPin_Enter(object sender, EventArgs e)
         {
-            int tempInt;
-            int.TryParse(tbWheelPin.Text, out tempInt);
-            using (var form = new FormNumeric(0, 50, tempInt))
+            var bx = (System.Windows.Forms.TextBox)sender;
+            double temp = 0;
+            if (double.TryParse(bx.Text.Trim(), out double vl)) temp = vl;
+
+            using (var form = new FormNumeric(0, 50, temp))
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
-                    tbWheelPin.Text = form.ReturnValue.ToString();
+                    if (form.IsBlank)
+                    {
+                        bx.Text = "-";
+                    }
+                    else
+                    {
+                        bx.Text = form.ReturnValue.ToString("N0");
+                    }
                 }
             }
         }
@@ -308,8 +341,17 @@ namespace RateController.Menu
             }
 
             tbWheelModule.Text = mf.WheelSpeed.WheelModule.ToString("N0");
-            tbWheelPin.Text = mf.WheelSpeed.WheelPin.ToString("N0");
-            tbWheelCal.Text = mf.WheelSpeed.WheelCal.ToString("N1");
+
+            if (mf.WheelSpeed.WheelPin == 255)
+            {
+                tbWheelPin.Text = "-";
+            }
+            else
+            {
+                tbWheelPin.Text = mf.WheelSpeed.WheelPin.ToString("N0");
+            }
+
+            tbWheelCal.Text = mf.WheelSpeed.WheelCal.ToString("N0");
 
             if (Props.UseMetric)
             {
@@ -330,6 +372,17 @@ namespace RateController.Menu
             ckRateDisplay.Checked = Props.UseRateDisplay;
 
             Initializing = false;
+        }
+
+        private bool ValidPin(int pin)
+        {
+            bool Result = true;
+            if (mf.ModuleConfig.Sensor0Flow == pin || mf.ModuleConfig.Sensor1Flow == pin)
+            {
+                Result = false;
+                Props.ShowMessage("Invalid pin, duplicate of flow pin.");
+            }
+            return Result;
         }
     }
 }

@@ -11,11 +11,11 @@ namespace RateController
         //2     module ID
         //3     Pressure Lo
         //4     Pressure Hi
-        //5     wheel speed Lo  actual * 100
+        //5     wheel speed Lo  actual * 10
         //6     wheel speed Hi
-        //7     -
-        //8     -
-        //9     -
+        //7     wheel count Lo
+        //8     wheel count mid
+        //9     wheel count Hi
         //10    InoType
         //11    InoID lo
         //12    InoID hi
@@ -37,6 +37,7 @@ namespace RateController
         private UInt16[] cInoID;
         private UInt16[] cInoType;
         private double[] cPressureReading;
+        private UInt16[] cWheelCounts;
         private double[] cWheelSpeed;
         private byte[] cWifiSignal;
         private bool[] cWorkSwitch;
@@ -62,6 +63,7 @@ namespace RateController
 
             cInoType = new ushort[Props.MaxModules];
             cWheelSpeed = new double[Props.MaxModules];
+            cWheelCounts = new ushort[Props.MaxModules];
         }
 
         public event EventHandler<PinStatusEventArgs> PinStatusChanged;
@@ -91,7 +93,9 @@ namespace RateController
                 {
                     cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
 
-                    cWheelSpeed[ModuleID] = ((double)(Data[5] | Data[6] << 8)) / 100.0;
+                    cWheelSpeed[ModuleID] = ((double)(Data[5] | Data[6] << 8)) / 10.0;
+
+                    cWheelCounts[ModuleID] = (ushort)(Data[7] | Data[8] << 8 | Data[9] << 16);
 
                     cInoType[ModuleID] = Data[10];
                     cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
@@ -157,6 +161,11 @@ namespace RateController
                     PinStatusChanged?.Invoke(this, args);
                 }
             }
+        }
+
+        public UInt16 WheelCounts(int Module)
+        {
+            return cWheelCounts[Module];
         }
 
         public double WheelSpeed(int Module)

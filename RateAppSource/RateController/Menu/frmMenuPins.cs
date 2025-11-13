@@ -32,15 +32,22 @@ namespace RateController.Menu
 
         private void Boxes_Enter(object sender, EventArgs e)
         {
-            System.Windows.Forms.TextBox bx = (System.Windows.Forms.TextBox)sender;
+            var bx = (System.Windows.Forms.TextBox)sender;
             double temp = 0;
             if (double.TryParse(bx.Text.Trim(), out double vl)) temp = vl;
+
             using (var form = new FormNumeric(0, 50, temp))
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                if (form.ShowDialog() == DialogResult.OK)
                 {
-                    bx.Text = form.ReturnValue.ToString("N0");
+                    if (form.IsBlank)
+                    {
+                        bx.Text = "-";          // sentinel for “no pin”
+                    }
+                    else
+                    {
+                        bx.Text = form.ReturnValue.ToString("N0");
+                    }
                 }
             }
         }
