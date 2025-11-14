@@ -891,12 +891,9 @@
     <None Include="Resources\Save.jpg" />
     <None Include="Resources\ConS_SourcesRoll.png" />
     <None Include="Resources\OK64.png" />
-    <None Include="Resources\AutoSteerTeensy.ino.hex" />
     <None Include="Resources\mcp23017_Adafruit.jpg" />
     <None Include="Resources\7791659_language_speak_communication_speech_chat_icon.png" />
     <None Include="Resources\7504229_hamburger_menu_list_options_icon.png" />
-    <None Include="Resources\RCnano.ino.hex" />
-    <None Include="Resources\RCnanoOldBootLoader.ino.hex" />
     <None Include="Resources\UpLoad.png" />
     <None Include="Resources\3556117_arrow_ui_up_icon.png" />
     <None Include="Resources\wrench.png" />

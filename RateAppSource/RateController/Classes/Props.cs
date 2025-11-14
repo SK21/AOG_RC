@@ -1000,7 +1000,7 @@ namespace RateController.Classes
             cCurrentMenuName = GetProp("LastScreen");
 
             // application properties
-            cSimSpeed = double.TryParse(GetAppProp("SimSpeed"), out double spd) ? spd : 5;
+            cSimSpeed = double.TryParse(GetAppProp("SimSpeed"), out double spd) ? spd : 8;
             cSpeedMode = Enum.TryParse(GetAppProp("SpeedMode"), out SpeedType spt) ? spt : SpeedType.GPS;
             cUseMetric = bool.TryParse(GetAppProp("UseMetric"), out bool mt) ? mt : false;
             cUseLargeScreen = bool.TryParse(GetAppProp("UseLargeScreen"), out bool ls) ? ls : false;
