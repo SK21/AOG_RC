@@ -261,10 +261,10 @@ namespace RateController
                         }
                     }
 
-                    if (AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    if (AutoSectionLast != mf.SwitchBox.AutoSectionOn)
                     {
                         AutoSectionsChanged = true;
-                        AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
+                        AutoSectionLast = mf.SwitchBox.AutoSectionOn;
 
                         if (AutoSectionLast & MasterIsOn)
                         {
@@ -283,7 +283,7 @@ namespace RateController
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        if (!mf.SwitchBox.AutoSectionOn)
                         {
                             // auto off, send on bytes to match switchbox
                             for (int i = 0; i < Max; i++)
@@ -447,10 +447,10 @@ namespace RateController
                         }
                     }
 
-                    if (AutoSectionLast != mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                    if (AutoSectionLast != mf.SwitchBox.AutoSectionOn)
                     {
                         AutoSectionsChanged = true;
-                        AutoSectionLast = mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
+                        AutoSectionLast = mf.SwitchBox.AutoSectionOn;
 
                         if (AutoSectionLast & MasterIsOn)
                         {
@@ -469,7 +469,7 @@ namespace RateController
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if (!mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+                        if (!mf.SwitchBox.AutoSectionOn)
                         {
                             // auto off, send on bytes to match RC zones
                             foreach (clsZone Zn in mf.Zones.Items)

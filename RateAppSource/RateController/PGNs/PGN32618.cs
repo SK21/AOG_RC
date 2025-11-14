@@ -1,6 +1,5 @@
 ﻿using RateController.Classes;
 using System;
-using System.Reflection;
 
 namespace RateController
 {
@@ -41,16 +40,17 @@ namespace RateController
         // 7    -
         // 8    crc
 
-        private const byte MinByteCount = 6;
         private const byte HeaderHi = 127;
         private const byte HeaderLo = 106;
+        private const byte MinByteCount = 6;
         private readonly FormStart mf;
-        private bool cAutoRateDisabled = false;
+        private bool cAutoRateEnabled = true;
+        private bool cAutoSectionEnabled = true;
         private UInt16 cInoID;
         private bool cMasterOn = false;
         private bool cRateDown = false;
         private bool cRateUp = false;
-        private bool cUseWorkSwitch = false;
+        private bool cWorkSwitchEnabled = false;
         private DateTime ReceivedReal;
         private DateTime ReceiveTime;
         private bool[] SW = new bool[24];
@@ -61,19 +61,20 @@ namespace RateController
             SW[(int)SwIDs.AutoSection] = true; // default to auto in case of no switchbox
             SW[(int)SwIDs.AutoRate] = true;
 
-            if (bool.TryParse(Props.GetProp("UseWorkSwitch"), out bool uw)) cUseWorkSwitch = uw;
-            if (bool.TryParse(Props.GetProp("SwitchboxAutoRateDisabled"), out bool auto)) cAutoRateDisabled = auto;
+            if (bool.TryParse(Props.GetProp("UseWorkSwitch"), out bool uw)) cWorkSwitchEnabled = uw;
+            if (bool.TryParse(Props.GetProp("SwitchboxAutoRateEnabled"), out bool auto)) cAutoRateEnabled = auto;
+            if (bool.TryParse(Props.GetProp("SwitchboxAutoSectionEnabled"), out bool asec)) cAutoSectionEnabled = asec;
         }
 
         public event EventHandler SwitchPGNreceived;
 
-        public bool AutoRateDisabled
+        public bool AutoRateEnabled
         {
-            get { return cAutoRateDisabled; }
+            get { return cAutoRateEnabled; }
             set
             {
-                cAutoRateDisabled = value;
-                Props.SetProp("SwitchboxAutoRateDisabled", cAutoRateDisabled.ToString());
+                cAutoRateEnabled = value;
+                Props.SetProp("SwitchboxAutoRateEnabled", cAutoRateEnabled.ToString());
             }
         }
 
@@ -82,14 +83,29 @@ namespace RateController
             get
             {
                 bool Result = false;
-                if (!AutoRateDisabled) Result = SW[(int)SwIDs.AutoRate];
+                if (AutoRateEnabled) Result = SW[(int)SwIDs.AutoRate];
                 return Result;
+            }
+        }
+
+        public bool AutoSectionEnabled
+        {
+            get { return cAutoSectionEnabled; }
+            set
+            {
+                cAutoSectionEnabled = value;
+                Props.SetProp("SwitchboxAutoSectionEnabled", cAutoSectionEnabled.ToString());
             }
         }
 
         public bool AutoSectionOn
         {
-            get { return SW[(int)SwIDs.AutoSection]; }
+            get
+            {
+                bool Result = false;
+                if (AutoSectionEnabled) Result = SW[(int)SwIDs.AutoSection];
+                return Result;
+            }
         }
 
         public bool MasterOn
@@ -122,16 +138,6 @@ namespace RateController
             set { cRateUp = value; }
         }
 
-        public bool UseWorkSwitch
-        {
-            get { return cUseWorkSwitch; }
-            set
-            {
-                cUseWorkSwitch = value;
-                Props.SetProp("UseWorkSwitch", cUseWorkSwitch.ToString());
-            }
-        }
-
         public bool WorkOn
         {
             // returns true if switchbox work switch is on or any
@@ -139,8 +145,18 @@ namespace RateController
             get
             {
                 bool Result = true;
-                if (cUseWorkSwitch) Result = SW[23] || mf.ModulesStatus.WorkSwitchOn();
+                if (cWorkSwitchEnabled) Result = SW[23] || mf.ModulesStatus.WorkSwitchOn();
                 return Result;
+            }
+        }
+
+        public bool WorkSwitchEnabled
+        {
+            get { return cWorkSwitchEnabled; }
+            set
+            {
+                cWorkSwitchEnabled = value;
+                Props.SetProp("UseWorkSwitch", cWorkSwitchEnabled.ToString());
             }
         }
 

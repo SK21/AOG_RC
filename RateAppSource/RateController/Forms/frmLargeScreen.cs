@@ -981,7 +981,7 @@ namespace RateController
         private void UpdateSwitches()
         {
             // auto button
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate) || mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+            if (mf.SwitchBox.AutoRateOn || mf.SwitchBox.AutoSectionOn)
             {
                 btAuto.BackColor = Color.LightGreen;
                 btAuto.Text = "AUTO";

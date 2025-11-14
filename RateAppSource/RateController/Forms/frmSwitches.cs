@@ -357,7 +357,7 @@ namespace RateController
                 btn8.BackColor = Color.Red;
             }
 
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoSection))
+            if (mf.SwitchBox.AutoSectionOn)
             {
                 btnAutoSection.BackColor = Color.LightGreen;
             }
@@ -366,7 +366,7 @@ namespace RateController
                 btnAutoSection.BackColor = Color.Red;
             }
 
-            if (mf.SwitchBox.SwitchIsOn(SwIDs.AutoRate))
+            if (mf.SwitchBox.AutoRateOn)
             {
                 btnAutoRate.BackColor = Color.LightGreen;
             }

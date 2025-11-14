@@ -84,7 +84,6 @@ namespace RateController.Classes
         private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
         private static bool cRateCalibrationOn = false;
-        private static double cRateDisplayResolution;
         private static bool cRateRecordEnabled;
         private static int cRateType;
         private static bool cReadOnly = false;
@@ -152,8 +151,6 @@ namespace RateController.Classes
         public static event EventHandler UnitsChanged;
 
         #region MainProperties
-
-        public static event EventHandler ResolutionChanged;
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }

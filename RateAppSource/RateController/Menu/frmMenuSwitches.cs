@@ -34,8 +34,9 @@ namespace RateController.Menu
             {
                 Props.ShowSwitches = ckScreenSwitches.Checked;
                 Props.UseDualAuto = ckDualAuto.Checked;
-                mf.SwitchBox.UseWorkSwitch = ckWorkSwitch.Checked;
-                mf.SwitchBox.AutoRateDisabled = rbSections.Checked;
+                mf.SwitchBox.WorkSwitchEnabled = ckWorkSwitch.Checked;
+                mf.SwitchBox.AutoRateEnabled = ckRate.Checked;
+                mf.SwitchBox.AutoSectionEnabled = ckSections.Checked;
 
                 if (rbMasterAll.Checked)
                 {
@@ -128,21 +129,22 @@ namespace RateController.Menu
             gbOnScreen.Text = Lang.lgOnScreen;
             gbAutoSwitch.Text = Lang.lgAutoSwitch;
             ckDualAuto.Text = Lang.lgDualAuto;
-            rbSections.Text = Lang.lgSections;
-            rbAutoAll.Text = Lang.lgAutoAll;
+            ckSections.Text = Lang.lgSections;
+            ckRate.Text = Lang.lgRate;
             rbMasterAll.Text = Lang.lgMasterAll;
             rbMasterOverride.Text = Lang.lgMasterOverride;
             rbMasterRelayOnly.Text = Lang.lgMasterRelayOnly;
         }
 
-        private void UpdateForm(bool UpdateObject = false)
+        private void UpdateForm()
         {
             Initializing = true;
 
             ckScreenSwitches.Checked = Props.ShowSwitches;
             ckDualAuto.Checked = Props.UseDualAuto;
-            ckWorkSwitch.Checked = mf.SwitchBox.UseWorkSwitch;
-            rbSections.Checked = mf.SwitchBox.AutoRateDisabled;
+            ckWorkSwitch.Checked = mf.SwitchBox.WorkSwitchEnabled;
+            ckRate.Checked = mf.SwitchBox.AutoRateEnabled;
+            ckSections.Checked = mf.SwitchBox.AutoSectionEnabled;
 
             switch (Props.MasterSwitchMode)
             {
