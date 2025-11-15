@@ -62,10 +62,11 @@ namespace RateController.Menu
                     MainMenu.CurrentProduct.Save();
                     SetButtons(false);
                     UpdateForm();
+                    Props.RaiseProductSettingsChanged();
                 }
                 else
                 {
-                    Props.ShowMessage("Sensor already assigned to a product.", "Help", 3000);
+                    Props.ShowMessage("Invalid or duplicate sensor ID.", "Help", 5000);
                 }
             }
             catch (Exception ex)

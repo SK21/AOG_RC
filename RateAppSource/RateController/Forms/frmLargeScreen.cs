@@ -9,8 +9,8 @@ namespace RateController
 {
     public partial class frmLargeScreen : Form
     {
+        public clsProduct cCurrentProduct;
         public FormStart mf;
-        public clsProduct Prd;
         public clsAlarm RCalarm;
         private int Fan1RateType = 0;
         private int Fan2RateType = 0;
@@ -36,7 +36,7 @@ namespace RateController
             #endregion // language
 
             mf = CallingForm;
-            Prd = mf.Products.Item(0);
+            cCurrentProduct = mf.Products.Item(0);
             RCalarm = new clsAlarm(mf, btAlarm);
 
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
@@ -62,11 +62,12 @@ namespace RateController
                 }
             }
             mf.ColorChanged += Mf_ColorChanged;
+            Props.ProductSettingsChanged += Props_ProductSettingsChanged;
         }
 
         public int CurrentProduct()
         {
-            return Prd.ID;
+            return cCurrentProduct.ID;
         }
 
         public void SetTransparent()
@@ -139,7 +140,7 @@ namespace RateController
 
         private void btMinimize_Click(object sender, EventArgs e)
         {
-            Form restoreform = new RCRestore(this, Props.UserRateType,  mf);
+            Form restoreform = new RCRestore(this, Props.UserRateType, mf);
             restoreform.Show();
         }
 
@@ -147,11 +148,11 @@ namespace RateController
         {
             if (mf.SwitchBox.AutoRateOn)
             {
-                Prd.RateSet = Prd.RateSet / 1.05;
+                cCurrentProduct.RateSet = cCurrentProduct.RateSet / 1.05;
             }
             else
             {
-                Prd.ManualPWM -= 5;
+                cCurrentProduct.ManualPWM -= 5;
             }
         }
 
@@ -169,18 +170,18 @@ namespace RateController
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            ShowSettings(Prd.ID, true);
+            ShowSettings(cCurrentProduct.ID, true);
         }
 
         private void btnUp_Click(object sender, EventArgs e)
         {
             if (mf.SwitchBox.AutoRateOn)
             {
-                Prd.RateSet = Prd.RateSet * 1.05;
+                cCurrentProduct.RateSet = cCurrentProduct.RateSet * 1.05;
             }
             else
             {
-                Prd.ManualPWM += 5;
+                cCurrentProduct.ManualPWM += 5;
             }
         }
 
@@ -192,8 +193,8 @@ namespace RateController
         private void frmLargeScreen_FormClosed(object sender, FormClosedEventArgs e)
         {
             mf.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
-            mf.ColorChanged -= Mf_ColorChanged; 
-            
+            mf.ColorChanged -= Mf_ColorChanged;
+
             timerMain.Enabled = false;
             tmrRelease.Enabled = false;
             tmrBorder.Enabled = false;
@@ -214,14 +215,13 @@ namespace RateController
         private void frmLargeScreen_Load(object sender, EventArgs e)
         {
             Props.LoadFormLocation(this);
-            Prd = mf.Products.Item(Props.DefaultProduct);
-
-            UpdateForm();
+            cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
             timerMain.Enabled = true;
             mf.vSwitchBox.LargeScreenOn = true;
             mf.vSwitchBox.PressSwitch(SwIDs.MasterOff);
             tmrRelease.Enabled = true;
             UpdateSwitches();
+            ShowProducts();
             UpdateForm();
         }
 
@@ -353,14 +353,14 @@ namespace RateController
 
         private void lbTarget_Click(object sender, EventArgs e)
         {
-            if (Prd.UseAltRate)
+            if (cCurrentProduct.UseAltRate)
             {
-                Prd.UseAltRate = false;
+                cCurrentProduct.UseAltRate = false;
                 lbTargetType.Text = "T";
             }
             else
             {
-                Prd.UseAltRate = true;
+                cCurrentProduct.UseAltRate = true;
                 lbTargetType.Text = "A";
             }
         }
@@ -407,6 +407,11 @@ namespace RateController
 
             Props.ShowMessage(Message);
             hlpevent.Handled = true;
+        }
+
+        private void Props_ProductSettingsChanged(object sender, EventArgs e)
+        {
+            ShowProducts();
         }
 
         private void SetDisplay(Color NewColor)
@@ -471,43 +476,34 @@ namespace RateController
 
         private void ShowProducts()
         {
-            clsProduct Prd = mf.Products.Item(0);
-            lbName0.Visible = Prd.Enabled;
-            pnlRate0.Visible = Prd.Enabled;
-            pnlQuantity0.Visible = Prd.Enabled;
-            pnlSelect0.Visible = Prd.Enabled;
+            int[] Positions = { 6, 102, 198, 294 };
+            int NextPosition = 3;
 
-            Prd = mf.Products.Item(1);
-            lbName1.Visible = Prd.Enabled;
-            pnlRate1.Visible = Prd.Enabled;
-            pnlQuantity1.Visible = Prd.Enabled;
-            pnlSelect1.Visible = Prd.Enabled;
+            for (int i = 3; i > -1; i--)
+            {
+                Panel posPnl = (Panel)(this.Controls.Find("pnlProd" + i, true)[0]);
+                clsProduct Prod = mf.Products.Item(i);
+                posPnl.Visible = Prod.Enabled;
+                if (Prod.Enabled)
+                {
+                    posPnl.Left = Positions[NextPosition];
+                    NextPosition--;
+                }
+            }
 
-            Prd = mf.Products.Item(2);
-            lbName2.Visible = Prd.Enabled;
-            pnlRate2.Visible = Prd.Enabled;
-            pnlQuantity2.Visible = Prd.Enabled;
-            pnlSelect2.Visible = Prd.Enabled;
+            clsProduct Prduct = mf.Products.Item(4);
+            lbFan1.Visible = Prduct.Enabled;
+            lbRPM1.Visible = Prduct.Enabled;
+            btnFan1.Visible = Prduct.Enabled;
 
-            Prd = mf.Products.Item(3);
-            lbName3.Visible = Prd.Enabled;
-            pnlRate3.Visible = Prd.Enabled;
-            pnlQuantity3.Visible = Prd.Enabled;
-            pnlSelect3.Visible = Prd.Enabled;
-
-            Prd = mf.Products.Item(4);
-            lbFan1.Visible = Prd.Enabled;
-            lbRPM1.Visible = Prd.Enabled;
-            btnFan1.Visible = Prd.Enabled;
-
-            Prd = mf.Products.Item(5);
-            lbFan2.Visible = Prd.Enabled;
-            lbRPM2.Visible = Prd.Enabled;
-            btnFan2.Visible = Prd.Enabled;
+            Prduct = mf.Products.Item(5);
+            lbFan2.Visible = Prduct.Enabled;
+            lbRPM2.Visible = Prduct.Enabled;
+            btnFan2.Visible = Prduct.Enabled;
 
             for (int i = 0; i < 5; i++)
             {
-                Prd = mf.Products.Item(i);
+                Prduct = mf.Products.Item(i);
                 if (i == 4)
                 {
                     btnDown.Visible = false;
@@ -515,37 +511,38 @@ namespace RateController
                     btnUp.Visible = false;
                     btnUp.Enabled = false;
                 }
-                else if (Prd.BumpButtons)
+                else if (Prduct.BumpButtons && Prduct.Enabled)
                 {
                     btnUp.Visible = true;
                     btnDown.Visible = true;
                     btnUp.Enabled = true;
                     btnDown.Enabled = true;
 
-                    Label posLbl = (Label)(this.Controls.Find("lbName" + i, true)[0]);
+                    Panel posPnl = (Panel)(this.Controls.Find("pnlProd" + i, true)[0]);
                     ProgressBar posPb = (ProgressBar)(this.Controls.Find("pbRate" + i, true)[0]);
 
-                    int posX = posLbl.Left;
-                    int posY = posLbl.Top;
-                    int Width = posLbl.Width;
-                    int Height = posPb.Height + posLbl.Height;
+                    int posX = posPnl.Left;
+                    int posY = posPnl.Top;
+                    int Width = posPnl.Width;
+                    int Height = posPnl.Height;
 
                     btnUp.Left = posX;
                     btnDown.Left = posX;
                     btnUp.Width = Width;
                     btnDown.Width = Width;
                     btnUp.Top = posY;
-                    btnUp.Height = (Height + 10) / 2;
-                    btnDown.Top = posY + btnUp.Height + 6;
+                    btnUp.Height = Height / 2;
+                    btnDown.Top = posY + btnUp.Height;
                     btnDown.Height = btnUp.Height;
                     break;
                 }
             }
+            cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
         }
 
         private void ShowSettings(int ProductID, bool OpenLast = false)
         {
-            Prd = mf.Products.Item(ProductID);
+            cCurrentProduct = mf.Products.Item(ProductID);
             UpdateForm();
 
             //check if window already exists
@@ -553,7 +550,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenu(mf, Prd.ID, OpenLast);
+                Form frm = new frmMenu(mf, cCurrentProduct.ID, OpenLast);
                 frm.Show();
             }
         }
@@ -593,7 +590,7 @@ namespace RateController
             {
                 lbTargetType.Text = "V";
             }
-            else if (Prd.UseAltRate)
+            else if (cCurrentProduct.UseAltRate)
             {
                 lbTargetType.Text = "A";
             }
@@ -607,7 +604,7 @@ namespace RateController
             pnlSelect1.BackColor = Properties.Settings.Default.MainBackColour;
             pnlSelect2.BackColor = Properties.Settings.Default.MainBackColour;
             pnlSelect3.BackColor = Properties.Settings.Default.MainBackColour;
-            switch (Prd.ID)
+            switch (cCurrentProduct.ID)
             {
                 case 0:
                     pnlSelect0.BackColor = SystemColors.Highlight;
@@ -713,32 +710,32 @@ namespace RateController
             {
                 case 1:
                     lbRateType.Text = "I";
-                    lbRateAmount.Text = Prd.CurrentRate().ToString("N1");
+                    lbRateAmount.Text = cCurrentProduct.CurrentRate().ToString("N1");
                     break;
 
                 case 2:
                     lbRateType.Text = "O";
-                    lbRateAmount.Text = Prd.AverageRate().ToString("N1");
+                    lbRateAmount.Text = cCurrentProduct.AverageRate().ToString("N1");
                     break;
 
                 default:
                     lbRateType.Text = "C";
-                    lbRateAmount.Text = Prd.SmoothRate().ToString("N1");
+                    lbRateAmount.Text = cCurrentProduct.SmoothRate().ToString("N1");
                     break;
             }
 
-            lbTargetAmount.Text = Prd.TargetRate().ToString("N1");
+            lbTargetAmount.Text = cCurrentProduct.TargetRate().ToString("N1");
 
             // coverage
             if (Props.ShowCoverageRemaining)
             {
                 lbCoverageType.Text = "R";
-                double RT = Prd.SmoothRate();
-                if (RT == 0) RT = Prd.TargetRate();
+                double RT = cCurrentProduct.SmoothRate();
+                if (RT == 0) RT = cCurrentProduct.TargetRate();
 
-                if ((RT > 0) & (Prd.TankStart > 0))
+                if ((RT > 0) & (cCurrentProduct.TankStart > 0))
                 {
-                    lbCoverageAmount.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
+                    lbCoverageAmount.Text = ((cCurrentProduct.TankStart - cCurrentProduct.UnitsApplied()) / RT).ToString("N1");
                 }
                 else
                 {
@@ -748,28 +745,28 @@ namespace RateController
             else
             {
                 // show amount done
-                lbCoverageAmount.Text = Prd.CurrentCoverage().ToString("N1");
+                lbCoverageAmount.Text = cCurrentProduct.CurrentCoverage().ToString("N1");
                 lbCoverageType.Text = "A";
             }
-            lbCoverage.Text = Prd.CoverageDescription();
+            lbCoverage.Text = cCurrentProduct.CoverageDescription();
 
             // quantity
             if (Props.ShowQuantityRemaining)
             {
                 lbQuantityType.Text = "R";
                 // calculate remaining
-                lbQuantityAmount.Text = (Prd.TankStart - Prd.UnitsApplied()).ToString("N0");
+                lbQuantityAmount.Text = (cCurrentProduct.TankStart - cCurrentProduct.UnitsApplied()).ToString("N0");
             }
             else
             {
                 // show amount done
                 lbQuantityType.Text = "A";
-                lbQuantityAmount.Text = Prd.UnitsApplied().ToString("N0");
+                lbQuantityAmount.Text = cCurrentProduct.UnitsApplied().ToString("N0");
             }
-            lbQuantity.Text = Prd.QuantityDescription;
+            lbQuantity.Text = cCurrentProduct.QuantityDescription;
 
             // aog
-            if (Props.SpeedMode==SpeedType.Simulated)
+            if (Props.SpeedMode == SpeedType.Simulated)
             {
                 btnMenu.Image = Properties.Resources.SimGear;
             }
@@ -975,7 +972,6 @@ namespace RateController
             }
 
             RCalarm.CheckAlarms();
-            ShowProducts();
         }
 
         private void UpdateSwitches()
@@ -1040,25 +1036,25 @@ namespace RateController
 
         private void verticalProgressBar1_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(0);
+            cCurrentProduct = mf.Products.Item(0);
             UpdateForm();
         }
 
         private void verticalProgressBar2_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(1);
+            cCurrentProduct = mf.Products.Item(1);
             UpdateForm();
         }
 
         private void verticalProgressBar3_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(2);
+            cCurrentProduct = mf.Products.Item(2);
             UpdateForm();
         }
 
         private void verticalProgressBar4_Click(object sender, EventArgs e)
         {
-            Prd = mf.Products.Item(3);
+            cCurrentProduct = mf.Products.Item(3);
             UpdateForm();
         }
     }

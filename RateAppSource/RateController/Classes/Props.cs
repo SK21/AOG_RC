@@ -144,6 +144,8 @@ namespace RateController.Classes
 
         public static event EventHandler JobChanged;
 
+        public static event EventHandler ProductSettingsChanged;
+
         public static event EventHandler RateDataSettingsChanged;
 
         public static event EventHandler ScreensSwitched;
@@ -1106,6 +1108,11 @@ namespace RateController.Classes
         public static void RaiseRateDataSettingsChanged()
         {
             RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static void RaiseProductSettingsChanged()
+        {
+            ProductSettingsChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static bool RateMapIsVisible()
