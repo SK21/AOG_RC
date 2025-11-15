@@ -125,9 +125,9 @@ void SendComm()
         Data[5] = Speed;
         Data[6] = Speed >> 8;
 
-        Data[6] = WheelCounts;
-        Data[7] = WheelCounts >> 8;
-        Data[8] = WheelCounts >> 16;
+        Data[7] = WheelCounts;
+        Data[8] = WheelCounts >> 8;
+        Data[9] = WheelCounts >> 16;
 
         Data[10] = InoType;
         Data[11] = (byte)InoID;

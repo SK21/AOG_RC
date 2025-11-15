@@ -27,7 +27,7 @@
     <ClCompile Include="Receive.ino" />
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
-    <ClCompile Include="WheelSensor.ino" />
+    <ClCompile Include="WheelSpeed.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCnano.vsarduino.h">

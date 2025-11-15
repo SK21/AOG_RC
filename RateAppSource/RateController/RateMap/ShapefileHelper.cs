@@ -1,3 +1,4 @@
+using GMap.NET.WindowsForms; // added for overlay export
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO.Esri;
@@ -5,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using GMap.NET.WindowsForms; // added for overlay export
 
 namespace RateController.Classes
 {
@@ -45,7 +45,7 @@ namespace RateController.Classes
             }
             catch (System.Exception ex)
             {
-                Props.WriteErrorLog("ShapefileHelper/LoadAndMapShapefile: " + ex.Message);
+                if (ex.Message != "Invalid shapefile format.") Props.WriteErrorLog("ShapefileHelper/CreateZoneList: " + ex.Message);
             }
             return mapZones;
         }

@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 12115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 14115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -160,6 +160,7 @@ bool EthernetConnected()
 
 bool CalibrationOn[] = { false,false };
 float WheelSpeed = 0;
+uint32_t WheelCounts = 0;
 
 void setup()
 {

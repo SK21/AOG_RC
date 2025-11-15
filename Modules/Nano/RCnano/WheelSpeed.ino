@@ -35,6 +35,7 @@ void GetSpeed()
 		LastPulseWhl = millis();
 
 		noInterrupts();
+		WheelCounts += PulseCountWhl;
 		PulseCountWhl = 0;
 		uint16_t count = SamplesCountWhl;
 		uint32_t Snapshot[MaxSampleSize];
@@ -66,3 +67,4 @@ void GetSpeed()
 		}
 	}
 }
+

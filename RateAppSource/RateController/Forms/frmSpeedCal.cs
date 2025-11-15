@@ -10,7 +10,9 @@ namespace RateController.Forms
         private double cCalNumber = 0;
         private bool cCanceled = true;
         private UInt32 Counts;
+        private bool DistanceChanged = false;
         private double DistanceToTravel;
+        private UInt32 LastCounts;
         private FormStart mf;
 
         public frmSpeedCal(FormStart CalledFrom)
@@ -61,6 +63,7 @@ namespace RateController.Forms
 
         private void frmSpeedCal_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Props.SetProp("SpeedCalDistance", DistanceToTravel.ToString());
             Props.SaveFormLocation(this);
         }
 
@@ -73,6 +76,17 @@ namespace RateController.Forms
             // Make Enter/ESC map to OK/Cancel
             this.AcceptButton = btnOK;
             this.CancelButton = btnCancel;
+
+            if (Props.UseMetric)
+            {
+                lbDistanceUnits.Text = "(meters)";
+                lbCalUnits.Text = "(pulses/km)";
+            }
+            else
+            {
+                lbDistanceUnits.Text = "(feet)";
+                lbCalUnits.Text = "(pulses/mile)";
+            }
 
             UpdateForm();
         }
@@ -90,15 +104,13 @@ namespace RateController.Forms
                 }
             }
             UpdateForm();
+            btnOK.Focus();
         }
 
         private void tbDistance_TextChanged(object sender, EventArgs e)
         {
-            if (double.TryParse(tbDistance.Text, out double di))
-            {
-                DistanceToTravel = di;
-                Props.SetProp("SpeedCalDistance", DistanceToTravel.ToString());
-            }
+            if (double.TryParse(tbDistance.Text, out double di)) DistanceToTravel = di;
+            DistanceChanged = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -110,23 +122,27 @@ namespace RateController.Forms
         {
             tbDistance.Text = DistanceToTravel.ToString("N1");
 
-            Counts = mf.ModulesStatus.WheelCounts(mf.WheelSpeed.WheelModule);
-            lbPulses.Text = Counts.ToString("N0");
+            if (timer1.Enabled)
+            {
+                Counts = mf.ModulesStatus.WheelCounts(mf.WheelSpeed.WheelModule);
+                lbPulses.Text = Counts.ToString("N0");
+            }
 
-            cCalNumber = 0;
-            if (Props.UseMetric)
+            if (Counts != LastCounts || DistanceChanged)
             {
-                lbDistanceUnits.Text = "(meters)";
-                lbCalUnits.Text = "(pulses/km)";
-                if (DistanceToTravel > 0) cCalNumber = (Counts / DistanceToTravel) * 1000.0;
+                LastCounts = Counts;
+                DistanceChanged = false;
+                cCalNumber = 0;
+                if (Props.UseMetric)
+                {
+                    if (DistanceToTravel > 0) cCalNumber = (Counts / DistanceToTravel) * 1000.0;
+                }
+                else
+                {
+                    if (DistanceToTravel > 0) cCalNumber = (Counts / DistanceToTravel) * 5280.0;
+                }
+                lbWheelCal.Text = CalNumber.ToString("N0");
             }
-            else
-            {
-                lbDistanceUnits.Text = "(feet)";
-                lbCalUnits.Text = "(pulses/mile)";
-                if (DistanceToTravel > 0) cCalNumber = (Counts / DistanceToTravel) * 5280.0;
-            }
-            lbWheelCal.Text = CalNumber.ToString("N0");
         }
     }
 }

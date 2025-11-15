@@ -435,25 +435,27 @@ void DoSetup()
 	Serial.println(MDL.PressurePin);
 
 	Serial.println("");
-	Serial.print("Wheel Speed Pin: ");
+	Serial.print(F("Wheel Speed Pin: "));
 	if (WheelMatch)
 	{
-		Serial.println("error, duplicate flow pin");
+		Serial.println(F("error, duplicate flow pin"));
+	}
+	else if (MDL.WheelSpeedPin == 255)
+	{
+		Serial.println(F("Disabled"));
 	}
 	else
 	{
 		Serial.println(MDL.WheelSpeedPin);
 	}
 
-	Serial.println("");
-	Serial.print("ADS1115 enabled: ");
 	if (ADSfound)
 	{
-		Serial.println("true");
+		Serial.println(F("ADS1115: Enabled "));
 	}
 	else
 	{
-		Serial.println("false");
+		Serial.println(F("ADS1115: Disabled "));
 	}
 
 	Serial.println("");

@@ -213,12 +213,14 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//1     HeaderHi    126
 		//2     ModuleID    0-7
 		//3     GPIO pin    0-50
-		//4     Cal Lo      actual X 1000
+		//4     Cal Lo       
 		//5     Cal Mid
 		//6     Cal Hi
-		//7     CRC
+		//7     Commands
+		//          - bit 0, erase counts
+		//8     CRC
 
-		PGNlength = 8;
+		PGNlength = 9;
 
 		if (len > PGNlength - 1)
 		{
@@ -227,13 +229,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 				bool NewPin = (data[3] != MDL.WheelSpeedPin);
 
 				MDL.WheelSpeedPin = data[3];
-
-				// cal setting, 1000 times actual
-				uint32_t CalSet = data[4] | (uint32_t)data[5] << 8 | (uint32_t)data[6] << 16;
-				MDL.WheelCal = (float)(CalSet * 0.001);
+				MDL.WheelCal = (float)(data[4] | (uint32_t)data[5] << 8 | (uint32_t)data[6] << 16);
+				if ((data[7] & 1) == 1) WheelCounts = 0;
 
 				SaveData();
-				if (NewPin) resetFunc();	// restart
+				if (NewPin) resetFunc();
 			}
 		}
 		break;

@@ -258,22 +258,24 @@ void DoSetup()
 	Serial.print(F("Work Switch Pin: "));
 	Serial.println(MDL.WorkPin);
 	Serial.print(F("Pressure Pin: "));
-	Serial.println(MDL.PressurePin);
+	Serial.print(MDL.PressurePin);
 
 	Serial.println("");
-	Serial.print("Wheel Speed Pin: ");
+	Serial.print(F("Wheel Speed Pin: "));
 	if (WheelMatch)
 	{
-		Serial.println("error, duplicate flow pin");
+		Serial.println(F("error, duplicate flow pin"));
+	}
+	else if (MDL.WheelSpeedPin == 255)
+	{
+		Serial.println(F("Disabled"));
 	}
 	else
 	{
 		Serial.println(MDL.WheelSpeedPin);
 	}
 
-	Serial.println("");
-	Serial.print(F("ADS1115 enabled: "));
-	Serial.println(F("false"));
+	Serial.println(F("ADS1115: Disabled "));
 
 	Serial.println("");
 	Serial.println(F("Finished setup."));
@@ -333,9 +335,6 @@ void LoadDefaults()
 {
 	Serial.println(F("Loading default settings."));
 
-	MDL.WorkPin = 14;
-	MDL.PressurePin = 15;
-
 	// default flow pins
 	Sensor[0].FlowPin = 3;
 	Sensor[0].DirPin = 4;
@@ -378,8 +377,10 @@ void LoadDefaults()
 	MDL.ADS1115Enabled = false;
 	MDL.InvertFlow = true;
 	MDL.InvertRelay = true;
-	MDL.WheelCal = 0;
+	MDL.WorkPin = 14;
+	MDL.PressurePin = 15;
 	MDL.WheelSpeedPin = NC;
+	MDL.WheelCal = 0;
 }
 
 bool ValidData()
@@ -387,7 +388,8 @@ bool ValidData()
 	bool Result = true;
 
 	if (MDL.WorkPin > 21 && MDL.WorkPin != NC) Result = false;
-	if (MDL.WheelSpeedPin > 21 && MDL.PressurePin != NC) Result = false;
+	if (MDL.PressurePin > 21 && MDL.PressurePin != NC) Result = false;
+	if (MDL.WheelSpeedPin > 21 && MDL.WheelSpeedPin != NC) Result = false;
 
 	if (Result)
 	{
