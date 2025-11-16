@@ -74,6 +74,12 @@ namespace RateController
             if (MouseButtonClicked == MouseButtons.Left)
             {
                 FormToHide.WindowState = FormWindowState.Normal;
+                frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
+                if (pressure != null)
+                {
+                    pressure.TryAttachToLargeScreen((frmLargeScreen)FormToHide);
+                }
+
                 timer1.Enabled = false;
 
                 frmRate RT = (frmRate)Props.IsFormOpen("frmRate", false);

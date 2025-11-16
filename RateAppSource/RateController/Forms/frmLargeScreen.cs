@@ -1,4 +1,5 @@
 ﻿using RateController.Classes;
+using RateController.Forms;
 using RateController.Language;
 using System;
 using System.Drawing;
@@ -147,6 +148,19 @@ namespace RateController
 
         private void btMinimize_Click(object sender, EventArgs e)
         {
+            // Detach pressure display (and similar pinned forms) before minimizing so they stay visible.
+            frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
+            if (pressure != null && pressure.Owner == this)
+            {
+                pressure.DetachFromOwnerIfPinned();
+            }
+            frmRate rateDisp = (frmRate)Props.IsFormOpen("frmRate", false);
+            if (rateDisp != null && rateDisp.Owner == this)
+            {
+                // if you also pin the rate form similarly, detach it
+                rateDisp.Owner = null;
+            }
+
             Form restoreform = new RCRestore(this, Props.UserRateType, mf);
             restoreform.Show();
         }

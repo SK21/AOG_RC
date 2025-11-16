@@ -232,5 +232,43 @@ namespace RateController
                 Props.WriteErrorLog("frmPressureDisplay/UpdateForm: " + ex.Message);
             }
         }
+
+        public void DetachFromOwnerIfPinned()
+        {
+            try
+            {
+                if (this.Owner != null)
+                {
+                    this.Owner = null;
+                    PinForm = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmPressureDisplay/Detach: " + ex.Message);
+            }
+        }
+
+        public void TryAttachToLargeScreen(frmLargeScreen large)
+        {
+            try
+            {
+                if (large == null || large.IsDisposed) return;
+                if (this.Owner == large) return;                // already attached
+
+                Rectangle recThis = this.Bounds;
+                Rectangle recLS = large.Bounds;
+                if (recThis.IntersectsWith(recLS))
+                {
+                    this.Owner = large;
+                    Offset = new Point(this.Location.X - large.Location.X, this.Location.Y - large.Location.Y);
+                    PinForm = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmPressureDisplay/TryAttach: " + ex.Message);
+            }
+        }
     }
 }
