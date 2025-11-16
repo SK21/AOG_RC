@@ -12,14 +12,18 @@ namespace RateController
         public clsProduct cCurrentProduct;
         public FormStart mf;
         public clsAlarm RCalarm;
+        private int CompactWidth = 250;
         private int Fan1RateType = 0;
         private int Fan2RateType = 0;
         private bool IsTransparent = false;
+        private int MainPanelLeft = 157;
         private bool masterOn;
         private bool MasterPressed;
         private Point MouseDownLocation;
-        private int[] PanelPositions = { 6, 102, 198, 294 };
+        private int NormalWidth = 403;
+        private int[] PanelPositions = { 6, 106, 206, 306 };
         private Color RateColour = Color.GreenYellow;
+        private int WidthOffset = 0;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -62,6 +66,7 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             mf.ColorChanged += Mf_ColorChanged;
             Props.ProductSettingsChanged += Props_ProductSettingsChanged;
+            WidthOffset = CompactWidth - NormalWidth;
         }
 
         public int CurrentProduct()
@@ -401,6 +406,26 @@ namespace RateController
             ShowProducts();
         }
 
+        private void ResizeForm(int PanelCount)
+        {
+            if (PanelCount > 2 || lbFan1.Visible == true || lbFan2.Visible == true)
+            {
+                // normal view
+                this.Width = NormalWidth;
+                pnlMain.Left = MainPanelLeft;
+            }
+            else
+            {
+                // compact view
+                this.Width = CompactWidth;
+                pnlProd0.Left += WidthOffset;
+                pnlProd1.Left += WidthOffset;
+                pnlProd2.Left += WidthOffset;
+                pnlProd3.Left += WidthOffset;
+                pnlMain.Left = MainPanelLeft + WidthOffset;
+            }
+        }
+
         private void SetDisplay()
         {
             Color NewColor = Properties.Settings.Default.DisplayForeColour;
@@ -431,39 +456,31 @@ namespace RateController
 
                 foreach (Control Ctrl in Controls)
                 {
-                    if (Ctrl.Name == "lbRateAmount" || Ctrl.Name == "lbTargetAmount"
-                       || Ctrl.Name == "lbCoverageAmount" || Ctrl.Name == "lbQuantityAmount")
-                    {
-                        Ctrl.Font = new Font(TransparentFont, 16, FontStyle.Bold);
-                    }
-                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
-                    {
-                        Ctrl.Font = new Font(TransparentFont, 10, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
-                    }
+                    Ctrl.Font = new Font(TransparentFont, 14, FontStyle.Bold);
                 }
+
+                lbRateAmount.Font = new Font(TransparentFont, 16, FontStyle.Bold);
+                lbTargetAmount.Font = new Font(TransparentFont, 16, FontStyle.Bold);
+                lbQuantityAmount.Font = new Font(TransparentFont, 16, FontStyle.Bold);
+                lbCoverageAmount.Font = new Font(TransparentFont, 16, FontStyle.Bold);
+
+                btAuto.Font = new Font(TransparentFont, 10, FontStyle.Bold);
+                btMaster.Font = new Font(TransparentFont, 10, FontStyle.Bold);
             }
             else
             {
                 foreach (Control Ctrl in Controls)
                 {
-                    if (Ctrl.Name == "lbRateAmount" || Ctrl.Name == "lbTargetAmount"
-                       || Ctrl.Name == "lbQuantityAmount" || Ctrl.Name == "lbCoverageAmount")
-                    {
-                        Ctrl.Font = new Font("Tahoma", 16, FontStyle.Bold);
-                    }
-                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
-                    {
-                        Ctrl.Font = new Font("MS Gothic", 10, FontStyle.Bold);
-                    }
-                    else
-                    {
-                        Ctrl.Font = new Font("Tahoma", 14);
-                    }
+                    Ctrl.Font = new Font("Tahoma", 14);
                 }
+
+                lbRateAmount.Font = new Font("Tahoma", 16, FontStyle.Bold);
+                lbTargetAmount.Font = new Font("Tahoma", 16, FontStyle.Bold);
+                lbQuantityAmount.Font = new Font("Tahoma", 16, FontStyle.Bold);
+                lbCoverageAmount.Font = new Font("Tahoma", 16, FontStyle.Bold);
+
+                btAuto.Font = new Font("MS Gothic", 10, FontStyle.Bold);
+                btMaster.Font = new Font("MS Gothic", 10, FontStyle.Bold);
             }
         }
 
@@ -471,6 +488,7 @@ namespace RateController
         {
             try
             {
+                int PanelCount = 0;
                 int CurrentPosition = 3;
 
                 for (int i = 3; i > -1; i--)
@@ -482,6 +500,7 @@ namespace RateController
                     posPnl.Visible = Prod.Enabled;
                     if (Prod.Enabled)
                     {
+                        PanelCount++;
                         posPnl.Left = PanelPositions[CurrentPosition];
                         CurrentPosition--;
                     }
@@ -542,6 +561,7 @@ namespace RateController
                     }
                 }
                 cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
+                ResizeForm(PanelCount);
             }
             catch (Exception ex)
             {
