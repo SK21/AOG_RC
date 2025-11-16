@@ -21,8 +21,6 @@ namespace RateController
         private Point MouseDownLocation;
         private int[] PanelPositions = { 6, 102, 198, 294 };
         private Color RateColour = Color.GreenYellow;
-        private int TransLeftOffset = 6;
-        private int TransTopOffset = 30;
 
         public frmLargeScreen(FormStart CallingForm)
         {
@@ -41,7 +39,7 @@ namespace RateController
             cCurrentProduct = mf.Products.Item(0);
             RCalarm = new clsAlarm(mf, btAlarm);
 
-            this.BackColor = Properties.Settings.Default.MainBackColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
             pnlRate0.BackColor = Properties.Settings.Default.MainBackColour;
             pnlRate1.BackColor = Properties.Settings.Default.MainBackColour;
             pnlRate1.BackColor = Properties.Settings.Default.MainBackColour;
@@ -77,25 +75,12 @@ namespace RateController
             IsTransparent = Props.UseTransparent;
             if (Props.UseTransparent)
             {
-                this.Text = string.Empty;
-                this.TransparencyKey = Properties.Settings.Default.MainBackColour;
-                //this.Opacity = .5;
-                this.HelpButton = false;
-                this.ControlBox = false;
-                this.FormBorderStyle = FormBorderStyle.None;
-                this.Top += TransTopOffset;
-                this.Left += TransLeftOffset;
+                this.TransparencyKey = Properties.Settings.Default.DisplayBackColour;
                 SetDisplay(Color.Yellow);
             }
             else
             {
-                this.Text = "RateController";
                 this.TransparencyKey = Color.Empty;
-                this.HelpButton = true;
-                this.ControlBox = true;
-                this.FormBorderStyle = FormBorderStyle.FixedDialog;
-                this.Top += -TransTopOffset;
-                this.Left += -TransLeftOffset;
                 SetDisplay(SystemColors.ControlText);
             }
             SetFont();
@@ -106,6 +91,23 @@ namespace RateController
             this.ShowInTaskbar = false;
             mf.ShowInTaskbar = true;
             this.Close();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            if (!Props.UseTransparent)
+            {
+                // Define the border color and thickness
+                Color borderColor = Properties.Settings.Default.DisplayForeColour;
+                int borderWidth = 1;
+
+                // Draw the border
+                using (Pen pen = new Pen(borderColor, borderWidth))
+                {
+                    e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+                }
+            }
         }
 
         private void btAlarm_Click(object sender, EventArgs e)
@@ -202,12 +204,6 @@ namespace RateController
             tmrRelease.Enabled = false;
             tmrBorder.Enabled = false;
 
-            if (Props.UseTransparent)
-            {
-                // move the window back to the default location
-                this.Top += -TransTopOffset;
-                this.Left += -TransLeftOffset;
-            }
             Props.SaveFormLocation(this);
 
             if (Props.UseLargeScreen) mf.LargeScreenExit = true;
