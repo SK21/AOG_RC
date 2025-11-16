@@ -1,7 +1,6 @@
 ﻿using RateController.Classes;
 using RateController.Language;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -76,14 +75,13 @@ namespace RateController
             if (Props.UseTransparent)
             {
                 this.TransparencyKey = Properties.Settings.Default.DisplayBackColour;
-                SetDisplay(Color.Yellow);
             }
             else
             {
                 this.TransparencyKey = Color.Empty;
-                SetDisplay(SystemColors.ControlText);
             }
             SetFont();
+            SetDisplay();
         }
 
         public void SwitchToStandard()
@@ -202,7 +200,6 @@ namespace RateController
 
             timerMain.Enabled = false;
             tmrRelease.Enabled = false;
-            tmrBorder.Enabled = false;
 
             Props.SaveFormLocation(this);
 
@@ -372,15 +369,6 @@ namespace RateController
             hlpevent.Handled = true;
         }
 
-        private void mainform_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left && Props.UseTransparent)
-            {
-                this.FormBorderStyle = FormBorderStyle.FixedSingle;
-                tmrBorder.Start();
-            }
-        }
-
         private void Mf_ColorChanged(object sender, EventArgs e)
         {
             //SetDisplay(Properties.Settings.Default.ForeColour);
@@ -388,12 +376,12 @@ namespace RateController
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+            MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if ((e.Button == MouseButtons.Right) || (e.Button == MouseButtons.Left)) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void pbRate0_HelpRequested(object sender, HelpEventArgs hlpevent)
@@ -413,8 +401,9 @@ namespace RateController
             ShowProducts();
         }
 
-        private void SetDisplay(Color NewColor)
+        private void SetDisplay()
         {
+            Color NewColor = Properties.Settings.Default.DisplayForeColour;
             lbTarget.ForeColor = NewColor;
             lbCoverage.ForeColor = NewColor;
             lbQuantity.ForeColor = NewColor;
@@ -461,7 +450,12 @@ namespace RateController
             {
                 foreach (Control Ctrl in Controls)
                 {
-                    if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
+                    if (Ctrl.Name == "lbRateAmount" || Ctrl.Name == "lbTargetAmount"
+                       || Ctrl.Name == "lbQuantityAmount" || Ctrl.Name == "lbCoverageAmount")
+                    {
+                        Ctrl.Font = new Font("Tahoma", 16, FontStyle.Bold);
+                    }
+                    else if (Ctrl.Name == "btAuto" || Ctrl.Name == "btMaster")
                     {
                         Ctrl.Font = new Font("MS Gothic", 10, FontStyle.Bold);
                     }
@@ -578,12 +572,6 @@ namespace RateController
         private void timerMain_Tick(object sender, EventArgs e)
         {
             UpdateForm();
-        }
-
-        private void tmrBorder_tick(object sender, EventArgs e)
-        {
-            this.FormBorderStyle = FormBorderStyle.None;
-            tmrBorder.Stop();
         }
 
         private void tmrRelease_Tick(object sender, EventArgs e)
@@ -750,7 +738,15 @@ namespace RateController
 
                 if ((RT > 0) & (cCurrentProduct.TankStart > 0))
                 {
-                    lbCoverageAmount.Text = ((cCurrentProduct.TankStart - cCurrentProduct.UnitsApplied()) / RT).ToString("N1");
+                    double amt = (cCurrentProduct.TankStart - cCurrentProduct.UnitsApplied()) / RT;
+                    if (Math.Abs(amt) >= 1000)
+                    {
+                        lbCoverageAmount.Text = amt.ToString("N0");
+                    }
+                    else
+                    {
+                        lbCoverageAmount.Text = amt.ToString("N1");
+                    }
                 }
                 else
                 {

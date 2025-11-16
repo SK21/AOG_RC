@@ -73,7 +73,6 @@
             this.btnUp = new System.Windows.Forms.Button();
             this.btAuto = new System.Windows.Forms.Button();
             this.btMinimize = new System.Windows.Forms.Button();
-            this.tmrBorder = new System.Windows.Forms.Timer(this.components);
             this.tmrRelease = new System.Windows.Forms.Timer(this.components);
             this.lbRateType = new System.Windows.Forms.Label();
             this.lbTargetType = new System.Windows.Forms.Label();
@@ -620,11 +619,6 @@
             this.btMinimize.UseVisualStyleBackColor = false;
             this.btMinimize.Click += new System.EventHandler(this.btMinimize_Click);
             // 
-            // tmrBorder
-            // 
-            this.tmrBorder.Interval = 500;
-            this.tmrBorder.Tick += new System.EventHandler(this.tmrBorder_tick);
-            // 
             // tmrRelease
             // 
             this.tmrRelease.Interval = 500;
@@ -813,7 +807,6 @@
             this.Activated += new System.EventHandler(this.frmLargeScreen_Activated);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmLargeScreen_FormClosed);
             this.Load += new System.EventHandler(this.frmLargeScreen_Load);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainform_MouseClick);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             this.pnlQuantity0.ResumeLayout(false);
@@ -877,7 +870,6 @@
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btAuto;
         private System.Windows.Forms.Button btMinimize;
-        private System.Windows.Forms.Timer tmrBorder;
         private System.Windows.Forms.Timer tmrRelease;
         private System.Windows.Forms.Label lbRateType;
         private System.Windows.Forms.Label lbTargetType;
