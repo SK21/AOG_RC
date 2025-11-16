@@ -468,6 +468,8 @@
             // 
             // btnDown
             // 
+            this.btnDown.FlatAppearance.MouseDownBackColor = System.Drawing.Color.IndianRed;
+            this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDown.Image = global::RateController.Properties.Resources.DnArrow64;
             this.btnDown.Location = new System.Drawing.Point(173, 74);
             this.btnDown.Margin = new System.Windows.Forms.Padding(2);
@@ -479,6 +481,8 @@
             // 
             // btnUp
             // 
+            this.btnUp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LimeGreen;
+            this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUp.Image = global::RateController.Properties.Resources.UpArrow64;
             this.btnUp.Location = new System.Drawing.Point(173, 42);
             this.btnUp.Margin = new System.Windows.Forms.Padding(2);

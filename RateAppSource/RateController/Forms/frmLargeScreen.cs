@@ -424,6 +424,7 @@ namespace RateController
                 pnlProd3.Left += WidthOffset;
                 pnlMain.Left = MainPanelLeft + WidthOffset;
             }
+            ShowBumpButtons();
         }
 
         private void SetDisplay()
@@ -486,41 +487,13 @@ namespace RateController
             }
         }
 
-        private void ShowProducts()
+        private void ShowBumpButtons()
         {
             try
             {
-                int PanelCount = 0;
-                int CurrentPosition = 3;
-
-                for (int i = 3; i > -1; i--)
-                {
-                    var panels = Controls.Find("pnlProd" + i, true);
-                    if (panels.Length == 0) continue;
-                    Panel posPnl = (Panel)panels[0];
-                    clsProduct Prod = mf.Products.Item(i);
-                    posPnl.Visible = Prod.Enabled;
-                    if (Prod.Enabled)
-                    {
-                        PanelCount++;
-                        posPnl.Left = PanelPositions[CurrentPosition];
-                        CurrentPosition--;
-                    }
-                }
-
-                clsProduct Prduct = mf.Products.Item(4);
-                lbFan1.Visible = Prduct.Enabled;
-                lbRPM1.Visible = Prduct.Enabled;
-                btnFan1.Visible = Prduct.Enabled;
-
-                Prduct = mf.Products.Item(5);
-                lbFan2.Visible = Prduct.Enabled;
-                lbRPM2.Visible = Prduct.Enabled;
-                btnFan2.Visible = Prduct.Enabled;
-
                 for (int i = 0; i < 5; i++)
                 {
-                    Prduct = mf.Products.Item(i);
+                    clsProduct Prduct = mf.Products.Item(i);
                     if (i == 4)
                     {
                         btnDown.Visible = false;
@@ -559,9 +532,52 @@ namespace RateController
                         btnUp.Height = Height / 2;
                         btnDown.Top = posY + btnUp.Height;
                         btnDown.Height = btnUp.Height;
+
+                        btnUp.BringToFront();
+                        btnDown.BringToFront();
+
                         break;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmLargeScreen/ShowBumpButtons: " + ex.Message);
+            }
+        }
+
+        private void ShowProducts()
+        {
+            try
+            {
+                int PanelCount = 0;
+                int CurrentPosition = 3;
+
+                for (int i = 3; i > -1; i--)
+                {
+                    var panels = Controls.Find("pnlProd" + i, true);
+                    if (panels.Length == 0) continue;
+                    Panel posPnl = (Panel)panels[0];
+                    clsProduct Prod = mf.Products.Item(i);
+                    posPnl.Visible = Prod.Enabled;
+                    if (Prod.Enabled)
+                    {
+                        PanelCount++;
+                        posPnl.Left = PanelPositions[CurrentPosition];
+                        CurrentPosition--;
+                    }
+                }
+
+                clsProduct Prduct = mf.Products.Item(4);
+                lbFan1.Visible = Prduct.Enabled;
+                lbRPM1.Visible = Prduct.Enabled;
+                btnFan1.Visible = Prduct.Enabled;
+
+                Prduct = mf.Products.Item(5);
+                lbFan2.Visible = Prduct.Enabled;
+                lbRPM2.Visible = Prduct.Enabled;
+                btnFan2.Visible = Prduct.Enabled;
+
                 cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
                 ResizeForm(PanelCount);
             }
