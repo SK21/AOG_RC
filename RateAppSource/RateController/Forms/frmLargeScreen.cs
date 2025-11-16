@@ -1,6 +1,7 @@
 ﻿using RateController.Classes;
 using RateController.Language;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -18,6 +19,7 @@ namespace RateController
         private bool masterOn;
         private bool MasterPressed;
         private Point MouseDownLocation;
+        private int[] PanelPositions = { 6, 102, 198, 294 };
         private Color RateColour = Color.GreenYellow;
         private int TransLeftOffset = 6;
         private int TransTopOffset = 30;
@@ -39,8 +41,6 @@ namespace RateController
             cCurrentProduct = mf.Products.Item(0);
             RCalarm = new clsAlarm(mf, btAlarm);
 
-            mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
-
             this.BackColor = Properties.Settings.Default.MainBackColour;
             pnlRate0.BackColor = Properties.Settings.Default.MainBackColour;
             pnlRate1.BackColor = Properties.Settings.Default.MainBackColour;
@@ -61,6 +61,8 @@ namespace RateController
                     Ctrl.MouseMove += mouseMove_MouseMove;
                 }
             }
+
+            mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             mf.ColorChanged += Mf_ColorChanged;
             Props.ProductSettingsChanged += Props_ProductSettingsChanged;
         }
@@ -194,6 +196,7 @@ namespace RateController
         {
             mf.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
             mf.ColorChanged -= Mf_ColorChanged;
+            Props.ProductSettingsChanged -= Props_ProductSettingsChanged;
 
             timerMain.Enabled = false;
             tmrRelease.Enabled = false;
@@ -476,68 +479,84 @@ namespace RateController
 
         private void ShowProducts()
         {
-            int[] Positions = { 6, 102, 198, 294 };
-            int NextPosition = 3;
-
-            for (int i = 3; i > -1; i--)
+            try
             {
-                Panel posPnl = (Panel)(this.Controls.Find("pnlProd" + i, true)[0]);
-                clsProduct Prod = mf.Products.Item(i);
-                posPnl.Visible = Prod.Enabled;
-                if (Prod.Enabled)
+                int CurrentPosition = 3;
+
+                for (int i = 3; i > -1; i--)
                 {
-                    posPnl.Left = Positions[NextPosition];
-                    NextPosition--;
+                    var panels = Controls.Find("pnlProd" + i, true);
+                    if (panels.Length == 0) continue;
+                    Panel posPnl = (Panel)panels[0];
+                    clsProduct Prod = mf.Products.Item(i);
+                    posPnl.Visible = Prod.Enabled;
+                    if (Prod.Enabled)
+                    {
+                        posPnl.Left = PanelPositions[CurrentPosition];
+                        CurrentPosition--;
+                    }
                 }
+
+                clsProduct Prduct = mf.Products.Item(4);
+                lbFan1.Visible = Prduct.Enabled;
+                lbRPM1.Visible = Prduct.Enabled;
+                btnFan1.Visible = Prduct.Enabled;
+
+                Prduct = mf.Products.Item(5);
+                lbFan2.Visible = Prduct.Enabled;
+                lbRPM2.Visible = Prduct.Enabled;
+                btnFan2.Visible = Prduct.Enabled;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    Prduct = mf.Products.Item(i);
+                    if (i == 4)
+                    {
+                        btnDown.Visible = false;
+                        btnDown.Enabled = false;
+                        btnUp.Visible = false;
+                        btnUp.Enabled = false;
+                    }
+                    else if (Prduct.BumpButtons && Prduct.Enabled)
+                    {
+                        btnUp.Visible = true;
+                        btnDown.Visible = true;
+                        btnUp.Enabled = true;
+                        btnDown.Enabled = true;
+
+                        var panelArr = Controls.Find("pnlProd" + i, true);
+                        var rateArr = Controls.Find("pbRate" + i, true);
+                        if (panelArr.Length == 0 || rateArr.Length == 0)
+                        {
+                            // Cannot position bump buttons if required controls are missing.
+                            continue;
+                        }
+
+                        Panel posPnl = (Panel)panelArr[0];
+                        ProgressBar posPb = (ProgressBar)rateArr[0];
+
+                        int posX = posPnl.Left;
+                        int posY = posPnl.Top;
+                        int Width = posPnl.Width;
+                        int Height = posPnl.Height;
+
+                        btnUp.Left = posX;
+                        btnDown.Left = posX;
+                        btnUp.Width = Width;
+                        btnDown.Width = Width;
+                        btnUp.Top = posY;
+                        btnUp.Height = Height / 2;
+                        btnDown.Top = posY + btnUp.Height;
+                        btnDown.Height = btnUp.Height;
+                        break;
+                    }
+                }
+                cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
             }
-
-            clsProduct Prduct = mf.Products.Item(4);
-            lbFan1.Visible = Prduct.Enabled;
-            lbRPM1.Visible = Prduct.Enabled;
-            btnFan1.Visible = Prduct.Enabled;
-
-            Prduct = mf.Products.Item(5);
-            lbFan2.Visible = Prduct.Enabled;
-            lbRPM2.Visible = Prduct.Enabled;
-            btnFan2.Visible = Prduct.Enabled;
-
-            for (int i = 0; i < 5; i++)
+            catch (Exception ex)
             {
-                Prduct = mf.Products.Item(i);
-                if (i == 4)
-                {
-                    btnDown.Visible = false;
-                    btnDown.Enabled = false;
-                    btnUp.Visible = false;
-                    btnUp.Enabled = false;
-                }
-                else if (Prduct.BumpButtons && Prduct.Enabled)
-                {
-                    btnUp.Visible = true;
-                    btnDown.Visible = true;
-                    btnUp.Enabled = true;
-                    btnDown.Enabled = true;
-
-                    Panel posPnl = (Panel)(this.Controls.Find("pnlProd" + i, true)[0]);
-                    ProgressBar posPb = (ProgressBar)(this.Controls.Find("pbRate" + i, true)[0]);
-
-                    int posX = posPnl.Left;
-                    int posY = posPnl.Top;
-                    int Width = posPnl.Width;
-                    int Height = posPnl.Height;
-
-                    btnUp.Left = posX;
-                    btnDown.Left = posX;
-                    btnUp.Width = Width;
-                    btnDown.Width = Width;
-                    btnUp.Top = posY;
-                    btnUp.Height = Height / 2;
-                    btnDown.Top = posY + btnUp.Height;
-                    btnDown.Height = btnUp.Height;
-                    break;
-                }
+                Props.WriteErrorLog("frmLargeScreen/ShowProducts: " + ex.Message);
             }
-            cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
         }
 
         private void ShowSettings(int ProductID, bool OpenLast = false)
