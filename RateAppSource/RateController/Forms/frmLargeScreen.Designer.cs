@@ -459,7 +459,7 @@
             this.btnMenu.FlatAppearance.BorderSize = 0;
             this.btnMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMenu.Image = global::RateController.Properties.Resources.GreenGear;
-            this.btnMenu.Location = new System.Drawing.Point(62, 146);
+            this.btnMenu.Location = new System.Drawing.Point(3, 146);
             this.btnMenu.Name = "btnMenu";
             this.btnMenu.Size = new System.Drawing.Size(60, 60);
             this.btnMenu.TabIndex = 194;
@@ -493,7 +493,7 @@
             this.btAuto.BackColor = System.Drawing.Color.Red;
             this.btAuto.BackgroundImage = global::RateController.Properties.Resources.spray2;
             this.btAuto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btAuto.Location = new System.Drawing.Point(122, 146);
+            this.btAuto.Location = new System.Drawing.Point(123, 146);
             this.btAuto.Margin = new System.Windows.Forms.Padding(2);
             this.btAuto.Name = "btAuto";
             this.btAuto.Size = new System.Drawing.Size(60, 60);
@@ -508,7 +508,7 @@
             this.btMinimize.BackColor = System.Drawing.Color.Transparent;
             this.btMinimize.BackgroundImage = global::RateController.Properties.Resources.monitor;
             this.btMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btMinimize.Location = new System.Drawing.Point(2, 146);
+            this.btMinimize.Location = new System.Drawing.Point(63, 146);
             this.btMinimize.Margin = new System.Windows.Forms.Padding(2);
             this.btMinimize.Name = "btMinimize";
             this.btMinimize.Size = new System.Drawing.Size(60, 60);
@@ -571,7 +571,7 @@
             this.btMaster.BackColor = System.Drawing.Color.Red;
             this.btMaster.BackgroundImage = global::RateController.Properties.Resources.spray2;
             this.btMaster.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btMaster.Location = new System.Drawing.Point(182, 146);
+            this.btMaster.Location = new System.Drawing.Point(183, 146);
             this.btMaster.Margin = new System.Windows.Forms.Padding(2);
             this.btMaster.Name = "btMaster";
             this.btMaster.Size = new System.Drawing.Size(60, 60);
@@ -790,9 +790,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.ClientSize = new System.Drawing.Size(403, 380);
-            this.Controls.Add(this.pnlMain);
-            this.Controls.Add(this.btnDown);
             this.Controls.Add(this.btnUp);
+            this.Controls.Add(this.btnDown);
+            this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlProd0);
             this.Controls.Add(this.pnlProd1);
             this.Controls.Add(this.pnlProd2);

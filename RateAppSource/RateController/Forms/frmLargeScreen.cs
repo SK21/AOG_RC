@@ -376,7 +376,7 @@ namespace RateController
 
         private void Mf_ColorChanged(object sender, EventArgs e)
         {
-            //SetDisplay(Properties.Settings.Default.ForeColour);
+            SetDisplay();
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -443,6 +443,8 @@ namespace RateController
             lbTargetType.ForeColor = NewColor;
             lbCoverageType.ForeColor = NewColor;
             lbQuantityType.ForeColor = NewColor;
+
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
         }
 
         private void SetFont()
