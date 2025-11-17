@@ -762,24 +762,46 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool CheckOnScreen(Form form, bool MakeOnScreen = true)
+        public static bool IsOnScreen(Control Ctrl, bool MakeOnScreen = true)
         {
-            bool IsOnScreen = false;
+            bool Result = false;
             try
             {
-                // Create rectangle
-                Rectangle formRectangle = new Rectangle(form.Left, form.Top, form.Width, form.Height);
+                if (Ctrl == null)
+                {
+                    // false
+                }
+                else if (!(Ctrl is Form) && !Ctrl.IsHandleCreated)
+                {
+                    // If handle not created yet (e.g., before Show), assume it will be valid.
+                    Result = true;
+                }
+                else
+                {
+                    Rectangle rect;
+                    if (Ctrl is Form frm)
+                    {
+                        rect = new Rectangle(frm.Left, frm.Top, frm.Width, frm.Height);
+                    }
+                    else
+                    {
+                        // Convert control client rectangle to screen coordinates
+                        rect = Ctrl.RectangleToScreen(new Rectangle(Point.Empty, Ctrl.Size));
+                    }
 
-                // Test
-                IsOnScreen = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(formRectangle));
+                    Result = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(rect));
 
-                if (!IsOnScreen && MakeOnScreen) CenterForm(form);
+                    if (!Result && MakeOnScreen && Ctrl is Form TheForm)
+                    {
+                        CenterForm(TheForm);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                WriteErrorLog("Props/CheckOnScreen: " + ex.Message);
+                WriteErrorLog("Props/IsOnScreen: " + ex.Message);
             }
-            return IsOnScreen;
+            return Result;
         }
 
         public static void DisplayPressure()
@@ -972,7 +994,7 @@ namespace RateController.Classes
                     frm.Left = Left;
                     frm.Top = Top;
                 }
-                CheckOnScreen(frm);
+                IsOnScreen(frm);
             }
             catch (Exception ex)
             {

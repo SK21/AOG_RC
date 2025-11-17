@@ -2,6 +2,7 @@
 using RateController.Forms;
 using RateController.Language;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -42,6 +43,7 @@ namespace RateController
             mf = CallingForm;
             cCurrentProduct = mf.Products.Item(0);
             RCalarm = new clsAlarm(mf, btAlarm);
+            WidthOffset = CompactWidth - NormalWidth;
 
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
             pnlRate0.BackColor = Properties.Settings.Default.MainBackColour;
@@ -67,7 +69,6 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             mf.ColorChanged += Mf_ColorChanged;
             Props.ProductSettingsChanged += Props_ProductSettingsChanged;
-            WidthOffset = CompactWidth - NormalWidth;
         }
 
         public int CurrentProduct()
@@ -203,6 +204,21 @@ namespace RateController
             else
             {
                 cCurrentProduct.ManualPWM += 5;
+            }
+        }
+
+        private void CheckDisplay()
+        {
+            // check if panel is not visible when it should be
+            Panel pnl = pnlProd0;
+            if (pnl.Enabled)
+            {
+                if (!pnl.Visible) Props.WriteErrorLog("Panel 0 not visible.");
+                if (!Props.IsOnScreen(pnl))
+                {
+                    Props.WriteErrorLog("Panel 0 not on screen. Left = " + pnl.Left.ToString()
+                        + " WidthOffset = " + WidthOffset.ToString());
+                }
             }
         }
 
@@ -420,27 +436,6 @@ namespace RateController
             ShowProducts();
         }
 
-        private void ResizeForm(int PanelCount)
-        {
-            if (PanelCount > 2 || lbFan1.Visible == true || lbFan2.Visible == true)
-            {
-                // normal view
-                this.Width = NormalWidth;
-                pnlMain.Left = MainPanelLeft;
-            }
-            else
-            {
-                // compact view
-                this.Width = CompactWidth;
-                pnlProd0.Left += WidthOffset;
-                pnlProd1.Left += WidthOffset;
-                pnlProd2.Left += WidthOffset;
-                pnlProd3.Left += WidthOffset;
-                pnlMain.Left = MainPanelLeft + WidthOffset;
-            }
-            ShowBumpButtons();
-        }
-
         private void SetDisplay()
         {
             Color NewColor = Properties.Settings.Default.DisplayForeColour;
@@ -531,7 +526,6 @@ namespace RateController
                         }
 
                         Panel posPnl = (Panel)panelArr[0];
-                        ProgressBar posPb = (ProgressBar)rateArr[0];
 
                         int posX = posPnl.Left;
                         int posY = posPnl.Top;
@@ -564,6 +558,20 @@ namespace RateController
         {
             try
             {
+                cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
+
+                // fans
+                clsProduct Prduct = mf.Products.Item(4);
+                lbFan1.Visible = Prduct.Enabled;
+                lbRPM1.Visible = Prduct.Enabled;
+                btnFan1.Visible = Prduct.Enabled;
+
+                Prduct = mf.Products.Item(5);
+                lbFan2.Visible = Prduct.Enabled;
+                lbRPM2.Visible = Prduct.Enabled;
+                btnFan2.Visible = Prduct.Enabled;
+
+                // products
                 int PanelCount = 0;
                 int CurrentPosition = 3;
 
@@ -582,18 +590,25 @@ namespace RateController
                     }
                 }
 
-                clsProduct Prduct = mf.Products.Item(4);
-                lbFan1.Visible = Prduct.Enabled;
-                lbRPM1.Visible = Prduct.Enabled;
-                btnFan1.Visible = Prduct.Enabled;
+                // resize form
+                if (PanelCount > 2 || lbFan1.Visible == true || lbFan2.Visible == true)
+                {
+                    // normal view
+                    this.Width = NormalWidth;
+                    pnlMain.Left = MainPanelLeft;
+                }
+                else
+                {
+                    // compact view
+                    this.Width = CompactWidth;
+                    pnlProd0.Left += WidthOffset;
+                    pnlProd1.Left += WidthOffset;
+                    pnlProd2.Left += WidthOffset;
+                    pnlProd3.Left += WidthOffset;
+                    pnlMain.Left = MainPanelLeft + WidthOffset;
+                }
 
-                Prduct = mf.Products.Item(5);
-                lbFan2.Visible = Prduct.Enabled;
-                lbRPM2.Visible = Prduct.Enabled;
-                btnFan2.Visible = Prduct.Enabled;
-
-                cCurrentProduct = mf.Products.Item(Props.DefaultProduct);
-                ResizeForm(PanelCount);
+                ShowBumpButtons();
             }
             catch (Exception ex)
             {
@@ -1035,6 +1050,7 @@ namespace RateController
             }
 
             RCalarm.CheckAlarms();
+            CheckDisplay();
         }
 
         private void UpdateSwitches()

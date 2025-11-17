@@ -202,7 +202,7 @@ namespace RateController
                         this.Location = desiredLocation;
 
                         // Revert if new location is off-screen
-                        if (!Props.CheckOnScreen(this, false)) this.Location = oldLocation;
+                        if (!Props.IsOnScreen(this, false)) this.Location = oldLocation;
 
                         // refresh
                         this.TopMost = false;
