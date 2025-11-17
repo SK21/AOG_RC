@@ -34,13 +34,13 @@
             this.ckScreenSwitches = new System.Windows.Forms.CheckBox();
             this.ckWorkSwitch = new System.Windows.Forms.CheckBox();
             this.gbAutoSwitch = new System.Windows.Forms.GroupBox();
+            this.ckRate = new System.Windows.Forms.CheckBox();
+            this.ckSections = new System.Windows.Forms.CheckBox();
             this.gbOnScreen = new System.Windows.Forms.GroupBox();
             this.gbMasterSwitch = new System.Windows.Forms.GroupBox();
             this.rbMasterOverride = new System.Windows.Forms.RadioButton();
             this.rbMasterRelayOnly = new System.Windows.Forms.RadioButton();
             this.rbMasterAll = new System.Windows.Forms.RadioButton();
-            this.ckRate = new System.Windows.Forms.CheckBox();
-            this.ckSections = new System.Windows.Forms.CheckBox();
             this.gbAutoSwitch.SuspendLayout();
             this.gbOnScreen.SuspendLayout();
             this.gbMasterSwitch.SuspendLayout();
@@ -107,7 +107,7 @@
             this.ckScreenSwitches.Name = "ckScreenSwitches";
             this.ckScreenSwitches.Size = new System.Drawing.Size(170, 37);
             this.ckScreenSwitches.TabIndex = 165;
-            this.ckScreenSwitches.Text = "Use Switches";
+            this.ckScreenSwitches.Text = "Enabled";
             this.ckScreenSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckScreenSwitches.UseVisualStyleBackColor = true;
             this.ckScreenSwitches.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
@@ -139,6 +139,40 @@
             this.gbAutoSwitch.Text = "Auto Switch";
             this.gbAutoSwitch.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
+            // ckRate
+            // 
+            this.ckRate.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRate.Checked = true;
+            this.ckRate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckRate.Location = new System.Drawing.Point(16, 28);
+            this.ckRate.Name = "ckRate";
+            this.ckRate.Size = new System.Drawing.Size(170, 37);
+            this.ckRate.TabIndex = 343;
+            this.ckRate.Text = "Rate";
+            this.ckRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRate.UseVisualStyleBackColor = true;
+            this.ckRate.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
+            // ckSections
+            // 
+            this.ckSections.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSections.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSections.Checked = true;
+            this.ckSections.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckSections.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckSections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSections.Location = new System.Drawing.Point(16, 97);
+            this.ckSections.Name = "ckSections";
+            this.ckSections.Size = new System.Drawing.Size(170, 37);
+            this.ckSections.TabIndex = 344;
+            this.ckSections.Text = "Sections";
+            this.ckSections.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSections.UseVisualStyleBackColor = true;
+            this.ckSections.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
             // gbOnScreen
             // 
             this.gbOnScreen.Controls.Add(this.ckScreenSwitches);
@@ -148,7 +182,7 @@
             this.gbOnScreen.Size = new System.Drawing.Size(200, 151);
             this.gbOnScreen.TabIndex = 341;
             this.gbOnScreen.TabStop = false;
-            this.gbOnScreen.Text = "On-Screen";
+            this.gbOnScreen.Text = "On-Screen Switches";
             this.gbOnScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
             // gbMasterSwitch
@@ -207,40 +241,6 @@
             this.rbMasterAll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbMasterAll.UseVisualStyleBackColor = true;
             this.rbMasterAll.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            // 
-            // ckRate
-            // 
-            this.ckRate.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckRate.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRate.Checked = true;
-            this.ckRate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRate.Location = new System.Drawing.Point(16, 28);
-            this.ckRate.Name = "ckRate";
-            this.ckRate.Size = new System.Drawing.Size(170, 37);
-            this.ckRate.TabIndex = 343;
-            this.ckRate.Text = "Rate";
-            this.ckRate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRate.UseVisualStyleBackColor = true;
-            this.ckRate.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            // 
-            // ckSections
-            // 
-            this.ckSections.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckSections.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSections.Checked = true;
-            this.ckSections.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckSections.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckSections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSections.Location = new System.Drawing.Point(16, 97);
-            this.ckSections.Name = "ckSections";
-            this.ckSections.Size = new System.Drawing.Size(170, 37);
-            this.ckSections.TabIndex = 344;
-            this.ckSections.Text = "Sections";
-            this.ckSections.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckSections.UseVisualStyleBackColor = true;
-            this.ckSections.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // frmMenuSwitches
             // 

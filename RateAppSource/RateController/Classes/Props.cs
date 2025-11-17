@@ -63,7 +63,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "14-Nov-2025";
+        private static string cAppDate = "16-Nov-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
