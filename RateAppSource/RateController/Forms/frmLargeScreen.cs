@@ -607,8 +607,8 @@ namespace RateController
                 else
                 {
                     // compact view
-                    int CenterOffset = 0;
-                    if (PanelCount == 2) CenterOffset = 0;
+                    int CenterOffset = -73;
+                    if (PanelCount == 2) CenterOffset = -23;
 
                     this.Width = CompactWidth;
                     pnlProd0.Left += WidthOffset + CenterOffset;
