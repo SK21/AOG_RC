@@ -476,13 +476,8 @@ namespace RateController
                         menuForm.Show();
                     }
 
-                    if (Props.IsFormOpen("frmMenuJobs", false) == null)
-                    {
-                        var jobsForm = new RateController.Menu.frmMenuJobs(this, menuForm);
-                        jobsForm.Owner = menuForm;
-                        jobsForm.Show();
-                        Props.CurrentMenuName = "frmMenuJobs";
-                    }
+                    menuForm.butFile_Click(this, EventArgs.Empty);
+                    menuForm.butJobs_Click(this, EventArgs.Empty);
                 }
             }
         }

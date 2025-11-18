@@ -337,7 +337,7 @@ namespace RateController
             }
         }
 
-        private void butFile_Click(object sender, EventArgs e)
+        public void butFile_Click(object sender, EventArgs e)
         {
             if (ClosedOwned())
             {
@@ -436,10 +436,10 @@ namespace RateController
             }
         }
 
-        private void butJobs_Click(object sender, EventArgs e)
+        public void butJobs_Click(object sender, EventArgs e)
         {
             SaveLastScreen("frmMenuJobs");
-            if (sender is Button button) HighlightButton(button);
+            HighlightButton(butJobs);
             Form fs = Props.IsFormOpen(cLastScreen);
 
             if (fs == null)
