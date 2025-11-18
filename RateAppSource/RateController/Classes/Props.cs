@@ -59,7 +59,7 @@ namespace RateController.Classes
         public static readonly int MaxSections = 128;
         public static readonly int MaxSensorsPerModule = 16;
         public static readonly int MaxSwitches = 16;
-        public static readonly double MPHtoKPH = 1.6092;
+        public static readonly double MPHtoKPH = 1.609344;
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
@@ -467,6 +467,7 @@ namespace RateController.Classes
                             break;
                     }
                 }
+                if (Result < 0 || Result > 10000) Result = 0;
                 return Result;
             }
         }
