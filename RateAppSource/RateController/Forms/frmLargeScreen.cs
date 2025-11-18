@@ -69,6 +69,7 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             mf.ColorChanged += Mf_ColorChanged;
             Props.ProductSettingsChanged += Props_ProductSettingsChanged;
+            Props.ProfileChanged += Props_ProfileChanged;
         }
 
         public int CurrentProduct()
@@ -232,6 +233,7 @@ namespace RateController
             mf.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
             mf.ColorChanged -= Mf_ColorChanged;
             Props.ProductSettingsChanged -= Props_ProductSettingsChanged;
+            Props.ProfileChanged -= Props_ProfileChanged;
 
             timerMain.Enabled = false;
             tmrRelease.Enabled = false;
@@ -432,6 +434,11 @@ namespace RateController
         }
 
         private void Props_ProductSettingsChanged(object sender, EventArgs e)
+        {
+            ShowProducts();
+        }
+
+        private void Props_ProfileChanged(object sender, EventArgs e)
         {
             ShowProducts();
         }

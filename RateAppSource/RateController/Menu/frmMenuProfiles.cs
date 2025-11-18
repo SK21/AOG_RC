@@ -18,16 +18,7 @@ namespace RateController.Menu
             mf = main;
             this.Tag = false;
         }
-        //private void btnCopy_Click(object sender, EventArgs e)
-        //{
-        //    if (lstProfiles.SelectedIndex >= 0)
-        //    {
-        //    }
-        //    else
-        //    {
-        //        Props.ShowMessage("No file selected.");
-        //    }
-        //}
+
         private void btnCopy_Click(object sender, EventArgs e)
         {
             try
@@ -55,6 +46,7 @@ namespace RateController.Menu
                         UpdateForm();
                         MainMenu.ChangeProduct(0);
                         MainMenu.ShowProfile();
+                        Props.RaiseEventProfileChanged();
                     }
                     else
                     {
@@ -103,6 +95,7 @@ namespace RateController.Menu
                                     mf.LoadSettings();
                                     MainMenu.ChangeProduct(0);
                                     MainMenu.ShowProfile();
+                                    Props.RaiseEventProfileChanged();
                                 }
                                 UpdateForm();
                             }
@@ -141,6 +134,7 @@ namespace RateController.Menu
                     UpdateForm();
                     MainMenu.ChangeProduct(0);
                     MainMenu.ShowProfile();
+                    Props.RaiseEventProfileChanged();
                 }
                 else
                 {
@@ -171,6 +165,7 @@ namespace RateController.Menu
                     UpdateForm();
                     MainMenu.ChangeProduct(0);
                     MainMenu.ShowProfile();
+                    Props.RaiseEventProfileChanged();
                 }
                 else
                 {
@@ -181,6 +176,18 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuProfiles/btnNew_Click: " + ex.Message);
             }
+        }
+
+        private void btnProfilesDown_Click(object sender, EventArgs e)
+        {
+            int itemsPerPage = lstProfiles.ClientSize.Height / lstProfiles.ItemHeight; // Calculate visible items
+            lstProfiles.TopIndex = Math.Min(lstProfiles.Items.Count - 1, lstProfiles.TopIndex + itemsPerPage); // Move down by 1 page
+        }
+
+        private void btnProfilesUp_Click(object sender, EventArgs e)
+        {
+            int itemsPerPage = lstProfiles.ClientSize.Height / lstProfiles.ItemHeight; // Calculate visible items
+            lstProfiles.TopIndex = Math.Max(0, lstProfiles.TopIndex - itemsPerPage); // Move up by 1 page
         }
 
         private void frmMenuProfiles_Load(object sender, EventArgs e)
@@ -219,18 +226,6 @@ namespace RateController.Menu
                 lstProfiles.Items.Add(Path.GetFileName(folder));
             }
             lbProfile.Text = "Current Profle:  " + Props.CurrentFileName();
-        }
-
-        private void btnProfilesUp_Click(object sender, EventArgs e)
-        {
-            int itemsPerPage = lstProfiles.ClientSize.Height / lstProfiles.ItemHeight; // Calculate visible items
-            lstProfiles.TopIndex = Math.Max(0, lstProfiles.TopIndex - itemsPerPage); // Move up by 1 page
-        }
-
-        private void btnProfilesDown_Click(object sender, EventArgs e)
-        {
-            int itemsPerPage = lstProfiles.ClientSize.Height / lstProfiles.ItemHeight; // Calculate visible items
-            lstProfiles.TopIndex = Math.Min(lstProfiles.Items.Count - 1, lstProfiles.TopIndex + itemsPerPage); // Move down by 1 page
         }
     }
 }

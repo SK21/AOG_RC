@@ -152,6 +152,8 @@ namespace RateController.Classes
 
         public static event EventHandler UnitsChanged;
 
+        public static event EventHandler ProfileChanged;
+
         #region MainProperties
 
         public static string ApplicationFolder
@@ -515,6 +517,11 @@ namespace RateController.Classes
                     UnitsChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
+        }
+
+        public static void RaiseEventProfileChanged()
+        {
+            ProfileChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static bool UseRateDisplay
