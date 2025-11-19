@@ -103,14 +103,17 @@ void SendComm()
         Data[1] = 126;
         Data[2] = MDL.ID;
 
+        if (MDL.PressurePin == NC) PressureReading = 0;
         Data[3] = (byte)PressureReading;
         Data[4] = (byte)(PressureReading >> 8);
 
         // wheel speed, 10 X actual
+        if (MDL.WheelSpeedPin == NC) WheelSpeed = 0;
         uint32_t Speed = WheelSpeed * 10.0;
         Data[5] = Speed;
         Data[6] = Speed >> 8;
 
+        if (MDL.WheelSpeedPin == NC) WheelCounts = 0;
         Data[7] = WheelCounts;
         Data[8] = WheelCounts >> 8;
         Data[9] = WheelCounts >> 16;
@@ -121,7 +124,7 @@ void SendComm()
 
         // status
         Data[13] = 0;
-        if (WorkPinOn()) Data[13] |= 0b00000001;
+        if ((MDL.WorkPin != NC) && WorkPinOn()) Data[13] |= 0b00000001;
 
         if (EthernetConnected()) Data[13] |= 0b00010000;
 
