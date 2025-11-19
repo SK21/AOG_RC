@@ -19,7 +19,7 @@ namespace RateController
         //      bit 5 - ADS1115 enabled
         //5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
         //                           , 5 - PCA9685, 6 - PCF8574
-        //6	    wifi module serial port
+        //6	    -
         //7	    Sensor 0, Flow pin
         //8     Sensor 0, Dir pin
         //9     Sensor 0, PWM pin
@@ -205,9 +205,6 @@ namespace RateController
 
         public byte SensorCount
         { set { cData[3] = value; } }
-
-        public byte WifiPort
-        { set { cData[6] = value; } }
 
         public byte WorkPin
         { set { cData[29] = value; } }

@@ -34,8 +34,6 @@
             this.ckADS1115enabled = new System.Windows.Forms.CheckBox();
             this.lbRelay = new System.Windows.Forms.Label();
             this.cbRelayControl = new System.Windows.Forms.ComboBox();
-            this.tbWifiPort = new System.Windows.Forms.TextBox();
-            this.lbWifiPort = new System.Windows.Forms.Label();
             this.ckFlowOn = new System.Windows.Forms.CheckBox();
             this.ckRelayOn = new System.Windows.Forms.CheckBox();
             this.tbSensorCount = new System.Windows.Forms.TextBox();
@@ -126,28 +124,6 @@
             this.cbRelayControl.TabStop = false;
             this.cbRelayControl.SelectedIndexChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             // 
-            // tbWifiPort
-            // 
-            this.tbWifiPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWifiPort.Location = new System.Drawing.Point(362, 213);
-            this.tbWifiPort.Name = "tbWifiPort";
-            this.tbWifiPort.Size = new System.Drawing.Size(58, 29);
-            this.tbWifiPort.TabIndex = 172;
-            this.tbWifiPort.TabStop = false;
-            this.tbWifiPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbWifiPort.TextChanged += new System.EventHandler(this.tbModuleID_TextChanged);
-            this.tbWifiPort.Enter += new System.EventHandler(this.tbWifiPort_Enter);
-            // 
-            // lbWifiPort
-            // 
-            this.lbWifiPort.AutoSize = true;
-            this.lbWifiPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWifiPort.Location = new System.Drawing.Point(84, 215);
-            this.lbWifiPort.Name = "lbWifiPort";
-            this.lbWifiPort.Size = new System.Drawing.Size(135, 24);
-            this.lbWifiPort.TabIndex = 171;
-            this.lbWifiPort.Text = "Wifi  Serial Port";
-            // 
             // ckFlowOn
             // 
             this.ckFlowOn.Appearance = System.Windows.Forms.Appearance.Button;
@@ -181,7 +157,7 @@
             // tbSensorCount
             // 
             this.tbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSensorCount.Location = new System.Drawing.Point(362, 165);
+            this.tbSensorCount.Location = new System.Drawing.Point(362, 208);
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 168;
@@ -194,7 +170,7 @@
             // 
             this.lbSensorCount.AutoSize = true;
             this.lbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorCount.Location = new System.Drawing.Point(84, 167);
+            this.lbSensorCount.Location = new System.Drawing.Point(84, 210);
             this.lbSensorCount.Name = "lbSensorCount";
             this.lbSensorCount.Size = new System.Drawing.Size(125, 24);
             this.lbSensorCount.TabIndex = 167;
@@ -203,7 +179,7 @@
             // tbModuleID
             // 
             this.tbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbModuleID.Location = new System.Drawing.Point(362, 117);
+            this.tbModuleID.Location = new System.Drawing.Point(362, 155);
             this.tbModuleID.Name = "tbModuleID";
             this.tbModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbModuleID.TabIndex = 166;
@@ -216,7 +192,7 @@
             // 
             this.lbModuleID.AutoSize = true;
             this.lbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleID.Location = new System.Drawing.Point(84, 119);
+            this.lbModuleID.Location = new System.Drawing.Point(84, 157);
             this.lbModuleID.Name = "lbModuleID";
             this.lbModuleID.Size = new System.Drawing.Size(96, 24);
             this.lbModuleID.TabIndex = 165;
@@ -248,8 +224,6 @@
             this.Controls.Add(this.ckADS1115enabled);
             this.Controls.Add(this.lbRelay);
             this.Controls.Add(this.cbRelayControl);
-            this.Controls.Add(this.tbWifiPort);
-            this.Controls.Add(this.lbWifiPort);
             this.Controls.Add(this.ckFlowOn);
             this.Controls.Add(this.ckRelayOn);
             this.Controls.Add(this.tbSensorCount);
@@ -276,8 +250,6 @@
         private System.Windows.Forms.CheckBox ckADS1115enabled;
         private System.Windows.Forms.Label lbRelay;
         private System.Windows.Forms.ComboBox cbRelayControl;
-        private System.Windows.Forms.TextBox tbWifiPort;
-        private System.Windows.Forms.Label lbWifiPort;
         private System.Windows.Forms.CheckBox ckFlowOn;
         private System.Windows.Forms.CheckBox ckRelayOn;
         private System.Windows.Forms.TextBox tbSensorCount;

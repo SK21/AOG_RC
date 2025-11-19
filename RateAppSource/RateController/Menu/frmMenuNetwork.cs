@@ -233,7 +233,6 @@ namespace RateController.Menu
                     // RC11-2, Teensy
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
-                    Set.WifiPort = 255;
                     Set.RelayType = 1;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
@@ -264,7 +263,6 @@ namespace RateController.Menu
                     // RC15, ESP32
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
-                    Set.WifiPort = 255;
                     Set.RelayType = 5;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
@@ -286,7 +284,6 @@ namespace RateController.Menu
                     // RC12-3, Nano
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
-                    Set.WifiPort = 255;
                     Set.RelayType = 4;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
