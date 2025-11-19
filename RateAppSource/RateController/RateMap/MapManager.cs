@@ -373,7 +373,7 @@ namespace RateController.Classes
                 if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
 
                 // Ensure the overlay is populated at least from history
-                var readings = mf?.Tls?.RateCollector?.GetReadings();
+                var readings = Props.RateCollector?.GetReadings();
                 if (readings != null && readings.Count > 0)
                 {
                     AppliedOverlay.Polygons.Clear();
@@ -457,7 +457,7 @@ namespace RateController.Classes
                 // Always record reading so zeros are captured immediately
                 var applied = (AppliedRates ?? Array.Empty<double>());
                 var target = (TargetRates ?? Array.Empty<double>());
-                mf.Tls?.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
+               Props.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
 
                 // NEW: cache latest applied array for live overlay update (no timer delay)
                 // ensure fixed length (5 max supported by recorder)
@@ -497,7 +497,7 @@ namespace RateController.Classes
             Dictionary<string, Color> legend = new Dictionary<string, Color>();
             try
             {
-                var readings = mf.Tls.RateCollector.GetReadings();
+                var readings = Props.RateCollector.GetReadings();
                 if (readings == null || readings.Count == 0)
                 {
                     ClearAppliedRatesOverlay();
@@ -879,7 +879,7 @@ namespace RateController.Classes
         {
             try
             {
-                var collector = mf?.Tls?.RateCollector;
+                var collector = Props.RateCollector;
                 if (collector == null) return false;
 
                 var readings = collector.GetReadings();

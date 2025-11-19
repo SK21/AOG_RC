@@ -155,7 +155,8 @@ namespace RateController.Classes
         public static event EventHandler ProfileChanged;
 
         #region MainProperties
-
+        private static DataCollector cRateCollector = new DataCollector();
+        public static DataCollector RateCollector { get { return cRateCollector; } }
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 

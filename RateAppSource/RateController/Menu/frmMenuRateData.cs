@@ -23,7 +23,7 @@ namespace RateController.Forms
             this.Tag = false;
 
             timer1.Enabled = true;
-            lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
+            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -42,7 +42,7 @@ namespace RateController.Forms
             Hlp.Close();
             if (Result)
             {
-                mf.Tls.RateCollector.ClearReadings();
+                Props.RateCollector.ClearReadings();
 
                 // Immediately clear coverage overlay and legend from the map
                 mf.Tls.Manager.ClearAppliedRatesOverlay();
@@ -192,7 +192,7 @@ namespace RateController.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
+            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
         }
 
         private void UpdateForm()
@@ -251,7 +251,7 @@ namespace RateController.Forms
                             return;
 
                         // After dialog creates and switches job, refresh display
-                        lbDataPoints.Text = mf.Tls.RateCollector.DataPoints.ToString("N0");
+                        lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
                     }
                 }
             }
