@@ -276,12 +276,27 @@ void DoSetup()
 	Serial.println(Sensor[1].PWMPin);
 
 	Serial.println("");
-	Serial.print("Work Switch Pin: ");
-	Serial.println(MDL.WorkPin);
-	Serial.print("Pressure Pin: ");
-	Serial.println(MDL.PressurePin);
 
-	Serial.println("");
+	Serial.print("Work Switch Pin: ");
+	if (MDL.WorkPin == NC)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.WorkPin);
+	}
+
+	Serial.print("Pressure Pin: ");
+	if (MDL.PressurePin == NC)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.PressurePin);
+	}
+
 	Serial.print(F("Wheel Speed Pin: "));
 	if (WheelMatch)
 	{

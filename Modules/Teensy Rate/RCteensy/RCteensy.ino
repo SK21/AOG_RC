@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 14115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -326,23 +326,23 @@ void Blink()
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
 
-		if (!FirmwareUpdateMode)
-		{
-			Serial.print(" Micros: ");
-			Serial.print(MaxLoopTime);
+		//if (!FirmwareUpdateMode)
+		//{
+		//	Serial.print(" Micros: ");
+		//	Serial.print(MaxLoopTime);
 
-			Serial.print(", ");
-			Serial.print(Ethernet.localIP());
+		//	Serial.print(", ");
+		//	Serial.print(Ethernet.localIP());
 
-			Serial.println("");
-		}
+		//	Serial.println("");
+		//}
 
-		if (Count++ > 10)
-		{
-			Count = 0;
-			MaxLoopTime = 0;
-		}
+		//if (Count++ > 10)
+		//{
+		//	Count = 0;
+		//	MaxLoopTime = 0;
+		//}
 	}
-	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
-	LoopTmr = 0;
+	//if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
+	//LoopTmr = 0;
 }
