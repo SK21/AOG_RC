@@ -429,18 +429,33 @@ void DoSetup()
 	Serial.println(Sensor[1].IN2);
 
 	Serial.println("");
-	Serial.print("Work Switch Pin: ");
-	Serial.println(MDL.WorkPin);
-	Serial.print("Pressure Pin: ");
-	Serial.println(MDL.PressurePin);
 
-	Serial.println("");
+	Serial.print("Work Switch Pin: ");
+	if (MDL.WorkPin == NC)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.WorkPin);
+	}
+
+	Serial.print("Pressure Pin: ");
+	if (MDL.PressurePin == NC)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.PressurePin);
+	}
+
 	Serial.print(F("Wheel Speed Pin: "));
 	if (WheelMatch)
 	{
 		Serial.println(F("error, duplicate flow pin"));
 	}
-	else if (MDL.WheelSpeedPin == 255)
+	else if (MDL.WheelSpeedPin == NC)
 	{
 		Serial.println(F("Disabled"));
 	}

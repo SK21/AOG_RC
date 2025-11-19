@@ -125,7 +125,7 @@ String GetPage2()
     st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ap_pass' size='20' name='prop3' value='" + String(MDL.APpassword) + "'></div></td>";
     st += "        </tr>";
     st += "        <tr>";
-    st += "          <td colspan='2'><div class='control-width'><div class='hint'>This is the rate module hotspot (Access Point) password. Leave empty for an open hotspot; use 8 to 10 characters.</div></div></td>";
+    st += "          <td colspan='2'><div class='control-width'><div class='hint'>This is the rate module hotspot (Access Point) password. Use 8 to 10 characters. Leave empty for an open hotspot.</div></div></td>";
     st += "        </tr>";
 
     st += "      </table>";
