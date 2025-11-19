@@ -146,17 +146,18 @@ namespace RateController.Classes
 
         public static event EventHandler ProductSettingsChanged;
 
+        public static event EventHandler ProfileChanged;
+
         public static event EventHandler RateDataSettingsChanged;
 
         public static event EventHandler ScreensSwitched;
 
         public static event EventHandler UnitsChanged;
 
-        public static event EventHandler ProfileChanged;
-
         #region MainProperties
-        private static DataCollector cRateCollector = new DataCollector();
-        public static DataCollector RateCollector { get { return cRateCollector; } }
+
+        private static DataCollector cRateCollector;
+
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 
@@ -325,6 +326,15 @@ namespace RateController.Classes
         {
             get { return cRateCalibrationOn; }
             set { cRateCalibrationOn = value; }
+        }
+
+        public static DataCollector RateCollector
+        {
+            get 
+            {
+                if (cRateCollector == null) cRateCollector = new DataCollector();
+                return cRateCollector; 
+            }
         }
 
         public static int RateDisplayProduct
@@ -521,11 +531,6 @@ namespace RateController.Classes
             }
         }
 
-        public static void RaiseEventProfileChanged()
-        {
-            ProfileChanged?.Invoke(null, EventArgs.Empty);
-        }
-
         public static bool UseRateDisplay
         {
             get { return cUseRateDisplay; }
@@ -648,6 +653,11 @@ namespace RateController.Classes
             return Result;
         }
 
+        public static void RaiseEventProfileChanged()
+        {
+            ProfileChanged?.Invoke(null, EventArgs.Empty);
+        }
+
         public static void ShowMessage(string Message, string Title = "Help",
                                                                                                                                                                                                                                                                                                                                                                             int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)
@@ -767,48 +777,6 @@ namespace RateController.Classes
             }
             catch (Exception)
             {
-            }
-            return Result;
-        }
-
-        public static bool IsOnScreen(Control Ctrl, bool MakeOnScreen = true)
-        {
-            bool Result = false;
-            try
-            {
-                if (Ctrl == null)
-                {
-                    // false
-                }
-                else if (!(Ctrl is Form) && !Ctrl.IsHandleCreated)
-                {
-                    // If handle not created yet (e.g., before Show), assume it will be valid.
-                    Result = true;
-                }
-                else
-                {
-                    Rectangle rect;
-                    if (Ctrl is Form frm)
-                    {
-                        rect = new Rectangle(frm.Left, frm.Top, frm.Width, frm.Height);
-                    }
-                    else
-                    {
-                        // Convert control client rectangle to screen coordinates
-                        rect = Ctrl.RectangleToScreen(new Rectangle(Point.Empty, Ctrl.Size));
-                    }
-
-                    Result = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(rect));
-
-                    if (!Result && MakeOnScreen && Ctrl is Form TheForm)
-                    {
-                        CenterForm(TheForm);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/IsOnScreen: " + ex.Message);
             }
             return Result;
         }
@@ -949,16 +917,58 @@ namespace RateController.Classes
             return Result;
         }
 
+        public static bool IsOnScreen(Control Ctrl, bool MakeOnScreen = true)
+        {
+            bool Result = false;
+            try
+            {
+                if (Ctrl == null)
+                {
+                    // false
+                }
+                else if (!(Ctrl is Form) && !Ctrl.IsHandleCreated)
+                {
+                    // If handle not created yet (e.g., before Show), assume it will be valid.
+                    Result = true;
+                }
+                else
+                {
+                    Rectangle rect;
+                    if (Ctrl is Form frm)
+                    {
+                        rect = new Rectangle(frm.Left, frm.Top, frm.Width, frm.Height);
+                    }
+                    else
+                    {
+                        // Convert control client rectangle to screen coordinates
+                        rect = Ctrl.RectangleToScreen(new Rectangle(Point.Empty, Ctrl.Size));
+                    }
+
+                    Result = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(rect));
+
+                    if (!Result && MakeOnScreen && Ctrl is Form TheForm)
+                    {
+                        CenterForm(TheForm);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/IsOnScreen: " + ex.Message);
+            }
+            return Result;
+        }
+
         public static bool IsPathSafeToDelete(string candidatePath)
         {
             bool result = false;
             try
             {
-                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string baseFolder = Path.Combine(myDocuments, "RateController");
-
                 if (!string.IsNullOrEmpty(candidatePath))
                 {
+                    string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    string baseFolder = Path.Combine(myDocuments, "RateController");
+
                     string candidateFullPath = Path.GetFullPath(candidatePath);
                     string safeBaseFullPath = Path.GetFullPath(baseFolder);
 
@@ -1136,14 +1146,14 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static void RaiseRateDataSettingsChanged()
-        {
-            RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
-        }
-
         public static void RaiseProductSettingsChanged()
         {
             ProductSettingsChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static void RaiseRateDataSettingsChanged()
+        {
+            RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static bool RateMapIsVisible()

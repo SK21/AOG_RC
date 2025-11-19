@@ -16,7 +16,6 @@ namespace RateController.Classes
         private readonly List<RateReading> Readings = new List<RateReading>();
         private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(30);
         private readonly Stopwatch SaveStopWatch = new Stopwatch();
-        private string cFilePath;
         private double LastLatitude = 0;
         private double LastLongitude = 0;
         private int lastSavedIndex = 0;
@@ -30,13 +29,12 @@ namespace RateController.Classes
             RecordTimer.Enabled = Props.RateRecordEnabled;
             RecordTimer.Interval = RecordIntervalMS;
 
-            cFilePath = Props.CurrentRateDataPath;
-            LoadDataFromCsv();
-
+            LoadData();
             if (Props.RateRecordEnabled) SaveStopWatch.Start();
 
             Props.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
+            Props.ProfileChanged += Props_ProfileChanged;
         }
 
         public int DataPoints
@@ -48,7 +46,7 @@ namespace RateController.Classes
             {
                 Readings.Clear();
                 lastSavedIndex = 0;
-                if (Props.IsPathSafeToDelete(cFilePath)) File.Delete(cFilePath);
+                if (Props.IsPathSafeToDelete(Props.CurrentRateDataPath)) File.Delete(Props.CurrentRateDataPath);
             }
         }
 
@@ -97,7 +95,7 @@ namespace RateController.Classes
                         if (SaveStopWatch.Elapsed >= SaveInterval)
                         {
                             SaveStopWatch.Reset();
-                            SaveDataToCsv();
+                            SaveData();
                             SaveStopWatch.Start();
                         }
                     }
@@ -105,7 +103,7 @@ namespace RateController.Classes
             }
         }
 
-        public void SaveDataToCsv()
+        public void SaveData()
         {
             try
             {
@@ -118,8 +116,8 @@ namespace RateController.Classes
                     lastSavedIndex = Readings.Count;
                 }
 
-                bool fileExists = File.Exists(cFilePath);
-                using (var writer = new StreamWriter(cFilePath, append: true))
+                bool fileExists = File.Exists(Props.CurrentRateDataPath);
+                using (var writer = new StreamWriter(Props.CurrentRateDataPath, append: true))
                 {
                     // If the file does not yet exist, write the header.
                     if (!fileExists)
@@ -185,12 +183,12 @@ namespace RateController.Classes
             return Result;
         }
 
-        private void LoadDataFromCsv()
+        private void LoadData()
         {
             try
             {
-                if (!File.Exists(cFilePath))
-                    throw new FileNotFoundException("The specified data file was not found.", cFilePath);
+                if (!File.Exists(Props.CurrentRateDataPath))
+                    throw new FileNotFoundException("The specified data file was not found.", Props.CurrentRateDataPath);
 
                 // Clear the existing readings before loading.
                 lock (_lock)
@@ -199,7 +197,7 @@ namespace RateController.Classes
                 }
 
                 // Using a using block ensures the file is closed immediately after reading.
-                using (var reader = new StreamReader(cFilePath))
+                using (var reader = new StreamReader(Props.CurrentRateDataPath))
                 {
                     if (!reader.EndOfStream)
                     {
@@ -279,8 +277,12 @@ namespace RateController.Classes
 
         private void Props_JobChanged(object sender, EventArgs e)
         {
-            cFilePath = Props.CurrentRateDataPath;
-            LoadDataFromCsv();
+            LoadData();
+        }
+
+        private void Props_ProfileChanged(object sender, EventArgs e)
+        {
+            LoadData();
         }
 
         private void Props_RateDataSettingsChanged(object sender, EventArgs e)

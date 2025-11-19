@@ -165,19 +165,19 @@ namespace RateController.Classes
             }
         }
 
-        public static string RateDataPath(int JobID)
-        {
-            string Result = null;
-            Job JB = SearchJob(JobID);
-            if (JB != null) Result = Path.Combine(JB.JobFolder, "RateData.csv");
-            return Result;
-        }
-
         public static string MapPath(int JobID)
         {
             string Result = null;
             Job JB = SearchJob(JobID);
             if (JB != null) Result = Path.Combine(JB.JobFolder, "Map\\Job.shp");
+            return Result;
+        }
+
+        public static string RateDataPath(int JobID)
+        {
+            string Result = null;
+            Job JB = SearchJob(JobID);
+            if (JB != null) Result = Path.Combine(JB.JobFolder, "RateData.csv");
             return Result;
         }
 
@@ -299,11 +299,11 @@ namespace RateController.Classes
     public class Job
     {
         public DateTime Date { get; set; }
+        public string DisplayName => $"{Name.PadRight(15)} {Date:dd-MMM}";
         public int FieldID { get; set; }
         public int ID { get; set; }
         public string JobFolder => Path.Combine(Path.GetDirectoryName(Props.JobsDataPath), $"Job_{ID}");
         public string Name { get; set; }
         public string Notes { get; set; }
-        public string DisplayName => $"{Name.PadRight(15)} {Date:dd-MMM}";
     }
 }
