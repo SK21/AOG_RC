@@ -101,7 +101,7 @@ namespace RateController.PGNs
         {
             try
             {
-                if ((Props.SpeedMode==SpeedType.GPS) && (Data.Length > Overhead) && (Data.Length == Data[4] + Overhead))
+                if ((Data.Length > Overhead) && (Data.Length == Data[4] + Overhead))
                 {
                     if (mf.Tls.GoodCRC(Data, 2))
                     {

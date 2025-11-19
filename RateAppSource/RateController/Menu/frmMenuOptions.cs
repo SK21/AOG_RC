@@ -254,7 +254,7 @@ namespace RateController.Menu
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbWheelCal.Text = form.ReturnValue.ToString("N3");
+                    tbWheelCal.Text = form.ReturnValue.ToString("N0");
                 }
             }
         }

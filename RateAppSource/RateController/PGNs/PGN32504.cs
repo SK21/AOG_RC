@@ -94,7 +94,7 @@ namespace RateController.PGNs
                 cData[3] = 255; // disable wheel sensor
             }
 
-            cData[4] = (byte)cWheelCal;
+            cData[4] = (byte)(cWheelCal + 0.5);
             cData[5] = (byte)((int)cWheelCal >> 8);
             cData[6] = (byte)((int)cWheelCal >> 16);
 
