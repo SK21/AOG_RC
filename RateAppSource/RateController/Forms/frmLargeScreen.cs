@@ -154,7 +154,7 @@ namespace RateController
             frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
             if (pressure != null && pressure.Owner == this)
             {
-                pressure.DetachFromOwnerIfPinned();
+                pressure.DetachFromOwner();
             }
             frmRate rateDisp = (frmRate)Props.IsFormOpen("frmRate", false);
             if (rateDisp != null && rateDisp.Owner == this)

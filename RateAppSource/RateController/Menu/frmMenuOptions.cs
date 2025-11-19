@@ -91,7 +91,14 @@ namespace RateController.Menu
 
                 Props.UseMetric = ckMetric.Checked;
                 Props.UseTransparent = ckTransparent.Checked;
-                Props.UseLargeScreen = ckLargeScreen.Checked;
+
+                if (Props.UseLargeScreen != ckLargeScreen.Checked)
+                {
+                    frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
+                    if (pressure != null) pressure.DetachFromOwner();
+                    Props.UseLargeScreen = ckLargeScreen.Checked;
+                }
+
                 Props.UseRateDisplay = ckRateDisplay.Checked;
 
                 if (WheelSpeedChanged)

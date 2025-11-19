@@ -67,6 +67,13 @@ namespace RateController
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
             lbRate.ForeColor = Properties.Settings.Default.DisplayForeColour;
             UpdateForm();
+
+            frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
+            if (pressure != null)
+            {
+                // Ensure it starts tracking this RCRestore window (and pins if overlapping)
+                pressure.TrackingSetup();
+            }
         }
 
         private void RestoreLC_Click(object sender, EventArgs e)
@@ -74,10 +81,12 @@ namespace RateController
             if (MouseButtonClicked == MouseButtons.Left)
             {
                 FormToHide.WindowState = FormWindowState.Normal;
+
                 frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
                 if (pressure != null)
                 {
-                    pressure.TryAttachToLargeScreen((frmLargeScreen)FormToHide);
+                    // Re-evaluate to attach back to the main form or large screen as needed
+                    pressure.TrackingSetup();
                 }
 
                 timer1.Enabled = false;

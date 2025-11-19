@@ -746,6 +746,12 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
+                frmPressureDisplay pressure = (frmPressureDisplay)Props.IsFormOpen("frmPressureDisplay", false);
+                if (pressure != null && pressure.Owner == this)
+                {
+                    pressure.DetachFromOwner();
+                }
+
                 int prod = CurrentPage - 1;
                 if (prod < 0) prod = 0;
                 Form restoreform = new RCRestore(this, Props.UserRateType, this);
