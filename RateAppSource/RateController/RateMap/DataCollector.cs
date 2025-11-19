@@ -68,7 +68,7 @@ namespace RateController.Classes
 
         public void RecordReading(double latitude, double longitude, double[] appliedRates, double[] targetRates)
         {
-            if (ReadyForNewData)
+            if (ReadyForNewData && Props.ProductsAreOn)
             {
                 ReadyForNewData = false;
                 RecordTimer.Enabled = Props.RateRecordEnabled;

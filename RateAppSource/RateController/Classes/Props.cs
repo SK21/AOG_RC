@@ -658,6 +658,11 @@ namespace RateController.Classes
             ProfileChanged?.Invoke(null, EventArgs.Empty);
         }
 
+        public static bool ProductsAreOn
+        {
+            get { return mf.Products.ProductsAreOn(); }
+        }
+
         public static void ShowMessage(string Message, string Title = "Help",
                                                                                                                                                                                                                                                                                                                                                                             int timeInMsec = 20000, bool LogError = false, bool Modal = false
             , bool PlayErrorSound = false)

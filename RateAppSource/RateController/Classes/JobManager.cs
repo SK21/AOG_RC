@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -262,11 +261,17 @@ namespace RateController.Classes
 
         private static List<Job> LoadJobsFromFile()
         {
-            if (!File.Exists(Props.JobsDataPath))
-                return new List<Job>();
-
             try
             {
+                if (!File.Exists(Props.JobsDataPath))
+                {
+                    // Attempt rebuild from existing Job_* folders if the data file is missing.
+                    TryRebuildJobsFromFolders();
+                }
+
+                if (!File.Exists(Props.JobsDataPath))
+                    return new List<Job>();
+
                 string json = File.ReadAllText(Props.JobsDataPath);
                 if (string.IsNullOrWhiteSpace(json))
                     return new List<Job>();
@@ -292,6 +297,81 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 Props.WriteErrorLog("JobManager/SaveJobsToFile: " + ex.Message);
+            }
+        }
+
+        // Rebuild JobsData.jbs from existing Job_* folders if missing or empty.
+        private static void TryRebuildJobsFromFolders()
+        {
+            lock (_syncLock)
+            {
+                try
+                {
+                    string dataPath = Props.JobsDataPath;
+                    string baseDir = Path.GetDirectoryName(dataPath);
+
+                    if (string.IsNullOrEmpty(baseDir))
+                    {
+                        Props.WriteErrorLog("JobManager/TryRebuildJobsFromFolders: No base directory.");
+                        return;
+                    }
+
+                    if (!Directory.Exists(baseDir))
+                    {
+                        Directory.CreateDirectory(baseDir);
+                    }
+
+                    if (File.Exists(dataPath))
+                    {
+                        // If file exists but has content, do nothing. Empty (0 bytes) triggers rebuild.
+                        try
+                        {
+                            var fi = new FileInfo(dataPath);
+                            if (fi.Length > 0)
+                                return;
+                        }
+                        catch
+                        {
+                            // If we cannot read length, assume we should attempt rebuild.
+                        }
+                    }
+
+                    var jobs = new List<Job>();
+
+                    // Look for folders named Job_<ID> directly under baseDir.
+                    foreach (string dir in Directory.GetDirectories(baseDir, "Job_*", SearchOption.TopDirectoryOnly))
+                    {
+                        string folderName = Path.GetFileName(dir);
+                        if (!folderName.StartsWith("Job_", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        string idPart = folderName.Substring(4);
+                        int id;
+                        if (!int.TryParse(idPart, out id))
+                            continue;
+
+                        DateTime date = Directory.GetCreationTime(dir);
+                        var job = new Job
+                        {
+                            ID = id,
+                            Name = "Recovered Job " + id,
+                            Date = date,
+                            FieldID = -1,
+                            Notes = "Recovered from existing job folder."
+                        };
+                        jobs.Add(job);
+
+                        // Ensure inner structure exists (RateData.csv, Map files).
+                        CreateJobFolderStructure(job);
+                    }
+
+                    jobs = jobs.OrderBy(j => j.ID).ToList();
+                    SaveJobsToFile(jobs);
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("JobManager/TryRebuildJobsFromFolders: " + ex.Message);
+                }
             }
         }
     }
