@@ -41,28 +41,45 @@ namespace RateController.Classes
                     return false;
 
                 _trail.Reset();
-                PointLatLng prev = new PointLatLng(readings[0].Latitude, readings[0].Longitude);
+                PointLatLng prevPoint = new PointLatLng(readings[0].Latitude, readings[0].Longitude);
+                DateTime prevTime = readings[0].Timestamp;
+
+                // Relocation / gap guards (mirrors live logic + time gap)
+                const double maxSnapMeters = 5.0;          // break if spatial gap exceeds this
+                const double MaxGapSeconds = 3.0;          // break if temporal gap (record interval ~1s) too large
+
                 for (int i = 0; i < readings.Count; i++)
                 {
                     var r = readings[i];
-                    var curr = new PointLatLng(r.Latitude, r.Longitude);
-                    double heading = i == 0 ? 0.0 : BearingDegrees(prev, curr);
+                    var currPoint = new PointLatLng(r.Latitude, r.Longitude);
+                    double heading = i == 0 ? 0.0 : BearingDegrees(prevPoint, currPoint);
 
-                    // Use the selected rate type value for trail generation (was always applied before)
+                    // Rate value chosen by legend type for coloring; bridging decision also uses this
                     double rateValue = legendType == RateType.Applied
                         ? (r.AppliedRates.Length > rateIndex ? r.AppliedRates[rateIndex] : 0.0)
                         : (r.TargetRates.Length > rateIndex ? r.TargetRates[rateIndex] : 0.0);
 
-                    if (rateValue > RateEpsilon)
+                    bool canBridge = rateValue > RateEpsilon;
+                    if (i > 0)
                     {
-                        _trail.AddPoint(curr, heading, rateValue, implementWidthMeters);
+                        double distToPrev = DistanceMeters(currPoint, prevPoint.Lat, prevPoint.Lng);
+                        if (distToPrev > maxSnapMeters) canBridge = false;
+
+                        TimeSpan gap = r.Timestamp - prevTime;
+                        if (gap.TotalSeconds > MaxGapSeconds) canBridge = false;
+                    }
+
+                    if (canBridge)
+                    {
+                        _trail.AddPoint(currPoint, heading, rateValue, implementWidthMeters);
                     }
                     else
                     {
                         _trail.Break();
                     }
 
-                    prev = curr;
+                    prevPoint = currPoint;
+                    prevTime = r.Timestamp;
                 }
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
@@ -80,21 +97,6 @@ namespace RateController.Classes
 
         public void Reset() => _trail.Reset();
 
-        public bool UpdateRatesOverlay(
-            GMapOverlay overlay,
-            IReadOnlyList<RateReading> readings,
-            PointLatLng tractorPos,
-            double headingDegrees,
-            double implementWidthMeters,
-            out Dictionary<string, Color> legend,
-            RateType legendType,
-            int rateIndex)
-        {
-            // kept for backward compatibility; delegate to live method without override
-            return UpdateRatesOverlayLive(
-                overlay, readings, tractorPos, headingDegrees, implementWidthMeters, null,
-                out legend, legendType, rateIndex);
-        }
 
         public bool UpdateRatesOverlayLive(
                     GMapOverlay overlay,
