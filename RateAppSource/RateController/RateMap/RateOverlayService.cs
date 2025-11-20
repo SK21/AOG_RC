@@ -11,6 +11,7 @@ namespace RateController.Classes
     {
         // Match CoverageTrail deadband so "0" means no coverage
         private const double RateEpsilon = 1e-3;
+
         private readonly CoverageTrail _trail = new CoverageTrail();
 
         public bool BuildFromHistory(
@@ -79,8 +80,24 @@ namespace RateController.Classes
 
         public void Reset() => _trail.Reset();
 
-        public bool UpdateRatesOverlayLive(
+        public bool UpdateRatesOverlay(
             GMapOverlay overlay,
+            IReadOnlyList<RateReading> readings,
+            PointLatLng tractorPos,
+            double headingDegrees,
+            double implementWidthMeters,
+            out Dictionary<string, Color> legend,
+            RateType legendType,
+            int rateIndex)
+        {
+            // kept for backward compatibility; delegate to live method without override
+            return UpdateRatesOverlayLive(
+                overlay, readings, tractorPos, headingDegrees, implementWidthMeters, null,
+                out legend, legendType, rateIndex);
+        }
+
+        public bool UpdateRatesOverlayLive(
+                    GMapOverlay overlay,
             IReadOnlyList<RateReading> readings,
             PointLatLng tractorPos,
             double headingDegrees,
@@ -145,22 +162,6 @@ namespace RateController.Classes
                 Props.WriteErrorLog($"RateOverlayService.UpdateRatesOverlayLive: {ex.Message}");
                 return false;
             }
-        }
-
-        public bool UpdateRatesOverlay(
-            GMapOverlay overlay,
-            IReadOnlyList<RateReading> readings,
-            PointLatLng tractorPos,
-            double headingDegrees,
-            double implementWidthMeters,
-            out Dictionary<string, Color> legend,
-            RateType legendType,
-            int rateIndex)
-        {
-            // kept for backward compatibility; delegate to live method without override
-            return UpdateRatesOverlayLive(
-                overlay, readings, tractorPos, headingDegrees, implementWidthMeters, null,
-                out legend, legendType, rateIndex);
         }
 
         private static double BearingDegrees(PointLatLng a, PointLatLng b)

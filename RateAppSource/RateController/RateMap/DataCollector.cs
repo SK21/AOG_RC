@@ -19,19 +19,18 @@ namespace RateController.Classes
         private double LastLatitude = 0;
         private double LastLongitude = 0;
         private int lastSavedIndex = 0;
+        private string LastSavePath;
         private bool ReadyForNewData = false;
         private Timer RecordTimer;
 
         public DataCollector()
         {
+            LoadData();
+
             RecordTimer = new Timer();
             RecordTimer.Elapsed += RecordTimer_Elapsed;
             RecordTimer.Enabled = Props.RateRecordEnabled;
             RecordTimer.Interval = RecordIntervalMS;
-
-            LoadData();
-            if (Props.RateRecordEnabled) SaveStopWatch.Start();
-
             Props.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
             Props.ProfileChanged += Props_ProfileChanged;
@@ -55,14 +54,6 @@ namespace RateController.Classes
             lock (_lock)
             {
                 return Readings.ToList();
-            }
-        }
-
-        public int GetReadingsCount()
-        {
-            lock (_lock)
-            {
-                return Readings.Count;
             }
         }
 
@@ -95,7 +86,8 @@ namespace RateController.Classes
                         if (SaveStopWatch.Elapsed >= SaveInterval)
                         {
                             SaveStopWatch.Reset();
-                            SaveData();
+                            Debug.Print("RecordReading");
+                            SaveData(Props.CurrentRateDataPath);
                             SaveStopWatch.Start();
                         }
                     }
@@ -103,10 +95,11 @@ namespace RateController.Classes
             }
         }
 
-        public void SaveData()
+        public void SaveData(string DataFilePath)
         {
             try
             {
+                LastSavePath = DataFilePath;
                 List<RateReading> snapshot;
                 lock (_lock)
                 {
@@ -114,10 +107,11 @@ namespace RateController.Classes
                     snapshot = Readings.Skip(lastSavedIndex).ToList();
                     // Update the index so that next time only the new items will be written.
                     lastSavedIndex = Readings.Count;
+                    Debug.Print("File: " + DataFilePath + ",  Count: " + Readings.Count.ToString());
                 }
 
-                bool fileExists = File.Exists(Props.CurrentRateDataPath);
-                using (var writer = new StreamWriter(Props.CurrentRateDataPath, append: true))
+                bool fileExists = File.Exists(DataFilePath);
+                using (var writer = new StreamWriter(DataFilePath, append: true))
                 {
                     // If the file does not yet exist, write the header.
                     if (!fileExists)
@@ -189,6 +183,11 @@ namespace RateController.Classes
             {
                 if (!File.Exists(Props.CurrentRateDataPath))
                     throw new FileNotFoundException("The specified data file was not found.", Props.CurrentRateDataPath);
+
+                SaveStopWatch.Reset();
+                Debug.Print("LoadData - save previous");
+                SaveData(LastSavePath); // save any unrecorded data
+                Debug.Print("LoadData - load:  "+Props.CurrentRateDataPath);
 
                 // Clear the existing readings before loading.
                 lock (_lock)
@@ -267,7 +266,10 @@ namespace RateController.Classes
                 lock (_lock)
                 {
                     lastSavedIndex = Readings.Count;
+                    Debug.Print("Load count: " + Readings.Count.ToString());
                 }
+
+                if (Props.RateRecordEnabled) SaveStopWatch.Start();
             }
             catch (Exception ex)
             {
