@@ -97,7 +97,6 @@ namespace RateController.Classes
 
         public void Reset() => _trail.Reset();
 
-
         public bool UpdateRatesOverlayLive(
                     GMapOverlay overlay,
             IReadOnlyList<RateReading> readings,

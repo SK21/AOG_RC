@@ -24,7 +24,7 @@ namespace RateController.Menu
             MainMenu = menu;
             mf = main;
             this.Tag = false;
-            StartSim=Props.SpeedMode;
+            StartSim = Props.SpeedMode;
             Cals = new clsCalibrates(mf);
             Cals.Edited += Cals_Edited;
         }
@@ -33,12 +33,16 @@ namespace RateController.Menu
         {
             // btnCalStop needs to be next in tab order
             // after btnCalStart to receive the focus
-            Props.SpeedMode = SpeedType.Simulated;
-            Running = true;
-            SetButtons();
-            Props.RateCalibrationOn=true;
-            Cals.Running(true);
+            if (Cals.ReadyToCalibrate())
+            {
+                Props.SpeedMode = SpeedType.Simulated;
+                Running = true;
+                SetButtons();
+                Props.RateCalibrationOn = true;
+                Cals.Running(true);
+            }
         }
+
         private void btnCalStop_Click(object sender, EventArgs e)
         {
             Props.SpeedMode = StartSim;
@@ -279,7 +283,7 @@ namespace RateController.Menu
 
             double displaySpeed = Props.UseMetric ? Props.SimSpeed_KMH : Props.SimSpeed_KMH / Props.MPHtoKPH;
             tbSpeed.Text = displaySpeed.ToString("N1");
-            
+
             Initializing = false;
         }
     }

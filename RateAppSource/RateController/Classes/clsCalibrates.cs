@@ -68,6 +68,20 @@ namespace RateController
             }
         }
 
+        public bool ReadyToCalibrate()
+        {
+            bool Result = false;
+            for(int i=0;i<cCalibrates.Count;i++)
+            {
+                if (cCalibrates[i].PowerOn)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
+        }
+
         public void Save(int ID = 0)
         {
             if (ID == 0)

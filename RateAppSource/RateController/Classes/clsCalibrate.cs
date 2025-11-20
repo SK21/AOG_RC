@@ -13,13 +13,13 @@ namespace RateController
         private TextBox cCalFactorBox;
         private Label cDescriptionLabel;
         private bool cEdited;
-        private bool cEnabled;
         private Label cExpected;
         private int cID = 0;
         private bool cIsLocked;
         private Button cLocked;
         private TextBox cMeasured;
         private Button cPower;
+        private bool cPowerOn;
         private clsProduct cProduct;
         private ProgressBar cProgress;
         private Label cPulses;
@@ -27,20 +27,20 @@ namespace RateController
         private TextBox cRateBox;
         private bool cRunning;
         private Timer cTimer = new Timer();
-        private bool FirstRun;
         private bool Initializing;
         private double MeasuredAmount;
         private FormStart mf;
+        private bool ObjectInitialized;
+        private bool ProductEnabledStart;
         private double PulseCountStart;
         private double PulseCountTotal;
         private int SetCount;
-        private bool ProductEnabledStart;
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
             mf = CallingFrom;
             cID = ID;
-            FirstRun = true;
+            ObjectInitialized = false;
             cProduct = mf.Products.Item(cID);
             cCalFactor = cProduct.MeterCal;
 
@@ -71,9 +71,6 @@ namespace RateController
         public Label Description
         { get { return cDescriptionLabel; } set { cDescriptionLabel = value; } }
 
-        public bool Enabled
-        { get { return cEnabled; } }
-
         public Label Expected
         { get { return cExpected; } set { cExpected = value; } }
 
@@ -99,7 +96,6 @@ namespace RateController
             set
             {
                 cMeasured = value;
-
                 cMeasured.Enter += CMeasured_Enter;
                 cMeasured.TextChanged += CMeasured_TextChanged;
                 cMeasured.Validating += CMeasured_Validating;
@@ -115,6 +111,9 @@ namespace RateController
                 cPower.Click += CPower_Click;
             }
         }
+
+        public bool PowerOn
+        { get { return cPowerOn; } }
 
         public ProgressBar Progress
         {
@@ -138,7 +137,6 @@ namespace RateController
             set
             {
                 cPWMDisplay = value;
-
                 switch (cProduct.ControlType)
                 {
                     case ControlTypeEnum.Valve:
@@ -162,7 +160,6 @@ namespace RateController
             set
             {
                 cRateBox = value;
-
                 cRateBox.Enter += CRateBox_Enter;
                 cRateBox.TextChanged += CRateBox_TextChanged;
                 cRateBox.Validating += CRateBox_Validating;
@@ -174,36 +171,35 @@ namespace RateController
             get { return cRunning; }
             set
             {
-                if (value)
+                if (ObjectInitialized)
                 {
-                    if (cEnabled && (cRunning != value))
+                    if (value)
                     {
-                        // calibration started
-                        cRunning = true;
-                        cProgress.Value = 0;
-                        PulseCountStart = cProduct.Pulses();
-                        MeasuredAmount = 0;
-                        cProduct.Enabled = true;
+                        if (cPowerOn && (cRunning != value))
+                        {
+                            // calibration started
+                            cRunning = true;
+                            cProgress.Value = 0;
+                            PulseCountStart = cProduct.Pulses();
+                            MeasuredAmount = 0;
+                            cProduct.Enabled = true;
+                        }
                     }
+                    else
+                    {
+                        // calibration stopped
+                        cRunning = false;
+                        cProduct.Enabled = false;
+                    }
+                    cPower.Enabled = !value;
+                    Update();
                 }
-                else
-                {
-                    // calibration stopped
-                    cRunning = false;
-                    cProduct.Enabled = false;
-                }
-                cPower.Enabled = !value;
-                Update();
             }
         }
 
         public void Close()
         {
-            // restore initial settings
-            cProduct.Enabled = ProductEnabledStart;
-            cProduct.AppMode = ApplicationModeStart;
-            cProduct.CalMode = CalibrationMode.Off;
-            cProduct.Save();
+            RestoreState();
         }
 
         public void Load()
@@ -228,7 +224,7 @@ namespace RateController
 
         public void Save()
         {
-            if (cEdited && cEnabled)
+            if (cEdited && cPowerOn)
             {
                 if (Props.ReadOnly)
                 {
@@ -257,7 +253,7 @@ namespace RateController
         public void Update()
         {
             Initializing = true;
-            if (cEnabled)
+            if (cPowerOn)
             {
                 cPower.Image = Properties.Resources.FanOn;
             }
@@ -268,10 +264,10 @@ namespace RateController
             }
 
             cTimer.Enabled = cRunning;
-            cCalFactorBox.Enabled = !cRunning && cEnabled;
-            cMeasured.Enabled = !cRunning && cEnabled && cIsLocked;
-            cRateBox.Enabled = !cRunning && cEnabled;
-            cLocked.Enabled = !cRunning && cEnabled;
+            cCalFactorBox.Enabled = !cRunning && cPowerOn;
+            cMeasured.Enabled = !cRunning && cPowerOn && cIsLocked;
+            cRateBox.Enabled = !cRunning && cPowerOn;
+            cLocked.Enabled = !cRunning && cPowerOn;
 
             if (cRunning)
             {
@@ -422,20 +418,29 @@ namespace RateController
 
         private void CPower_Click(object sender, EventArgs e)
         {
-            if (FirstRun)
+            cPowerOn = !cPowerOn;
+
+            if (cPowerOn)
             {
-                // Prevent turning off product when frmMenuCalibrate loads.
-                // Only turn off when calibration is going to be used.
-                FirstRun = false;
-                cCalFactor = cProduct.MeterCal;
-                ApplicationModeStart = cProduct.AppMode;
-                ProductEnabledStart = cProduct.Enabled;
-                cProduct.Enabled = false;
-                PulseCountStart = cProduct.Pulses();
-                cProduct.AppMode = ApplicationMode.ConstantUPM;
+                // save non-calibration state
+                if (!ObjectInitialized)
+                {
+                    // Prevent turning off product when frmMenuCalibrate loads.
+                    // Only turn off when calibration is going to be used.
+                    ObjectInitialized = true;
+                    cCalFactor = cProduct.MeterCal;
+                    ApplicationModeStart = cProduct.AppMode;
+                    ProductEnabledStart = cProduct.Enabled;
+                    cProduct.Enabled = false;
+                    PulseCountStart = cProduct.Pulses();
+                    cProduct.AppMode = ApplicationMode.ConstantUPM;
+                }
             }
-            cEnabled = !cEnabled;
-            //cProduct.CalUseBaseRate = cEnabled;
+            else
+            {
+                RestoreState();
+            }
+
             Update();
         }
 
@@ -513,6 +518,19 @@ namespace RateController
                 Result = PulseCountTotal / MeasuredAmount;
             }
             return Result;
+        }
+
+        private void RestoreState()
+        {
+            if (ObjectInitialized)
+            {
+                // restore initial settings
+                cProduct.Enabled = ProductEnabledStart;
+                cProduct.AppMode = ApplicationModeStart;
+                cProduct.CalMode = CalibrationMode.Off;
+                cProduct.Save();
+                ObjectInitialized = false;
+            }
         }
     }
 }
