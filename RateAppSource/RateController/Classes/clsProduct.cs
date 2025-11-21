@@ -15,8 +15,6 @@ namespace RateController
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
-        private CalibrationMode cCalMode = CalibrationMode.Off;
-        private bool cCalUseBaseRate;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
         private bool cEnabled = false;
@@ -55,7 +53,7 @@ namespace RateController
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
-
+        private bool cCalSettingPWM = false;
         public clsProduct(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
@@ -234,22 +232,10 @@ namespace RateController
             set { cBumpButtons = value; }
         }
 
-        public CalibrationMode CalMode
+        public bool CalIsLocked
         {
-            get { return cCalMode; }
-            set
-            {
-                cCalMode = value;
-                if (cCalMode == CalibrationMode.Off)
-                {
-                    cCalUseBaseRate = false;
-                }
-                else
-                {
-                    // use base rate for cal and not vr rate
-                    cCalUseBaseRate = true;
-                }
-            }
+            get { return cCalSettingPWM; }
+            set { cCalSettingPWM = value; }
         }
 
         public ControlTypeEnum ControlType
@@ -932,7 +918,7 @@ namespace RateController
         public double TargetRate()
         {
             double Result = 0;
-            if (!cCalUseBaseRate && Props.VariableRateEnabled)
+            if (Props.VariableRateEnabled && !Props.RateCalibrationOn)
             {
                 Result = mf.Tls.Manager.GetRate(ID);
             }
@@ -956,7 +942,7 @@ namespace RateController
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
-                        if (cHectaresPerMinute == 0 && cCalMode == CalibrationMode.Off) HPM = 0;   // all sections off
+                        if (cHectaresPerMinute == 0 && !Props.RateCalibrationOn) HPM = 0;   // all sections off
                         Result = TargetRate() * HPM * 2.47105;
                     }
                     else
@@ -973,7 +959,7 @@ namespace RateController
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = mf.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
-                        if (cHectaresPerMinute == 0 && cCalMode == CalibrationMode.Off) HPM = 0;
+                        if (cHectaresPerMinute == 0 && !Props.RateCalibrationOn) HPM = 0;
                         Result = TargetRate() * HPM;
                     }
                     else

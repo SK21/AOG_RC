@@ -16,9 +16,6 @@ namespace RateController.Classes
     public enum ApplicationMode
     { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
 
-    public enum CalibrationMode
-    { Off, SettingPWM, TestingRate }
-
     public enum ControlTypeEnum
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 

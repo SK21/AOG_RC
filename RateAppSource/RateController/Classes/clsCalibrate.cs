@@ -7,6 +7,7 @@ namespace RateController
 {
     public class clsCalibrate
     {
+        private bool AlarmStart;
         private ApplicationMode ApplicationModeStart;
         private int CalPWM;
         private double cCalFactor;
@@ -26,23 +27,29 @@ namespace RateController
         private Label cPWMDisplay;
         private TextBox cRateBox;
         private bool cRunning;
+        private Button cStopRun;
         private Timer cTimer = new Timer();
         private bool Initializing;
         private double MeasuredAmount;
         private FormStart mf;
-        private bool ObjectInitialized;
         private bool ProductEnabledStart;
         private double PulseCountStart;
         private double PulseCountTotal;
         private int SetCount;
+        private bool TestingRate = false;
 
         public clsCalibrate(FormStart CallingFrom, int ID)
         {
             mf = CallingFrom;
             cID = ID;
-            ObjectInitialized = false;
+
             cProduct = mf.Products.Item(cID);
             cCalFactor = cProduct.MeterCal;
+            PulseCountStart = cProduct.Pulses();
+
+            ApplicationModeStart = cProduct.AppMode;
+            ProductEnabledStart = cProduct.Enabled;
+            AlarmStart = cProduct.UseOffRateAlarm;
 
             cTimer.Interval = 1000;
             cTimer.Enabled = false;
@@ -51,9 +58,10 @@ namespace RateController
 
         public event EventHandler<EventArgs> Edited;
 
+        #region Controls
+
         public TextBox CalFactorBox
         {
-            get { return cCalFactorBox; }
             set
             {
                 cCalFactorBox = value;
@@ -69,16 +77,17 @@ namespace RateController
         }
 
         public Label Description
-        { get { return cDescriptionLabel; } set { cDescriptionLabel = value; } }
+        {
+            set
+            {
+                cDescriptionLabel = value;
+                cDescriptionLabel.Text = (cID + 1).ToString() + ". " + cProduct.ProductName
+                 + "  - " + Props.ControlTypeDescription(cProduct.ControlType);
+            }
+        }
 
         public Label Expected
         { get { return cExpected; } set { cExpected = value; } }
-
-        public int ID
-        { get { return cID; } }
-
-        public bool IsLocked
-        { get { return cIsLocked; } }
 
         public Button Locked
         {
@@ -111,9 +120,6 @@ namespace RateController
                 cPower.Click += CPower_Click;
             }
         }
-
-        public bool PowerOn
-        { get { return cPowerOn; } }
 
         public ProgressBar Progress
         {
@@ -166,178 +172,17 @@ namespace RateController
             }
         }
 
-        public bool Running
+        public Button StopRun
         {
-            get { return cRunning; }
             set
             {
-                if (ObjectInitialized)
-                {
-                    if (value)
-                    {
-                        if (cPowerOn && (cRunning != value))
-                        {
-                            // calibration started
-                            cRunning = true;
-                            cProgress.Value = 0;
-                            PulseCountStart = cProduct.Pulses();
-                            MeasuredAmount = 0;
-                            cProduct.Enabled = true;
-                        }
-                    }
-                    else
-                    {
-                        // calibration stopped
-                        cRunning = false;
-                        cProduct.Enabled = false;
-                    }
-                    cPower.Enabled = !value;
-                    Update();
-                }
+                cStopRun = value;
             }
         }
 
-        public void Close()
-        {
-            RestoreState();
-        }
+        #endregion Controls
 
-        public void Load()
-        {
-            if (bool.TryParse(Props.GetProp(Name() + "_IsLocked"), out bool lk)) cIsLocked = lk;
-            if (double.TryParse(Props.GetProp(Name() + "_Pulses"), out double pl)) PulseCountTotal = pl;
-            if (double.TryParse(Props.GetProp(Name() + "_Amount"), out double amt)) MeasuredAmount = amt;
-            if (int.TryParse(Props.GetProp(Name() + "_CalPWM"), out int pwm)) CalPWM = pwm;
-        }
-
-        public void Reset()
-        {
-            bool Last = Initializing;
-            Initializing = true;
-            cPulses.Text = PulseCountTotal.ToString("N0");
-            cCalFactorBox.Text = cCalFactor.ToString("N1");
-            MeasuredAmount = 0;
-            cMeasured.Text = MeasuredAmount.ToString("N1");
-            cRateBox.Text = cProduct.RateSet.ToString("N1");
-            Initializing = Last;
-        }
-
-        public void Save()
-        {
-            if (cEdited && cPowerOn)
-            {
-                if (Props.ReadOnly)
-                {
-                    Props.ShowMessage("File is read only.", "Help", 5000, false, false, true);
-                }
-                else
-                {
-                    Props.SetProp(Name() + "_Pulses", PulseCountTotal.ToString());
-                    Props.SetProp(Name() + "_Amount", MeasuredAmount.ToString());
-                    Props.SetProp(Name() + "_CalPWM", CalPWM.ToString());
-                    Props.SetProp(Name() + "_IsLocked", cIsLocked.ToString());
-
-                    double.TryParse(cCalFactorBox.Text, out cCalFactor);
-                    cProduct.MeterCal = cCalFactor;
-                    double.TryParse(cRateBox.Text, out double tmp);
-                    cProduct.RateSet = tmp;
-                    cProduct.Save();
-
-                    cEdited = false;
-                    PulseCountStart = cProduct.Pulses();
-                    Update();
-                }
-            }
-        }
-
-        public void Update()
-        {
-            Initializing = true;
-            if (cPowerOn)
-            {
-                cPower.Image = Properties.Resources.FanOn;
-            }
-            else
-            {
-                cPower.Image = Properties.Resources.FanOff;
-                cRunning = false;
-            }
-
-            cTimer.Enabled = cRunning;
-            cCalFactorBox.Enabled = !cRunning && cPowerOn;
-            cMeasured.Enabled = !cRunning && cPowerOn && cIsLocked;
-            cRateBox.Enabled = !cRunning && cPowerOn;
-            cLocked.Enabled = !cRunning && cPowerOn;
-
-            if (cRunning)
-            {
-                if (!cIsLocked && MeterIsSet())
-                {
-                    cIsLocked = true;
-                    switch (cProduct.ControlType)
-                    {
-                        case ControlTypeEnum.Valve:
-                        case ControlTypeEnum.ComboCloseTimed:
-                        case ControlTypeEnum.ComboClose:
-                            cProduct.ManualPWM = 0;
-                            break;
-
-                        case ControlTypeEnum.Motor:
-                        case ControlTypeEnum.MotorWeights:
-                        case ControlTypeEnum.Fan:
-                            CalPWM = (int)cProduct.PWM();
-                            break;
-                    }
-                }
-
-                if (cIsLocked)
-                {
-                    cProduct.CalMode = CalibrationMode.TestingRate;
-                }
-                else
-                {
-                    cProduct.CalMode = CalibrationMode.SettingPWM;
-                }
-                cProduct.ManualPWM = CalPWM;
-            }
-            else
-            {
-                Reset();
-            }
-
-            if (cIsLocked)
-            {
-                cLocked.Image = Properties.Resources.ColorLocked;
-                cLocked.Visible = true;
-                cProgress.Visible = false;
-                cPWMDisplay.Text = CalPWM.ToString("N0");
-            }
-            else
-            {
-                cLocked.Image = Properties.Resources.ColorUnlocked;
-                cLocked.Visible = !cRunning;
-                cProgress.Visible = cRunning;
-                cPWMDisplay.Text = cProduct.PWM().ToString("N0");
-            }
-
-            PulseCountTotal = cProduct.Pulses() - PulseCountStart;
-            cPulses.Text = PulseCountTotal.ToString("N0");
-            cRateBox.Text = cProduct.RateSet.ToString("N1");
-            cMeasured.Text = MeasuredAmount.ToString("N1");
-            if (cCalFactor > 0)
-            {
-                cExpected.Text = (PulseCountTotal / cCalFactor).ToString("N1");
-            }
-            else
-            {
-                cExpected.Text = "0.0";
-            }
-
-            cDescriptionLabel.Text = (cID + 1).ToString() + ". " + cProduct.ProductName
-                + "  - " + Props.ControlTypeDescription(cProduct.ControlType);
-
-            Initializing = false;
-        }
+        #region Controls events
 
         private void CCalFactor_Enter(object sender, EventArgs e)
         {
@@ -422,19 +267,19 @@ namespace RateController
 
             if (cPowerOn)
             {
+                cCalFactor = cProduct.MeterCal;
+                Initializing = true;
+                cCalFactorBox.Text = cCalFactor.ToString("N1");
+                Initializing = false;
+
                 // save non-calibration state
-                if (!ObjectInitialized)
-                {
-                    // Prevent turning off product when frmMenuCalibrate loads.
-                    // Only turn off when calibration is going to be used.
-                    ObjectInitialized = true;
-                    cCalFactor = cProduct.MeterCal;
-                    ApplicationModeStart = cProduct.AppMode;
-                    ProductEnabledStart = cProduct.Enabled;
-                    cProduct.Enabled = false;
-                    PulseCountStart = cProduct.Pulses();
-                    cProduct.AppMode = ApplicationMode.ConstantUPM;
-                }
+                ApplicationModeStart = cProduct.AppMode;
+                ProductEnabledStart = cProduct.Enabled;
+                AlarmStart = cProduct.UseOffRateAlarm;
+
+                cProduct.AppMode = ApplicationMode.ConstantUPM;
+                cProduct.Enabled = false;
+                cProduct.UseOffRateAlarm = false;
             }
             else
             {
@@ -483,6 +328,220 @@ namespace RateController
             Update();
         }
 
+        #endregion Controls events
+
+        public int ID
+        { get { return cID; } }
+
+        public bool PowerOn
+        { get { return cPowerOn; } }
+
+        public bool Running
+        {
+            get { return cRunning; }
+            set
+            {
+                if (cPowerOn)
+                {
+                    if (value)
+                    {
+                        if (cRunning != value)
+                        {
+                            // calibration started
+                            cRunning = true;
+                            cProgress.Value = 0;
+                            PulseCountStart = cProduct.Pulses();
+                            MeasuredAmount = 0;
+                            cProduct.Enabled = true;
+                            TestingRate = cIsLocked;
+                        }
+                    }
+                    else
+                    {
+                        // calibration stopped
+                        cRunning = false;
+                        cProduct.Enabled = false;
+                        Reset();
+                    }
+                    Update();
+                }
+            }
+        }
+
+        public void Close()
+        {
+            RestoreState();
+        }
+
+        public void Load()
+        {
+            if (int.TryParse(Props.GetProp(Name() + "_CalPWM"), out int pwm)) CalPWM = pwm;
+        }
+
+        public void Reset()
+        {
+            bool Last = Initializing;
+            Initializing = true;
+            cPulses.Text = PulseCountTotal.ToString("N0");
+            cCalFactorBox.Text = cCalFactor.ToString("N1");
+            MeasuredAmount = 0;
+            cMeasured.Text = MeasuredAmount.ToString("N1");
+            cRateBox.Text = cProduct.RateSet.ToString("N1");
+            Initializing = Last;
+        }
+
+        public void Save()
+        {
+            if (cEdited && cPowerOn)
+            {
+                if (Props.ReadOnly)
+                {
+                    Props.ShowMessage("File is read only.", "Help", 5000, false, false, true);
+                }
+                else
+                {
+                    Props.SetProp(Name() + "_CalPWM", CalPWM.ToString());
+
+                    if (double.TryParse(cCalFactorBox.Text, out double NewFactor))
+                    {
+                        cCalFactor = NewFactor;
+                        cProduct.MeterCal = NewFactor;
+                        cProduct.Save();
+                    }
+
+                    cEdited = false;
+                }
+            }
+        }
+
+        public void Update()
+        {
+            Initializing = true;
+
+            if (cPowerOn)
+            {
+                cPower.Image = Properties.Resources.FanOn;
+                cTimer.Enabled = cRunning;
+
+                // pulses
+                PulseCountTotal = cProduct.Pulses() - PulseCountStart;
+                cPulses.Text = PulseCountTotal.ToString("N0");
+
+                // base rate
+                cRateBox.Enabled = !cRunning && !cIsLocked;
+                cRateBox.Text = cProduct.RateSet.ToString("N1");
+
+                // Meter Cal
+                cCalFactorBox.Enabled = !cRunning && !cIsLocked;
+
+                // Progress bar
+                cProgress.Visible = (!cIsLocked && Running);
+
+                if (cIsLocked)
+                {
+                    // Testing Rate, run in manual at CalPWM
+
+                    // Expected Amount
+                    if (TestingRate && cCalFactor > 0)
+                    {
+                        cExpected.Text = (PulseCountTotal / cCalFactor).ToString("N1");
+                    }
+
+                    // Measured Amount
+                    cMeasured.Enabled = !cRunning && TestingRate;
+                    cMeasured.Text = MeasuredAmount.ToString("N1");
+
+                    // Lock
+                    cLocked.Enabled = !cRunning;
+                    cLocked.Image = Properties.Resources.ColorLocked;
+                    cLocked.Visible = true;
+
+                    // PWM display
+                    cPWMDisplay.Text = CalPWM.ToString("N0");
+                }
+                else
+                {
+                    // Setting PWM, auto on, find CalPWM
+
+                    // Expected Amount
+                    cExpected.Text = "0";
+
+                    // Measured Amount
+                    cMeasured.Enabled = false;
+                    cMeasured.Text = "0";
+
+                    // Lock
+                    cLocked.Enabled = !cRunning;
+                    cLocked.Image = Properties.Resources.ColorUnlocked;
+                    cLocked.Visible = !cRunning;
+
+                    // PWM display
+                    cPWMDisplay.Text = cProduct.PWM().ToString("N0");
+                }
+
+                if (cRunning)
+                {
+                    if (!cIsLocked && MeterIsSet())
+                    {
+                        cIsLocked = true;
+                        switch (cProduct.ControlType)
+                        {
+                            case ControlTypeEnum.Valve:
+                            case ControlTypeEnum.ComboCloseTimed:
+                            case ControlTypeEnum.ComboClose:
+                                cProduct.ManualPWM = 0;
+                                break;
+
+                            case ControlTypeEnum.Motor:
+                            case ControlTypeEnum.MotorWeights:
+                            case ControlTypeEnum.Fan:
+                                CalPWM = (int)cProduct.PWM();
+                                break;
+                        }
+                        cStopRun.PerformClick();
+                    }
+
+                    cProduct.CalIsLocked = cIsLocked;
+                    cProduct.ManualPWM = CalPWM;
+                }
+            }
+            else
+            {
+                cPower.Image = Properties.Resources.FanOff;
+                cTimer.Enabled = false;
+
+                // pulses
+                cPulses.Text = "0";
+
+                // Base Rate
+                cRateBox.Enabled = false;
+                cRateBox.Text = "0";
+
+                // Meter Cal
+                cCalFactorBox.Enabled = false;
+                cCalFactorBox.Text = "0";
+
+                // Expected amount
+                cExpected.Text = "0";
+
+                // Measured Amount
+                cMeasured.Enabled = false;
+                cMeasured.Text = "0";
+
+                // Progress bar
+                cProgress.Visible = false;
+
+                // Lock
+                cLocked.Enabled = false;
+                cLocked.Image = Properties.Resources.ColorUnlocked;
+                cLocked.Visible = true;
+
+                // PWM display
+                cPWMDisplay.Text = "0";
+            }
+            Initializing = false;
+        }
+
         private bool MeterIsSet()
         {
             // true if within 10%
@@ -522,15 +581,13 @@ namespace RateController
 
         private void RestoreState()
         {
-            if (ObjectInitialized)
-            {
-                // restore initial settings
-                cProduct.Enabled = ProductEnabledStart;
-                cProduct.AppMode = ApplicationModeStart;
-                cProduct.CalMode = CalibrationMode.Off;
-                cProduct.Save();
-                ObjectInitialized = false;
-            }
+            // restore initial settings
+            cProduct.AppMode = ApplicationModeStart;
+            cProduct.Enabled = ProductEnabledStart;
+            cProduct.UseOffRateAlarm = AlarmStart;
+
+            cProduct.Save();
+            Running = false;
         }
     }
 }

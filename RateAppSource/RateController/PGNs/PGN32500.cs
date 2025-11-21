@@ -46,38 +46,12 @@ namespace RateController
             if (Prod.ModuleID >= 0 && Prod.SensorID >= 0)
             {
                 double Tmp = 0;
-                double RateSet;
+                double RateSet = 0;
                 Array.Clear(cData, 0, cByteCount);
                 cData[0] = 244;
                 cData[1] = 126;
 
                 cData[2] = Prod.mf.Tls.BuildModSenID((byte)Prod.ModuleID, Prod.SensorID);
-
-                // rate set
-                if (Prod.CalMode == CalibrationMode.Off)
-                {
-                    if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
-                        || Prod.AppMode == ApplicationMode.DocumentApplied)
-                    {
-                        RateSet = 0;
-                    }
-                    else
-                    {
-                        RateSet = Prod.TargetUPM() * 1000.0;
-                        if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
-                    }
-                }
-                else
-                {
-                    RateSet = Prod.TargetUPM() * 1000.0;
-                }
-
-                if (Prod.Enabled)
-                {
-                    cData[3] = (byte)RateSet;
-                    cData[4] = (byte)((int)RateSet >> 8);
-                    cData[5] = (byte)((int)RateSet >> 16);
-                }
 
                 // flow cal
                 Tmp = Prod.MeterCal * 1000.0;
@@ -126,23 +100,37 @@ namespace RateController
                 if (Props.RateCalibrationOn)
                 {
                     // calibrate
+                    RateSet = Prod.TargetUPM() * 1000.0;
+
                     cData[9] |= 0b10010000; // calibration on bit 7, master on bit 4
 
-                    if (Prod.CalMode == CalibrationMode.SettingPWM)
+                    if (Prod.CalIsLocked)
                     {
-                        // SettingPWM, auto on, find CalPWM
-                        cData[9] |= 0b01000000;
+                        // Testing Rate, run in manual at CalPWM
+                        cData[10] = (byte)Prod.ManualPWM;
+                        cData[11] = (byte)(Prod.ManualPWM >> 8);
                     }
                     else
                     {
-                        // TestingRate, run in manual at CalPWM
-                        cData[10] = (byte)Prod.ManualPWM;
-                        cData[11] = (byte)(Prod.ManualPWM >> 8);
+                        // Setting PWM, auto on, find CalPWM
+                        cData[9] |= 0b01000000;
                     }
                 }
                 else
                 {
                     // normal run
+                    // rate
+                    if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
+                            || Prod.AppMode == ApplicationMode.DocumentApplied)
+                    {
+                        RateSet = 0;
+                    }
+                    else
+                    {
+                        RateSet = Prod.TargetUPM() * 1000.0;
+                        if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
+                    }
+
                     // master on
                     if (Prod.mf.SwitchBox.Connected())
                     {
@@ -176,6 +164,13 @@ namespace RateController
                         cData[10] = (byte)Prod.ManualPWM;
                         cData[11] = (byte)(Prod.ManualPWM >> 8);
                     }
+                }
+
+                if (Prod.Enabled)
+                {
+                    cData[3] = (byte)RateSet;
+                    cData[4] = (byte)((int)RateSet >> 8);
+                    cData[5] = (byte)((int)RateSet >> 16);
                 }
 
                 // CRC

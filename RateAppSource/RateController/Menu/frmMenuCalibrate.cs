@@ -160,6 +160,7 @@ namespace RateController.Menu
             Cal.Progress = pb0;
             Cal.Locked = btnSet0;
             Cal.PWMDisplay = lbPWM0;
+            Cal.StopRun = btnCalStop;
 
             Cal = Cals.Item(1);
             Cal.Description = lbName1;
@@ -172,6 +173,7 @@ namespace RateController.Menu
             Cal.Progress = pb1;
             Cal.Locked = btnSet1;
             Cal.PWMDisplay = lbPWM1;
+            Cal.StopRun = btnCalStop;
 
             Cal = Cals.Item(2);
             Cal.Description = lbName2;
@@ -184,6 +186,7 @@ namespace RateController.Menu
             Cal.Progress = pb2;
             Cal.Locked = btnSet2;
             Cal.PWMDisplay = lbPWM2;
+            Cal.StopRun = btnCalStop;
 
             Cal = Cals.Item(3);
             Cal.Description = lbName3;
@@ -196,7 +199,9 @@ namespace RateController.Menu
             Cal.Progress = pb3;
             Cal.Locked = btnSet3;
             Cal.PWMDisplay = lbPWM3;
+            Cal.StopRun = btnCalStop;
         }
+
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
