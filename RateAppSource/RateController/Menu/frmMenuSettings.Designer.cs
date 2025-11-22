@@ -87,7 +87,7 @@
             this.ckBumpButtons.Text = "Bump Buttons";
             this.ckBumpButtons.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckBumpButtons.UseVisualStyleBackColor = true;
-            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
+            this.ckBumpButtons.CheckedChanged += new System.EventHandler(this.ckBumpButtons_CheckedChanged);
             // 
             // ckDefault
             // 
@@ -103,7 +103,7 @@
             this.ckDefault.Text = "Default Product";
             this.ckDefault.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDefault.UseVisualStyleBackColor = true;
-            this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged);
+            this.ckDefault.CheckedChanged += new System.EventHandler(this.ckDefault_CheckedChanged_1);
             // 
             // lbPercent
             // 

@@ -1,6 +1,7 @@
 ﻿using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RateController
 {
@@ -92,6 +93,7 @@ namespace RateController
                 clsProduct Prd = new clsProduct(mf, i);
                 cProducts.Add(Prd);
                 Prd.Load();
+                Debug.Print("Product " + Prd.ID.ToString() + ", Enabled: " + Prd.Enabled.ToString());
 
                 if (Prd.IsNew())
                 {
@@ -236,7 +238,7 @@ namespace RateController
             for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
                 clsProduct Prod = cProducts[i];
-                if (Prod.Enabled)
+                if (Prod.Enabled && !Prod.BumpButtons)
                 {
                     EnabledID = i;
                     if (Props.DefaultProduct == i) DefaultFound = true;
@@ -249,7 +251,11 @@ namespace RateController
                 cProducts[0].Save();
                 EnabledID = 0;
             }
-            if (!DefaultFound) Props.DefaultProduct = EnabledID;
+            if (!DefaultFound)
+            {
+                Props.DefaultProduct = EnabledID;
+                cProducts[EnabledID].BumpButtons = false;
+            }
         }
 
         public bool UniqueModSen(int ModID, int SenID, int ProdID)

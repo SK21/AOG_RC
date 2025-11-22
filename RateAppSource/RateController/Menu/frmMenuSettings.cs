@@ -43,24 +43,35 @@ namespace RateController.Menu
                 byte SenID = 0;
                 byte.TryParse(tbConID.Text, out ModID);
                 byte.TryParse(tbSenID.Text, out SenID);
+                clsProduct Prd = MainMenu.CurrentProduct;
 
-                if (mf.Products.UniqueModSen(ModID, SenID, MainMenu.CurrentProduct.ID))
+                if (mf.Products.UniqueModSen(ModID, SenID, Prd.ID))
                 {
-                    MainMenu.CurrentProduct.ModuleID = ModID;
-                    MainMenu.CurrentProduct.SensorID = SenID;
+                    Prd.ModuleID = ModID;
+                    Prd.SensorID = SenID;
 
-                    if (double.TryParse(tbMinUPM.Text, out double mu)) MainMenu.CurrentProduct.MinUPM = mu;
-                    if (double.TryParse(tbUPMspeed.Text, out double sp)) MainMenu.CurrentProduct.MinUPMbySpeed = sp;
-                    if (ckDefault.Checked) Props.DefaultProduct = MainMenu.CurrentProduct.ID;
-                    MainMenu.CurrentProduct.BumpButtons = ckBumpButtons.Checked;
-                    mf.SetScale(MainMenu.CurrentProduct.ID, ckScale.Checked);
-                    MainMenu.CurrentProduct.UseOffRateAlarm = ckOffRate.Checked;
-                    if (byte.TryParse(tbOffRate.Text, out byte off)) MainMenu.CurrentProduct.OffRateSetting = off;
-                    MainMenu.CurrentProduct.UseMinUPMbySpeed = rbUPMSpeed.Checked;
-                    MainMenu.CurrentProduct.Enabled = ckEnabled.Checked;
+                    if (double.TryParse(tbMinUPM.Text, out double mu)) Prd.MinUPM = mu;
+                    if (double.TryParse(tbUPMspeed.Text, out double sp)) Prd.MinUPMbySpeed = sp;
 
-                    MainMenu.CurrentProduct.Save();
+                    if (ckDefault.Checked)
+                    {
+                        Props.DefaultProduct = Prd.ID;
+                        Prd.BumpButtons = false;
+                    }
+                    else
+                    {
+                        Prd.BumpButtons = ckBumpButtons.Checked;
+                    }
+
+                    mf.SetScale(Prd.ID, ckScale.Checked);
+                    Prd.UseOffRateAlarm = ckOffRate.Checked;
+                    if (byte.TryParse(tbOffRate.Text, out byte off)) Prd.OffRateSetting = off;
+                    Prd.UseMinUPMbySpeed = rbUPMSpeed.Checked;
+                    Prd.Enabled = ckEnabled.Checked;
+
+                    Prd.Save();
                     SetButtons(false);
+                    mf.Products.SetEnabledDefault();
                     UpdateForm();
                     Props.RaiseProductSettingsChanged();
                 }
@@ -81,8 +92,20 @@ namespace RateController.Menu
             UpdateForm();
         }
 
+        private void ckBumpButtons_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckBumpButtons.Checked) ckDefault.Checked = false;
+            SetButtons(true);
+        }
+
         private void ckDefault_CheckedChanged(object sender, EventArgs e)
         {
+            SetButtons(true);
+        }
+
+        private void ckDefault_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (ckDefault.Checked) ckBumpButtons.Checked = false;
             SetButtons(true);
         }
 

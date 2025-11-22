@@ -28,11 +28,6 @@ namespace RateController
             }
         }
 
-        public int Count()
-        {
-            return cCalibrates.Count;
-        }
-
         public clsCalibrate Item(int ID)  // access records by ID
         {
             int IDX = ListID(ID);
@@ -52,6 +47,20 @@ namespace RateController
             }
         }
 
+        public bool ReadyToCalibrate()
+        {
+            bool Result = false;
+            for (int i = 0; i < cCalibrates.Count; i++)
+            {
+                if (cCalibrates[i].PowerOn)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
+        }
+
         public void Reset()
         {
             for (int i = 0; i < cCalibrates.Count; i++)
@@ -66,20 +75,6 @@ namespace RateController
             {
                 cCalibrates[i].Running = IsRunning;
             }
-        }
-
-        public bool ReadyToCalibrate()
-        {
-            bool Result = false;
-            for(int i=0;i<cCalibrates.Count;i++)
-            {
-                if (cCalibrates[i].PowerOn)
-                {
-                    Result = true;
-                    break;
-                }
-            }
-            return Result;
         }
 
         public void Save(int ID = 0)
