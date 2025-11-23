@@ -23,9 +23,10 @@ namespace RateController.Classes
         private Bitmap legendBitmap;
         private Font legendFont;
         private PictureBox legendHost;
+        private bool legendOverlayEnabled;
         private int legendRightMarginPx = 0;
         private string legendSignature;
-        private bool legendOverlayEnabled; // backing field
+        // backing field
 
         public LegendManager(GMapControl gmap)
         {

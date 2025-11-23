@@ -426,6 +426,7 @@ namespace RateController.Menu
             {
                 var item = new ListViewItem(job.Name);
                 item.SubItems.Add(job.Date.ToString("dd-MMM-yy"));
+                item.SubItems.Add("Job_" + job.ID.ToString());
                 item.Tag = job;
                 lvJobs.Items.Add(item);
             }

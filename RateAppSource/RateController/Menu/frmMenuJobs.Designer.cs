@@ -45,6 +45,7 @@
             this.btnNotesDown = new System.Windows.Forms.Button();
             this.btnNotesUp = new System.Windows.Forms.Button();
             this.gbJobs = new System.Windows.Forms.GroupBox();
+            this.btnResetField = new System.Windows.Forms.Button();
             this.lvJobs = new System.Windows.Forms.ListView();
             this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -58,7 +59,8 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckResume = new System.Windows.Forms.CheckBox();
-            this.btnResetField = new System.Windows.Forms.Button();
+            this.HdrFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnImport = new System.Windows.Forms.Button();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -279,11 +281,28 @@
             this.gbJobs.Text = "Jobs";
             this.gbJobs.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
+            // btnResetField
+            // 
+            this.btnResetField.BackColor = System.Drawing.Color.Transparent;
+            this.btnResetField.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnResetField.FlatAppearance.BorderSize = 0;
+            this.btnResetField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetField.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetField.Image = global::RateController.Properties.Resources.Update;
+            this.btnResetField.Location = new System.Drawing.Point(358, 21);
+            this.btnResetField.Name = "btnResetField";
+            this.btnResetField.Size = new System.Drawing.Size(70, 63);
+            this.btnResetField.TabIndex = 393;
+            this.btnResetField.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnResetField.UseVisualStyleBackColor = false;
+            this.btnResetField.Click += new System.EventHandler(this.btnResetField_Click);
+            // 
             // lvJobs
             // 
             this.lvJobs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.HdrName,
-            this.HdrDate});
+            this.HdrDate,
+            this.HdrFileName});
             this.lvJobs.FullRowSelect = true;
             this.lvJobs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvJobs.HideSelection = false;
@@ -297,12 +316,12 @@
             // HdrName
             // 
             this.HdrName.Text = "Name";
-            this.HdrName.Width = 275;
+            this.HdrName.Width = 150;
             // 
             // HdrDate
             // 
             this.HdrDate.Text = "Date";
-            this.HdrDate.Width = 300;
+            this.HdrDate.Width = 125;
             // 
             // cbSearchField
             // 
@@ -424,7 +443,7 @@
             this.ckResume.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckResume.Location = new System.Drawing.Point(212, 602);
+            this.ckResume.Location = new System.Drawing.Point(301, 602);
             this.ckResume.Name = "ckResume";
             this.ckResume.Size = new System.Drawing.Size(108, 64);
             this.ckResume.TabIndex = 392;
@@ -433,27 +452,26 @@
             this.ckResume.UseVisualStyleBackColor = true;
             this.ckResume.CheckedChanged += new System.EventHandler(this.ckResume_CheckedChanged);
             // 
-            // btnResetField
+            // HdrFileName
             // 
-            this.btnResetField.BackColor = System.Drawing.Color.Transparent;
-            this.btnResetField.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnResetField.FlatAppearance.BorderSize = 0;
-            this.btnResetField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetField.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetField.Image = global::RateController.Properties.Resources.Update;
-            this.btnResetField.Location = new System.Drawing.Point(358, 21);
-            this.btnResetField.Name = "btnResetField";
-            this.btnResetField.Size = new System.Drawing.Size(70, 63);
-            this.btnResetField.TabIndex = 393;
-            this.btnResetField.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnResetField.UseVisualStyleBackColor = false;
-            this.btnResetField.Click += new System.EventHandler(this.btnResetField_Click);
+            this.HdrFileName.Text = "FileName";
+            this.HdrFileName.Width = 150;
+            // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(166, 602);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(89, 64);
+            this.btnImport.TabIndex = 393;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = true;
             // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.ckResume);
             this.Controls.Add(this.gbCurrentJob);
             this.Controls.Add(this.gbJobs);
@@ -504,5 +522,7 @@
         private System.Windows.Forms.ColumnHeader HdrDate;
         private System.Windows.Forms.CheckBox ckResume;
         private System.Windows.Forms.Button btnResetField;
+        private System.Windows.Forms.ColumnHeader HdrFileName;
+        private System.Windows.Forms.Button btnImport;
     }
 }
