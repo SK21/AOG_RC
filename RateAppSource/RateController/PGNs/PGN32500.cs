@@ -4,6 +4,20 @@ using System.Diagnostics;
 
 namespace RateController
 {
+    enum CommandPGN32500 : byte
+    {
+        ResetQuantity = 1,              // 0000 0001, bit 0
+        ControlStandard = 0,            // 0000 0000, bits 1,2,3 cleared
+        ControlComboClose = 2,          // 0000 0010, bit 1
+        ControlMotor = 4,               // 0000 0100, bit 2
+        ControlMotorWeights = 6,        // 0000 0110, bit 1, bit 2
+        ControlFan = 8,                 // 0000 1000, bit 3
+        ControlComboCloseTimed = 10,    // 0000 1010, bit 1, bit 3
+        MasterOnMode = 16,              // 0001 0000, bit 4
+        MasterOnPosition = 32,          // 0010 0000, bit 5
+        AutoOn = 64,                    // 0100 0000, bit 6
+        CalibrationOn = 128             // 1000 0000, bit 7
+    }
     public class PGN32500
     {
         //PGN32500, Rate settings from RC to module
@@ -20,7 +34,7 @@ namespace RateController
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2,3		control type 0-4
         //	        - bit 4		    MasterOn mode
-        //          - bit 5         -
+        //          - bit 5         MasterOn switch position
         //          - bit 6         AutoOn
         //          - bit 7         Calibration On
         //10    manual pwm Lo
@@ -61,48 +75,43 @@ namespace RateController
 
                 // command byte
                 cData[9] = 0;
-                if (Prod.EraseAccumulatedUnits) cData[9] |= 0b00000001;
-                Prod.EraseAccumulatedUnits = false;
 
                 switch (Prod.ControlType)
                 {
                     case ControlTypeEnum.ComboClose:
-                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                        cData[9] |= 0b00000010; // set bit 1
+                        cData[9] = (byte)CommandPGN32500.ControlComboClose;
                         break;
 
                     case ControlTypeEnum.Motor:
-                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                        cData[9] |= 0b00000100; // set bit 2
+                        cData[9] = (byte)CommandPGN32500.ControlMotor;
                         break;
 
                     case ControlTypeEnum.MotorWeights:
-                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                        cData[9] |= 0b00000110; // set bit 1, 2
+                        cData[9] = (byte)CommandPGN32500.ControlMotorWeights;
                         break;
 
                     case ControlTypeEnum.Fan:
-                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                        cData[9] |= 0b00001000; // set bit 3
+                        cData[9] = (byte)CommandPGN32500.ControlFan;
                         break;
 
                     case ControlTypeEnum.ComboCloseTimed:
-                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
-                        cData[9] |= 0b00001010; // set bit 1, 3
+                        cData[9] = (byte)CommandPGN32500.ControlComboCloseTimed;
                         break;
 
                     default:
-                        // standard valve
-                        cData[9] &= 0b11110001; // clear bit 1, 2, 3
+                        // standard valve, leave bits 1, 2 and 3 unset
                         break;
                 }
+
+                if (Prod.EraseAccumulatedUnits) cData[9] |= (byte)CommandPGN32500.ResetQuantity;
+                Prod.EraseAccumulatedUnits = false;
 
                 if (Props.RateCalibrationOn)
                 {
                     // calibrate
                     RateSet = Prod.TargetUPM() * 1000.0;
 
-                    cData[9] |= 0b10010000; // calibration on bit 7, master on bit 4
+                    cData[9] |= (byte)(CommandPGN32500.CalibrationOn | CommandPGN32500.MasterOnMode);
 
                     if (Prod.CalIsLocked)
                     {
@@ -113,7 +122,7 @@ namespace RateController
                     else
                     {
                         // Setting PWM, auto on, find CalPWM
-                        cData[9] |= 0b01000000;
+                        cData[9] |= (byte)CommandPGN32500.AutoOn;
                     }
                 }
                 else
@@ -136,17 +145,20 @@ namespace RateController
                     {
                         if (Prod.mf.SectionControl.MasterOn
                             || Props.MasterSwitchMode == MasterSwitchMode.Override
-                            || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= 0b00010000;
+                            || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= (byte)CommandPGN32500.MasterOnMode;
+
+                        if (Prod.mf.SwitchBox.MasterOn) cData[9] |= (byte)CommandPGN32500.MasterOnPosition;
                     }
                     else
                     {
-                        cData[9] |= 0b00010000;
+                        // switchbox missing, always master on
+                        cData[9] |= (byte)CommandPGN32500.MasterOnMode;
                     }
 
                     if (Prod.mf.SwitchBox.AutoRateOn)
                     {
                         // auto on
-                        cData[9] |= 0b01000000;
+                        cData[9] |= (byte)CommandPGN32500.AutoOn;
 
                         if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
                         {
