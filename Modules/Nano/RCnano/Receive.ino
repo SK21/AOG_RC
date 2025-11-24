@@ -207,37 +207,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		}
 		break;
 
-	case 32504:
-		// PGN32504, Wheel Speed sensor settings from RC to module
-		//0     HeaderLo    248
-		//1     HeaderHi    126
-		//2     ModuleID    0-7
-		//3     GPIO pin    0-50
-		//4     Cal Lo       
-		//5     Cal Mid
-		//6     Cal Hi
-		//7     Commands
-		//          - bit 0, erase counts
-		//8     CRC
-
-		PGNlength = 9;
-
-		if (len > PGNlength - 1)
-		{
-			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
-			{
-				bool NewPin = (data[3] != MDL.WheelSpeedPin);
-
-				MDL.WheelSpeedPin = data[3];
-				MDL.WheelCal = (float)(data[4] | (uint32_t)data[5] << 8 | (uint32_t)data[6] << 16);
-				if ((data[7] & 1) == 1) WheelCounts = 0;
-
-				SaveData();
-				if (NewPin) resetFunc();
-			}
-		}
-		break;
-
 	case 32700:
 		// module config
 		//0     HeaderLo    188

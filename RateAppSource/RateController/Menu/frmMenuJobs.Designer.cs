@@ -49,6 +49,7 @@
             this.lvJobs = new System.Windows.Forms.ListView();
             this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.HdrFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbSearchField = new System.Windows.Forms.ComboBox();
             this.btnDeleteField = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -59,7 +60,6 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckResume = new System.Windows.Forms.CheckBox();
-            this.HdrFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnImport = new System.Windows.Forms.Button();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
@@ -323,6 +323,11 @@
             this.HdrDate.Text = "Date";
             this.HdrDate.Width = 125;
             // 
+            // HdrFileName
+            // 
+            this.HdrFileName.Text = "FileName";
+            this.HdrFileName.Width = 150;
+            // 
             // cbSearchField
             // 
             this.cbSearchField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -452,11 +457,6 @@
             this.ckResume.UseVisualStyleBackColor = true;
             this.ckResume.CheckedChanged += new System.EventHandler(this.ckResume_CheckedChanged);
             // 
-            // HdrFileName
-            // 
-            this.HdrFileName.Text = "FileName";
-            this.HdrFileName.Width = 150;
-            // 
             // btnImport
             // 
             this.btnImport.Location = new System.Drawing.Point(166, 602);
@@ -465,6 +465,7 @@
             this.btnImport.TabIndex = 393;
             this.btnImport.Text = "Import";
             this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Visible = false;
             // 
             // frmMenuJobs
             // 

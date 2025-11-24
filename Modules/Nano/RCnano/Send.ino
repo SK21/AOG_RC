@@ -107,16 +107,12 @@ void SendComm()
         Data[3] = (byte)PressureReading;
         Data[4] = (byte)(PressureReading >> 8);
 
-        // wheel speed, 10 X actual
-        if (MDL.WheelSpeedPin == NC) WheelSpeed = 0;
-        uint32_t Speed = WheelSpeed * 10.0;
-        Data[5] = Speed;
-        Data[6] = Speed >> 8;
+        Data[5] = 0;
+        Data[6] = 0;
 
-        if (MDL.WheelSpeedPin == NC) WheelCounts = 0;
-        Data[7] = WheelCounts;
-        Data[8] = WheelCounts >> 8;
-        Data[9] = WheelCounts >> 16;
+        Data[7] = 0;
+        Data[8] = 0;
+        Data[9] = 0;
 
         Data[10] = InoType;
         Data[11] = (byte)InoID;

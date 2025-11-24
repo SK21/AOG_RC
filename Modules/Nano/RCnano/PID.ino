@@ -12,7 +12,8 @@
 // TimedPause       time in ms where there is no adjustment of the combo valve.
 // PIDtime          time interval in ms the pid runs
 
-const float NormalAdjust = 1.0;
+const float FastAdjustMotor = 1.0;
+const float FastAdjustValve = 30.0;
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
@@ -78,6 +79,8 @@ void SetPWM()
 }
 float DoPID(byte ID, bool IsMotor)
 {
+	static float BrakeFactor;
+	static float ChangeAmount;
 	float Result = 0;
 
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
@@ -89,7 +92,7 @@ float DoPID(byte ID, bool IsMotor)
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
-			if (fabsf(RateError) > Sensor[ID].Deadband * Sensor[ID].TargetUPM)
+			if (abs(RateError) > Sensor[ID].Deadband * Sensor[ID].TargetUPM)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
@@ -103,27 +106,31 @@ float DoPID(byte ID, bool IsMotor)
 					IntegralSum[ID] = 0;
 				}
 
-				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint) ? NormalAdjust : Sensor[ID].PIDslowAdjust;
-
-				float Change = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
-				Change = constrain(Change, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
-
 				if (IsMotor)
 				{
-					Result += Change;
+					BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust * FastAdjustMotor;
+
+					ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
+					ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
+
+					Result += ChangeAmount;
 					Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
 				}
 				else
 				{
 					// valve
-					if (Change == 0.0f)
+					BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint) ? FastAdjustValve : Sensor[ID].PIDslowAdjust * FastAdjustValve;
+
+					ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
+
+					if (ChangeAmount == 0.0f)
 					{
 						Result = 0.0f;
 					}
 					else
 					{
-						Result = constrain(fabsf(Change) + Sensor[ID].MinPWM, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
-						Result *= (Change >= 0.0f) ? 1.0f : -1.0f;
+						Result = constrain(fabsf(ChangeAmount) + Sensor[ID].MinPWM, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
+						Result *= (ChangeAmount >= 0.0f) ? 1.0f : -1.0f;
 					}
 				}
 				LastPWM[ID] = Result;

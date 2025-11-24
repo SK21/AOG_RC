@@ -50,7 +50,7 @@ namespace RateController.Menu
                 Boxes[i].TextChanged += BoxTextChanged;
             }
             BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 20, .1, 1, 1, 10 };
-            BoxesMax = new double[] { 10, 50, 75, 50, 25, 50, 1000, 2000, 25, 3000, 25, 250 };
+            BoxesMax = new double[] { 10, 50, 100, 255, 25, 50, 1000, 2000, 25, 3000, 25, 250 };
             BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N1",  "N0", "F0", "F0",
                 "N1","F0","N0","N0" };
         }
@@ -228,23 +228,48 @@ namespace RateController.Menu
 
         private void btnPIDloadDefaults_Click(object sender, EventArgs e)
         {
-            HSmax.Value = Props.MaxPWMdefault;
-            HSmin.Value = Props.MinPWMdefault;
-            HSscaling.Value = Props.KPdefault;
-            HSintegral.Value = Props.KIdefault;
+            if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Motor || MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
+            {
+                // motors
+                HSmax.Value = Props.MaxPWMdefault;
+                HSmin.Value = Props.MinPWMdefault;
+                HSscaling.Value = Props.KPdefault;
+                HSintegral.Value = Props.KIdefault;
 
-            tbDeadband.Text = (Props.DeadbandDefault / 10.0).ToString("N1");
-            tbBrakepoint.Text = Props.BrakePointDefault.ToString();
-            tbSlowAdj.Text = Props.PIDslowAdjustDefault.ToString();
-            tbSlewRate.Text = Props.SlewRateDefault.ToString();
-            tbMaxMotorI.Text = (Props.MaxIntegralDefault / 10.0).ToString("N1");
-            tbMinStart.Text = Props.TimedMinStartDefault.ToString();
-            tbAdjustTm.Text = Props.TimedAdjustDefault.ToString();
-            tbPauseTm.Text = Props.TimedPauseDefault.ToString();
-            tbMinHz.Text = (Props.PulseMinHzDefault / 10.0).ToString("N1");
-            tbMaxHz.Text = Props.PulseMaxHzDefault.ToString();
-            tbSampleSize.Text = Props.PulseSampleSizeDefault.ToString();
-            tbPIDtime.Text = Props.PIDtimeDefault.ToString();
+                tbDeadband.Text = (Props.DeadbandDefault / 10.0).ToString("N1");
+                tbBrakepoint.Text = Props.BrakePointDefault.ToString();
+                tbSlowAdj.Text = Props.PIDslowAdjustDefault.ToString();
+                tbSlewRate.Text = Props.SlewRateDefault.ToString();
+                tbMaxMotorI.Text = (Props.MaxIntegralDefault / 10.0).ToString("N1");
+                tbMinStart.Text = Props.TimedMinStartDefault.ToString();
+                tbAdjustTm.Text = Props.TimedAdjustDefault.ToString();
+                tbPauseTm.Text = Props.TimedPauseDefault.ToString();
+                tbMinHz.Text = (Props.PulseMinHzDefault / 10.0).ToString("N1");
+                tbMaxHz.Text = Props.PulseMaxHzDefault.ToString();
+                tbSampleSize.Text = Props.PulseSampleSizeDefault.ToString();
+                tbPIDtime.Text = Props.PIDtimeDefault.ToString();
+            }
+            else
+            {
+                // valves
+                HSmax.Value = Props.MaxPWMdefault;
+                HSmin.Value = 15;
+                HSscaling.Value = 75;
+                HSintegral.Value = 15;
+
+                tbDeadband.Text = (Props.DeadbandDefault / 10.0).ToString("N1");
+                tbBrakepoint.Text = Props.BrakePointDefault.ToString();
+                tbSlowAdj.Text = "80";
+                tbSlewRate.Text = Props.SlewRateDefault.ToString();
+                tbMaxMotorI.Text = "20";
+                tbMinStart.Text = "15";
+                tbAdjustTm.Text = Props.TimedAdjustDefault.ToString();
+                tbPauseTm.Text = Props.TimedPauseDefault.ToString();
+                tbMinHz.Text = (Props.PulseMinHzDefault / 10.0).ToString("N1");
+                tbMaxHz.Text = Props.PulseMaxHzDefault.ToString();
+                tbSampleSize.Text = Props.PulseSampleSizeDefault.ToString();
+                tbPIDtime.Text = Props.PIDtimeDefault.ToString();
+            }
         }
 
         private void btnRight_Click(object sender, EventArgs e)

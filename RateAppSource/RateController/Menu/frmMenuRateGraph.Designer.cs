@@ -326,9 +326,9 @@
             this.lbHz.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.lbHz.Location = new System.Drawing.Point(12, 215);
             this.lbHz.Name = "lbHz";
-            this.lbHz.Size = new System.Drawing.Size(52, 23);
+            this.lbHz.Size = new System.Drawing.Size(61, 23);
             this.lbHz.TabIndex = 226;
-            this.lbHz.Text = "1000";
+            this.lbHz.Text = "1,000";
             this.lbHz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmMenuRateGraph

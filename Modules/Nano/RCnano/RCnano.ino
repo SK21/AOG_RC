@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 19115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 23115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -53,8 +53,6 @@ struct ModuleConfig
 	bool Is3Wire = true;			// False - powered on/off, True - powered on only
 	uint8_t PressurePin = 15;		
 	bool ADS1115Enabled = false;
-	uint8_t WheelSpeedPin = NC;
-	float WheelCal = 0;
 };
 
 ModuleConfig MDL;
@@ -160,8 +158,6 @@ bool EthernetConnected()
 }
 
 bool CalibrationOn[] = { false,false };
-float WheelSpeed = 0;
-uint32_t WheelCounts = 0;
 
 void setup()
 {
@@ -186,7 +182,6 @@ void loop()
 		GetUPM();
 		AdjustFlow();
 		CheckPressure();
-		if (MDL.WheelSpeedPin != NC) GetSpeed();
 	}
 
 	SendComm();
@@ -328,19 +323,26 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //uint32_t MaxLoopTime;
 //uint32_t LoopTmr;
 //byte ReadReset;
-//float debug1;
-//float debug2;
+//int MinMem = 2000;
+//double debug1;
+//double debug2;
+//double debug3;
+//double debug4;
 //
 //void DebugTheIno()
 //{
 //	if (millis() - DebugTime > 1000)
 //	{
 //		DebugTime = millis();
-//		Serial.println("");
+//		//Serial.println("");
 //
-//		Serial.print(MaxLoopTime);
+//		//Serial.print(F(" Micros: "));
+//		//Serial.print(MaxLoopTime);
 //
-//		Serial.print(", ");
+//		//Serial.print(F(",  SRAM left: "));
+//		//Serial.print(MinMem);
+//		//Serial.print(", ");
+//
 //		Serial.print(debug1);
 //
 //		Serial.print(", ");
@@ -349,15 +351,27 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //		Serial.print(", ");
 //		Serial.print(debug3);
 //
+//		Serial.print(", ");
+//		Serial.print(debug4);
+//
 //		Serial.println("");
 //
 //		if (ReadReset++ > 10)
 //		{
 //			ReadReset = 0;
 //			MaxLoopTime = 0;
+//			MinMem = 2000;
 //		}
 //	}
 //	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
 //	LoopTmr = micros();
+//	if (freeRam() < MinMem) MinMem = freeRam();
 //}
-
+//
+//int freeRam() {
+//	extern int __heap_start, * __brkval;
+//	int v;
+//	return (int)&v - (__brkval == 0
+//		? (int)&__heap_start : (int)__brkval);
+//}
+//
