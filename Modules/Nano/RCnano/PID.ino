@@ -79,8 +79,6 @@ void SetPWM()
 }
 float DoPID(byte ID, bool IsMotor)
 {
-	static float BrakeFactor;
-	static float ChangeAmount;
 	float Result = 0;
 
 	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
@@ -92,7 +90,7 @@ float DoPID(byte ID, bool IsMotor)
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
-			if (abs(RateError) > Sensor[ID].Deadband * Sensor[ID].TargetUPM)
+			if (fabsf(RateError) > Sensor[ID].Deadband * Sensor[ID].TargetUPM)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
@@ -106,6 +104,8 @@ float DoPID(byte ID, bool IsMotor)
 					IntegralSum[ID] = 0;
 				}
 
+				float BrakeFactor;
+				float ChangeAmount;
 				if (IsMotor)
 				{
 					BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust * FastAdjustMotor;
@@ -123,7 +123,7 @@ float DoPID(byte ID, bool IsMotor)
 
 					ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
 
-					if (ChangeAmount == 0.0f)
+					if (fabsf(ChangeAmount) < 1e-6f)
 					{
 						Result = 0.0f;
 					}
@@ -152,7 +152,6 @@ float DoPID(byte ID, bool IsMotor)
 	}
 	return Result;
 }
-
 
 float TimedCombo(byte ID, bool ManualAdjust = false)
 {
