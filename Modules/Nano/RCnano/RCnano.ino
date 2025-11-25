@@ -81,21 +81,21 @@ struct SensorConfig
 	uint32_t TotalPulses;
 	float TargetUPM;
 	float MeterCal;
-	float ManualAdjust;
+	int16_t ManualAdjust;
 	float Hz;
-	float MaxPWM;
-	float MinPWM;
+	uint8_t MaxPWM;
+	uint8_t MinPWM;
 	float Kp;
 	float Ki;
 	float Deadband;
-	float BrakePoint;
-	float PIDslowAdjust;
-	float SlewRate;
+	uint8_t BrakePoint;
+	uint8_t PIDslowAdjust;
+	uint8_t SlewRate;
 	float MaxIntegral;
 	float TimedMinStart;
-	uint32_t TimedAdjust;
-	uint32_t TimedPause;
-	uint32_t PIDtime;
+	uint16_t TimedAdjust;
+	uint16_t TimedPause;
+	uint8_t PIDtime;
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
@@ -185,7 +185,7 @@ void loop()
 	}
 
 	SendComm();
-	//DebugTheIno();
+	DebugTheIno();
 }
 
 void SetSensorsEnabled()
@@ -319,59 +319,59 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 	return Result;
 }
 
-//uint32_t DebugTime;
-//uint32_t MaxLoopTime;
-//uint32_t LoopTmr;
-//byte ReadReset;
-//int MinMem = 2000;
+uint32_t DebugTime;
+uint32_t MaxLoopTime;
+uint32_t LoopTmr;
+byte ReadReset;
+int MinMem = 2000;
 //double debug1;
 //double debug2;
 //double debug3;
 //double debug4;
-//
-//void DebugTheIno()
-//{
-//	if (millis() - DebugTime > 1000)
-//	{
-//		DebugTime = millis();
-//		//Serial.println("");
-//
-//		//Serial.print(F(" Micros: "));
-//		//Serial.print(MaxLoopTime);
-//
-//		//Serial.print(F(",  SRAM left: "));
-//		//Serial.print(MinMem);
-//		//Serial.print(", ");
-//
-//		Serial.print(debug1);
-//
-//		Serial.print(", ");
-//		Serial.print(debug2);
-//
-//		Serial.print(", ");
-//		Serial.print(debug3);
-//
-//		Serial.print(", ");
-//		Serial.print(debug4);
-//
-//		Serial.println("");
-//
-//		if (ReadReset++ > 10)
-//		{
-//			ReadReset = 0;
-//			MaxLoopTime = 0;
-//			MinMem = 2000;
-//		}
-//	}
-//	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
-//	LoopTmr = micros();
-//	if (freeRam() < MinMem) MinMem = freeRam();
-//}
-//
-//int freeRam() {
-//	extern int __heap_start, * __brkval;
-//	int v;
-//	return (int)&v - (__brkval == 0
-//		? (int)&__heap_start : (int)__brkval);
-//}
-//
+
+void DebugTheIno()
+{
+	if (millis() - DebugTime > 1000)
+	{
+		DebugTime = millis();
+		//Serial.println("");
+
+		Serial.print(F(" Micros: "));
+		Serial.print(MaxLoopTime);
+
+		Serial.print(F(",  SRAM: "));
+		Serial.print(MinMem);
+		Serial.print(", ");
+
+		//Serial.print(debug1);
+
+		//Serial.print(", ");
+		//Serial.print(debug2);
+
+		//Serial.print(", ");
+		//Serial.print(debug3);
+
+		//Serial.print(", ");
+		//Serial.print(debug4);
+
+		Serial.println("");
+
+		if (ReadReset++ > 10)
+		{
+			ReadReset = 0;
+			MaxLoopTime = 0;
+			MinMem = 2000;
+		}
+	}
+	if (micros() - LoopTmr > MaxLoopTime) MaxLoopTime = micros() - LoopTmr;
+	LoopTmr = micros();
+	if (freeRam() < MinMem) MinMem = freeRam();
+}
+
+int freeRam() {
+	extern int __heap_start, * __brkval;
+	int v;
+	return (int)&v - (__brkval == 0
+		? (int)&__heap_start : (int)__brkval);
+}
+

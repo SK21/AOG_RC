@@ -344,8 +344,8 @@ void LoadDefaults()
 		Sensor[i].Kp = 0.0003;    // gain 35
 		Sensor[i].Ki = 0.00123;   // integral 5
 		Sensor[i].Deadband = 0.015;
-		Sensor[i].BrakePoint = 0.35;
-		Sensor[i].PIDslowAdjust = 0.3;
+		Sensor[i].BrakePoint = 35;
+		Sensor[i].PIDslowAdjust = 30;
 		Sensor[i].SlewRate = 6;
 		Sensor[i].MaxIntegral = 0.1;
 		Sensor[i].TimedMinStart = 0.03;
