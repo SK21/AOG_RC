@@ -369,8 +369,8 @@ void LoadDefaults()
 	MDL.ADS1115Enabled = false;
 	MDL.InvertFlow = true;
 	MDL.InvertRelay = true;
-	MDL.WorkPin = 14;
-	MDL.PressurePin = 15;
+	MDL.WorkPin = 15;
+	MDL.PressurePin = 14;
 }
 
 bool ValidData()

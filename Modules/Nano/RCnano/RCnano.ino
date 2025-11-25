@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 23115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 25115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -48,10 +48,10 @@ struct ModuleConfig
 	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
 	uint8_t RelayControlPins[16] = { 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 };	// MCP23017, RC12-3
 	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
-	uint8_t WorkPin = 14;
+	uint8_t WorkPin = 15;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - powered on/off, True - powered on only
-	uint8_t PressurePin = 15;		
+	uint8_t PressurePin = 14;		
 	bool ADS1115Enabled = false;
 };
 
@@ -111,7 +111,7 @@ SensorConfig Sensor[2];
 // and then mount the shield on top of the Nano.
 
 // ethernet
-byte Ethernet::buffer[500];			// udp send and receive buffer (increased to prevent UDP payload truncation)
+byte Ethernet::buffer[400];			// udp send and receive buffer (changed to 400 25Nov2025)
 static byte selectPin = 10;
 uint16_t ListeningPort = 28888;
 uint16_t DestinationPort = 29999;
@@ -328,20 +328,21 @@ int MinMem = 2000;
 //double debug2;
 //double debug3;
 //double debug4;
+//double debug5;
 
 void DebugTheIno()
 {
 	if (millis() - DebugTime > 1000)
 	{
 		DebugTime = millis();
-		//Serial.println("");
+		Serial.println("");
 
 		Serial.print(F(" Micros: "));
 		Serial.print(MaxLoopTime);
 
 		Serial.print(F(",  SRAM: "));
 		Serial.print(MinMem);
-		Serial.print(", ");
+		//Serial.print(", ");
 
 		//Serial.print(debug1);
 
@@ -354,7 +355,8 @@ void DebugTheIno()
 		//Serial.print(", ");
 		//Serial.print(debug4);
 
-		Serial.println("");
+		//Serial.print(", ");
+		//Serial.print(debug5);
 
 		if (ReadReset++ > 10)
 		{

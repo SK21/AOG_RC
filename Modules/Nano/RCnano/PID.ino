@@ -97,7 +97,7 @@ float PIDvalve(byte ID)
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
 
 				float ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
-
+			
 				if (fabsf(ChangeAmount) < 0.1)
 				{
 					Result = 0.0f;
