@@ -122,19 +122,19 @@ namespace RateController.Classes
 
         public static readonly byte BrakePointDefault = 35;
         public static readonly byte DeadbandDefault = 15;
-        public static readonly byte KIdefault = 5;
-        public static readonly byte KPdefault = 35;
-        public static readonly byte MaxIntegralDefault = 1;
+        public static readonly byte KIdefault = 65;
+        public static readonly byte KPdefault = 65;
+        public static readonly byte MaxIntegralDefault = 250;
         public static readonly byte MaxPWMdefault = 100;
-        public static readonly byte MinPWMdefault = 0;
-        public static readonly byte PIDslowAdjustDefault = 30;
+        public static readonly byte MinPWMdefault = 5;
+        public static readonly byte PIDslowAdjustDefault = 80;
         public static readonly byte PIDtimeDefault = 100;
         public static readonly UInt16 PulseMaxHzDefault = 3000;
         public static readonly byte PulseMinHzDefault = 10;
         public static readonly byte PulseSampleSizeDefault = 12;
-        public static readonly byte SlewRateDefault = 15;
+        public static readonly byte SlewRateDefault = 25;
         public static readonly byte TimedAdjustDefault = 80;
-        public static readonly byte TimedMinStartDefault = 3;
+        public static readonly byte TimedMinStartDefault = 50;
         public static readonly UInt16 TimedPauseDefault = 400;
 
         #endregion flow adjustment defaults

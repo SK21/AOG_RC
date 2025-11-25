@@ -298,7 +298,7 @@ namespace RateController.Classes
             get { return cTimedMinStart; }
             set
             {
-                if (value >= 0 && value <= 50)
+                if (value >= 0 && value <= 75)
                 {
                     cTimedMinStart = value;
                 }
