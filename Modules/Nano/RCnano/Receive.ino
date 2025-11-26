@@ -146,8 +146,15 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						Sensor[SensorID].MaxPWM = (255.0 * data[3] / 100.0);
 						Sensor[SensorID].MinPWM = (255.0 * data[4] / 100.0);
 
-						// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
-						Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+						if (data[5] > 0)
+						{
+							// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
+							Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+						}
+						else
+						{
+							Sensor[SensorID].Kp = 0;
+						}
 
 						if (data[6] > 0)
 						{

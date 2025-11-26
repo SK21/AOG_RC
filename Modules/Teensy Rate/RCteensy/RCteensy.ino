@@ -13,7 +13,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 19115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 25115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -95,21 +95,21 @@ struct SensorConfig	// about 104 bytes
 	uint32_t TotalPulses;
 	float TargetUPM;
 	float MeterCal;
-	float ManualAdjust;
+	int16_t ManualAdjust;
 	float Hz;
-	float MaxPWM;
-	float MinPWM;
+	uint8_t MaxPWM;
+	uint8_t MinPWM;
 	float Kp;
 	float Ki;
 	float Deadband;
-	float BrakePoint;
-	float PIDslowAdjust;
-	float SlewRate;
+	uint8_t BrakePoint;
+	uint8_t PIDslowAdjust;
+	uint8_t SlewRate;
 	float MaxIntegral;
 	float TimedMinStart;
-	uint32_t TimedAdjust;
-	uint32_t TimedPause;
-	uint32_t PIDtime;
+	uint16_t TimedAdjust;
+	uint16_t TimedPause;
+	uint8_t PIDtime;
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
@@ -317,8 +317,8 @@ void Blink()
 	static bool State = false;
 	static elapsedMillis BlinkTmr;
 	static elapsedMicros LoopTmr;
-	static byte Count = 0;
-	static uint32_t MaxLoopTime = 0;
+	//static byte Count = 0;
+	//static uint32_t MaxLoopTime = 0;
 
 	if (BlinkTmr > 1000)
 	{

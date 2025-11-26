@@ -169,15 +169,22 @@ void ReadPGNs(byte data[], uint16_t len)
                     byte SensorID = ParseSenID(data[2]);
                     if (SensorID < MDL.SensorCount)
                     {
-                        Sensor[SensorID].MaxPWM = (float)(255.0 * data[3] / 100.0);
-                        Sensor[SensorID].MinPWM = (float)(255.0 * data[4] / 100.0);
+                        Sensor[SensorID].MaxPWM = (255.0 * data[3] / 100.0);
+                        Sensor[SensorID].MinPWM = (255.0 * data[4] / 100.0);
 
-                        // 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
-                        Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+                        if (data[5] > 0)
+                        {
+                            // 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
+                            Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+                        }
+                        else
+                        {
+                            Sensor[SensorID].Kp = 0;
+                        }
 
                         if (data[6] > 0)
                         {
-                            Sensor[SensorID].Ki = pow(1.06, data[6] - 120);
+                            Sensor[SensorID].Ki = pow(1.1, data[6] - 120);
                         }
                         else
                         {
@@ -185,8 +192,8 @@ void ReadPGNs(byte data[], uint16_t len)
                         }
 
                         Sensor[SensorID].Deadband = data[7] / 1000.0;
-                        Sensor[SensorID].BrakePoint = data[8] / 100.0;
-                        Sensor[SensorID].PIDslowAdjust = data[9] / 100.0;
+                        Sensor[SensorID].BrakePoint = data[8];
+                        Sensor[SensorID].PIDslowAdjust = data[9];
                         Sensor[SensorID].SlewRate = data[10];
                         Sensor[SensorID].MaxIntegral = data[11] / 10.0;
                         Sensor[SensorID].TimedMinStart = data[13] / 100.0;

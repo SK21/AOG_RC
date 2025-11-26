@@ -340,15 +340,15 @@ void LoadDefaults()
 	for (int i = 0; i < 2; i++)
 	{
 		Sensor[i].MaxPWM = 255;
-		Sensor[i].MinPWM = 10;
-		Sensor[i].Kp = 0.0003;    // gain 35
-		Sensor[i].Ki = 0.00123;   // integral 5
+		Sensor[i].MinPWM = 5;
+		Sensor[i].Kp = pow(1.1, 65 - 120);	// Kp = 65
+		Sensor[i].Ki = pow(1.1, 65 - 120);	// Ki = 65
 		Sensor[i].Deadband = 0.015;
 		Sensor[i].BrakePoint = 35;
 		Sensor[i].PIDslowAdjust = 30;
-		Sensor[i].SlewRate = 6;
-		Sensor[i].MaxIntegral = 0.1;
-		Sensor[i].TimedMinStart = 0.03;
+		Sensor[i].SlewRate = 25;
+		Sensor[i].MaxIntegral = 25;
+		Sensor[i].TimedMinStart = 0.5;
 		Sensor[i].TimedAdjust = 80;
 		Sensor[i].TimedPause = 400;
 		Sensor[i].PIDtime = 100;
