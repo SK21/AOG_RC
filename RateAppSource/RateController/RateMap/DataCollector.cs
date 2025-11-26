@@ -86,7 +86,6 @@ namespace RateController.Classes
                         if (SaveStopWatch.Elapsed >= SaveInterval)
                         {
                             SaveStopWatch.Reset();
-                            Debug.Print("RecordReading");
                             SaveData(Props.CurrentRateDataPath);
                             SaveStopWatch.Start();
                         }
@@ -99,60 +98,62 @@ namespace RateController.Classes
         {
             try
             {
-                LastSavePath = DataFilePath;
-                List<RateReading> snapshot;
-                lock (_lock)
+                if (DataFilePath != null)
                 {
-                    // Skip the readings that have already been saved.
-                    snapshot = Readings.Skip(lastSavedIndex).ToList();
-                    // Update the index so that next time only the new items will be written.
-                    lastSavedIndex = Readings.Count;
-                    Debug.Print("File: " + DataFilePath + ",  Count: " + Readings.Count.ToString());
-                }
-
-                bool fileExists = File.Exists(DataFilePath);
-                using (var writer = new StreamWriter(DataFilePath, append: true))
-                {
-                    // If the file does not yet exist, write the header.
-                    if (!fileExists)
+                    LastSavePath = DataFilePath;
+                    List<RateReading> snapshot;
+                    lock (_lock)
                     {
-                        string header = "Timestamp,Latitude,Longitude," +
-                                        "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
-                                        "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
-                        writer.WriteLine(header);
+                        // Skip the readings that have already been saved.
+                        snapshot = Readings.Skip(lastSavedIndex).ToList();
+                        // Update the index so that next time only the new items will be written.
+                        lastSavedIndex = Readings.Count;
                     }
 
-                    // Write each reading as a CSV line.
-                    foreach (var reading in snapshot)
+                    bool fileExists = File.Exists(DataFilePath);
+                    using (var writer = new StreamWriter(DataFilePath, append: true))
                     {
-                        string timestamp = reading.Timestamp.ToString("O", CultureInfo.InvariantCulture);
-                        string lat = reading.Latitude.ToString(CultureInfo.InvariantCulture);
-                        string lon = reading.Longitude.ToString(CultureInfo.InvariantCulture);
-                        string basicValues = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", timestamp, lat, lon);
-
-                        // Prepare the applied rates columns (filling unused columns with empty strings).
-                        string[] appliedColumns = new string[5];
-                        for (int i = 0; i < 5; i++)
+                        // If the file does not yet exist, write the header.
+                        if (!fileExists)
                         {
-                            appliedColumns[i] = i < reading.AppliedRates.Length
-                                ? reading.AppliedRates[i].ToString(CultureInfo.InvariantCulture)
-                                : "";
+                            string header = "Timestamp,Latitude,Longitude," +
+                                            "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
+                                            "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
+                            writer.WriteLine(header);
                         }
-                        string appliedData = string.Join(",", appliedColumns);
 
-                        // Prepare the target rates columns.
-                        string[] targetColumns = new string[5];
-                        for (int i = 0; i < 5; i++)
+                        // Write each reading as a CSV line.
+                        foreach (var reading in snapshot)
                         {
-                            targetColumns[i] = i < reading.TargetRates.Length
-                                ? reading.TargetRates[i].ToString(CultureInfo.InvariantCulture)
-                                : "";
-                        }
-                        string targetData = string.Join(",", targetColumns);
+                            string timestamp = reading.Timestamp.ToString("O", CultureInfo.InvariantCulture);
+                            string lat = reading.Latitude.ToString(CultureInfo.InvariantCulture);
+                            string lon = reading.Longitude.ToString(CultureInfo.InvariantCulture);
+                            string basicValues = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", timestamp, lat, lon);
 
-                        // Construct the full CSV line.
-                        string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, targetData);
-                        writer.WriteLine(csvLine);
+                            // Prepare the applied rates columns (filling unused columns with empty strings).
+                            string[] appliedColumns = new string[5];
+                            for (int i = 0; i < 5; i++)
+                            {
+                                appliedColumns[i] = i < reading.AppliedRates.Length
+                                    ? reading.AppliedRates[i].ToString(CultureInfo.InvariantCulture)
+                                    : "";
+                            }
+                            string appliedData = string.Join(",", appliedColumns);
+
+                            // Prepare the target rates columns.
+                            string[] targetColumns = new string[5];
+                            for (int i = 0; i < 5; i++)
+                            {
+                                targetColumns[i] = i < reading.TargetRates.Length
+                                    ? reading.TargetRates[i].ToString(CultureInfo.InvariantCulture)
+                                    : "";
+                            }
+                            string targetData = string.Join(",", targetColumns);
+
+                            // Construct the full CSV line.
+                            string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, targetData);
+                            writer.WriteLine(csvLine);
+                        }
                     }
                 }
             }
@@ -185,9 +186,7 @@ namespace RateController.Classes
                     throw new FileNotFoundException("The specified data file was not found.", Props.CurrentRateDataPath);
 
                 SaveStopWatch.Reset();
-                Debug.Print("LoadData - save previous");
                 SaveData(LastSavePath); // save any unrecorded data
-                Debug.Print("LoadData - load:  "+Props.CurrentRateDataPath);
 
                 // Clear the existing readings before loading.
                 lock (_lock)
@@ -266,7 +265,6 @@ namespace RateController.Classes
                 lock (_lock)
                 {
                     lastSavedIndex = Readings.Count;
-                    Debug.Print("Load count: " + Readings.Count.ToString());
                 }
 
                 if (Props.RateRecordEnabled) SaveStopWatch.Start();

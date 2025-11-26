@@ -93,7 +93,6 @@ namespace RateController
                 clsProduct Prd = new clsProduct(mf, i);
                 cProducts.Add(Prd);
                 Prd.Load();
-                Debug.Print("Product " + Prd.ID.ToString() + ", Enabled: " + Prd.Enabled.ToString());
 
                 if (Prd.IsNew())
                 {
