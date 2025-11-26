@@ -60,7 +60,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "23-Nov-2025";
+        private static string cAppDate = "25-Nov-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
@@ -316,6 +316,11 @@ namespace RateController.Classes
             }
         }
 
+        public static bool ProductsAreOn
+        {
+            get { return mf.Products.ProductsAreOn(); }
+        }
+
         public static string ProfilesFolder
         { get { return cProfilesFolder; } }
 
@@ -327,10 +332,10 @@ namespace RateController.Classes
 
         public static DataCollector RateCollector
         {
-            get 
+            get
             {
                 if (cRateCollector == null) cRateCollector = new DataCollector();
-                return cRateCollector; 
+                return cRateCollector;
             }
         }
 
@@ -653,11 +658,6 @@ namespace RateController.Classes
         public static void RaiseEventProfileChanged()
         {
             ProfileChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        public static bool ProductsAreOn
-        {
-            get { return mf.Products.ProductsAreOn(); }
         }
 
         public static void ShowMessage(string Message, string Title = "Help",
