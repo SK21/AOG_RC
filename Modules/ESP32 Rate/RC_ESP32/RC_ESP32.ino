@@ -20,14 +20,12 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 26115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 30115;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 
-const uint8_t MaxProductCount = 2;
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
-const int MaxSampleSize = 25;
 const uint32_t FlowTimeout = 4000;
 
 const uint16_t EEPROM_SIZE = 512;
@@ -44,13 +42,19 @@ const uint8_t W5500_SS = 5;		// W5500 SPI SS
 #if defined(ESP32)
 const int PWM_BITS = 12;
 const int PWM_FREQ = 490;
+const uint8_t MaxProductCount = 6;
+const int MaxSampleSize = 25;
 #elif defined(ARDUINO_TEENSY41)
 const int PWM_BITS = 12;
 const int PWM_FREQ = 490;
+const uint8_t MaxProductCount = 6;
+const int MaxSampleSize = 25;
 #else // Nano & similar AVR
 const int PWM_BITS = 8;
 const int PWM_FREQ = 490;  // Default
 uint8_t ditherCounter = 0; // for Nano dithering
+const uint8_t MaxProductCount = 2;
+const int MaxSampleSize = 11;
 #endif
 
 enum ControlType
@@ -66,7 +70,7 @@ struct ModuleConfig	// about 130 bytes
 {
 	// RC15
 	uint8_t ID = 0;
-	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
+	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
@@ -402,8 +406,8 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //		//Serial.print(", ");
 //		//Serial.print(WifiMasterOn);
 //
-//		//Serial.print(", ");
-//		//Serial.print(Button[0]);
+//		Serial.print(", ");
+//		Serial.print(Sensor[0].TotalPulses);
 //
 //		Serial.println("");
 //

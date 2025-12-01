@@ -2,20 +2,19 @@
 // PulseMaxHz       maximum Hz of the flow sensor
 // PulseSampeSize   number of pulses used to get the median Hz reading
 
-uint32_t LastPulse[2];
-uint32_t ReadLast[2];
-uint32_t PulseTime[2];
+uint32_t LastPulse[MaxProductCount];
+uint32_t ReadLast[MaxProductCount];
+uint32_t PulseTime[MaxProductCount];
 
-volatile uint32_t Samples[2][MaxSampleSize];
-volatile uint16_t PulseCount[2];
-volatile uint8_t SamplesCount[2];
-volatile uint8_t SamplesIndex[2];
+volatile uint32_t Samples[MaxProductCount][MaxSampleSize];
+volatile uint16_t PulseCount[MaxProductCount];
+volatile uint8_t SamplesCount[MaxProductCount];
+volatile uint8_t SamplesIndex[MaxProductCount];
 
-IRAM_ATTR void PulseISR(uint8_t ID)
+IRAM_ATTR void PulseISR(uint8_t ID,uint32_t ReadTime)
 {
 	if (RelayLo > 0 || RelayHi > 0)
 	{
-		uint32_t ReadTime = micros();
 		PulseTime[ID] = ReadTime - ReadLast[ID];
 		ReadLast[ID] = ReadTime;
 
@@ -31,7 +30,7 @@ IRAM_ATTR void PulseISR(uint8_t ID)
 
 void GetUPM()
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		if (PulseCount[i])
 		{
@@ -76,11 +75,31 @@ void GetUPM()
 
 IRAM_ATTR void ISR0()
 {
-	PulseISR(0);
+	PulseISR(0,micros());
 }
 
 IRAM_ATTR void ISR1()
 {
-	PulseISR(1);
+	PulseISR(1, micros());
+}
+
+IRAM_ATTR void ISR2()
+{
+	PulseISR(2, micros());
+}
+
+IRAM_ATTR void ISR3()
+{
+	PulseISR(3, micros());
+}
+
+IRAM_ATTR void ISR4()
+{
+	PulseISR(4, micros());
+}
+
+IRAM_ATTR void ISR5()
+{
+	PulseISR(5, micros());
 }
 

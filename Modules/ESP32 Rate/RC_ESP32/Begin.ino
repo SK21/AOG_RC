@@ -1,5 +1,5 @@
 // valid pins for each processor
-uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// SPI pins 5,18,19,23 excluded for ethernet module
+uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33,34,35,36,39 };	// SPI pins 5,18,19,23 excluded for ethernet module
 
 void DoSetup()
 {
@@ -140,6 +140,18 @@ void DoSetup()
 			break;
 		case 1:
 			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, RISING);
+			break;
+		case 2:
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR2, RISING);
+			break;
+		case 3:
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR3, RISING);
+			break;
+		case 4:
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR4, RISING);
+			break;
+		case 5:
+			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR5, RISING);
 			break;
 		}
 
@@ -579,7 +591,7 @@ void LoadDefaults()
 	MDL.WorkPin = NC;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
-	MDL.ADS1115Enabled = true;
+	MDL.ADS1115Enabled = false;
 	MDL.PressurePin = NC;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
