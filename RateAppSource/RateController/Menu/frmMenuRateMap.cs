@@ -5,6 +5,7 @@ using RateController.Classes;
 using RateController.Forms;
 using RateController.Language;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -14,6 +15,8 @@ namespace RateController.Menu
 {
     public partial class frmMenuRateMap : Form
     {
+        public bool MenuSelected = false;
+
         // Pan scale (pixels moved per scrollbar unit)
         private const int PanScalePxPerUnit = 3;
 
@@ -25,6 +28,7 @@ namespace RateController.Menu
         private int MainLeft = 0;
         private frmMenu MainMenu;
         private int MainTop = 0;
+        private int MaxZoom;
         private FormStart mf;
         private int PicHeight;
         private int PicLeft;
@@ -41,6 +45,7 @@ namespace RateController.Menu
             MainMenu = menu;
             mf = main;
             this.Tag = false;
+            MaxZoom = 17;
             InitializeColorComboBox();
         }
 
@@ -329,7 +334,7 @@ namespace RateController.Menu
 
         private void colorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-          if(!Initializing)  SetEditInProgress(true);
+            if (!Initializing) SetEditInProgress(true);
         }
 
         private void EnableButtons()
@@ -341,6 +346,16 @@ namespace RateController.Menu
             tbP4.Enabled = EditZones;
             colorComboBox.Enabled = EditZones;
             ckEditPolygons.Enabled = EditZones;
+        }
+
+        private void frmMenuRateMap_Activated(object sender, EventArgs e)
+        {
+            if (MenuSelected)
+            {
+                mf.Tls.Manager.ShowAppliedLayer();
+                mf.Tls.Manager.CenterMap();
+                MenuSelected = false;
+            }
         }
 
         private void frmMenuRateMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -526,6 +541,29 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
+        private void SaveMapImageWithLegend(string imageFilePath)
+        {
+            var ctrl = mf.Tls.Manager.gmapObject;
+            bool prevLegend = mf.Tls.Manager.LegendOverlayEnabled;
+
+            // Ensure legend is enabled for capture
+            mf.Tls.Manager.LegendOverlayEnabled = true;
+
+            // Force a synchronous repaint so legend is drawn
+            ctrl.Refresh();
+            ctrl.Update();
+            Application.DoEvents();
+
+            using (var bmp = new Bitmap(ctrl.Width, ctrl.Height))
+            {
+                ctrl.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                bmp.Save(imageFilePath, ImageFormat.Png);
+            }
+
+            // Restore previous state
+            mf.Tls.Manager.LegendOverlayEnabled = prevLegend;
+        }
+
         private void SetEditInProgress(bool InProgress)
         {
             if (InProgress != EditInProgress)
@@ -693,13 +731,9 @@ namespace RateController.Menu
 
             GMapControl gmap = mf.Tls.Manager.gmapObject;
 
-            int newValue = (int)Math.Round((gmap.Zoom - gmap.MinZoom) * 100.0 / (gmap.MaxZoom - gmap.MinZoom));
-            if (VSzoom.Value != newValue)
-            {
-                updatingZoom = true;
-                VSzoom.Value = newValue;
-                updatingZoom = false;
-            }
+            int NewZoom = (int)gmap.Zoom;
+            if (NewZoom < VSzoom.Minimum || NewZoom > VSzoom.Maximum) NewZoom = 10;
+            VSzoom.Value = NewZoom;
 
             ckEnable.Checked = Props.VariableRateEnabled;
             ckSatView.Checked = mf.Tls.Manager.ShowTiles;
@@ -726,8 +760,8 @@ namespace RateController.Menu
         private void UpdateMapZoom()
         {
             var gmap = mf.Tls.Manager.gmapObject;
-            double zoom = (gmap.MaxZoom - gmap.MinZoom) * VSzoom.Value / 100.0 + gmap.MinZoom;
-            gmap.Zoom = Math.Round(zoom);
+            double zoom = VSzoom.Value;
+            if (zoom <= MaxZoom) gmap.Zoom = Math.Round(zoom);
         }
 
         private void vsPan_Scroll(object sender, ScrollEventArgs e)
@@ -758,29 +792,6 @@ namespace RateController.Menu
             {
                 UpdateMapZoom();
             }
-        }
-
-        private void SaveMapImageWithLegend(string imageFilePath)
-        {
-            var ctrl = mf.Tls.Manager.gmapObject;
-            bool prevLegend = mf.Tls.Manager.LegendOverlayEnabled;
-
-            // Ensure legend is enabled for capture
-            mf.Tls.Manager.LegendOverlayEnabled = true;
-
-            // Force a synchronous repaint so legend is drawn
-            ctrl.Refresh();
-            ctrl.Update();
-            Application.DoEvents();
-
-            using (var bmp = new Bitmap(ctrl.Width, ctrl.Height))
-            {
-                ctrl.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
-                bmp.Save(imageFilePath, ImageFormat.Png);
-            }
-
-            // Restore previous state
-            mf.Tls.Manager.LegendOverlayEnabled = prevLegend;
         }
     }
 }

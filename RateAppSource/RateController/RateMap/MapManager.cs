@@ -15,6 +15,40 @@ using System.Text.RegularExpressions;
 
 namespace RateController.Classes
 {
+    public class ArcGIS_World_Imagery_Provider : GMapProvider
+    {
+        public static readonly ArcGIS_World_Imagery_Provider Instance = new ArcGIS_World_Imagery_Provider();
+
+        private static readonly TimeSpan MinRequestInterval = TimeSpan.FromMilliseconds(120);
+
+        // Simple rate limiter: one request every 120 ms (adjust as needed)
+        private static readonly object ThrottleLock = new object();
+
+        private static DateTime _lastRequestUtc = DateTime.MinValue;
+        public override Guid Id => new Guid("F4E1A7A7-3B5D-4FDC-9C84-9B2390C7B04C");
+        public override string Name => "ArcGISWorldImagery";
+        public override GMapProvider[] Overlays => new GMapProvider[] { this };
+        public override PureProjection Projection => GMap.NET.Projections.MercatorProjection.Instance;
+
+        public override PureImage GetTileImage(GPoint pos, int zoom)
+        {
+            // Throttle access to avoid server blocking
+            lock (ThrottleLock)
+            {
+                var now = DateTime.UtcNow;
+                var elapsed = now - _lastRequestUtc;
+                if (elapsed < MinRequestInterval)
+                {
+                    System.Threading.Thread.Sleep(MinRequestInterval - elapsed);
+                }
+                _lastRequestUtc = DateTime.UtcNow;
+            }
+
+            string url = $"https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{zoom}/{pos.Y}/{pos.X}";
+            return GetTileImageUsingHttp(url);
+        }
+    }
+
     public class MapManager : IDisposable
     {
         private const int MapRefreshSeconds = 2;
@@ -77,8 +111,9 @@ namespace RateController.Classes
             Props.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_MapShowRatesChanged;
 
+            TilesGrayScale = false;
+
             LoadMap();
-            TilesGrayScale = true;
         }
 
         public event EventHandler MapChanged;
@@ -122,7 +157,7 @@ namespace RateController.Classes
             {
                 Props.MapShowTiles = value;
                 gmap.MapProvider = value
-                    ? (GMapProvider)GMapProviders.BingSatelliteMap
+                    ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 Refresh();
             }
@@ -457,7 +492,7 @@ namespace RateController.Classes
                 // Always record reading so zeros are captured immediately
                 var applied = (AppliedRates ?? Array.Empty<double>());
                 var target = (TargetRates ?? Array.Empty<double>());
-               Props.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
+                Props.RateCollector?.RecordReading(NewLocation.Lat, NewLocation.Lng, applied, target);
 
                 // NEW: cache latest applied array for live overlay update (no timer delay)
                 // ensure fixed length (5 max supported by recorder)
@@ -1005,6 +1040,9 @@ namespace RateController.Classes
                 CacheLocation = Props.MapCache
             };
 
+            // Be polite: longer TTL reduces re-fetching tiles
+            GMapProvider.TTLCache = 24 * 60; // minutes (e.g., 24 hours)
+
             double Lat = 0;
             double Lng = TimeZoneInfo.Local.BaseUtcOffset.TotalHours * 15.0;    // estimated longitude
             if (double.TryParse(Props.GetProp("LastMapLat"), out double latpos)) Lat = latpos;
@@ -1020,9 +1058,11 @@ namespace RateController.Classes
                 ShowCenter = false
             };
 
+            // Use the ArcGIS provider when tiles are enabled
             gmap.MapProvider = Props.MapShowTiles
-                ? (GMapProvider)GMapProviders.BingSatelliteMap
+                ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
                 : (GMapProvider)GMapProviders.EmptyProvider;
+
             gmap.MouseClick += Gmap_MouseClick;
 
             gmap.Zoom = 2;

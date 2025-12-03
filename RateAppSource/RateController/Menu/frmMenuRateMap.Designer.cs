@@ -327,9 +327,12 @@
             // 
             this.VSzoom.LargeChange = 1;
             this.VSzoom.Location = new System.Drawing.Point(106, 308);
+            this.VSzoom.Maximum = 17;
+            this.VSzoom.Minimum = 2;
             this.VSzoom.Name = "VSzoom";
             this.VSzoom.Size = new System.Drawing.Size(45, 358);
             this.VSzoom.TabIndex = 349;
+            this.VSzoom.Value = 2;
             this.VSzoom.Scroll += new System.Windows.Forms.ScrollEventHandler(this.VSzoom_Scroll);
             this.VSzoom.ValueChanged += new System.EventHandler(this.VSzoom_ValueChanged);
             // 
@@ -450,6 +453,7 @@
             this.Name = "frmMenuRateMap";
             this.ShowInTaskbar = false;
             this.Text = "Rate Map";
+            this.Activated += new System.EventHandler(this.frmMenuRateMap_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuRateMap_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mnuRateMap_FormClosed);
             this.Load += new System.EventHandler(this.mnuRateMap_Load);

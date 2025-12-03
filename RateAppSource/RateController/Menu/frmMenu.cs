@@ -550,9 +550,15 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenuRateMap(mf, this);
-                frm.Owner = this;
-                frm.Show();
+                fs = new frmMenuRateMap(mf, this);
+                fs.Owner = this;
+                if (fs is frmMenuRateMap rm) rm.MenuSelected = true;
+                fs.Show();
+            }
+            else
+            {
+                mf.Tls.Manager.ShowAppliedLayer();
+                mf.Tls.Manager.CenterMap();
             }
         }
 
