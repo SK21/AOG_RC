@@ -45,7 +45,6 @@
             this.btnNotesDown = new System.Windows.Forms.Button();
             this.btnNotesUp = new System.Windows.Forms.Button();
             this.gbJobs = new System.Windows.Forms.GroupBox();
-            this.btnResetField = new System.Windows.Forms.Button();
             this.lvJobs = new System.Windows.Forms.ListView();
             this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -61,6 +60,7 @@
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckResume = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
+            this.ckFilter = new System.Windows.Forms.CheckBox();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -260,8 +260,8 @@
             // 
             // gbJobs
             // 
-            this.gbJobs.Controls.Add(this.btnResetField);
             this.gbJobs.Controls.Add(this.lvJobs);
+            this.gbJobs.Controls.Add(this.ckFilter);
             this.gbJobs.Controls.Add(this.cbSearchField);
             this.gbJobs.Controls.Add(this.btnDeleteField);
             this.gbJobs.Controls.Add(this.label2);
@@ -280,22 +280,6 @@
             this.gbJobs.TabStop = false;
             this.gbJobs.Text = "Jobs";
             this.gbJobs.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
-            // 
-            // btnResetField
-            // 
-            this.btnResetField.BackColor = System.Drawing.Color.Transparent;
-            this.btnResetField.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnResetField.FlatAppearance.BorderSize = 0;
-            this.btnResetField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetField.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetField.Image = global::RateController.Properties.Resources.Update;
-            this.btnResetField.Location = new System.Drawing.Point(358, 21);
-            this.btnResetField.Name = "btnResetField";
-            this.btnResetField.Size = new System.Drawing.Size(70, 63);
-            this.btnResetField.TabIndex = 393;
-            this.btnResetField.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnResetField.UseVisualStyleBackColor = false;
-            this.btnResetField.Click += new System.EventHandler(this.btnResetField_Click);
             // 
             // lvJobs
             // 
@@ -468,6 +452,22 @@
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Visible = false;
             // 
+            // ckFilter
+            // 
+            this.ckFilter.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckFilter.Checked = true;
+            this.ckFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckFilter.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckFilter.Image = global::RateController.Properties.Resources.selection;
+            this.ckFilter.Location = new System.Drawing.Point(358, 20);
+            this.ckFilter.Name = "ckFilter";
+            this.ckFilter.Size = new System.Drawing.Size(70, 63);
+            this.ckFilter.TabIndex = 394;
+            this.ckFilter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckFilter.UseVisualStyleBackColor = true;
+            this.ckFilter.CheckedChanged += new System.EventHandler(this.ckFilter_CheckedChanged);
+            // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -523,8 +523,8 @@
         private System.Windows.Forms.ColumnHeader HdrName;
         private System.Windows.Forms.ColumnHeader HdrDate;
         private System.Windows.Forms.CheckBox ckResume;
-        private System.Windows.Forms.Button btnResetField;
         private System.Windows.Forms.ColumnHeader HdrFileName;
         private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.CheckBox ckFilter;
     }
 }

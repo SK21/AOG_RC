@@ -305,22 +305,16 @@ namespace RateController.Menu
 
         private void btnResetField_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // Clear field and year filters
-                cbSearchField.SelectedIndex = -1;
-                tbSearchYear.Text = string.Empty;
-                FillJobsList();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuJobs/btnResetField_Click: " + ex.Message);
-            }
         }
 
         private void cbSearchField_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillJobsList();
+        }
+
+        private void ckFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
@@ -633,6 +627,13 @@ namespace RateController.Menu
                 }
                 ckResume.Checked = Props.ShowJobs;
 
+                if (!ckFilter.Checked)
+                {
+                    // Clear field and year filters
+                    cbSearchField.SelectedIndex = -1;
+                    tbSearchYear.Text = string.Empty;
+                    FillJobsList();
+                }
                 Initializing = false;
             }
             catch (Exception ex)
