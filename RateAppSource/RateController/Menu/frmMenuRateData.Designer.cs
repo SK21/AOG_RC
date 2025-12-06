@@ -191,7 +191,7 @@
             this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRecord.Image = global::RateController.Properties.Resources.record;
-            this.ckRecord.Location = new System.Drawing.Point(81, 117);
+            this.ckRecord.Location = new System.Drawing.Point(86, 117);
             this.ckRecord.Name = "ckRecord";
             this.ckRecord.Size = new System.Drawing.Size(89, 64);
             this.ckRecord.TabIndex = 382;
@@ -235,23 +235,34 @@
             // 
             // btnImport
             // 
+            this.btnImport.BackColor = System.Drawing.Color.Transparent;
+            this.btnImport.FlatAppearance.BorderSize = 0;
             this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImport.Location = new System.Drawing.Point(333, 117);
+            this.btnImport.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnImport.Location = new System.Drawing.Point(212, 117);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(89, 64);
             this.btnImport.TabIndex = 399;
-            this.btnImport.Text = "Import CSV";
-            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Text = "Import";
+            this.btnImport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnImport.UseVisualStyleBackColor = false;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click_1);
             // 
             // btnExport
             // 
+            this.btnExport.BackColor = System.Drawing.Color.Transparent;
+            this.btnExport.FlatAppearance.BorderSize = 0;
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.Location = new System.Drawing.Point(207, 117);
+            this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnExport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnExport.Location = new System.Drawing.Point(338, 117);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(89, 64);
             this.btnExport.TabIndex = 398;
-            this.btnExport.Text = "Export CSV";
-            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Text = "Export";
+            this.btnExport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnExport.UseVisualStyleBackColor = false;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // btnDelete

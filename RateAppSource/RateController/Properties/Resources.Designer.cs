@@ -323,6 +323,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap copy_small {
+            get {
+                object obj = ResourceManager.GetObject("copy_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap copy1 {
             get {
                 object obj = ResourceManager.GetObject("copy1", resourceCulture);
@@ -506,6 +516,36 @@ namespace RateController.Properties {
         internal static System.Drawing.Bitmap FileNew1 {
             get {
                 object obj = ResourceManager.GetObject("FileNew1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_open_small {
+            get {
+                object obj = ResourceManager.GetObject("folder_open_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_simple {
+            get {
+                object obj = ResourceManager.GetObject("folder_simple", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_simple_small {
+            get {
+                object obj = ResourceManager.GetObject("folder_simple_small", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

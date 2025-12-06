@@ -466,7 +466,7 @@
             this.btnImport.FlatAppearance.BorderSize = 0;
             this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImport.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImport.Image = global::RateController.Properties.Resources.file_text;
+            this.btnImport.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnImport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnImport.Location = new System.Drawing.Point(329, 595);
             this.btnImport.Name = "btnImport";
@@ -502,7 +502,7 @@
             this.btnExport.FlatAppearance.BorderSize = 0;
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExport.Image = global::RateController.Properties.Resources.file_text;
+            this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnExport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnExport.Location = new System.Drawing.Point(416, 595);
             this.btnExport.Name = "btnExport";

@@ -3,7 +3,6 @@ using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -477,7 +476,6 @@ namespace RateController.Menu
 
         private void frmMenuJobs_Activated(object sender, EventArgs e)
         {
-            Debug.Print("activated");
             HighlightCurrentJob();
         }
 
@@ -529,7 +527,6 @@ namespace RateController.Menu
 
         private void HighlightCurrentJob()
         {
-            Debug.Print("Highlight");
             // highlight the current job in the list
             if (lvJobs.Enabled) lvJobs.Focus();
             foreach (ListViewItem item in lvJobs.Items)

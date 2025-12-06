@@ -261,5 +261,10 @@ namespace RateController.Forms
                 Props.ShowMessage("Import failed: " + ex.Message, "Import", 15000, true, true);
             }
         }
+
+        private void btnImport_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

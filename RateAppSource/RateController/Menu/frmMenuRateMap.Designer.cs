@@ -64,12 +64,18 @@
             // 
             // btnImport
             // 
+            this.btnImport.BackColor = System.Drawing.Color.Transparent;
+            this.btnImport.FlatAppearance.BorderSize = 0;
+            this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImport.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnImport.Location = new System.Drawing.Point(8, 96);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(89, 64);
             this.btnImport.TabIndex = 342;
             this.btnImport.Text = "Import";
-            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnImport.UseVisualStyleBackColor = false;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // gbZone
@@ -376,12 +382,18 @@
             // 
             // btnExport
             // 
+            this.btnExport.BackColor = System.Drawing.Color.Transparent;
+            this.btnExport.FlatAppearance.BorderSize = 0;
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnExport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnExport.Location = new System.Drawing.Point(8, 180);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(89, 64);
             this.btnExport.TabIndex = 356;
             this.btnExport.Text = "Export";
-            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnExport.UseVisualStyleBackColor = false;
             this.btnExport.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // ckRateData
@@ -402,12 +414,18 @@
             // 
             // btnCopy
             // 
+            this.btnCopy.BackColor = System.Drawing.Color.Transparent;
+            this.btnCopy.FlatAppearance.BorderSize = 0;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopy.Image = global::RateController.Properties.Resources.copy_small;
+            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnCopy.Location = new System.Drawing.Point(8, 12);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(89, 64);
             this.btnCopy.TabIndex = 359;
             this.btnCopy.Text = "Copy";
-            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnCopy.UseVisualStyleBackColor = false;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // hsPan
