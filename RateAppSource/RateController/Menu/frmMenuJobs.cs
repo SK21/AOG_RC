@@ -643,5 +643,26 @@ namespace RateController.Menu
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
             }
         }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "Select a folder";
+                dialog.ShowNewFolderButton = false;
+
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.LastFolder)) dialog.SelectedPath = Properties.Settings.Default.LastFolder;
+
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    Properties.Settings.Default.LastFolder = dialog.SelectedPath;
+                    int Count = JobManager.ImportJobs(dialog.SelectedPath);
+                    Props.ShowMessage(Count.ToString() + " jobs imported.");
+                    if (Count > 0) UpdateForm();
+                }
+            }
+        }
     }
 }

@@ -223,7 +223,7 @@ namespace RateController.Classes
 
                         foreach (string dir in Directory.GetDirectories(cJobsFolder, "Job_*", SearchOption.TopDirectoryOnly))
                         {
-                            Job NewJob = LoadJob(dir);
+                            Job NewJob = LoadJob(dir, true);
 
                             if (NewJob != null) JobsList.Add(NewJob);
                         }
@@ -237,6 +237,33 @@ namespace RateController.Classes
                 }
             }
             return JobsList;
+        }
+
+        public static int ImportJobs(string ImportFolderPath)
+        {
+            int Count = 0;
+            try
+            {
+                if (Directory.Exists(ImportFolderPath))
+                {
+                    foreach (string dir in Directory.GetDirectories(ImportFolderPath, "Job_*", SearchOption.TopDirectoryOnly))
+                    {
+                        Job NewJob = LoadJob(dir);
+                        if (NewJob != null)
+                        {
+                            AddJob(NewJob);
+                            CopyJob(dir, NewJob.JobFolder);
+                            Count++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("JobManager/ImportJobs: " + ex.Message);
+                throw;
+            }
+            return Count;
         }
 
         public static void Initialize()
@@ -280,7 +307,7 @@ namespace RateController.Classes
             }
         }
 
-        public static Job LoadJob(string JobFolderPath)
+        public static Job LoadJob(string JobFolderPath, bool SaveRecovered = false)
         {
             Job Result = null;
             String FolderName = Path.GetFileName(JobFolderPath.Trim(Path.DirectorySeparatorChar));
@@ -319,7 +346,14 @@ namespace RateController.Classes
                         };
 
                         // save job data
-                        if (SaveJob(RecoveredJob)) Result = RecoveredJob;
+                        if (SaveRecovered)
+                        {
+                            if (SaveJob(RecoveredJob)) Result = RecoveredJob;
+                        }
+                        else
+                        {
+                            Result = RecoveredJob;
+                        }
                     }
                 }
                 catch (Exception ex)

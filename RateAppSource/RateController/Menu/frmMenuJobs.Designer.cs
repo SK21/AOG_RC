@@ -49,6 +49,7 @@
             this.HdrName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HdrDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HdrFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ckFilter = new System.Windows.Forms.CheckBox();
             this.cbSearchField = new System.Windows.Forms.ComboBox();
             this.btnDeleteField = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -60,7 +61,6 @@
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckResume = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
-            this.ckFilter = new System.Windows.Forms.CheckBox();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -312,6 +312,22 @@
             this.HdrFileName.Text = "FileName";
             this.HdrFileName.Width = 150;
             // 
+            // ckFilter
+            // 
+            this.ckFilter.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckFilter.Checked = true;
+            this.ckFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckFilter.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckFilter.Image = global::RateController.Properties.Resources.selection;
+            this.ckFilter.Location = new System.Drawing.Point(358, 20);
+            this.ckFilter.Name = "ckFilter";
+            this.ckFilter.Size = new System.Drawing.Size(70, 63);
+            this.ckFilter.TabIndex = 394;
+            this.ckFilter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckFilter.UseVisualStyleBackColor = true;
+            this.ckFilter.CheckedChanged += new System.EventHandler(this.ckFilter_CheckedChanged);
+            // 
             // cbSearchField
             // 
             this.cbSearchField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -450,23 +466,7 @@
             this.btnImport.TabIndex = 393;
             this.btnImport.Text = "Import";
             this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Visible = false;
-            // 
-            // ckFilter
-            // 
-            this.ckFilter.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckFilter.Checked = true;
-            this.ckFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckFilter.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckFilter.Image = global::RateController.Properties.Resources.selection;
-            this.ckFilter.Location = new System.Drawing.Point(358, 20);
-            this.ckFilter.Name = "ckFilter";
-            this.ckFilter.Size = new System.Drawing.Size(70, 63);
-            this.ckFilter.TabIndex = 394;
-            this.ckFilter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckFilter.UseVisualStyleBackColor = true;
-            this.ckFilter.CheckedChanged += new System.EventHandler(this.ckFilter_CheckedChanged);
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // frmMenuJobs
             // 
