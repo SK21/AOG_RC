@@ -61,6 +61,8 @@
             this.cbField = new System.Windows.Forms.ComboBox();
             this.ckResume = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
+            this.butActivity = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             this.gbJobs.SuspendLayout();
             this.gbCurrentJob.SuspendLayout();
             this.SuspendLayout();
@@ -291,6 +293,7 @@
             this.lvJobs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvJobs.HideSelection = false;
             this.lvJobs.Location = new System.Drawing.Point(94, 95);
+            this.lvJobs.MultiSelect = false;
             this.lvJobs.Name = "lvJobs";
             this.lvJobs.Size = new System.Drawing.Size(379, 244);
             this.lvJobs.TabIndex = 392;
@@ -448,7 +451,7 @@
             this.ckResume.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckResume.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckResume.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckResume.Location = new System.Drawing.Point(301, 602);
+            this.ckResume.Location = new System.Drawing.Point(100, 599);
             this.ckResume.Name = "ckResume";
             this.ckResume.Size = new System.Drawing.Size(108, 64);
             this.ckResume.TabIndex = 392;
@@ -459,20 +462,64 @@
             // 
             // btnImport
             // 
+            this.btnImport.BackColor = System.Drawing.Color.Transparent;
+            this.btnImport.FlatAppearance.BorderSize = 0;
             this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImport.Location = new System.Drawing.Point(166, 602);
+            this.btnImport.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImport.Image = global::RateController.Properties.Resources.file_text;
+            this.btnImport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnImport.Location = new System.Drawing.Point(329, 595);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(89, 64);
+            this.btnImport.Size = new System.Drawing.Size(81, 72);
             this.btnImport.TabIndex = 393;
             this.btnImport.Text = "Import";
-            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnImport.UseVisualStyleBackColor = false;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // butActivity
+            // 
+            this.butActivity.BackColor = System.Drawing.Color.Transparent;
+            this.butActivity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butActivity.FlatAppearance.BorderSize = 0;
+            this.butActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butActivity.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butActivity.Image = global::RateController.Properties.Resources.file_text;
+            this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butActivity.Location = new System.Drawing.Point(248, 595);
+            this.butActivity.Margin = new System.Windows.Forms.Padding(6);
+            this.butActivity.Name = "butActivity";
+            this.butActivity.Size = new System.Drawing.Size(81, 72);
+            this.butActivity.TabIndex = 394;
+            this.butActivity.Text = "Activity";
+            this.butActivity.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.butActivity.UseVisualStyleBackColor = false;
+            // 
+            // btnExport
+            // 
+            this.btnExport.BackColor = System.Drawing.Color.Transparent;
+            this.btnExport.FlatAppearance.BorderSize = 0;
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExport.Image = global::RateController.Properties.Resources.file_text;
+            this.btnExport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnExport.Location = new System.Drawing.Point(416, 595);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(81, 72);
+            this.btnExport.TabIndex = 395;
+            this.btnExport.Text = "Export";
+            this.btnExport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // frmMenuJobs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.butActivity);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.ckResume);
             this.Controls.Add(this.gbCurrentJob);
@@ -483,7 +530,9 @@
             this.Name = "frmMenuJobs";
             this.ShowInTaskbar = false;
             this.Text = "frmMenuJobs";
+            this.Activated += new System.EventHandler(this.frmMenuJobs_Activated);
             this.Load += new System.EventHandler(this.frmMenuJobs_Load);
+            this.Shown += new System.EventHandler(this.frmMenuJobs_Shown);
             this.gbJobs.ResumeLayout(false);
             this.gbJobs.PerformLayout();
             this.gbCurrentJob.ResumeLayout(false);
@@ -526,5 +575,7 @@
         private System.Windows.Forms.ColumnHeader HdrFileName;
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.CheckBox ckFilter;
+        private System.Windows.Forms.Button butActivity;
+        private System.Windows.Forms.Button btnExport;
     }
 }

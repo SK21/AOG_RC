@@ -33,7 +33,7 @@ namespace RateController.Classes
         {
             get
             {
-                if (!IsJobValid(SearchJob( Properties.Settings.Default.CurrentJob)))
+                if (!IsJobValid(SearchJob(Properties.Settings.Default.CurrentJob)))
                 {
                     // select default job
                     CheckDefaultJob();
@@ -199,6 +199,31 @@ namespace RateController.Classes
                 }
                 return result;
             }
+        }
+
+        public static int ExportJobs(string ExportFolderPath)
+        {
+            int Count = 0;
+            try
+            {
+                if (Directory.Exists(ExportFolderPath))
+                {
+                    foreach (Job jb in JobsList)
+                    {
+                        string jobFolderName = $"Job_{jb.ID}";
+                        string jobFolderPath = Path.Combine(ExportFolderPath, jobFolderName);
+                        if (!Directory.Exists(jobFolderPath)) Directory.CreateDirectory(jobFolderPath);
+                        CopyJob(jb.JobFolder, jobFolderPath);
+                        Count++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("JobManager/ExportJobs: " + ex.Message);
+                throw;
+            }
+            return Count;
         }
 
         public static List<Job> FilterJobs(DateTime? startDate = null, DateTime? endDate = null, int? fieldID = null)
@@ -409,59 +434,6 @@ namespace RateController.Classes
             }
         }
 
-        private static bool IsJobValid(Job JobToCheck)
-        {
-            bool IsValid = false;
-            try
-            {
-                if (JobToCheck != null)
-                {
-                    // check file structure
-
-                    // job folder
-                    string jobFolderName = $"Job_{JobToCheck.ID}";
-                    string jobFolderPath = Path.Combine(cJobsFolder, jobFolderName);
-                    if (Directory.Exists(jobFolderPath))
-                    {
-                        // rate data file
-                        string rateDataFilePath = Path.Combine(jobFolderPath, "RateData.csv");
-                        if (File.Exists(rateDataFilePath))
-                        {
-                            // job data file
-                            string JobData = Path.Combine(jobFolderPath, JobDataName);
-                            if (File.Exists(JobData))
-                            {
-                                // map folder
-                                string mapFolderPath = Path.Combine(jobFolderPath, "Map");
-                                if (Directory.Exists(mapFolderPath))
-                                {
-                                    // map files
-                                    int Found = 0;
-                                    string[] mapFiles = new string[]
-                                    {
-                                    $"Job.cpg",
-                                    $"Job.dbf",
-                                    $"Job.shp"
-                                    };
-                                    foreach (string fileName in mapFiles)
-                                    {
-                                        string filePath = Path.Combine(mapFolderPath, fileName);
-                                        if (File.Exists(filePath)) Found++;
-                                    }
-                                    IsValid = (Found == 3);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("JobManager/IsJobValid: " + ex.Message);
-            }
-            return IsValid;
-        }
-
         private static void CheckFolderStructure(Job job)
         {
             try
@@ -521,33 +493,85 @@ namespace RateController.Classes
             bool Result = false;
             try
             {
-                if (Props.IsPathSafe(destinationDir))
-                {
-                    foreach (string filePath in Directory.GetFiles(sourceDir))
-                    {
-                        string fileName = Path.GetFileName(filePath);
-                        if (!fileName.Equals(JobDataName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destFilePath = Path.Combine(destinationDir, fileName);
-                            File.Copy(filePath, destFilePath, overwrite: true);
-                        }
-                    }
+                if (!Directory.Exists(destinationDir)) Directory.CreateDirectory(destinationDir);
 
-                    // Recursively copy subdirectories
-                    foreach (string subDir in Directory.GetDirectories(sourceDir))
+                foreach (string filePath in Directory.GetFiles(sourceDir))
+                {
+                    string fileName = Path.GetFileName(filePath);
+                    if (!fileName.Equals(JobDataName, StringComparison.OrdinalIgnoreCase))
                     {
-                        string subDirName = Path.GetFileName(subDir);
-                        string destSubDir = Path.Combine(destinationDir, subDirName);
-                        CopyJob(subDir, destSubDir);
+                        string destFilePath = Path.Combine(destinationDir, fileName);
+                        File.Copy(filePath, destFilePath, overwrite: true);
                     }
-                    Result = true;
                 }
+
+                // Recursively copy subdirectories
+                foreach (string subDir in Directory.GetDirectories(sourceDir))
+                {
+                    string subDirName = Path.GetFileName(subDir);
+                    string destSubDir = Path.Combine(destinationDir, subDirName);
+                    CopyJob(subDir, destSubDir);
+                }
+                Result = true;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("JobManager/CopyJob: " + ex.Message);
             }
             return Result;
+        }
+
+        private static bool IsJobValid(Job JobToCheck)
+        {
+            bool IsValid = false;
+            try
+            {
+                if (JobToCheck != null)
+                {
+                    // check file structure
+
+                    // job folder
+                    string jobFolderName = $"Job_{JobToCheck.ID}";
+                    string jobFolderPath = Path.Combine(cJobsFolder, jobFolderName);
+                    if (Directory.Exists(jobFolderPath))
+                    {
+                        // rate data file
+                        string rateDataFilePath = Path.Combine(jobFolderPath, "RateData.csv");
+                        if (File.Exists(rateDataFilePath))
+                        {
+                            // job data file
+                            string JobData = Path.Combine(jobFolderPath, JobDataName);
+                            if (File.Exists(JobData))
+                            {
+                                // map folder
+                                string mapFolderPath = Path.Combine(jobFolderPath, "Map");
+                                if (Directory.Exists(mapFolderPath))
+                                {
+                                    // map files
+                                    int Found = 0;
+                                    string[] mapFiles = new string[]
+                                    {
+                                    $"Job.cpg",
+                                    $"Job.dbf",
+                                    $"Job.shp"
+                                    };
+                                    foreach (string fileName in mapFiles)
+                                    {
+                                        string filePath = Path.Combine(mapFolderPath, fileName);
+                                        if (File.Exists(filePath)) Found++;
+                                    }
+                                    IsValid = (Found == 3);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("JobManager/IsJobValid: " + ex.Message);
+            }
+            return IsValid;
         }
     }
 

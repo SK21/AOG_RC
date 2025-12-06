@@ -3,6 +3,7 @@ using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -32,7 +33,6 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
-
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
@@ -46,7 +46,6 @@ namespace RateController.Menu
             try
             {
                 UpdateEditingJob();
-                UpdateForm();
                 SetButtons(false);
             }
             catch (Exception ex)
@@ -72,7 +71,6 @@ namespace RateController.Menu
                         EditingJob.Notes = "";
                         IsNewJob = true;
                         SetButtons(true);
-                        UpdateForm();
                     }
                 }
                 else
@@ -162,6 +160,49 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuJobs/btnDeleteField_Click: " + ex.Message);
             }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "Select a folder to export files.";
+                dialog.ShowNewFolderButton = true;
+
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.LastFolder)) dialog.SelectedPath = Properties.Settings.Default.LastFolder;
+
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    Properties.Settings.Default.LastFolder = dialog.SelectedPath;
+                    int Count = JobManager.ExportJobs(dialog.SelectedPath);
+                    Props.ShowMessage(Count.ToString() + " jobs exported.");
+                }
+            }
+            HighlightCurrentJob();
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "Select a folder to import files.";
+                dialog.ShowNewFolderButton = false;
+
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.LastFolder)) dialog.SelectedPath = Properties.Settings.Default.LastFolder;
+
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    Properties.Settings.Default.LastFolder = dialog.SelectedPath;
+                    int Count = JobManager.ImportJobs(dialog.SelectedPath);
+                    Props.ShowMessage(Count.ToString() + " jobs imported.");
+                    if (Count > 0) UpdateForm();
+                }
+            }
+            HighlightCurrentJob();
         }
 
         private void btnJobsDown_Click(object sender, EventArgs e)
@@ -292,7 +333,6 @@ namespace RateController.Menu
                 }
 
                 SetButtons(false);
-                UpdateForm();
             }
             catch (Exception ex)
             {
@@ -435,6 +475,12 @@ namespace RateController.Menu
             return date.ToString(format, culture);
         }
 
+        private void frmMenuJobs_Activated(object sender, EventArgs e)
+        {
+            Debug.Print("activated");
+            HighlightCurrentJob();
+        }
+
         private void frmMenuJobs_Load(object sender, EventArgs e)
         {
             try
@@ -452,6 +498,11 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuJobs/frmMenuJobs_Load: " + ex.Message);
             }
+        }
+
+        private void frmMenuJobs_Shown(object sender, EventArgs e)
+        {
+            HighlightCurrentJob();
         }
 
         private void gbCurrentJob_Paint(object sender, PaintEventArgs e)
@@ -473,6 +524,23 @@ namespace RateController.Menu
                 Color borderColor = cEdited ? Color.Red : Color.Blue; // Change color based on cEdited
                 float borderWidth = cEdited ? 3 : 1; // Change thickness based on cEdited
                 mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
+            }
+        }
+
+        private void HighlightCurrentJob()
+        {
+            Debug.Print("Highlight");
+            // highlight the current job in the list
+            if (lvJobs.Enabled) lvJobs.Focus();
+            foreach (ListViewItem item in lvJobs.Items)
+            {
+                if (item.Tag is Job job && job.ID == JobManager.CurrentJobID)
+                {
+                    item.Selected = true;
+                    lvJobs.FocusedItem = item;
+                    item.EnsureVisible();
+                    break;
+                }
             }
         }
 
@@ -516,8 +584,9 @@ namespace RateController.Menu
 
                 cEdited = Edited;
                 this.Tag = cEdited;
-                gbCurrentJob.Invalidate();
-                gbJobs.Invalidate();
+                //gbCurrentJob.Invalidate();
+                //gbJobs.Invalidate();
+                UpdateForm();
             }
         }
 
@@ -612,23 +681,6 @@ namespace RateController.Menu
                 tbNotes.SelectionStart = tbNotes.Text.Length;
                 tbNotes.ScrollToCaret();
 
-                // Trigger a repaint
-                gbCurrentJob.Invalidate();
-                gbJobs.Invalidate();
-
-                // highlight the current job in the list
-                foreach (ListViewItem item in lvJobs.Items)
-                {
-                    if (item.Tag is Job job && job.ID == JobManager.CurrentJobID)
-                    {
-                        item.Selected = true;
-                        item.EnsureVisible();
-                        break;
-                    }
-                }
-                ckResume.Checked = JobManager.ShowJobs;
-                ckFilter.Checked = JobManager.JobFilter;
-
                 if (!JobManager.JobFilter)
                 {
                     // Clear field and year filters
@@ -636,32 +688,21 @@ namespace RateController.Menu
                     tbSearchYear.Text = string.Empty;
                     FillJobsList();
                 }
+
+                ckResume.Checked = JobManager.ShowJobs;
+                ckFilter.Checked = JobManager.JobFilter;
+
+                // Trigger a repaint
+                gbCurrentJob.Refresh();
+                gbJobs.Refresh();
+
+                HighlightCurrentJob();
+
                 Initializing = false;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
-            }
-        }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
-            {
-                dialog.Description = "Select a folder";
-                dialog.ShowNewFolderButton = false;
-
-                if (!string.IsNullOrEmpty(Properties.Settings.Default.LastFolder)) dialog.SelectedPath = Properties.Settings.Default.LastFolder;
-
-                DialogResult result = dialog.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
-                {
-                    Properties.Settings.Default.LastFolder = dialog.SelectedPath;
-                    int Count = JobManager.ImportJobs(dialog.SelectedPath);
-                    Props.ShowMessage(Count.ToString() + " jobs imported.");
-                    if (Count > 0) UpdateForm();
-                }
             }
         }
     }
