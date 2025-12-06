@@ -33,20 +33,23 @@ namespace RateController.Classes
         {
             get
             {
-                Job current = SearchJob(Properties.Settings.Default.CurrentJob);
-                if (current == null)
+                if (!IsJobValid(SearchJob( Properties.Settings.Default.CurrentJob)))
                 {
+                    // select default job
+                    CheckDefaultJob();
                     Properties.Settings.Default.CurrentJob = 0;
                     Properties.Settings.Default.Save();
-                    current = SearchJob(0);
                 }
                 return Properties.Settings.Default.CurrentJob;
             }
             set
             {
-                Properties.Settings.Default.CurrentJob = value;
-                Properties.Settings.Default.Save();
-                JobChanged?.Invoke(null, EventArgs.Empty);
+                if (IsJobValid(SearchJob(value)))
+                {
+                    Properties.Settings.Default.CurrentJob = value;
+                    Properties.Settings.Default.Save();
+                    JobChanged?.Invoke(null, EventArgs.Empty);
+                }
             }
         }
 
@@ -179,6 +182,14 @@ namespace RateController.Classes
                             }
                             JobsList = null;
                             result = true;
+                            if (!IsJobValid(SearchJob(Properties.Settings.Default.CurrentJob)))
+                            {
+                                // select default job
+                                CheckDefaultJob();
+                                Properties.Settings.Default.CurrentJob = 0;
+                                Properties.Settings.Default.Save();
+                                JobChanged?.Invoke(null, EventArgs.Empty);
+                            }
                         }
                     }
                 }
@@ -281,17 +292,6 @@ namespace RateController.Classes
             foreach (Job job in jobs)
             {
                 CheckFolderStructure(job);
-            }
-
-            // check user files, current job
-            int CurrentJob = CurrentJobID;
-            if (JobManager.SearchJob(CurrentJob) == null)
-            {
-                CurrentJobID = 0;
-            }
-            else
-            {
-                CurrentJobID = Properties.Settings.Default.CurrentJob;
             }
 
             // settings
@@ -407,6 +407,59 @@ namespace RateController.Classes
             {
                 return GetJobsList().FirstOrDefault(j => j.ID == JobID);
             }
+        }
+
+        private static bool IsJobValid(Job JobToCheck)
+        {
+            bool IsValid = false;
+            try
+            {
+                if (JobToCheck != null)
+                {
+                    // check file structure
+
+                    // job folder
+                    string jobFolderName = $"Job_{JobToCheck.ID}";
+                    string jobFolderPath = Path.Combine(cJobsFolder, jobFolderName);
+                    if (Directory.Exists(jobFolderPath))
+                    {
+                        // rate data file
+                        string rateDataFilePath = Path.Combine(jobFolderPath, "RateData.csv");
+                        if (File.Exists(rateDataFilePath))
+                        {
+                            // job data file
+                            string JobData = Path.Combine(jobFolderPath, JobDataName);
+                            if (File.Exists(JobData))
+                            {
+                                // map folder
+                                string mapFolderPath = Path.Combine(jobFolderPath, "Map");
+                                if (Directory.Exists(mapFolderPath))
+                                {
+                                    // map files
+                                    int Found = 0;
+                                    string[] mapFiles = new string[]
+                                    {
+                                    $"Job.cpg",
+                                    $"Job.dbf",
+                                    $"Job.shp"
+                                    };
+                                    foreach (string fileName in mapFiles)
+                                    {
+                                        string filePath = Path.Combine(mapFolderPath, fileName);
+                                        if (File.Exists(filePath)) Found++;
+                                    }
+                                    IsValid = (Found == 3);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("JobManager/IsJobValid: " + ex.Message);
+            }
+            return IsValid;
         }
 
         private static void CheckFolderStructure(Job job)

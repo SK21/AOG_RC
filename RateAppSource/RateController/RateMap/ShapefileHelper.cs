@@ -18,6 +18,7 @@ namespace RateController.Classes
         public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping = null)
         {
             var mapZones = new List<MapZone>();
+
             try
             {
                 using (var shapefile = Shapefile.OpenRead(shapefilePath))
