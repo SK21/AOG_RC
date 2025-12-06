@@ -82,7 +82,7 @@ namespace RateController.Menu
                         if (Result)
                         {
                             string FilePath = Props.ProfilesFolder + "\\" + FileToDelete;
-                            if (Props.IsPathSafeToDelete(FilePath))
+                            if (Props.IsPathSafe(FilePath))
                             {
                                 Directory.Delete(FilePath, true);
 

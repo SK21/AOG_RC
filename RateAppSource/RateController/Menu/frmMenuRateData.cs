@@ -52,7 +52,7 @@ namespace RateController.Forms
         {
             try
             {
-                string sourceFilePath = Props.CurrentRateDataPath;
+                string sourceFilePath = JobManager.CurrentRateDataPath;
                 using (SaveFileDialog saveFileDialog = new SaveFileDialog())
                 {
                     saveFileDialog.Title = "Save File As";

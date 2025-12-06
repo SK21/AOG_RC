@@ -31,7 +31,7 @@ namespace RateController.Classes
             RecordTimer.Elapsed += RecordTimer_Elapsed;
             RecordTimer.Enabled = Props.RateRecordEnabled;
             RecordTimer.Interval = RecordIntervalMS;
-            Props.JobChanged += Props_JobChanged;
+            JobManager.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
             Props.ProfileChanged += Props_ProfileChanged;
         }
@@ -45,7 +45,7 @@ namespace RateController.Classes
             {
                 Readings.Clear();
                 lastSavedIndex = 0;
-                if (Props.IsPathSafeToDelete(Props.CurrentRateDataPath)) File.Delete(Props.CurrentRateDataPath);
+                if (Props.IsPathSafe(JobManager.CurrentRateDataPath)) File.Delete(JobManager.CurrentRateDataPath);
             }
         }
 
@@ -86,7 +86,7 @@ namespace RateController.Classes
                         if (SaveStopWatch.Elapsed >= SaveInterval)
                         {
                             SaveStopWatch.Reset();
-                            SaveData(Props.CurrentRateDataPath);
+                            SaveData(JobManager.CurrentRateDataPath);
                             SaveStopWatch.Start();
                         }
                     }
@@ -182,8 +182,8 @@ namespace RateController.Classes
         {
             try
             {
-                if (!File.Exists(Props.CurrentRateDataPath))
-                    throw new FileNotFoundException("The specified data file was not found.", Props.CurrentRateDataPath);
+                if (!File.Exists(JobManager.CurrentRateDataPath))
+                    throw new FileNotFoundException("The specified data file was not found.", JobManager.CurrentRateDataPath);
 
                 SaveStopWatch.Reset();
                 SaveData(LastSavePath); // save any unrecorded data
@@ -195,7 +195,7 @@ namespace RateController.Classes
                 }
 
                 // Using a using block ensures the file is closed immediately after reading.
-                using (var reader = new StreamReader(Props.CurrentRateDataPath))
+                using (var reader = new StreamReader(JobManager.CurrentRateDataPath))
                 {
                     if (!reader.EndOfStream)
                     {

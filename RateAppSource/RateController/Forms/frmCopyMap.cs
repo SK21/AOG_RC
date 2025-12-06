@@ -90,7 +90,7 @@ namespace RateController.Forms
                     Job SelectedJob = lvJobs.SelectedItems[0].Tag as Job;
                     if (SelectedJob != null)
                     {
-                        Result = JobManager.CopyJobData(SelectedJob.ID, Props.CurrentJobID, ckErase.Checked);
+                        Result = JobManager.CopyJobData(SelectedJob.ID, JobManager.CurrentJobID, ckErase.Checked);
                         if (Result) mf.Tls.Manager.LoadMap();
                     }
                 }
@@ -229,7 +229,7 @@ namespace RateController.Forms
 
         private void UpdateEditingJob()
         {
-            int JobID = Props.CurrentJobID;
+            int JobID = JobManager.CurrentJobID;
             EditingJob = JobManager.SearchJob(JobID);
             if (EditingJob == null) EditingJob = JobManager.SearchJob(0);
         }

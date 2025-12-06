@@ -108,7 +108,7 @@ namespace RateController.Classes
             AppliedOverlayTimer.Tick += AppliedOverlayTimer_Tick;
             AppliedOverlayTimer.Enabled = false;
 
-            Props.JobChanged += Props_JobChanged;
+            JobManager.JobChanged += Props_JobChanged;
             Props.RateDataSettingsChanged += Props_MapShowRatesChanged;
 
             TilesGrayScale = false;
@@ -288,7 +288,7 @@ namespace RateController.Classes
             {
                 AppliedOverlayTimer.Enabled = false;
                 AppliedOverlayTimer.Tick -= AppliedOverlayTimer_Tick;
-                Props.JobChanged -= Props_JobChanged;
+                JobManager.JobChanged -= Props_JobChanged;
                 Props.RateDataSettingsChanged -= Props_MapShowRatesChanged;
                 if (gmap != null)
                 {
@@ -356,7 +356,7 @@ namespace RateController.Classes
             {
                 var shapefileHelper = new ShapefileHelper();
 
-                mapZones = shapefileHelper.CreateZoneList(Props.CurrentMapPath);
+                mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
 
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in mapZones)
@@ -385,7 +385,7 @@ namespace RateController.Classes
         {
             bool Result = false;
             var shapefileHelper = new ShapefileHelper();
-            shapefileHelper.SaveMapZones(Props.CurrentMapPath, mapZones);
+            shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
             if (UpdateCache) AddToCache();
             Result = true;
             return Result;
@@ -446,7 +446,7 @@ namespace RateController.Classes
             // Nothing to export, ensure any existing file is removed for cleanliness
             try
             {
-                if (Props.IsPathSafeToDelete(filePath))
+                if (Props.IsPathSafe(filePath))
                 {
                     string shp = System.IO.Path.ChangeExtension(filePath, ".shp");
                     string dbf = System.IO.Path.ChangeExtension(filePath, ".dbf");

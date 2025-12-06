@@ -81,7 +81,7 @@ namespace RateController
 
             ChangeProduct(ProductID);
             LoadLast = LoadLst;
-            Props.JobChanged += Props_JobChanged;
+            JobManager.JobChanged += Props_JobChanged;
         }
 
         public event EventHandler MenuMoved;
@@ -143,7 +143,7 @@ namespace RateController
                 lbFileName.BackColor = Properties.Settings.Default.MainBackColour;
             }
 
-            string job = Props.CurrentJobDescription;
+            string job = JobManager.CurrentJobDescription;
             Nm = job.Length <= max ? job : job.Substring(0, max) + "...";
             lbJob.Text = "[" + Nm + "]";
         }

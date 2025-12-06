@@ -60,18 +60,17 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "25-Nov-2025";
+        private static string cAppDate = "05-Dec-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.1.3";
+        private static string cAppVersion = "4.1.4";
         private static string cCurrentMenuName = "";
+        private static string cDefaultDir;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
-        private static string cJobsDataPath;
-        private static string cJobsFolder;
         private static bool cMapShowRates;
         private static bool cMapShowTiles;
         private static bool cMapShowZones;
@@ -86,7 +85,6 @@ namespace RateController.Classes
         private static bool cReadOnly = false;
         private static bool cResumeAfterPrime;
         private static int cSensorSettingsMaxID = -1;
-        private static bool cShowJobs;
         private static bool cShowPressure;
         private static bool cShowSwitches;
         private static double cSimSpeed = 0;
@@ -139,8 +137,6 @@ namespace RateController.Classes
 
         #endregion flow adjustment defaults
 
-        public static event EventHandler JobChanged;
-
         public static event EventHandler ProductSettingsChanged;
 
         public static event EventHandler ProfileChanged;
@@ -158,56 +154,17 @@ namespace RateController.Classes
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 
-        public static string CurrentJobDescription
+        public static string CurrentMenuName
         {
-            get
-            {
-                Job current = JobManager.SearchJob(Props.CurrentJobID);
-                string fld = "";
-                Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
-                if (currentParcel != null && currentParcel.Name.Trim() != "") fld = " - " + currentParcel.Name;
-                return current.Name + fld;
-            }
-        }
-
-        public static int CurrentJobID
-        {
-            get
-            {
-                Job current = JobManager.SearchJob(Properties.Settings.Default.CurrentJob);
-                if (current == null)
-                {
-                    Properties.Settings.Default.CurrentJob = 0;
-                    Properties.Settings.Default.Save();
-                    current = JobManager.SearchJob(0);
-                    SaveJobInfo();
-                }
-                return Properties.Settings.Default.CurrentJob;
-            }
+            get { return cCurrentMenuName; }
             set
             {
-                Properties.Settings.Default.CurrentJob = value;
-                Properties.Settings.Default.Save();
-                JobChanged?.Invoke(null, EventArgs.Empty);
-                SaveJobInfo();
+                cCurrentMenuName = value;
             }
         }
 
-        public static string CurrentMapPath
-        {
-            get
-            {
-                return JobManager.MapPath(Properties.Settings.Default.CurrentJob);
-            }
-        }
-
-        public static string CurrentRateDataPath
-        {
-            get
-            {
-                return JobManager.RateDataPath(Properties.Settings.Default.CurrentJob);
-            }
-        }
+        public static string DefaultDir
+        { get { return cDefaultDir; } }
 
         public static int DefaultProduct
         {
@@ -224,12 +181,6 @@ namespace RateController.Classes
 
         public static string FieldNamesPath
         { get { return cFieldNames; } }
-
-        public static string JobsDataPath
-        { get { return cJobsDataPath; } }
-
-        public static string JobsFolder
-        { get { return cJobsFolder; } }
 
         public static FormStart MainForm
         {
@@ -389,16 +340,6 @@ namespace RateController.Classes
             {
                 cShowCoverageRemaining = value;
                 SetProp("ShowCoverageRemaining", cShowCoverageRemaining.ToString());
-            }
-        }
-
-        public static bool ShowJobs
-        {
-            get { return cShowJobs; }
-            set
-            {
-                cShowJobs = value;
-                SetAppProp("ShowJobs", cShowJobs.ToString());
             }
         }
 
@@ -689,28 +630,7 @@ namespace RateController.Classes
             return cAppDate;
         }
 
-        private static void SaveJobInfo()
-        {
-            string InfoPath = cJobsFolder + "\\CurrentJob.txt";
-            string JobPath = "";
-            Job current = JobManager.SearchJob(Properties.Settings.Default.CurrentJob);
-            if (current != null)
-            {
-                JobPath = current.JobFolder;
-            }
-            File.WriteAllText(InfoPath, JobPath);
-        }
-
         #endregion MainProperties
-
-        public static string CurrentMenuName
-        {
-            get { return cCurrentMenuName; }
-            set
-            {
-                cCurrentMenuName = value;
-            }
-        }
 
         public static bool CheckFolders()
         {
@@ -718,7 +638,7 @@ namespace RateController.Classes
             try
             {
                 // check for default dir and files
-                string cDefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
+                cDefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
                 if (!Directory.Exists(cDefaultDir)) Directory.CreateDirectory(cDefaultDir);
 
                 // application folder
@@ -748,32 +668,8 @@ namespace RateController.Classes
                     Properties.Settings.Default.Save();
                 }
 
-                // jobs folder
-                name = cDefaultDir + "\\Jobs";
-                if (!Directory.Exists(name)) Directory.CreateDirectory(name);
-                cJobsFolder = name;
-
-                cJobsDataPath = cJobsFolder + "\\JobsData.jbs";
-                if (!File.Exists(cJobsDataPath)) File.WriteAllText(cJobsDataPath, string.Empty);
-
-                // check for default job
-                JobManager.CheckDefaultJob();
-
-                // check user files, current job
-                int CurrentJob = Props.CurrentJobID;
-                if (JobManager.SearchJob(CurrentJob) == null)
-                {
-                    Props.CurrentJobID = 0;
-                }
-                else
-                {
-                    Props.CurrentJobID = Properties.Settings.Default.CurrentJob;
-                }
-
                 // create field names path
                 cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
-
-                SaveJobInfo();
 
                 Result = true;
             }
@@ -961,7 +857,7 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool IsPathSafeToDelete(string candidatePath)
+        public static bool IsPathSafe(string candidatePath)
         {
             bool result = false;
             try
@@ -991,7 +887,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                WriteErrorLog("Props/SafeToDelete: " + ex.Message);
+                WriteErrorLog("Props/IsPathSafe: " + ex.Message);
             }
             return result;
         }
@@ -1054,7 +950,6 @@ namespace RateController.Classes
             cShowSwitches = bool.TryParse(GetAppProp("ShowSwitches"), out bool ss) ? ss : false;
             cUseDualAuto = bool.TryParse(GetAppProp("UseDualAuto"), out bool da) ? da : false;
             cUseRateDisplay = bool.TryParse(GetAppProp("UseRateDisplay"), out bool rtd) ? rtd : false;
-            cShowJobs = bool.TryParse(GetAppProp("ShowJobs"), out bool ja) ? ja : false;
 
             for (int i = 0; i < 40; i++)
             {

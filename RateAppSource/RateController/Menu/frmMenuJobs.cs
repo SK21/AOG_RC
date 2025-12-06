@@ -32,6 +32,7 @@ namespace RateController.Menu
             this.Tag = false;
         }
 
+
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
@@ -200,7 +201,7 @@ namespace RateController.Menu
                     Job selectedJob = lvJobs.SelectedItems[0].Tag as Job;
                     if (selectedJob != null)
                     {
-                        Props.CurrentJobID = selectedJob.ID;
+                        JobManager.CurrentJobID = selectedJob.ID;
                         UpdateEditingJob();
                         UpdateForm();
                     }
@@ -286,12 +287,8 @@ namespace RateController.Menu
                             JobToCopyFromID = -1;
                         }
                     }
-                    else
-                    {
-                        JobManager.EditJob(EditingJob);
-                    }
-
-                    Props.CurrentJobID = EditingJob.ID;
+                    JobManager.SaveJob(EditingJob);
+                    JobManager.CurrentJobID = EditingJob.ID;
                 }
 
                 SetButtons(false);
@@ -314,7 +311,11 @@ namespace RateController.Menu
 
         private void ckFilter_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateForm();
+            if (!Initializing)
+            {
+                JobManager.JobFilter = ckFilter.Checked;
+                UpdateForm();
+            }
         }
 
         private void ckJobs_CheckedChanged(object sender, EventArgs e)
@@ -324,7 +325,7 @@ namespace RateController.Menu
 
         private void ckResume_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing) Props.ShowJobs = ckResume.Checked;
+            if (!Initializing) JobManager.ShowJobs = ckResume.Checked;
         }
 
         private void FillCombos()
@@ -557,7 +558,7 @@ namespace RateController.Menu
 
         private void UpdateEditingJob()
         {
-            int JobID = Props.CurrentJobID;
+            int JobID = JobManager.CurrentJobID;
             EditingJob = JobManager.SearchJob(JobID);
             if (EditingJob == null) EditingJob = JobManager.SearchJob(0);
             IsNewJob = false;
@@ -618,16 +619,17 @@ namespace RateController.Menu
                 // highlight the current job in the list
                 foreach (ListViewItem item in lvJobs.Items)
                 {
-                    if (item.Tag is Job job && job.ID == Props.CurrentJobID)
+                    if (item.Tag is Job job && job.ID == JobManager.CurrentJobID)
                     {
                         item.Selected = true;
                         item.EnsureVisible();
                         break;
                     }
                 }
-                ckResume.Checked = Props.ShowJobs;
+                ckResume.Checked = JobManager.ShowJobs;
+                ckFilter.Checked = JobManager.JobFilter;
 
-                if (!ckFilter.Checked)
+                if (!JobManager.JobFilter)
                 {
                     // Clear field and year filters
                     cbSearchField.SelectedIndex = -1;

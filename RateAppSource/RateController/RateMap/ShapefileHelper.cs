@@ -95,7 +95,7 @@ namespace RateController.Classes
                     // No zones to save: remove existing shapefile so deleted zones don't reappear on reload
                     try
                     {
-                        if (Props.IsPathSafeToDelete(shapefilePath))
+                        if (Props.IsPathSafe(shapefilePath))
                         {
                             string shp = Path.ChangeExtension(shapefilePath, ".shp");
                             string dbf = Path.ChangeExtension(shapefilePath, ".dbf");

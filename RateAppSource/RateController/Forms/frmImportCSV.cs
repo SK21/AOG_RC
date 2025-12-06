@@ -117,7 +117,7 @@ namespace RateController.Forms
                 }
 
                 // Switch to the new job
-                Props.CurrentJobID = newJob.ID;
+                JobManager.CurrentJobID = newJob.ID;
 
                 Props.ShowMessage("CSV imported to new job [" + jobName + "].", "Import", 8000);
 

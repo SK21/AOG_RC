@@ -75,6 +75,7 @@ namespace RateController
             Props.MainForm = this;
             Props.CheckFolders();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
+            JobManager.Initialize();
             Tls = new clsTools(this);
             Tls.StartMapManager();
 
@@ -465,7 +466,7 @@ namespace RateController
             if (RunOnce == 0)
             {
                 RunOnce = 1;
-                if (Props.ShowJobs)
+                if (JobManager.ShowJobs)
                 {
                     // show jobs menu
                     var menuForm = Props.IsFormOpen("frmMenu", false) as frmMenu;
