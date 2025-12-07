@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -42,8 +41,12 @@ namespace RateController.Classes
                         DateTime SaveTime = DateTime.Now;
                         string FileLocation = Path.Combine(CurrentJob.JobFolder, DataFileName);
                         bool FileFound = File.Exists(FileLocation);
-                        using (var writer = new StreamWriter(FileLocation, append: true))
+
+                        using (var fs = new FileStream(FileLocation, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                        using (var writer = new StreamWriter(fs))
                         {
+                            writer.AutoFlush = true; 
+                            
                             if (!FileFound)
                             {
                                 string header = "TimeStamp,ProductID,Quantity,Hectares";
