@@ -8,7 +8,6 @@ namespace RateController.Classes
     public class clsJobDataTotals
     {
         private const string DataFileName = "JobStats.CSV";
-        private string FilePath;
 
         public void GetTotals(Job jb, int ProductID, out TimeSpan WorkedTime, out double QuantityTotal, out double HectaresTotal)
         {
@@ -19,7 +18,7 @@ namespace RateController.Classes
 
             if (jb != null)
             {
-                FilePath = Path.Combine(jb.JobFolder, DataFileName);
+                string FilePath = Path.Combine(jb.JobFolder, DataFileName);
 
                 try
                 {
