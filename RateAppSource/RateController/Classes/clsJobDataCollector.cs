@@ -29,6 +29,10 @@ namespace RateController.Classes
             CurrentJob = JobManager.CurrentJob;
             InitializeProductData();
             ProductData = LoadData(CurrentJob);
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                LastQuantity[i] = ProductData[i].Quantity;
+            }
 
             JobManager.JobChanged += JobManager_JobChanged;
         }
@@ -68,6 +72,10 @@ namespace RateController.Classes
             CurrentJob = JobManager.CurrentJob;
             InitializeProductData();
             ProductData = LoadData(CurrentJob);
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                LastQuantity[i] = ProductData[i].Quantity;
+            }
         }
 
         private JobProductData[] LoadData(Job JB)
@@ -139,7 +147,7 @@ namespace RateController.Classes
                 {
                     if (CurrentJob != null)
                     {
-                        DateTime SaveTime = DateTime.Now;
+                        DateTime SaveTime = DateTime.UtcNow;
                         string FileLocation = Path.Combine(CurrentJob.JobFolder, DataFileName);
 
                         foreach (clsProduct Prd in Props.MainForm.Products.Items)
