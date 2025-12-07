@@ -125,7 +125,7 @@ namespace RateController.Classes
                         // Write each reading as a CSV line.
                         foreach (var reading in snapshot)
                         {
-                            string timestamp = reading.Timestamp.ToString("O", CultureInfo.InvariantCulture);
+                            string timestamp = reading.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
                             string lat = reading.Latitude.ToString(CultureInfo.InvariantCulture);
                             string lon = reading.Longitude.ToString(CultureInfo.InvariantCulture);
                             string basicValues = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", timestamp, lat, lon);

@@ -76,6 +76,8 @@ namespace RateController
             Props.CheckFolders();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
             JobManager.Initialize();
+            Props.JobCollector.Record = true;
+
             Tls = new clsTools(this);
             Tls.StartMapManager();
 

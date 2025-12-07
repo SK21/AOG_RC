@@ -150,6 +150,7 @@ namespace RateController.Classes
         #region MainProperties
 
         private static DataCollector cRateCollector;
+        private static clsJobDataCollector cJobCollector;
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
@@ -287,6 +288,15 @@ namespace RateController.Classes
             {
                 if (cRateCollector == null) cRateCollector = new DataCollector();
                 return cRateCollector;
+            }
+        }
+
+        public static clsJobDataCollector JobCollector
+        {
+            get
+            {
+                if(cJobCollector== null) cJobCollector=new clsJobDataCollector();
+                return cJobCollector;
             }
         }
 

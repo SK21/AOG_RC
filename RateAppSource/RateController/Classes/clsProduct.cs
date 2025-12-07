@@ -15,6 +15,7 @@ namespace RateController
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
         private bool cBumpButtons;
+        private bool cCalSettingPWM = false;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
         private bool cEnabled = false;
@@ -53,7 +54,7 @@ namespace RateController
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
-        private bool cCalSettingPWM = false;
+
         public clsProduct(FormStart CallingForm, int ProdID)
         {
             mf = CallingForm;
@@ -689,7 +690,7 @@ namespace RateController
             return Result;
         }
 
-        public bool ProductOn()
+        public bool ProductOn(bool IncludeCalibration = true)
         {
             bool Result = false;
             if (ControlType == ControlTypeEnum.Fan)
@@ -698,7 +699,14 @@ namespace RateController
             }
             else
             {
-                Result = (RateSensorData.Connected() && (cHectaresPerMinute > 0 || Props.RateCalibrationOn));
+                if (IncludeCalibration)
+                {
+                    Result = (RateSensorData.Connected() && (cHectaresPerMinute > 0 || Props.RateCalibrationOn));
+                }
+                else
+                {
+                    Result = (RateSensorData.Connected() && cHectaresPerMinute > 0);
+                }
             }
             return Result;
         }
@@ -1026,6 +1034,10 @@ namespace RateController
             return Result;
         }
 
+        public double HectaresWorked()
+        {
+            return CurrentWorkedArea_Hc;
+        }
         public void Update()
         {
             if (RateSensorData.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)

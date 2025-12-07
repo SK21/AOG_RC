@@ -46,6 +46,7 @@ namespace RateController.Menu
             {
                 UpdateEditingJob();
                 SetButtons(false);
+                UpdateForm();
             }
             catch (Exception ex)
             {
@@ -70,6 +71,7 @@ namespace RateController.Menu
                         EditingJob.Notes = "";
                         IsNewJob = true;
                         SetButtons(true);
+                        UpdateForm();
                     }
                 }
                 else
@@ -332,6 +334,7 @@ namespace RateController.Menu
                 }
 
                 SetButtons(false);
+                UpdateForm();
             }
             catch (Exception ex)
             {
@@ -581,9 +584,6 @@ namespace RateController.Menu
 
                 cEdited = Edited;
                 this.Tag = cEdited;
-                //gbCurrentJob.Invalidate();
-                //gbJobs.Invalidate();
-                UpdateForm();
             }
         }
 

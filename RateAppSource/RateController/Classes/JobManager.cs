@@ -52,7 +52,10 @@ namespace RateController.Classes
                 }
             }
         }
-
+        public static Job CurrentJob
+        {
+            get { return SearchJob(CurrentJobID); }
+        }
         public static string CurrentMapPath
         {
             get
