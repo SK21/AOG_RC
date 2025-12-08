@@ -495,6 +495,7 @@
             this.butActivity.Text = "Activity";
             this.butActivity.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.butActivity.UseVisualStyleBackColor = false;
+            this.butActivity.Click += new System.EventHandler(this.butActivity_Click);
             // 
             // btnExport
             // 

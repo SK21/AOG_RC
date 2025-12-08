@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
+using RateController.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -344,6 +345,25 @@ namespace RateController.Menu
 
         private void btnResetField_Click(object sender, EventArgs e)
         {
+        }
+
+        private void butActivity_Click(object sender, EventArgs e)
+        {
+            Job JB = null;
+            if (lvJobs.SelectedItems.Count > 0)
+            {
+                JB = lvJobs.SelectedItems[0].Tag as Job;
+
+                Form fs = Props.IsFormOpen("frmJobReport");
+                if (fs != null) fs.Close();
+
+                fs = new frmJobReport(JB);
+                fs.Show();
+            }
+            else
+            {
+                Props.ShowMessage("Select a job.");
+            }
         }
 
         private void cbSearchField_SelectedIndexChanged(object sender, EventArgs e)
