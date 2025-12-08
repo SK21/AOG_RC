@@ -37,7 +37,7 @@
             this.rtb.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtb.Location = new System.Drawing.Point(12, 12);
             this.rtb.Name = "rtb";
-            this.rtb.Size = new System.Drawing.Size(611, 379);
+            this.rtb.Size = new System.Drawing.Size(611, 473);
             this.rtb.TabIndex = 0;
             this.rtb.Text = "";
             // 
@@ -50,7 +50,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(553, 403);
+            this.btnOK.Location = new System.Drawing.Point(551, 491);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 174;
@@ -61,7 +61,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(633, 478);
+            this.ClientSize = new System.Drawing.Size(633, 566);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.rtb);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

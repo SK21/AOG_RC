@@ -10,7 +10,7 @@ namespace RateController.Forms
     {
         private string DateFormat = "yyyy-MM-ddTHH:mm";
         private Job JB;
-        private int MaxLineLength = 40;
+        private int MaxLineLength = 45;
         private bool UseBold = false;
         private bool UseUnderline = false;
 
@@ -104,11 +104,18 @@ namespace RateController.Forms
         {
             try
             {
-                int Pad1 = 15;
+                int Pad1 = 10;
                 int PadUsed = 0;
 
-                string line = "Job Report - " + JB.Name;
-                Add(line, true, true, 20, 0, 2);
+                string line = "Job Report";
+                Add(line, true, true, 25, 0, 1);
+
+                line = "Name:";
+                Add(line, false, false, 0, 0, 0);
+                PadUsed = line.Length;
+
+                line = JB.Name;
+                Add(line, false, false, Pad1, PadUsed);
 
                 line = "Date:";
                 Add(line, false, false, 0, 0, 0);
@@ -141,6 +148,10 @@ namespace RateController.Forms
                     int Pad4 = 36;
                     int Pad5 = 48;
 
+                    // Fixed column widths for right alignment of numeric columns
+                    int QtyColWidth = 10;     // adjust as needed
+                    int AreaColWidth = 10;    // adjust as needed
+
                     line = "Product";
                     Add(line, true, true, 0, 0, 0);
                     PadUsed = line.Length;
@@ -154,8 +165,10 @@ namespace RateController.Forms
                     PadUsed = line.Length + Pad3;
 
                     line = "Quantity";
-                    Add(line, true, true, Pad4, PadUsed, 0);
-                    PadUsed = line.Length + Pad4;
+                    int qtyExtraPad = Math.Max(0, QtyColWidth - line.Length);
+                    int qtyStartPad = Pad4 + qtyExtraPad;
+                    Add(line, true, true, qtyStartPad, PadUsed, 0);
+                    PadUsed = qtyStartPad + line.Length;
 
                     if (Props.UseMetric)
                     {
@@ -165,7 +178,9 @@ namespace RateController.Forms
                     {
                         line = "Acres";
                     }
-                    Add(line, true, true, Pad5, PadUsed);
+                    int areaExtraPad = Math.Max(0, AreaColWidth - line.Length);
+                    int areaStartPad = Pad5 + areaExtraPad;
+                    Add(line, true, true, areaStartPad, PadUsed);
 
                     foreach (JobProductData PrdData in Data)
                     {
@@ -186,6 +201,7 @@ namespace RateController.Forms
                             Add(line, false, false, Pad2, PadUsed, 0);
                             PadUsed = line.Length + Pad2;
 
+                            // End time
                             if (PrdData.EndTime == DateTime.MinValue)
                             {
                                 line = "-";
@@ -197,10 +213,14 @@ namespace RateController.Forms
                             Add(line, false, false, Pad3, PadUsed, 0);
                             PadUsed = line.Length + Pad3;
 
+                            // Quantity (right-aligned within QtyColWidth starting at Pad4)
                             line = PrdData.Quantity.ToString("N2");
-                            Add(line, false, false, Pad4, PadUsed, 0);
-                            PadUsed = line.Length + Pad4;
+                            qtyExtraPad = Math.Max(0, QtyColWidth - line.Length);
+                            qtyStartPad = Pad4 + qtyExtraPad;
+                            Add(line, false, false, qtyStartPad, PadUsed, 0);
+                            PadUsed = qtyStartPad + line.Length;
 
+                            // Area (Hectares/Acres) right-aligned within AreaColWidth starting at Pad5
                             if (Props.UseMetric)
                             {
                                 line = PrdData.Hectares.ToString("N2");
@@ -209,7 +229,9 @@ namespace RateController.Forms
                             {
                                 line = (PrdData.Hectares * 2.47).ToString("N2");
                             }
-                            Add(line, false, false, Pad5, PadUsed);
+                            areaExtraPad = Math.Max(0, AreaColWidth - line.Length);
+                            areaStartPad = Pad5 + areaExtraPad;
+                            Add(line, false, false, areaStartPad, PadUsed);
                         }
                     }
                 }
