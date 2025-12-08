@@ -104,6 +104,7 @@ namespace RateController.Forms
         private void frmJobReport_Load(object sender, EventArgs e)
         {
             Props.LoadFormLocation(this);
+            this.BackColor = Properties.Settings.Default.MainBackColour;
         }
 
         private void ShowBold(bool Enabled = true)

@@ -35,12 +35,14 @@
             // 
             // rtb
             // 
+            this.rtb.BackColor = System.Drawing.Color.White;
             this.rtb.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtb.Location = new System.Drawing.Point(12, 12);
             this.rtb.Name = "rtb";
             this.rtb.ReadOnly = true;
             this.rtb.Size = new System.Drawing.Size(611, 473);
-            this.rtb.TabIndex = 0;
+            this.rtb.TabIndex = 2;
+            this.rtb.TabStop = false;
             this.rtb.Text = "";
             // 
             // btnOK
@@ -50,12 +52,12 @@
             this.btnOK.FlatAppearance.BorderSize = 0;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.Save;
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.btnOK.Location = new System.Drawing.Point(551, 491);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
-            this.btnOK.TabIndex = 174;
+            this.btnOK.TabIndex = 1;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -72,7 +74,7 @@
             this.btnPrint.Location = new System.Drawing.Point(475, 491);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(70, 63);
-            this.btnPrint.TabIndex = 175;
+            this.btnPrint.TabIndex = 2;
             this.btnPrint.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnPrint.UseVisualStyleBackColor = false;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
