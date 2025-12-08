@@ -212,6 +212,7 @@
       <DependentUpon>frmSpeedCal.cs</DependentUpon>
     </Compile>
     <Compile Include="PGNs\PGN32504.cs" />
+    <Compile Include="Printing\RichTextBoxPrinterRTF.cs" />
     <Compile Include="RateMap\DataCollector.cs" />
     <Compile Include="Classes\clsProducts.cs" />
     <Compile Include="Classes\clsRelay.cs" />
@@ -788,6 +789,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\printer.png" />
     <None Include="Resources\copy-small.png" />
     <None Include="Resources\folder-open-small.png" />
     <None Include="Resources\folder-simple-small.png" />

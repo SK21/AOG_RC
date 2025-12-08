@@ -30,6 +30,7 @@
         {
             this.rtb = new System.Windows.Forms.RichTextBox();
             this.btnOK = new System.Windows.Forms.Button();
+            this.btnPrint = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // rtb
@@ -57,11 +58,29 @@
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             // 
+            // btnPrint
+            // 
+            this.btnPrint.BackColor = System.Drawing.Color.Transparent;
+            this.btnPrint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnPrint.Image = global::RateController.Properties.Resources.printer;
+            this.btnPrint.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnPrint.Location = new System.Drawing.Point(475, 491);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(70, 63);
+            this.btnPrint.TabIndex = 175;
+            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            // 
             // frmJobReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(633, 566);
+            this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.rtb);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -79,5 +98,6 @@
 
         private System.Windows.Forms.RichTextBox rtb;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnPrint;
     }
 }

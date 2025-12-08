@@ -1,4 +1,5 @@
 ﻿using RateController.Classes;
+using RateController.Printing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -82,6 +83,12 @@ namespace RateController.Forms
                     }
                 }
             }
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            RichTextBoxPrinterRTF printer = new RichTextBoxPrinterRTF(rtb);
+            printer.Print();
         }
 
         private void ShowBold(bool Enabled = true)
