@@ -24,34 +24,58 @@ namespace RateController.Forms
 
         private void Add(string line, bool Underline = false, bool Bold = false, int Pad = 0, int TitleLength = 0, int LineFeed = 1)
         {
-            if (line.Length > MaxLineLength)
+            try
             {
-                List<string> Lines = SplitString(line, MaxLineLength);
-
-                bool FirstLine = true;
-                foreach (string SubLine in Lines)
+                if (line.Length > MaxLineLength)
                 {
-                    if (FirstLine)
+                    List<string> Lines = SplitString(line, MaxLineLength);
+
+                    bool FirstLine = true;
+                    foreach (string SubLine in Lines)
                     {
-                        // adjust padding for title
-                        FirstLine = false;
-                        if (Pad - TitleLength > 0)
+                        if (FirstLine)
+                        {
+                            // adjust padding for title
+                            FirstLine = false;
+                            if (Pad - TitleLength > 0)
+                            {
+                                if (UseUnderline) ShowUnderline(false);
+                                if (UseBold) ShowBold(false);
+                                rtb.AppendText(string.Empty.PadRight(Pad - TitleLength));
+                            }
+                        }
+                        else if (Pad > 0)
                         {
                             if (UseUnderline) ShowUnderline(false);
                             if (UseBold) ShowBold(false);
-                            rtb.AppendText(string.Empty.PadRight(Pad - TitleLength));
+                            rtb.AppendText(string.Empty.PadRight(Pad));
+                        }
+
+                        if (UseUnderline != Underline) ShowUnderline(Underline);
+                        if (UseBold != Bold) ShowBold(Bold);
+                        rtb.AppendText(SubLine);
+
+                        if (LineFeed > 0 && LineFeed < 20)
+                        {
+                            for (int i = 0; i < LineFeed; i++)
+                            {
+                                rtb.AppendText(Environment.NewLine);
+                            }
                         }
                     }
-                    else if (Pad > 0)
+                }
+                else
+                {
+                    if (Pad - TitleLength > 0)
                     {
                         if (UseUnderline) ShowUnderline(false);
                         if (UseBold) ShowBold(false);
-                        rtb.AppendText(string.Empty.PadRight(Pad));
+                        rtb.AppendText(string.Empty.PadRight(Pad - TitleLength));
                     }
 
                     if (UseUnderline != Underline) ShowUnderline(Underline);
                     if (UseBold != Bold) ShowBold(Bold);
-                    rtb.AppendText(SubLine);
+                    rtb.AppendText(line);
 
                     if (LineFeed > 0 && LineFeed < 20)
                     {
@@ -62,26 +86,9 @@ namespace RateController.Forms
                     }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                if (Pad - TitleLength > 0)
-                {
-                    if (UseUnderline) ShowUnderline(false);
-                    if (UseBold) ShowBold(false);
-                    rtb.AppendText(string.Empty.PadRight(Pad - TitleLength));
-                }
-
-                if (UseUnderline != Underline) ShowUnderline(Underline);
-                if (UseBold != Bold) ShowBold(Bold);
-                rtb.AppendText(line);
-
-                if (LineFeed > 0 && LineFeed < 20)
-                {
-                    for (int i = 0; i < LineFeed; i++)
-                    {
-                        rtb.AppendText(Environment.NewLine);
-                    }
-                }
+                Props.WriteErrorLog("frmJobReport/Add: " + ex.Message);
             }
         }
 
