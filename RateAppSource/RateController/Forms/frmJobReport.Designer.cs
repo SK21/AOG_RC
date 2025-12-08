@@ -38,6 +38,7 @@
             this.rtb.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtb.Location = new System.Drawing.Point(12, 12);
             this.rtb.Name = "rtb";
+            this.rtb.ReadOnly = true;
             this.rtb.Size = new System.Drawing.Size(611, 473);
             this.rtb.TabIndex = 0;
             this.rtb.Text = "";
@@ -57,6 +58,7 @@
             this.btnOK.TabIndex = 174;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnPrint
             // 
@@ -90,6 +92,8 @@
             this.MinimizeBox = false;
             this.Name = "frmJobReport";
             this.Text = "Job Report";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmJobReport_FormClosed);
+            this.Load += new System.EventHandler(this.frmJobReport_Load);
             this.ResumeLayout(false);
 
         }

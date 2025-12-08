@@ -85,10 +85,25 @@ namespace RateController.Forms
             }
         }
 
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void btnPrint_Click(object sender, EventArgs e)
         {
             RichTextBoxPrinterRTF printer = new RichTextBoxPrinterRTF(rtb);
             printer.Print();
+        }
+
+        private void frmJobReport_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Props.SaveFormLocation(this);
+        }
+
+        private void frmJobReport_Load(object sender, EventArgs e)
+        {
+            Props.LoadFormLocation(this);
         }
 
         private void ShowBold(bool Enabled = true)
@@ -115,7 +130,7 @@ namespace RateController.Forms
                 int PadUsed = 0;
 
                 string line = "Job Report";
-                Add(line, true, true, 25, 0, 1);
+                Add(line, true, true, 25, 0, 2);
 
                 line = "Name:";
                 Add(line, false, false, 0, 0, 0);
@@ -191,7 +206,7 @@ namespace RateController.Forms
 
                     foreach (JobProductData PrdData in Data)
                     {
-                        //if (PrdData.Hectares > 0)
+                        if (PrdData.Hectares > 0)
                         {
                             line = Props.MainForm.Products.Item(PrdData.ProductID).ProductName;
                             Add(line, false, false, 0, 0, 0);
