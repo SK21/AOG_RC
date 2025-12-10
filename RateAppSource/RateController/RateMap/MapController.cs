@@ -21,8 +21,9 @@ namespace RateController.RateMap
 
         #endregion GMap
 
-        public static event EventHandler MapZoomed;
         public static event EventHandler MapLeftClicked;
+
+        public static event EventHandler MapZoomed;
 
         public static GMapControl Map
         { get { return gmap; } }
@@ -31,6 +32,9 @@ namespace RateController.RateMap
         {
             Props.SetProp("LastMapLat", gmap.Position.Lat.ToString("N10"));
             Props.SetProp("LastMapLng", gmap.Position.Lng.ToString("N10"));
+
+            gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
+            gmap.MouseClick -= Gmap_MouseClick;
         }
 
         public static void Initialize()
@@ -39,15 +43,13 @@ namespace RateController.RateMap
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
             gmap.MouseClick += Gmap_MouseClick;
         }
-
-        private static void Gmap_MouseClick(object sender, MouseEventArgs e)
+        private static void Refresh()
         {
-            if (e.Button == MouseButtons.Left)
+            if (Props.RateMapIsVisible())
             {
-                MapLeftClicked?.Invoke(null, EventArgs.Empty);
+                gmap.Refresh();
             }
         }
-
 
         private static void AddOverlay(GMapOverlay NewOverlay)
         {
@@ -60,9 +62,29 @@ namespace RateController.RateMap
             }
         }
 
+        private static void Gmap_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                MapLeftClicked?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
         private static void Gmap_OnMapZoomChanged()
         {
             MapZoomed?.Invoke(null, EventArgs.Empty);
+        }
+        public static bool ShowTiles
+        {
+            get { return Props.MapShowTiles; }
+            set
+            {
+                Props.MapShowTiles = value;
+                gmap.MapProvider = value
+                    ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
+                    : (GMapProvider)GMapProviders.EmptyProvider;
+                Refresh();
+            }
         }
 
         private static void InitializeMap()
@@ -82,10 +104,7 @@ namespace RateController.RateMap
             if (double.TryParse(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
 
             gmap = new GMapControl();
-            gmap.MapProvider = ArcGIS_World_Imagery_Provider.Instance;
-            //  gmap.MapProvider = Props.MapShowTiles
-            //? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
-            //: (GMapProvider)GMapProviders.EmptyProvider;
+            ShowTiles=Props.MapShowTiles;
 
             gmap.Position = new PointLatLng(Lat, Lng);
             gmap.ShowCenter = false;

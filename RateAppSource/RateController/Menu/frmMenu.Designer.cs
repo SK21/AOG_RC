@@ -61,7 +61,6 @@
             this.butMap = new System.Windows.Forms.Button();
             this.btnPressure = new System.Windows.Forms.Button();
             this.lbFileName = new System.Windows.Forms.Label();
-            this.butRateData = new System.Windows.Forms.Button();
             this.lbJob = new System.Windows.Forms.Label();
             this.butProfiles = new System.Windows.Forms.Button();
             this.butJobs = new System.Windows.Forms.Button();
@@ -358,7 +357,7 @@
             this.butLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLanguage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butLanguage.Location = new System.Drawing.Point(281, 338);
+            this.butLanguage.Location = new System.Drawing.Point(281, 270);
             this.butLanguage.Name = "butLanguage";
             this.butLanguage.Size = new System.Drawing.Size(158, 49);
             this.butLanguage.TabIndex = 31;
@@ -415,7 +414,7 @@
             this.butDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butDisplay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butDisplay.Location = new System.Drawing.Point(281, 270);
+            this.butDisplay.Location = new System.Drawing.Point(281, 215);
             this.butDisplay.Name = "butDisplay";
             this.butDisplay.Size = new System.Drawing.Size(158, 49);
             this.butDisplay.TabIndex = 28;
@@ -588,7 +587,7 @@
             this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butColor.Location = new System.Drawing.Point(281, 404);
+            this.butColor.Location = new System.Drawing.Point(281, 325);
             this.butColor.Name = "butColor";
             this.butColor.Size = new System.Drawing.Size(158, 49);
             this.butColor.TabIndex = 163;
@@ -649,25 +648,6 @@
             this.lbFileName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseDown);
             this.lbFileName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmMenu_MouseMove);
             // 
-            // butRateData
-            // 
-            this.butRateData.BackColor = System.Drawing.Color.Transparent;
-            this.butRateData.FlatAppearance.BorderSize = 0;
-            this.butRateData.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butRateData.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butRateData.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRateData.Location = new System.Drawing.Point(281, 215);
-            this.butRateData.Name = "butRateData";
-            this.butRateData.Size = new System.Drawing.Size(158, 49);
-            this.butRateData.TabIndex = 167;
-            this.butRateData.Text = "Rate Data";
-            this.butRateData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butRateData.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.butRateData.UseVisualStyleBackColor = false;
-            this.butRateData.Visible = false;
-            this.butRateData.Click += new System.EventHandler(this.butRateData_Click);
-            // 
             // lbJob
             // 
             this.lbJob.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -722,7 +702,7 @@
             // 
             this.gbSpacer1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbSpacer1.ForeColor = System.Drawing.Color.Yellow;
-            this.gbSpacer1.Location = new System.Drawing.Point(270, 147);
+            this.gbSpacer1.Location = new System.Drawing.Point(961, 250);
             this.gbSpacer1.Name = "gbSpacer1";
             this.gbSpacer1.Size = new System.Drawing.Size(158, 3);
             this.gbSpacer1.TabIndex = 171;
@@ -733,7 +713,7 @@
             // 
             this.gbSpacer2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbSpacer2.ForeColor = System.Drawing.Color.Yellow;
-            this.gbSpacer2.Location = new System.Drawing.Point(281, 271);
+            this.gbSpacer2.Location = new System.Drawing.Point(961, 292);
             this.gbSpacer2.Name = "gbSpacer2";
             this.gbSpacer2.Size = new System.Drawing.Size(158, 3);
             this.gbSpacer2.TabIndex = 172;
@@ -750,7 +730,6 @@
             this.Controls.Add(this.butJobs);
             this.Controls.Add(this.butProfiles);
             this.Controls.Add(this.lbJob);
-            this.Controls.Add(this.butRateData);
             this.Controls.Add(this.lbFileName);
             this.Controls.Add(this.btnPressure);
             this.Controls.Add(this.butMap);
@@ -830,7 +809,6 @@
         private System.Windows.Forms.Button butMap;
         private System.Windows.Forms.Button btnPressure;
         private System.Windows.Forms.Label lbFileName;
-        private System.Windows.Forms.Button butRateData;
         private System.Windows.Forms.Label lbJob;
         private System.Windows.Forms.Button butProfiles;
         private System.Windows.Forms.Button butJobs;

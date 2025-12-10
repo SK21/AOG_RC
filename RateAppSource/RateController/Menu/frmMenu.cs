@@ -17,6 +17,10 @@ namespace RateController
         private const int SubFirstSpacing = 75;
         private const int SubOffset = 10;
         private const int SubSpacing = 55;
+
+        // Prevent intermediate repaints while updating visibility/positions
+        private const int WM_SETREDRAW = 0x000B;
+
         private clsProduct cCurrentProduct;
         private string cLastScreen = "";
         private bool cMenuNetworkHasRan = false;
@@ -24,51 +28,6 @@ namespace RateController
         private bool LoadLast = false;
         private FormStart mf;
         private Point MouseDownLocation;
-
-        // Prevent intermediate repaints while updating visibility/positions
-        private const int WM_SETREDRAW = 0x000B;
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
-
-        private sealed class RedrawScope : IDisposable
-        {
-            private readonly Control _control;
-            public RedrawScope(Control control)
-            {
-                _control = control;
-                if (control.IsHandleCreated)
-                    SendMessage(control.Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
-            }
-            public void Dispose()
-            {
-                if (_control != null && _control.IsHandleCreated)
-                {
-                    SendMessage(_control.Handle, WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
-                    _control.Refresh();
-                }
-            }
-        }
-
-        // Reduce flicker across parent/children by clipping and composited painting
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                var cp = base.CreateParams;
-                cp.Style |= 0x02000000;     // WS_CLIPCHILDREN
-                cp.ExStyle |= 0x02000000;   // WS_EX_COMPOSITED
-                return cp;
-            }
-        }
-
-        // Avoid background erase flicker; paint background ourselves
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            using (var b = new SolidBrush(Properties.Settings.Default.MainBackColour))
-            {
-                e.Graphics.FillRectangle(b, this.ClientRectangle);
-            }
-        }
 
         public frmMenu(FormStart cf, int ProductID, bool LoadLst = false)
         {
@@ -100,6 +59,108 @@ namespace RateController
 
         public bool MenuNetworkHasRan
         { get { return cMenuNetworkHasRan; } set { cMenuNetworkHasRan = value; } }
+
+        // Reduce flicker across parent/children by clipping and composited painting
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.Style |= 0x02000000;     // WS_CLIPCHILDREN
+                cp.ExStyle |= 0x02000000;   // WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+        public void butFile_Click(object sender, EventArgs e)
+        {
+            if (ClosedOwned())
+            {
+                using (new RedrawScope(this))
+                {
+                    // Suspend layout to avoid multiple repaints while changing many control properties
+                    this.SuspendLayout();
+                    try
+                    {
+                        butProfiles.Visible = !Expanded;
+                        butJobs.Visible = !Expanded;
+                        butMap.Visible = !Expanded;
+                        butDisplay.Visible = !Expanded;
+                        butLanguage.Visible = !Expanded;
+                        butColor.Visible = !Expanded;
+                        if (Expanded)
+                        {
+                            Expanded = false;
+                            butFile.Visible = true;
+                            butProducts.Visible = true;
+                            butMachine.Visible = true;
+                            butModules.Visible = true;
+                            butHelpScreen.Visible = true;
+                        }
+                        else
+                        {
+                            Expanded = true;
+                            butFile.Visible = true;
+                            butProducts.Visible = false;
+                            butMachine.Visible = false;
+                            butModules.Visible = false;
+                            butHelpScreen.Visible = false;
+
+                            int Pos = butFile.Top;
+                            butProfiles.Visible = true;
+                            butProfiles.Left = butFile.Left + SubOffset;
+                            Pos += SubFirstSpacing;
+                            butProfiles.Top = Pos;
+
+                            butJobs.Visible = true;
+                            butJobs.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butJobs.Top = Pos;
+
+                            butMap.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing + 5;
+                            butMap.Top = Pos;
+
+                            butDisplay.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing + 5;
+                            butDisplay.Top = Pos;
+
+                            butLanguage.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butLanguage.Top = Pos;
+
+                            butColor.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butColor.Top = Pos;
+
+                            butProfiles.PerformClick();
+                        }
+                    }
+                    finally
+                    {
+                        this.ResumeLayout(true);
+                    }
+                }
+            }
+        }
+
+        public void butJobs_Click(object sender, EventArgs e)
+        {
+            SaveLastScreen("frmMenuJobs");
+            HighlightButton(butJobs);
+            Form fs = Props.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuJobs(mf, this);
+                frm.Owner = this;
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+        }
 
         public void ChangeProduct(int NewID, bool NoFans = false)
         {
@@ -203,6 +264,18 @@ namespace RateController
                 e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
             }
         }
+
+        // Avoid background erase flicker; paint background ourselves
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            using (var b = new SolidBrush(Properties.Settings.Default.MainBackColour))
+            {
+                e.Graphics.FillRectangle(b, this.ClientRectangle);
+            }
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
@@ -337,78 +410,6 @@ namespace RateController
             }
         }
 
-        public void butFile_Click(object sender, EventArgs e)
-        {
-            if (ClosedOwned())
-            {
-                using (new RedrawScope(this))
-                {
-                    // Suspend layout to avoid multiple repaints while changing many control properties
-                    this.SuspendLayout();
-                    try
-                    {
-                        butProfiles.Visible = !Expanded;
-                        butJobs.Visible = !Expanded;
-                        butMap.Visible = !Expanded;
-                        butDisplay.Visible = !Expanded;
-                        butLanguage.Visible = !Expanded;
-                        butColor.Visible = !Expanded;
-                        if (Expanded)
-                        {
-                            Expanded = false;
-                            butFile.Visible = true;
-                            butProducts.Visible = true;
-                            butMachine.Visible = true;
-                            butModules.Visible = true;
-                            butHelpScreen.Visible = true;
-                        }
-                        else
-                        {
-                            Expanded = true;
-                            butFile.Visible = true;
-                            butProducts.Visible = false;
-                            butMachine.Visible = false;
-                            butModules.Visible = false;
-                            butHelpScreen.Visible = false;
-
-                            int Pos = butFile.Top;
-                            butProfiles.Visible = true;
-                            butProfiles.Left = butFile.Left + SubOffset;
-                            Pos += SubFirstSpacing;
-                            butProfiles.Top = Pos;
-
-                            butJobs.Visible = true;
-                            butJobs.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing;
-                            butJobs.Top = Pos;
-
-                            butMap.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing + 5;
-                            butMap.Top = Pos;
-
-                            butDisplay.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing + 5;
-                            butDisplay.Top = Pos;
-
-                            butLanguage.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing;
-                            butLanguage.Top = Pos;
-
-                            butColor.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing;
-                            butColor.Top = Pos;
-
-                            butProfiles.PerformClick();
-                        }
-                    }
-                    finally
-                    {
-                        this.ResumeLayout(true);
-                    }
-                }
-            }
-        }
-
         private void butHelpScreen_Click(object sender, EventArgs e)
         {
             SaveLastScreen("frmMenuHelp");
@@ -420,24 +421,6 @@ namespace RateController
                 Form frm = new frmMenuHelp(mf, this);
                 frm.Owner = this;
                 frm.Show();
-            }
-        }
-
-        public void butJobs_Click(object sender, EventArgs e)
-        {
-            SaveLastScreen("frmMenuJobs");
-            HighlightButton(butJobs);
-            Form fs = Props.IsFormOpen(cLastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuJobs(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-            else
-            {
-                fs.Focus();
             }
         }
 
@@ -826,20 +809,6 @@ namespace RateController
             }
         }
 
-        private void butRateData_Click(object sender, EventArgs e)
-        {
-            SaveLastScreen("frmMenuRateData");
-            if (sender is Button button) HighlightButton(button);
-            Form fs = Props.IsFormOpen(cLastScreen);
-
-            if (fs == null)
-            {
-                Form frm = new frmMenuRateData(mf, this);
-                frm.Owner = this;
-                frm.Show();
-            }
-        }
-
         private void butRelayPins_Click(object sender, EventArgs e)
         {
             SaveLastScreen("frmMenuRelayPins");
@@ -1137,15 +1106,6 @@ namespace RateController
                             fs.Show();
                             break;
 
-                        case "frmMenuRateData":
-                            butFile.PerformClick();
-                            fs = new frmMenuRateData(mf, this);
-                            fs.Owner = this;
-                            SaveLastScreen(Last);
-                            HighlightButton(butRateData);
-                            fs.Show();
-                            break;
-
                         case "frmMenuSections":
                             butMachine.PerformClick();  // frmMenuSections opened by default
                             HighlightButton(butSections);
@@ -1325,7 +1285,6 @@ namespace RateController
             butMonitor.Text = Lang.lgMonitoring;
             butData.Text = Lang.lgData;
             butMap.Text = Lang.lgRateMap;
-            butRateData.Text = Lang.lgRateData;
 
             butSections.Text = Lang.lgSections;
             butRelays.Text = Lang.lgRelays;
@@ -1342,6 +1301,27 @@ namespace RateController
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
             btnPressure.Text = Lang.lgPressure;
+        }
+
+        private sealed class RedrawScope : IDisposable
+        {
+            private readonly Control _control;
+
+            public RedrawScope(Control control)
+            {
+                _control = control;
+                if (control.IsHandleCreated)
+                    SendMessage(control.Handle, WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+            }
+
+            public void Dispose()
+            {
+                if (_control != null && _control.IsHandleCreated)
+                {
+                    SendMessage(_control.Handle, WM_SETREDRAW, new IntPtr(1), IntPtr.Zero);
+                    _control.Refresh();
+                }
+            }
         }
     }
 }

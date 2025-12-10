@@ -141,6 +141,7 @@
             this.ckSatView.Text = "Sat View";
             this.ckSatView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSatView.UseVisualStyleBackColor = true;
+            this.ckSatView.CheckedChanged += new System.EventHandler(this.ckSatView_CheckedChanged);
             // 
             // ckZones
             // 

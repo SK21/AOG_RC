@@ -307,5 +307,11 @@ namespace RateController.Forms
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
         }
+
+        private void ckSatView_CheckedChanged(object sender, EventArgs e)
+        {
+            MapController.ShowTiles = ckSatView.Checked;
+
+        }
     }
 }
