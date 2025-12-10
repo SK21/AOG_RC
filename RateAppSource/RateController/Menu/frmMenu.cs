@@ -350,12 +350,9 @@ namespace RateController
                         butProfiles.Visible = !Expanded;
                         butJobs.Visible = !Expanded;
                         butMap.Visible = !Expanded;
-                        butRateData.Visible = !Expanded;
                         butDisplay.Visible = !Expanded;
                         butLanguage.Visible = !Expanded;
                         butColor.Visible = !Expanded;
-                        gbSpacer1.Visible = !Expanded;
-                        gbSpacer2.Visible = !Expanded;
                         if (Expanded)
                         {
                             Expanded = false;
@@ -385,19 +382,9 @@ namespace RateController
                             Pos += SubSpacing;
                             butJobs.Top = Pos;
 
-                            gbSpacer1.Left = butFile.Left + SubOffset;
-                            gbSpacer1.Top = Pos + SubSpacing;
-
                             butMap.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing + 5;
                             butMap.Top = Pos;
-
-                            butRateData.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing;
-                            butRateData.Top = Pos;
-
-                            gbSpacer2.Left = butFile.Left + SubOffset;
-                            gbSpacer2.Top = Pos + SubSpacing;
 
                             butDisplay.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing + 5;
@@ -544,21 +531,15 @@ namespace RateController
 
         private void butMap_Click(object sender, EventArgs e)
         {
-            SaveLastScreen("frmMenuRateMap");
-            if (sender is Button button) HighlightButton(button);
-            Form fs = Props.IsFormOpen(cLastScreen);
-
+            Form fs = Props.IsFormOpen("frmMap");
             if (fs == null)
             {
-                fs = new frmMenuRateMap(mf, this);
-                fs.Owner = this;
-                if (fs is frmMenuRateMap rm) rm.MenuSelected = true;
+                fs = new frmMap();
                 fs.Show();
             }
             else
             {
-                mf.Tls.Manager.ShowAppliedLayer();
-                mf.Tls.Manager.CenterMap();
+                fs.Close();
             }
         }
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -149,8 +150,8 @@ namespace RateController.Classes
 
         #region MainProperties
 
-        private static DataCollector cRateCollector;
         private static clsJobDataCollector cJobCollector;
+        private static DataCollector cRateCollector;
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
@@ -182,6 +183,15 @@ namespace RateController.Classes
 
         public static string FieldNamesPath
         { get { return cFieldNames; } }
+
+        public static clsJobDataCollector JobCollector
+        {
+            get
+            {
+                if (cJobCollector == null) cJobCollector = new clsJobDataCollector();
+                return cJobCollector;
+            }
+        }
 
         public static FormStart MainForm
         {
@@ -288,15 +298,6 @@ namespace RateController.Classes
             {
                 if (cRateCollector == null) cRateCollector = new DataCollector();
                 return cRateCollector;
-            }
-        }
-
-        public static clsJobDataCollector JobCollector
-        {
-            get
-            {
-                if(cJobCollector== null) cJobCollector=new clsJobDataCollector();
-                return cJobCollector;
             }
         }
 

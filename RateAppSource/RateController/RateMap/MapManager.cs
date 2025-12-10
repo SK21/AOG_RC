@@ -6,12 +6,9 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq; // Linq used throughout
 using System.Windows.Forms;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace RateController.Classes
 {

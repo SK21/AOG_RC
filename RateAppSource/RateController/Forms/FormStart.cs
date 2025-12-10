@@ -4,6 +4,7 @@ using RateController.Classes;
 using RateController.Language;
 using RateController.PGNs;
 using RateController.Properties;
+using RateController.RateMap;
 using System;
 using System.Drawing;
 using System.IO;
@@ -75,6 +76,8 @@ namespace RateController
             Props.MainForm = this;
             Props.CheckFolders();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
+
+            MapController.Initialize();
             JobManager.Initialize();
             Props.JobCollector.Enabled = true;
 
@@ -652,6 +655,7 @@ namespace RateController
 
         private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
         {
+            MapController.Close();
             if (!LargeScreenExit && !Restart && !LoadError && Products.Connected()
                 && e.CloseReason != CloseReason.WindowsShutDown && e.CloseReason != CloseReason.TaskManagerClosing)
             {
@@ -967,9 +971,9 @@ namespace RateController
             if (GPS.Connected())
             {
                 PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
-                Tls.Manager.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
+                //Tls.Manager.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
             }
-            Tls.Manager.UpdateTargetRates();
+            //Tls.Manager.UpdateTargetRates();
         }
     }
 }
