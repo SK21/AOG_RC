@@ -124,6 +124,7 @@ namespace RateController.Forms
                 Props.MainForm.Left = MainLeft;
                 Props.MainForm.Top = MainTop;
             }
+            MapController.MapIsDisplayed = false;
         }
 
         private void frmMap_Load(object sender, EventArgs e)
@@ -154,6 +155,7 @@ namespace RateController.Forms
             UpdateForm();
 
             ckWindow.Checked = bool.TryParse(Props.GetAppProp("MapWindow"), out bool fs) ? fs : true;
+            MapController.MapIsDisplayed = true;
         }
 
         private void frmMap_Move(object sender, EventArgs e)
@@ -311,6 +313,11 @@ namespace RateController.Forms
         private void ckSatView_CheckedChanged(object sender, EventArgs e)
         {
             MapController.ShowTiles = ckSatView.Checked;
+
+        }
+
+        private void ckRateData_CheckedChanged(object sender, EventArgs e)
+        {
 
         }
     }

@@ -629,7 +629,6 @@ namespace RateController
                 UDPmodules.Close();
 
                 timerMain.Enabled = false;
-                timerRates.Enabled = false;
                 Props.WriteActivityLog("Stopped");
                 string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
                 Props.WriteActivityLog(mes);
@@ -707,7 +706,6 @@ namespace RateController
                 Props.DisplayRate();
 
                 timerMain.Enabled = true;
-                timerRates.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -966,14 +964,5 @@ namespace RateController
             SectionControl.ReadRateSwitches();
         }
 
-        private void timerRates_Tick(object sender, EventArgs e)
-        {
-            if (GPS.Connected())
-            {
-                PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
-                MapController.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
-            }
-            MapController.UpdateTargetRates();
-        }
     }
 }

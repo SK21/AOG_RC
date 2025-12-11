@@ -2,14 +2,14 @@
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
-using RateController.Forms;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace RateController.RateMap
@@ -39,20 +39,78 @@ namespace RateController.RateMap
 
         #endregion Overlays
 
+        #region Properties
+
+        private static int cProductRates;
+        private static RateType cRateTypeDisplay;
+        private static bool cShowRates;
+
+        #endregion Properties
+        #region CurrentZone
+        private static string CurrentZoneName = "";
+        private static double[] CurrentZoneRates;
+        private static Color CurrentZoneColor;
+        private static double CurrentZoneHectares;
+        #endregion
+
+        private static readonly RateOverlayService overlayService = new RateOverlayService();
+        private static bool cMapIsDisplayed = false;
+        private static Dictionary<string, Color> ColorLegend;
         private static MapState cState;
         private static PointLatLng cTractorPosition;
+        private static double cTravelHeading;
         private static MapZone CurrentZone;
         private static List<PointLatLng> currentZoneVertices;
+        private static DateTime lastAppliedOverlayUpdateUtc = DateTime.MinValue;
         private static LegendManager legendManager;
         private static List<MapZone> mapZones;
+        private static System.Windows.Forms.Timer UpdateTimer;
         private static STRtree<MapZone> zoneIndex;        // spatial index for fast zone lookup
 
-        public static event EventHandler MapLeftClicked;
-        public static event EventHandler MapZoomed;
         public static event EventHandler MapChanged;
+
+        public static event EventHandler MapLeftClicked;
+
+        public static event EventHandler MapZoomed;
 
         public static GMapControl Map
         { get { return gmap; } }
+
+        public static bool MapIsDisplayed
+        { get { return cMapIsDisplayed; } set { cMapIsDisplayed = value; } }
+
+        public static int ProductRates
+        {
+            get { return cProductRates; }
+            set
+            {
+                if (value >= 0 && (value < Props.MaxProducts - 2))
+                {
+                    cProductRates = value;
+                    Props.SetProp("MapProductRates", cProductRates.ToString());
+                }
+            }
+        }
+
+        public static RateType RateTypeDisplay
+        {
+            get { return cRateTypeDisplay; }
+            set
+            {
+                cRateTypeDisplay = value;
+                Props.SetProp("RateDisplayType", value.ToString());
+            }
+        }
+
+        public static bool ShowRates
+        {
+            get { return cShowRates; }
+            set
+            {
+                cShowRates = value;
+                Props.SetProp("MapShowRates", cShowRates.ToString());
+            }
+        }
 
         public static bool ShowTiles
         {
@@ -64,6 +122,23 @@ namespace RateController.RateMap
                     ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 Refresh();
+            }
+        }
+
+        public static void ClearAppliedRatesOverlay()
+        {
+            try
+            {
+                overlayService.Reset();
+                if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
+                legendManager?.Clear();
+                ColorLegend = null;
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapManager/ClearAppliedRatesOverlay: " + ex.Message);
             }
         }
 
@@ -90,8 +165,10 @@ namespace RateController.RateMap
 
         public static void Initialize()
         {
+            CurrentZoneRates = new double[Props.MaxProducts - 2];
             cState = MapState.Tracking;
             InitializeMap();
+            legendManager = new LegendManager(gmap);
 
             // map zones
             mapZones = new List<MapZone>();
@@ -100,15 +177,133 @@ namespace RateController.RateMap
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
             gmap.MouseClick += Gmap_MouseClick;
 
+            UpdateTimer = new System.Windows.Forms.Timer();
+            UpdateTimer.Interval = 1000; // ms
+            UpdateTimer.Tick += UpdateTimer_Tick;
+            UpdateTimer.Enabled = false;
+
+            LoadData();
             UpdateCurrentZone();
+            //LoadMap();
         }
 
-        public static void SetTractorPosition(PointLatLng NewLocation, double[] AppliedRates, double[] TargetRates)
+        public static void SetTractorPosition(PointLatLng NewLocation)
         {
+            if (cState == MapState.Tracking || cState == MapState.Preview)
+            {
+                if (!cTractorPosition.IsEmpty)
+                {
+                    double deltaLng = NewLocation.Lng - cTractorPosition.Lng;
+                    double deltaLat = NewLocation.Lat - cTractorPosition.Lat;
+
+                    double movementThreshold = 0.0000001;
+                    if (Math.Abs(deltaLng) > movementThreshold || Math.Abs(deltaLat) > movementThreshold)
+                    {
+                        cTravelHeading = (Math.Atan2(deltaLng, deltaLat) * 180.0 / Math.PI + 360.0) % 360.0;
+                    }
+                }
+
+                cTractorPosition = NewLocation;
+                tractorMarker.Position = NewLocation;
+            }
         }
 
-        public static void UpdateTargetRates()
+        public static bool ShowHistoricalRateLayer()
         {
+            bool Result = false;
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/ShowHistoricalRateLayer: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public static bool UpdateRateLayer(double[] AppliedRates, double[] TargetRates)
+        {
+            bool Result = false;
+            Dictionary<string, Color> legend = new Dictionary<string, Color>();
+            try
+            {
+                if (cShowRates && cMapIsDisplayed && (cState == MapState.Tracking || cState == MapState.Preview))
+                {
+                    var readings = Props.RateCollector.GetReadings();
+                    if (readings == null || readings.Count == 0)
+                    {
+                        ClearAppliedRatesOverlay();
+                    }
+                    else
+                    {
+                        double Rates = AppliedRates[cProductRates];  // product rates to display
+
+                        Result = overlayService.UpdateRatesOverlayLive(
+                            AppliedOverlay,
+                            readings,
+                            cTractorPosition,
+                            cTravelHeading,
+                            Props.MainForm.Sections.TotalWidth(false),
+                            Rates,
+                            out legend,
+                            cRateTypeDisplay,
+                            cProductRates
+                        );
+                    }
+                }
+                ColorLegend = legend;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/UpdateRateLayer: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public static void UpdateVariableRates()
+        {
+            try
+            {
+                bool ZoneFound = false;
+                if (zoneIndex != null)
+                {
+                    // Query spatial index for candidate zones near the tractor
+                    var ptEnv = new Envelope(cTractorPosition.Lng, cTractorPosition.Lng, cTractorPosition.Lat, cTractorPosition.Lat);
+                    var candidates = zoneIndex.Query(ptEnv);
+                    if (candidates != null && candidates.Count > 0)
+                    {
+                        // emulate previous last-wins behavior: zones added later have priority
+                        foreach (var zone in candidates.OrderByDescending(z => mapZones.IndexOf(z)))
+                        {
+                            if (zone.Contains(cTractorPosition))
+                            {
+                                CurrentZoneName = zone.Name;
+                                CurrentZoneRates[0] = zone.Rates["ProductA"];
+                                CurrentZoneRates[1] = zone.Rates["ProductB"];
+                                CurrentZoneRates[2] = zone.Rates["ProductC"];
+                                CurrentZoneRates[3] = zone.Rates["ProductD"];
+                                CurrentZoneColor = zone.ZoneColor;
+                                CurrentZoneHectares = zone.Hectares();
+                                ZoneFound = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!ZoneFound)
+                {
+                    // use target rates
+                    CurrentZoneName = "-";
+                    CurrentZoneRates = Props.MainForm.Products.ProductTargetRates();
+                    CurrentZoneColor = Color.Blue;
+                    CurrentZoneHectares = 0;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/UpdateVariableRates: " + ex.Message);
+            }
         }
 
         private static void AddOverlay(GMapOverlay NewOverlay)
@@ -158,6 +353,7 @@ namespace RateController.RateMap
 
         private static void Gmap_OnMapZoomChanged()
         {
+            legendManager?.OnMapZoomChanged();
             MapZoomed?.Invoke(null, EventArgs.Empty);
         }
 
@@ -201,14 +397,18 @@ namespace RateController.RateMap
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
             Refresh();
+        }
 
-            // Initialize legend manager and host
-            legendManager = new LegendManager(gmap);
+        private static void LoadData()
+        {
+            cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
+            cProductRates = int.TryParse(Props.GetProp("MapProductRates"), out int pr) ? pr : 0;
+            cRateTypeDisplay = Enum.TryParse(Props.GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied;
         }
 
         private static void Refresh()
         {
-            if (Props.RateMapIsVisible())
+            if (cMapIsDisplayed)
             {
                 gmap.Refresh();
             }
@@ -218,12 +418,23 @@ namespace RateController.RateMap
         {
             try
             {
-                bool Found = false;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/UpdateCurrentZone: " + ex.Message);
             }
+        }
+
+        private static void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            if (Props.MainForm.GPS.Connected())
+            {
+                PointLatLng Position = new PointLatLng(Props.MainForm.GPS.Latitude, Props.MainForm.GPS.Longitude);
+                SetTractorPosition(Position);
+                if (cState == MapState.Tracking || cState == MapState.Preview) Props.RateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductTargetRates());
+                UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductTargetRates());
+            }
+            UpdateVariableRates();
         }
     }
 }

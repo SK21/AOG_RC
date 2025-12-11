@@ -126,6 +126,7 @@
             this.ckRateData.Text = "Rate Data";
             this.ckRateData.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRateData.UseVisualStyleBackColor = true;
+            this.ckRateData.CheckedChanged += new System.EventHandler(this.ckRateData_CheckedChanged);
             // 
             // ckSatView
             // 
