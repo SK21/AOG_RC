@@ -971,9 +971,9 @@ namespace RateController
             if (GPS.Connected())
             {
                 PointLatLng Position = new PointLatLng(GPS.Latitude, GPS.Longitude);
-                //Tls.Manager.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
+                MapController.SetTractorPosition(Position, Products.ProductAppliedRates(), Products.ProductTargetRates());
             }
-            //Tls.Manager.UpdateTargetRates();
+            MapController.UpdateTargetRates();
         }
     }
 }

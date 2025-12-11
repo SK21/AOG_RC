@@ -19,7 +19,6 @@ namespace RateController.Forms
         {
             InitializeComponent();
         }
-
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom += 1;
@@ -88,6 +87,7 @@ namespace RateController.Forms
                         Props.MainForm.Top = this.Top + pnlTabs.Top + pnlTabs.Height + 55;
                     }
                 }
+                MapController.DisplaySizeUpdate(ckWindow.Checked);
             }
             catch (Exception ex)
             {
