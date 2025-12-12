@@ -41,8 +41,6 @@ namespace RateController
             {
                 Application.Run(frmStart);
             }
-
-            Environment.Exit(0);
         }
     }
 }

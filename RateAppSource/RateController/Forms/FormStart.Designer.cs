@@ -621,7 +621,6 @@ namespace RateController
             this.TransparencyKey = System.Drawing.Color.Transparent;
             this.Activated += new System.EventHandler(this.FormStart_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStart_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormRateControl_FormClosed);
             this.Load += new System.EventHandler(this.FormStart_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);

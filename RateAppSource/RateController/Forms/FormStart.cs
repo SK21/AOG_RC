@@ -45,6 +45,7 @@ namespace RateController
         public UDPComm UDPaog;
         public UDPComm UDPmodules;
         public clsVirtualSwitchBox vSwitchBox;
+        public PGN32504 WheelSpeed;
         public string WiFiIP;
         public clsZones Zones;
         private bool[] cShowScale = new bool[4];
@@ -58,7 +59,6 @@ namespace RateController
         private Label[] Rates;
         private PGN32501[] RelaySettings;
         private int RunOnce = 0;
-        public PGN32504 WheelSpeed;
 
         public FormStart()
         {
@@ -77,8 +77,8 @@ namespace RateController
             Props.CheckFolders();
             Props.OpenFile(Properties.Settings.Default.CurrentFile);
 
-            MapController.Initialize();
             JobManager.Initialize();
+            MapController.Initialize();
             Props.JobCollector.Enabled = true;
 
             Tls = new clsTools(this);
@@ -268,7 +268,7 @@ namespace RateController
             {
                 this.Text = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
 
-                if (Props.SpeedMode==SpeedType.Simulated || SectionControl.PrimeOn)
+                if (Props.SpeedMode == SpeedType.Simulated || SectionControl.PrimeOn)
                 {
                     btnSettings.Image = Properties.Resources.SimGear;
                 }
@@ -488,6 +488,59 @@ namespace RateController
             }
         }
 
+        private void AppShutDown(FormClosingEventArgs e)
+        {
+            bool ShutDown = true;
+
+            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected() && e.CloseReason != CloseReason.WindowsShutDown 
+                && e.CloseReason != CloseReason.TaskManagerClosing)
+            {
+                using (var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true))
+                {
+                    Hlp.TopMost = true;
+
+                    Hlp.ShowDialog();
+                    bool Result = Hlp.Result;
+                    if (!Result)
+                    {
+                        ShutDown = false;
+                        e.Cancel = true;
+                    }
+                }
+            }
+
+            if (ShutDown)
+            {
+                try
+                {
+                    timerMain.Enabled = false;
+
+                    Form frm = Props.IsFormOpen("frmMap", false);
+                    if (frm != null) frm.Close();
+
+                    MapController.Close();
+                    Props.SaveFormLocation(this);
+                    if (this.WindowState == FormWindowState.Normal)
+                    {
+                        Props.SetProp("CurrentPage", CurrentPage.ToString());
+                    }
+
+                    Sections.Save();
+                    Products.Save();
+
+                    UDPaog.Close();
+                    UDPmodules.Close();
+
+                    Props.WriteActivityLog("Stopped");
+                    string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
+                    Props.WriteActivityLog(mes);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
         private void AreaDone_Click(object sender, EventArgs e)
         {
             if (MouseButtonClicked == MouseButtons.Left)
@@ -612,34 +665,6 @@ namespace RateController
             }
         }
 
-        private void FormRateControl_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                Props.SaveFormLocation(this);
-                if (this.WindowState == FormWindowState.Normal)
-                {
-                    Props.SetProp("CurrentPage", CurrentPage.ToString());
-                }
-
-                Sections.Save();
-                Products.Save();
-
-                UDPaog.Close();
-                UDPmodules.Close();
-
-                timerMain.Enabled = false;
-                Props.WriteActivityLog("Stopped");
-                string mes = "Run time (hours): " + ((DateTime.Now - cStartTime).TotalSeconds / 3600.0).ToString("N1");
-                Props.WriteActivityLog(mes);
-            }
-            catch (Exception)
-            {
-            }
-
-            Application.Exit();
-        }
-
         private void FormStart_Activated(object sender, EventArgs e)
         {
             if (Restart)
@@ -654,20 +679,7 @@ namespace RateController
 
         private void FormStart_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MapController.Close();
-            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected()
-                && e.CloseReason != CloseReason.WindowsShutDown && e.CloseReason != CloseReason.TaskManagerClosing)
-            {
-                using (var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true))
-                {
-                    Hlp.TopMost = true;
-
-                    Hlp.ShowDialog();
-                    bool Result = Hlp.Result;
-                    Hlp.Close();
-                    if (!Result) e.Cancel = true;
-                }
-            }
+            AppShutDown(e);
         }
 
         private void FormStart_Load(object sender, EventArgs e)
@@ -963,6 +975,5 @@ namespace RateController
             Products.Save();
             SectionControl.ReadRateSwitches();
         }
-
     }
 }

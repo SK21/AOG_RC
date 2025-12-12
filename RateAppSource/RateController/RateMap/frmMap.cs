@@ -144,14 +144,12 @@ namespace RateController.Forms
             ChangeMapSize();
         }
 
-        private void frmMap_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            SaveFormLocation();
-            Props.SetAppProp("MapWindow", ckWindow.Checked.ToString());
-        }
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ckWindow.Checked = false;
+            ChangeMapSize();
+
             pnlMap.Controls.Remove(MapController.Map);
 
             MapController.MapZoomed -= MapController_MapZoomed;
@@ -169,14 +167,19 @@ namespace RateController.Forms
                 Props.MainForm.Top = MainTop;
             }
             MapController.MapIsDisplayed = false;
+
+            SaveFormLocation();
+            Props.SetAppProp("MapWindow", ckWindow.Checked.ToString());
         }
 
         private void frmMap_Load(object sender, EventArgs e)
         {
             MapController.MapChanged += MapController_MapChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
+
             tabPage1.BackColor = Properties.Settings.Default.MainBackColour;
             tabPage2.BackColor = Properties.Settings.Default.MainBackColour;
+            tabControl1.ItemSize = new Size((tabControl1.Width - 10) / 2, tabControl1.ItemSize.Height);
 
             ckZones.Checked = Props.MapShowZones;
             ckSatView.Checked = Props.MapShowTiles;
@@ -213,6 +216,8 @@ namespace RateController.Forms
 
             ckWindow.Checked = bool.TryParse(Props.GetAppProp("MapWindow"), out bool fs) ? fs : true;
             MapController.MapIsDisplayed = true;
+            MapController.Map.Zoom = 16;
+            MapController.CenterMap();
         }
 
         private void frmMap_Move(object sender, EventArgs e)
@@ -248,8 +253,12 @@ namespace RateController.Forms
             if (ckWindow.Checked)
             {
                 ckWindow.Checked = false;
-                ChangeMapSize();
             }
+            else
+            {
+                ckWindow.Checked = true;
+            }
+                ChangeMapSize();
         }
 
         private void MapController_MapZoomed(object sender, EventArgs e)
@@ -370,6 +379,11 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

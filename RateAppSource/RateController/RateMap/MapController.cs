@@ -2,13 +2,12 @@
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
-using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
-using NetTopologySuite.IO.Esri;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -58,6 +57,7 @@ namespace RateController.RateMap
 
         #endregion CurrentZone
 
+        private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         private static readonly RateOverlayService overlayService = new RateOverlayService();
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
@@ -69,7 +69,6 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
-        private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         // spatial index for fast zone lookup
 
         public static event EventHandler MapChanged;
@@ -186,54 +185,76 @@ namespace RateController.RateMap
             }
         }
 
-        public static void CenterMap()
+        // Add a KML layer to the map from a file path.
+        public static bool AddKmlLayer(string filePath)
         {
-            bool Centered = false;
             try
             {
-                var collector = Props.RateCollector;
-                if (collector != null)
-                {
-                    var readings = collector.GetReadings();
-                    if (readings != null && readings.Count > 0)
-                    {
-                        const double eps = 0.1; // consider >0.1 as applied
-                        double minLat = double.MaxValue;
-                        double maxLat = double.MinValue;
-                        double minLng = double.MaxValue;
-                        double maxLng = double.MinValue;
-                        bool any = false;
-                        foreach (var r in readings)
-                        {
-                            bool hasApplied = (r.AppliedRates != null && r.AppliedRates.Any(a => a > eps));
-                            if (!hasApplied) continue;
-                            any = true;
-                            if (r.Latitude < minLat) minLat = r.Latitude;
-                            if (r.Latitude > maxLat) maxLat = r.Latitude;
-                            if (r.Longitude < minLng) minLng = r.Longitude;
-                            if (r.Longitude > maxLng) maxLng = r.Longitude;
-                        }
-                        if (any)
-                        {
-                            double width = Math.Max(maxLng - minLng, 0.0008);   // ensure reasonable width
-                            double height = Math.Max(maxLat - minLat, 0.0006);  // ensure reasonable height
-                                                                                // pad a little
-                            double padW = width * 0.15;
-                            double padH = height * 0.15;
-                            var rect = new RectLatLng(maxLat + padH, minLng - padW, width + 2 * padW, height + 2 * padH);
+                var overlay = kmlLayerManager.LoadKml(filePath);
+                if (overlay == null) return false;
 
-                            gmap.SetZoomToFitRect(rect);
-                            MapChanged?.Invoke(null, EventArgs.Empty);
-                            Centered = true;
-                        }
-                    }
-                }
+                AddOverlay(overlay);
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+                return true;
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("MapController/CenterMap: " + ex.Message);
+                Props.WriteErrorLog("MapController/AddKmlLayer: " + ex.Message);
+                return false;
             }
-            if (!Centered) ZoomToFit();
+        }
+
+        public static void CenterMap()
+        {
+            if (!ZoomToFit())
+            {
+                try
+                {
+            Debug.Print("CenterMap");
+                    var collector = Props.RateCollector;
+                    if (collector != null)
+                    {
+                        var readings = collector.GetReadings();
+                        if (readings != null && readings.Count > 0)
+                        {
+                            const double eps = 0.1; // consider >0.1 as applied
+                            double minLat = double.MaxValue;
+                            double maxLat = double.MinValue;
+                            double minLng = double.MaxValue;
+                            double maxLng = double.MinValue;
+                            bool any = false;
+                            foreach (var r in readings)
+                            {
+                                bool hasApplied = (r.AppliedRates != null && r.AppliedRates.Any(a => a > eps));
+                                if (!hasApplied) continue;
+                                any = true;
+                                if (r.Latitude < minLat) minLat = r.Latitude;
+                                if (r.Latitude > maxLat) maxLat = r.Latitude;
+                                if (r.Longitude < minLng) minLng = r.Longitude;
+                                if (r.Longitude > maxLng) maxLng = r.Longitude;
+                            }
+                            if (any)
+                            {
+                                double width = Math.Max(maxLng - minLng, 0.0008);   // ensure reasonable width
+                                double height = Math.Max(maxLat - minLat, 0.0006);  // ensure reasonable height
+                                                                                    // pad a little
+                                double padW = width * 0.15;
+                                double padH = height * 0.15;
+                                var rect = new RectLatLng(maxLat + padH, minLng - padW, width + 2 * padW, height + 2 * padH);
+
+                                gmap.SetZoomToFitRect(rect);
+                                MapChanged?.Invoke(null, EventArgs.Empty);
+                                Debug.Print("CenterMap2");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("MapController/CenterMap: " + ex.Message);
+                }
+            }
         }
 
         public static void ClearAppliedRatesOverlay()
@@ -340,6 +361,7 @@ namespace RateController.RateMap
             if (Preview)
             {
                 cState = MapState.Preview;
+                CenterMap();
             }
             else
             {
@@ -439,6 +461,25 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/LoadMap: " + ex.Message);
             }
             return Result;
+        }
+
+        // Remove a KML layer previously added.
+        public static void RemoveKmlLayer(string filePath)
+        {
+            try
+            {
+                var overlay = kmlLayerManager.GetOverlay(filePath);
+                if (overlay == null) return;
+
+                RemoveOverlay(overlay);
+                kmlLayerManager.Remove(filePath);
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
+            }
         }
 
         public static bool SaveMap()
@@ -837,13 +878,18 @@ namespace RateController.RateMap
             return Result;
         }
 
-        public static void ZoomToFit()
+        public static bool ZoomToFit()
         {
+            Debug.Print("zoom to fit");
+            bool Result = false;
             RectLatLng boundingBox = GetOverallRectLatLng();
             if (boundingBox != RectLatLng.Empty)
             {
+                Debug.Print("zoom to fit 2");
                 gmap.SetZoomToFitRect(boundingBox);
+                Result = true;
             }
+            return Result;
         }
 
         private static void AddOverlay(GMapOverlay NewOverlay)
@@ -921,6 +967,7 @@ namespace RateController.RateMap
                         break;
 
                     case MapState.Tracking:
+                        MapLeftClicked?.Invoke(null, EventArgs.Empty);
                         break;
 
                     case MapState.Positioning:
@@ -976,6 +1023,7 @@ namespace RateController.RateMap
             AppliedOverlay = new GMapOverlay("AppliedRates");
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(Lat, Lng), GMarkerGoogleType.green);
+            tractorMarker.IsHitTestVisible = false;
             gpsMarkerOverlay.Markers.Add(tractorMarker);
 
             AddOverlay(gpsMarkerOverlay);
@@ -1064,45 +1112,6 @@ namespace RateController.RateMap
                 }
             }
             UpdateVariableRates();
-        }
-
-        // Add a KML layer to the map from a file path.
-        public static bool AddKmlLayer(string filePath)
-        {
-            try
-            {
-                var overlay = kmlLayerManager.LoadKml(filePath);
-                if (overlay == null) return false;
-
-                AddOverlay(overlay);
-                Refresh();
-                MapChanged?.Invoke(null, EventArgs.Empty);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/AddKmlLayer: " + ex.Message);
-                return false;
-            }
-        }
-
-        // Remove a KML layer previously added.
-        public static void RemoveKmlLayer(string filePath)
-        {
-            try
-            {
-                var overlay = kmlLayerManager.GetOverlay(filePath);
-                if (overlay == null) return;
-
-                RemoveOverlay(overlay);
-                kmlLayerManager.Remove(filePath);
-                Refresh();
-                MapChanged?.Invoke(null, EventArgs.Empty);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
-            }
         }
     }
 }
