@@ -10,10 +10,9 @@ using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RateController.RateMap
 {
@@ -70,6 +69,7 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
+        private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         // spatial index for fast zone lookup
 
         public static event EventHandler MapChanged;
@@ -77,6 +77,12 @@ namespace RateController.RateMap
         public static event EventHandler MapLeftClicked;
 
         public static event EventHandler MapZoomed;
+
+        public static bool Enabled
+        {
+            get { return UpdateTimer.Enabled; }
+            set { UpdateTimer.Enabled = value; }
+        }
 
         public static bool LegendOverlayEnabled
         {
@@ -160,6 +166,7 @@ namespace RateController.RateMap
         }
 
         public static Color ZoneColor => CurrentZoneColor;
+
         public static double ZoneHectares => CurrentZoneHectares;
 
         public static string ZoneName
@@ -399,7 +406,7 @@ namespace RateController.RateMap
             UpdateTimer = new System.Windows.Forms.Timer();
             UpdateTimer.Interval = 1000; // ms
             UpdateTimer.Tick += UpdateTimer_Tick;
-            UpdateTimer.Enabled = true;
+            UpdateTimer.Enabled = false;
 
             LoadData();
             LoadMap();
@@ -451,20 +458,45 @@ namespace RateController.RateMap
             return Result;
         }
 
+        public static bool SaveMapImage(string FilePath)
+        {
+            bool Result = false;
+            bool PrevShow = LegendOverlayEnabled;
+            try
+            {
+                LegendOverlayEnabled = true;
+                gmap.Refresh();
+                gmap.Update();
+
+                using (var bmp = new Bitmap(gmap.Width, gmap.Height))
+                {
+                    gmap.DrawToBitmap(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height));
+                    bmp.Save(FilePath, ImageFormat.Png);
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SaveMapImage: " + ex.Message);
+            }
+            LegendOverlayEnabled = PrevShow;
+            return Result;
+        }
+
         public static void SaveMapToFile(string filePath)
         {
             var shapefileHelper = new ShapefileHelper();
 
             try
             {
-                var features = new List<IFeature>();
+                var features = new List<NetTopologySuite.Features.IFeature>();
 
                 // Collect zone features
                 if (mapZones != null && mapZones.Count > 0)
                 {
                     foreach (var mapZone in mapZones)
                     {
-                        var zoneAtts = new AttributesTable
+                        var zoneAtts = new NetTopologySuite.Features.AttributesTable
                         {
                             { "Name", mapZone.Name },
                             { "ProductA", mapZone.Rates["ProductA"] },
@@ -472,14 +504,13 @@ namespace RateController.RateMap
                             { "ProductC", mapZone.Rates["ProductC"] },
                             { "ProductD", mapZone.Rates["ProductD"] },
                             { "Color", ColorTranslator.ToHtml(mapZone.ZoneColor) },
-                            { "Type", "Zone" } // distinguish in combined shapefile
+                            { "Type", "Zone" }
                         };
-                        features.Add(new Feature(mapZone.Geometry, zoneAtts));
+                        features.Add(new NetTopologySuite.Features.Feature(mapZone.Geometry, zoneAtts));
                     }
                 }
 
                 // Collect applied overlay features (coverage polygons)
-                // Ensure overlay is populated at least from history when needed
                 if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
 
                 bool haveCoverage = false;
@@ -519,19 +550,19 @@ namespace RateController.RateMap
                     {
                         if (gp == null || gp.Points == null || gp.Points.Count < 3) continue;
 
-                        var coords = new List<Coordinate>(gp.Points.Count + 1);
+                        var coords = new List<NetTopologySuite.Geometries.Coordinate>(gp.Points.Count + 1);
                         for (int i = 0; i < gp.Points.Count; i++)
                         {
                             var p = gp.Points[i];
-                            coords.Add(new Coordinate(p.Lng, p.Lat));
+                            coords.Add(new NetTopologySuite.Geometries.Coordinate(p.Lng, p.Lat));
                         }
                         if (!coords[0].Equals2D(coords[coords.Count - 1]))
                         {
                             coords.Add(coords[0]);
                         }
 
-                        var ring = new LinearRing(coords.ToArray());
-                        var poly = new Polygon(ring);
+                        var ring = new NetTopologySuite.Geometries.LinearRing(coords.ToArray());
+                        var poly = new NetTopologySuite.Geometries.Polygon(ring);
 
                         Color fillColor = Color.Transparent;
                         try
@@ -541,26 +572,24 @@ namespace RateController.RateMap
                         }
                         catch { }
 
-                        var covAtts = new AttributesTable
+                        var covAtts = new NetTopologySuite.Features.AttributesTable
                         {
                             { "Name", string.IsNullOrEmpty(gp.Name) ? "Coverage" : gp.Name },
                             { "Color", ColorTranslator.ToHtml(Color.FromArgb(255, fillColor)) },
                             { "Alpha", fillColor.A },
-                            { "Type", "Coverage" } // distinguish in combined shapefile
+                            { "Type", "Coverage" }
                         };
 
-                        features.Add(new Feature(poly, covAtts));
+                        features.Add(new NetTopologySuite.Features.Feature(poly, covAtts));
                     }
                 }
 
-                // Write combined or clean up if empty
                 if (features.Count > 0)
                 {
-                    Shapefile.WriteAllFeatures(features, filePath);
+                    NetTopologySuite.IO.Esri.Shapefile.WriteAllFeatures(features, filePath);
                     return;
                 }
 
-                // Nothing to export, ensure any existing file is removed for cleanliness
                 try
                 {
                     if (Props.IsPathSafe(filePath))
@@ -1035,6 +1064,45 @@ namespace RateController.RateMap
                 }
             }
             UpdateVariableRates();
+        }
+
+        // Add a KML layer to the map from a file path.
+        public static bool AddKmlLayer(string filePath)
+        {
+            try
+            {
+                var overlay = kmlLayerManager.LoadKml(filePath);
+                if (overlay == null) return false;
+
+                AddOverlay(overlay);
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/AddKmlLayer: " + ex.Message);
+                return false;
+            }
+        }
+
+        // Remove a KML layer previously added.
+        public static void RemoveKmlLayer(string filePath)
+        {
+            try
+            {
+                var overlay = kmlLayerManager.GetOverlay(filePath);
+                if (overlay == null) return;
+
+                RemoveOverlay(overlay);
+                kmlLayerManager.Remove(filePath);
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
+            }
         }
     }
 }

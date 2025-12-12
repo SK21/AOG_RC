@@ -3,6 +3,7 @@ using RateController.Classes;
 using RateController.RateMap;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RateController.Forms
@@ -19,6 +20,40 @@ namespace RateController.Forms
         {
             InitializeComponent();
         }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+
+            using (var saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Title = "Save Shapefile As";
+                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "shp";
+                saveFileDialog.FileName = Name + ".shp";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        MapController.SaveMapToFile(saveFileDialog.FileName);
+
+                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
+                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
+
+                        // Capture including legend
+                        MapController.SaveMapImage(imageName);
+
+                        Props.ShowMessage("File saved successfully", "Save", 5000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
+                    }
+                }
+            }
+        }
+
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom += 1;
@@ -95,6 +130,15 @@ namespace RateController.Forms
             }
         }
 
+        private void ckRateData_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void ckSatView_CheckedChanged(object sender, EventArgs e)
+        {
+            MapController.ShowTiles = ckSatView.Checked;
+        }
+
         private void ckWindow_CheckedChanged(object sender, EventArgs e)
         {
             ChangeMapSize();
@@ -129,6 +173,13 @@ namespace RateController.Forms
 
         private void frmMap_Load(object sender, EventArgs e)
         {
+            MapController.MapChanged += MapController_MapChanged;
+            this.BackColor = Properties.Settings.Default.MainBackColour;
+
+            ckZones.Checked = Props.MapShowZones;
+            ckSatView.Checked = Props.MapShowTiles;
+            ckRateData.Checked = Props.MapShowRates;
+
             PMheight = pnlMain.Height;
             PMwidth = pnlMain.Width;
 
@@ -136,8 +187,12 @@ namespace RateController.Forms
 
             MapController.MapZoomed += MapController_MapZoomed;
             MapController.MapLeftClicked += MapController_MapLeftClicked;
-            Props.ScreensSwitched += Props_ScreensSwitched;
+            MapController.LoadMap();
+            MapController.ShowZoneOverlay(ckZones.Checked);
+            MapController.LegendOverlayEnabled = !ckWindow.Checked;
+            MapController.Enabled = true;
 
+            Props.ScreensSwitched += Props_ScreensSwitched;
             if (Props.UseLargeScreen)
             {
                 MainLeft = Props.MainForm.LSLeft;
@@ -179,6 +234,11 @@ namespace RateController.Forms
             {
                 Props.LoadFormLocation(this);
             }
+        }
+
+        private void MapController_MapChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
         }
 
         private void MapController_MapLeftClicked(object sender, EventArgs e)
@@ -308,17 +368,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void ckSatView_CheckedChanged(object sender, EventArgs e)
-        {
-            MapController.ShowTiles = ckSatView.Checked;
-
-        }
-
-        private void ckRateData_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

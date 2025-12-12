@@ -5,7 +5,6 @@ using RateController.Classes;
 using RateController.Forms;
 using RateController.Language;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;

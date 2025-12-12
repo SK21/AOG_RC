@@ -126,6 +126,9 @@
     <Reference Include="RepeatButtonControl">
       <HintPath>.\RepeatButtonControl.dll</HintPath>
     </Reference>
+    <Reference Include="SharpKml.Core, Version=6.1.0.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpKml.Core.6.1.0\lib\net462\SharpKml.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
@@ -144,6 +147,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.119.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Pipelines, Version=9.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Pipelines.9.0.3\lib\net462\System.IO.Pipelines.dll</HintPath>
     </Reference>
@@ -539,6 +543,7 @@
       <DependentUpon>RCRestore.cs</DependentUpon>
     </Compile>
     <Compile Include="RateMap\CoverageTrail.cs" />
+    <Compile Include="RateMap\KmlLayerManager.cs" />
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />
     <Compile Include="RateMap\MapManager.cs" />

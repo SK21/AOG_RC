@@ -41,6 +41,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ckRecord = new System.Windows.Forms.CheckBox();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.ckWindow = new System.Windows.Forms.CheckBox();
             this.butClose = new System.Windows.Forms.Button();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.btnZoomIn = new System.Windows.Forms.Button();
@@ -73,7 +74,6 @@
             this.rbProductC = new System.Windows.Forms.RadioButton();
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.pnlTabs = new System.Windows.Forms.Panel();
-            this.ckWindow = new System.Windows.Forms.CheckBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -111,6 +111,7 @@
             this.btnExport.Text = "Export";
             this.btnExport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // ckRateData
             // 
@@ -243,6 +244,20 @@
             this.pnlControls.Name = "pnlControls";
             this.pnlControls.Size = new System.Drawing.Size(97, 438);
             this.pnlControls.TabIndex = 386;
+            // 
+            // ckWindow
+            // 
+            this.ckWindow.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckWindow.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckWindow.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckWindow.Location = new System.Drawing.Point(5, 7);
+            this.ckWindow.Name = "ckWindow";
+            this.ckWindow.Size = new System.Drawing.Size(89, 64);
+            this.ckWindow.TabIndex = 391;
+            this.ckWindow.Text = "Window";
+            this.ckWindow.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckWindow.UseVisualStyleBackColor = true;
+            this.ckWindow.CheckedChanged += new System.EventHandler(this.ckWindow_CheckedChanged);
             // 
             // butClose
             // 
@@ -628,20 +643,6 @@
             this.pnlTabs.Name = "pnlTabs";
             this.pnlTabs.Size = new System.Drawing.Size(433, 359);
             this.pnlTabs.TabIndex = 390;
-            // 
-            // ckWindow
-            // 
-            this.ckWindow.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckWindow.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckWindow.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWindow.Location = new System.Drawing.Point(5, 7);
-            this.ckWindow.Name = "ckWindow";
-            this.ckWindow.Size = new System.Drawing.Size(89, 64);
-            this.ckWindow.TabIndex = 391;
-            this.ckWindow.Text = "Window";
-            this.ckWindow.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckWindow.UseVisualStyleBackColor = true;
-            this.ckWindow.CheckedChanged += new System.EventHandler(this.ckWindow_CheckedChanged);
             // 
             // frmMap
             // 
