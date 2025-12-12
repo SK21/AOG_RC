@@ -175,6 +175,8 @@ namespace RateController.Forms
         {
             MapController.MapChanged += MapController_MapChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
+            tabPage1.BackColor = Properties.Settings.Default.MainBackColour;
+            tabPage2.BackColor = Properties.Settings.Default.MainBackColour;
 
             ckZones.Checked = Props.MapShowZones;
             ckSatView.Checked = Props.MapShowTiles;

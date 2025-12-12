@@ -197,10 +197,10 @@
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
     <Compile Include="Classes\Props.cs" />
-    <Compile Include="Forms\frmImportCSV.cs">
+    <Compile Include="RateMap\frmImportCSV.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmImportCSV.Designer.cs">
+    <Compile Include="RateMap\frmImportCSV.Designer.cs">
       <DependentUpon>frmImportCSV.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmJobReport.cs">
@@ -209,10 +209,10 @@
     <Compile Include="Forms\frmJobReport.Designer.cs">
       <DependentUpon>frmJobReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmMap.cs">
+    <Compile Include="RateMap\frmMap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmMap.Designer.cs">
+    <Compile Include="RateMap\frmMap.Designer.cs">
       <DependentUpon>frmMap.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmSpeedCal.cs">
@@ -253,10 +253,10 @@
     <Compile Include="Forms\FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmCopyMap.cs">
+    <Compile Include="RateMap\frmCopyMap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmCopyMap.Designer.cs">
+    <Compile Include="RateMap\frmCopyMap.Designer.cs">
       <DependentUpon>frmCopyMap.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmHelp.cs">
@@ -265,10 +265,10 @@
     <Compile Include="Forms\frmHelp.Designer.cs">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmImport.cs">
+    <Compile Include="RateMap\frmImport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmImport.Designer.cs">
+    <Compile Include="RateMap\frmImport.Designer.cs">
       <DependentUpon>frmImport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmLargeScreen.cs">
@@ -301,10 +301,10 @@
     <Compile Include="Menu\frmMenuProfiles.Designer.cs">
       <DependentUpon>frmMenuProfiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu\frmMenuRateData.cs">
+    <Compile Include="RateMap\frmMenuRateData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Menu\frmMenuRateData.Designer.cs">
+    <Compile Include="RateMap\frmMenuRateData.Designer.cs">
       <DependentUpon>frmMenuRateData.cs</DependentUpon>
     </Compile>
     <Compile Include="Language\Lang.Designer.cs">
@@ -511,10 +511,10 @@
     <Compile Include="Menu\frmMenuPrimed.Designer.cs">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu\frmMenuRateMap.cs">
+    <Compile Include="RateMap\frmMenuRateMap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Menu\frmMenuRateMap.Designer.cs">
+    <Compile Include="RateMap\frmMenuRateMap.Designer.cs">
       <DependentUpon>frmMenuRateMap.cs</DependentUpon>
     </Compile>
     <Compile Include="PGNs\PGN100.cs" />
@@ -559,16 +559,16 @@
       <DependentUpon>FormStart.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmCopyMap.resx">
+    <EmbeddedResource Include="RateMap\frmCopyMap.resx">
       <DependentUpon>frmCopyMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmImport.resx">
+    <EmbeddedResource Include="RateMap\frmImport.resx">
       <DependentUpon>frmImport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmImportCSV.resx">
+    <EmbeddedResource Include="RateMap\frmImportCSV.resx">
       <DependentUpon>frmImportCSV.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmJobReport.resx">
@@ -577,7 +577,7 @@
     <EmbeddedResource Include="Forms\frmLargeScreen.resx">
       <DependentUpon>frmLargeScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmMap.resx">
+    <EmbeddedResource Include="RateMap\frmMap.resx">
       <DependentUpon>frmMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmRate.resx">
@@ -595,7 +595,7 @@
     <EmbeddedResource Include="Menu\frmMenuProfiles.resx">
       <DependentUpon>frmMenuProfiles.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Menu\frmMenuRateData.resx">
+    <EmbeddedResource Include="RateMap\frmMenuRateData.resx">
       <DependentUpon>frmMenuRateData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Language\Lang.lt.resx" />
@@ -718,7 +718,7 @@
     <EmbeddedResource Include="Menu\frmMenuPrimed.resx">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Menu\frmMenuRateMap.resx">
+    <EmbeddedResource Include="RateMap\frmMenuRateMap.resx">
       <DependentUpon>frmMenuRateMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
