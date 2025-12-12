@@ -15,10 +15,15 @@ namespace RateController.Forms
         private int MainTop = 0;
         private int PMheight;
         private int PMwidth;
+        private bool Initializing = true;
 
         public frmMap()
         {
             InitializeComponent();
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -144,7 +149,6 @@ namespace RateController.Forms
             ChangeMapSize();
         }
 
-
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
             ckWindow.Checked = false;
@@ -258,7 +262,7 @@ namespace RateController.Forms
             {
                 ckWindow.Checked = true;
             }
-                ChangeMapSize();
+            ChangeMapSize();
         }
 
         private void MapController_MapZoomed(object sender, EventArgs e)
@@ -340,6 +344,10 @@ namespace RateController.Forms
         {
             try
             {
+                Initializing = true;
+                ckUseVR.Checked = Props.VariableRateEnabled;
+
+                Initializing = false;
             }
             catch (Exception ex)
             {
@@ -381,8 +389,12 @@ namespace RateController.Forms
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
         }
 
-        private void btnCopy_Click(object sender, EventArgs e)
+        private void ckUseVR_CheckedChanged(object sender, EventArgs e)
         {
+            if (!Initializing)
+            {
+                Props.VariableRateEnabled = ckUseVR.Checked;
+            }
 
         }
     }

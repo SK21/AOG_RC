@@ -35,7 +35,7 @@
             this.ckSatView = new System.Windows.Forms.CheckBox();
             this.ckZones = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
-            this.ckEnable = new System.Windows.Forms.CheckBox();
+            this.ckUseVR = new System.Windows.Forms.CheckBox();
             this.btnDelete = new System.Windows.Forms.Button();
             this.lbDataPoints = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -180,16 +180,17 @@
             // 
             // ckEnable
             // 
-            this.ckEnable.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckEnable.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEnable.Location = new System.Drawing.Point(4, 78);
-            this.ckEnable.Name = "ckEnable";
-            this.ckEnable.Size = new System.Drawing.Size(89, 64);
-            this.ckEnable.TabIndex = 363;
-            this.ckEnable.Text = "Enable VR";
-            this.ckEnable.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEnable.UseVisualStyleBackColor = true;
+            this.ckUseVR.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckUseVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckUseVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckUseVR.Location = new System.Drawing.Point(4, 78);
+            this.ckUseVR.Name = "ckEnable";
+            this.ckUseVR.Size = new System.Drawing.Size(89, 64);
+            this.ckUseVR.TabIndex = 363;
+            this.ckUseVR.Text = "Enable VR";
+            this.ckUseVR.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckUseVR.UseVisualStyleBackColor = true;
+            this.ckUseVR.CheckedChanged += new System.EventHandler(this.ckUseVR_CheckedChanged);
             // 
             // btnDelete
             // 
@@ -242,7 +243,7 @@
             this.pnlControls.Controls.Add(this.ckSatView);
             this.pnlControls.Controls.Add(this.butClose);
             this.pnlControls.Controls.Add(this.ckRateData);
-            this.pnlControls.Controls.Add(this.ckEnable);
+            this.pnlControls.Controls.Add(this.ckUseVR);
             this.pnlControls.Location = new System.Drawing.Point(439, 2);
             this.pnlControls.Name = "pnlControls";
             this.pnlControls.Size = new System.Drawing.Size(97, 438);
@@ -705,7 +706,7 @@
         private System.Windows.Forms.CheckBox ckSatView;
         private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Button btnImport;
-        private System.Windows.Forms.CheckBox ckEnable;
+        private System.Windows.Forms.CheckBox ckUseVR;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Label lbDataPoints;
         private System.Windows.Forms.Label label1;

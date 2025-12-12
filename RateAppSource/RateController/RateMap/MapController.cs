@@ -211,7 +211,7 @@ namespace RateController.RateMap
             {
                 try
                 {
-            Debug.Print("CenterMap");
+                    Debug.Print("CenterMap");
                     var collector = Props.RateCollector;
                     if (collector != null)
                     {
