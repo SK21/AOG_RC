@@ -2,8 +2,10 @@
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
+using NetTopologySuite.IO.Esri;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
@@ -63,9 +65,7 @@ namespace RateController.RateMap
         private static MapState cState;
         private static PointLatLng cTractorPosition;
         private static double cTravelHeading;
-        private static MapZone CurrentZone;
         private static List<PointLatLng> currentZoneVertices;
-        private static DateTime lastAppliedOverlayUpdateUtc = DateTime.MinValue;
         private static LegendManager legendManager;
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
@@ -142,7 +142,6 @@ namespace RateController.RateMap
                 Refresh();
             }
         }
-        public static double ZoneHectares => CurrentZoneHectares;
 
         public static bool StateEditZones
         {
@@ -161,6 +160,24 @@ namespace RateController.RateMap
         }
 
         public static Color ZoneColor => CurrentZoneColor;
+        public static double ZoneHectares => CurrentZoneHectares;
+
+        public static string ZoneName
+        {
+            get { return CurrentZoneName; }
+            set
+            {
+                if (value.Length > 0)
+                {
+                    if (value.Length > 12) value = value.Substring(0, 12);
+                    CurrentZoneName = value;
+                }
+                else
+                {
+                    CurrentZoneName = "Unnamed Zone";
+                }
+            }
+        }
 
         public static void CenterMap()
         {
@@ -225,17 +242,90 @@ namespace RateController.RateMap
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("MapManager/ClearAppliedRatesOverlay: " + ex.Message);
+                Props.WriteErrorLog("MapController/ClearAppliedRatesOverlay: " + ex.Message);
             }
         }
 
         public static void Close()
         {
-            Props.SetProp("LastMapLat", gmap.Position.Lat.ToString("N10"));
-            Props.SetProp("LastMapLng", gmap.Position.Lng.ToString("N10"));
+            try
+            {
+                JobManager.JobChanged -= JobManager_JobChanged;
+                Props.RateDataSettingsChanged -= Props_RateDataSettingsChanged;
 
-            gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
-            gmap.MouseClick -= Gmap_MouseClick;
+                Props.SetProp("LastMapLat", gmap.Position.Lat.ToString("N10"));
+                Props.SetProp("LastMapLng", gmap.Position.Lng.ToString("N10"));
+
+                gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
+                gmap.MouseClick -= Gmap_MouseClick;
+
+                UpdateTimer.Enabled = false;
+                UpdateTimer.Tick -= UpdateTimer_Tick;
+
+                legendManager?.Dispose();
+                AppliedOverlay?.Polygons.Clear();
+                zoneOverlay?.Polygons.Clear();
+                tempMarkerOverlay?.Markers.Clear();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/Close: " + ex.Message);
+            }
+        }
+
+        public static bool DeleteZone(string name)
+        {
+            bool Result = false;
+            try
+            {
+                if (string.IsNullOrEmpty(name) || mapZones == null || zoneOverlay == null) return false;
+
+                // collect all zones with the given name (multi-polygons often share the same name)
+                var zonesToRemove = mapZones.Where(z => string.Equals(z.Name, name, StringComparison.Ordinal)).ToList();
+                if (zonesToRemove.Count == 0) return false;
+
+                foreach (var zone in zonesToRemove)
+                {
+                    // remove polygons from overlay that match the ones created for this zone
+                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons();
+                    foreach (var polygonToRemove in polygonsToRemove)
+                    {
+                        if (polygonToRemove == null) continue;
+
+                        var polygonInOverlay = zoneOverlay.Polygons
+                            .FirstOrDefault(polygon => polygon.Points.SequenceEqual(polygonToRemove.Points));
+
+                        if (polygonInOverlay != null)
+                        {
+                            zoneOverlay.Polygons.Remove(polygonInOverlay);
+                            Result = true;
+                        }
+                    }
+                }
+
+                // also remove any remaining polygons in the overlay that carry this name (safety)
+                var leftovers = zoneOverlay.Polygons.Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) || (p.Name != null && p.Name.StartsWith(name + "_hole", StringComparison.Ordinal))).ToList();
+                foreach (var p in leftovers) zoneOverlay.Polygons.Remove(p);
+
+                // remove zones from the internal list
+                mapZones.RemoveAll(z => string.Equals(z.Name, name, StringComparison.Ordinal));
+
+                if (Result)
+                {
+                    RemoveOverlay(zoneOverlay);
+                    AddOverlay(zoneOverlay);
+
+                    BuildZoneIndex();
+
+                    Refresh();
+                    SaveMap();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/DeleteZone: " + ex.Message);
+            }
+            return Result;
         }
 
         public static void DisplaySizeUpdate(bool Preview)
@@ -282,8 +372,18 @@ namespace RateController.RateMap
             return Result;
         }
 
+        public static double GetRate(int RateID)
+        {
+            double Result = 0.0;
+            if (RateID >= 0 && RateID < (Props.MaxProducts - 2)) Result = CurrentZoneRates[RateID];
+            return Result;
+        }
+
         public static void Initialize()
         {
+            JobManager.JobChanged += JobManager_JobChanged;
+            Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
+
             CurrentZoneRates = new double[Props.MaxProducts - 2];
             cState = MapState.Tracking;
             InitializeMap();
@@ -302,7 +402,6 @@ namespace RateController.RateMap
             UpdateTimer.Enabled = true;
 
             LoadData();
-            UpdateCurrentZone();
             LoadMap();
         }
 
@@ -335,6 +434,161 @@ namespace RateController.RateMap
             return Result;
         }
 
+        public static bool SaveMap()
+        {
+            bool Result = false;
+            try
+            {
+                var shapefileHelper = new ShapefileHelper();
+                shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
+                Result = true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SaveMap: " + ex.Message);
+            }
+
+            return Result;
+        }
+
+        public static void SaveMapToFile(string filePath)
+        {
+            var shapefileHelper = new ShapefileHelper();
+
+            try
+            {
+                var features = new List<IFeature>();
+
+                // Collect zone features
+                if (mapZones != null && mapZones.Count > 0)
+                {
+                    foreach (var mapZone in mapZones)
+                    {
+                        var zoneAtts = new AttributesTable
+                        {
+                            { "Name", mapZone.Name },
+                            { "ProductA", mapZone.Rates["ProductA"] },
+                            { "ProductB", mapZone.Rates["ProductB"] },
+                            { "ProductC", mapZone.Rates["ProductC"] },
+                            { "ProductD", mapZone.Rates["ProductD"] },
+                            { "Color", ColorTranslator.ToHtml(mapZone.ZoneColor) },
+                            { "Type", "Zone" } // distinguish in combined shapefile
+                        };
+                        features.Add(new Feature(mapZone.Geometry, zoneAtts));
+                    }
+                }
+
+                // Collect applied overlay features (coverage polygons)
+                // Ensure overlay is populated at least from history when needed
+                if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
+
+                bool haveCoverage = false;
+                if (AppliedOverlay.Polygons != null && AppliedOverlay.Polygons.Count > 0)
+                {
+                    haveCoverage = true;
+                }
+                else
+                {
+                    var readings = Props.RateCollector?.GetReadings();
+                    if (readings != null && readings.Count > 0)
+                    {
+                        AppliedOverlay.Polygons.Clear();
+
+                        double implementWidth = 24.0;
+                        if (Props.MainForm.Sections != null)
+                        {
+                            try { implementWidth = Props.MainForm.Sections.TotalWidth(false); }
+                            catch (Exception ex) { Props.WriteErrorLog($"MapController: implement width - {ex.Message}"); }
+                        }
+
+                        Dictionary<string, Color> legendFromHistory;
+                        haveCoverage = overlayService.BuildFromHistory(
+                            AppliedOverlay,
+                            readings,
+                            implementWidth,
+                            Props.RateDisplayType,
+                            Props.RateDisplayProduct,
+                            out legendFromHistory
+                        );
+                    }
+                }
+
+                if (haveCoverage && AppliedOverlay.Polygons != null && AppliedOverlay.Polygons.Count > 0)
+                {
+                    foreach (var gp in AppliedOverlay.Polygons)
+                    {
+                        if (gp == null || gp.Points == null || gp.Points.Count < 3) continue;
+
+                        var coords = new List<Coordinate>(gp.Points.Count + 1);
+                        for (int i = 0; i < gp.Points.Count; i++)
+                        {
+                            var p = gp.Points[i];
+                            coords.Add(new Coordinate(p.Lng, p.Lat));
+                        }
+                        if (!coords[0].Equals2D(coords[coords.Count - 1]))
+                        {
+                            coords.Add(coords[0]);
+                        }
+
+                        var ring = new LinearRing(coords.ToArray());
+                        var poly = new Polygon(ring);
+
+                        Color fillColor = Color.Transparent;
+                        try
+                        {
+                            var sb = gp.Fill as SolidBrush;
+                            if (sb != null) fillColor = sb.Color;
+                        }
+                        catch { }
+
+                        var covAtts = new AttributesTable
+                        {
+                            { "Name", string.IsNullOrEmpty(gp.Name) ? "Coverage" : gp.Name },
+                            { "Color", ColorTranslator.ToHtml(Color.FromArgb(255, fillColor)) },
+                            { "Alpha", fillColor.A },
+                            { "Type", "Coverage" } // distinguish in combined shapefile
+                        };
+
+                        features.Add(new Feature(poly, covAtts));
+                    }
+                }
+
+                // Write combined or clean up if empty
+                if (features.Count > 0)
+                {
+                    Shapefile.WriteAllFeatures(features, filePath);
+                    return;
+                }
+
+                // Nothing to export, ensure any existing file is removed for cleanliness
+                try
+                {
+                    if (Props.IsPathSafe(filePath))
+                    {
+                        string shp = System.IO.Path.ChangeExtension(filePath, ".shp");
+                        string dbf = System.IO.Path.ChangeExtension(filePath, ".dbf");
+                        string shx = System.IO.Path.ChangeExtension(filePath, ".shx");
+                        string prj = System.IO.Path.ChangeExtension(filePath, ".prj");
+                        string qix = System.IO.Path.ChangeExtension(filePath, ".qix");
+
+                        if (System.IO.File.Exists(shp)) System.IO.File.Delete(shp);
+                        if (System.IO.File.Exists(dbf)) System.IO.File.Delete(dbf);
+                        if (System.IO.File.Exists(shx)) System.IO.File.Delete(shx);
+                        if (System.IO.File.Exists(prj)) System.IO.File.Delete(prj);
+                        if (System.IO.File.Exists(qix)) System.IO.File.Delete(qix);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("MapController/SaveMapToFile cleanup: " + ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SaveMapToFile combined: " + ex.Message);
+            }
+        }
+
         public static void SetTractorPosition(PointLatLng NewLocation)
         {
             if (cState == MapState.Tracking || cState == MapState.Preview)
@@ -354,19 +608,6 @@ namespace RateController.RateMap
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
             }
-        }
-
-        public static bool ShowHistoricalRateLayer()
-        {
-            bool Result = false;
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/ShowHistoricalRateLayer: " + ex.Message);
-            }
-            return Result;
         }
 
         public static void ShowRatesOverlay()
@@ -396,6 +637,29 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/ShowRatesOverlay: " + ex.Message);
+            }
+        }
+
+        public static void ShowZoneOverlay(bool Show)
+        {
+            Props.MapShowZones = Show;
+            if (Props.MapShowZones)
+            {
+                try
+                {
+                    if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
+                    AddOverlay(zoneOverlay);
+                    Refresh();
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("MapController/ShowZoneOverlay: " + ex.Message);
+                }
+            }
+            else
+            {
+                RemoveOverlay(zoneOverlay);
+                Refresh();
             }
         }
 
@@ -483,6 +747,67 @@ namespace RateController.RateMap
             }
         }
 
+        public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
+        {
+            bool Result = false;
+            if (currentZoneVertices.Count > 2)
+            {
+                var geometryFactory = new GeometryFactory();
+                var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
+
+                if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
+                {
+                    Array.Resize(ref coordinates, coordinates.Length + 1);
+                    coordinates[coordinates.Length - 1] = coordinates[0];
+                }
+                var polygon = geometryFactory.CreatePolygon(coordinates);
+
+                if (name == "") name = "Zone " + mapZones.Count.ToString();
+
+                var mapZone = new MapZone(name, polygon, new Dictionary<string, double>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    }, zoneColor);
+                mapZones.Add(mapZone);
+                zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
+
+                currentZoneVertices.Clear();
+                tempMarkerOverlay.Markers.Clear();
+
+                BuildZoneIndex();
+                Result = true;
+            }
+            else
+            {
+                bool Found = false;
+                for (int i = mapZones.Count - 1; i >= 0; i--)
+                {
+                    var zone = mapZones[i];
+                    if (zone.Contains(cTractorPosition))
+                    {
+                        zone.Name = name;
+                        zone.Rates = new Dictionary<string, double>
+                        {
+                            { "ProductA", Rt0 },
+                            { "ProductB", Rt1 },
+                            { "ProductC", Rt2 },
+                            { "ProductD", Rt3 }
+                        };
+                        zone.ZoneColor = zoneColor;
+                        Found = true;
+                        SaveMap();
+                        LoadMap();
+                        break;
+                    }
+                }
+                Result = Found;
+            }
+            return Result;
+        }
+
         public static void ZoomToFit()
         {
             RectLatLng boundingBox = GetOverallRectLatLng();
@@ -498,9 +823,7 @@ namespace RateController.RateMap
             {
                 bool overlayExists = gmap.Overlays.Any(o => o.Id == NewOverlay.Id);
                 if (!overlayExists) gmap.Overlays.Add(NewOverlay);
-                // keep legend host on top
-                //EnsureLegendTop();
-                UpdateCurrentZone();
+                EnsureLegendTop();
             }
         }
 
@@ -633,11 +956,42 @@ namespace RateController.RateMap
             Refresh();
         }
 
+        private static void JobManager_JobChanged(object sender, EventArgs e)
+        {
+            LoadMap();
+        }
+
         private static void LoadData()
         {
             cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
             cProductRates = int.TryParse(Props.GetProp("MapProductRates"), out int pr) ? pr : 0;
             cRateTypeDisplay = Enum.TryParse(Props.GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied;
+        }
+
+        private static void Props_RateDataSettingsChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Props.MapShowRates)
+                {
+                    overlayService.Reset();
+
+                    if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
+                    AddOverlay(AppliedOverlay);
+                }
+                else
+                {
+                    overlayService.Reset();
+                    RemoveOverlay(AppliedOverlay);
+                    legendManager?.Clear();
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/Props_RateDataSettingsChanged: " + ex.Message);
+            }
         }
 
         private static void Refresh()
@@ -665,17 +1019,6 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
-            }
-        }
-
-        private static void UpdateCurrentZone()
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/UpdateCurrentZone: " + ex.Message);
             }
         }
 
