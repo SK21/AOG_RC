@@ -11,6 +11,7 @@ namespace RateController.Forms
     public partial class frmMap : Form
     {
         private const double BASE_PAN_DISTANCE_MILES = 2;
+        private bool EditInProgress = false;
         private bool Initializing = true;
         private int MainLeft = 0;
         private int MainTop = 0;
@@ -20,6 +21,19 @@ namespace RateController.Forms
         public frmMap()
         {
             InitializeComponent();
+        }
+
+        public void SetSelectedColor(Color color)
+        {
+            colorComboBox.SelectedIndex = 1;
+            for (int i = 0; i < colorComboBox.Items.Count; i++)
+            {
+                if (colorComboBox.Items[i] is Color itemColor && itemColor == color)
+                {
+                    colorComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
@@ -135,6 +149,25 @@ namespace RateController.Forms
             }
         }
 
+        private void ckPositioning_CheckedChanged(object sender, EventArgs e)
+        {
+           MapController.Positioning= ckPositioning.Checked;
+            EnableButtons(ckPositioning.Checked);
+
+            if (ckPositioning.Checked)
+            {
+                ckPositioning.FlatAppearance.BorderSize = 1;
+                ckEditZones.Enabled = true;
+                btnDelete.Enabled = true;
+            }
+            else
+            {
+                ckPositioning.FlatAppearance.BorderSize = 0;
+                ckEditZones.Enabled = false;
+                btnDelete.Enabled = false;
+            }
+        }
+
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing) MapController.ShowRates = ckRateData.Checked;
@@ -161,6 +194,37 @@ namespace RateController.Forms
         private void ckZones_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing) MapController.ShowZones = ckZones.Checked;
+        }
+
+        private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+
+            Color color = (Color)colorComboBox.Items[e.Index];
+
+            e.DrawBackground();
+
+            using (Brush brush = new SolidBrush(color))
+            {
+                int rectSize = e.Bounds.Height - 2;
+                Rectangle rect = new Rectangle(e.Bounds.X + 2, e.Bounds.Y + 1, rectSize, rectSize);
+                e.Graphics.FillRectangle(brush, rect);
+                e.Graphics.DrawRectangle(Pens.Black, rect);
+            }
+
+            e.Graphics.DrawString(color.Name, e.Font, Brushes.Black, e.Bounds.X + e.Bounds.Height + 2, e.Bounds.Y);
+            e.DrawFocusRectangle();
+        }
+
+        private void EnableButtons(bool Positioning)
+        {
+            tbName.Enabled = Positioning;
+            tbP1.Enabled = Positioning;
+            tbP2.Enabled = Positioning;
+            tbP3.Enabled = Positioning;
+            tbP4.Enabled = Positioning;
+            colorComboBox.Enabled = Positioning;
+            ckEditZones.Enabled = Positioning;
         }
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -191,6 +255,8 @@ namespace RateController.Forms
 
         private void frmMap_Load(object sender, EventArgs e)
         {
+            InitializeColorComboBox();
+
             MapController.MapChanged += MapController_MapChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
 
@@ -240,6 +306,20 @@ namespace RateController.Forms
         {
             double newLng = e.NewValue / 1000.0;
             MapController.Map.Position = new PointLatLng(MapController.Map.Position.Lat, newLng);
+        }
+
+        private void InitializeColorComboBox()
+        {
+            colorComboBox.Items.Clear();
+
+            foreach (KnownColor knownColor in Enum.GetValues(typeof(KnownColor)))
+            {
+                colorComboBox.Items.Add(Color.FromKnownColor(knownColor));
+            }
+
+            colorComboBox.SelectedIndex = 0;
+            colorComboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            colorComboBox.DrawItem += new DrawItemEventHandler(colorComboBox_DrawItem);
         }
 
         private void LoadFormLocation()
@@ -358,6 +438,27 @@ namespace RateController.Forms
                 ckRateData.Checked = MapController.ShowRates;
                 ckZones.Checked = MapController.ShowZones;
 
+                EnableButtons(ckPositioning.Checked);
+                if (!EditInProgress)
+                {
+                    tbName.Text = MapController.ZoneName;
+                    tbP1.Text = MapController.GetRate(0).ToString("N1");
+                    tbP2.Text = MapController.GetRate(1).ToString("N1");
+                    tbP3.Text = MapController.GetRate(2).ToString("N1");
+                    tbP4.Text = MapController.GetRate(3).ToString("N1");
+                    SetSelectedColor(MapController.ZoneColor);
+                }
+
+                if (Props.UseMetric)
+                {
+                    lbArea.Text = MapController.ZoneHectares.ToString("N1");
+                    lbAreaName.Text = "Hectares";
+                }
+                else
+                {
+                    lbArea.Text = (MapController.ZoneHectares * 2.47).ToString("N1");
+                    lbAreaName.Text = "Acres";
+                }
                 Initializing = false;
             }
             catch (Exception ex)

@@ -168,7 +168,7 @@ namespace RateController.RateMap
             }
         }
 
-        public static bool StateEditZones
+        public static bool EditingZones
         {
             get { return cState == MapState.EditZones; }
             set
@@ -181,6 +181,22 @@ namespace RateController.RateMap
                 {
                     cState = MapState.Tracking;
                 }
+            }
+        }
+        public static bool Positioning
+        {
+            get { return cState == MapState.Positioning; }
+            set
+            {
+                if (value)
+                {
+                    cState = MapState.Positioning;
+                }
+                else
+                {
+                    cState = MapState.Tracking;
+                }
+
             }
         }
 
@@ -1113,7 +1129,6 @@ namespace RateController.RateMap
             }
         }
 
-        // Helper: returns true if the same map is reloading and history readings haven’t changed
         private static bool ShouldSkipHistoryBuild(string mapPath, IReadOnlyList<RateReading> readings)
         {
             if (string.IsNullOrEmpty(mapPath) || readings == null || readings.Count == 0) return false;
