@@ -23,6 +23,10 @@ namespace RateController.Classes
         public Polygon Geometry { get; set; }
 
         public string Name { get; set; }
+        public bool MatchesGeometry(Polygon other)
+        {
+            return Geometry.EqualsTopologically(other);
+        }
 
         public Dictionary<string, double> Rates { get; set; }
         public Color ZoneColor { get; set; }
@@ -71,7 +75,7 @@ namespace RateController.Classes
             return totalArea;
         }
 
-        public List<GMapPolygon> ToGMapPolygons()
+        public List<GMapPolygon> ToGMapPolygons(byte Transparentcy=50)
         {
             var polygons = new List<GMapPolygon>();
             try
@@ -92,7 +96,7 @@ namespace RateController.Classes
                 var outerPolygon = new GMapPolygon(outerPoints, Name)
                 {
                     Stroke = new Pen(ZoneColor, 2),
-                    Fill = new SolidBrush(Color.FromArgb(50, ZoneColor))
+                    Fill = new SolidBrush(Color.FromArgb(Transparentcy, ZoneColor))
                 };
                 polygons.Add(outerPolygon);
 

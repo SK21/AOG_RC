@@ -77,6 +77,7 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
+        private static byte ZoneTransparentcy = 50;
 
         public static event EventHandler MapChanged;
 
@@ -354,7 +355,7 @@ namespace RateController.RateMap
                 foreach (var zone in zonesToRemove)
                 {
                     // remove polygons from overlay that match the ones created for this zone
-                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons();
+                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(ZoneTransparentcy);
                     foreach (var polygonToRemove in polygonsToRemove)
                     {
                         if (polygonToRemove == null) continue;
@@ -471,6 +472,7 @@ namespace RateController.RateMap
             UpdateTimer.Tick += UpdateTimer_Tick;
             UpdateTimer.Enabled = true;
 
+            ZoneTransparentcy = 100;
             LoadMap();
         }
 
@@ -486,7 +488,7 @@ namespace RateController.RateMap
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in mapZones)
                 {
-                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
+                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(ZoneTransparentcy));
                 }
 
                 BuildZoneIndex();
@@ -826,33 +828,55 @@ namespace RateController.RateMap
             tempMarkerOverlay.Markers.Clear();
 
         }
+        private static MapZone GetExistingZone()
+        {
+            // is pointer in an existing zone, load zone
+            MapZone Result = null;
+            if (gmap != null)
+            {
+                var mousePos = gmap.PointToClient(Cursor.Position);
+                var point = gmap.FromLocalToLatLng(mousePos.X, mousePos.Y);
+
+                foreach (var zn in mapZones)
+                {
+                    if (zn.Contains(point))
+                    {
+                        Result = zn;
+                        break;
+                    }
+                }
+            }
+            return Result;
+        }
         public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             bool Result = false;
-            if (currentZoneVertices.Count > 2)
+            MapZone ZoneToEdit = GetExistingZone();
+            if (ZoneToEdit == null)
             {
-                var geometryFactory = new GeometryFactory();
-                var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
-
-                if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
+                // create a new zone
+                if (currentZoneVertices.Count > 2 && !ZoneNameFound(name))
                 {
-                    Array.Resize(ref coordinates, coordinates.Length + 1);
-                    coordinates[coordinates.Length - 1] = coordinates[0];
-                }
-                var polygon = geometryFactory.CreatePolygon(coordinates);
+                    var geometryFactory = new GeometryFactory();
+                    var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
 
-                if (name == "") name = "Zone " + mapZones.Count.ToString();
-                if (!ZoneNameFound(name))
-                {
-                    var mapZone = new MapZone(name, polygon, new Dictionary<string, double>
+                    if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
+                    {
+                        Array.Resize(ref coordinates, coordinates.Length + 1);
+                        coordinates[coordinates.Length - 1] = coordinates[0];
+                    }
+                    var polygon = geometryFactory.CreatePolygon(coordinates);
+
+                    ZoneToEdit = new MapZone(name, polygon, new Dictionary<string, double>
                     {
                         { "ProductA", Rt0 },
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
                     }, zoneColor);
-                    mapZones.Add(mapZone);
-                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
+
+                    mapZones.Add(ZoneToEdit);
+                    zoneOverlay = AddPolygons(zoneOverlay, ZoneToEdit.ToGMapPolygons(ZoneTransparentcy));
 
                     currentZoneVertices.Clear();
                     tempMarkerOverlay.Markers.Clear();
@@ -861,31 +885,27 @@ namespace RateController.RateMap
                     Result = true;
                 }
             }
-            //else
-            //{
-            //    bool Found = false;
-            //    for (int i = mapZones.Count - 1; i >= 0; i--)
-            //    {
-            //        var zone = mapZones[i];
-            //        if (zone.Contains(cTractorPosition))
-            //        {
-            //            zone.Name = name;
-            //            zone.Rates = new Dictionary<string, double>
-            //            {
-            //                { "ProductA", Rt0 },
-            //                { "ProductB", Rt1 },
-            //                { "ProductC", Rt2 },
-            //                { "ProductD", Rt3 }
-            //            };
-            //            zone.ZoneColor = zoneColor;
-            //            Found = true;
-            //            SaveMap();
-            //            LoadMap();
-            //            break;
-            //        }
-            //    }
-            //    Result = Found;
-            //}
+            else
+            {
+                // update zone
+                ZoneToEdit.Name = name;
+                Dictionary<string, double> NewRates = new Dictionary<string, double>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    };
+                ZoneToEdit.Rates = NewRates;
+                ZoneToEdit.ZoneColor = zoneColor;
+
+                currentZoneVertices.Clear();
+                tempMarkerOverlay.Markers.Clear();
+
+                BuildZoneIndex();
+                Result = true;
+            }
+
             return Result;
         }
 
