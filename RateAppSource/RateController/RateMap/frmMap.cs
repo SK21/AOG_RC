@@ -165,9 +165,9 @@ namespace RateController.Forms
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Props.SetAppProp("MapWindow", ckWindow.Checked.ToString());
             ckWindow.Checked = false;
             ChangeMapSize();
-
             pnlMap.Controls.Remove(MapController.Map);
 
             MapController.MapZoomed -= MapController_MapZoomed;
@@ -187,7 +187,6 @@ namespace RateController.Forms
             MapController.MapIsDisplayed = false;
 
             SaveFormLocation();
-            Props.SetAppProp("MapWindow", ckWindow.Checked.ToString());
         }
 
         private void frmMap_Load(object sender, EventArgs e)
@@ -227,7 +226,7 @@ namespace RateController.Forms
             UpdateScrollbars();
             UpdateForm();
 
-            ckWindow.Checked = bool.TryParse(Props.GetAppProp("MapWindow"), out bool fs) ? fs : true;
+            ckWindow.Checked = bool.TryParse(Props.GetAppProp("MapWindow"), out bool fs) ? fs : false;
             MapController.MapIsDisplayed = true;
             MapController.Map.Zoom = 16;
             MapController.CenterMap();

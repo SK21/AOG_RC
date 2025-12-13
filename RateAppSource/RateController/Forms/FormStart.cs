@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using Microsoft.Win32;
 using RateController.Classes;
+using RateController.Forms;
 using RateController.Language;
 using RateController.PGNs;
 using RateController.Properties;
@@ -82,7 +83,6 @@ namespace RateController
             Props.JobCollector.Enabled = true;
 
             Tls = new clsTools(this);
-            Tls.StartMapManager();
 
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 
@@ -516,7 +516,7 @@ namespace RateController
                     timerMain.Enabled = false;
 
                     Form frm = Props.IsFormOpen("frmMap", false);
-                    if (frm != null) frm.Close();
+                    if (frm != null) frm.Close();   // to reset FormStart if moved
 
                     MapController.Close();
                     Props.SaveFormLocation(this);
@@ -718,6 +718,13 @@ namespace RateController
                 Props.DisplayRate();
 
                 timerMain.Enabled = true;
+
+                bool Preview = bool.TryParse(Props.GetAppProp("MapWindow"), out bool pv) ? pv : false;
+                if(Preview)
+                {
+                    frmMap frm=new frmMap();
+                    frm.Show();
+                }
             }
             catch (Exception ex)
             {

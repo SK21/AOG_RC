@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using RateController.Language;
+using RateController.RateMap;
 using System;
 using System.Diagnostics;
 
@@ -928,7 +929,7 @@ namespace RateController
             double Result = 0;
             if (Props.VariableRateEnabled && !Props.RateCalibrationOn)
             {
-                Result = mf.Tls.Manager.GetRate(ID);
+                Result = MapController.GetRate(ID);
             }
             else
             {
