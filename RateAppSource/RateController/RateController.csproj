@@ -301,12 +301,6 @@
     <Compile Include="Menu\frmMenuProfiles.Designer.cs">
       <DependentUpon>frmMenuProfiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="RateMap\frmMenuRateData.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RateMap\frmMenuRateData.Designer.cs">
-      <DependentUpon>frmMenuRateData.cs</DependentUpon>
-    </Compile>
     <Compile Include="Language\Lang.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -511,12 +505,6 @@
     <Compile Include="Menu\frmMenuPrimed.Designer.cs">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>
     </Compile>
-    <Compile Include="RateMap\frmMenuRateMap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RateMap\frmMenuRateMap.Designer.cs">
-      <DependentUpon>frmMenuRateMap.cs</DependentUpon>
-    </Compile>
     <Compile Include="PGNs\PGN100.cs" />
     <Compile Include="PGNs\PGN208.cs" />
     <Compile Include="PGNs\PGN229.cs" />
@@ -546,7 +534,6 @@
     <Compile Include="RateMap\KmlLayerManager.cs" />
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />
-    <Compile Include="RateMap\MapManager.cs" />
     <Compile Include="RateMap\MapZone.cs" />
     <Compile Include="RateMap\RateOverlayService.cs" />
     <Compile Include="RateMap\RateReading.cs" />
@@ -594,9 +581,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuProfiles.resx">
       <DependentUpon>frmMenuProfiles.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RateMap\frmMenuRateData.resx">
-      <DependentUpon>frmMenuRateData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Language\Lang.lt.resx" />
     <EmbeddedResource Include="Menu\frmMenu.resx">
@@ -717,9 +701,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuPrimed.resx">
       <DependentUpon>frmMenuPrimed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RateMap\frmMenuRateMap.resx">
-      <DependentUpon>frmMenuRateMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

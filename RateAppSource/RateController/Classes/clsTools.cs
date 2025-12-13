@@ -20,7 +20,6 @@ namespace RateController
 
         #region ScreenBitMap
 
-        private MapManager cManager;
         private Bitmap cScreenBitmap;
         private int cScreenBitmapHeight = 465;  // from frmMenuColor colorPanel
         private int cScreenBitmapWidth = 516;
@@ -34,8 +33,6 @@ namespace RateController
             _ = InitializeAsync();
         }
 
-        public MapManager Manager
-        { get { return cManager; } }
 
 
         public byte BitClear(byte b, int pos)

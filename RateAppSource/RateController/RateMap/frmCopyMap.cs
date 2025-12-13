@@ -91,7 +91,7 @@ namespace RateController.Forms
                     if (SelectedJob != null)
                     {
                         Result = JobManager.CopyJobData(SelectedJob.ID, JobManager.CurrentJobID, ckErase.Checked);
-                        if (Result) mf.Tls.Manager.LoadMap();
+                        //if (Result) mf.Tls.Manager.LoadMap();
                     }
                 }
                 else

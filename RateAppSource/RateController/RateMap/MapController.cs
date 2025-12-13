@@ -76,7 +76,7 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
-        private static byte ZoneTransparentcy = 190;
+        private static byte ZoneTransparency = 190;
 
         public static event EventHandler MapChanged;
 
@@ -356,7 +356,7 @@ namespace RateController.RateMap
                 foreach (var zone in zonesToRemove)
                 {
                     // remove polygons from overlay that match the ones created for this zone
-                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(ZoneTransparentcy);
+                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(ZoneTransparency);
                     foreach (var polygonToRemove in polygonsToRemove)
                     {
                         if (polygonToRemove == null) continue;
@@ -488,7 +488,7 @@ namespace RateController.RateMap
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in mapZones)
                 {
-                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(ZoneTransparentcy));
+                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
                 }
 
                 BuildZoneIndex();
@@ -844,7 +844,7 @@ namespace RateController.RateMap
                     }, zoneColor);
 
                     mapZones.Add(ZoneToEdit);
-                    zoneOverlay = AddPolygons(zoneOverlay, ZoneToEdit.ToGMapPolygons(ZoneTransparentcy));
+                    zoneOverlay = AddPolygons(zoneOverlay, ZoneToEdit.ToGMapPolygons(ZoneTransparency));
 
                     currentZoneVertices.Clear();
                     tempMarkerOverlay.Markers.Clear();
@@ -876,7 +876,7 @@ namespace RateController.RateMap
                     // Refresh polygons in overlay to reflect new color
                     if (zoneOverlay != null)
                     {
-                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(ZoneTransparentcy);
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(ZoneTransparency);
                         foreach (var polygonToReplace in polygonsForZone)
                         {
                             if (polygonToReplace == null) continue;

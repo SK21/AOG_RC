@@ -114,7 +114,7 @@ namespace RateController.Forms
                     string MapPath = JobManager.MapPath(JobManager.CurrentJobID);
                     if (shapefileHelper.SaveMapZones(MapPath, mapZones))
                     {
-                        mf.Tls.Manager.LoadMap();
+                        //mf.Tls.Manager.LoadMap();
                         Result = true;
                     }
                 }

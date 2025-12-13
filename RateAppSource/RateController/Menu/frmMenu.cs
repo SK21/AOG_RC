@@ -1097,15 +1097,6 @@ namespace RateController
                             fs.Show();
                             break;
 
-                        case "frmMenuRateMap":
-                            butFile.PerformClick();
-                            fs = new frmMenuRateMap(mf, this);
-                            fs.Owner = this;
-                            SaveLastScreen(Last);
-                            HighlightButton(butMap);
-                            fs.Show();
-                            break;
-
                         case "frmMenuSections":
                             butMachine.PerformClick();  // frmMenuSections opened by default
                             HighlightButton(butSections);
