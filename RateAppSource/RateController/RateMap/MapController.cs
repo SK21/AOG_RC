@@ -49,15 +49,19 @@ namespace RateController.RateMap
 
         #endregion Saved Properties
 
-        #region CurrentZone
+        #region Zones
 
         private static MapZone CurrentZone = null;
         private static Color CurrentZoneColor;
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
         private static double[] CurrentZoneRates;
+        private static List<PointLatLng> currentZoneVertices;
+        private static List<MapZone> mapZones;
+        private static STRtree<MapZone> STRtreeZoneIndex;
+        private static byte ZoneTransparency = 190;
 
-        #endregion CurrentZone
+        #endregion Zones
 
         private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         private static readonly RateOverlayService overlayService = new RateOverlayService();
@@ -69,12 +73,8 @@ namespace RateController.RateMap
         private static MapState cState;
         private static PointLatLng cTractorPosition;
         private static double cTravelHeading;
-        private static List<PointLatLng> currentZoneVertices;
         private static LegendManager legendManager;
-        private static List<MapZone> mapZones;
-        private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
-        private static byte ZoneTransparency = 190;
 
         public static event EventHandler MapChanged;
 
@@ -757,57 +757,10 @@ namespace RateController.RateMap
             return Result;
         }
 
-        public static void UpdateVariableRates()
-        {
-            try
-            {
-                bool ZoneFound = false;
-                if (STRtreeZoneIndex != null)
-                {
-                    // Query spatial index for candidate zones near the tractor
-                    var ptEnv = new Envelope(cTractorPosition.Lng, cTractorPosition.Lng, cTractorPosition.Lat, cTractorPosition.Lat);
-                    var candidates = STRtreeZoneIndex.Query(ptEnv);
-                    if (candidates != null && candidates.Count > 0)
-                    {
-                        // emulate previous last-wins behavior: zones added later have priority
-                        foreach (var zone in candidates.OrderByDescending(z => mapZones.IndexOf(z)))
-                        {
-                            if (zone.Contains(cTractorPosition))
-                            {
-                                CurrentZoneName = zone.Name;
-                                CurrentZoneRates[0] = zone.Rates["ProductA"];
-                                CurrentZoneRates[1] = zone.Rates["ProductB"];
-                                CurrentZoneRates[2] = zone.Rates["ProductC"];
-                                CurrentZoneRates[3] = zone.Rates["ProductD"];
-                                CurrentZoneColor = zone.ZoneColor;
-                                CurrentZoneHectares = zone.Hectares();
-                                ZoneFound = true;
-                                CurrentZone = zone;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!ZoneFound && Props.MainForm.Products != null)
-                {
-                    // use target rates
-                    CurrentZoneName = "Base Rate";
-                    CurrentZoneRates = Props.MainForm.Products.ProductsRateSet();
-                    CurrentZoneColor = Color.Blue;
-                    CurrentZoneHectares = 0;
-                    CurrentZone = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/UpdateVariableRates: " + ex.Message);
-            }
-        }
-
         public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             bool Result = false;
-            MapZone ZoneToEdit = GetExistingZone();
+            MapZone ZoneToEdit = CurrentZone;
             if (ZoneToEdit == null)
             {
                 // create a new zone
@@ -1005,24 +958,6 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/EnsureLegendTop: " + ex.Message);
             }
-        }
-
-        private static MapZone GetExistingZone()
-        {
-            // is pointer in an existing zone, load zone
-            MapZone Result = null;
-            if (gmap != null && cTractorPosition != null)
-            {
-                foreach (var zn in mapZones)
-                {
-                    if (zn.Contains(cTractorPosition))
-                    {
-                        Result = zn;
-                        break;
-                    }
-                }
-            }
-            return Result;
         }
 
         private static void Gmap_MouseClick(object sender, MouseEventArgs e)
@@ -1299,6 +1234,53 @@ namespace RateController.RateMap
                 }
             }
             UpdateVariableRates();
+        }
+
+        private static void UpdateVariableRates()
+        {
+            try
+            {
+                bool ZoneFound = false;
+                if (STRtreeZoneIndex != null)
+                {
+                    // Query spatial index for candidate zones near the tractor
+                    var ptEnv = new Envelope(cTractorPosition.Lng, cTractorPosition.Lng, cTractorPosition.Lat, cTractorPosition.Lat);
+                    var candidates = STRtreeZoneIndex.Query(ptEnv);
+                    if (candidates != null && candidates.Count > 0)
+                    {
+                        // emulate previous last-wins behavior: zones added later have priority
+                        foreach (var zone in candidates.OrderByDescending(z => mapZones.IndexOf(z)))
+                        {
+                            if (zone.Contains(cTractorPosition))
+                            {
+                                CurrentZoneName = zone.Name;
+                                CurrentZoneRates[0] = zone.Rates["ProductA"];
+                                CurrentZoneRates[1] = zone.Rates["ProductB"];
+                                CurrentZoneRates[2] = zone.Rates["ProductC"];
+                                CurrentZoneRates[3] = zone.Rates["ProductD"];
+                                CurrentZoneColor = zone.ZoneColor;
+                                CurrentZoneHectares = zone.Hectares();
+                                ZoneFound = true;
+                                CurrentZone = zone;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!ZoneFound && Props.MainForm.Products != null)
+                {
+                    // use target rates
+                    CurrentZoneName = "Base Rate";
+                    CurrentZoneRates = Props.MainForm.Products.ProductsRateSet();
+                    CurrentZoneColor = Color.Blue;
+                    CurrentZoneHectares = 0;
+                    CurrentZone = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/UpdateVariableRates: " + ex.Message);
+            }
         }
 
         private static bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
