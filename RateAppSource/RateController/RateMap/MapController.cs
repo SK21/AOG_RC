@@ -52,6 +52,7 @@ namespace RateController.RateMap
 
         #region CurrentZone
 
+        private static MapZone CurrentZone = null;
         private static Color CurrentZoneColor;
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
@@ -83,6 +84,22 @@ namespace RateController.RateMap
 
         public static event EventHandler MapZoomed;
 
+        public static bool EditingZones
+        {
+            get { return cState == MapState.EditZones; }
+            set
+            {
+                if (value)
+                {
+                    cState = MapState.EditZones;
+                }
+                else
+                {
+                    cState = MapState.Positioning;
+                }
+            }
+        }
+
         public static bool Enabled
         {
             get { return UpdateTimer.Enabled; }
@@ -107,6 +124,22 @@ namespace RateController.RateMap
 
         public static bool MapIsDisplayed
         { get { return cMapIsDisplayed; } set { cMapIsDisplayed = value; } }
+
+        public static bool Positioning
+        {
+            get { return cState == MapState.Positioning; }
+            set
+            {
+                if (value)
+                {
+                    cState = MapState.Positioning;
+                }
+                else
+                {
+                    cState = MapState.Tracking;
+                }
+            }
+        }
 
         public static int ProductRates
         {
@@ -168,40 +201,12 @@ namespace RateController.RateMap
             }
         }
 
-        public static bool EditingZones
-        {
-            get { return cState == MapState.EditZones; }
-            set
-            {
-                if (value)
-                {
-                    cState = MapState.EditZones;
-                }
-                else
-                {
-                    cState = MapState.Tracking;
-                }
-            }
-        }
-        public static bool Positioning
-        {
-            get { return cState == MapState.Positioning; }
-            set
-            {
-                if (value)
-                {
-                    cState = MapState.Positioning;
-                }
-                else
-                {
-                    cState = MapState.Tracking;
-                }
-
-            }
-        }
-
         public static Color ZoneColor => CurrentZoneColor;
 
+        public static int ZoneCount
+        { get { return STRtreeZoneIndex.Count; } }
+        public static bool ZoneFound
+        { get { return CurrentZone != null; } }
         public static double ZoneHectares => CurrentZoneHectares;
 
         public static string ZoneName
@@ -464,7 +469,7 @@ namespace RateController.RateMap
             UpdateTimer = new System.Windows.Forms.Timer();
             UpdateTimer.Interval = 1000; // ms
             UpdateTimer.Tick += UpdateTimer_Tick;
-            UpdateTimer.Enabled = false;
+            UpdateTimer.Enabled = true;
 
             LoadMap();
         }
@@ -781,6 +786,7 @@ namespace RateController.RateMap
                                 CurrentZoneColor = zone.ZoneColor;
                                 CurrentZoneHectares = zone.Hectares();
                                 ZoneFound = true;
+                                CurrentZone = zone;
                                 break;
                             }
                         }
@@ -789,10 +795,11 @@ namespace RateController.RateMap
                 if (!ZoneFound)
                 {
                     // use target rates
-                    CurrentZoneName = "-";
-                    CurrentZoneRates = Props.MainForm.Products.ProductTargetRates();
+                    CurrentZoneName = "Base Rate";
+                    CurrentZoneRates = Props.MainForm.Products.ProductsRateSet();
                     CurrentZoneColor = Color.Blue;
                     CurrentZoneHectares = 0;
+                    CurrentZone = null;
                 }
             }
             catch (Exception ex)
@@ -800,7 +807,25 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/UpdateVariableRates: " + ex.Message);
             }
         }
+        private static bool ZoneNameFound(string Name)
+        {
+            bool Result = false;
+            foreach(MapZone zn in mapZones)
+            {
+                if(zn.Name == Name)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
+        }
+        public static void ResetMarkers()
+        {
+            currentZoneVertices.Clear();
+            tempMarkerOverlay.Markers.Clear();
 
+        }
         public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             bool Result = false;
@@ -817,48 +842,50 @@ namespace RateController.RateMap
                 var polygon = geometryFactory.CreatePolygon(coordinates);
 
                 if (name == "") name = "Zone " + mapZones.Count.ToString();
-
-                var mapZone = new MapZone(name, polygon, new Dictionary<string, double>
+                if (!ZoneNameFound(name))
+                {
+                    var mapZone = new MapZone(name, polygon, new Dictionary<string, double>
                     {
                         { "ProductA", Rt0 },
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
                     }, zoneColor);
-                mapZones.Add(mapZone);
-                zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
+                    mapZones.Add(mapZone);
+                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons());
 
-                currentZoneVertices.Clear();
-                tempMarkerOverlay.Markers.Clear();
+                    currentZoneVertices.Clear();
+                    tempMarkerOverlay.Markers.Clear();
 
-                BuildZoneIndex();
-                Result = true;
-            }
-            else
-            {
-                bool Found = false;
-                for (int i = mapZones.Count - 1; i >= 0; i--)
-                {
-                    var zone = mapZones[i];
-                    if (zone.Contains(cTractorPosition))
-                    {
-                        zone.Name = name;
-                        zone.Rates = new Dictionary<string, double>
-                        {
-                            { "ProductA", Rt0 },
-                            { "ProductB", Rt1 },
-                            { "ProductC", Rt2 },
-                            { "ProductD", Rt3 }
-                        };
-                        zone.ZoneColor = zoneColor;
-                        Found = true;
-                        SaveMap();
-                        LoadMap();
-                        break;
-                    }
+                    BuildZoneIndex();
+                    Result = true;
                 }
-                Result = Found;
             }
+            //else
+            //{
+            //    bool Found = false;
+            //    for (int i = mapZones.Count - 1; i >= 0; i--)
+            //    {
+            //        var zone = mapZones[i];
+            //        if (zone.Contains(cTractorPosition))
+            //        {
+            //            zone.Name = name;
+            //            zone.Rates = new Dictionary<string, double>
+            //            {
+            //                { "ProductA", Rt0 },
+            //                { "ProductB", Rt1 },
+            //                { "ProductC", Rt2 },
+            //                { "ProductD", Rt3 }
+            //            };
+            //            zone.ZoneColor = zoneColor;
+            //            Found = true;
+            //            SaveMap();
+            //            LoadMap();
+            //            break;
+            //        }
+            //    }
+            //    Result = Found;
+            //}
             return Result;
         }
 
@@ -997,6 +1024,7 @@ namespace RateController.RateMap
                         PointLatLng Location = gmap.FromLocalToLatLng(e.X, e.Y);
                         cTractorPosition = Location;
                         tractorMarker.Position = Location;
+                        UpdateVariableRates();
                         Refresh();
                         MapChanged?.Invoke(null, EventArgs.Empty);
                         break;
@@ -1056,6 +1084,11 @@ namespace RateController.RateMap
             tractorMarker = new GMarkerGoogle(new PointLatLng(Lat, Lng), GMarkerGoogleType.green);
             tractorMarker.IsHitTestVisible = false;
             gpsMarkerOverlay.Markers.Add(tractorMarker);
+
+            PointLatLng Location = new PointLatLng(Lat, Lng);
+            cTractorPosition = Location;
+            tractorMarker.Position = Location;
+            UpdateVariableRates();
 
             AddOverlay(gpsMarkerOverlay);
             AddOverlay(tempMarkerOverlay);
@@ -1236,8 +1269,8 @@ namespace RateController.RateMap
                 SetTractorPosition(Position);
                 if (Props.MainForm.Products.ProductsAreOn() && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
-                    Props.RateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductTargetRates());
-                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductTargetRates());
+                    Props.RateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductsRateSet());
+                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductsRateSet());
                 }
             }
             UpdateVariableRates();

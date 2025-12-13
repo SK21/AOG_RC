@@ -1,4 +1,5 @@
-﻿using GMap.NET;
+﻿using AgOpenGPS;
+using GMap.NET;
 using RateController.Classes;
 using RateController.RateMap;
 using System;
@@ -34,6 +35,15 @@ namespace RateController.Forms
                     break;
                 }
             }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            SetEditInProgress(false);
+            ckEditZones.Checked = false;
+            EnableButtons();
+            MapController.ResetMarkers();
+            UpdateForm();
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
@@ -73,6 +83,31 @@ namespace RateController.Forms
             }
         }
 
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            double RateA = double.TryParse(tbP1.Text, out double p1) ? p1 : 0;
+            double RateB = double.TryParse(tbP2.Text, out double p2) ? p2 : 0;
+            double RateC = double.TryParse(tbP3.Text, out double p3) ? p3 : 0;
+            double RateD = double.TryParse(tbP4.Text, out double p4) ? p4 : 0;
+
+            Color SelectedColor = (Color)(colorComboBox.SelectedItem ?? Color.Blue);
+
+            if (MapController.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor))
+            {
+                SetEditInProgress(false);
+            ckEditZones.Checked = false;
+            EnableButtons();
+            MapController.SaveMap();
+            UpdateForm();
+            }
+            else
+            {
+                Props.ShowMessage("Could not save Zone.");
+
+            }
+
+        }
+
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom += 1;
@@ -86,6 +121,18 @@ namespace RateController.Forms
         private void butClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (MapController.DeleteZone(tbName.Text))
+            {
+                UpdateForm();
+            }
+            else
+            {
+                Props.ShowMessage("Zone could not be deleted.");
+            }
         }
 
         private void ChangeMapSize()
@@ -149,22 +196,29 @@ namespace RateController.Forms
             }
         }
 
+        private void ckEditZones_CheckedChanged(object sender, EventArgs e)
+        {
+            MapController.EditingZones = ckEditZones.Checked;
+            ckEditZones.FlatAppearance.BorderSize = ckEditZones.Checked ? 1 : 0;
+            if (ckEditZones.Checked && !Initializing) SetEditInProgress(true);
+        }
+
         private void ckPositioning_CheckedChanged(object sender, EventArgs e)
         {
-           MapController.Positioning= ckPositioning.Checked;
-            EnableButtons(ckPositioning.Checked);
+            MapController.Positioning = ckPositioning.Checked;
+            EnableButtons();
 
             if (ckPositioning.Checked)
             {
                 ckPositioning.FlatAppearance.BorderSize = 1;
                 ckEditZones.Enabled = true;
-                btnDelete.Enabled = true;
+                btnDeleteZone.Enabled = true;
             }
             else
             {
                 ckPositioning.FlatAppearance.BorderSize = 0;
                 ckEditZones.Enabled = false;
-                btnDelete.Enabled = false;
+                btnDeleteZone.Enabled = false;
             }
         }
 
@@ -196,6 +250,11 @@ namespace RateController.Forms
             if (!Initializing) MapController.ShowZones = ckZones.Checked;
         }
 
+        private void colorComboBox_Click(object sender, EventArgs e)
+        {
+            SetEditInProgress(true);
+        }
+
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
@@ -216,8 +275,14 @@ namespace RateController.Forms
             e.DrawFocusRectangle();
         }
 
-        private void EnableButtons(bool Positioning)
+        private void colorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!Initializing) SetEditInProgress(true);
+        }
+
+        private void EnableButtons()
+        {
+            bool Positioning = ckPositioning.Checked;
             tbName.Enabled = Positioning;
             tbP1.Enabled = Positioning;
             tbP2.Enabled = Positioning;
@@ -345,12 +410,8 @@ namespace RateController.Forms
             if (ckWindow.Checked)
             {
                 ckWindow.Checked = false;
+                ChangeMapSize();
             }
-            else
-            {
-                ckWindow.Checked = true;
-            }
-            ChangeMapSize();
         }
 
         private void MapController_MapZoomed(object sender, EventArgs e)
@@ -428,6 +489,143 @@ namespace RateController.Forms
             }
         }
 
+        private void SetEditInProgress(bool InProgress)
+        {
+            if (InProgress != EditInProgress)
+            {
+                EditInProgress = InProgress;
+
+                btnCancel.Enabled = InProgress;
+                btnOK.Enabled = InProgress;
+
+                ckEditZones.Enabled = !InProgress;
+                ckEditZones.Enabled = !InProgress;
+                btnDeleteZone.Enabled = !InProgress;
+
+                if(InProgress && !MapController.ZoneFound)
+                {
+                    tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
+                }
+            }
+        }
+
+        private void tbName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            SetEditInProgress(true);
+        }
+
+        private void tbP1_Enter(object sender, EventArgs e)
+        {
+            SetEditInProgress(true);
+
+            double tempD;
+            double.TryParse(tbP1.Text, out tempD);
+
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    tbP1.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbP1_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP1.Text, out tempD);
+
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbP2_Enter(object sender, EventArgs e)
+        {
+            SetEditInProgress(true);
+
+            double tempD;
+            double.TryParse(tbP2.Text, out tempD);
+
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    tbP2.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbP2_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP2.Text, out tempD);
+
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbP3_Enter(object sender, EventArgs e)
+        {
+            SetEditInProgress(true);
+
+            double tempD;
+            double.TryParse(tbP3.Text, out tempD);
+
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    tbP3.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbP3_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP3.Text, out tempD);
+
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void tbP4_Enter(object sender, EventArgs e)
+        {
+            SetEditInProgress(true);
+
+            double tempD;
+            double.TryParse(tbP4.Text, out tempD);
+
+            using (var form = new FormNumeric(0, 10000, tempD))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    tbP4.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbP4_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbP4.Text, out tempD);
+
+            if (tempD < 0 || tempD > 10000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
         private void UpdateForm()
         {
             try
@@ -438,7 +636,7 @@ namespace RateController.Forms
                 ckRateData.Checked = MapController.ShowRates;
                 ckZones.Checked = MapController.ShowZones;
 
-                EnableButtons(ckPositioning.Checked);
+                EnableButtons();
                 if (!EditInProgress)
                 {
                     tbName.Text = MapController.ZoneName;
@@ -488,8 +686,6 @@ namespace RateController.Forms
             HSB.Minimum = (int)((lng - lngOffset) * 1000);
             HSB.Maximum = (int)((lng + lngOffset) * 1000);
             HSB.Value = (int)(lng * 1000);
-
-            tbName.Text = MapController.Map.Zoom.ToString();
         }
 
         private void VSB_Scroll(object sender, ScrollEventArgs e)

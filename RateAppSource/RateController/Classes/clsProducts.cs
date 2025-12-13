@@ -181,15 +181,12 @@ namespace RateController
             return Result;
         }
 
-        public double[] ProductTargetRates()
+        public double[] ProductsRateSet()
         {
             double[] Result = new double[Props.MaxProducts - 2];
             for (int i = 0; i < Props.MaxProducts - 2; i++)
             {
-                if (cProducts[i].RateSensorData.Connected())
-                {
-                    Result[i] = cProducts[i].TargetRate();
-                }
+                    Result[i] = cProducts[i].RateSet;
             }
             return Result;
         }

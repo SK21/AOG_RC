@@ -36,7 +36,7 @@
             this.ckZones = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
             this.ckUseVR = new System.Windows.Forms.CheckBox();
-            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnDeleteData = new System.Windows.Forms.Button();
             this.lbDataPoints = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ckRecord = new System.Windows.Forms.CheckBox();
@@ -54,7 +54,7 @@
             this.lbArea = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnDeleteZone = new System.Windows.Forms.Button();
             this.lbP4 = new System.Windows.Forms.Label();
             this.tbP4 = new System.Windows.Forms.TextBox();
             this.lbP3 = new System.Windows.Forms.Label();
@@ -193,16 +193,16 @@
             this.ckUseVR.UseVisualStyleBackColor = true;
             this.ckUseVR.CheckedChanged += new System.EventHandler(this.ckUseVR_CheckedChanged);
             // 
-            // btnDelete
+            // btnDeleteData
             // 
-            this.btnDelete.FlatAppearance.BorderSize = 0;
-            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(323, 60);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(89, 64);
-            this.btnDelete.TabIndex = 397;
-            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDeleteData.FlatAppearance.BorderSize = 0;
+            this.btnDeleteData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteData.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDeleteData.Location = new System.Drawing.Point(323, 60);
+            this.btnDeleteData.Name = "btnDeleteData";
+            this.btnDeleteData.Size = new System.Drawing.Size(89, 64);
+            this.btnDeleteData.TabIndex = 397;
+            this.btnDeleteData.UseVisualStyleBackColor = true;
             // 
             // lbDataPoints
             // 
@@ -361,6 +361,7 @@
             this.btnOK.TabIndex = 344;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // ckPositioning
             // 
@@ -407,18 +408,21 @@
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(162, 32);
             this.colorComboBox.TabIndex = 340;
+            this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.colorComboBox_SelectedIndexChanged);
+            this.colorComboBox.Click += new System.EventHandler(this.colorComboBox_Click);
             // 
-            // button1
+            // btnDeleteZone
             // 
-            this.button1.Enabled = false;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Image = global::RateController.Properties.Resources.Trash;
-            this.button1.Location = new System.Drawing.Point(6, 154);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(82, 64);
-            this.button1.TabIndex = 12;
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnDeleteZone.Enabled = false;
+            this.btnDeleteZone.FlatAppearance.BorderSize = 0;
+            this.btnDeleteZone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteZone.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDeleteZone.Location = new System.Drawing.Point(6, 154);
+            this.btnDeleteZone.Name = "btnDeleteZone";
+            this.btnDeleteZone.Size = new System.Drawing.Size(82, 64);
+            this.btnDeleteZone.TabIndex = 12;
+            this.btnDeleteZone.UseVisualStyleBackColor = true;
+            this.btnDeleteZone.Click += new System.EventHandler(this.button1_Click);
             // 
             // lbP4
             // 
@@ -435,6 +439,8 @@
             this.tbP4.Size = new System.Drawing.Size(80, 29);
             this.tbP4.TabIndex = 10;
             this.tbP4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP4.Enter += new System.EventHandler(this.tbP4_Enter);
+            this.tbP4.Validating += new System.ComponentModel.CancelEventHandler(this.tbP4_Validating);
             // 
             // lbP3
             // 
@@ -458,6 +464,7 @@
             this.ckEditZones.TabIndex = 339;
             this.ckEditZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEditZones.UseVisualStyleBackColor = true;
+            this.ckEditZones.CheckedChanged += new System.EventHandler(this.ckEditZones_CheckedChanged);
             // 
             // tbP3
             // 
@@ -466,6 +473,8 @@
             this.tbP3.Size = new System.Drawing.Size(80, 29);
             this.tbP3.TabIndex = 8;
             this.tbP3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP3.Enter += new System.EventHandler(this.tbP3_Enter);
+            this.tbP3.Validating += new System.ComponentModel.CancelEventHandler(this.tbP3_Validating);
             // 
             // lbP2
             // 
@@ -482,6 +491,8 @@
             this.tbP2.Size = new System.Drawing.Size(80, 29);
             this.tbP2.TabIndex = 6;
             this.tbP2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP2.Enter += new System.EventHandler(this.tbP2_Enter);
+            this.tbP2.Validating += new System.ComponentModel.CancelEventHandler(this.tbP2_Validating);
             // 
             // lbP1
             // 
@@ -498,6 +509,8 @@
             this.tbP1.Size = new System.Drawing.Size(80, 29);
             this.tbP1.TabIndex = 4;
             this.tbP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbP1.Enter += new System.EventHandler(this.tbP1_Enter);
+            this.tbP1.Validating += new System.ComponentModel.CancelEventHandler(this.tbP1_Validating);
             // 
             // tbName
             // 
@@ -506,6 +519,7 @@
             this.tbName.Size = new System.Drawing.Size(162, 29);
             this.tbName.TabIndex = 2;
             this.tbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbName_KeyPress);
             // 
             // btnCancel
             // 
@@ -523,6 +537,7 @@
             this.btnCancel.TabIndex = 345;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // tabControl1
             // 
@@ -551,7 +566,7 @@
             this.tabZones.Controls.Add(this.tbP1);
             this.tabZones.Controls.Add(this.colorComboBox);
             this.tabZones.Controls.Add(this.lbP1);
-            this.tabZones.Controls.Add(this.button1);
+            this.tabZones.Controls.Add(this.btnDeleteZone);
             this.tabZones.Controls.Add(this.tbP2);
             this.tabZones.Controls.Add(this.lbP4);
             this.tabZones.Controls.Add(this.lbP2);
@@ -593,7 +608,7 @@
             this.tabData.Controls.Add(this.btnCopy);
             this.tabData.Controls.Add(this.ckRecord);
             this.tabData.Controls.Add(this.btnImport);
-            this.tabData.Controls.Add(this.btnDelete);
+            this.tabData.Controls.Add(this.btnDeleteData);
             this.tabData.Controls.Add(this.btnExport);
             this.tabData.Controls.Add(this.label1);
             this.tabData.Controls.Add(this.lbDataPoints);
@@ -672,7 +687,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1002, 735);
+            this.ClientSize = new System.Drawing.Size(955, 444);
             this.Controls.Add(this.pnlTabs);
             this.Controls.Add(this.pnlControls);
             this.Controls.Add(this.pnlMain);
@@ -709,7 +724,7 @@
         private System.Windows.Forms.CheckBox ckZones;
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.CheckBox ckUseVR;
-        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnDeleteData;
         private System.Windows.Forms.Label lbDataPoints;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox ckRecord;
@@ -725,7 +740,7 @@
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox colorComboBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnDeleteZone;
         private System.Windows.Forms.Label lbP4;
         private System.Windows.Forms.TextBox tbP4;
         private System.Windows.Forms.Label lbP3;
