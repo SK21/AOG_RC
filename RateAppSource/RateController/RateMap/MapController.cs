@@ -45,6 +45,8 @@ namespace RateController.RateMap
         private static int cProductRates;
         private static RateType cRateTypeDisplay;
         private static bool cShowRates;
+        private static bool cShowTiles;
+        private static bool cShowZones;
 
         #endregion Saved Properties
 
@@ -59,6 +61,11 @@ namespace RateController.RateMap
 
         private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         private static readonly RateOverlayService overlayService = new RateOverlayService();
+        private static int _lastHistoryCount;
+        private static DateTime _lastHistoryLastTimestamp;
+
+        private static string _lastLoadedMapPath;
+
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
         private static MapState cState;
@@ -69,7 +76,6 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
-        // spatial index for fast zone lookup
 
         public static event EventHandler MapChanged;
 
@@ -91,7 +97,7 @@ namespace RateController.RateMap
                 if (legendManager != null)
                 {
                     legendManager.LegendOverlayEnabled = value;
-                    legendManager.UpdateLegend(ColorLegend);
+                    ShowLegend(ColorLegend, true);
                 }
             }
         }
@@ -132,19 +138,33 @@ namespace RateController.RateMap
             {
                 cShowRates = value;
                 Props.SetProp("MapShowRates", cShowRates.ToString());
+                ShowRatesOverlay();
             }
         }
 
         public static bool ShowTiles
         {
-            get { return Props.MapShowTiles; }
+            get { return cShowTiles; }
             set
             {
-                Props.MapShowTiles = value;
+                cShowTiles = value;
+                Props.SetProp("MapShowTiles", cShowTiles.ToString());
+
                 gmap.MapProvider = value
                     ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
                     : (GMapProvider)GMapProviders.EmptyProvider;
                 Refresh();
+            }
+        }
+
+        public static bool ShowZones
+        {
+            get { return cShowZones; }
+            set
+            {
+                cShowZones = value;
+                Props.SetProp("MapShowZones", cShowZones.ToString());
+                ShowZoneOverlay();
             }
         }
 
@@ -211,7 +231,6 @@ namespace RateController.RateMap
             {
                 try
                 {
-                    Debug.Print("CenterMap");
                     var collector = Props.RateCollector;
                     if (collector != null)
                     {
@@ -245,7 +264,6 @@ namespace RateController.RateMap
 
                                 gmap.SetZoomToFitRect(rect);
                                 MapChanged?.Invoke(null, EventArgs.Empty);
-                                Debug.Print("CenterMap2");
                             }
                         }
                     }
@@ -367,6 +385,7 @@ namespace RateController.RateMap
             {
                 cState = MapState.Tracking;
             }
+            ShowLegend(ColorLegend);
         }
 
         public static RectLatLng GetOverallRectLatLng()
@@ -410,6 +429,7 @@ namespace RateController.RateMap
 
         public static void Initialize()
         {
+            LoadData();
             JobManager.JobChanged += JobManager_JobChanged;
             Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
 
@@ -430,7 +450,6 @@ namespace RateController.RateMap
             UpdateTimer.Tick += UpdateTimer_Tick;
             UpdateTimer.Enabled = false;
 
-            LoadData();
             LoadMap();
         }
 
@@ -450,8 +469,10 @@ namespace RateController.RateMap
                 }
 
                 BuildZoneIndex();
-                Refresh();
+                ShowZoneOverlay();
+
                 ShowRatesOverlay();
+                Refresh();
                 CenterMap();
                 MapChanged?.Invoke(null, EventArgs.Empty);
                 Result = true;
@@ -680,59 +701,6 @@ namespace RateController.RateMap
             }
         }
 
-        public static void ShowRatesOverlay()
-        {
-            try
-            {
-                if (cShowRates)
-                {
-                    if (cMapIsDisplayed)
-                    {
-                        if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
-                        overlayService.Reset();
-                        AppliedOverlay.Polygons.Clear();
-                        AddOverlay(AppliedOverlay);
-                    }
-                }
-                else
-                {
-                    // remove rates overlay
-                    overlayService.Reset();
-                    RemoveOverlay(AppliedOverlay);
-                    legendManager?.Clear();
-                    Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/ShowRatesOverlay: " + ex.Message);
-            }
-        }
-
-        public static void ShowZoneOverlay(bool Show)
-        {
-            Props.MapShowZones = Show;
-            if (Props.MapShowZones)
-            {
-                try
-                {
-                    if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
-                    AddOverlay(zoneOverlay);
-                    Refresh();
-                }
-                catch (Exception ex)
-                {
-                    Props.WriteErrorLog("MapController/ShowZoneOverlay: " + ex.Message);
-                }
-            }
-            else
-            {
-                RemoveOverlay(zoneOverlay);
-                Refresh();
-            }
-        }
-
         public static bool UpdateRateLayer(double[] AppliedRates, double[] TargetRates)
         {
             bool Result = false;
@@ -880,12 +848,10 @@ namespace RateController.RateMap
 
         public static bool ZoomToFit()
         {
-            Debug.Print("zoom to fit");
             bool Result = false;
             RectLatLng boundingBox = GetOverallRectLatLng();
             if (boundingBox != RectLatLng.Empty)
             {
-                Debug.Print("zoom to fit 2");
                 gmap.SetZoomToFitRect(boundingBox);
                 Result = true;
             }
@@ -911,6 +877,47 @@ namespace RateController.RateMap
                 overlay.Polygons.Add(polygon);
             }
             return overlay;
+        }
+
+        private static void BuildCoverageFromHistory()
+        {
+            try
+            {
+                if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
+                overlayService.Reset();
+                AppliedOverlay.Polygons.Clear();
+                AddOverlay(AppliedOverlay);
+
+                Props.RateCollector.LoadData(); // ensure fresh data
+                var readings = Props.RateCollector.GetReadings();
+                if (readings == null || readings.Count == 0)
+                {
+                    legendManager?.Clear();
+                    ColorLegend = null;
+                    Refresh();
+                }
+                else
+                {
+                    Dictionary<string, Color> histLegend;
+                    bool histOk = overlayService.BuildFromHistory(
+                        AppliedOverlay,
+                        readings,
+                        Props.MainForm.Sections.TotalWidth(false),
+                        cRateTypeDisplay,
+                        cProductRates,
+                        out histLegend
+                    );
+                    ColorLegend = histLegend;
+                    ShowLegend(histLegend, histOk);
+
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/BuildCoverageFromHistory: " + ex.Message);
+            }
         }
 
         private static void BuildZoneIndex()
@@ -996,7 +1003,7 @@ namespace RateController.RateMap
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             GMaps.Instance.PrimaryCache = new GMap.NET.CacheProviders.SQLitePureImageCache
             {
-                CacheLocation = Props.MapCache
+                CacheLocation = Props.ApplicationFolder + "\\MapCache"
             };
 
             GMapProvider.TTLCache = 24 * 60 * 7; // minutes (e.g., 24 hours) 7 days
@@ -1007,7 +1014,15 @@ namespace RateController.RateMap
             if (double.TryParse(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
 
             gmap = new GMapControl();
-            ShowTiles = Props.MapShowTiles;
+
+            if (cShowTiles)
+            {
+                gmap.MapProvider = (GMapProvider)ArcGIS_World_Imagery_Provider.Instance;
+            }
+            else
+            {
+                gmap.MapProvider = (GMapProvider)GMapProviders.EmptyProvider;
+            }
 
             gmap.Position = new PointLatLng(Lat, Lng);
             gmap.ShowCenter = false;
@@ -1040,16 +1055,18 @@ namespace RateController.RateMap
 
         private static void LoadData()
         {
-            cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
             cProductRates = int.TryParse(Props.GetProp("MapProductRates"), out int pr) ? pr : 0;
             cRateTypeDisplay = Enum.TryParse(Props.GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied;
+            cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
+            cShowZones = bool.TryParse(Props.GetProp("MapShowZones"), out bool sz) ? sz : true;
+            cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
         }
 
         private static void Props_RateDataSettingsChanged(object sender, EventArgs e)
         {
             try
             {
-                if (Props.MapShowRates)
+                if (cShowRates)
                 {
                     overlayService.Reset();
 
@@ -1073,10 +1090,7 @@ namespace RateController.RateMap
 
         private static void Refresh()
         {
-            if (cMapIsDisplayed)
-            {
-                gmap.Refresh();
-            }
+            gmap.Refresh();
         }
 
         private static void RemoveOverlay(GMapOverlay overlay)
@@ -1096,6 +1110,106 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
+            }
+        }
+
+        // Helper: returns true if the same map is reloading and history readings haven’t changed
+        private static bool ShouldSkipHistoryBuild(string mapPath, IReadOnlyList<RateReading> readings)
+        {
+            if (string.IsNullOrEmpty(mapPath) || readings == null || readings.Count == 0) return false;
+
+            var lastTs = readings[readings.Count - 1].Timestamp;
+            return string.Equals(_lastLoadedMapPath, mapPath, StringComparison.Ordinal) &&
+                   _lastHistoryCount == readings.Count &&
+                   _lastHistoryLastTimestamp == lastTs &&
+                   AppliedOverlay != null &&
+                   AppliedOverlay.Polygons != null &&
+                   AppliedOverlay.Polygons.Count > 0;
+        }
+
+        private static void ShowLegend(Dictionary<string, Color> LegendToShow, bool Show = true)
+        {
+            if (Show && cState != MapState.Preview)
+            {
+                legendManager?.UpdateLegend(LegendToShow);
+            }
+            else
+            {
+                legendManager?.Clear();
+                //LegendToShow = null;
+            }
+        }
+
+        private static void ShowRatesOverlay()
+        {
+            try
+            {
+                if (cShowRates)
+                {
+                    // Decide whether to rebuild coverage from history
+                    var readings = Props.RateCollector?.GetReadings();
+                    bool SkipRebuild = ShouldSkipHistoryBuild(JobManager.CurrentMapPath, readings);
+
+                    if (SkipRebuild)
+                    {
+                        AddOverlay(AppliedOverlay);
+                        ShowLegend(ColorLegend);
+                    }
+                    else
+                    {
+                        BuildCoverageFromHistory();
+
+                        // update signature after a successful build
+                        _lastLoadedMapPath = JobManager.CurrentMapPath;
+                        if (readings != null && readings.Count > 0)
+                        {
+                            _lastHistoryCount = readings.Count;
+                            _lastHistoryLastTimestamp = readings[readings.Count - 1].Timestamp;
+                        }
+                        else
+                        {
+                            _lastHistoryCount = 0;
+                            _lastHistoryLastTimestamp = DateTime.MinValue;
+                        }
+                    }
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                }
+                else
+                {
+                    // remove rates overlay
+                    overlayService.Reset();
+                    RemoveOverlay(AppliedOverlay);
+                    legendManager?.Clear();
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/ShowRatesOverlay: " + ex.Message);
+            }
+        }
+
+        private static void ShowZoneOverlay()
+        {
+            if (cShowZones)
+            {
+                try
+                {
+                    if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
+                    AddOverlay(zoneOverlay);
+                    Refresh();
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("MapController/ShowZoneOverlay: " + ex.Message);
+                }
+            }
+            else
+            {
+                RemoveOverlay(zoneOverlay);
+                Refresh();
             }
         }
 

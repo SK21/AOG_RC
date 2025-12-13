@@ -11,11 +11,11 @@ namespace RateController.Forms
     public partial class frmMap : Form
     {
         private const double BASE_PAN_DISTANCE_MILES = 2;
+        private bool Initializing = true;
         private int MainLeft = 0;
         private int MainTop = 0;
         private int PMheight;
         private int PMwidth;
-        private bool Initializing = true;
 
         public frmMap()
         {
@@ -137,16 +137,30 @@ namespace RateController.Forms
 
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
+            if (!Initializing) MapController.ShowRates = ckRateData.Checked;
         }
 
         private void ckSatView_CheckedChanged(object sender, EventArgs e)
         {
-            MapController.ShowTiles = ckSatView.Checked;
+            if (!Initializing) MapController.ShowTiles = ckSatView.Checked;
+        }
+
+        private void ckUseVR_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                Props.VariableRateEnabled = ckUseVR.Checked;
+            }
         }
 
         private void ckWindow_CheckedChanged(object sender, EventArgs e)
         {
             ChangeMapSize();
+        }
+
+        private void ckZones_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) MapController.ShowZones = ckZones.Checked;
         }
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -181,13 +195,9 @@ namespace RateController.Forms
             MapController.MapChanged += MapController_MapChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
 
-            tabPage1.BackColor = Properties.Settings.Default.MainBackColour;
-            tabPage2.BackColor = Properties.Settings.Default.MainBackColour;
+            tabZones.BackColor = Properties.Settings.Default.MainBackColour;
+            tabData.BackColor = Properties.Settings.Default.MainBackColour;
             tabControl1.ItemSize = new Size((tabControl1.Width - 10) / 2, tabControl1.ItemSize.Height);
-
-            ckZones.Checked = Props.MapShowZones;
-            ckSatView.Checked = Props.MapShowTiles;
-            ckRateData.Checked = Props.MapShowRates;
 
             PMheight = pnlMain.Height;
             PMwidth = pnlMain.Width;
@@ -197,7 +207,6 @@ namespace RateController.Forms
             MapController.MapZoomed += MapController_MapZoomed;
             MapController.MapLeftClicked += MapController_MapLeftClicked;
             MapController.LoadMap();
-            MapController.ShowZoneOverlay(ckZones.Checked);
             MapController.LegendOverlayEnabled = !ckWindow.Checked;
             MapController.Enabled = true;
 
@@ -346,6 +355,9 @@ namespace RateController.Forms
             {
                 Initializing = true;
                 ckUseVR.Checked = Props.VariableRateEnabled;
+                ckSatView.Checked = MapController.ShowTiles;
+                ckRateData.Checked = MapController.ShowRates;
+                ckZones.Checked = MapController.ShowZones;
 
                 Initializing = false;
             }
@@ -387,15 +399,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void ckUseVR_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing)
-            {
-                Props.VariableRateEnabled = ckUseVR.Checked;
-            }
-
         }
     }
 }

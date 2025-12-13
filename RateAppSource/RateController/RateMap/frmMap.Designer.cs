@@ -67,10 +67,10 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabZones = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.lbAreaName = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabData = new System.Windows.Forms.TabPage();
             this.rbProductA = new System.Windows.Forms.RadioButton();
             this.rbProductD = new System.Windows.Forms.RadioButton();
             this.rbProductC = new System.Windows.Forms.RadioButton();
@@ -79,8 +79,8 @@
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabZones.SuspendLayout();
+            this.tabData.SuspendLayout();
             this.pnlTabs.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -162,6 +162,7 @@
             this.ckZones.Text = "Zones";
             this.ckZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckZones.UseVisualStyleBackColor = true;
+            this.ckZones.CheckedChanged += new System.EventHandler(this.ckZones_CheckedChanged);
             // 
             // btnImport
             // 
@@ -178,13 +179,13 @@
             this.btnImport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnImport.UseVisualStyleBackColor = false;
             // 
-            // ckEnable
+            // ckUseVR
             // 
             this.ckUseVR.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckUseVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckUseVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckUseVR.Location = new System.Drawing.Point(4, 78);
-            this.ckUseVR.Name = "ckEnable";
+            this.ckUseVR.Name = "ckUseVR";
             this.ckUseVR.Size = new System.Drawing.Size(89, 64);
             this.ckUseVR.TabIndex = 363;
             this.ckUseVR.Text = "Enable VR";
@@ -210,7 +211,7 @@
             this.lbDataPoints.Name = "lbDataPoints";
             this.lbDataPoints.Size = new System.Drawing.Size(88, 23);
             this.lbDataPoints.TabIndex = 396;
-            this.lbDataPoints.Text = "100,000";
+            this.lbDataPoints.Text = "0";
             this.lbDataPoints.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
@@ -525,8 +526,8 @@
             // tabControl1
             // 
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabZones);
+            this.tabControl1.Controls.Add(this.tabData);
             this.tabControl1.ItemSize = new System.Drawing.Size(150, 50);
             this.tabControl1.Location = new System.Drawing.Point(2, 2);
             this.tabControl1.Name = "tabControl1";
@@ -535,35 +536,35 @@
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 389;
             // 
-            // tabPage1
+            // tabZones
             // 
-            this.tabPage1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.lbAreaName);
-            this.tabPage1.Controls.Add(this.btnOK);
-            this.tabPage1.Controls.Add(this.ckEditZones);
-            this.tabPage1.Controls.Add(this.btnCancel);
-            this.tabPage1.Controls.Add(this.lbArea);
-            this.tabPage1.Controls.Add(this.tbName);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.tbP1);
-            this.tabPage1.Controls.Add(this.colorComboBox);
-            this.tabPage1.Controls.Add(this.lbP1);
-            this.tabPage1.Controls.Add(this.button1);
-            this.tabPage1.Controls.Add(this.tbP2);
-            this.tabPage1.Controls.Add(this.lbP4);
-            this.tabPage1.Controls.Add(this.lbP2);
-            this.tabPage1.Controls.Add(this.tbP4);
-            this.tabPage1.Controls.Add(this.tbP3);
-            this.tabPage1.Controls.Add(this.lbP3);
-            this.tabPage1.Controls.Add(this.ckEditPolygons);
-            this.tabPage1.Location = new System.Drawing.Point(4, 54);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(423, 377);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Zones";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabZones.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabZones.Controls.Add(this.label3);
+            this.tabZones.Controls.Add(this.lbAreaName);
+            this.tabZones.Controls.Add(this.btnOK);
+            this.tabZones.Controls.Add(this.ckEditZones);
+            this.tabZones.Controls.Add(this.btnCancel);
+            this.tabZones.Controls.Add(this.lbArea);
+            this.tabZones.Controls.Add(this.tbName);
+            this.tabZones.Controls.Add(this.label2);
+            this.tabZones.Controls.Add(this.tbP1);
+            this.tabZones.Controls.Add(this.colorComboBox);
+            this.tabZones.Controls.Add(this.lbP1);
+            this.tabZones.Controls.Add(this.button1);
+            this.tabZones.Controls.Add(this.tbP2);
+            this.tabZones.Controls.Add(this.lbP4);
+            this.tabZones.Controls.Add(this.lbP2);
+            this.tabZones.Controls.Add(this.tbP4);
+            this.tabZones.Controls.Add(this.tbP3);
+            this.tabZones.Controls.Add(this.lbP3);
+            this.tabZones.Controls.Add(this.ckEditPolygons);
+            this.tabZones.Location = new System.Drawing.Point(4, 54);
+            this.tabZones.Name = "tabZones";
+            this.tabZones.Padding = new System.Windows.Forms.Padding(3);
+            this.tabZones.Size = new System.Drawing.Size(423, 377);
+            this.tabZones.TabIndex = 0;
+            this.tabZones.Text = "Zones";
+            this.tabZones.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -581,27 +582,27 @@
             this.lbAreaName.TabIndex = 346;
             this.lbAreaName.Text = "Acres";
             // 
-            // tabPage2
+            // tabData
             // 
-            this.tabPage2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabPage2.Controls.Add(this.rbProductA);
-            this.tabPage2.Controls.Add(this.rbProductD);
-            this.tabPage2.Controls.Add(this.rbProductC);
-            this.tabPage2.Controls.Add(this.rbProductB);
-            this.tabPage2.Controls.Add(this.btnCopy);
-            this.tabPage2.Controls.Add(this.ckRecord);
-            this.tabPage2.Controls.Add(this.btnImport);
-            this.tabPage2.Controls.Add(this.btnDelete);
-            this.tabPage2.Controls.Add(this.btnExport);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.lbDataPoints);
-            this.tabPage2.Location = new System.Drawing.Point(4, 54);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(423, 377);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Data";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabData.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabData.Controls.Add(this.rbProductA);
+            this.tabData.Controls.Add(this.rbProductD);
+            this.tabData.Controls.Add(this.rbProductC);
+            this.tabData.Controls.Add(this.rbProductB);
+            this.tabData.Controls.Add(this.btnCopy);
+            this.tabData.Controls.Add(this.ckRecord);
+            this.tabData.Controls.Add(this.btnImport);
+            this.tabData.Controls.Add(this.btnDelete);
+            this.tabData.Controls.Add(this.btnExport);
+            this.tabData.Controls.Add(this.label1);
+            this.tabData.Controls.Add(this.lbDataPoints);
+            this.tabData.Location = new System.Drawing.Point(4, 54);
+            this.tabData.Name = "tabData";
+            this.tabData.Padding = new System.Windows.Forms.Padding(3);
+            this.tabData.Size = new System.Drawing.Size(423, 377);
+            this.tabData.TabIndex = 1;
+            this.tabData.Text = "Data";
+            this.tabData.UseVisualStyleBackColor = true;
             // 
             // rbProductA
             // 
@@ -690,9 +691,9 @@
             this.pnlControls.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
+            this.tabZones.ResumeLayout(false);
+            this.tabZones.PerformLayout();
+            this.tabData.ResumeLayout(false);
             this.pnlTabs.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -737,8 +738,8 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button butClose;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabZones;
+        private System.Windows.Forms.TabPage tabData;
         private System.Windows.Forms.Panel pnlTabs;
         private System.Windows.Forms.RadioButton rbProductA;
         private System.Windows.Forms.RadioButton rbProductD;

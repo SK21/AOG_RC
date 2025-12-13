@@ -178,7 +178,7 @@ namespace RateController.Classes
             return Result;
         }
 
-        private void LoadData()
+        public void LoadData()
         {
             try
             {

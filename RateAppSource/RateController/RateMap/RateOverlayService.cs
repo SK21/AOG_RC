@@ -10,7 +10,7 @@ namespace RateController.Classes
     public sealed class RateOverlayService
     {
         // Match CoverageTrail deadband so "0" means no coverage
-        private const double RateEpsilon = 1e-3;
+        private const double RateEpsilon = 0.01;
 
         private readonly CoverageTrail _trail = new CoverageTrail();
 

@@ -945,9 +945,6 @@ namespace RateController.Classes
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
             cShowCoverageRemaining = bool.TryParse(GetProp("ShowCoverageRemaining"), out bool cr) ? cr : false;
             cRateRecordEnabled = bool.TryParse(GetProp("RecordRates"), out bool rc) ? rc : true;
-            cMapShowTiles = bool.TryParse(GetProp("ShowTiles"), out bool st) ? st : true;
-            cMapShowZones = bool.TryParse(GetProp("MapShowZones"), out bool sz) ? sz : true;
-            cMapShowRates = bool.TryParse(GetProp("MapShowRates"), out bool sr) ? sr : false;
             cSensorSettingsMaxID = int.TryParse(GetProp("SensorSettingsMaxID"), out int mi) ? mi : 0;
             cCurrentMenuName = GetProp("LastScreen");
 
