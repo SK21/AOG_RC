@@ -419,10 +419,10 @@ namespace RateController.Forms
         }
         private void UpdateProductToDisplay()
         {
-            if (rbProductA.Checked) Props.RateDisplayProduct = 0;
-            else if (rbProductB.Checked) Props.RateDisplayProduct = 1;
-            else if (rbProductC.Checked) Props.RateDisplayProduct = 2;
-            else Props.RateDisplayProduct = 3;
+            if (rbProductA.Checked) MapController.ProductRates = 0;
+            else if (rbProductB.Checked) MapController.ProductRates = 1;
+            else if (rbProductC.Checked) MapController.ProductRates = 2;
+            else MapController.ProductRates = 3;
 
         }
         private void MapController_MapZoomed(object sender, EventArgs e)
@@ -671,7 +671,7 @@ namespace RateController.Forms
 
                 ckRecord.Checked = Props.RateRecordEnabled;
 
-                switch (Props.RateDisplayProduct)
+                switch (MapController.ProductRates)
                 {
                     case 1:
                         rbProductB.Checked = true;

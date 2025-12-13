@@ -189,10 +189,6 @@ namespace RateController
             }
         }
 
-        public void StartMapManager()
-        {
-            //cManager = new MapManager(mf);
-        }
 
         #region ScreenBitMapCode
 

@@ -63,9 +63,7 @@ namespace RateController.RateMap
         private static readonly RateOverlayService overlayService = new RateOverlayService();
         private static int _lastHistoryCount;
         private static DateTime _lastHistoryLastTimestamp;
-
         private static string _lastLoadedMapPath;
-
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
         private static MapState cState;
@@ -151,16 +149,6 @@ namespace RateController.RateMap
                     cProductRates = value;
                     Props.SetProp("MapProductRates", cProductRates.ToString());
                 }
-            }
-        }
-
-        public static RateType RateTypeDisplay
-        {
-            get { return cRateTypeDisplay; }
-            set
-            {
-                cRateTypeDisplay = value;
-                Props.SetProp("RateDisplayType", value.ToString());
             }
         }
 
@@ -628,8 +616,8 @@ namespace RateController.RateMap
                             AppliedOverlay,
                             readings,
                             implementWidth,
-                            Props.RateDisplayType,
-                            Props.RateDisplayProduct,
+                            cRateTypeDisplay,
+                            cProductRates,
                             out legendFromHistory
                         );
                     }
@@ -800,7 +788,7 @@ namespace RateController.RateMap
                         }
                     }
                 }
-                if (!ZoneFound)
+                if (!ZoneFound && Props.MainForm.Products != null)
                 {
                     // use target rates
                     CurrentZoneName = "Base Rate";
@@ -958,7 +946,7 @@ namespace RateController.RateMap
                     ColorLegend = null;
                     Refresh();
                 }
-                else
+                else if (Props.MainForm.Sections != null)
                 {
                     Dictionary<string, Color> histLegend;
                     bool histOk = overlayService.BuildFromHistory(

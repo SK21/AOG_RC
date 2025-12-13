@@ -301,17 +301,7 @@ namespace RateController.Classes
             }
         }
 
-        public static int RateDisplayProduct
-        {
-            get { return int.TryParse(GetProp("RatesProduct"), out int rs) ? rs : 0; }
-            set { SetProp("RatesProduct", value.ToString()); }
-        }
 
-        public static RateType RateDisplayType
-        {
-            get { return Enum.TryParse(GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied; }
-            set { SetProp("RateDisplayType", value.ToString()); }
-        }
 
         public static bool RateRecordEnabled
         {
