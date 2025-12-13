@@ -399,38 +399,6 @@ namespace RateController.RateMap
             ShowLegend(ColorLegend);
         }
 
-        public static RectLatLng GetOverallRectLatLng()
-        {
-            RectLatLng Result = RectLatLng.Empty;
-            if (zoneOverlay != null && zoneOverlay.Polygons.Count > 0)
-            {
-                double minLat = double.MaxValue;
-                double maxLat = double.MinValue;
-                double minLng = double.MaxValue;
-                double maxLng = double.MinValue;
-
-                foreach (var polygon in zoneOverlay.Polygons)
-                {
-                    var pts = polygon.Points;
-                    int count = pts.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        var p = pts[i];
-                        if (p.Lat < minLat) minLat = p.Lat;
-                        if (p.Lat > maxLat) maxLat = p.Lat;
-                        if (p.Lng < minLng) minLng = p.Lng;
-                        if (p.Lng > maxLng) maxLng = p.Lng;
-                    }
-                }
-
-                if (minLat != double.MaxValue)
-                {
-                    Result = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
-                }
-            }
-            return Result;
-        }
-
         public static double GetRate(int RateID)
         {
             double Result = 0.0;
@@ -697,66 +665,6 @@ namespace RateController.RateMap
             }
         }
 
-        public static void SetTractorPosition(PointLatLng NewLocation)
-        {
-            if (cState == MapState.Tracking || cState == MapState.Preview)
-            {
-                if (!cTractorPosition.IsEmpty)
-                {
-                    double deltaLng = NewLocation.Lng - cTractorPosition.Lng;
-                    double deltaLat = NewLocation.Lat - cTractorPosition.Lat;
-
-                    double movementThreshold = 0.0000001;
-                    if (Math.Abs(deltaLng) > movementThreshold || Math.Abs(deltaLat) > movementThreshold)
-                    {
-                        cTravelHeading = (Math.Atan2(deltaLng, deltaLat) * 180.0 / Math.PI + 360.0) % 360.0;
-                    }
-                }
-
-                cTractorPosition = NewLocation;
-                tractorMarker.Position = NewLocation;
-            }
-        }
-
-        public static bool UpdateRateLayer(double[] AppliedRates, double[] TargetRates)
-        {
-            bool Result = false;
-            Dictionary<string, Color> legend = new Dictionary<string, Color>();
-            try
-            {
-                if (cShowRates && cMapIsDisplayed && (cState == MapState.Tracking || cState == MapState.Preview))
-                {
-                    var readings = Props.RateCollector.GetReadings();
-                    if (readings == null || readings.Count == 0)
-                    {
-                        ClearAppliedRatesOverlay();
-                    }
-                    else
-                    {
-                        double Rates = AppliedRates[cProductRates];  // product rates to display
-
-                        Result = overlayService.UpdateRatesOverlayLive(
-                            AppliedOverlay,
-                            readings,
-                            cTractorPosition,
-                            cTravelHeading,
-                            Props.MainForm.Sections.TotalWidth(false),
-                            Rates,
-                            out legend,
-                            cRateTypeDisplay,
-                            cProductRates
-                        );
-                    }
-                }
-                ColorLegend = legend;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/UpdateRateLayer: " + ex.Message);
-            }
-            return Result;
-        }
-
         public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             bool Result = false;
@@ -846,18 +754,6 @@ namespace RateController.RateMap
                 }
             }
 
-            return Result;
-        }
-
-        public static bool ZoomToFit()
-        {
-            bool Result = false;
-            RectLatLng boundingBox = GetOverallRectLatLng();
-            if (boundingBox != RectLatLng.Empty)
-            {
-                gmap.SetZoomToFitRect(boundingBox);
-                Result = true;
-            }
             return Result;
         }
 
@@ -958,6 +854,38 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/EnsureLegendTop: " + ex.Message);
             }
+        }
+
+        private static RectLatLng GetOverallRectLatLng()
+        {
+            RectLatLng Result = RectLatLng.Empty;
+            if (zoneOverlay != null && zoneOverlay.Polygons.Count > 0)
+            {
+                double minLat = double.MaxValue;
+                double maxLat = double.MinValue;
+                double minLng = double.MaxValue;
+                double maxLng = double.MinValue;
+
+                foreach (var polygon in zoneOverlay.Polygons)
+                {
+                    var pts = polygon.Points;
+                    int count = pts.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        var p = pts[i];
+                        if (p.Lat < minLat) minLat = p.Lat;
+                        if (p.Lat > maxLat) maxLat = p.Lat;
+                        if (p.Lng < minLng) minLng = p.Lng;
+                        if (p.Lng > maxLng) maxLng = p.Lng;
+                    }
+                }
+
+                if (minLat != double.MaxValue)
+                {
+                    Result = new RectLatLng(maxLat, minLng, maxLng - minLng, maxLat - minLat);
+                }
+            }
+            return Result;
         }
 
         private static void Gmap_MouseClick(object sender, MouseEventArgs e)
@@ -1122,6 +1050,27 @@ namespace RateController.RateMap
             }
         }
 
+        private static void SetTractorPosition(PointLatLng NewLocation)
+        {
+            if (cState == MapState.Tracking || cState == MapState.Preview)
+            {
+                if (!cTractorPosition.IsEmpty)
+                {
+                    double deltaLng = NewLocation.Lng - cTractorPosition.Lng;
+                    double deltaLat = NewLocation.Lat - cTractorPosition.Lat;
+
+                    double movementThreshold = 0.0000001;
+                    if (Math.Abs(deltaLng) > movementThreshold || Math.Abs(deltaLat) > movementThreshold)
+                    {
+                        cTravelHeading = (Math.Atan2(deltaLng, deltaLat) * 180.0 / Math.PI + 360.0) % 360.0;
+                    }
+                }
+
+                cTractorPosition = NewLocation;
+                tractorMarker.Position = NewLocation;
+            }
+        }
+
         private static bool ShouldSkipHistoryBuild(string mapPath, IReadOnlyList<RateReading> readings)
         {
             if (string.IsNullOrEmpty(mapPath) || readings == null || readings.Count == 0) return false;
@@ -1221,6 +1170,45 @@ namespace RateController.RateMap
             }
         }
 
+        private static bool UpdateRateLayer(double[] AppliedRates, double[] TargetRates)
+        {
+            bool Result = false;
+            Dictionary<string, Color> legend = new Dictionary<string, Color>();
+            try
+            {
+                if (cShowRates && cMapIsDisplayed && (cState == MapState.Tracking || cState == MapState.Preview))
+                {
+                    var readings = Props.RateCollector.GetReadings();
+                    if (readings == null || readings.Count == 0)
+                    {
+                        ClearAppliedRatesOverlay();
+                    }
+                    else
+                    {
+                        double Rates = AppliedRates[cProductRates];  // product rates to display
+
+                        Result = overlayService.UpdateRatesOverlayLive(
+                            AppliedOverlay,
+                            readings,
+                            cTractorPosition,
+                            cTravelHeading,
+                            Props.MainForm.Sections.TotalWidth(false),
+                            Rates,
+                            out legend,
+                            cRateTypeDisplay,
+                            cProductRates
+                        );
+                    }
+                }
+                ColorLegend = legend;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/UpdateRateLayer: " + ex.Message);
+            }
+            return Result;
+        }
+
         private static void UpdateTimer_Tick(object sender, EventArgs e)
         {
             if (Props.MainForm.GPS.Connected())
@@ -1293,6 +1281,18 @@ namespace RateController.RateMap
                     Result = true;
                     break;
                 }
+            }
+            return Result;
+        }
+
+        private static bool ZoomToFit()
+        {
+            bool Result = false;
+            RectLatLng boundingBox = GetOverallRectLatLng();
+            if (boundingBox != RectLatLng.Empty)
+            {
+                gmap.SetZoomToFitRect(boundingBox);
+                Result = true;
             }
             return Result;
         }
