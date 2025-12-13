@@ -316,6 +316,7 @@ namespace RateController.Forms
             MapController.MapIsDisplayed = false;
 
             SaveFormLocation();
+            timer1.Enabled = false;
         }
 
         private void frmMap_Load(object sender, EventArgs e)
@@ -361,6 +362,9 @@ namespace RateController.Forms
             MapController.MapIsDisplayed = true;
             MapController.Map.Zoom = 16;
             MapController.CenterMap();
+
+            timer1.Enabled = true;
+            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
         }
 
         private void frmMap_Move(object sender, EventArgs e)
@@ -413,7 +417,14 @@ namespace RateController.Forms
                 ChangeMapSize();
             }
         }
+        private void UpdateProductToDisplay()
+        {
+            if (rbProductA.Checked) Props.RateDisplayProduct = 0;
+            else if (rbProductB.Checked) Props.RateDisplayProduct = 1;
+            else if (rbProductC.Checked) Props.RateDisplayProduct = 2;
+            else Props.RateDisplayProduct = 3;
 
+        }
         private void MapController_MapZoomed(object sender, EventArgs e)
         {
             UpdateScrollbars();
@@ -657,6 +668,28 @@ namespace RateController.Forms
                     lbArea.Text = (MapController.ZoneHectares * 2.47).ToString("N1");
                     lbAreaName.Text = "Acres";
                 }
+
+                ckRecord.Checked = Props.RateRecordEnabled;
+
+                switch (Props.RateDisplayProduct)
+                {
+                    case 1:
+                        rbProductB.Checked = true;
+                        break;
+
+                    case 2:
+                        rbProductC.Checked = true;
+                        break;
+
+                    case 3:
+                        rbProductD.Checked = true;
+                        break;
+
+                    default:
+                        rbProductA.Checked = true;
+                        break;
+                }
+
                 Initializing = false;
             }
             catch (Exception ex)
@@ -695,6 +728,43 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
+        }
+
+        private void ckRecord_CheckedChanged(object sender, EventArgs e)
+        {
+            if(!Initializing)
+            {
+                Props.RateRecordEnabled = ckRecord.Checked;
+            }
+        }
+
+        private void rbProductA_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) UpdateProductToDisplay();
+        }
+
+        private void btnDeleteData_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(Props.MainForm, "Confirm Delete all job data?", "Delete File", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                Props.RateCollector.ClearReadings();
+
+                // Immediately clear coverage overlay and legend from the map
+                MapController.ClearAppliedRatesOverlay();
+            }
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+
         }
     }
 }

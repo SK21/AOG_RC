@@ -7,7 +7,6 @@ using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -77,7 +76,7 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static System.Windows.Forms.Timer UpdateTimer;
-        private static byte ZoneTransparentcy = 50;
+        private static byte ZoneTransparentcy = 190;
 
         public static event EventHandler MapChanged;
 
@@ -206,8 +205,10 @@ namespace RateController.RateMap
 
         public static int ZoneCount
         { get { return STRtreeZoneIndex.Count; } }
+
         public static bool ZoneFound
         { get { return CurrentZone != null; } }
+
         public static double ZoneHectares => CurrentZoneHectares;
 
         public static string ZoneName
@@ -472,7 +473,6 @@ namespace RateController.RateMap
             UpdateTimer.Tick += UpdateTimer_Tick;
             UpdateTimer.Enabled = true;
 
-            ZoneTransparentcy = 100;
             LoadMap();
         }
 
@@ -524,6 +524,12 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
             }
+        }
+
+        public static void ResetMarkers()
+        {
+            currentZoneVertices.Clear();
+            tempMarkerOverlay.Markers.Clear();
         }
 
         public static bool SaveMap()
@@ -809,45 +815,7 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/UpdateVariableRates: " + ex.Message);
             }
         }
-        private static bool ZoneNameFound(string Name)
-        {
-            bool Result = false;
-            foreach(MapZone zn in mapZones)
-            {
-                if(zn.Name == Name)
-                {
-                    Result = true;
-                    break;
-                }
-            }
-            return Result;
-        }
-        public static void ResetMarkers()
-        {
-            currentZoneVertices.Clear();
-            tempMarkerOverlay.Markers.Clear();
 
-        }
-        private static MapZone GetExistingZone()
-        {
-            // is pointer in an existing zone, load zone
-            MapZone Result = null;
-            if (gmap != null)
-            {
-                var mousePos = gmap.PointToClient(Cursor.Position);
-                var point = gmap.FromLocalToLatLng(mousePos.X, mousePos.Y);
-
-                foreach (var zn in mapZones)
-                {
-                    if (zn.Contains(point))
-                    {
-                        Result = zn;
-                        break;
-                    }
-                }
-            }
-            return Result;
-        }
         public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             bool Result = false;
@@ -883,27 +851,58 @@ namespace RateController.RateMap
 
                     BuildZoneIndex();
                     Result = true;
+                    UpdateVariableRates();
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
             else
             {
                 // update zone
-                ZoneToEdit.Name = name;
-                Dictionary<string, double> NewRates = new Dictionary<string, double>
+                if (!ZoneNameFound(name, ZoneToEdit))
+                {
+                    // Update properties
+                    ZoneToEdit.Name = name;
+                    Dictionary<string, double> NewRates = new Dictionary<string, double>
                     {
                         { "ProductA", Rt0 },
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
                     };
-                ZoneToEdit.Rates = NewRates;
-                ZoneToEdit.ZoneColor = zoneColor;
+                    ZoneToEdit.Rates = NewRates;
+                    ZoneToEdit.ZoneColor = zoneColor;
 
-                currentZoneVertices.Clear();
-                tempMarkerOverlay.Markers.Clear();
+                    // Refresh polygons in overlay to reflect new color
+                    if (zoneOverlay != null)
+                    {
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(ZoneTransparentcy);
+                        foreach (var polygonToReplace in polygonsForZone)
+                        {
+                            if (polygonToReplace == null) continue;
+                            var existing = zoneOverlay.Polygons
+                                .FirstOrDefault(p => p.Points.SequenceEqual(polygonToReplace.Points));
+                            if (existing != null)
+                            {
+                                zoneOverlay.Polygons.Remove(existing);
+                            }
+                        }
+                        zoneOverlay = AddPolygons(zoneOverlay, polygonsForZone);
+                    }
 
-                BuildZoneIndex();
-                Result = true;
+                    // Reorder to keep last-wins priority
+                    mapZones.Remove(ZoneToEdit);
+                    mapZones.Add(ZoneToEdit);
+
+                    currentZoneVertices.Clear();
+                    tempMarkerOverlay.Markers.Clear();
+
+                    BuildZoneIndex();
+                    Result = true;
+                    UpdateVariableRates();
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                }
             }
 
             return Result;
@@ -1018,6 +1017,24 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/EnsureLegendTop: " + ex.Message);
             }
+        }
+
+        private static MapZone GetExistingZone()
+        {
+            // is pointer in an existing zone, load zone
+            MapZone Result = null;
+            if (gmap != null && cTractorPosition != null)
+            {
+                foreach (var zn in mapZones)
+                {
+                    if (zn.Contains(cTractorPosition))
+                    {
+                        Result = zn;
+                        break;
+                    }
+                }
+            }
+            return Result;
         }
 
         private static void Gmap_MouseClick(object sender, MouseEventArgs e)
@@ -1294,6 +1311,20 @@ namespace RateController.RateMap
                 }
             }
             UpdateVariableRates();
+        }
+
+        private static bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
+        {
+            bool Result = false;
+            foreach (MapZone zn in mapZones)
+            {
+                if (zn.Name == Name && zn != ExcludeZone)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
         }
     }
 }

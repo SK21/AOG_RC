@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMap));
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
@@ -76,6 +77,7 @@
             this.rbProductC = new System.Windows.Forms.RadioButton();
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.pnlTabs = new System.Windows.Forms.Panel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -203,6 +205,7 @@
             this.btnDeleteData.Size = new System.Drawing.Size(89, 64);
             this.btnDeleteData.TabIndex = 397;
             this.btnDeleteData.UseVisualStyleBackColor = true;
+            this.btnDeleteData.Click += new System.EventHandler(this.btnDeleteData_Click);
             // 
             // lbDataPoints
             // 
@@ -236,6 +239,7 @@
             this.ckRecord.TabIndex = 382;
             this.ckRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckRecord.UseVisualStyleBackColor = true;
+            this.ckRecord.CheckedChanged += new System.EventHandler(this.ckRecord_CheckedChanged);
             // 
             // pnlControls
             // 
@@ -634,6 +638,7 @@
             this.rbProductA.Text = "A";
             this.rbProductA.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbProductA.UseVisualStyleBackColor = true;
+            this.rbProductA.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
             // 
             // rbProductD
             // 
@@ -647,6 +652,7 @@
             this.rbProductD.Text = "D";
             this.rbProductD.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbProductD.UseVisualStyleBackColor = true;
+            this.rbProductD.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
             // 
             // rbProductC
             // 
@@ -660,6 +666,7 @@
             this.rbProductC.Text = "C";
             this.rbProductC.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbProductC.UseVisualStyleBackColor = true;
+            this.rbProductC.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
             // 
             // rbProductB
             // 
@@ -673,6 +680,7 @@
             this.rbProductB.Text = "B";
             this.rbProductB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbProductB.UseVisualStyleBackColor = true;
+            this.rbProductB.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
             // 
             // pnlTabs
             // 
@@ -682,6 +690,11 @@
             this.pnlTabs.Name = "pnlTabs";
             this.pnlTabs.Size = new System.Drawing.Size(433, 438);
             this.pnlTabs.TabIndex = 390;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // frmMap
             // 
@@ -764,5 +777,6 @@
         private System.Windows.Forms.CheckBox ckWindow;
         private System.Windows.Forms.Label lbAreaName;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Timer timer1;
     }
 }

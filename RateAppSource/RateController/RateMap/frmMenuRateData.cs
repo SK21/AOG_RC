@@ -48,6 +48,7 @@ namespace RateController.Forms
                 mf.Tls.Manager.ClearAppliedRatesOverlay();
             }
         }
+
         private void btnExport_Click(object sender, EventArgs e)
         {
             try
@@ -79,6 +80,44 @@ namespace RateController.Forms
             {
                 Props.ShowMessage(ex.Message);
             }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var ofd = new OpenFileDialog { Filter = "CSV Files (*.csv)|*.csv", Title = "Select Rate Data CSV" })
+                {
+                    if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                    string csvPath = ofd.FileName;
+                    if (!File.Exists(csvPath))
+                    {
+                        Props.ShowMessage("Selected file not found.", "Import", 8000, true);
+                        return;
+                    }
+
+                    // Use frmImportCSV to create a job and attach the CSV
+                    using (var dlg = new frmImportCSV())
+                    {
+                        dlg.CsvPath = csvPath;
+                        if (dlg.ShowDialog(this) != DialogResult.OK)
+                            return;
+
+                        // After dialog creates and switches job, refresh display
+                        lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuRateData/btnImport_Click: " + ex.Message);
+                Props.ShowMessage("Import failed: " + ex.Message, "Import", 15000, true, true);
+            }
+        }
+
+        private void btnImport_Click_1(object sender, EventArgs e)
+        {
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -210,12 +249,15 @@ namespace RateController.Forms
                     case 1:
                         rbProductB.Checked = true;
                         break;
+
                     case 2:
                         rbProductC.Checked = true;
                         break;
+
                     case 3:
                         rbProductD.Checked = true;
                         break;
+
                     default:
                         rbProductA.Checked = true;
                         break;
@@ -226,45 +268,6 @@ namespace RateController.Forms
                 Props.WriteErrorLog("frmRates/UpdateForm: " + ex.Message);
             }
             Initializing = false;
-        }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (var ofd = new OpenFileDialog { Filter = "CSV Files (*.csv)|*.csv", Title = "Select Rate Data CSV" })
-                {
-                    if (ofd.ShowDialog() != DialogResult.OK) return;
-
-                    string csvPath = ofd.FileName;
-                    if (!File.Exists(csvPath))
-                    {
-                        Props.ShowMessage("Selected file not found.", "Import", 8000, true);
-                        return;
-                    }
-
-                    // Use frmImportCSV to create a job and attach the CSV
-                    using (var dlg = new frmImportCSV())
-                    {
-                        dlg.CsvPath = csvPath;
-                        if (dlg.ShowDialog(this) != DialogResult.OK)
-                            return;
-
-                        // After dialog creates and switches job, refresh display
-                        lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMenuRateData/btnImport_Click: " + ex.Message);
-                Props.ShowMessage("Import failed: " + ex.Message, "Import", 15000, true, true);
-            }
-        }
-
-        private void btnImport_Click_1(object sender, EventArgs e)
-        {
-
         }
     }
 }
