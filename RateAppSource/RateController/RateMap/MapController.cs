@@ -93,7 +93,7 @@ namespace RateController.RateMap
                 }
                 else
                 {
-                    cState = MapState.Positioning;
+                    cState = MapState.Tracking;
                 }
             }
         }
@@ -330,6 +330,60 @@ namespace RateController.RateMap
             }
         }
 
+        public static bool CreateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
+        {
+            bool Result = false;
+            ErrorCode = 0;
+            try
+            {
+                if (ZoneNameFound(name))
+                {
+                    ErrorCode = 1;
+                }
+                else if (currentZoneVertices.Count < 3)
+                {
+                    ErrorCode = 2;
+                }
+                else
+                {
+                    var geometryFactory = new GeometryFactory();
+                    var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
+
+                    if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
+                    {
+                        Array.Resize(ref coordinates, coordinates.Length + 1);
+                        coordinates[coordinates.Length - 1] = coordinates[0];
+                    }
+                    var polygon = geometryFactory.CreatePolygon(coordinates);
+
+                    MapZone NewZone = new MapZone(name, polygon, new Dictionary<string, double>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    }, zoneColor);
+
+                    mapZones.Add(NewZone);
+                    zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(ZoneTransparency));
+
+                    currentZoneVertices.Clear();
+                    tempMarkerOverlay.Markers.Clear();
+
+                    BuildZoneIndex();
+                    UpdateVariableRates();
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/CreateZone: " + ex.Message);
+            }
+            return Result;
+        }
+
         public static bool DeleteZone(string name)
         {
             bool Result = false;
@@ -397,6 +451,69 @@ namespace RateController.RateMap
                 cState = MapState.Tracking;
             }
             ShowLegend(ColorLegend);
+        }
+
+        public static bool EditZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
+        {
+            bool Result = false;
+            ErrorCode = 0;
+            try
+            {
+                MapZone ZoneToEdit = CurrentZone;
+                if (ZoneNameFound(name, ZoneToEdit))
+                {
+                    // check for duplicate name
+                    ErrorCode = 1;
+                }
+                else
+                {
+                    ZoneToEdit.Name = name;
+                    Dictionary<string, double> NewRates = new Dictionary<string, double>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    };
+                    ZoneToEdit.Rates = NewRates;
+                    ZoneToEdit.ZoneColor = zoneColor;
+
+                    // Refresh polygons in overlay to reflect new color
+                    if (zoneOverlay != null)
+                    {
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(ZoneTransparency);
+                        foreach (var polygonToReplace in polygonsForZone)
+                        {
+                            if (polygonToReplace == null) continue;
+                            var existing = zoneOverlay.Polygons
+                                .FirstOrDefault(p => p.Points.SequenceEqual(polygonToReplace.Points));
+                            if (existing != null)
+                            {
+                                zoneOverlay.Polygons.Remove(existing);
+                            }
+                        }
+                        zoneOverlay = AddPolygons(zoneOverlay, polygonsForZone);
+                    }
+
+                    // Reorder to keep last-wins priority
+                    mapZones.Remove(ZoneToEdit);
+                    mapZones.Add(ZoneToEdit);
+
+                    currentZoneVertices.Clear();
+                    tempMarkerOverlay.Markers.Clear();
+
+                    BuildZoneIndex();
+                    UpdateVariableRates();
+                    Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/EditZone: " + ex.Message);
+            }
+            return Result;
         }
 
         public static double GetRate(int RateID)
@@ -668,7 +785,12 @@ namespace RateController.RateMap
         public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
         {
             bool Result = false;
-            MapZone ZoneToEdit = CurrentZone;
+            MapZone ZoneToEdit = null;
+            if (cState == MapState.Positioning)
+            {
+                ZoneToEdit = CurrentZone;
+            }
+
             if (ZoneToEdit == null)
             {
                 // create a new zone

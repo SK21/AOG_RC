@@ -51,7 +51,7 @@
             this.HSB = new System.Windows.Forms.HScrollBar();
             this.pnlMap = new System.Windows.Forms.Panel();
             this.btnOK = new System.Windows.Forms.Button();
-            this.ckPositioning = new System.Windows.Forms.CheckBox();
+            this.ckEdit = new System.Windows.Forms.CheckBox();
             this.lbArea = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
@@ -59,7 +59,7 @@
             this.lbP4 = new System.Windows.Forms.Label();
             this.tbP4 = new System.Windows.Forms.TextBox();
             this.lbP3 = new System.Windows.Forms.Label();
-            this.ckEditZones = new System.Windows.Forms.CheckBox();
+            this.ckNew = new System.Windows.Forms.CheckBox();
             this.tbP3 = new System.Windows.Forms.TextBox();
             this.lbP2 = new System.Windows.Forms.Label();
             this.tbP2 = new System.Windows.Forms.TextBox();
@@ -367,20 +367,20 @@
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // ckPositioning
+            // ckEdit
             // 
-            this.ckPositioning.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckPositioning.FlatAppearance.BorderSize = 0;
-            this.ckPositioning.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckPositioning.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckPositioning.Image = global::RateController.Properties.Resources.FileEditName;
-            this.ckPositioning.Location = new System.Drawing.Point(6, 6);
-            this.ckPositioning.Name = "ckPositioning";
-            this.ckPositioning.Size = new System.Drawing.Size(82, 64);
-            this.ckPositioning.TabIndex = 343;
-            this.ckPositioning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckPositioning.UseVisualStyleBackColor = true;
-            this.ckPositioning.CheckedChanged += new System.EventHandler(this.ckPositioning_CheckedChanged);
+            this.ckEdit.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEdit.FlatAppearance.BorderSize = 0;
+            this.ckEdit.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEdit.Image = global::RateController.Properties.Resources.FileEditName;
+            this.ckEdit.Location = new System.Drawing.Point(6, 76);
+            this.ckEdit.Name = "ckEdit";
+            this.ckEdit.Size = new System.Drawing.Size(82, 64);
+            this.ckEdit.TabIndex = 343;
+            this.ckEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEdit.UseVisualStyleBackColor = true;
+            this.ckEdit.CheckedChanged += new System.EventHandler(this.ckEdit_CheckedChanged);
             // 
             // lbArea
             // 
@@ -454,21 +454,20 @@
             this.lbP3.TabIndex = 9;
             this.lbP3.Text = "Product C";
             // 
-            // ckEditZones
+            // ckNew
             // 
-            this.ckEditZones.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckEditZones.Enabled = false;
-            this.ckEditZones.FlatAppearance.BorderSize = 0;
-            this.ckEditZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckEditZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEditZones.Image = global::RateController.Properties.Resources.polygon;
-            this.ckEditZones.Location = new System.Drawing.Point(6, 80);
-            this.ckEditZones.Name = "ckEditZones";
-            this.ckEditZones.Size = new System.Drawing.Size(82, 64);
-            this.ckEditZones.TabIndex = 339;
-            this.ckEditZones.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEditZones.UseVisualStyleBackColor = true;
-            this.ckEditZones.CheckedChanged += new System.EventHandler(this.ckEditZones_CheckedChanged);
+            this.ckNew.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckNew.FlatAppearance.BorderSize = 0;
+            this.ckNew.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckNew.Image = global::RateController.Properties.Resources.polygon;
+            this.ckNew.Location = new System.Drawing.Point(6, 6);
+            this.ckNew.Name = "ckNew";
+            this.ckNew.Size = new System.Drawing.Size(82, 64);
+            this.ckNew.TabIndex = 339;
+            this.ckNew.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNew.UseVisualStyleBackColor = true;
+            this.ckNew.CheckedChanged += new System.EventHandler(this.ckNew_CheckedChanged);
             // 
             // tbP3
             // 
@@ -562,7 +561,7 @@
             this.tabZones.Controls.Add(this.label3);
             this.tabZones.Controls.Add(this.lbAreaName);
             this.tabZones.Controls.Add(this.btnOK);
-            this.tabZones.Controls.Add(this.ckPositioning);
+            this.tabZones.Controls.Add(this.ckEdit);
             this.tabZones.Controls.Add(this.btnCancel);
             this.tabZones.Controls.Add(this.lbArea);
             this.tabZones.Controls.Add(this.tbName);
@@ -577,7 +576,7 @@
             this.tabZones.Controls.Add(this.tbP4);
             this.tabZones.Controls.Add(this.tbP3);
             this.tabZones.Controls.Add(this.lbP3);
-            this.tabZones.Controls.Add(this.ckEditZones);
+            this.tabZones.Controls.Add(this.ckNew);
             this.tabZones.Location = new System.Drawing.Point(4, 54);
             this.tabZones.Name = "tabZones";
             this.tabZones.Padding = new System.Windows.Forms.Padding(3);
@@ -749,7 +748,7 @@
         private System.Windows.Forms.HScrollBar HSB;
         private System.Windows.Forms.Panel pnlMap;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.CheckBox ckPositioning;
+        private System.Windows.Forms.CheckBox ckEdit;
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox colorComboBox;
@@ -757,7 +756,7 @@
         private System.Windows.Forms.Label lbP4;
         private System.Windows.Forms.TextBox tbP4;
         private System.Windows.Forms.Label lbP3;
-        private System.Windows.Forms.CheckBox ckEditZones;
+        private System.Windows.Forms.CheckBox ckNew;
         private System.Windows.Forms.TextBox tbP3;
         private System.Windows.Forms.Label lbP2;
         private System.Windows.Forms.TextBox tbP2;

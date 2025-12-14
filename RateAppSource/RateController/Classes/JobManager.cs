@@ -12,7 +12,8 @@ namespace RateController.Classes
         private static bool cJobFilter = true;
         private static string cJobsFolder;
         private static bool cShowJobs;
-        private static string JobDataName = "JobData.txt";
+        private static readonly string JobDataName = "JobData.txt";
+        private static readonly string ZoneShapeFileName = "Job";
         private static List<Job> JobsList;
 
         public static event EventHandler JobChanged;
@@ -462,12 +463,7 @@ namespace RateController.Classes
                     {
                         Directory.CreateDirectory(mapFolderPath);
                     }
-                    string[] mapFiles = new string[]
-                    {
-                        $"Job.cpg",
-                        $"Job.dbf",
-                        $"Job.shp"
-                    };
+                    string[] mapFiles = new string[] { ZoneShapeFileName + ".cpg", ZoneShapeFileName + ".dbf", ZoneShapeFileName + ".shp" };
                     foreach (string fileName in mapFiles)
                     {
                         string filePath = Path.Combine(mapFolderPath, fileName);
@@ -552,12 +548,7 @@ namespace RateController.Classes
                                 {
                                     // map files
                                     int Found = 0;
-                                    string[] mapFiles = new string[]
-                                    {
-                                    $"Job.cpg",
-                                    $"Job.dbf",
-                                    $"Job.shp"
-                                    };
+                                    string[] mapFiles = new string[] { ZoneShapeFileName + ".cpg", ZoneShapeFileName + ".dbf", ZoneShapeFileName + ".shp" };
                                     foreach (string fileName in mapFiles)
                                     {
                                         string filePath = Path.Combine(mapFolderPath, fileName);

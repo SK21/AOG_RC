@@ -39,15 +39,30 @@ namespace RateController.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            SetEditInProgress(false);
-            ckEditZones.Checked = false;
-            EnableButtons();
+            SetEditMode(false, true);
             MapController.ResetMarkers();
             UpdateForm();
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
+        }
+
+        private void btnDeleteData_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox(Props.MainForm, "Confirm Delete all job data?", "Delete File", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                Props.RateCollector.ClearReadings();
+
+                // Immediately clear coverage overlay and legend from the map
+                MapController.ClearAppliedRatesOverlay();
+            }
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -92,20 +107,41 @@ namespace RateController.Forms
 
             Color SelectedColor = (Color)(colorComboBox.SelectedItem ?? Color.Blue);
 
-            if (MapController.UpdateZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor))
+            int Error = 0;
+            bool EditSaved = false;
+            if (ckNew.Checked)
             {
-                SetEditInProgress(false);
-            ckEditZones.Checked = false;
-            EnableButtons();
-            MapController.SaveMap();
-            UpdateForm();
+                EditSaved = MapController.CreateZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor, out Error);
             }
             else
             {
-                Props.ShowMessage("Could not save Zone.");
-
+                EditSaved = MapController.EditZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor, out Error);
             }
 
+            if (EditSaved)
+            {
+                SetEditMode(false, true);
+                MapController.SaveMap();
+                UpdateForm();
+            }
+            else
+            {
+                string Message = "Could not save the changes.";
+                switch (Error)
+                {
+                    case 1:
+                        Message += "\n\nDuplicate name.";
+                        break;
+
+                    case 2:
+                        Message += "\n\nNot enough points.";
+                        break;
+
+                    default:
+                        break;
+                }
+                Props.ShowMessage(Message);
+            }
         }
 
         private void btnZoomIn_Click(object sender, EventArgs e)
@@ -127,6 +163,7 @@ namespace RateController.Forms
         {
             if (MapController.DeleteZone(tbName.Text))
             {
+                SetEditMode(false, true);
                 UpdateForm();
             }
             else
@@ -196,35 +233,40 @@ namespace RateController.Forms
             }
         }
 
-        private void ckEditZones_CheckedChanged(object sender, EventArgs e)
+        private void ckEdit_CheckedChanged(object sender, EventArgs e)
         {
-            MapController.EditingZones = ckEditZones.Checked;
-            ckEditZones.FlatAppearance.BorderSize = ckEditZones.Checked ? 1 : 0;
-            if (ckEditZones.Checked && !Initializing) SetEditInProgress(true);
+            if (!Initializing)
+            {
+                ckNew.Enabled = !ckEdit.Checked;
+                MapController.Positioning = ckEdit.Checked;
+                ckEdit.FlatAppearance.BorderSize = ckEdit.Checked ? 1 : 0;
+                SetEditMode(ckEdit.Checked);
+            }
         }
 
-        private void ckPositioning_CheckedChanged(object sender, EventArgs e)
+        private void ckNew_CheckedChanged(object sender, EventArgs e)
         {
-            MapController.Positioning = ckPositioning.Checked;
-            EnableButtons();
-
-            if (ckPositioning.Checked)
+            if (!Initializing)
             {
-                ckPositioning.FlatAppearance.BorderSize = 1;
-                ckEditZones.Enabled = true;
-                btnDeleteZone.Enabled = true;
-            }
-            else
-            {
-                ckPositioning.FlatAppearance.BorderSize = 0;
-                ckEditZones.Enabled = false;
-                btnDeleteZone.Enabled = false;
+                ckEdit.Enabled = !ckNew.Checked;
+                MapController.EditingZones = ckNew.Checked;
+                ckNew.FlatAppearance.BorderSize = ckNew.Checked ? 1 : 0;
+                tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
+                SetEditMode(ckNew.Checked);
             }
         }
 
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing) MapController.ShowRates = ckRateData.Checked;
+        }
+
+        private void ckRecord_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                Props.RateRecordEnabled = ckRecord.Checked;
+            }
         }
 
         private void ckSatView_CheckedChanged(object sender, EventArgs e)
@@ -252,7 +294,7 @@ namespace RateController.Forms
 
         private void colorComboBox_Click(object sender, EventArgs e)
         {
-            SetEditInProgress(true);
+            if (!Initializing) EditInProgress = true;
         }
 
         private void colorComboBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -277,19 +319,7 @@ namespace RateController.Forms
 
         private void colorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!Initializing) SetEditInProgress(true);
-        }
-
-        private void EnableButtons()
-        {
-            bool Positioning = ckPositioning.Checked;
-            tbName.Enabled = Positioning;
-            tbP1.Enabled = Positioning;
-            tbP2.Enabled = Positioning;
-            tbP3.Enabled = Positioning;
-            tbP4.Enabled = Positioning;
-            colorComboBox.Enabled = Positioning;
-            ckEditZones.Enabled = Positioning;
+            if (!Initializing) EditInProgress = true;
         }
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -417,14 +447,7 @@ namespace RateController.Forms
                 ChangeMapSize();
             }
         }
-        private void UpdateProductToDisplay()
-        {
-            if (rbProductA.Checked) MapController.ProductRates = 0;
-            else if (rbProductB.Checked) MapController.ProductRates = 1;
-            else if (rbProductC.Checked) MapController.ProductRates = 2;
-            else MapController.ProductRates = 3;
 
-        }
         private void MapController_MapZoomed(object sender, EventArgs e)
         {
             UpdateScrollbars();
@@ -448,6 +471,11 @@ namespace RateController.Forms
         private void Props_ScreensSwitched(object sender, EventArgs e)
         {
             ChangeMapSize();
+        }
+
+        private void rbProductA_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) UpdateProductToDisplay();
         }
 
         private void ResizeControls()
@@ -500,34 +528,39 @@ namespace RateController.Forms
             }
         }
 
-        private void SetEditInProgress(bool InProgress)
+        private void SetEditMode(bool Editing, bool ResetButtons = false)
         {
-            if (InProgress != EditInProgress)
+            tbName.Enabled = Editing;
+            tbP1.Enabled = Editing;
+            tbP2.Enabled = Editing;
+            tbP3.Enabled = Editing;
+            tbP4.Enabled = Editing;
+            colorComboBox.Enabled = Editing;
+            btnCancel.Enabled = Editing;
+            btnOK.Enabled = Editing;
+            btnDeleteZone.Enabled = Editing;
+
+            if (ResetButtons)
             {
-                EditInProgress = InProgress;
+                ckEdit.Checked = false;
+                ckNew.Checked = false;
+            }
 
-                btnCancel.Enabled = InProgress;
-                btnOK.Enabled = InProgress;
-
-                ckEditZones.Enabled = !InProgress;
-                ckEditZones.Enabled = !InProgress;
-                btnDeleteZone.Enabled = !InProgress;
-
-                if(InProgress && !MapController.ZoneFound)
-                {
-                    tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
-                }
+            if (!Editing)
+            {
+                EditInProgress = false;
+                UpdateForm();
             }
         }
 
         private void tbName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            SetEditInProgress(true);
+            if (!Initializing) EditInProgress = true;
         }
 
         private void tbP1_Enter(object sender, EventArgs e)
         {
-            SetEditInProgress(true);
+            EditInProgress = true;
 
             double tempD;
             double.TryParse(tbP1.Text, out tempD);
@@ -555,7 +588,7 @@ namespace RateController.Forms
 
         private void tbP2_Enter(object sender, EventArgs e)
         {
-            SetEditInProgress(true);
+            EditInProgress = true;
 
             double tempD;
             double.TryParse(tbP2.Text, out tempD);
@@ -583,7 +616,7 @@ namespace RateController.Forms
 
         private void tbP3_Enter(object sender, EventArgs e)
         {
-            SetEditInProgress(true);
+            EditInProgress = true;
 
             double tempD;
             double.TryParse(tbP3.Text, out tempD);
@@ -611,7 +644,7 @@ namespace RateController.Forms
 
         private void tbP4_Enter(object sender, EventArgs e)
         {
-            SetEditInProgress(true);
+            EditInProgress = true;
 
             double tempD;
             double.TryParse(tbP4.Text, out tempD);
@@ -637,6 +670,11 @@ namespace RateController.Forms
             }
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+        }
+
         private void UpdateForm()
         {
             try
@@ -647,7 +685,6 @@ namespace RateController.Forms
                 ckRateData.Checked = MapController.ShowRates;
                 ckZones.Checked = MapController.ShowZones;
 
-                EnableButtons();
                 if (!EditInProgress)
                 {
                     tbName.Text = MapController.ZoneName;
@@ -699,6 +736,14 @@ namespace RateController.Forms
             }
         }
 
+        private void UpdateProductToDisplay()
+        {
+            if (rbProductA.Checked) MapController.ProductRates = 0;
+            else if (rbProductB.Checked) MapController.ProductRates = 1;
+            else if (rbProductC.Checked) MapController.ProductRates = 2;
+            else MapController.ProductRates = 3;
+        }
+
         private void UpdateScrollbars()
         {
             double lat = MapController.Map.Position.Lat;
@@ -728,43 +773,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void ckRecord_CheckedChanged(object sender, EventArgs e)
-        {
-            if(!Initializing)
-            {
-                Props.RateRecordEnabled = ckRecord.Checked;
-            }
-        }
-
-        private void rbProductA_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) UpdateProductToDisplay();
-        }
-
-        private void btnDeleteData_Click(object sender, EventArgs e)
-        {
-            var Hlp = new frmMsgBox(Props.MainForm, "Confirm Delete all job data?", "Delete File", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
-            {
-                Props.RateCollector.ClearReadings();
-
-                // Immediately clear coverage overlay and legend from the map
-                MapController.ClearAppliedRatesOverlay();
-            }
-
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
-
         }
     }
 }
