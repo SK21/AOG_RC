@@ -73,21 +73,22 @@
             this.rbProductD = new System.Windows.Forms.RadioButton();
             this.rbProductC = new System.Windows.Forms.RadioButton();
             this.rbProductB = new System.Windows.Forms.RadioButton();
-            this.pnlTabs = new System.Windows.Forms.Panel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabFiles = new System.Windows.Forms.TabPage();
+            this.btnKMLdelete = new System.Windows.Forms.Button();
+            this.ckKML = new System.Windows.Forms.CheckBox();
+            this.btnImportKML = new System.Windows.Forms.Button();
             this.btnImportZones = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
-            this.btnImportKML = new System.Windows.Forms.Button();
-            this.ckKML = new System.Windows.Forms.CheckBox();
-            this.btnKMLdelete = new System.Windows.Forms.Button();
+            this.pnlTabs = new System.Windows.Forms.Panel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.btnHelp = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabZones.SuspendLayout();
             this.tabData.SuspendLayout();
-            this.pnlTabs.SuspendLayout();
             this.tabFiles.SuspendLayout();
+            this.pnlTabs.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckRateData
@@ -97,7 +98,7 @@
             this.ckRateData.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckRateData.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRateData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateData.Location = new System.Drawing.Point(4, 291);
+            this.ckRateData.Location = new System.Drawing.Point(5, 299);
             this.ckRateData.Name = "ckRateData";
             this.ckRateData.Size = new System.Drawing.Size(89, 64);
             this.ckRateData.TabIndex = 366;
@@ -113,7 +114,7 @@
             this.ckSatView.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckSatView.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckSatView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckSatView.Location = new System.Drawing.Point(4, 220);
+            this.ckSatView.Location = new System.Drawing.Point(5, 226);
             this.ckSatView.Name = "ckSatView";
             this.ckSatView.Size = new System.Drawing.Size(89, 64);
             this.ckSatView.TabIndex = 362;
@@ -129,7 +130,7 @@
             this.ckZones.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckZones.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckZones.Location = new System.Drawing.Point(4, 149);
+            this.ckZones.Location = new System.Drawing.Point(5, 153);
             this.ckZones.Name = "ckZones";
             this.ckZones.Size = new System.Drawing.Size(89, 64);
             this.ckZones.TabIndex = 364;
@@ -143,7 +144,7 @@
             this.ckUseVR.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckUseVR.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckUseVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckUseVR.Location = new System.Drawing.Point(4, 78);
+            this.ckUseVR.Location = new System.Drawing.Point(5, 80);
             this.ckUseVR.Name = "ckUseVR";
             this.ckUseVR.Size = new System.Drawing.Size(89, 64);
             this.ckUseVR.TabIndex = 363;
@@ -200,7 +201,9 @@
             // 
             // pnlControls
             // 
+            this.pnlControls.Controls.Add(this.btnHelp);
             this.pnlControls.Controls.Add(this.ckZones);
+            this.pnlControls.Controls.Add(this.ckKML);
             this.pnlControls.Controls.Add(this.ckWindow);
             this.pnlControls.Controls.Add(this.ckSatView);
             this.pnlControls.Controls.Add(this.butClose);
@@ -208,7 +211,7 @@
             this.pnlControls.Controls.Add(this.ckUseVR);
             this.pnlControls.Location = new System.Drawing.Point(439, 2);
             this.pnlControls.Name = "pnlControls";
-            this.pnlControls.Size = new System.Drawing.Size(97, 438);
+            this.pnlControls.Size = new System.Drawing.Size(97, 598);
             this.pnlControls.TabIndex = 386;
             // 
             // ckWindow
@@ -233,7 +236,7 @@
             this.butClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butClose.Image = ((System.Drawing.Image)(resources.GetObject("butClose.Image")));
-            this.butClose.Location = new System.Drawing.Point(13, 362);
+            this.butClose.Location = new System.Drawing.Point(14, 517);
             this.butClose.Name = "butClose";
             this.butClose.Size = new System.Drawing.Size(70, 63);
             this.butClose.TabIndex = 386;
@@ -636,24 +639,9 @@
             this.rbProductB.UseVisualStyleBackColor = true;
             this.rbProductB.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
             // 
-            // pnlTabs
-            // 
-            this.pnlTabs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlTabs.Controls.Add(this.tabControl1);
-            this.pnlTabs.Location = new System.Drawing.Point(2, 2);
-            this.pnlTabs.Name = "pnlTabs";
-            this.pnlTabs.Size = new System.Drawing.Size(433, 438);
-            this.pnlTabs.TabIndex = 390;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // tabFiles
             // 
             this.tabFiles.Controls.Add(this.btnKMLdelete);
-            this.tabFiles.Controls.Add(this.ckKML);
             this.tabFiles.Controls.Add(this.btnImportKML);
             this.tabFiles.Controls.Add(this.btnImportZones);
             this.tabFiles.Controls.Add(this.btnExport);
@@ -665,6 +653,54 @@
             this.tabFiles.Text = "Files";
             this.tabFiles.UseVisualStyleBackColor = true;
             // 
+            // btnKMLdelete
+            // 
+            this.btnKMLdelete.BackColor = System.Drawing.Color.Transparent;
+            this.btnKMLdelete.FlatAppearance.BorderSize = 0;
+            this.btnKMLdelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnKMLdelete.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnKMLdelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnKMLdelete.Location = new System.Drawing.Point(104, 280);
+            this.btnKMLdelete.Name = "btnKMLdelete";
+            this.btnKMLdelete.Size = new System.Drawing.Size(213, 64);
+            this.btnKMLdelete.TabIndex = 372;
+            this.btnKMLdelete.Text = "Delete KML File";
+            this.btnKMLdelete.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnKMLdelete.UseVisualStyleBackColor = false;
+            this.btnKMLdelete.Click += new System.EventHandler(this.btnKMLdelete_Click);
+            // 
+            // ckKML
+            // 
+            this.ckKML.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckKML.Checked = true;
+            this.ckKML.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckKML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckKML.Location = new System.Drawing.Point(5, 372);
+            this.ckKML.Name = "ckKML";
+            this.ckKML.Size = new System.Drawing.Size(89, 64);
+            this.ckKML.TabIndex = 371;
+            this.ckKML.Text = "KML Files";
+            this.ckKML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckKML.UseVisualStyleBackColor = true;
+            this.ckKML.CheckedChanged += new System.EventHandler(this.ckKML_CheckedChanged);
+            // 
+            // btnImportKML
+            // 
+            this.btnImportKML.BackColor = System.Drawing.Color.Transparent;
+            this.btnImportKML.FlatAppearance.BorderSize = 0;
+            this.btnImportKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportKML.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImportKML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImportKML.Location = new System.Drawing.Point(104, 198);
+            this.btnImportKML.Name = "btnImportKML";
+            this.btnImportKML.Size = new System.Drawing.Size(213, 64);
+            this.btnImportKML.TabIndex = 370;
+            this.btnImportKML.Text = "Import KML File";
+            this.btnImportKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnImportKML.UseVisualStyleBackColor = false;
+            this.btnImportKML.Click += new System.EventHandler(this.btnImportKML_Click);
+            // 
             // btnImportZones
             // 
             this.btnImportZones.BackColor = System.Drawing.Color.Transparent;
@@ -672,7 +708,7 @@
             this.btnImportZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImportZones.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnImportZones.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportZones.Location = new System.Drawing.Point(70, 38);
+            this.btnImportZones.Location = new System.Drawing.Point(104, 34);
             this.btnImportZones.Name = "btnImportZones";
             this.btnImportZones.Size = new System.Drawing.Size(213, 64);
             this.btnImportZones.TabIndex = 369;
@@ -688,68 +724,50 @@
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExport.Location = new System.Drawing.Point(70, 120);
+            this.btnExport.Location = new System.Drawing.Point(104, 116);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(213, 64);
             this.btnExport.TabIndex = 368;
-            this.btnExport.Text = "Export Job";
+            this.btnExport.Text = "Export Map";
             this.btnExport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnExport.UseVisualStyleBackColor = false;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
-            // btnImportKML
+            // pnlTabs
             // 
-            this.btnImportKML.BackColor = System.Drawing.Color.Transparent;
-            this.btnImportKML.FlatAppearance.BorderSize = 0;
-            this.btnImportKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportKML.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnImportKML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportKML.Location = new System.Drawing.Point(70, 202);
-            this.btnImportKML.Name = "btnImportKML";
-            this.btnImportKML.Size = new System.Drawing.Size(213, 64);
-            this.btnImportKML.TabIndex = 370;
-            this.btnImportKML.Text = "Import KML File";
-            this.btnImportKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnImportKML.UseVisualStyleBackColor = false;
-            this.btnImportKML.Click += new System.EventHandler(this.btnImportKML_Click);
+            this.pnlTabs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTabs.Controls.Add(this.tabControl1);
+            this.pnlTabs.Location = new System.Drawing.Point(2, 2);
+            this.pnlTabs.Name = "pnlTabs";
+            this.pnlTabs.Size = new System.Drawing.Size(433, 438);
+            this.pnlTabs.TabIndex = 390;
             // 
-            // ckKML
+            // timer1
             // 
-            this.ckKML.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckKML.Checked = true;
-            this.ckKML.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckKML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckKML.Location = new System.Drawing.Point(311, 202);
-            this.ckKML.Name = "ckKML";
-            this.ckKML.Size = new System.Drawing.Size(89, 64);
-            this.ckKML.TabIndex = 371;
-            this.ckKML.Text = "KML Files";
-            this.ckKML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckKML.UseVisualStyleBackColor = true;
-            this.ckKML.CheckedChanged += new System.EventHandler(this.ckKML_CheckedChanged);
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnKMLdelete
+            // btnHelp
             // 
-            this.btnKMLdelete.BackColor = System.Drawing.Color.Transparent;
-            this.btnKMLdelete.FlatAppearance.BorderSize = 0;
-            this.btnKMLdelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnKMLdelete.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnKMLdelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnKMLdelete.Location = new System.Drawing.Point(70, 284);
-            this.btnKMLdelete.Name = "btnKMLdelete";
-            this.btnKMLdelete.Size = new System.Drawing.Size(213, 64);
-            this.btnKMLdelete.TabIndex = 372;
-            this.btnKMLdelete.Text = "Delete KML File";
-            this.btnKMLdelete.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnKMLdelete.UseVisualStyleBackColor = false;
-            this.btnKMLdelete.Click += new System.EventHandler(this.btnKMLdelete_Click);
+            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
+            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHelp.Location = new System.Drawing.Point(14, 445);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(70, 63);
+            this.btnHelp.TabIndex = 392;
+            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHelp.UseVisualStyleBackColor = false;
             // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 444);
+            this.ClientSize = new System.Drawing.Size(955, 616);
             this.Controls.Add(this.pnlTabs);
             this.Controls.Add(this.pnlControls);
             this.Controls.Add(this.pnlMain);
@@ -772,8 +790,8 @@
             this.tabZones.ResumeLayout(false);
             this.tabZones.PerformLayout();
             this.tabData.ResumeLayout(false);
-            this.pnlTabs.ResumeLayout(false);
             this.tabFiles.ResumeLayout(false);
+            this.pnlTabs.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -830,5 +848,6 @@
         private System.Windows.Forms.Button btnImportKML;
         private System.Windows.Forms.CheckBox ckKML;
         private System.Windows.Forms.Button btnKMLdelete;
+        private System.Windows.Forms.Button btnHelp;
     }
 }
