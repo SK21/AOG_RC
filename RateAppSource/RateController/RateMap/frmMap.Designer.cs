@@ -79,6 +79,8 @@
             this.btnImportZones = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.btnImportKML = new System.Windows.Forms.Button();
+            this.ckKML = new System.Windows.Forms.CheckBox();
+            this.btnKMLdelete = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -650,6 +652,8 @@
             // 
             // tabFiles
             // 
+            this.tabFiles.Controls.Add(this.btnKMLdelete);
+            this.tabFiles.Controls.Add(this.ckKML);
             this.tabFiles.Controls.Add(this.btnImportKML);
             this.tabFiles.Controls.Add(this.btnImportZones);
             this.tabFiles.Controls.Add(this.btnExport);
@@ -668,7 +672,7 @@
             this.btnImportZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImportZones.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnImportZones.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportZones.Location = new System.Drawing.Point(95, 58);
+            this.btnImportZones.Location = new System.Drawing.Point(70, 38);
             this.btnImportZones.Name = "btnImportZones";
             this.btnImportZones.Size = new System.Drawing.Size(213, 64);
             this.btnImportZones.TabIndex = 369;
@@ -684,7 +688,7 @@
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExport.Location = new System.Drawing.Point(95, 226);
+            this.btnExport.Location = new System.Drawing.Point(70, 120);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(213, 64);
             this.btnExport.TabIndex = 368;
@@ -700,14 +704,46 @@
             this.btnImportKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImportKML.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnImportKML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportKML.Location = new System.Drawing.Point(95, 142);
+            this.btnImportKML.Location = new System.Drawing.Point(70, 202);
             this.btnImportKML.Name = "btnImportKML";
             this.btnImportKML.Size = new System.Drawing.Size(213, 64);
             this.btnImportKML.TabIndex = 370;
-            this.btnImportKML.Text = "Import KML";
+            this.btnImportKML.Text = "Import KML File";
             this.btnImportKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnImportKML.UseVisualStyleBackColor = false;
             this.btnImportKML.Click += new System.EventHandler(this.btnImportKML_Click);
+            // 
+            // ckKML
+            // 
+            this.ckKML.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckKML.Checked = true;
+            this.ckKML.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckKML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckKML.Location = new System.Drawing.Point(311, 202);
+            this.ckKML.Name = "ckKML";
+            this.ckKML.Size = new System.Drawing.Size(89, 64);
+            this.ckKML.TabIndex = 371;
+            this.ckKML.Text = "KML Files";
+            this.ckKML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckKML.UseVisualStyleBackColor = true;
+            this.ckKML.CheckedChanged += new System.EventHandler(this.ckKML_CheckedChanged);
+            // 
+            // btnKMLdelete
+            // 
+            this.btnKMLdelete.BackColor = System.Drawing.Color.Transparent;
+            this.btnKMLdelete.FlatAppearance.BorderSize = 0;
+            this.btnKMLdelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnKMLdelete.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnKMLdelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnKMLdelete.Location = new System.Drawing.Point(70, 284);
+            this.btnKMLdelete.Name = "btnKMLdelete";
+            this.btnKMLdelete.Size = new System.Drawing.Size(213, 64);
+            this.btnKMLdelete.TabIndex = 372;
+            this.btnKMLdelete.Text = "Delete KML File";
+            this.btnKMLdelete.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnKMLdelete.UseVisualStyleBackColor = false;
+            this.btnKMLdelete.Click += new System.EventHandler(this.btnKMLdelete_Click);
             // 
             // frmMap
             // 
@@ -792,5 +828,7 @@
         private System.Windows.Forms.Button btnImportZones;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnImportKML;
+        private System.Windows.Forms.CheckBox ckKML;
+        private System.Windows.Forms.Button btnKMLdelete;
     }
 }

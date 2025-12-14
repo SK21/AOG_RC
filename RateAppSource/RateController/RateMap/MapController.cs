@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
+using GMap.NET.Internals; // ensure namespace available for loader cancel methods
 
 namespace RateController.RateMap
 {
@@ -119,7 +120,6 @@ namespace RateController.RateMap
 
         public static GMapControl Map
         { get { return gmap; } }
-
         public static bool MapIsDisplayed
         { get { return cMapIsDisplayed; } set { cMapIsDisplayed = value; } }
 
@@ -221,10 +221,17 @@ namespace RateController.RateMap
         {
             try
             {
-                var overlay = kmlLayerManager.LoadKml(filePath);
+                var jobCopyPath = PersistKmlToJob(filePath) ?? filePath;
+                var overlay = kmlLayerManager.LoadKml(jobCopyPath);
                 if (overlay == null) return false;
 
                 AddOverlay(overlay);
+
+                // ensure KML overlays are visible immediately
+                SetKmlVisibility(true);
+                Props.SetProp("KmlVisible", "True");
+
+                CenterMap();
                 Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
                 return true;
@@ -323,6 +330,10 @@ namespace RateController.RateMap
                 AppliedOverlay?.Polygons.Clear();
                 zoneOverlay?.Polygons.Clear();
                 tempMarkerOverlay?.Markers.Clear();
+
+                gmap.Overlays.Clear();
+                GMaps.Instance.CancelTileCaching();
+                gmap.Dispose();
             }
             catch (Exception ex)
             {
@@ -547,6 +558,10 @@ namespace RateController.RateMap
             UpdateTimer.Enabled = true;
 
             LoadMap();
+            ReloadJobKmls();
+
+            bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
+            SetKmlVisibility(kmlVisible);
         }
 
         public static bool LoadMap()
@@ -585,11 +600,39 @@ namespace RateController.RateMap
         {
             try
             {
-                var overlay = kmlLayerManager.GetOverlay(filePath);
+                var jobDir = System.IO.Directory.Exists(JobManager.CurrentMapPath)
+                    ? JobManager.CurrentMapPath
+                    : System.IO.Path.GetDirectoryName(JobManager.CurrentMapPath);
+
+                var fileNameOnly = System.IO.Path.GetFileName(filePath);
+                var jobFull = string.IsNullOrWhiteSpace(jobDir) ? null : System.IO.Path.Combine(jobDir, fileNameOnly);
+
+                var overlay = kmlLayerManager.GetOverlay(jobFull ?? filePath);
                 if (overlay == null) return;
 
                 RemoveOverlay(overlay);
-                kmlLayerManager.Remove(filePath);
+                kmlLayerManager.Remove(jobFull ?? filePath);
+
+                var current = Props.GetProp("KmlJobFiles");
+                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
+                list.RemoveAll(p => string.Equals(p, fileNameOnly, StringComparison.OrdinalIgnoreCase));
+                Props.SetProp("KmlJobFiles", string.Join("|", list));
+
+                // Delete the physical KML in the job folder (safe delete)
+                if (!string.IsNullOrWhiteSpace(jobFull) &&
+                    System.IO.File.Exists(jobFull) &&
+                    Props.IsPathSafe(jobFull))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(jobFull);
+                    }
+                    catch (Exception delEx)
+                    {
+                        Props.WriteErrorLog("MapController/RemoveKmlLayer delete: " + delEx.Message);
+                    }
+                }
+
                 Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
             }
@@ -779,6 +822,29 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/SaveMapToFile combined: " + ex.Message);
+            }
+        }
+
+        public static void SetKmlVisibility(bool visible)
+        {
+            try
+            {
+                foreach (var overlay in kmlLayerManager.GetAllOverlays())
+                {
+                    if (overlay == null) continue;
+                    if (visible)
+                        AddOverlay(overlay);
+                    else
+                        RemoveOverlay(overlay);
+                }
+
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+                Props.SetProp("KmlVisible", visible.ToString());
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SetKmlVisibility: " + ex.Message);
             }
         }
 
@@ -1110,6 +1176,7 @@ namespace RateController.RateMap
         private static void JobManager_JobChanged(object sender, EventArgs e)
         {
             LoadMap();
+            ReloadJobKmls();
         }
 
         private static void LoadData()
@@ -1119,6 +1186,42 @@ namespace RateController.RateMap
             cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
             cShowZones = bool.TryParse(Props.GetProp("MapShowZones"), out bool sz) ? sz : true;
             cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
+        }
+
+        private static string PersistKmlToJob(string sourcePath)
+        {
+            try
+            {
+                var jobDir = JobManager.CurrentMapPath;
+                if (string.IsNullOrWhiteSpace(jobDir))
+                    return null;
+
+                // If CurrentMapPath is a file, use its directory
+                if (!System.IO.Directory.Exists(jobDir))
+                    jobDir = System.IO.Path.GetDirectoryName(jobDir);
+
+                if (string.IsNullOrWhiteSpace(jobDir) || !System.IO.Directory.Exists(jobDir))
+                    return null;
+
+                var fileName = System.IO.Path.GetFileName(sourcePath);
+                var destPath = System.IO.Path.Combine(jobDir, fileName);
+
+                System.IO.File.Copy(sourcePath, destPath, true);
+
+                var current = Props.GetProp("KmlJobFiles");
+                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
+                if (!list.Any(p => string.Equals(p, fileName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    list.Add(fileName);
+                    Props.SetProp("KmlJobFiles", string.Join("|", list));
+                }
+                return destPath;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/PersistKmlToJob: " + ex.Message);
+                return null;
+            }
         }
 
         private static void Props_RateDataSettingsChanged(object sender, EventArgs e)
@@ -1150,6 +1253,35 @@ namespace RateController.RateMap
         private static void Refresh()
         {
             gmap.Refresh();
+        }
+
+        private static void ReloadJobKmls()
+        {
+            try
+            {
+                var jobDir = JobManager.CurrentMapPath;
+                if (!System.IO.Directory.Exists(jobDir))
+                    jobDir = System.IO.Path.GetDirectoryName(jobDir);
+
+                var current = Props.GetProp("KmlJobFiles");
+                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
+
+                foreach (var fname in list)
+                {
+                    if (string.IsNullOrWhiteSpace(fname) || string.IsNullOrWhiteSpace(jobDir)) continue;
+                    var full = System.IO.Path.Combine(jobDir, fname);
+                    if (!System.IO.File.Exists(full)) continue;
+
+                    var overlay = kmlLayerManager.LoadKml(full);
+                    if (overlay != null) AddOverlay(overlay);
+                }
+                Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/ReloadJobKmls: " + ex.Message);
+            }
         }
 
         private static void RemoveOverlay(GMapOverlay overlay)

@@ -104,7 +104,10 @@ namespace RateController.Forms
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    MapController.AddKmlLayer(ofd.FileName);
+                    if (MapController.AddKmlLayer(ofd.FileName))
+                    {
+                        ckKML.Checked = true; // reflect visible state
+                    }
                 }
             }
         }
@@ -120,6 +123,79 @@ namespace RateController.Forms
             else
             {
                 fs.Focus();
+            }
+        }
+
+        private void btnKMLdelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Resolve current job folder
+                var jobDir = System.IO.Directory.Exists(JobManager.CurrentMapPath)
+                    ? JobManager.CurrentMapPath
+                    : System.IO.Path.GetDirectoryName(JobManager.CurrentMapPath);
+
+                if (string.IsNullOrWhiteSpace(jobDir) || !System.IO.Directory.Exists(jobDir))
+                {
+                    Props.ShowMessage("Job folder not found.", "Delete KML", 6000, true);
+                    return;
+                }
+
+                // Load per-job KML list
+                var current = Props.GetProp("KmlJobFiles");
+                var list = new System.Collections.Generic.List<string>(
+                    string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
+
+                if (list.Count == 0)
+                {
+                    Props.ShowMessage("No KML files recorded for this job.", "Delete KML", 6000);
+                    return;
+                }
+
+                // Let user pick one of the job KMLs to delete
+                using (var dlg = new OpenFileDialog
+                {
+                    Title = "Select KML to delete (current job)",
+                    Filter = "KML files (*.kml)|*.kml",
+                    InitialDirectory = jobDir,
+                    CheckFileExists = true
+                })
+                {
+                    // Pre-populate with first known KML to keep scope in job folder
+                    var first = list[0];
+                    var candidate = System.IO.Path.Combine(jobDir, first);
+                    if (System.IO.File.Exists(candidate))
+                    {
+                        dlg.FileName = candidate;
+                    }
+
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                    // Confirm
+                    using (var prompt = new frmMsgBox("Delete KML file from current job?", "Delete KML", true))
+                    {
+                        prompt.TopMost = true;
+                        prompt.ShowDialog();
+                        if (!prompt.Result) return;
+                    }
+
+                    // Ensure the selected file belongs to the current job list
+                    var selectedName = System.IO.Path.GetFileName(dlg.FileName);
+                    if (!list.Exists(n => string.Equals(n, selectedName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Props.ShowMessage("Selected file is not registered to this job.", "Delete KML", 6000, true);
+                        return;
+                    }
+
+                    // Remove overlay and delete disk file (MapController handles both)
+                    MapController.RemoveKmlLayer(dlg.FileName);
+                    Props.ShowMessage("KML deleted.", "Delete KML", 4000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnDeleteKml_Click: " + ex.Message);
+                Props.ShowMessage("Error deleting KML: " + ex.Message, "Delete KML", 8000, true);
             }
         }
 
@@ -269,6 +345,11 @@ namespace RateController.Forms
             }
         }
 
+        private void ckKML_CheckedChanged(object sender, EventArgs e)
+        {
+            MapController.SetKmlVisibility(ckKML.Checked);
+        }
+
         private void ckNew_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing)
@@ -347,17 +428,22 @@ namespace RateController.Forms
             if (!Initializing) EditInProgress = true;
         }
 
+
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
             Props.SetAppProp("MapWindow", ckWindow.Checked.ToString());
             ckWindow.Checked = false;
             ChangeMapSize();
+
+            // Remove the control from the panel first
             pnlMap.Controls.Remove(MapController.Map);
 
+            // Unsubscribe UI-level events
             MapController.MapZoomed -= MapController_MapZoomed;
             MapController.MapLeftClicked -= MapController_MapLeftClicked;
             Props.ScreensSwitched -= Props_ScreensSwitched;
 
+            // Persist main window placement
             if (Props.UseLargeScreen)
             {
                 Props.MainForm.LSLeft = MainLeft;
@@ -368,10 +454,12 @@ namespace RateController.Forms
                 Props.MainForm.Left = MainLeft;
                 Props.MainForm.Top = MainTop;
             }
+
             MapController.MapIsDisplayed = false;
 
             SaveFormLocation();
             timer1.Enabled = false;
+
         }
 
         private void frmMap_Load(object sender, EventArgs e)
@@ -423,6 +511,11 @@ namespace RateController.Forms
 
             timer1.Enabled = true;
             lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+
+            // Sync checkbox with saved preference
+            bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
+            ckKML.Checked = kmlVisible;
+            MapController.SetKmlVisibility(kmlVisible);
         }
 
         private void frmMap_Move(object sender, EventArgs e)
@@ -774,24 +867,31 @@ namespace RateController.Forms
 
         private void UpdateScrollbars()
         {
-            double lat = MapController.Map.Position.Lat;
-            double lng = MapController.Map.Position.Lng;
+            try
+            {
+                double lat = MapController.Map.Position.Lat;
+                double lng = MapController.Map.Position.Lng;
 
-            // Scale pan distance based on zoom
-            double a = 0.25; // tuning constant
-            if (MapController.Map.Zoom < 10) a = 0.6;
-            double effectiveMiles = BASE_PAN_DISTANCE_MILES * Math.Exp(a * (MapController.Map.MaxZoom - MapController.Map.Zoom));
+                // Scale pan distance based on zoom
+                double a = 0.25; // tuning constant
+                if (MapController.Map.Zoom < 10) a = 0.6;
+                double effectiveMiles = BASE_PAN_DISTANCE_MILES * Math.Exp(a * (MapController.Map.MaxZoom - MapController.Map.Zoom));
 
-            double latOffset = MilesToLatDegrees(effectiveMiles);
-            double lngOffset = MilesToLngDegrees(effectiveMiles, lat);
+                double latOffset = MilesToLatDegrees(effectiveMiles);
+                double lngOffset = MilesToLngDegrees(effectiveMiles, lat);
 
-            VSB.Minimum = (int)((lat - latOffset) * 1000);
-            VSB.Maximum = (int)((lat + latOffset) * 1000);
-            VSB.Value = (int)(lat * 1000);
+                VSB.Minimum = (int)((lat - latOffset) * 1000);
+                VSB.Maximum = (int)((lat + latOffset) * 1000);
+                VSB.Value = (int)(lat * 1000);
 
-            HSB.Minimum = (int)((lng - lngOffset) * 1000);
-            HSB.Maximum = (int)((lng + lngOffset) * 1000);
-            HSB.Value = (int)(lng * 1000);
+                HSB.Minimum = (int)((lng - lngOffset) * 1000);
+                HSB.Maximum = (int)((lng + lngOffset) * 1000);
+                HSB.Value = (int)(lng * 1000);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/UpdateScrollbars: " + ex.Message);
+            }
         }
 
         private void VSB_Scroll(object sender, ScrollEventArgs e)

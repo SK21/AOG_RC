@@ -71,6 +71,11 @@ namespace RateController.RateMap
             return _overlaysByPath.Remove(filePath);
         }
 
+        public IEnumerable<GMapOverlay> GetAllOverlays()
+        {
+            return _overlaysByPath.Values;
+        }
+
         private static void AddLineString(Placemark pm, LineString line, GMapOverlay overlay)
         {
             var coords = line.Coordinates;
@@ -155,10 +160,9 @@ namespace RateController.RateMap
                 if (pts.Count >= 3)
                 {
                     var gpoly = new GMapPolygon(pts, pm.Name ?? "KML Polygon");
-                    // Match zone style: no stroke to avoid overlaps
-                    gpoly.Stroke = Pens.Transparent;
-                    var color = GetKmlPolyColor(pm);
-                    gpoly.Fill = new SolidBrush(Color.FromArgb(color.A, color));
+                    // boundary-only: visible stroke, transparent fill
+                    gpoly.Stroke = new Pen(Color.Yellow, 2f); // choose color/thickness
+                    gpoly.Fill = new SolidBrush(Color.FromArgb(0, Color.White)); // fully transparent
                     overlay.Polygons.Add(gpoly);
                 }
             }
