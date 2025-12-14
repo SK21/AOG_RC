@@ -16,8 +16,12 @@ namespace RateController.Forms
         private bool Initializing = true;
         private int MainLeft = 0;
         private int MainTop = 0;
+        private int MaxviewLeft = 0;
+        private int MaxviewTop = 0;
         private int PMheight;
         private int PMwidth;
+        private int PreviewLeft = 0;
+        private int PreviewTop = 0;
 
         public frmMap()
         {
@@ -277,11 +281,12 @@ namespace RateController.Forms
         {
             try
             {
-                LoadFormLocation();
                 if (ckWindow.Checked)
                 {
                     // small window
                     TopMost = true;
+                    this.Left = PreviewLeft;
+                    this.Top = PreviewTop;
 
                     pnlTabs.Visible = false;
                     pnlControls.Visible = false;
@@ -307,6 +312,8 @@ namespace RateController.Forms
                 {
                     // full screen
                     TopMost = false;
+                    this.Left = MaxviewLeft;
+                    this.Top = MaxviewTop;
 
                     pnlTabs.Visible = true;
                     pnlControls.Visible = true;
@@ -390,6 +397,18 @@ namespace RateController.Forms
 
         private void ckWindow_CheckedChanged(object sender, EventArgs e)
         {
+            if (ckWindow.Checked)
+            {
+                // currently still max view, save max view position
+                MaxviewLeft = this.Left;
+                MaxviewTop = this.Top;
+            }
+            else
+            {
+                // currently still preview, save preview position
+                PreviewLeft = this.Left;
+                PreviewTop = this.Top;
+            }
             ChangeMapSize();
         }
 
@@ -428,12 +447,10 @@ namespace RateController.Forms
             if (!Initializing) EditInProgress = true;
         }
 
-
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Props.SetAppProp("MapWindow", ckWindow.Checked.ToString());
-            ckWindow.Checked = false;
-            ChangeMapSize();
+            MapController.MapIsDisplayed = false;
+            timer1.Enabled = false;
 
             // Remove the control from the panel first
             pnlMap.Controls.Remove(MapController.Map);
@@ -455,11 +472,7 @@ namespace RateController.Forms
                 Props.MainForm.Top = MainTop;
             }
 
-            MapController.MapIsDisplayed = false;
-
             SaveFormLocation();
-            timer1.Enabled = false;
-
         }
 
         private void frmMap_Load(object sender, EventArgs e)
@@ -499,12 +512,13 @@ namespace RateController.Forms
                 MainTop = Props.MainForm.Top;
             }
 
-            ResizeControls();
+            LoadFormLocation();
             ChangeMapSize();
+            ResizeControls();
+
             UpdateScrollbars();
             UpdateForm();
 
-            ckWindow.Checked = bool.TryParse(Props.GetAppProp("MapWindow"), out bool fs) ? fs : false;
             MapController.MapIsDisplayed = true;
             MapController.Map.Zoom = 16;
             MapController.CenterMap();
@@ -544,14 +558,30 @@ namespace RateController.Forms
 
         private void LoadFormLocation()
         {
-            if (ckWindow.Checked)
+            try
             {
-                this.Left = int.TryParse(Props.GetAppProp("MapWindow.Left"), out int lf) ? lf : 0;
-                this.Top = int.TryParse(Props.GetAppProp("MapWindow.Top"), out int tp) ? tp : 0;
+                ckWindow.Checked = bool.TryParse(Props.GetAppProp("MapPreview"), out bool fs) ? fs : false;
+
+                PreviewLeft = int.TryParse(Props.GetAppProp("MapPreviewLeft"), out int lf) ? lf : 0;
+                PreviewTop = int.TryParse(Props.GetAppProp("MapPreviewTop"), out int tp) ? tp : 0;
+
+                MaxviewLeft = int.TryParse(Props.GetAppProp("MapMaxLeft"), out int ml) ? ml : 0;
+                MaxviewTop = int.TryParse(Props.GetAppProp("MapMaxTop"), out int mt) ? mt : 0;
+
+                if (ckWindow.Checked)
+                {
+                    this.Top = PreviewTop;
+                    this.Left = PreviewLeft;
+                }
+                else
+                {
+                    this.Top = MaxviewTop;
+                    this.Left = MaxviewLeft;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Props.LoadFormLocation(this);
+                Props.WriteErrorLog("frmMap/LoadFormLocation: " + ex.Message);
             }
         }
 
@@ -638,14 +668,23 @@ namespace RateController.Forms
 
         private void SaveFormLocation()
         {
+            Props.SetAppProp("MapPreview", ckWindow.Checked.ToString());
+
             if (ckWindow.Checked)
             {
-                Props.SetAppProp("MapWindow.Left", this.Left.ToString());
-                Props.SetAppProp("MapWindow.Top", this.Top.ToString());
+                Props.SetAppProp("MapPreviewLeft", this.Left.ToString());
+                Props.SetAppProp("MapPreviewTop", this.Top.ToString());
+
+                Props.SetAppProp("MapMaxLeft", MaxviewLeft.ToString());
+                Props.SetAppProp("MapmaxTop", MaxviewTop.ToString());
             }
             else
             {
-                Props.SaveFormLocation(this);
+                Props.SetAppProp("MapPreviewLeft", PreviewLeft.ToString());
+                Props.SetAppProp("MapPreviewTop", PreviewTop.ToString());
+
+                Props.SetAppProp("MapMaxLeft", this.Left.ToString());
+                Props.SetAppProp("MapMaxTop", this.Top.ToString());
             }
         }
 

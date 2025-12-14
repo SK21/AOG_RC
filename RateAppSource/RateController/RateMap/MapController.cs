@@ -120,6 +120,7 @@ namespace RateController.RateMap
 
         public static GMapControl Map
         { get { return gmap; } }
+
         public static bool MapIsDisplayed
         { get { return cMapIsDisplayed; } set { cMapIsDisplayed = value; } }
 
@@ -314,26 +315,47 @@ namespace RateController.RateMap
         {
             try
             {
-                JobManager.JobChanged -= JobManager_JobChanged;
-                Props.RateDataSettingsChanged -= Props_RateDataSettingsChanged;
-
                 Props.SetProp("LastMapLat", gmap.Position.Lat.ToString("N10"));
                 Props.SetProp("LastMapLng", gmap.Position.Lng.ToString("N10"));
 
-                gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
-                gmap.MouseClick -= Gmap_MouseClick;
-
-                UpdateTimer.Enabled = false;
+                UpdateTimer?.Stop();
                 UpdateTimer.Tick -= UpdateTimer_Tick;
 
-                legendManager?.Dispose();
-                AppliedOverlay?.Polygons.Clear();
-                zoneOverlay?.Polygons.Clear();
-                tempMarkerOverlay?.Markers.Clear();
+                JobManager.JobChanged -= JobManager_JobChanged;
+                Props.RateDataSettingsChanged -= Props_RateDataSettingsChanged;
 
-                gmap.Overlays.Clear();
+                if (gmap != null)
+                {
+                    gmap.OnMapZoomChanged -= Gmap_OnMapZoomChanged;
+                    gmap.MouseClick -= Gmap_MouseClick;
+                }
+
                 GMaps.Instance.CancelTileCaching();
-                gmap.Dispose();
+
+                legendManager?.Dispose();
+                legendManager = null;
+                overlayService?.Reset();
+
+                if (gmap != null)
+                {
+                    gmap.Overlays.Clear();
+                }
+
+                AppliedOverlay = null;
+                zoneOverlay = null;
+                gpsMarkerOverlay = null;
+                tempMarkerOverlay = null;
+
+                gmap?.Dispose();
+                gmap = null;
+
+                STRtreeZoneIndex = null;
+                mapZones?.Clear();
+                mapZones = null;
+
+                MapChanged = null;
+                MapLeftClicked = null;
+                MapZoomed = null;
             }
             catch (Exception ex)
             {
