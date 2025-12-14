@@ -7,11 +7,9 @@ namespace RateController
     public partial class frmMsgBox : Form
     {
         private bool cResult;
-        private FormStart mf;
 
-        public frmMsgBox(FormStart CallingForm, string Message, string Title = "Help", bool Shrink = false)
+        public frmMsgBox( string Message, string Title = "Help", bool Shrink = false)
         {
-            mf = CallingForm;
             InitializeComponent();
             this.Text = Title;
             label1.Text = Message;

@@ -125,7 +125,7 @@ namespace RateController
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    var Hlp = new frmMsgBox(mf, "Reset starting weight and acres?", "Reset", true);
+                    var Hlp = new frmMsgBox("Reset starting weight and acres?", "Reset", true);
                     Hlp.TopMost = true;
 
                     Hlp.ShowDialog();
@@ -139,7 +139,7 @@ namespace RateController
                     break;
 
                 case MouseButtons.Right:
-                    var Hlp2 = new frmMsgBox(mf, "Reset tare weight?", "Reset", true);
+                    var Hlp2 = new frmMsgBox("Reset tare weight?", "Reset", true);
                     Hlp2.TopMost = true;
 
                     Hlp2.ShowDialog();

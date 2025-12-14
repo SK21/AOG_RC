@@ -495,7 +495,7 @@ namespace RateController
             if (!LargeScreenExit && !Restart && !LoadError && Products.Connected() && e.CloseReason != CloseReason.WindowsShutDown 
                 && e.CloseReason != CloseReason.TaskManagerClosing)
             {
-                using (var Hlp = new frmMsgBox(this, "Confirm Exit?", "Exit", true))
+                using (var Hlp = new frmMsgBox( "Confirm Exit?", "Exit", true))
                 {
                     Hlp.TopMost = true;
 
@@ -545,7 +545,7 @@ namespace RateController
         {
             if (MouseButtonClicked == MouseButtons.Left)
             {
-                var Hlp = new frmMsgBox(this, "Reset area?", "Reset", true);
+                var Hlp = new frmMsgBox("Reset area?", "Reset", true);
                 Hlp.TopMost = true;
 
                 Hlp.ShowDialog();

@@ -73,7 +73,7 @@ namespace RateController.Menu
                     string FileToDelete = lstProfiles.SelectedItem.ToString();
                     if (FileToDelete != "Default" && FileToDelete != "Example")
                     {
-                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FileToDelete + "]?", "Delete File", true);
+                        var Hlp = new frmMsgBox("Confirm Delete [" + FileToDelete + "]?", "Delete File", true);
                         Hlp.TopMost = true;
 
                         Hlp.ShowDialog();

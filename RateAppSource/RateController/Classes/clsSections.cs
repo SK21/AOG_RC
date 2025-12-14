@@ -186,7 +186,7 @@ namespace RateController
             }
             Message += "\n\n Accept the changes?";
 
-            var Hlp = new frmMsgBox(mf, Message, "Section Changes");
+            var Hlp = new frmMsgBox( Message, "Section Changes");
             Hlp.ShowDialog();
             bool Result = Hlp.Result;
             Hlp.Close();

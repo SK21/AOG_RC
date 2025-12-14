@@ -197,12 +197,6 @@
     <Compile Include="Classes\JobManager.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
     <Compile Include="Classes\Props.cs" />
-    <Compile Include="RateMap\frmImportCSV.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RateMap\frmImportCSV.Designer.cs">
-      <DependentUpon>frmImportCSV.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmJobReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,12 +246,6 @@
     </Compile>
     <Compile Include="Forms\FormStart.designer.cs">
       <DependentUpon>FormStart.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RateMap\frmCopyMap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RateMap\frmCopyMap.Designer.cs">
-      <DependentUpon>frmCopyMap.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmHelp.cs">
       <SubType>Form</SubType>
@@ -546,17 +534,11 @@
       <DependentUpon>FormStart.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="RateMap\frmCopyMap.resx">
-      <DependentUpon>frmCopyMap.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RateMap\frmImport.resx">
       <DependentUpon>frmImport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RateMap\frmImportCSV.resx">
-      <DependentUpon>frmImportCSV.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmJobReport.resx">
       <DependentUpon>frmJobReport.cs</DependentUpon>

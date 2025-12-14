@@ -95,7 +95,7 @@ namespace RateController.Menu
                     Job SelectedJob = lvJobs.SelectedItems[0].Tag as Job;
                     if (SelectedJob != null && SelectedJob.ID != 0)    // keep 0, default job
                     {
-                        var Hlp = new frmMsgBox(mf, "Confirm Delete [" + SelectedJob.Name + "] and all job data?", "Delete File", true);
+                        var Hlp = new frmMsgBox("Confirm Delete [" + SelectedJob.Name + "] and all job data?", "Delete File", true);
                         Hlp.TopMost = true;
 
                         Hlp.ShowDialog();
@@ -132,7 +132,7 @@ namespace RateController.Menu
                 if (Fld != null)
                 {
                     string FieldToDelete = Fld.Name;
-                    var Hlp = new frmMsgBox(mf, "Confirm Delete [" + FieldToDelete + "] from the Fields list?", "Delete Field", true);
+                    var Hlp = new frmMsgBox("Confirm Delete [" + FieldToDelete + "] from the Fields list?", "Delete Field", true);
                     Hlp.TopMost = true;
 
                     Hlp.ShowDialog();

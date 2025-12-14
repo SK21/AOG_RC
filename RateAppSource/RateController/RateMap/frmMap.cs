@@ -50,7 +50,7 @@ namespace RateController.Forms
 
         private void btnDeleteData_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(Props.MainForm, "Confirm Delete all job data?", "Delete File", true);
+            var Hlp = new frmMsgBox("Confirm Delete all job data?", "Delete File", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();
@@ -95,6 +95,31 @@ namespace RateController.Forms
                         Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
                     }
                 }
+            }
+        }
+
+        private void btnImportKML_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog { Title = "Open KML file.", Filter = "Shapefiles (*.kml)|*.kml" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    MapController.AddKmlLayer(ofd.FileName);
+                }
+            }
+        }
+
+        private void btnImportZones_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmImport");
+            if (fs == null)
+            {
+                fs = new frmImport();
+                fs.Show();
+            }
+            else
+            {
+                fs.Focus();
             }
         }
 
@@ -356,9 +381,12 @@ namespace RateController.Forms
             MapController.MapChanged += MapController_MapChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
 
-            tabZones.BackColor = Properties.Settings.Default.MainBackColour;
-            tabData.BackColor = Properties.Settings.Default.MainBackColour;
-            tabControl1.ItemSize = new Size((tabControl1.Width - 10) / 2, tabControl1.ItemSize.Height);
+            tabControl1.ItemSize = new Size((tabControl1.Width - 10) / tabControl1.TabCount, tabControl1.ItemSize.Height);
+
+            foreach (TabPage tb in tabControl1.TabPages)
+            {
+                tb.BackColor = Properties.Settings.Default.MainBackColour;
+            }
 
             PMheight = pnlMain.Height;
             PMwidth = pnlMain.Width;

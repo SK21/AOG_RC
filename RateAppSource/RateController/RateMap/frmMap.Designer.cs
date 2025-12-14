@@ -30,12 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMap));
-            this.btnCopy = new System.Windows.Forms.Button();
-            this.btnExport = new System.Windows.Forms.Button();
             this.ckRateData = new System.Windows.Forms.CheckBox();
             this.ckSatView = new System.Windows.Forms.CheckBox();
             this.ckZones = new System.Windows.Forms.CheckBox();
-            this.btnImport = new System.Windows.Forms.Button();
             this.ckUseVR = new System.Windows.Forms.CheckBox();
             this.btnDeleteData = new System.Windows.Forms.Button();
             this.lbDataPoints = new System.Windows.Forms.Label();
@@ -78,45 +75,18 @@
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tabFiles = new System.Windows.Forms.TabPage();
+            this.btnImportZones = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.btnImportKML = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabZones.SuspendLayout();
             this.tabData.SuspendLayout();
             this.pnlTabs.SuspendLayout();
+            this.tabFiles.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnCopy
-            // 
-            this.btnCopy.BackColor = System.Drawing.Color.Transparent;
-            this.btnCopy.FlatAppearance.BorderSize = 0;
-            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopy.Image = global::RateController.Properties.Resources.copy_small;
-            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnCopy.Location = new System.Drawing.Point(37, 264);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(89, 64);
-            this.btnCopy.TabIndex = 367;
-            this.btnCopy.Text = "Copy";
-            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnCopy.UseVisualStyleBackColor = false;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
-            // btnExport
-            // 
-            this.btnExport.BackColor = System.Drawing.Color.Transparent;
-            this.btnExport.FlatAppearance.BorderSize = 0;
-            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnExport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnExport.Location = new System.Drawing.Point(289, 264);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(89, 64);
-            this.btnExport.TabIndex = 365;
-            this.btnExport.Text = "Export";
-            this.btnExport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnExport.UseVisualStyleBackColor = false;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // ckRateData
             // 
@@ -166,21 +136,6 @@
             this.ckZones.UseVisualStyleBackColor = true;
             this.ckZones.CheckedChanged += new System.EventHandler(this.ckZones_CheckedChanged);
             // 
-            // btnImport
-            // 
-            this.btnImport.BackColor = System.Drawing.Color.Transparent;
-            this.btnImport.FlatAppearance.BorderSize = 0;
-            this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImport.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnImport.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnImport.Location = new System.Drawing.Point(163, 264);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(89, 64);
-            this.btnImport.TabIndex = 360;
-            this.btnImport.Text = "Import";
-            this.btnImport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnImport.UseVisualStyleBackColor = false;
-            // 
             // ckUseVR
             // 
             this.ckUseVR.Appearance = System.Windows.Forms.Appearance.Button;
@@ -200,7 +155,7 @@
             this.btnDeleteData.FlatAppearance.BorderSize = 0;
             this.btnDeleteData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteData.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteData.Location = new System.Drawing.Point(323, 60);
+            this.btnDeleteData.Location = new System.Drawing.Point(231, 250);
             this.btnDeleteData.Name = "btnDeleteData";
             this.btnDeleteData.Size = new System.Drawing.Size(89, 64);
             this.btnDeleteData.TabIndex = 397;
@@ -210,17 +165,17 @@
             // lbDataPoints
             // 
             this.lbDataPoints.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDataPoints.Location = new System.Drawing.Point(226, 81);
+            this.lbDataPoints.Location = new System.Drawing.Point(246, 67);
             this.lbDataPoints.Name = "lbDataPoints";
-            this.lbDataPoints.Size = new System.Drawing.Size(88, 23);
+            this.lbDataPoints.Size = new System.Drawing.Size(111, 23);
             this.lbDataPoints.TabIndex = 396;
             this.lbDataPoints.Text = "0";
-            this.lbDataPoints.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbDataPoints.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(104, 81);
+            this.label1.Location = new System.Drawing.Point(124, 67);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(113, 23);
             this.label1.TabIndex = 395;
@@ -233,7 +188,7 @@
             this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRecord.Image = global::RateController.Properties.Resources.record;
-            this.ckRecord.Location = new System.Drawing.Point(6, 60);
+            this.ckRecord.Location = new System.Drawing.Point(105, 250);
             this.ckRecord.Name = "ckRecord";
             this.ckRecord.Size = new System.Drawing.Size(89, 64);
             this.ckRecord.TabIndex = 382;
@@ -547,7 +502,8 @@
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl1.Controls.Add(this.tabZones);
             this.tabControl1.Controls.Add(this.tabData);
-            this.tabControl1.ItemSize = new System.Drawing.Size(150, 50);
+            this.tabControl1.Controls.Add(this.tabFiles);
+            this.tabControl1.ItemSize = new System.Drawing.Size(100, 50);
             this.tabControl1.Location = new System.Drawing.Point(2, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -608,11 +564,8 @@
             this.tabData.Controls.Add(this.rbProductD);
             this.tabData.Controls.Add(this.rbProductC);
             this.tabData.Controls.Add(this.rbProductB);
-            this.tabData.Controls.Add(this.btnCopy);
             this.tabData.Controls.Add(this.ckRecord);
-            this.tabData.Controls.Add(this.btnImport);
             this.tabData.Controls.Add(this.btnDeleteData);
-            this.tabData.Controls.Add(this.btnExport);
             this.tabData.Controls.Add(this.label1);
             this.tabData.Controls.Add(this.lbDataPoints);
             this.tabData.Location = new System.Drawing.Point(4, 54);
@@ -629,7 +582,7 @@
             this.rbProductA.Checked = true;
             this.rbProductA.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductA.Location = new System.Drawing.Point(37, 172);
+            this.rbProductA.Location = new System.Drawing.Point(36, 147);
             this.rbProductA.Name = "rbProductA";
             this.rbProductA.Size = new System.Drawing.Size(66, 40);
             this.rbProductA.TabIndex = 401;
@@ -644,7 +597,7 @@
             this.rbProductD.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbProductD.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductD.Location = new System.Drawing.Point(313, 172);
+            this.rbProductD.Location = new System.Drawing.Point(312, 147);
             this.rbProductD.Name = "rbProductD";
             this.rbProductD.Size = new System.Drawing.Size(66, 40);
             this.rbProductD.TabIndex = 398;
@@ -658,7 +611,7 @@
             this.rbProductC.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbProductC.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductC.Location = new System.Drawing.Point(221, 172);
+            this.rbProductC.Location = new System.Drawing.Point(220, 147);
             this.rbProductC.Name = "rbProductC";
             this.rbProductC.Size = new System.Drawing.Size(66, 40);
             this.rbProductC.TabIndex = 399;
@@ -672,7 +625,7 @@
             this.rbProductB.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbProductB.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbProductB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbProductB.Location = new System.Drawing.Point(129, 172);
+            this.rbProductB.Location = new System.Drawing.Point(128, 147);
             this.rbProductB.Name = "rbProductB";
             this.rbProductB.Size = new System.Drawing.Size(66, 40);
             this.rbProductB.TabIndex = 400;
@@ -694,6 +647,67 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // tabFiles
+            // 
+            this.tabFiles.Controls.Add(this.btnImportKML);
+            this.tabFiles.Controls.Add(this.btnImportZones);
+            this.tabFiles.Controls.Add(this.btnExport);
+            this.tabFiles.Location = new System.Drawing.Point(4, 54);
+            this.tabFiles.Name = "tabFiles";
+            this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFiles.Size = new System.Drawing.Size(423, 377);
+            this.tabFiles.TabIndex = 2;
+            this.tabFiles.Text = "Files";
+            this.tabFiles.UseVisualStyleBackColor = true;
+            // 
+            // btnImportZones
+            // 
+            this.btnImportZones.BackColor = System.Drawing.Color.Transparent;
+            this.btnImportZones.FlatAppearance.BorderSize = 0;
+            this.btnImportZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportZones.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImportZones.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImportZones.Location = new System.Drawing.Point(95, 58);
+            this.btnImportZones.Name = "btnImportZones";
+            this.btnImportZones.Size = new System.Drawing.Size(213, 64);
+            this.btnImportZones.TabIndex = 369;
+            this.btnImportZones.Text = "Import Shape File";
+            this.btnImportZones.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnImportZones.UseVisualStyleBackColor = false;
+            this.btnImportZones.Click += new System.EventHandler(this.btnImportZones_Click);
+            // 
+            // btnExport
+            // 
+            this.btnExport.BackColor = System.Drawing.Color.Transparent;
+            this.btnExport.FlatAppearance.BorderSize = 0;
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExport.Location = new System.Drawing.Point(95, 226);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(213, 64);
+            this.btnExport.TabIndex = 368;
+            this.btnExport.Text = "Export Job";
+            this.btnExport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // btnImportKML
+            // 
+            this.btnImportKML.BackColor = System.Drawing.Color.Transparent;
+            this.btnImportKML.FlatAppearance.BorderSize = 0;
+            this.btnImportKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportKML.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImportKML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImportKML.Location = new System.Drawing.Point(95, 142);
+            this.btnImportKML.Name = "btnImportKML";
+            this.btnImportKML.Size = new System.Drawing.Size(213, 64);
+            this.btnImportKML.TabIndex = 370;
+            this.btnImportKML.Text = "Import KML";
+            this.btnImportKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnImportKML.UseVisualStyleBackColor = false;
+            this.btnImportKML.Click += new System.EventHandler(this.btnImportKML_Click);
             // 
             // frmMap
             // 
@@ -723,18 +737,15 @@
             this.tabZones.PerformLayout();
             this.tabData.ResumeLayout(false);
             this.pnlTabs.ResumeLayout(false);
+            this.tabFiles.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnCopy;
-        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.CheckBox ckRateData;
         private System.Windows.Forms.CheckBox ckSatView;
         private System.Windows.Forms.CheckBox ckZones;
-        private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.CheckBox ckUseVR;
         private System.Windows.Forms.Button btnDeleteData;
         private System.Windows.Forms.Label lbDataPoints;
@@ -777,5 +788,9 @@
         private System.Windows.Forms.Label lbAreaName;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.TabPage tabFiles;
+        private System.Windows.Forms.Button btnImportZones;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.Button btnImportKML;
     }
 }

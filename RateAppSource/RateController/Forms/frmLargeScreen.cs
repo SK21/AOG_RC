@@ -275,7 +275,7 @@ namespace RateController
 
         private void lbCoverageAmount_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Reset area?", "Reset", true);
+            var Hlp = new frmMsgBox("Reset area?", "Reset", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();

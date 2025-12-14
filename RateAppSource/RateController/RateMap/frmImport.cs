@@ -9,13 +9,11 @@ namespace RateController.Forms
     public partial class frmImport : Form
     {
         private Dictionary<string, string> attributeMapping;
-        private FormStart mf;
         private string selectedShapefilePath;
 
-        public frmImport(FormStart CallingForm)
+        public frmImport()
         {
             InitializeComponent();
-            mf = CallingForm;
             dgvMapping.AutoGenerateColumns = false;
             dgvMapping.AllowUserToAddRows = false;
         }
@@ -27,7 +25,7 @@ namespace RateController.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox(mf, "Confirm replace current map with imported map?", "Import File", true);
+            var Hlp = new frmMsgBox("Confirm replace current map with imported map?", "Import File", true);
             Hlp.TopMost = true;
 
             Hlp.ShowDialog();
@@ -47,11 +45,6 @@ namespace RateController.Forms
             }
         }
 
-        private void btnSelectFile_Click(object sender, EventArgs e)
-        {
-            SelectShapefile(dgvMapping);
-        }
-
         private void frmImport_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
@@ -62,6 +55,7 @@ namespace RateController.Forms
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             SetLanguage();
+            SelectShapefile(dgvMapping);
         }
 
         private void LoadShapefileAttributes(DataGridView dgvMapping)
@@ -132,12 +126,16 @@ namespace RateController.Forms
 
         private void SelectShapefile(DataGridView DGV)
         {
-            using (var ofd = new OpenFileDialog { Filter = "Shapefiles (*.shp)|*.shp" })
+            using (var ofd = new OpenFileDialog { Title = "Open shape file.", Filter = "Shapefiles (*.shp)|*.shp" })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     selectedShapefilePath = ofd.FileName;
                     LoadShapefileAttributes(DGV);
+                }
+                else
+                {
+                    Close();
                 }
             }
         }

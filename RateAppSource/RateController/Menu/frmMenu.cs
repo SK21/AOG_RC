@@ -522,7 +522,7 @@ namespace RateController
             }
             else
             {
-                fs.Close();
+                fs.Focus();
             }
         }
 
@@ -939,7 +939,7 @@ namespace RateController
             {
                 if ((bool)OwnedForm.Tag)
                 {
-                    var Hlp = new frmMsgBox(mf, "Unsaved Changes, Confirm Exit?", "Exit", true);
+                    var Hlp = new frmMsgBox("Unsaved Changes, Confirm Exit?", "Exit", true);
                     Hlp.TopMost = true;
 
                     Hlp.ShowDialog();
