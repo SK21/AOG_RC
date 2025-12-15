@@ -1,5 +1,6 @@
 ﻿using AgOpenGPS;
 using GMap.NET;
+using NetTopologySuite.Triangulate;
 using RateController.Classes;
 using RateController.RateMap;
 using System;
@@ -25,6 +26,7 @@ namespace RateController.Forms
         private int PreviewLeft = 0;
         private int PreviewTop = 0;
         private int PreviewZoom = 10;
+        private Point MouseDownLocation;
 
         public frmMap()
         {
@@ -49,10 +51,6 @@ namespace RateController.Forms
             SetEditMode(false, true);
             MapController.ResetMarkers();
             UpdateForm();
-        }
-
-        private void btnCopy_Click(object sender, EventArgs e)
-        {
         }
 
         private void btnDeleteData_Click(object sender, EventArgs e)
@@ -306,6 +304,14 @@ namespace RateController.Forms
         {
             try
             {
+                tlpTitle.Visible = ckWindow.Checked;
+
+                if (pnlMain.Width < 250 && pnlMain.Height < 250)
+                {
+                    pnlMain.Width = 250;
+                    pnlMain.Height = 250;
+                }
+
                 if (ckWindow.Checked)
                 {
                     // small window
@@ -314,14 +320,17 @@ namespace RateController.Forms
                     this.Top = PreviewTop;
                     MapController.Map.Zoom = PreviewZoom;
 
+                    this.FormBorderStyle = FormBorderStyle.None;
+
                     pnlTabs.Visible = false;
                     pnlControls.Visible = false;
 
-                    this.Width = 403;
-                    this.Height = 407;
+                    this.Width = 300;
+                    this.Height = 300;
 
-                    pnlMain.Size = new Size(PMwidth, PMheight);
-                    pnlMain.Location = new Point(0, 0);
+                    pnlMain.Location = new Point(0, tlpTitle.Height);
+                    pnlMain.Size = new Size(this.Width, this.Height - tlpTitle.Height);
+                    pnlMap.Size = pnlMain.Size;
 
                     if (Props.UseLargeScreen)
                     {
@@ -342,12 +351,31 @@ namespace RateController.Forms
                     this.Top = MaxviewTop;
                     MapController.Map.Zoom = MaxZoom;
 
+                    this.FormBorderStyle = FormBorderStyle.FixedDialog;
+
                     pnlTabs.Visible = true;
                     pnlControls.Visible = true;
 
                     this.Bounds = Screen.GetWorkingArea(this);
                     pnlMain.Size = new Size(this.ClientSize.Width - 565, this.ClientSize.Height - 28);
                     pnlMain.Location = new Point(550, 14);
+
+                    pnlMap.Width = pnlMain.Width - VSB.Width;
+                    pnlMap.Height = pnlMain.Height - HSB.Height;
+
+                    VSB.Left = pnlMap.Width;
+                    VSB.Top = 0;
+                    VSB.Height = pnlMain.Height - btnZoomIn.Height;
+
+                    HSB.Left = 0;
+                    HSB.Top = pnlMap.Height;
+                    HSB.Width = pnlMain.Width - btnZoomIn.Width - btnZoomOut.Width;
+
+                    btnZoomOut.Top = HSB.Top;
+                    btnZoomOut.Left = HSB.Width;
+
+                    btnZoomIn.Top = VSB.Height;
+                    btnZoomIn.Left = VSB.Left;
 
                     if (Props.UseLargeScreen)
                     {
@@ -421,7 +449,6 @@ namespace RateController.Forms
                 Props.VariableRateEnabled = ckUseVR.Checked;
             }
         }
-
         private void ckWindow_CheckedChanged(object sender, EventArgs e)
         {
             if (ckWindow.Checked)
@@ -509,7 +536,16 @@ namespace RateController.Forms
             InitializeColorComboBox();
 
             MapController.MapChanged += MapController_MapChanged;
+
             this.BackColor = Properties.Settings.Default.MainBackColour;
+            tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
+            lbTitle.BackColor = Properties.Settings.Default.MainBackColour;
+            btnTitleClose.BackColor = Properties.Settings.Default.MainBackColour;
+            btnTitleZoomIn.BackColor = Properties.Settings.Default.MainBackColour;
+            btnTitleZoomOut.BackColor = Properties.Settings.Default.MainBackColour;
+
+            tlpTitle.Top = 0;
+            tlpTitle.Left = 0;
 
             tabControl1.ItemSize = new Size((tabControl1.Width - 10) / tabControl1.TabCount, tabControl1.ItemSize.Height);
 
@@ -543,7 +579,6 @@ namespace RateController.Forms
 
             LoadFormLocation();
             ChangeMapSize();
-            ResizeControls();
 
             UpdateScrollbars();
             UpdateForm();
@@ -645,11 +680,6 @@ namespace RateController.Forms
             return miles / (69.0 * Math.Cos(latitude * Math.PI / 180.0));
         }
 
-        private void pnlMain_Resize(object sender, EventArgs e)
-        {
-            ResizeControls();
-        }
-
         private void Props_ScreensSwitched(object sender, EventArgs e)
         {
             ChangeMapSize();
@@ -658,43 +688,6 @@ namespace RateController.Forms
         private void rbProductA_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing) UpdateProductToDisplay();
-        }
-
-        private void ResizeControls()
-        {
-            if (pnlMain.Width < 250 && pnlMain.Height < 250)
-            {
-                pnlMain.Width = 250;
-                pnlMain.Height = 250;
-            }
-
-            pnlMap.Left = 0;
-            pnlMap.Top = 0;
-
-            if (ckWindow.Checked)
-            {
-                pnlMap.Width = this.Width;
-                pnlMap.Height = this.Height;
-            }
-            else
-            {
-                pnlMap.Width = pnlMain.Width - VSB.Width;
-                pnlMap.Height = pnlMain.Height - HSB.Height;
-            }
-
-            VSB.Left = pnlMap.Width;
-            VSB.Top = 0;
-            VSB.Height = pnlMain.Height - btnZoomIn.Height;
-
-            HSB.Left = 0;
-            HSB.Top = pnlMap.Height;
-            HSB.Width = pnlMain.Width - btnZoomIn.Width - btnZoomOut.Width;
-
-            btnZoomOut.Top = HSB.Top;
-            btnZoomOut.Left = HSB.Width;
-
-            btnZoomIn.Top = VSB.Height;
-            btnZoomIn.Left = VSB.Left;
         }
 
         private void SaveFormLocation()
@@ -973,6 +966,23 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
+        }
+
+        private void btnTitleClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
+        {
+             MouseDownLocation = e.Location;
+
+        }
+
+        private void tlpTitle_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+
         }
     }
 }

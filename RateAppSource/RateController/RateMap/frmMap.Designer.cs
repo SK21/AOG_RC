@@ -82,6 +82,11 @@
             this.btnExport = new System.Windows.Forms.Button();
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tlpTitle = new System.Windows.Forms.TableLayoutPanel();
+            this.lbTitle = new System.Windows.Forms.Label();
+            this.btnTitleZoomOut = new System.Windows.Forms.Button();
+            this.btnTitleZoomIn = new System.Windows.Forms.Button();
+            this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -89,6 +94,7 @@
             this.tabData.SuspendLayout();
             this.tabFiles.SuspendLayout();
             this.pnlTabs.SuspendLayout();
+            this.tlpTitle.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckRateData
@@ -288,7 +294,6 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(403, 407);
             this.pnlMain.TabIndex = 387;
-            this.pnlMain.Resize += new System.EventHandler(this.pnlMain_Resize);
             // 
             // btnZoomIn
             // 
@@ -336,7 +341,7 @@
             // 
             // pnlMap
             // 
-            this.pnlMap.Location = new System.Drawing.Point(6, 6);
+            this.pnlMap.Location = new System.Drawing.Point(0, 0);
             this.pnlMap.Margin = new System.Windows.Forms.Padding(6);
             this.pnlMap.Name = "pnlMap";
             this.pnlMap.Size = new System.Drawing.Size(335, 338);
@@ -764,11 +769,85 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // tlpTitle
+            // 
+            this.tlpTitle.ColumnCount = 4;
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tlpTitle.Controls.Add(this.btnTitleClose, 3, 0);
+            this.tlpTitle.Controls.Add(this.btnTitleZoomIn, 2, 0);
+            this.tlpTitle.Controls.Add(this.lbTitle, 0, 0);
+            this.tlpTitle.Controls.Add(this.btnTitleZoomOut, 1, 0);
+            this.tlpTitle.Location = new System.Drawing.Point(307, 492);
+            this.tlpTitle.Name = "tlpTitle";
+            this.tlpTitle.RowCount = 1;
+            this.tlpTitle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpTitle.Size = new System.Drawing.Size(300, 45);
+            this.tlpTitle.TabIndex = 391;
+            this.tlpTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
+            this.tlpTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
+            // 
+            // lbTitle
+            // 
+            this.lbTitle.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbTitle.Location = new System.Drawing.Point(3, 0);
+            this.lbTitle.Name = "lbTitle";
+            this.lbTitle.Size = new System.Drawing.Size(54, 45);
+            this.lbTitle.TabIndex = 0;
+            this.lbTitle.Text = "Map";
+            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
+            this.lbTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
+            // 
+            // btnTitleZoomOut
+            // 
+            this.btnTitleZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleZoomOut.Location = new System.Drawing.Point(168, 3);
+            this.btnTitleZoomOut.Name = "btnTitleZoomOut";
+            this.btnTitleZoomOut.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleZoomOut.TabIndex = 1;
+            this.btnTitleZoomOut.Text = "-";
+            this.btnTitleZoomOut.UseVisualStyleBackColor = true;
+            this.btnTitleZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+            // 
+            // btnTitleZoomIn
+            // 
+            this.btnTitleZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleZoomIn.Location = new System.Drawing.Point(213, 3);
+            this.btnTitleZoomIn.Name = "btnTitleZoomIn";
+            this.btnTitleZoomIn.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleZoomIn.TabIndex = 2;
+            this.btnTitleZoomIn.Text = "+";
+            this.btnTitleZoomIn.UseVisualStyleBackColor = true;
+            this.btnTitleZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            // 
+            // btnTitleClose
+            // 
+            this.btnTitleClose.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleClose.Location = new System.Drawing.Point(258, 3);
+            this.btnTitleClose.Name = "btnTitleClose";
+            this.btnTitleClose.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleClose.TabIndex = 3;
+            this.btnTitleClose.Text = "X";
+            this.btnTitleClose.UseVisualStyleBackColor = true;
+            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
+            // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(955, 616);
+            this.Controls.Add(this.tlpTitle);
             this.Controls.Add(this.pnlTabs);
             this.Controls.Add(this.pnlControls);
             this.Controls.Add(this.pnlMain);
@@ -793,6 +872,7 @@
             this.tabData.ResumeLayout(false);
             this.tabFiles.ResumeLayout(false);
             this.pnlTabs.ResumeLayout(false);
+            this.tlpTitle.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -850,5 +930,10 @@
         private System.Windows.Forms.CheckBox ckKML;
         private System.Windows.Forms.Button btnKMLdelete;
         private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.TableLayoutPanel tlpTitle;
+        private System.Windows.Forms.Button btnTitleClose;
+        private System.Windows.Forms.Button btnTitleZoomIn;
+        private System.Windows.Forms.Label lbTitle;
+        private System.Windows.Forms.Button btnTitleZoomOut;
     }
 }
