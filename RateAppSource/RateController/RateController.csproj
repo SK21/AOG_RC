@@ -698,6 +698,9 @@
       <DependentUpon>RCRestore.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Documentation\MAPMANAGER.md" />
+    <None Include="Help\frmMap.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Help\frmMenuCalibrate.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -729,12 +732,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Help\frmMenuRate.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Help\frmMenuRateData.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Help\frmMenuRateMap.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Help\frmMenuRelays.pdf">

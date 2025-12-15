@@ -3,6 +3,7 @@ using GMap.NET;
 using RateController.Classes;
 using RateController.RateMap;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -940,6 +941,29 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string FileName = exeDirectory + "Help\\frmMap.pdf";
+
+            try
+            {
+                if (File.Exists(FileName))
+                {
+                    Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+                }
+                else
+                {
+                    Props.ShowMessage("No help available.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/bthHelp_Click: " + ex.Message);
+            }
+
         }
     }
 }

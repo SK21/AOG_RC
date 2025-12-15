@@ -39,6 +39,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ckRecord = new System.Windows.Forms.CheckBox();
             this.pnlControls = new System.Windows.Forms.Panel();
+            this.btnHelp = new System.Windows.Forms.Button();
+            this.ckKML = new System.Windows.Forms.CheckBox();
             this.ckWindow = new System.Windows.Forms.CheckBox();
             this.butClose = new System.Windows.Forms.Button();
             this.pnlMain = new System.Windows.Forms.Panel();
@@ -75,13 +77,11 @@
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.tabFiles = new System.Windows.Forms.TabPage();
             this.btnKMLdelete = new System.Windows.Forms.Button();
-            this.ckKML = new System.Windows.Forms.CheckBox();
             this.btnImportKML = new System.Windows.Forms.Button();
             this.btnImportZones = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnHelp = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -213,6 +213,39 @@
             this.pnlControls.Name = "pnlControls";
             this.pnlControls.Size = new System.Drawing.Size(97, 598);
             this.pnlControls.TabIndex = 386;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
+            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHelp.Location = new System.Drawing.Point(14, 445);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(70, 63);
+            this.btnHelp.TabIndex = 392;
+            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // ckKML
+            // 
+            this.ckKML.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckKML.Checked = true;
+            this.ckKML.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckKML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckKML.Location = new System.Drawing.Point(5, 372);
+            this.ckKML.Name = "ckKML";
+            this.ckKML.Size = new System.Drawing.Size(89, 64);
+            this.ckKML.TabIndex = 371;
+            this.ckKML.Text = "KML Files";
+            this.ckKML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckKML.UseVisualStyleBackColor = true;
+            this.ckKML.CheckedChanged += new System.EventHandler(this.ckKML_CheckedChanged);
             // 
             // ckWindow
             // 
@@ -669,22 +702,6 @@
             this.btnKMLdelete.UseVisualStyleBackColor = false;
             this.btnKMLdelete.Click += new System.EventHandler(this.btnKMLdelete_Click);
             // 
-            // ckKML
-            // 
-            this.ckKML.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckKML.Checked = true;
-            this.ckKML.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckKML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckKML.Location = new System.Drawing.Point(5, 372);
-            this.ckKML.Name = "ckKML";
-            this.ckKML.Size = new System.Drawing.Size(89, 64);
-            this.ckKML.TabIndex = 371;
-            this.ckKML.Text = "KML Files";
-            this.ckKML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckKML.UseVisualStyleBackColor = true;
-            this.ckKML.CheckedChanged += new System.EventHandler(this.ckKML_CheckedChanged);
-            // 
             // btnImportKML
             // 
             this.btnImportKML.BackColor = System.Drawing.Color.Transparent;
@@ -746,22 +763,6 @@
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHelp.Location = new System.Drawing.Point(14, 445);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(70, 63);
-            this.btnHelp.TabIndex = 392;
-            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnHelp.UseVisualStyleBackColor = false;
             // 
             // frmMap
             // 

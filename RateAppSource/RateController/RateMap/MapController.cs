@@ -175,7 +175,7 @@ namespace RateController.RateMap
                 gmap.MapProvider = value
                     ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
                     : (GMapProvider)GMapProviders.EmptyProvider;
-                Refresh();
+                gmap.Refresh();
             }
         }
 
@@ -194,9 +194,6 @@ namespace RateController.RateMap
 
         public static int ZoneCount
         { get { return STRtreeZoneIndex.Count; } }
-
-        public static bool ZoneFound
-        { get { return CurrentZone != null; } }
 
         public static double ZoneHectares => CurrentZoneHectares;
 
@@ -233,7 +230,7 @@ namespace RateController.RateMap
                 Props.SetProp("KmlVisible", "True");
 
                 CenterMap();
-                Refresh();
+                gmap.Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
                 return true;
             }
@@ -302,7 +299,7 @@ namespace RateController.RateMap
                 if (AppliedOverlay != null) AppliedOverlay.Polygons.Clear();
                 legendManager?.Clear();
                 ColorLegend = null;
-                Refresh();
+                gmap.Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -405,7 +402,7 @@ namespace RateController.RateMap
 
                     BuildZoneIndex();
                     UpdateVariableRates();
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                     Result = true;
                 }
@@ -415,6 +412,52 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/CreateZone: " + ex.Message);
             }
             return Result;
+        }
+
+        public static void DeleteKmlLayer(string filePath)
+        {
+            try
+            {
+                var jobDir = System.IO.Directory.Exists(JobManager.CurrentMapPath)
+                    ? JobManager.CurrentMapPath
+                    : System.IO.Path.GetDirectoryName(JobManager.CurrentMapPath);
+
+                var fileNameOnly = System.IO.Path.GetFileName(filePath);
+                var jobFull = string.IsNullOrWhiteSpace(jobDir) ? null : System.IO.Path.Combine(jobDir, fileNameOnly);
+
+                var overlay = kmlLayerManager.GetOverlay(jobFull ?? filePath);
+                if (overlay == null) return;
+
+                RemoveOverlay(overlay);
+                kmlLayerManager.Remove(jobFull ?? filePath);
+
+                var current = Props.GetProp("KmlJobFiles");
+                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
+                list.RemoveAll(p => string.Equals(p, fileNameOnly, StringComparison.OrdinalIgnoreCase));
+                Props.SetProp("KmlJobFiles", string.Join("|", list));
+
+                // Delete the physical KML in the job folder (safe delete)
+                if (!string.IsNullOrWhiteSpace(jobFull) &&
+                    System.IO.File.Exists(jobFull) &&
+                    Props.IsPathSafe(jobFull))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(jobFull);
+                    }
+                    catch (Exception delEx)
+                    {
+                        Props.WriteErrorLog("MapController/RemoveKmlLayer delete: " + delEx.Message);
+                    }
+                }
+
+                gmap.Refresh();
+                MapChanged?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
+            }
         }
 
         public static bool DeleteZone(string name)
@@ -461,7 +504,7 @@ namespace RateController.RateMap
 
                     BuildZoneIndex();
 
-                    Refresh();
+                    gmap.Refresh();
                     SaveMap();
                 }
             }
@@ -537,7 +580,7 @@ namespace RateController.RateMap
 
                     BuildZoneIndex();
                     UpdateVariableRates();
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                     Result = true;
                 }
@@ -580,12 +623,10 @@ namespace RateController.RateMap
             UpdateTimer.Enabled = true;
 
             LoadMap();
-            ReloadJobKmls();
 
             bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
             SetKmlVisibility(kmlVisible);
         }
-
 
         public static bool LoadMap()
         {
@@ -606,8 +647,9 @@ namespace RateController.RateMap
                 ShowZoneOverlay();
                 ShowRatesOverlay();
                 kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
+                ReloadJobKmls();
 
-                Refresh();
+                gmap.Refresh();
                 CenterMap();
                 MapChanged?.Invoke(null, EventArgs.Empty);
                 Result = true;
@@ -617,53 +659,6 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/LoadMap: " + ex.Message);
             }
             return Result;
-        }
-
-
-        public static void DeleteKmlLayer(string filePath)
-        {
-            try
-            {
-                var jobDir = System.IO.Directory.Exists(JobManager.CurrentMapPath)
-                    ? JobManager.CurrentMapPath
-                    : System.IO.Path.GetDirectoryName(JobManager.CurrentMapPath);
-
-                var fileNameOnly = System.IO.Path.GetFileName(filePath);
-                var jobFull = string.IsNullOrWhiteSpace(jobDir) ? null : System.IO.Path.Combine(jobDir, fileNameOnly);
-
-                var overlay = kmlLayerManager.GetOverlay(jobFull ?? filePath);
-                if (overlay == null) return;
-
-                RemoveOverlay(overlay);
-                kmlLayerManager.Remove(jobFull ?? filePath);
-
-                var current = Props.GetProp("KmlJobFiles");
-                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
-                list.RemoveAll(p => string.Equals(p, fileNameOnly, StringComparison.OrdinalIgnoreCase));
-                Props.SetProp("KmlJobFiles", string.Join("|", list));
-
-                // Delete the physical KML in the job folder (safe delete)
-                if (!string.IsNullOrWhiteSpace(jobFull) &&
-                    System.IO.File.Exists(jobFull) &&
-                    Props.IsPathSafe(jobFull))
-                {
-                    try
-                    {
-                        System.IO.File.Delete(jobFull);
-                    }
-                    catch (Exception delEx)
-                    {
-                        Props.WriteErrorLog("MapController/RemoveKmlLayer delete: " + delEx.Message);
-                    }
-                }
-
-                Refresh();
-                MapChanged?.Invoke(null, EventArgs.Empty);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
-            }
         }
 
         public static void ResetMarkers()
@@ -862,7 +857,7 @@ namespace RateController.RateMap
                         RemoveOverlay(overlay);
                 }
 
-                Refresh();
+                gmap.Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
                 Props.SetProp("KmlVisible", visible.ToString());
             }
@@ -913,7 +908,7 @@ namespace RateController.RateMap
                     BuildZoneIndex();
                     Result = true;
                     UpdateVariableRates();
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
@@ -961,7 +956,7 @@ namespace RateController.RateMap
                     BuildZoneIndex();
                     Result = true;
                     UpdateVariableRates();
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
@@ -1005,7 +1000,7 @@ namespace RateController.RateMap
                 {
                     legendManager?.Clear();
                     ColorLegend = null;
-                    Refresh();
+                    gmap.Refresh();
                 }
                 else if (Props.MainForm.Sections != null)
                 {
@@ -1021,7 +1016,7 @@ namespace RateController.RateMap
                     ColorLegend = histLegend;
                     ShowLegend(histLegend, histOk);
 
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
@@ -1125,7 +1120,7 @@ namespace RateController.RateMap
                         cTractorPosition = Location;
                         tractorMarker.Position = Location;
                         UpdateVariableRates();
-                        Refresh();
+                        gmap.Refresh();
                         MapChanged?.Invoke(null, EventArgs.Empty);
                         break;
 
@@ -1194,13 +1189,12 @@ namespace RateController.RateMap
             AddOverlay(tempMarkerOverlay);
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
-            Refresh();
+            gmap.Refresh();
         }
 
         private static void JobManager_JobChanged(object sender, EventArgs e)
         {
             LoadMap();
-            ReloadJobKmls();
         }
 
         private static void LoadData()
@@ -1264,7 +1258,7 @@ namespace RateController.RateMap
                     overlayService.Reset();
                     RemoveOverlay(AppliedOverlay);
                     legendManager?.Clear();
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
@@ -1272,11 +1266,6 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/Props_RateDataSettingsChanged: " + ex.Message);
             }
-        }
-
-        private static void Refresh()
-        {
-            gmap.Refresh();
         }
 
         private static void ReloadJobKmls()
@@ -1299,7 +1288,7 @@ namespace RateController.RateMap
                     var overlay = kmlLayerManager.LoadKml(full);
                     if (overlay != null) AddOverlay(overlay);
                 }
-                Refresh();
+                gmap.Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -1409,7 +1398,7 @@ namespace RateController.RateMap
                             _lastHistoryLastTimestamp = DateTime.MinValue;
                         }
                     }
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                 }
                 else
@@ -1418,7 +1407,7 @@ namespace RateController.RateMap
                     overlayService.Reset();
                     RemoveOverlay(AppliedOverlay);
                     legendManager?.Clear();
-                    Refresh();
+                    gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
                 }
             }
@@ -1436,7 +1425,7 @@ namespace RateController.RateMap
                 {
                     if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
                     AddOverlay(zoneOverlay);
-                    Refresh();
+                    gmap.Refresh();
                 }
                 catch (Exception ex)
                 {
@@ -1446,7 +1435,7 @@ namespace RateController.RateMap
             else
             {
                 RemoveOverlay(zoneOverlay);
-                Refresh();
+                gmap.Refresh();
             }
         }
 
@@ -1503,7 +1492,6 @@ namespace RateController.RateMap
             }
             UpdateVariableRates();
         }
-
 
         private static void UpdateVariableRates()
         {
