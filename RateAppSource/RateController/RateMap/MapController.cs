@@ -60,7 +60,7 @@ namespace RateController.RateMap
         private static List<PointLatLng> currentZoneVertices;
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
-        private static byte ZoneTransparency = 190;
+        private static byte ZoneTransparency = 100;
 
         #endregion Zones
 
@@ -520,7 +520,6 @@ namespace RateController.RateMap
             if (Preview)
             {
                 cState = MapState.Preview;
-                CenterMap();
             }
             else
             {
@@ -1336,7 +1335,7 @@ namespace RateController.RateMap
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
 
-                gmap.Position = NewLocation;
+               if(cState==MapState.Preview) gmap.Position = NewLocation;
             }
         }
 

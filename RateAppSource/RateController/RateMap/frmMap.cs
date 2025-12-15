@@ -19,10 +19,12 @@ namespace RateController.Forms
         private int MainTop = 0;
         private int MaxviewLeft = 0;
         private int MaxviewTop = 0;
+        private int MaxZoom = 10;
         private int PMheight;
         private int PMwidth;
         private int PreviewLeft = 0;
         private int PreviewTop = 0;
+        private int PreviewZoom = 10;
 
         public frmMap()
         {
@@ -100,6 +102,28 @@ namespace RateController.Forms
                         Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
                     }
                 }
+            }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string FileName = exeDirectory + "Help\\frmMap.pdf";
+
+            try
+            {
+                if (File.Exists(FileName))
+                {
+                    Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+                }
+                else
+                {
+                    Props.ShowMessage("No help available.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/bthHelp_Click: " + ex.Message);
             }
         }
 
@@ -288,6 +312,7 @@ namespace RateController.Forms
                     TopMost = true;
                     this.Left = PreviewLeft;
                     this.Top = PreviewTop;
+                    MapController.Map.Zoom = PreviewZoom;
 
                     pnlTabs.Visible = false;
                     pnlControls.Visible = false;
@@ -315,6 +340,7 @@ namespace RateController.Forms
                     TopMost = false;
                     this.Left = MaxviewLeft;
                     this.Top = MaxviewTop;
+                    MapController.Map.Zoom = MaxZoom;
 
                     pnlTabs.Visible = true;
                     pnlControls.Visible = true;
@@ -403,12 +429,14 @@ namespace RateController.Forms
                 // currently still max view, save max view position
                 MaxviewLeft = this.Left;
                 MaxviewTop = this.Top;
+                MaxZoom = (int)MapController.Map.Zoom;
             }
             else
             {
                 // currently still preview, save preview position
                 PreviewLeft = this.Left;
                 PreviewTop = this.Top;
+                PreviewZoom = (int)MapController.Map.Zoom;
             }
             ChangeMapSize();
         }
@@ -521,8 +549,6 @@ namespace RateController.Forms
             UpdateForm();
 
             MapController.MapIsDisplayed = true;
-            MapController.Map.Zoom = 16;
-            MapController.CenterMap();
 
             timer1.Enabled = true;
             lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
@@ -565,19 +591,23 @@ namespace RateController.Forms
 
                 PreviewLeft = int.TryParse(Props.GetAppProp("MapPreviewLeft"), out int lf) ? lf : 0;
                 PreviewTop = int.TryParse(Props.GetAppProp("MapPreviewTop"), out int tp) ? tp : 0;
+                PreviewZoom = int.TryParse(Props.GetAppProp("MapPreviewZoom"), out int zm) ? zm : 10;
 
                 MaxviewLeft = int.TryParse(Props.GetAppProp("MapMaxLeft"), out int ml) ? ml : 0;
                 MaxviewTop = int.TryParse(Props.GetAppProp("MapMaxTop"), out int mt) ? mt : 0;
+                MaxZoom = int.TryParse(Props.GetAppProp("MapMaxZoom"), out int mz) ? mz : 10;
 
                 if (ckWindow.Checked)
                 {
                     this.Top = PreviewTop;
                     this.Left = PreviewLeft;
+                    MapController.Map.Zoom = PreviewZoom;
                 }
                 else
                 {
                     this.Top = MaxviewTop;
                     this.Left = MaxviewLeft;
+                    MapController.Map.Zoom = MaxZoom;
                 }
             }
             catch (Exception ex)
@@ -670,6 +700,8 @@ namespace RateController.Forms
         private void SaveFormLocation()
         {
             Props.SetAppProp("MapPreview", ckWindow.Checked.ToString());
+            Props.SetAppProp("MapPreviewZoom", PreviewZoom.ToString());
+            Props.SetAppProp("MapMaxZoom", MaxZoom.ToString());
 
             if (ckWindow.Checked)
             {
@@ -941,29 +973,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string FileName = exeDirectory + "Help\\frmMap.pdf";
-
-            try
-            {
-                if (File.Exists(FileName))
-                {
-                    Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
-                }
-                else
-                {
-                    Props.ShowMessage("No help available.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/bthHelp_Click: " + ex.Message);
-            }
-
         }
     }
 }
