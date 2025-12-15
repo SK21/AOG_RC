@@ -19,6 +19,48 @@ namespace RateController.RateMap
         private readonly Dictionary<string, GMapOverlay> _overlaysByPath =
             new Dictionary<string, GMapOverlay>(StringComparer.OrdinalIgnoreCase);
 
+        // Remove all KML overlays from the provided map and clear the cache.
+        // Call this before loading a new job.
+        public void ClearKmlOverlaysFromMap(GMapControl map)
+        {
+            if (map == null) return;
+
+            // Remove overlays whose Id starts with "kml:"
+            var toRemove = map.Overlays.Where(o => o != null && o.Id != null && o.Id.StartsWith("kml:", StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var ov in toRemove)
+            {
+                // Dispose brushes/pens to avoid GDI leaks
+                foreach (var p in ov.Polygons)
+                {
+                    try
+                    {
+                        if (p.Stroke != null) p.Stroke.Dispose();
+                        if (p.Fill != null) p.Fill.Dispose();
+                    }
+                    catch { /* ignore dispose errors */ }
+                }
+
+                foreach (var r in ov.Routes)
+                {
+                    try
+                    {
+                        if (r.Stroke != null) r.Stroke.Dispose();
+                    }
+                    catch { /* ignore dispose errors */ }
+                }
+
+                map.Overlays.Remove(ov);
+            }
+
+            _overlaysByPath.Clear();
+            map.Refresh(); // ensure UI updates
+        }
+
+        public IEnumerable<GMapOverlay> GetAllOverlays()
+        {
+            return _overlaysByPath.Values;
+        }
+
         // Retrieve an overlay previously created for a file path.
         public GMapOverlay GetOverlay(string filePath)
         {
@@ -69,11 +111,6 @@ namespace RateController.RateMap
         public bool Remove(string filePath)
         {
             return _overlaysByPath.Remove(filePath);
-        }
-
-        public IEnumerable<GMapOverlay> GetAllOverlays()
-        {
-            return _overlaysByPath.Values;
         }
 
         private static void AddLineString(Placemark pm, LineString line, GMapOverlay overlay)
@@ -239,10 +276,5 @@ namespace RateController.RateMap
             return Color.FromArgb(255, Color.Red);
         }
 
-        private static Color GetKmlPolyColor(Placemark pm)
-        {
-            // Without resolving shared styles, default color
-            return Color.FromArgb(120, Color.Lime);
-        }
     }
 }

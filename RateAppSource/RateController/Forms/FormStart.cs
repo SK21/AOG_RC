@@ -719,7 +719,7 @@ namespace RateController
 
                 timerMain.Enabled = true;
 
-                bool Preview = bool.TryParse(Props.GetAppProp("MapWindow"), out bool pv) ? pv : false;
+                bool Preview = bool.TryParse(Props.GetAppProp("MapPreview"), out bool pv) ? pv : false;
                 if(Preview)
                 {
                     frmMap frm=new frmMap();

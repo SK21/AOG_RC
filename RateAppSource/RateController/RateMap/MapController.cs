@@ -586,6 +586,7 @@ namespace RateController.RateMap
             SetKmlVisibility(kmlVisible);
         }
 
+
         public static bool LoadMap()
         {
             bool Result = false;
@@ -603,8 +604,9 @@ namespace RateController.RateMap
 
                 BuildZoneIndex();
                 ShowZoneOverlay();
-
                 ShowRatesOverlay();
+                kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
+
                 Refresh();
                 CenterMap();
                 MapChanged?.Invoke(null, EventArgs.Empty);
@@ -617,8 +619,8 @@ namespace RateController.RateMap
             return Result;
         }
 
-        // Remove a KML layer previously added.
-        public static void RemoveKmlLayer(string filePath)
+
+        public static void DeleteKmlLayer(string filePath)
         {
             try
             {
@@ -1344,6 +1346,8 @@ namespace RateController.RateMap
 
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
+
+                gmap.Position = NewLocation;
             }
         }
 
@@ -1493,12 +1497,13 @@ namespace RateController.RateMap
                 SetTractorPosition(Position);
                 if (Props.MainForm.Products.ProductsAreOn() && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
-                    Props.RateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductsRateSet());
-                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.ProductsRateSet());
+                    Props.RateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
+                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
                 }
             }
             UpdateVariableRates();
         }
+
 
         private static void UpdateVariableRates()
         {
@@ -1535,7 +1540,7 @@ namespace RateController.RateMap
                 {
                     // use target rates
                     CurrentZoneName = "Base Rate";
-                    CurrentZoneRates = Props.MainForm.Products.ProductsRateSet();
+                    CurrentZoneRates = Props.MainForm.Products.BaseRates();
                     CurrentZoneColor = Color.Blue;
                     CurrentZoneHectares = 0;
                     CurrentZone = null;

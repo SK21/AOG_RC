@@ -1,7 +1,6 @@
 ﻿using RateController.Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace RateController
 {
@@ -45,6 +44,23 @@ namespace RateController
                 }
             }
             return cAlarmOn;
+        }
+
+        public double[] BaseRates()
+        {
+            double[] Result = new double[Props.MaxProducts - 2];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].Enabled && cProducts[i].BumpButtons == false)
+                {
+                    Result[i] = cProducts[i].RateSet;
+                }
+                else
+                {
+                    Result[i] = 0;
+                }
+            }
+            return Result;
         }
 
         public bool Connected()
@@ -177,16 +193,6 @@ namespace RateController
                     Result = true;
                     break;
                 }
-            }
-            return Result;
-        }
-
-        public double[] ProductsRateSet()
-        {
-            double[] Result = new double[Props.MaxProducts - 2];
-            for (int i = 0; i < Props.MaxProducts - 2; i++)
-            {
-                    Result[i] = cProducts[i].RateSet;
             }
             return Result;
         }

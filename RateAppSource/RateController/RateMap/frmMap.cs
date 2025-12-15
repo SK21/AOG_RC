@@ -192,7 +192,7 @@ namespace RateController.Forms
                     }
 
                     // Remove overlay and delete disk file (MapController handles both)
-                    MapController.RemoveKmlLayer(dlg.FileName);
+                    MapController.DeleteKmlLayer(dlg.FileName);
                     Props.ShowMessage("KML deleted.", "Delete KML", 4000);
                 }
             }
