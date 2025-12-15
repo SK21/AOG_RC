@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.RateMap;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -16,6 +17,7 @@ namespace RateController.Classes
         private readonly List<RateReading> Readings = new List<RateReading>();
         private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(30);
         private readonly Stopwatch SaveStopWatch = new Stopwatch();
+        private bool cEnabled = true;
         private double LastLatitude = 0;
         private double LastLongitude = 0;
         private int lastSavedIndex = 0;
@@ -27,17 +29,38 @@ namespace RateController.Classes
         {
             LoadData();
 
+            cEnabled = bool.TryParse(Props.GetProp("RecordRates"), out bool rec) ? rec : true;
+
             RecordTimer = new Timer();
             RecordTimer.Elapsed += RecordTimer_Elapsed;
-            RecordTimer.Enabled = Props.RateRecordEnabled;
             RecordTimer.Interval = RecordIntervalMS;
+            RecordTimer.Enabled = cEnabled;
             JobManager.JobChanged += Props_JobChanged;
-            Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
             Props.ProfileChanged += Props_ProfileChanged;
         }
 
         public int DataPoints
         { get { return Readings.Count; } }
+
+        public bool Enabled
+        {
+            get { return cEnabled; }
+            set
+            {
+                cEnabled = value;
+                RecordTimer.Enabled = cEnabled;
+                Props.SetProp("RecordRates", cEnabled.ToString());
+
+                if (cEnabled)
+                {
+                    SaveStopWatch.Start();
+                }
+                else
+                {
+                    SaveStopWatch.Stop();
+                }
+            }
+        }
 
         public void ClearReadings()
         {
@@ -57,12 +80,109 @@ namespace RateController.Classes
             }
         }
 
+        public void LoadData()
+        {
+            try
+            {
+                if (!File.Exists(JobManager.CurrentRateDataPath))
+                    throw new FileNotFoundException("The specified data file was not found.", JobManager.CurrentRateDataPath);
+
+                SaveStopWatch.Reset();
+                SaveData(LastSavePath); // save any unrecorded data
+
+                // Clear the existing readings before loading.
+                lock (_lock)
+                {
+                    Readings.Clear();
+                }
+
+                // Using a using block ensures the file is closed immediately after reading.
+                using (var reader = new StreamReader(JobManager.CurrentRateDataPath))
+                {
+                    if (!reader.EndOfStream)
+                    {
+                        // Read and discard header line.
+                        string headerLine = reader.ReadLine();
+
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            if (string.IsNullOrWhiteSpace(line))
+                                continue;
+
+                            // Assuming the CSV format matches our SaveDataToCsv header.
+                            // Split on comma. This simple approach assumes that the data values do not contain commas.
+                            string[] parts = line.Split(',');
+
+                            // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
+                            if (parts.Length < 13)
+                                continue;
+
+                            // Parse basic values.
+                            DateTime timestamp;
+                            double latitude, longitude;
+
+                            if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
+                            !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
+                            !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
+                            {
+                                continue;
+                            }
+
+                            // Parse applied rates.
+                            List<double> appliedRates = new List<double>();
+                            for (int i = 3; i < 8; i++)
+                            {
+                                double rate;
+                                if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                                {
+                                    appliedRates.Add(rate);
+                                }
+                            }
+
+                            // Parse target rates.
+                            List<double> targetRates = new List<double>();
+                            for (int i = 8; i < 13; i++)
+                            {
+                                double rate;
+                                if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                                {
+                                    targetRates.Add(rate);
+                                }
+                            }
+
+                            // Only add the reading if the number of applied and target rates match.
+                            if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
+                            {
+                                var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
+                                lock (_lock)
+                                {
+                                    Readings.Add(reading);
+                                }
+                            }
+                        }
+                    }
+                }
+                // After fully loading the CSV, set lastSavedIndex to the current count of readings.
+                lock (_lock)
+                {
+                    lastSavedIndex = Readings.Count;
+                }
+
+                if (cEnabled) SaveStopWatch.Start();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("DataCollector/LoadDataFromCSV: " + ex.Message);
+            }
+        }
+
         public void RecordReading(double latitude, double longitude, double[] appliedRates, double[] targetRates)
         {
             if (ReadyForNewData && Props.ProductsAreOn)
             {
                 ReadyForNewData = false;
-                RecordTimer.Enabled = Props.RateRecordEnabled;
+                RecordTimer.Enabled = cEnabled;
 
                 bool IsValid = true;
 
@@ -178,103 +298,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public void LoadData()
-        {
-            try
-            {
-                if (!File.Exists(JobManager.CurrentRateDataPath))
-                    throw new FileNotFoundException("The specified data file was not found.", JobManager.CurrentRateDataPath);
-
-                SaveStopWatch.Reset();
-                SaveData(LastSavePath); // save any unrecorded data
-
-                // Clear the existing readings before loading.
-                lock (_lock)
-                {
-                    Readings.Clear();
-                }
-
-                // Using a using block ensures the file is closed immediately after reading.
-                using (var reader = new StreamReader(JobManager.CurrentRateDataPath))
-                {
-                    if (!reader.EndOfStream)
-                    {
-                        // Read and discard header line.
-                        string headerLine = reader.ReadLine();
-
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            if (string.IsNullOrWhiteSpace(line))
-                                continue;
-
-                            // Assuming the CSV format matches our SaveDataToCsv header.
-                            // Split on comma. This simple approach assumes that the data values do not contain commas.
-                            string[] parts = line.Split(',');
-
-                            // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
-                            if (parts.Length < 13)
-                                continue;
-
-                            // Parse basic values.
-                            DateTime timestamp;
-                            double latitude, longitude;
-
-                            if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
-                            !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
-                            !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
-                            {
-                                continue;
-                            }
-
-                            // Parse applied rates.
-                            List<double> appliedRates = new List<double>();
-                            for (int i = 3; i < 8; i++)
-                            {
-                                double rate;
-                                if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
-                                {
-                                    appliedRates.Add(rate);
-                                }
-                            }
-
-                            // Parse target rates.
-                            List<double> targetRates = new List<double>();
-                            for (int i = 8; i < 13; i++)
-                            {
-                                double rate;
-                                if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
-                                {
-                                    targetRates.Add(rate);
-                                }
-                            }
-
-                            // Only add the reading if the number of applied and target rates match.
-                            if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
-                            {
-                                var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
-                                lock (_lock)
-                                {
-                                    Readings.Add(reading);
-                                }
-                            }
-                        }
-                    }
-                }
-                // After fully loading the CSV, set lastSavedIndex to the current count of readings.
-                lock (_lock)
-                {
-                    lastSavedIndex = Readings.Count;
-                }
-
-                if (Props.RateRecordEnabled) SaveStopWatch.Start();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("DataCollector/LoadDataFromCSV: " + ex.Message);
-            }
-        }
-
         private void Props_JobChanged(object sender, EventArgs e)
         {
             LoadData();
@@ -283,20 +306,6 @@ namespace RateController.Classes
         private void Props_ProfileChanged(object sender, EventArgs e)
         {
             LoadData();
-        }
-
-        private void Props_RateDataSettingsChanged(object sender, EventArgs e)
-        {
-            RecordTimer.Enabled = Props.RateRecordEnabled;
-            RecordTimer.Interval = RecordIntervalMS;
-            if (Props.RateRecordEnabled)
-            {
-                SaveStopWatch.Start();
-            }
-            else
-            {
-                SaveStopWatch.Stop();
-            }
         }
 
         private void RecordTimer_Elapsed(object sender, ElapsedEventArgs e)

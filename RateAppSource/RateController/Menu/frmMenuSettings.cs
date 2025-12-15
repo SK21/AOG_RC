@@ -172,13 +172,13 @@ namespace RateController.Menu
         private void grpMinUPM_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void grpSensor_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
-            mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)

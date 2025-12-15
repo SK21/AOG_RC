@@ -533,7 +533,7 @@ namespace RateController.Menu
             {
                 Color borderColor = cEdited ? Color.Blue : Color.Blue; // Change color based on cEdited
                 float borderWidth = cEdited ? 3 : 1; // Change thickness based on cEdited
-                mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
+                Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
             }
         }
 
@@ -544,7 +544,7 @@ namespace RateController.Menu
             {
                 Color borderColor = cEdited ? Color.Red : Color.Blue; // Change color based on cEdited
                 float borderWidth = cEdited ? 3 : 1; // Change thickness based on cEdited
-                mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
+                Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
             }
         }
 

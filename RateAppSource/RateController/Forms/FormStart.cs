@@ -745,7 +745,7 @@ namespace RateController
         private void groupBox3_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
-            Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Properties.Settings.Default.DisplayForeColour);
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Properties.Settings.Default.DisplayForeColour);
         }
 
         private void label34_Click(object sender, EventArgs e)

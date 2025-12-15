@@ -72,9 +72,6 @@ namespace RateController.Classes
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
-        private static bool cMapShowRates;
-        private static bool cMapShowTiles;
-        private static bool cMapShowZones;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static int cPrimeDelay = 3;
         private static double cPrimeTime = 0;
@@ -142,8 +139,6 @@ namespace RateController.Classes
 
         public static event EventHandler ProfileChanged;
 
-        public static event EventHandler RateDataSettingsChanged;
-
         public static event EventHandler ScreensSwitched;
 
         public static event EventHandler UnitsChanged;
@@ -197,39 +192,6 @@ namespace RateController.Classes
         {
             get { return mf; }
             set { mf = value; }
-        }
-
-        public static string MapCache
-        { get { return cApplicationFolder + "\\MapCache"; } }
-
-        public static bool MapShowRates
-        {
-            get { return cMapShowRates; }
-            set
-            {
-                cMapShowRates = value;
-                SetProp("MapShowRates", cMapShowRates.ToString());
-            }
-        }
-
-        public static bool MapShowTiles
-        {
-            get { return cMapShowTiles; }
-            set
-            {
-                cMapShowTiles = value;
-                SetProp("ShowTiles", cMapShowTiles.ToString());
-            }
-        }
-
-        public static bool MapShowZones
-        {
-            get { return cMapShowZones; }
-            set
-            {
-                cMapShowZones = value;
-                SetProp("MapShowZones", cMapShowZones.ToString());
-            }
         }
 
         public static MasterSwitchMode MasterSwitchMode
@@ -298,18 +260,6 @@ namespace RateController.Classes
             {
                 if (cRateCollector == null) cRateCollector = new DataCollector();
                 return cRateCollector;
-            }
-        }
-
-
-
-        public static bool RateRecordEnabled
-        {
-            get { return cRateRecordEnabled; }
-            set
-            {
-                cRateRecordEnabled = value;
-                SetProp("RecordRates", value.ToString());
             }
         }
 
@@ -568,11 +518,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static string CurrentDir()
-        {
-            return Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
-        }
-
         public static string CurrentFileName()
         {
             return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
@@ -602,9 +547,7 @@ namespace RateController.Classes
             ProfileChanged?.Invoke(null, EventArgs.Empty);
         }
 
-        public static void ShowMessage(string Message, string Title = "Help",
-                                                                                                                                                                                                                                                                                                                                                                            int timeInMsec = 20000, bool LogError = false, bool Modal = false
-            , bool PlayErrorSound = false)
+        public static void ShowMessage(string Message, string Title = "Help", int timeInMsec = 20000, bool LogError = false, bool Modal = false, bool PlayErrorSound = false)
         {
             if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60)
             {
@@ -733,44 +676,44 @@ namespace RateController.Classes
             }
         }
 
-        public static void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor)
+        public static void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor, float borderWidth = 1)
         {
             // useage:
             // point the Groupbox paint event to this sub:
-            //private void GroupBoxPaint(object sender, PaintEventArgs e)
+            // private void groupBox1_Paint(object sender, PaintEventArgs e)
             //{
             //    GroupBox box = sender as GroupBox;
-            //    Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            // mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Red, 3); // Red border with thickness 3
             //}
-
             if (box != null)
             {
-                Brush textBrush = new SolidBrush(textColor);
-                Brush borderBrush = new SolidBrush(borderColor);
-                Pen borderPen = new Pen(borderBrush);
-                SizeF strSize = g.MeasureString(box.Text, box.Font);
-                Rectangle rect = new Rectangle(box.ClientRectangle.X,
-                                               box.ClientRectangle.Y + (int)(strSize.Height / 2),
-                                               box.ClientRectangle.Width - 1,
-                                               box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
+                using (Brush textBrush = new SolidBrush(textColor))
+                using (Pen borderPen = new Pen(borderColor, borderWidth))
+                {
+                    SizeF strSize = g.MeasureString(box.Text, box.Font);
+                    Rectangle rect = new Rectangle(box.ClientRectangle.X,
+                                                   box.ClientRectangle.Y + (int)(strSize.Height / 2),
+                                                   box.ClientRectangle.Width - 1,
+                                                   box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
 
-                // Clear text and border
-                g.Clear(BackColor);
+                    // Clear text and border
+                    g.Clear(BackColor);
 
-                // Draw text
-                g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left, 0);
+                    // Draw text
+                    g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left, 0);
 
-                // Drawing Border
-                //Left
-                g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
-                //Right
-                g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
-                //Bottom
-                g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
-                //Top1
-                g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
-                //Top2
-                g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+                    // Drawing Border
+                    // Left
+                    g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+                    // Right
+                    g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                    // Bottom
+                    g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                    // Top1
+                    g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
+                    // Top2
+                    g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+                }
             }
         }
 
@@ -995,23 +938,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static bool ParseDateText(string input, out DateTime result)
-        {
-            int currentYear = DateTime.Now.Year;
-            if (IsDayMonthOnly(input)) input += " " + currentYear.ToString();
-
-            // Try to parse the date with different formats
-            string[] formats = {
-                "MM/dd/yyyy", "MM-dd-yyyy", "MM.dd.yyyy",
-                "dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy",
-                "yyyy/MM/dd", "yyyy-MM-dd", "yyyy.MM.dd",
-                "MMM dd, yyyy", "dd MMM yyyy", "MMM dd yyyy",
-                "dd MMM yyyy"
-            };
-
-            return DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
-        }
-
         public static double PressureReading(int ModuleID, double Reading)
         {
             // y = Mx + B
@@ -1044,37 +970,6 @@ namespace RateController.Classes
         public static void RaiseProductSettingsChanged()
         {
             ProductSettingsChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        public static void RaiseRateDataSettingsChanged()
-        {
-            RateDataSettingsChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        public static bool RateMapIsVisible()
-        {
-            bool Result = true;
-            try
-            {
-                if (cCurrentMenuName != "frmMenuRateMap")
-                {
-                    Result = false;
-                }
-                else
-                {
-                    Form frm = IsFormOpen("frmMenuRateMap", false);
-                    if ((frm == null) || !frm.Visible || (frm.WindowState == FormWindowState.Minimized))
-                    {
-                        Result = false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/IsRateMapVisible: " + ex.Message);
-                Result = false;
-            }
-            return Result;
         }
 
         public static void SaveFormLocation(Form frm, string Instance = "")
@@ -1286,28 +1181,6 @@ namespace RateController.Classes
             {
                 WriteErrorLog("Props/CenterForm: " + ex.Message);
             }
-        }
-
-        private static bool IsDayMonthOnly(string input)
-        {
-            bool Result = false;
-            // Check if the input matches day and month formats
-            string[] dayMonthFormats = {
-                "MM/dd", "MM-dd", "MM.dd",
-                "dd/MM", "dd-MM", "dd.MM",
-                "MMM dd", "dd MMM"
-            };
-
-            foreach (var format in dayMonthFormats)
-            {
-                if (DateTime.TryParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                {
-                    Result = true;
-                    break;
-                }
-            }
-
-            return Result;
         }
 
         private static void Load(SortedDictionary<string, string> PropsDct, string DctPath)

@@ -405,7 +405,7 @@ namespace RateController.Forms
         {
             if (!Initializing)
             {
-                Props.RateRecordEnabled = ckRecord.Checked;
+                Props.RateCollector.Enabled = ckRecord.Checked;
             }
         }
 
@@ -899,7 +899,7 @@ namespace RateController.Forms
                     lbAreaName.Text = "Acres";
                 }
 
-                ckRecord.Checked = Props.RateRecordEnabled;
+                ckRecord.Checked = Props.RateCollector.Enabled;
 
                 switch (MapController.ProductRates)
                 {

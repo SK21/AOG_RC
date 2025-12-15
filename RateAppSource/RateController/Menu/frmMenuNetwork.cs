@@ -129,7 +129,7 @@ namespace RateController.Menu
 
         private void groupBox2_Paint(object sender, PaintEventArgs e)
         {
-            mf.Tls.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void LoadCombo()

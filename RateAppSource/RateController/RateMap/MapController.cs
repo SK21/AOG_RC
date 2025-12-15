@@ -69,6 +69,8 @@ namespace RateController.RateMap
         private static int _lastHistoryCount;
         private static DateTime _lastHistoryLastTimestamp;
         private static string _lastLoadedMapPath;
+        private static int _lastProductRates = -1;
+        private static RateType _lastRateTypeDisplay = RateType.Applied;
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
         private static MapState cState;
@@ -149,6 +151,7 @@ namespace RateController.RateMap
                 {
                     cProductRates = value;
                     Props.SetProp("MapProductRates", cProductRates.ToString());
+                    ShowRatesOverlay();
                 }
             }
         }
@@ -319,7 +322,6 @@ namespace RateController.RateMap
                 UpdateTimer.Tick -= UpdateTimer_Tick;
 
                 JobManager.JobChanged -= JobManager_JobChanged;
-                Props.RateDataSettingsChanged -= Props_RateDataSettingsChanged;
 
                 if (gmap != null)
                 {
@@ -602,7 +604,6 @@ namespace RateController.RateMap
         {
             LoadData();
             JobManager.JobChanged += JobManager_JobChanged;
-            Props.RateDataSettingsChanged += Props_RateDataSettingsChanged;
 
             CurrentZoneRates = new double[Props.MaxProducts - 2];
             cState = MapState.Tracking;
@@ -1245,21 +1246,9 @@ namespace RateController.RateMap
         {
             try
             {
-                if (cShowRates)
-                {
-                    overlayService.Reset();
-
-                    if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
-                    AddOverlay(AppliedOverlay);
-                }
-                else
-                {
-                    overlayService.Reset();
-                    RemoveOverlay(AppliedOverlay);
-                    legendManager?.Clear();
-                    gmap.Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                }
+                // Reload persisted settings and rebuild overlay accordingly
+                LoadData();
+                ShowRatesOverlay();
             }
             catch (Exception ex)
             {
@@ -1335,7 +1324,7 @@ namespace RateController.RateMap
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
 
-               if(cState==MapState.Preview) gmap.Position = NewLocation;
+                if (cState == MapState.Preview) gmap.Position = NewLocation;
             }
         }
 
@@ -1347,6 +1336,8 @@ namespace RateController.RateMap
             return string.Equals(_lastLoadedMapPath, mapPath, StringComparison.Ordinal) &&
                    _lastHistoryCount == readings.Count &&
                    _lastHistoryLastTimestamp == lastTs &&
+                   _lastProductRates == cProductRates &&                 // ensure product selection matches
+                   _lastRateTypeDisplay == cRateTypeDisplay &&           // ensure display type matches
                    AppliedOverlay != null &&
                    AppliedOverlay.Polygons != null &&
                    AppliedOverlay.Polygons.Count > 0;
