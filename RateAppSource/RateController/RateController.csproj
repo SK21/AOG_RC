@@ -697,7 +697,6 @@
     <EmbeddedResource Include="Forms\RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Documentation\MAPMANAGER.md" />
     <None Include="Help\frmMap.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -772,7 +771,6 @@
     <None Include="Resources\file-arrow-down.png" />
     <None Include="Resources\selection.png" />
     <None Include="Resources\clock.png" />
-    <None Include="Documentation\APPLIED_COVERAGE.md" />
     <None Include="Resources\caret-circle-up.png" />
     <None Include="Resources\file-cloud.png" />
     <None Include="Resources\plus-square.png" />
