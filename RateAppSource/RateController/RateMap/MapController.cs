@@ -35,7 +35,7 @@ namespace RateController.RateMap
 
         private static GMapOverlay AppliedOverlay;
         private static GMapOverlay gpsMarkerOverlay;
-        private static GMapOverlay tempMarkerOverlay;
+        private static GMapOverlay NewZoneMarkerOverlay;
         private static GMapOverlay zoneOverlay;
 
         #endregion Overlays
@@ -57,7 +57,7 @@ namespace RateController.RateMap
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
         private static double[] CurrentZoneRates;
-        private static List<PointLatLng> currentZoneVertices;
+        private static List<PointLatLng> NewZoneVertices;
         private static List<MapZone> mapZones;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static byte ZoneTransparency = 100;
@@ -343,7 +343,7 @@ namespace RateController.RateMap
                 AppliedOverlay = null;
                 zoneOverlay = null;
                 gpsMarkerOverlay = null;
-                tempMarkerOverlay = null;
+                NewZoneMarkerOverlay = null;
 
                 gmap?.Dispose();
                 gmap = null;
@@ -372,14 +372,14 @@ namespace RateController.RateMap
                 {
                     ErrorCode = 1;
                 }
-                else if (currentZoneVertices.Count < 3)
+                else if (NewZoneVertices.Count < 3)
                 {
                     ErrorCode = 2;
                 }
                 else
                 {
                     var geometryFactory = new GeometryFactory();
-                    var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
+                    var coordinates = NewZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
 
                     if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
                     {
@@ -399,8 +399,8 @@ namespace RateController.RateMap
                     mapZones.Add(NewZone);
                     zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(ZoneTransparency));
 
-                    currentZoneVertices.Clear();
-                    tempMarkerOverlay.Markers.Clear();
+                    NewZoneVertices.Clear();
+                    NewZoneMarkerOverlay.Markers.Clear();
 
                     BuildZoneIndex();
                     UpdateVariableRates();
@@ -532,6 +532,7 @@ namespace RateController.RateMap
 
         public static bool EditZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
         {
+            // rates, color
             bool Result = false;
             ErrorCode = 0;
             try
@@ -572,14 +573,6 @@ namespace RateController.RateMap
                         zoneOverlay = AddPolygons(zoneOverlay, polygonsForZone);
                     }
 
-                    // Reorder to keep last-wins priority
-                    mapZones.Remove(ZoneToEdit);
-                    mapZones.Add(ZoneToEdit);
-
-                    currentZoneVertices.Clear();
-                    tempMarkerOverlay.Markers.Clear();
-
-                    BuildZoneIndex();
                     UpdateVariableRates();
                     gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
@@ -612,7 +605,7 @@ namespace RateController.RateMap
 
             // map zones
             mapZones = new List<MapZone>();
-            currentZoneVertices = new List<PointLatLng>();
+            NewZoneVertices = new List<PointLatLng>();
 
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
             gmap.MouseClick += Gmap_MouseClick;
@@ -663,8 +656,8 @@ namespace RateController.RateMap
 
         public static void ResetMarkers()
         {
-            currentZoneVertices.Clear();
-            tempMarkerOverlay.Markers.Clear();
+            NewZoneVertices.Clear();
+            NewZoneMarkerOverlay.Markers.Clear();
         }
 
         public static bool SaveMap()
@@ -867,102 +860,6 @@ namespace RateController.RateMap
             }
         }
 
-        public static bool UpdateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor)
-        {
-            bool Result = false;
-            MapZone ZoneToEdit = null;
-            if (cState == MapState.Positioning)
-            {
-                ZoneToEdit = CurrentZone;
-            }
-
-            if (ZoneToEdit == null)
-            {
-                // create a new zone
-                if (currentZoneVertices.Count > 2 && !ZoneNameFound(name))
-                {
-                    var geometryFactory = new GeometryFactory();
-                    var coordinates = currentZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
-
-                    if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
-                    {
-                        Array.Resize(ref coordinates, coordinates.Length + 1);
-                        coordinates[coordinates.Length - 1] = coordinates[0];
-                    }
-                    var polygon = geometryFactory.CreatePolygon(coordinates);
-
-                    ZoneToEdit = new MapZone(name, polygon, new Dictionary<string, double>
-                    {
-                        { "ProductA", Rt0 },
-                        { "ProductB", Rt1 },
-                        { "ProductC", Rt2 },
-                        { "ProductD", Rt3 }
-                    }, zoneColor);
-
-                    mapZones.Add(ZoneToEdit);
-                    zoneOverlay = AddPolygons(zoneOverlay, ZoneToEdit.ToGMapPolygons(ZoneTransparency));
-
-                    currentZoneVertices.Clear();
-                    tempMarkerOverlay.Markers.Clear();
-
-                    BuildZoneIndex();
-                    Result = true;
-                    UpdateVariableRates();
-                    gmap.Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                }
-            }
-            else
-            {
-                // update zone
-                if (!ZoneNameFound(name, ZoneToEdit))
-                {
-                    // Update properties
-                    ZoneToEdit.Name = name;
-                    Dictionary<string, double> NewRates = new Dictionary<string, double>
-                    {
-                        { "ProductA", Rt0 },
-                        { "ProductB", Rt1 },
-                        { "ProductC", Rt2 },
-                        { "ProductD", Rt3 }
-                    };
-                    ZoneToEdit.Rates = NewRates;
-                    ZoneToEdit.ZoneColor = zoneColor;
-
-                    // Refresh polygons in overlay to reflect new color
-                    if (zoneOverlay != null)
-                    {
-                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(ZoneTransparency);
-                        foreach (var polygonToReplace in polygonsForZone)
-                        {
-                            if (polygonToReplace == null) continue;
-                            var existing = zoneOverlay.Polygons
-                                .FirstOrDefault(p => p.Points.SequenceEqual(polygonToReplace.Points));
-                            if (existing != null)
-                            {
-                                zoneOverlay.Polygons.Remove(existing);
-                            }
-                        }
-                        zoneOverlay = AddPolygons(zoneOverlay, polygonsForZone);
-                    }
-
-                    // Reorder to keep last-wins priority
-                    mapZones.Remove(ZoneToEdit);
-                    mapZones.Add(ZoneToEdit);
-
-                    currentZoneVertices.Clear();
-                    tempMarkerOverlay.Markers.Clear();
-
-                    BuildZoneIndex();
-                    Result = true;
-                    UpdateVariableRates();
-                    gmap.Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                }
-            }
-
-            return Result;
-        }
 
         private static void AddOverlay(GMapOverlay NewOverlay)
         {
@@ -1107,8 +1004,8 @@ namespace RateController.RateMap
 
                     case MapState.EditZones:
                         var point = gmap.FromLocalToLatLng(e.X, e.Y);
-                        currentZoneVertices.Add(point);
-                        tempMarkerOverlay.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.red_small));
+                        NewZoneVertices.Add(point);
+                        NewZoneMarkerOverlay.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.red_small));
                         break;
 
                     case MapState.Tracking:
@@ -1173,7 +1070,7 @@ namespace RateController.RateMap
             // overlays
             zoneOverlay = new GMapOverlay("mapzones");
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
-            tempMarkerOverlay = new GMapOverlay("tempMarkers");
+            NewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
             AppliedOverlay = new GMapOverlay("AppliedRates");
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(Lat, Lng), GMarkerGoogleType.green);
@@ -1186,7 +1083,7 @@ namespace RateController.RateMap
             UpdateVariableRates();
 
             AddOverlay(gpsMarkerOverlay);
-            AddOverlay(tempMarkerOverlay);
+            AddOverlay(NewZoneMarkerOverlay);
             AddOverlay(zoneOverlay);
             AddOverlay(AppliedOverlay);
             gmap.Refresh();
