@@ -18,8 +18,10 @@ namespace RateController.Classes
         private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(30);
         private readonly Stopwatch SaveStopWatch = new Stopwatch();
         private bool cEnabled = true;
+        private int LastCount = 0;
         private double LastLatitude = 0;
         private double LastLongitude = 0;
+        private int LastProductID = -1;
         private int lastSavedIndex = 0;
         private string LastSavePath;
         private bool ReadyForNewData = false;
@@ -65,14 +67,26 @@ namespace RateController.Classes
             {
                 Readings.Clear();
                 lastSavedIndex = 0;
+                LastProductID = -1;
+                LastCount = 0;
                 if (Props.IsPathSafe(JobManager.CurrentRateDataPath)) File.Delete(JobManager.CurrentRateDataPath);
             }
         }
 
         public int DataPoints(int ProductID)
         {
-            int count = Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
-            return count;
+            int Result = 0;
+            if ((lastSavedIndex == Readings.Count) && (ProductID == LastProductID))
+            {
+                Result = LastCount;
+            }
+            else
+            {
+                LastCount = Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
+                LastProductID = ProductID;
+                Result = LastCount;
+            }
+            return Result;
         }
 
         public IReadOnlyList<RateReading> GetReadings()
@@ -97,6 +111,8 @@ namespace RateController.Classes
                 lock (_lock)
                 {
                     Readings.Clear();
+                    LastProductID = -1;
+                    LastCount = 0;
                 }
 
                 // Using a using block ensures the file is closed immediately after reading.

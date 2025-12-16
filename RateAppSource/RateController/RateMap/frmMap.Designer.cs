@@ -553,6 +553,7 @@
             this.tabControl1.Size = new System.Drawing.Size(431, 435);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 389;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabZones
             // 

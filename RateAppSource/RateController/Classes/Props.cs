@@ -146,7 +146,6 @@ namespace RateController.Classes
         #region MainProperties
 
         private static clsJobDataCollector cJobCollector;
-        private static DataCollector cRateCollector;
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
@@ -252,15 +251,6 @@ namespace RateController.Classes
         {
             get { return cRateCalibrationOn; }
             set { cRateCalibrationOn = value; }
-        }
-
-        public static DataCollector RateCollector
-        {
-            get
-            {
-                if (cRateCollector == null) cRateCollector = new DataCollector();
-                return cRateCollector;
-            }
         }
 
         public static bool ReadOnly

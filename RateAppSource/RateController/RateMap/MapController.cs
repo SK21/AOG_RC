@@ -72,6 +72,7 @@ namespace RateController.RateMap
         private static RateType _lastRateTypeDisplay = RateType.Applied;
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
+        private static DataCollector cRateCollector;
         private static MapState cState;
         private static PointLatLng cTractorPosition;
         private static double cTravelHeading;
@@ -154,6 +155,9 @@ namespace RateController.RateMap
                 }
             }
         }
+
+        public static DataCollector RateCollector
+        { get { return cRateCollector; } }
 
         public static bool ShowRates
         {
@@ -252,7 +256,7 @@ namespace RateController.RateMap
             {
                 try
                 {
-                    var collector = Props.RateCollector;
+                    var collector = cRateCollector;
                     if (collector != null)
                     {
                         var readings = collector.GetReadings();
@@ -357,6 +361,8 @@ namespace RateController.RateMap
                 MapChanged = null;
                 MapLeftClicked = null;
                 MapZoomed = null;
+
+                cRateCollector = null;
             }
             catch (Exception ex)
             {
@@ -617,6 +623,7 @@ namespace RateController.RateMap
 
         public static void Initialize()
         {
+            cRateCollector = new DataCollector();
             LoadData();
             JobManager.JobChanged += JobManager_JobChanged;
 
@@ -761,7 +768,7 @@ namespace RateController.RateMap
                 }
                 else
                 {
-                    var readings = Props.RateCollector?.GetReadings();
+                    var readings = cRateCollector?.GetReadings();
                     if (readings != null && readings.Count > 0)
                     {
                         AppliedOverlay.Polygons.Clear();
@@ -912,8 +919,8 @@ namespace RateController.RateMap
                 AppliedOverlay.Polygons.Clear();
                 AddOverlay(AppliedOverlay);
 
-                Props.RateCollector.LoadData(); // ensure fresh data
-                var readings = Props.RateCollector.GetReadings();
+                cRateCollector.LoadData(); // ensure fresh data
+                var readings = cRateCollector.GetReadings();
                 if (readings == null || readings.Count == 0)
                 {
                     legendManager?.Clear();
@@ -1281,7 +1288,7 @@ namespace RateController.RateMap
                 if (cShowRates)
                 {
                     // Decide whether to rebuild coverage from history
-                    var readings = Props.RateCollector?.GetReadings();
+                    var readings = cRateCollector?.GetReadings();
                     bool SkipRebuild = ShouldSkipHistoryBuild(JobManager.CurrentMapPath, readings);
 
                     if (SkipRebuild)
@@ -1355,7 +1362,7 @@ namespace RateController.RateMap
             {
                 if (cShowRates && cMapIsDisplayed && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
-                    var readings = Props.RateCollector.GetReadings();
+                    var readings = cRateCollector.GetReadings();
                     if (readings == null || readings.Count == 0)
                     {
                         ClearAppliedRatesOverlay();
@@ -1394,7 +1401,7 @@ namespace RateController.RateMap
                 SetTractorPosition(Position);
                 if (Props.MainForm.Products.ProductsAreOn() && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
-                    Props.RateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
+                    cRateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
                     if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
                 }
             }

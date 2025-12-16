@@ -117,7 +117,7 @@ namespace RateController.Forms
             Hlp.Close();
             if (Result)
             {
-                Props.RateCollector.ClearReadings();
+                MapController.RateCollector.ClearReadings();
 
                 // Immediately clear coverage overlay and legend from the map
                 MapController.ClearAppliedRatesOverlay();
@@ -435,6 +435,7 @@ namespace RateController.Forms
                     }
                 }
                 MapController.DisplaySizeUpdate(ckWindow.Checked);
+                timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
             }
             catch (Exception ex)
             {
@@ -479,7 +480,7 @@ namespace RateController.Forms
         {
             if (!Initializing)
             {
-                Props.RateCollector.Enabled = ckRecord.Checked;
+                MapController.RateCollector.Enabled = ckRecord.Checked;
             }
         }
 
@@ -638,8 +639,8 @@ namespace RateController.Forms
 
                 MapController.MapIsDisplayed = true;
 
-                timer1.Enabled = true;
-                lbDataPoints.Text = Props.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
+                timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
+                lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
 
                 // Sync checkbox with saved preference
                 bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
@@ -810,6 +811,11 @@ namespace RateController.Forms
             lbTitle.Text = job.Length <= 15 ? job : job.Substring(0, 15);
         }
 
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
+        }
+
         private void tbName_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!Initializing) EditInProgress = true;
@@ -929,7 +935,7 @@ namespace RateController.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbDataPoints.Text = Props.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
         }
 
         private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
@@ -973,7 +979,7 @@ namespace RateController.Forms
                     lbAreaName.Text = "Acres";
                 }
 
-                ckRecord.Checked = Props.RateCollector.Enabled;
+                ckRecord.Checked = MapController.RateCollector.Enabled;
 
                 switch (MapController.ProductRates)
                 {
@@ -1010,7 +1016,7 @@ namespace RateController.Forms
             else if (rbProductC.Checked) MapController.ProductRates = 2;
             else MapController.ProductRates = 3;
 
-            lbDataPoints.Text = Props.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
         }
 
         private void UpdateScrollbars()
