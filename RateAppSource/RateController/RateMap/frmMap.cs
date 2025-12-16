@@ -322,14 +322,24 @@ namespace RateController.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (MapController.DeleteZone(tbName.Text))
+
+            switch (MapController.State)
             {
-                SetEditMode(false, true);
-                UpdateForm();
-            }
-            else
-            {
-                Props.ShowMessage("Zone could not be deleted.");
+                case MapState.EditZones:
+                    MapController.DeleteLastVertex();
+                    break;
+
+                case MapState.Positioning:
+                    if (MapController.DeleteZone(tbName.Text))
+                    {
+                        SetEditMode(false, true);
+                        UpdateForm();
+                    }
+                    else
+                    {
+                        Props.ShowMessage("Zone could not be deleted.");
+                    }
+                    break;
             }
         }
 
@@ -683,11 +693,11 @@ namespace RateController.Forms
 
                 PreviewLeft = int.TryParse(Props.GetAppProp("MapPreviewLeft"), out int lf) ? lf : 0;
                 PreviewTop = int.TryParse(Props.GetAppProp("MapPreviewTop"), out int tp) ? tp : 0;
-                PreviewZoom = int.TryParse(Props.GetAppProp("MapPreviewZoom"), out int zm) ? zm : 10;
+                PreviewZoom = int.TryParse(Props.GetAppProp("MapPreviewZoom"), out int zm) ? zm : 16;
 
                 MaxviewLeft = int.TryParse(Props.GetAppProp("MapMaxLeft"), out int ml) ? ml : 0;
                 MaxviewTop = int.TryParse(Props.GetAppProp("MapMaxTop"), out int mt) ? mt : 0;
-                MaxZoom = int.TryParse(Props.GetAppProp("MapMaxZoom"), out int mz) ? mz : 10;
+                MaxZoom = int.TryParse(Props.GetAppProp("MapMaxZoom"), out int mz) ? mz : 16;
 
                 if (ckWindow.Checked)
                 {

@@ -11,7 +11,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
-using GMap.NET.Internals; // ensure namespace available for loader cancel methods
 
 namespace RateController.RateMap
 {
@@ -57,8 +56,8 @@ namespace RateController.RateMap
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
         private static double[] CurrentZoneRates;
-        private static List<PointLatLng> NewZoneVertices;
         private static List<MapZone> mapZones;
+        private static List<PointLatLng> NewZoneVertices;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static byte ZoneTransparency = 100;
 
@@ -192,6 +191,9 @@ namespace RateController.RateMap
                 ShowZoneOverlay();
             }
         }
+
+        public static MapState State
+        { get { return cState; } }
 
         public static Color ZoneColor => CurrentZoneColor;
 
@@ -459,6 +461,26 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
+            }
+        }
+
+        public static void DeleteLastVertex()
+        {
+            try
+            {
+                if (NewZoneVertices.Count > 0)
+                {
+                    NewZoneVertices.RemoveAt(NewZoneVertices.Count - 1);
+                    if (NewZoneMarkerOverlay.Markers.Count > 0)
+                    {
+                        NewZoneMarkerOverlay.Markers.RemoveAt(NewZoneMarkerOverlay.Markers.Count - 1);
+                    }
+                    gmap.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/DeleteLastVertex: " + ex.Message);
             }
         }
 
@@ -859,7 +881,6 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/SetKmlVisibility: " + ex.Message);
             }
         }
-
 
         private static void AddOverlay(GMapOverlay NewOverlay)
         {
