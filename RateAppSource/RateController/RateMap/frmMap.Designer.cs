@@ -83,10 +83,10 @@
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tlpTitle = new System.Windows.Forms.TableLayoutPanel();
+            this.btnTitleClose = new System.Windows.Forms.Button();
+            this.btnTitleZoomIn = new System.Windows.Forms.Button();
             this.lbTitle = new System.Windows.Forms.Label();
             this.btnTitleZoomOut = new System.Windows.Forms.Button();
-            this.btnTitleZoomIn = new System.Windows.Forms.Button();
-            this.btnTitleClose = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -789,12 +789,44 @@
             this.tlpTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
             this.tlpTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
             // 
+            // btnTitleClose
+            // 
+            this.btnTitleClose.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleClose.FlatAppearance.BorderSize = 0;
+            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleClose.Image = global::RateController.Properties.Resources.x_square48;
+            this.btnTitleClose.Location = new System.Drawing.Point(258, 3);
+            this.btnTitleClose.Name = "btnTitleClose";
+            this.btnTitleClose.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleClose.TabIndex = 3;
+            this.btnTitleClose.UseVisualStyleBackColor = true;
+            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
+            // 
+            // btnTitleZoomIn
+            // 
+            this.btnTitleZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleZoomIn.FlatAppearance.BorderSize = 0;
+            this.btnTitleZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTitleZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleZoomIn.Image = global::RateController.Properties.Resources.plus_square48;
+            this.btnTitleZoomIn.Location = new System.Drawing.Point(213, 3);
+            this.btnTitleZoomIn.Name = "btnTitleZoomIn";
+            this.btnTitleZoomIn.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleZoomIn.TabIndex = 2;
+            this.btnTitleZoomIn.UseVisualStyleBackColor = true;
+            this.btnTitleZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            // 
             // lbTitle
             // 
             this.lbTitle.Dock = System.Windows.Forms.DockStyle.Left;
             this.lbTitle.Location = new System.Drawing.Point(3, 0);
             this.lbTitle.Name = "lbTitle";
-            this.lbTitle.Size = new System.Drawing.Size(54, 45);
+            this.lbTitle.Size = new System.Drawing.Size(159, 45);
             this.lbTitle.TabIndex = 0;
             this.lbTitle.Text = "Map";
             this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -806,41 +838,16 @@
             this.btnTitleZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleZoomOut.FlatAppearance.BorderSize = 0;
+            this.btnTitleZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTitleZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleZoomOut.Image = global::RateController.Properties.Resources.minus_square48;
             this.btnTitleZoomOut.Location = new System.Drawing.Point(168, 3);
             this.btnTitleZoomOut.Name = "btnTitleZoomOut";
             this.btnTitleZoomOut.Size = new System.Drawing.Size(39, 39);
             this.btnTitleZoomOut.TabIndex = 1;
-            this.btnTitleZoomOut.Text = "-";
             this.btnTitleZoomOut.UseVisualStyleBackColor = true;
             this.btnTitleZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
-            // 
-            // btnTitleZoomIn
-            // 
-            this.btnTitleZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTitleZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTitleZoomIn.Location = new System.Drawing.Point(213, 3);
-            this.btnTitleZoomIn.Name = "btnTitleZoomIn";
-            this.btnTitleZoomIn.Size = new System.Drawing.Size(39, 39);
-            this.btnTitleZoomIn.TabIndex = 2;
-            this.btnTitleZoomIn.Text = "+";
-            this.btnTitleZoomIn.UseVisualStyleBackColor = true;
-            this.btnTitleZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
-            // 
-            // btnTitleClose
-            // 
-            this.btnTitleClose.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTitleClose.Location = new System.Drawing.Point(258, 3);
-            this.btnTitleClose.Name = "btnTitleClose";
-            this.btnTitleClose.Size = new System.Drawing.Size(39, 39);
-            this.btnTitleClose.TabIndex = 3;
-            this.btnTitleClose.Text = "X";
-            this.btnTitleClose.UseVisualStyleBackColor = true;
-            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
             // 
             // frmMap
             // 

@@ -762,6 +762,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\x-square48.png" />
+    <None Include="Resources\x-square.png" />
+    <None Include="Resources\plus-square48.png" />
+    <None Include="Resources\minus-square48.png" />
     <None Include="Resources\printer.png" />
     <None Include="Resources\copy-small.png" />
     <None Include="Resources\folder-open-small.png" />

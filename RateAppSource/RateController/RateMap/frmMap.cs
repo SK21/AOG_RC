@@ -21,12 +21,12 @@ namespace RateController.Forms
         private int MaxviewLeft = 0;
         private int MaxviewTop = 0;
         private int MaxZoom = 10;
+        private Point MouseDownLocation;
         private int PMheight;
         private int PMwidth;
         private int PreviewLeft = 0;
         private int PreviewTop = 0;
         private int PreviewZoom = 10;
-        private Point MouseDownLocation;
 
         public frmMap()
         {
@@ -44,6 +44,34 @@ namespace RateController.Forms
                     break;
                 }
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Draw a 1px border inside the client area so it's not hidden by the non-client frame
+            var rect = this.ClientRectangle;
+            if (rect.Width <= 0 || rect.Height <= 0) return;
+
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
+            int borderWidth = 1;
+
+            ControlPaint.DrawBorder(
+                e.Graphics,
+                rect,
+                borderColor, borderWidth, ButtonBorderStyle.Solid,
+                borderColor, borderWidth, ButtonBorderStyle.Solid,
+                borderColor, borderWidth, ButtonBorderStyle.Solid,
+                borderColor, borderWidth, ButtonBorderStyle.Solid
+            );
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            // Ensure border repaints correctly after layout or size changes
+            this.Invalidate();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -272,6 +300,11 @@ namespace RateController.Forms
             }
         }
 
+        private void btnTitleClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom += 1;
@@ -328,8 +361,13 @@ namespace RateController.Forms
                     this.Width = 300;
                     this.Height = 300;
 
-                    pnlMain.Location = new Point(0, tlpTitle.Height);
-                    pnlMain.Size = new Size(this.Width, this.Height - tlpTitle.Height);
+                    // Respect padding so the custom border remains visible
+                    tlpTitle.Left = this.Padding.Left;
+                    tlpTitle.Top = this.Padding.Top;
+                    tlpTitle.Width = this.ClientSize.Width - this.Padding.Horizontal;
+
+                    pnlMain.Location = new Point(this.Padding.Left, tlpTitle.Bottom);
+                    pnlMain.Size = new Size(this.ClientSize.Width - this.Padding.Horizontal, this.ClientSize.Height - tlpTitle.Height - this.Padding.Vertical);
                     pnlMap.Size = pnlMain.Size;
 
                     if (Props.UseLargeScreen)
@@ -449,6 +487,7 @@ namespace RateController.Forms
                 Props.VariableRateEnabled = ckUseVR.Checked;
             }
         }
+
         private void ckWindow_CheckedChanged(object sender, EventArgs e)
         {
             if (ckWindow.Checked)
@@ -533,65 +572,78 @@ namespace RateController.Forms
 
         private void frmMap_Load(object sender, EventArgs e)
         {
-            InitializeColorComboBox();
-
-            MapController.MapChanged += MapController_MapChanged;
-
-            this.BackColor = Properties.Settings.Default.MainBackColour;
-            tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
-            lbTitle.BackColor = Properties.Settings.Default.MainBackColour;
-            btnTitleClose.BackColor = Properties.Settings.Default.MainBackColour;
-            btnTitleZoomIn.BackColor = Properties.Settings.Default.MainBackColour;
-            btnTitleZoomOut.BackColor = Properties.Settings.Default.MainBackColour;
-
-            tlpTitle.Top = 0;
-            tlpTitle.Left = 0;
-
-            tabControl1.ItemSize = new Size((tabControl1.Width - 10) / tabControl1.TabCount, tabControl1.ItemSize.Height);
-
-            foreach (TabPage tb in tabControl1.TabPages)
+            try
             {
-                tb.BackColor = Properties.Settings.Default.MainBackColour;
+                InitializeColorComboBox();
+
+                MapController.MapChanged += MapController_MapChanged;
+                JobManager.JobChanged += JobManager_JobChanged;
+
+                this.BackColor = Properties.Settings.Default.MainBackColour;
+                tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
+                lbTitle.BackColor = Properties.Settings.Default.MainBackColour;
+                btnTitleClose.BackColor = Properties.Settings.Default.MainBackColour;
+                btnTitleZoomIn.BackColor = Properties.Settings.Default.MainBackColour;
+                btnTitleZoomOut.BackColor = Properties.Settings.Default.MainBackColour;
+
+                tlpTitle.Top = 0;
+                tlpTitle.Left = 0;
+
+                tabControl1.ItemSize = new Size((tabControl1.Width - 10) / tabControl1.TabCount, tabControl1.ItemSize.Height);
+
+                foreach (TabPage tb in tabControl1.TabPages)
+                {
+                    tb.BackColor = Properties.Settings.Default.MainBackColour;
+                }
+
+                PMheight = pnlMain.Height;
+                PMwidth = pnlMain.Width;
+
+                pnlMap.Controls.Add(MapController.Map);
+
+                MapController.MapZoomed += MapController_MapZoomed;
+                MapController.MapLeftClicked += MapController_MapLeftClicked;
+                MapController.LoadMap();
+                MapController.LegendOverlayEnabled = !ckWindow.Checked;
+                MapController.Enabled = true;
+
+                Props.ScreensSwitched += Props_ScreensSwitched;
+                if (Props.UseLargeScreen)
+                {
+                    MainLeft = Props.MainForm.LSLeft;
+                    MainTop = Props.MainForm.LSTop;
+                }
+                else
+                {
+                    MainLeft = Props.MainForm.Left;
+                    MainTop = Props.MainForm.Top;
+                }
+
+                // Reserve 1px around the edges so the painted border remains visible
+                this.Padding = new Padding(1);
+
+                LoadFormLocation();
+                ChangeMapSize();
+
+                UpdateScrollbars();
+                UpdateForm();
+
+                MapController.MapIsDisplayed = true;
+
+                timer1.Enabled = true;
+                lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+
+                // Sync checkbox with saved preference
+                bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
+                ckKML.Checked = kmlVisible;
+                MapController.SetKmlVisibility(kmlVisible);
+
+                SetTitle();
             }
-
-            PMheight = pnlMain.Height;
-            PMwidth = pnlMain.Width;
-
-            pnlMap.Controls.Add(MapController.Map);
-
-            MapController.MapZoomed += MapController_MapZoomed;
-            MapController.MapLeftClicked += MapController_MapLeftClicked;
-            MapController.LoadMap();
-            MapController.LegendOverlayEnabled = !ckWindow.Checked;
-            MapController.Enabled = true;
-
-            Props.ScreensSwitched += Props_ScreensSwitched;
-            if (Props.UseLargeScreen)
+            catch (Exception ex)
             {
-                MainLeft = Props.MainForm.LSLeft;
-                MainTop = Props.MainForm.LSTop;
+                Props.WriteErrorLog("frmMap/Load: " + ex.Message);
             }
-            else
-            {
-                MainLeft = Props.MainForm.Left;
-                MainTop = Props.MainForm.Top;
-            }
-
-            LoadFormLocation();
-            ChangeMapSize();
-
-            UpdateScrollbars();
-            UpdateForm();
-
-            MapController.MapIsDisplayed = true;
-
-            timer1.Enabled = true;
-            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
-
-            // Sync checkbox with saved preference
-            bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
-            ckKML.Checked = kmlVisible;
-            MapController.SetKmlVisibility(kmlVisible);
         }
 
         private void frmMap_Move(object sender, EventArgs e)
@@ -616,6 +668,11 @@ namespace RateController.Forms
             colorComboBox.SelectedIndex = 0;
             colorComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             colorComboBox.DrawItem += new DrawItemEventHandler(colorComboBox_DrawItem);
+        }
+
+        private void JobManager_JobChanged(object sender, EventArgs e)
+        {
+            SetTitle();
         }
 
         private void LoadFormLocation()
@@ -737,6 +794,12 @@ namespace RateController.Forms
                 EditInProgress = false;
                 UpdateForm();
             }
+        }
+
+        private void SetTitle()
+        {
+            string job = JobManager.CurrentJobDescription;
+            lbTitle.Text = job.Length <= 15 ? job : job.Substring(0, 15);
         }
 
         private void tbName_KeyPress(object sender, KeyPressEventArgs e)
@@ -861,6 +924,16 @@ namespace RateController.Forms
             lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
         }
 
+        private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseDownLocation = e.Location;
+        }
+
+        private void tlpTitle_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+        }
+
         private void UpdateForm()
         {
             try
@@ -966,23 +1039,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void btnTitleClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
-        {
-             MouseDownLocation = e.Location;
-
-        }
-
-        private void tlpTitle_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
-
         }
     }
 }

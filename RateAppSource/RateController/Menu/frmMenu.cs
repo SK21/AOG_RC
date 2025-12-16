@@ -254,15 +254,21 @@ namespace RateController
         {
             base.OnPaint(e);
 
-            // Define the border color and thickness
+            // Draw border inside client rectangle; avoid overlap with controls at form edge
+            var rect = this.ClientRectangle;
+            if (rect.Width <= 0 || rect.Height <= 0) return;
+
             Color borderColor = Properties.Settings.Default.MainForeColour;
             int borderWidth = 1;
 
-            // Draw the border
-            using (Pen pen = new Pen(borderColor, borderWidth))
-            {
-                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
-            }
+            ControlPaint.DrawBorder(
+                e.Graphics,
+                rect,
+                borderColor, borderWidth, ButtonBorderStyle.Solid,
+                borderColor, borderWidth, ButtonBorderStyle.Solid,
+                borderColor, borderWidth, ButtonBorderStyle.Solid,
+                borderColor, borderWidth, ButtonBorderStyle.Solid
+            );
         }
 
         // Avoid background erase flicker; paint background ourselves
@@ -272,6 +278,13 @@ namespace RateController
             {
                 e.Graphics.FillRectangle(b, this.ClientRectangle);
             }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            // Ensure border gets repainted after layout changes
+            this.Invalidate();
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -981,6 +994,8 @@ namespace RateController
             Props.LoadFormLocation(this);
             this.Width = SubMenuLayout.MainMenuWidth;
             this.Height = SubMenuLayout.MainMenuHeight;
+            // Leave a 1px padding so our custom border is not covered by edge-aligned controls
+            this.Padding = new Padding(1);
             StyleControls(this);
             butPowerOff.Left = 12;
             butPowerOff.Top = this.Height - 75;
