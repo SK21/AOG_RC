@@ -39,9 +39,6 @@ namespace RateController.Classes
             Props.ProfileChanged += Props_ProfileChanged;
         }
 
-        public int DataPoints
-        { get { return Readings.Count; } }
-
         public bool Enabled
         {
             get { return cEnabled; }
@@ -70,6 +67,12 @@ namespace RateController.Classes
                 lastSavedIndex = 0;
                 if (Props.IsPathSafe(JobManager.CurrentRateDataPath)) File.Delete(JobManager.CurrentRateDataPath);
             }
+        }
+
+        public int DataPoints(int ProductID)
+        {
+            int count = Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
+            return count;
         }
 
         public IReadOnlyList<RateReading> GetReadings()

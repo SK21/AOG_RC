@@ -1,6 +1,5 @@
 ﻿using AgOpenGPS;
 using GMap.NET;
-using NetTopologySuite.Triangulate;
 using RateController.Classes;
 using RateController.RateMap;
 using System;
@@ -79,6 +78,33 @@ namespace RateController.Forms
             SetEditMode(false, true);
             MapController.ResetMarkers();
             UpdateForm();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            switch (MapController.State)
+            {
+                case MapState.EditZones:
+                    MapController.DeleteLastVertex();
+                    break;
+
+                case MapState.Positioning:
+                    if (MapController.DeleteZone(tbName.Text))
+                    {
+                        SetEditMode(false, true);
+                        UpdateForm();
+                    }
+                    else
+                    {
+                        Props.ShowMessage("Zone could not be deleted.");
+                    }
+                    break;
+            }
         }
 
         private void btnDeleteData_Click(object sender, EventArgs e)
@@ -313,34 +339,6 @@ namespace RateController.Forms
         private void btnZoomOut_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom -= 1;
-        }
-
-        private void butClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            switch (MapController.State)
-            {
-                case MapState.EditZones:
-                    MapController.DeleteLastVertex();
-                    break;
-
-                case MapState.Positioning:
-                    if (MapController.DeleteZone(tbName.Text))
-                    {
-                        SetEditMode(false, true);
-                        UpdateForm();
-                    }
-                    else
-                    {
-                        Props.ShowMessage("Zone could not be deleted.");
-                    }
-                    break;
-            }
         }
 
         private void ChangeMapSize()
@@ -641,7 +639,7 @@ namespace RateController.Forms
                 MapController.MapIsDisplayed = true;
 
                 timer1.Enabled = true;
-                lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+                lbDataPoints.Text = Props.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
 
                 // Sync checkbox with saved preference
                 bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
@@ -791,7 +789,7 @@ namespace RateController.Forms
             colorComboBox.Enabled = Editing;
             btnCancel.Enabled = Editing;
             btnOK.Enabled = Editing;
-            btnDeleteZone.Enabled = Editing;
+            btnDelete.Enabled = Editing;
 
             if (ResetButtons)
             {
@@ -931,7 +929,7 @@ namespace RateController.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbDataPoints.Text = Props.RateCollector.DataPoints.ToString("N0");
+            lbDataPoints.Text = Props.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
         }
 
         private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
@@ -1011,6 +1009,8 @@ namespace RateController.Forms
             else if (rbProductB.Checked) MapController.ProductRates = 1;
             else if (rbProductC.Checked) MapController.ProductRates = 2;
             else MapController.ProductRates = 3;
+
+            lbDataPoints.Text = Props.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
         }
 
         private void UpdateScrollbars()

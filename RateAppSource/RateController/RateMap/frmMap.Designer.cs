@@ -42,7 +42,7 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.ckKML = new System.Windows.Forms.CheckBox();
             this.ckWindow = new System.Windows.Forms.CheckBox();
-            this.butClose = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.btnZoomIn = new System.Windows.Forms.Button();
             this.btnZoomOut = new System.Windows.Forms.Button();
@@ -54,7 +54,7 @@
             this.lbArea = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
-            this.btnDeleteZone = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.lbP4 = new System.Windows.Forms.Label();
             this.tbP4 = new System.Windows.Forms.TextBox();
             this.lbP3 = new System.Windows.Forms.Label();
@@ -212,7 +212,7 @@
             this.pnlControls.Controls.Add(this.ckKML);
             this.pnlControls.Controls.Add(this.ckWindow);
             this.pnlControls.Controls.Add(this.ckSatView);
-            this.pnlControls.Controls.Add(this.butClose);
+            this.pnlControls.Controls.Add(this.btnClose);
             this.pnlControls.Controls.Add(this.ckRateData);
             this.pnlControls.Controls.Add(this.ckUseVR);
             this.pnlControls.Location = new System.Drawing.Point(439, 2);
@@ -267,20 +267,20 @@
             this.ckWindow.UseVisualStyleBackColor = true;
             this.ckWindow.CheckedChanged += new System.EventHandler(this.ckWindow_CheckedChanged);
             // 
-            // butClose
+            // btnClose
             // 
-            this.butClose.BackColor = System.Drawing.Color.Transparent;
-            this.butClose.FlatAppearance.BorderSize = 0;
-            this.butClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.butClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.butClose.Image = ((System.Drawing.Image)(resources.GetObject("butClose.Image")));
-            this.butClose.Location = new System.Drawing.Point(14, 517);
-            this.butClose.Name = "butClose";
-            this.butClose.Size = new System.Drawing.Size(70, 63);
-            this.butClose.TabIndex = 386;
-            this.butClose.UseVisualStyleBackColor = false;
-            this.butClose.Click += new System.EventHandler(this.butClose_Click);
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.Location = new System.Drawing.Point(14, 517);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(70, 63);
+            this.btnClose.TabIndex = 386;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // pnlMain
             // 
@@ -413,18 +413,18 @@
             this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.colorComboBox_SelectedIndexChanged);
             this.colorComboBox.Click += new System.EventHandler(this.colorComboBox_Click);
             // 
-            // btnDeleteZone
+            // btnDelete
             // 
-            this.btnDeleteZone.Enabled = false;
-            this.btnDeleteZone.FlatAppearance.BorderSize = 0;
-            this.btnDeleteZone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteZone.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteZone.Location = new System.Drawing.Point(6, 154);
-            this.btnDeleteZone.Name = "btnDeleteZone";
-            this.btnDeleteZone.Size = new System.Drawing.Size(82, 64);
-            this.btnDeleteZone.TabIndex = 12;
-            this.btnDeleteZone.UseVisualStyleBackColor = true;
-            this.btnDeleteZone.Click += new System.EventHandler(this.button1_Click);
+            this.btnDelete.Enabled = false;
+            this.btnDelete.FlatAppearance.BorderSize = 0;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDelete.Location = new System.Drawing.Point(6, 154);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(82, 64);
+            this.btnDelete.TabIndex = 12;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // lbP4
             // 
@@ -568,7 +568,7 @@
             this.tabZones.Controls.Add(this.tbP1);
             this.tabZones.Controls.Add(this.colorComboBox);
             this.tabZones.Controls.Add(this.lbP1);
-            this.tabZones.Controls.Add(this.btnDeleteZone);
+            this.tabZones.Controls.Add(this.btnDelete);
             this.tabZones.Controls.Add(this.tbP2);
             this.tabZones.Controls.Add(this.lbP4);
             this.tabZones.Controls.Add(this.lbP2);
@@ -905,7 +905,7 @@
         private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox colorComboBox;
-        private System.Windows.Forms.Button btnDeleteZone;
+        private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Label lbP4;
         private System.Windows.Forms.TextBox tbP4;
         private System.Windows.Forms.Label lbP3;
@@ -917,7 +917,7 @@
         private System.Windows.Forms.TextBox tbP1;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button butClose;
+        private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabZones;
         private System.Windows.Forms.TabPage tabData;
