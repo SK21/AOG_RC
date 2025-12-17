@@ -13,6 +13,7 @@ namespace RateController.Classes
         private Job CurrentJob;
         private string DataFileName = "JobStats.CSV";
         private string DateFormat = "yyyy-MM-ddTHH:mm:ss";
+        private double[] LastHectares;
         private double[] LastQuantity;
         private JobProductData[] ProductData;
         private System.Windows.Forms.Timer RecordTimer;
@@ -20,6 +21,7 @@ namespace RateController.Classes
         public clsJobDataCollector()
         {
             LastQuantity = new double[Props.MaxProducts];
+            LastHectares = new double[Props.MaxProducts];
             ProductData = new JobProductData[Props.MaxProducts];
             RecordTimer = new System.Windows.Forms.Timer();
             RecordTimer.Interval = 1000;   // milliseconds
@@ -32,6 +34,7 @@ namespace RateController.Classes
             for (int i = 0; i < Props.MaxProducts; i++)
             {
                 LastQuantity[i] = ProductData[i].Quantity;
+                LastHectares[i] = ProductData[i].Hectares;
             }
 
             JobManager.JobChanged += JobManager_JobChanged;
@@ -54,6 +57,7 @@ namespace RateController.Classes
             for (int i = 0; i < Props.MaxProducts; i++)
             {
                 LastQuantity[i] = 0;
+                LastHectares[i] = 0;
                 ProductData[i] = new JobProductData
                 {
                     ProductID = i,
@@ -75,6 +79,7 @@ namespace RateController.Classes
             for (int i = 0; i < Props.MaxProducts; i++)
             {
                 LastQuantity[i] = ProductData[i].Quantity;
+                LastHectares[i] = ProductData[i].Hectares;
             }
         }
 
@@ -147,7 +152,7 @@ namespace RateController.Classes
                 {
                     if (CurrentJob != null)
                     {
-                        DateTime SaveTime = DateTime.UtcNow;
+                        DateTime SaveTime = DateTime.Now;
                         string FileLocation = Path.Combine(CurrentJob.JobFolder, DataFileName);
 
                         foreach (clsProduct Prd in Props.MainForm.Products.Items)
@@ -167,7 +172,8 @@ namespace RateController.Classes
                                 if (Applied > 0) PD.Quantity += Applied;
 
                                 // hectares
-                                double worked = Prd.HectaresWorked();
+                                double worked = Prd.SessionTotalHectares() - LastHectares[Prd.ID];
+                                LastHectares[Prd.ID] = Prd.SessionTotalHectares();
                                 if (worked > 0) PD.Hectares += worked;
                             }
                             ProductData[Prd.ID] = PD;

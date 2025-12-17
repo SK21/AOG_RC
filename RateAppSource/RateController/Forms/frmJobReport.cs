@@ -3,13 +3,14 @@ using RateController.Printing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace RateController.Forms
 {
     public partial class frmJobReport : Form
     {
-        private string DateFormat = "yyyy-MM-ddTHH:mm";
+        private string DateFormat = "HH:mm";
         private Job JB;
         private int MaxLineLength = 45;
         private bool UseBold = false;
@@ -18,6 +19,7 @@ namespace RateController.Forms
         public frmJobReport(Job JobToReport)
         {
             InitializeComponent();
+            DateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
             JB = JobToReport;
             ShowReport();
         }
@@ -151,7 +153,7 @@ namespace RateController.Forms
                 Add(line, false, false, 0, 0, 0);
                 PadUsed = line.Length;
 
-                line = JB.Date.ToString("dd-MMM-yyyy");
+                line = JB.Date.ToString(CultureInfo.CurrentCulture.DateTimeFormat.LongDatePattern);
                 Add(line, false, false, Pad1, PadUsed);
 
                 line = "Field:";

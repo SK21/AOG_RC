@@ -55,6 +55,7 @@ namespace RateController
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
+        private double cSessionTotalHectares = 0;
 
         public clsProduct(FormStart CallingForm, int ProdID)
         {
@@ -1035,9 +1036,9 @@ namespace RateController
             return Result;
         }
 
-        public double HectaresWorked()
+        public double SessionTotalHectares()
         {
-            return CurrentWorkedArea_Hc;
+            return cSessionTotalHectares;
         }
         public void Update()
         {
@@ -1049,6 +1050,7 @@ namespace RateController
                 // update worked area
                 cHectaresPerMinute = mf.Sections.WorkingWidth(false) * Props.Speed_KMH / 600.0;
                 CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
+                cSessionTotalHectares += CurrentWorkedArea_Hc;
 
                 //coverage
                 if (cHectaresPerMinute > 0)    // Is application on?
