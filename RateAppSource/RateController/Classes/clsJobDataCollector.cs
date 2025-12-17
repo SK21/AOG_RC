@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -17,9 +18,11 @@ namespace RateController.Classes
         private double[] LastQuantity;
         private JobProductData[] ProductData;
         private System.Windows.Forms.Timer RecordTimer;
+        private int SaveCounter = 0;
 
         public clsJobDataCollector()
         {
+            Debug.Print("Data Collector");
             LastQuantity = new double[Props.MaxProducts];
             LastHectares = new double[Props.MaxProducts];
             ProductData = new JobProductData[Props.MaxProducts];
@@ -31,13 +34,9 @@ namespace RateController.Classes
             CurrentJob = JobManager.CurrentJob;
             InitializeProductData();
             ProductData = LoadData(CurrentJob);
-            for (int i = 0; i < Props.MaxProducts; i++)
-            {
-                LastQuantity[i] = ProductData[i].Quantity;
-                LastHectares[i] = ProductData[i].Hectares;
-            }
 
             JobManager.JobChanged += JobManager_JobChanged;
+            Props.AppExit += Props_AppExit;
         }
 
         public bool Enabled
@@ -56,16 +55,10 @@ namespace RateController.Classes
         {
             for (int i = 0; i < Props.MaxProducts; i++)
             {
-                LastQuantity[i] = 0;
-                LastHectares[i] = 0;
-                ProductData[i] = new JobProductData
-                {
-                    ProductID = i,
-                    StartTime = DateTime.MinValue,
-                    EndTime = DateTime.MinValue,
-                    Quantity = 0,
-                    Hectares = 0
-                };
+                // Max value causes LastQuantity and LastHectares to be
+                // re-baselined on first run.
+                LastQuantity[i] = double.MaxValue;
+                LastHectares[i] = double.MaxValue;
             }
         }
 
@@ -76,11 +69,6 @@ namespace RateController.Classes
             CurrentJob = JobManager.CurrentJob;
             InitializeProductData();
             ProductData = LoadData(CurrentJob);
-            for (int i = 0; i < Props.MaxProducts; i++)
-            {
-                LastQuantity[i] = ProductData[i].Quantity;
-                LastHectares[i] = ProductData[i].Hectares;
-            }
         }
 
         private JobProductData[] LoadData(Job JB)
@@ -139,64 +127,87 @@ namespace RateController.Classes
             return Data;
         }
 
-        private void RecordTimer_Tick(object sender, EventArgs e)
+        private void Props_AppExit(object sender, EventArgs e)
         {
             SaveData();
+        }
+
+        private void RecordData()
+        {
+            try
+            {
+                if (CurrentJob != null)
+                {
+                    DateTime SaveTime = DateTime.Now;
+                    string FileLocation = Path.Combine(CurrentJob.JobFolder, DataFileName);
+
+                    foreach (clsProduct Prd in Props.MainForm.Products.Items)
+                    {
+                        JobProductData PD = ProductData[Prd.ID];
+                        if (Prd.ControlType != ControlTypeEnum.Fan)
+                        {
+                            if (Prd.ProductOn(false))
+                            {
+                                if (PD.StartTime == DateTime.MinValue || SaveTime < PD.StartTime) PD.StartTime = SaveTime;
+                                if (PD.EndTime == DateTime.MinValue || SaveTime > PD.EndTime) PD.EndTime = SaveTime;
+                            }
+
+                            // quantity
+                            double Applied = Prd.UnitsApplied() - LastQuantity[Prd.ID];
+                            LastQuantity[Prd.ID] = Prd.UnitsApplied();
+                            if (Applied > 0) PD.Quantity += Applied;
+
+                            // hectares
+                            double worked = Prd.SessionTotalHectares() - LastHectares[Prd.ID];
+                            LastHectares[Prd.ID] = Prd.SessionTotalHectares();
+                            if (worked > 0) PD.Hectares += worked;
+                        }
+                        ProductData[Prd.ID] = PD;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsJobDataCollector/RecordData: " + ex.Message);
+            }
+        }
+
+        private void RecordTimer_Tick(object sender, EventArgs e)
+        {
+            if (Props.MainForm.Products.ProductsAreOn())
+            {
+                RecordData();
+
+                SaveCounter++;
+                if (SaveCounter > 60)
+                {
+                    SaveCounter = 0;
+                    SaveData();
+                }
+            }
         }
 
         private void SaveData()
         {
             try
             {
-                if (Props.MainForm.Products.ProductsAreOn())
+                string FileLocation = Path.Combine(CurrentJob.JobFolder, DataFileName);
+                using (var writer = new StreamWriter(FileLocation, false))
                 {
-                    if (CurrentJob != null)
+                    writer.WriteLine(CSVheader);
+
+                    for (int i = 0; i < Props.MaxProducts; i++)
                     {
-                        DateTime SaveTime = DateTime.Now;
-                        string FileLocation = Path.Combine(CurrentJob.JobFolder, DataFileName);
+                        var PD = ProductData[i];
 
-                        foreach (clsProduct Prd in Props.MainForm.Products.Items)
-                        {
-                            JobProductData PD = ProductData[Prd.ID];
-                            if (Prd.ControlType != ControlTypeEnum.Fan)
-                            {
-                                if (Prd.ProductOn(false))
-                                {
-                                    if (PD.StartTime == DateTime.MinValue || SaveTime < PD.StartTime) PD.StartTime = SaveTime;
-                                    if (PD.EndTime == DateTime.MinValue || SaveTime > PD.EndTime) PD.EndTime = SaveTime;
-                                }
+                        string ID = PD.ProductID.ToString(CultureInfo.InvariantCulture);
+                        string Start = (PD.StartTime == DateTime.MinValue ? "" : PD.StartTime.ToString(DateFormat, CultureInfo.InvariantCulture));
+                        string End = (PD.EndTime == DateTime.MinValue ? "" : PD.EndTime.ToString(DateFormat, CultureInfo.InvariantCulture));
+                        string Quantity = PD.Quantity.ToString("F4", CultureInfo.InvariantCulture);
+                        string Hectares = PD.Hectares.ToString("F4", CultureInfo.InvariantCulture);
 
-                                // quantity
-                                double Applied = Prd.UnitsApplied() - LastQuantity[Prd.ID];
-                                LastQuantity[Prd.ID] = Prd.UnitsApplied();
-                                if (Applied > 0) PD.Quantity += Applied;
-
-                                // hectares
-                                double worked = Prd.SessionTotalHectares() - LastHectares[Prd.ID];
-                                LastHectares[Prd.ID] = Prd.SessionTotalHectares();
-                                if (worked > 0) PD.Hectares += worked;
-                            }
-                            ProductData[Prd.ID] = PD;
-                        }
-
-                        using (var writer = new StreamWriter(FileLocation, false))
-                        {
-                            writer.WriteLine(CSVheader);
-
-                            for (int i = 0; i < Props.MaxProducts; i++)
-                            {
-                                var PD = ProductData[i];
-
-                                string ID = PD.ProductID.ToString(CultureInfo.InvariantCulture);
-                                string Start = (PD.StartTime == DateTime.MinValue ? "" : PD.StartTime.ToString(DateFormat, CultureInfo.InvariantCulture));
-                                string End = (PD.EndTime == DateTime.MinValue ? "" : PD.EndTime.ToString(DateFormat, CultureInfo.InvariantCulture));
-                                string Quantity = PD.Quantity.ToString("F4", CultureInfo.InvariantCulture);
-                                string Hectares = PD.Hectares.ToString("F4", CultureInfo.InvariantCulture);
-
-                                string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3},{4}", ID, Start, End, Quantity, Hectares);
-                                writer.WriteLine(csvLine);
-                            }
-                        }
+                        string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3},{4}", ID, Start, End, Quantity, Hectares);
+                        writer.WriteLine(csvLine);
                     }
                 }
             }

@@ -1,6 +1,4 @@
-﻿using GMap.NET;
-using Microsoft.Win32;
-using RateController.Classes;
+﻿using RateController.Classes;
 using RateController.Forms;
 using RateController.Language;
 using RateController.PGNs;
@@ -492,10 +490,10 @@ namespace RateController
         {
             bool ShutDown = true;
 
-            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected() && e.CloseReason != CloseReason.WindowsShutDown 
+            if (!LargeScreenExit && !Restart && !LoadError && Products.Connected() && e.CloseReason != CloseReason.WindowsShutDown
                 && e.CloseReason != CloseReason.TaskManagerClosing)
             {
-                using (var Hlp = new frmMsgBox( "Confirm Exit?", "Exit", true))
+                using (var Hlp = new frmMsgBox("Confirm Exit?", "Exit", true))
                 {
                     Hlp.TopMost = true;
 
@@ -513,6 +511,8 @@ namespace RateController
             {
                 try
                 {
+                    Props.RaiseApplicationExiting();
+
                     timerMain.Enabled = false;
 
                     Form frm = Props.IsFormOpen("frmMap", false);
@@ -720,9 +720,9 @@ namespace RateController
                 timerMain.Enabled = true;
 
                 bool Preview = bool.TryParse(Props.GetAppProp("MapPreview"), out bool pv) ? pv : false;
-                if(Preview)
+                if (Preview)
                 {
-                    frmMap frm=new frmMap();
+                    frmMap frm = new frmMap();
                     frm.Show();
                 }
             }

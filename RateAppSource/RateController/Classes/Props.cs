@@ -61,7 +61,7 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "16-Dec-2025";
+        private static string cAppDate = "17-Dec-2025";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
@@ -134,6 +134,8 @@ namespace RateController.Classes
         public static readonly UInt16 TimedPauseDefault = 400;
 
         #endregion flow adjustment defaults
+
+        public static event EventHandler AppExit;
 
         public static event EventHandler ProductSettingsChanged;
 
@@ -530,11 +532,6 @@ namespace RateController.Classes
                 }
             }
             return Result;
-        }
-
-        public static void RaiseEventProfileChanged()
-        {
-            ProfileChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static void ShowMessage(string Message, string Title = "Help", int timeInMsec = 20000, bool LogError = false, bool Modal = false, bool PlayErrorSound = false)
@@ -955,6 +952,16 @@ namespace RateController.Classes
                 WriteErrorLog("Props/PressureReading: " + ex.Message);
             }
             return Result;
+        }
+
+        public static void RaiseApplicationExiting()
+        {
+            AppExit?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static void RaiseEventProfileChanged()
+        {
+            ProfileChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static void RaiseProductSettingsChanged()
