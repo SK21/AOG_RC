@@ -130,6 +130,8 @@ namespace RateController.Classes
         private void Props_AppExit(object sender, EventArgs e)
         {
             SaveData();
+            JobManager.JobChanged-= JobManager_JobChanged;
+            Props.AppExit-= Props_AppExit;
         }
 
         private void RecordData()

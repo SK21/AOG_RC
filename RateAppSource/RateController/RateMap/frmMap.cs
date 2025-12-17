@@ -508,6 +508,19 @@ namespace RateController.Forms
             }
             else
             {
+                // We are switching to max view: capture the user's current main form position
+                // so we can restore it when returning to min size.
+                if (Props.UseLargeScreen)
+                {
+                    MainLeft = Props.MainForm.LSLeft;
+                    MainTop = Props.MainForm.LSTop;
+                }
+                else
+                {
+                    MainLeft = Props.MainForm.Left;
+                    MainTop = Props.MainForm.Top;
+                }
+
                 // currently still preview, save preview position
                 PreviewLeft = this.Left;
                 PreviewTop = this.Top;
@@ -519,6 +532,44 @@ namespace RateController.Forms
         private void ckZones_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing) MapController.ShowZones = ckZones.Checked;
+        }
+
+        private void CloseCleanup()
+        {
+            try
+            {
+                MapController.MapIsDisplayed = false;
+                timer1.Enabled = false;
+
+                // Remove the control from the panel first
+                pnlMap.Controls.Remove(MapController.Map);
+
+                // Unsubscribe UI-level events
+                MapController.MapZoomed -= MapController_MapZoomed;
+                MapController.MapLeftClicked -= MapController_MapLeftClicked;
+                Props.ScreensSwitched -= Props_ScreensSwitched;
+                Props.AppExit -= Props_AppExit;
+
+                if (!ckWindow.Checked)
+                {
+                    if (Props.UseLargeScreen)
+                    {
+                        Props.MainForm.LSLeft = MainLeft;
+                        Props.MainForm.LSTop = MainTop;
+                    }
+                    else
+                    {
+                        Props.MainForm.Left = MainLeft;
+                        Props.MainForm.Top = MainTop;
+                    }
+                }
+
+                SaveFormLocation();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMaps/CloseCleanup: " + ex.Message);
+            }
         }
 
         private void colorComboBox_Click(object sender, EventArgs e)
@@ -553,30 +604,7 @@ namespace RateController.Forms
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MapController.MapIsDisplayed = false;
-            timer1.Enabled = false;
-
-            // Remove the control from the panel first
-            pnlMap.Controls.Remove(MapController.Map);
-
-            // Unsubscribe UI-level events
-            MapController.MapZoomed -= MapController_MapZoomed;
-            MapController.MapLeftClicked -= MapController_MapLeftClicked;
-            Props.ScreensSwitched -= Props_ScreensSwitched;
-
-            // Persist main window placement
-            if (Props.UseLargeScreen)
-            {
-                Props.MainForm.LSLeft = MainLeft;
-                Props.MainForm.LSTop = MainTop;
-            }
-            else
-            {
-                Props.MainForm.Left = MainLeft;
-                Props.MainForm.Top = MainTop;
-            }
-
-            SaveFormLocation();
+            CloseCleanup();
         }
 
         private void frmMap_Load(object sender, EventArgs e)
@@ -587,6 +615,7 @@ namespace RateController.Forms
 
                 MapController.MapChanged += MapController_MapChanged;
                 JobManager.JobChanged += JobManager_JobChanged;
+                Props.AppExit += Props_AppExit;
 
                 this.BackColor = Properties.Settings.Default.MainBackColour;
                 tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
@@ -746,6 +775,11 @@ namespace RateController.Forms
             return miles / (69.0 * Math.Cos(latitude * Math.PI / 180.0));
         }
 
+        private void Props_AppExit(object sender, EventArgs e)
+        {
+            CloseCleanup();
+        }
+
         private void Props_ScreensSwitched(object sender, EventArgs e)
         {
             ChangeMapSize();
@@ -768,7 +802,7 @@ namespace RateController.Forms
                 Props.SetAppProp("MapPreviewTop", this.Top.ToString());
 
                 Props.SetAppProp("MapMaxLeft", MaxviewLeft.ToString());
-                Props.SetAppProp("MapmaxTop", MaxviewTop.ToString());
+                Props.SetAppProp("MapMaxTop", MaxviewTop.ToString());
             }
             else
             {
@@ -807,7 +841,7 @@ namespace RateController.Forms
 
         private void SetTitle()
         {
-            string job = JobManager.CurrentJobDescription;
+            string job = JobManager.CurrentJob.Name;
             lbTitle.Text = job.Length <= 15 ? job : job.Substring(0, 15);
         }
 

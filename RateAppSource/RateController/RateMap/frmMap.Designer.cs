@@ -830,7 +830,7 @@
             this.lbTitle.Size = new System.Drawing.Size(159, 45);
             this.lbTitle.TabIndex = 0;
             this.lbTitle.Text = "Map";
-            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
             this.lbTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
             // 

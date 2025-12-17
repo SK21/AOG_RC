@@ -515,9 +515,6 @@ namespace RateController
 
                     timerMain.Enabled = false;
 
-                    Form frm = Props.IsFormOpen("frmMap", false);
-                    if (frm != null) frm.Close();   // to reset FormStart if moved
-
                     MapController.Close();
                     Props.SaveFormLocation(this);
                     if (this.WindowState == FormWindowState.Normal)
