@@ -66,7 +66,7 @@ namespace RateController.Classes
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.1.4";
+        private static string cAppVersion = "4.1.5";
         private static string cCurrentMenuName = "";
         private static string cDefaultDir;
         private static int cDefaultProduct;
