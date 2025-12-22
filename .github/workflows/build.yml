@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - UI_update
+      - Development
   pull_request:
     types: [opened, synchronize, reopened]
     
