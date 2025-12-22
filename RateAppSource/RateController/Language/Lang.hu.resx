@@ -117,32 +117,89 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lg2Wire" xml:space="preserve">
+    <value>2 vezetékes szelep</value>
+  </data>
+  <data name="lg3Wire" xml:space="preserve">
+    <value>3 vezetékes szelep</value>
+  </data>
   <data name="lgAcres" xml:space="preserve">
     <value>Hold</value>
   </data>
   <data name="lgAcresHr" xml:space="preserve">
     <value>Hold/óra</value>
   </data>
+  <data name="lgActivity" xml:space="preserve">
+    <value>Aktivitás</value>
+  </data>
+  <data name="lgActual" xml:space="preserve">
+    <value>Hasznos</value>
+  </data>
   <data name="lgAlreadyRunning" xml:space="preserve">
     <value>Már fut</value>
   </data>
   <data name="lgAltRate" xml:space="preserve">
-    <value>Alt. Ráta (%)</value>
+    <value>Altern. dózis (%)</value>
+  </data>
+  <data name="lgApplied" xml:space="preserve">
+    <value>Kijuttatott</value>
+  </data>
+  <data name="lgAuto" xml:space="preserve">
+    <value>Automata</value>
+  </data>
+  <data name="lgAutoAll" xml:space="preserve">
+    <value>Dózis + Szakaszok</value>
+  </data>
+  <data name="lgAutoRate" xml:space="preserve">
+    <value>Auto Dózis</value>
+  </data>
+  <data name="lgAutoSection" xml:space="preserve">
+    <value>Auto Szakaszok</value>
+  </data>
+  <data name="lgAutoSwitch" xml:space="preserve">
+    <value>Auto Kapcsoló</value>
+  </data>
+  <data name="lgBackColor" xml:space="preserve">
+    <value>Háttér</value>
   </data>
   <data name="lgBaseRate" xml:space="preserve">
-    <value>Alap Ráta</value>
+    <value>Alap Dózis</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>PCBk</value>
+  </data>
+  <data name="lgBumpButtons" xml:space="preserve">
+    <value>Állító gombok</value>
+  </data>
+  <data name="lgCalFactor" xml:space="preserve">
+    <value>Mérő Kalib</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibrál</value>
   </data>
+  <data name="lgCalProduct" xml:space="preserve">
+    <value>Anyag</value>
+  </data>
+  <data name="lgCalSpeed" xml:space="preserve">
+    <value>Kalibrációs Sebesség</value>
+  </data>
+  <data name="lgCalValue" xml:space="preserve">
+    <value>Kalib érték</value>
+  </data>
+  <data name="lgColor" xml:space="preserve">
+    <value>Szín</value>
+  </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Kombinált zárás</value>
   </data>
-  <data name="lgComm" xml:space="preserve">
-    <value>Kommunikáció</value>
+  <data name="lgComboTimed" xml:space="preserve">
+    <value>Időzített</value>
   </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value>Csatlakozás</value>
+  <data name="lgConfig" xml:space="preserve">
+    <value>Konfiguráció</value>
+  </data>
+  <data name="lgConfigIP" xml:space="preserve">
+    <value>IP cím</value>
   </data>
   <data name="lgControl" xml:space="preserve">
     <value>Vezérlés</value>
@@ -157,25 +214,62 @@
     <value>Lefedettség</value>
   </data>
   <data name="lgCurrentRate" xml:space="preserve">
-    <value>Aktuális Ráta</value>
+    <value>Aktuális Dózis</value>
   </data>
-  <data name="lgDerivative" xml:space="preserve">
-    <value>Derivatív</value>
+  <data name="lgData" xml:space="preserve">
+    <value>Adat</value>
+  </data>
+  <data name="lgDefaultProduct" xml:space="preserve">
+    <value>Alapértelmezett Anyag</value>
+  </data>
+  <data name="lgDefaults" xml:space="preserve">
+    <value>Alapértelmezések</value>
+  </data>
+  <data name="lgDensity" xml:space="preserve">
+    <value>Sűrűség</value>
   </data>
   <data name="lgDescription" xml:space="preserve">
     <value>Leírás</value>
   </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>Diagnosztika</value>
+  <data name="lgDisplay" xml:space="preserve">
+    <value>Megjelenít</value>
   </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>Székapcsol</value>
+  <data name="lgDualAuto" xml:space="preserve">
+    <value>Dupla auto</value>
   </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
+  <data name="lgEnableVR" xml:space="preserve">
+    <value>Változó Dozis engedélyezése</value>
+  </data>
+  <data name="lgEnd" xml:space="preserve">
+    <value>Befejez</value>
+  </data>
+  <data name="lgError" xml:space="preserve">
+    <value>Hiba %</value>
+  </data>
+  <data name="lgErrors" xml:space="preserve">
+    <value>Hibák</value>
+  </data>
+  <data name="lgExit" xml:space="preserve">
+    <value>Kilép</value>
+  </data>
+  <data name="lgExpectedAmount" xml:space="preserve">
+    <value>Várt</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Ventillátor</value>
+  </data>
+  <data name="lgFile" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="lgFillTank" xml:space="preserve">
+    <value>Tank Töltése</value>
+  </data>
+  <data name="lgFullScreen" xml:space="preserve">
+    <value>Teljes kijelző</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lgGeoStop" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgHectares" xml:space="preserve">
     <value>Hektár</value>
@@ -183,8 +277,11 @@
   <data name="lgHectares_Hr" xml:space="preserve">
     <value>Hektár/Óra</value>
   </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value>PWM Maximum</value>
+  <data name="lgHelp" xml:space="preserve">
+    <value>Segítség</value>
+  </data>
+  <data name="lgHighAdjust" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgHour" xml:space="preserve">
     <value>Óra</value>
@@ -192,17 +289,32 @@
   <data name="lgHours" xml:space="preserve">
     <value>Órák</value>
   </data>
+  <data name="lgHydDown" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="lgID" xml:space="preserve">
     <value>ID</value>
   </data>
-  <data name="lgInstantRate" xml:space="preserve">
-    <value>Pillanatnyi Ráta</value>
+  <data name="lgImport" xml:space="preserve">
+    <value>Importál</value>
   </data>
-  <data name="lgIntegral" xml:space="preserve">
-    <value>Integrál</value>
+  <data name="lgInstantRate" xml:space="preserve">
+    <value>Pillanatnyi Dózis</value>
+  </data>
+  <data name="lgInvertFlow" xml:space="preserve">
+    <value>Vezérlést Invertál</value>
+  </data>
+  <data name="lgInvertRelays" xml:space="preserve">
+    <value>Relét Invertál</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Szakaszt Invertál</value>
+  </data>
+  <data name="lgInvert_Master" xml:space="preserve">
+    <value>Főelzáró Invertál</value>
+  </data>
+  <data name="lgJobs" xml:space="preserve">
+    <value>Munák</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>Km/h</value>
@@ -210,8 +322,35 @@
   <data name="lgLanguage" xml:space="preserve">
     <value>Nyelv</value>
   </data>
+  <data name="lgLargeScreen" xml:space="preserve">
+    <value>Nagy kijelző</value>
+  </data>
+  <data name="lgLowAdjust" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lgMachine" xml:space="preserve">
+    <value>Gép</value>
+  </data>
+  <data name="lgMap" xml:space="preserve">
+    <value>Térkép</value>
+  </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Főelzáró</value>
+  </data>
+  <data name="lgMasterAll" xml:space="preserve">
+    <value>Összeset Vezérel</value>
+  </data>
+  <data name="lgMasterOverride" xml:space="preserve">
+    <value>Főelzáró felülír</value>
+  </data>
+  <data name="lgMasterRelayOnly" xml:space="preserve">
+    <value>Főelzáró csak relét</value>
+  </data>
+  <data name="lgMeasuredAmount" xml:space="preserve">
+    <value>Menny.</value>
+  </data>
+  <data name="lgMeterSet" xml:space="preserve">
+    <value>Rögzít</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metrikus mértékek</value>
@@ -228,11 +367,23 @@
   <data name="lgMinutes" xml:space="preserve">
     <value>Percek</value>
   </data>
+  <data name="lgMode" xml:space="preserve">
+    <value>Mód</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Modul</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
     <value>Modul ID</value>
+  </data>
+  <data name="lgModules" xml:space="preserve">
+    <value>Modulok</value>
+  </data>
+  <data name="lgMomentary" xml:space="preserve">
+    <value>Pillanatyi</value>
+  </data>
+  <data name="lgMonitoring" xml:space="preserve">
+    <value>Monitorozás</value>
   </data>
   <data name="lgMotor" xml:space="preserve">
     <value>Motor</value>
@@ -246,8 +397,17 @@
   <data name="lgNetwork" xml:space="preserve">
     <value>Hálózat</value>
   </data>
+  <data name="lgNetworkName" xml:space="preserve">
+    <value>Hálózat Neve</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Hálózat Jelszava</value>
+  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Új</value>
+  </data>
+  <data name="lgNone" xml:space="preserve">
+    <value>Nincs</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>Szakaszok Száma</value>
@@ -258,23 +418,59 @@
   <data name="lgOffset" xml:space="preserve">
     <value>Offsezet</value>
   </data>
+  <data name="lgOnScreen" xml:space="preserve">
+    <value>Kijelzőn</value>
+  </data>
+  <data name="lgOnTime" xml:space="preserve">
+    <value />
+  </data>
   <data name="lgOpen" xml:space="preserve">
-    <value>Nyit</value>
+    <value>Megnyit</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Beállítások</value>
   </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>Össz Ráta</value>
+  <data name="lgOther" xml:space="preserve">
+    <value>Egyéb</value>
+  </data>
+  <data name="lgPerZone" xml:space="preserve">
+    <value>Szakaszok zónánként</value>
   </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>PID grafikon</value>
   </data>
+  <data name="lgPins" xml:space="preserve">
+    <value>Lábak</value>
+  </data>
   <data name="lgPower" xml:space="preserve">
-    <value>Erő</value>
+    <value>Bekapcolva</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Nyomás</value>
+  </data>
+  <data name="lgPressureCurrent" xml:space="preserve">
+    <value>Aktuális:</value>
+  </data>
+  <data name="lgPressureMax" xml:space="preserve">
+    <value>Magas:</value>
+  </data>
+  <data name="lgPressureMin" xml:space="preserve">
+    <value>Alacsony:</value>
+  </data>
+  <data name="lgPressurePin" xml:space="preserve">
+    <value>Nyomás Pin</value>
+  </data>
+  <data name="lgPressurePressure" xml:space="preserve">
+    <value>Nyomás</value>
+  </data>
+  <data name="lgPressureVoltage" xml:space="preserve">
+    <value>Érték V</value>
+  </data>
+  <data name="lgPressureZero" xml:space="preserve">
+    <value>Minimum:</value>
+  </data>
+  <data name="lgPrimedStart" xml:space="preserve">
+    <value>Előkészített indítás</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Anyag</value>
@@ -283,16 +479,25 @@
     <value>Anyag neve</value>
   </data>
   <data name="lgProducts" xml:space="preserve">
-    <value>Anyagok/Veniltárok</value>
+    <value>Anyagok/Ventilátorok</value>
+  </data>
+  <data name="lgProductsMenu" xml:space="preserve">
+    <value>Anyagok</value>
+  </data>
+  <data name="lgProfiles" xml:space="preserve">
+    <value>Profilok</value>
   </data>
   <data name="lgProportional" xml:space="preserve">
     <value>Proportional</value>
   </data>
+  <data name="lgPulses" xml:space="preserve">
+    <value>Pulzusok</value>
+  </data>
   <data name="lgPWMmax" xml:space="preserve">
-    <value>PWM Maximum</value>
+    <value>Maximum</value>
   </data>
   <data name="lgPWMmin" xml:space="preserve">
-    <value>PWM Minimum</value>
+    <value>Minimum</value>
   </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>Mennyiség</value>
@@ -301,22 +506,52 @@
     <value>Kijuttatott Mennyiség</value>
   </data>
   <data name="lgRate" xml:space="preserve">
-    <value>Ráta</value>
+    <value>Dózis</value>
   </data>
-  <data name="lgRateMethod" xml:space="preserve">
-    <value>Mérés módszere</value>
+  <data name="lgRateData" xml:space="preserve">
+    <value>Dózis adat</value>
+  </data>
+  <data name="lgRateMap" xml:space="preserve">
+    <value>Dózis térkép</value>
   </data>
   <data name="lgRelay" xml:space="preserve">
     <value>Relé</value>
   </data>
+  <data name="lgRelayControl" xml:space="preserve">
+    <value>Relé Vezérlés</value>
+  </data>
+  <data name="lgRelayControlNumber" xml:space="preserve">
+    <value>Szám</value>
+  </data>
+  <data name="lgRelayPins" xml:space="preserve">
+    <value>Relé Lábak</value>
+  </data>
   <data name="lgRelays" xml:space="preserve">
     <value>Relék</value>
+  </data>
+  <data name="lgResetApplied" xml:space="preserve">
+    <value>Kijuttatot nulláz</value>
+  </data>
+  <data name="lgResetProducts" xml:space="preserve">
+    <value>Anyag nulláz</value>
+  </data>
+  <data name="lgResume" xml:space="preserve">
+    <value>Folytat</value>
   </data>
   <data name="lgRPM" xml:space="preserve">
     <value>Fordulatszám</value>
   </data>
   <data name="lgSaveAs" xml:space="preserve">
     <value>Mentés másként</value>
+  </data>
+  <data name="lgScaleWeight" xml:space="preserve">
+    <value>Mérleg súly</value>
+  </data>
+  <data name="lgScaling" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="lgSeconds" xml:space="preserve">
+    <value>Másodpercek</value>
   </data>
   <data name="lgSection" xml:space="preserve">
     <value>Szakaszok</value>
@@ -327,8 +562,17 @@
   <data name="lgSections" xml:space="preserve">
     <value>Szakaszok ehhez az anyaghoz</value>
   </data>
+  <data name="lgSelectedSubnet" xml:space="preserve">
+    <value>Választott Hálózat</value>
+  </data>
+  <data name="lgSend" xml:space="preserve">
+    <value>Küld</value>
+  </data>
   <data name="lgSensor" xml:space="preserve">
     <value>Érzékelő</value>
+  </data>
+  <data name="lgSensorCount" xml:space="preserve">
+    <value>Erzékelő Pulzus</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
     <value>Érzékelő Pulzus / egység</value>
@@ -339,8 +583,20 @@
   <data name="lgSensorLocation" xml:space="preserve">
     <value>Érzékelő Lokáció</value>
   </data>
+  <data name="lgSetPoint" xml:space="preserve">
+    <value>Beállít</value>
+  </data>
+  <data name="lgSettings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
   <data name="lgShowPressure" xml:space="preserve">
-    <value>Nyomás kiejlzése</value>
+    <value>Nyomást mutat</value>
+  </data>
+  <data name="lgSimulateSpeed" xml:space="preserve">
+    <value>Szimulált sebesség</value>
+  </data>
+  <data name="lgSingleProduct" xml:space="preserve">
+    <value>Egyetlen anyag</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Slave</value>
@@ -351,14 +607,29 @@
   <data name="lgStandard" xml:space="preserve">
     <value>Hagyományos</value>
   </data>
+  <data name="lgStandardScreen" xml:space="preserve">
+    <value>Kis kijelző</value>
+  </data>
   <data name="lgStart" xml:space="preserve">
     <value>Indít</value>
   </data>
   <data name="lgStartQuantity" xml:space="preserve">
-    <value>Tartály kezdeti mennyisége</value>
+    <value>Tartályban lévő mennyiség</value>
+  </data>
+  <data name="lgSubnet" xml:space="preserve">
+    <value>Alhálózat címe</value>
   </data>
   <data name="lgSwitch" xml:space="preserve">
-    <value>Vált</value>
+    <value>Kapcsoló</value>
+  </data>
+  <data name="lgSwitchDelay" xml:space="preserve">
+    <value>Főelzáró késleltetése</value>
+  </data>
+  <data name="lgSwitches" xml:space="preserve">
+    <value>Kapcsolók</value>
+  </data>
+  <data name="lgSwitchesOnScreen" xml:space="preserve">
+    <value>Mutat</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>Tartályméret</value>
@@ -367,10 +638,16 @@
     <value>Hátralévő mennyiség</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
-    <value>Cél Ráta</value>
+    <value>Cél Dózis</value>
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
-    <value>Cél Alt. Ráta</value>
+    <value>Cél Altern. Dózis</value>
+  </data>
+  <data name="lgTextColor" xml:space="preserve">
+    <value>Szöveg szín</value>
+  </data>
+  <data name="lgThreshold" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="lgTimeForMulti" xml:space="preserve">
     <value>Átlag idő / pulzus (&lt;50 ms/pulzus)</value>
@@ -378,11 +655,17 @@
   <data name="lgTimeForSingle" xml:space="preserve">
     <value>Egy pulzus hossza(&gt;50 ms/pulse)</value>
   </data>
+  <data name="lgTramLeft" xml:space="preserve">
+    <value>Művelőút Bal</value>
+  </data>
+  <data name="lgTramRight" xml:space="preserve">
+    <value>Művelőút Jobb</value>
+  </data>
+  <data name="lgTransparent" xml:space="preserve">
+    <value>Átlátszó</value>
+  </data>
   <data name="lgType" xml:space="preserve">
     <value>Típus</value>
-  </data>
-  <data name="lgUnitsVolt" xml:space="preserve">
-    <value>Mérték/Volt</value>
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
     <value>UPM Pillanatynilag</value>
@@ -390,19 +673,106 @@
   <data name="lgUPMerror" xml:space="preserve">
     <value>Hiba %</value>
   </data>
+  <data name="lgUPMFixed" xml:space="preserve">
+    <value>Rögzített érték</value>
+  </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>UPM/PWM</value>
+  </data>
+  <data name="lgUPMSpeed" xml:space="preserve">
+    <value>Sebesség alapján</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Cél</value>
   </data>
+  <data name="lgUseWifi" xml:space="preserve">
+    <value>WiFi kliens módba</value>
+  </data>
+  <data name="lgValves" xml:space="preserve">
+    <value>Szelepek</value>
+  </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Szélesség</value>
+  </data>
+  <data name="lgWifi" xml:space="preserve">
+    <value>Wifi</value>
+  </data>
+  <data name="lgWifiClient" xml:space="preserve">
+    <value>Wifi</value>
+  </data>
+  <data name="lgWifiPort" xml:space="preserve">
+    <value>Wifi Port</value>
+  </data>
+  <data name="lgWifiSignal" xml:space="preserve">
+    <value>Wifi jelvétel</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
     <value>Munkaszélesség (Láb)</value>
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>Munkaszélesség (M)</value>
+  </data>
+  <data name="lgWorkPin" xml:space="preserve">
+    <value>Munka Pin</value>
+  </data>
+  <data name="lgWorkSwitch" xml:space="preserve">
+    <value>Munkakapcsoló</value>
+  </data>
+  <data name="lgZone" xml:space="preserve">
+    <value>Zóna</value>
+  </data>
+  <data name="lgZoneAttributes" xml:space="preserve">
+    <value>Zóna tulajdonsága</value>
+  </data>
+  <data name="lgConnect" xml:space="preserve">
+    <value>Csatlakozás</value>
+  </data>
+  <data name="lgDiagnostics" xml:space="preserve">
+    <value>Diagnosztika</value>
+  </data>
+  <data name="lgDisconnect" xml:space="preserve">
+    <value>Székapcsol</value>
+  </data>
+  <data name="lgEqual" xml:space="preserve">
+    <value>=1</value>
+  </data>
+  <data name="lgHighMax" xml:space="preserve">
+    <value>PWM Maximum</value>
+  </data>
+  <data name="lgOverallRate" xml:space="preserve">
+    <value>Átlag Dózis</value>
+  </data>
+  <data name="lgComm" xml:space="preserve">
+    <value>Kommunikáció</value>
+  </data>
+  <data name="lgCommDiagnostics" xml:space="preserve">
+    <value>Kommunikáció diag</value>
+  </data>
+  <data name="lgDerivative" xml:space="preserve">
+    <value>Derivatív</value>
+  </data>
+  <data name="lgIntegral" xml:space="preserve">
+    <value>Integrál</value>
+  </data>
+  <data name="lgRateMethod" xml:space="preserve">
+    <value>Mérés módszere</value>
+  </data>
+  <data name="lgUnitsVolt" xml:space="preserve">
+    <value>Egység/Volt</value>
+  </data>
+  <data name="lgChannel" xml:space="preserve">
+    <value>Csatorna</value>
+  </data>
+  <data name="lgFlowOnHigh" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="lgMaxRate" xml:space="preserve">
+    <value>Maximum Dózis</value>
+  </data>
+  <data name="lgMinRate" xml:space="preserve">
+    <value>Minimum Dózis</value>
+  </data>
+  <data name="lgUseVR" xml:space="preserve">
+    <value>Vátozó rátát használ</value>
   </data>
 </root>
