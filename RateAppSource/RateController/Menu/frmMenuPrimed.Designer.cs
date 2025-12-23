@@ -177,7 +177,6 @@
             this.lbDelay.Size = new System.Drawing.Size(179, 23);
             this.lbDelay.TabIndex = 3;
             this.lbDelay.Text = "Master Switch Delay";
-            this.lbDelay.Click += new System.EventHandler(this.lbDelay_Click);
             // 
             // lbOnTime
             // 

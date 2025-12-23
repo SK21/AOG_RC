@@ -235,7 +235,7 @@
             this.grpSensor.TabIndex = 141;
             this.grpSensor.TabStop = false;
             this.grpSensor.Text = "Rate Sensor Location";
-            this.grpSensor.Paint += new System.Windows.Forms.PaintEventHandler(this.grpSensor_Paint);
+            this.grpSensor.Paint += new System.Windows.Forms.PaintEventHandler(this.grpMinUPM_Paint);
             // 
             // lbSensorID
             // 

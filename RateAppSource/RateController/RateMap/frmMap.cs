@@ -21,8 +21,6 @@ namespace RateController.Forms
         private int MaxviewTop = 0;
         private int MaxZoom = 10;
         private Point MouseDownLocation;
-        private int PMheight;
-        private int PMwidth;
         private int PreviewLeft = 0;
         private int PreviewTop = 0;
         private int PreviewZoom = 10;
@@ -634,8 +632,6 @@ namespace RateController.Forms
                     tb.BackColor = Properties.Settings.Default.MainBackColour;
                 }
 
-                PMheight = pnlMain.Height;
-                PMwidth = pnlMain.Width;
 
                 pnlMap.Controls.Add(MapController.Map);
 
@@ -682,10 +678,6 @@ namespace RateController.Forms
             {
                 Props.WriteErrorLog("frmMap/Load: " + ex.Message);
             }
-        }
-
-        private void frmMap_Move(object sender, EventArgs e)
-        {
         }
 
         private void HSB_Scroll(object sender, ScrollEventArgs e)

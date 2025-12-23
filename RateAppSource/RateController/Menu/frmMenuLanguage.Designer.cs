@@ -90,7 +90,6 @@
             this.rbFrench.Text = "French";
             this.rbFrench.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbFrench.UseVisualStyleBackColor = true;
-            this.rbFrench.CheckedChanged += new System.EventHandler(this.rbFrench_CheckedChanged);
             // 
             // rbNederlands
             // 

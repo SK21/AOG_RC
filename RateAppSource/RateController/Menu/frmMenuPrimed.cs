@@ -12,13 +12,11 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private FormStart mf;
 
-        public frmMenuPrimed(FormStart main, frmMenu menu)
+        public frmMenuPrimed( frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
-            mf = main;
             this.Tag = false;
         }
 
@@ -74,10 +72,6 @@ namespace RateController.Menu
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
             UpdateForm();
-        }
-
-        private void lbDelay_Click(object sender, EventArgs e)
-        {
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)

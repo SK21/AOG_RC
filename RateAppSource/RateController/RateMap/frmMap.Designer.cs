@@ -871,7 +871,6 @@
             this.Text = "Map";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMap_FormClosing);
             this.Load += new System.EventHandler(this.frmMap_Load);
-            this.Move += new System.EventHandler(this.frmMap_Move);
             this.pnlControls.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);

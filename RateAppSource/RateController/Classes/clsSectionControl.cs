@@ -266,7 +266,7 @@ namespace RateController
                         AutoSectionsChanged = true;
                         AutoSectionLast = mf.SwitchBox.AutoSectionOn;
 
-                        if (AutoSectionLast & MasterIsOn)
+                        if (AutoSectionLast && MasterIsOn)
                         {
                             // auto on
                             ToAOG.Command = 1;
@@ -452,7 +452,7 @@ namespace RateController
                         AutoSectionsChanged = true;
                         AutoSectionLast = mf.SwitchBox.AutoSectionOn;
 
-                        if (AutoSectionLast & MasterIsOn)
+                        if (AutoSectionLast && MasterIsOn)
                         {
                             // auto on
                             ToAOG.Command = 1;

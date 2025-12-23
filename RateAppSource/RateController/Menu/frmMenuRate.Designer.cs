@@ -157,7 +157,6 @@
             this.CbUseProdDensity.TabIndex = 156;
             this.CbUseProdDensity.UseVisualStyleBackColor = true;
             this.CbUseProdDensity.CheckedChanged += new System.EventHandler(this.CbUseProdDensity_CheckedChanged);
-            this.CbUseProdDensity.Click += new System.EventHandler(this.CbUseProdDensity_Click);
             // 
             // ProdDensity
             // 

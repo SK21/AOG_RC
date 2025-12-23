@@ -11,14 +11,12 @@ namespace RateController.Classes
     {
         private static readonly HttpClient _httpClient = new HttpClient();
         private string FileLocation;
-        private FormStart mf;
         private Dictionary<int, ModuleInfo> Modules = new Dictionary<int, ModuleInfo>();
         private RCappInfo RCapp = null;
         private string VersionsURL = "https://github.com/SK21/AOG_RC/releases/latest/download/Versions.json";
 
-        public clsVersionChecker(FormStart CalledFrom)
+        public clsVersionChecker()
         {
-            mf = CalledFrom;
             FileLocation = Props.ApplicationFolder + "//ModuleVersions.json";
             LoadFromFile(FileLocation);
         }

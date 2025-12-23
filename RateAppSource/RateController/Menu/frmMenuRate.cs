@@ -71,7 +71,6 @@ namespace RateController.Menu
                 if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
                 if (double.TryParse(TankRemain.Text, out double tr)) MainMenu.CurrentProduct.TankStart = tr;
 
-                string Title = "RC [" + Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile) + "]";
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
@@ -109,19 +108,13 @@ namespace RateController.Menu
             if (CbUseProdDensity.Checked)
             {
                 ProdDensity.Enabled = true;
-                //LabProdDensity.Enabled = true;
             }
             else
             {
                 ProdDensity.Enabled = false;
-                //LabProdDensity.Enabled = false;
             }
 
             SetButtons(true);
-        }
-
-        private void CbUseProdDensity_Click(object sender, EventArgs e)
-        {
         }
 
         private int ConvertControlType(ControlTypeEnum Type)

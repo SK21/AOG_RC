@@ -152,7 +152,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenuJobs(mf, this);
+                Form frm = new frmMenuJobs(this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -403,7 +403,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenuData(mf, this);
+                Form frm = new frmMenuData( this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -547,7 +547,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenuMode(mf, this);
+                Form frm = new frmMenuMode(this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -699,7 +699,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenuPrimed(mf, this);
+                Form frm = new frmMenuPrimed(this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -1060,7 +1060,7 @@ namespace RateController
 
                         case "frmMenuJobs":
                             butFile.PerformClick();
-                            fs = new frmMenuJobs(mf, this);
+                            fs = new frmMenuJobs(this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butJobs);
@@ -1087,7 +1087,7 @@ namespace RateController
 
                         case "frmMenuMode":
                             butProducts.PerformClick();
-                            fs = new frmMenuMode(mf, this);
+                            fs = new frmMenuMode(this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butMode);
@@ -1105,7 +1105,7 @@ namespace RateController
 
                         case "frmMenuData":
                             butProducts.PerformClick();
-                            fs = new frmMenuData(mf, this);
+                            fs = new frmMenuData(this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butData);
@@ -1128,7 +1128,7 @@ namespace RateController
 
                         case "frmMenuPrimed":
                             butMachine.PerformClick();
-                            fs = new frmMenuPrimed(mf, this);
+                            fs = new frmMenuPrimed(this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butPrimed);
@@ -1209,15 +1209,6 @@ namespace RateController
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(btnPressure);
-                            fs.Show();
-                            break;
-
-                        case "frmMenuLanguage":
-                            butFile.PerformClick();
-                            fs = new frmMenuLanguage(mf, this);
-                            fs.Owner = this;
-                            SaveLastScreen(Last);
-                            HighlightButton(butLanguage);
                             fs.Show();
                             break;
 

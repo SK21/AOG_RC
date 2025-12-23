@@ -538,7 +538,7 @@ namespace RateController.Classes
         {
             if (!LogError || Message != lastMessage || (DateTime.Now - lastMessageTime).TotalSeconds > 60)
             {
-                var Hlp = new frmHelp(mf, Message, Title, timeInMsec);
+                var Hlp = new frmHelp( Message, Title, timeInMsec);
                 if (Modal)
                 {
                     Hlp.ShowDialog();

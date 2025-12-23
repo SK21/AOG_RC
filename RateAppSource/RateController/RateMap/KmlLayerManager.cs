@@ -126,7 +126,7 @@ namespace RateController.RateMap
             if (pts.Count >= 2)
             {
                 var route = new GMapRoute(pts, pm.Name ?? "KML Line");
-                var lc = GetKmlLineColor(pm);
+                var lc = GetKmlLineColor();
                 route.Stroke = new Pen(Color.FromArgb(lc.A, lc), 2f);
                 overlay.Routes.Add(route);
             }
@@ -271,7 +271,7 @@ namespace RateController.RateMap
             }
         }
 
-        private static Color GetKmlLineColor(Placemark pm)
+        private static Color GetKmlLineColor()
         {
             return Color.FromArgb(255, Color.Red);
         }

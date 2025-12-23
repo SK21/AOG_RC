@@ -49,9 +49,9 @@ namespace RateController
                     this.Close();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Props.WriteErrorLog("frmResetQuantity/btnOK: " + ex.Message);
             }
         }
 

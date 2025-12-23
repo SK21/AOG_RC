@@ -111,14 +111,7 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
-        private void rbDeustch_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
 
-        private void rbFrench_CheckedChanged(object sender, EventArgs e)
-        {
-        }
 
         private void SetButtons(bool Edited)
         {

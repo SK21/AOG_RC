@@ -356,7 +356,6 @@
             this.label27.Size = new System.Drawing.Size(145, 23);
             this.label27.TabIndex = 267;
             this.label27.Text = "Network Subnet";
-            this.label27.Click += new System.EventHandler(this.label27_Click);
             // 
             // label3
             // 

@@ -122,7 +122,6 @@ namespace RateController.Classes
                         Name = "Default Job",
                         Notes = ""
                     };
-                    List<Job> jobs = GetJobsList();
                     JobsList.Add(defaultJob);
                     SaveJob(defaultJob);
                 }

@@ -197,22 +197,6 @@ namespace RateController
             return Result;
         }
 
-        public void Save(int ProdID = 0)
-        {
-            if (ProdID == 0)
-            {
-                // save all
-                for (int i = 0; i < cProducts.Count; i++)
-                {
-                    cProducts[i].Save();
-                }
-            }
-            else
-            {
-                // save selected
-                cProducts[ListID(ProdID)].Save();
-            }
-        }
 
         public void Save()
         {

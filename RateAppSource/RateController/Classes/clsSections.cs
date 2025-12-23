@@ -96,9 +96,6 @@ namespace RateController
             }
         }
 
-        public void Renumber()
-        {
-        }
 
         public void Save()
         {

@@ -11,13 +11,11 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private FormStart mf;
 
-        public frmMenuMode(FormStart main, frmMenu menu)
+        public frmMenuMode( frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
-            mf = main;
             this.Tag = false;
         }
 

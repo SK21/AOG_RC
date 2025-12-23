@@ -80,7 +80,7 @@ namespace RateController
             MapController.Initialize();
             Props.JobCollector.Enabled = true;
 
-            Tls = new clsTools(this);
+            Tls = new clsTools();
 
             //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
 
@@ -332,9 +332,9 @@ namespace RateController
                     {
                         lbCoverage.Text = CoverageDescriptions[Prd.CoverageUnits] + " Left";
                         double RT = Prd.SmoothRate();
-                        if (RT == 0) RT = Prd.TargetRate();
+                        if (RT <0.01) RT = Prd.TargetRate();
 
-                        if ((RT > 0) & (Prd.TankStart > 0))
+                        if ((RT > 0) && (Prd.TankStart > 0))
                         {
                             AreaDone.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
                         }
@@ -773,8 +773,6 @@ namespace RateController
                     pressure.DetachFromOwner();
                 }
 
-                int prod = CurrentPage - 1;
-                if (prod < 0) prod = 0;
                 Form restoreform = new RCRestore(this, Props.UserRateType, this);
                 restoreform.Show();
             }

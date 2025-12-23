@@ -16,7 +16,6 @@ namespace RateController
 {
     public class clsTools
     {
-        private FormStart mf;
 
         #region ScreenBitMap
 
@@ -26,9 +25,8 @@ namespace RateController
 
         #endregion ScreenBitMap
 
-        public clsTools(FormStart CallingForm)
+        public clsTools()
         {
-            mf = CallingForm;
 
             _ = InitializeAsync();
         }

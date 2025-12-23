@@ -811,9 +811,9 @@ namespace RateController
             {
                 lbCoverageType.Text = "R";
                 double RT = cCurrentProduct.SmoothRate();
-                if (RT == 0) RT = cCurrentProduct.TargetRate();
+                if (RT <0.01) RT = cCurrentProduct.TargetRate();
 
-                if ((RT > 0) & (cCurrentProduct.TankStart > 0))
+                if ((RT > 0) && (cCurrentProduct.TankStart > 0))
                 {
                     double amt = (cCurrentProduct.TankStart - cCurrentProduct.UnitsApplied()) / RT;
                     if (Math.Abs(amt) >= 1000)
@@ -875,8 +875,8 @@ namespace RateController
             clsProduct PD = mf.Products.Item(0);
             double Size = PD.TankSize;
             double Rem = PD.TankStart - PD.UnitsApplied();
-            if (Size == 0 || Size < Rem) Size = Rem * 2;
-            if (Size == 0) Size = 100;
+            if (Size <0.01|| Size < Rem) Size = Rem * 2;
+            if (Size < 0.01) Size = 100;
             int Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
@@ -903,8 +903,8 @@ namespace RateController
             PD = mf.Products.Item(1);
             Size = PD.TankSize;
             Rem = PD.TankStart - PD.UnitsApplied();
-            if (Size == 0 || Size < Rem) Size = Rem * 2;
-            if (Size == 0) Size = 100;
+            if (Size <0.01|| Size < Rem) Size = Rem * 2;
+            if (Size < 0.01) Size = 100;
             Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
@@ -931,8 +931,8 @@ namespace RateController
             PD = mf.Products.Item(2);
             Size = PD.TankSize;
             Rem = PD.TankStart - PD.UnitsApplied();
-            if (Size == 0 || Size < Rem) Size = Rem * 2;
-            if (Size == 0) Size = 100;
+            if (Size < 0.01 || Size < Rem) Size = Rem * 2;
+            if (Size < 0.01) Size = 100;
             Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;
@@ -959,8 +959,8 @@ namespace RateController
             PD = mf.Products.Item(3);
             Size = PD.TankSize;
             Rem = PD.TankStart - PD.UnitsApplied();
-            if (Size == 0 || Size < Rem) Size = Rem * 2;
-            if (Size == 0) Size = 100;
+            if (Size < 0.01 || Size < Rem) Size = Rem * 2;
+            if (Size < 0.01) Size = 100;
             Level = (int)(Rem / Size * 100);
             if (Level > 100) Level = 100;
             if (Level < 0) Level = 0;

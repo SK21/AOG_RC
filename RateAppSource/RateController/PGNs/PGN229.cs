@@ -30,7 +30,6 @@ namespace RateController
         private bool[] cSection;
         private DateTime ReceiveTime;
         private bool[] SectionLast;
-        private byte Bit;
 
         public PGN229(FormStart CalledFrom)
         {
@@ -77,6 +76,7 @@ namespace RateController
 
         public bool SectionIsOn(int ID)
         {
+            byte Bit;
             bool Result = false;
             if (Connected())
             {

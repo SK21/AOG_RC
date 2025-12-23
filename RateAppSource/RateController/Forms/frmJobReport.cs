@@ -10,7 +10,7 @@ namespace RateController.Forms
 {
     public partial class frmJobReport : Form
     {
-        private string DateFormat = "HH:mm";
+        private string DateFormat;
         private Job JB;
         private int MaxLineLength = 45;
         private bool UseBold = false;

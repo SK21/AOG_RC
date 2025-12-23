@@ -733,7 +733,6 @@ namespace RateController.RateMap
 
         public static void SaveMapToFile(string filePath)
         {
-            var shapefileHelper = new ShapefileHelper();
 
             try
             {
@@ -1354,7 +1353,7 @@ namespace RateController.RateMap
             }
         }
 
-        private static bool UpdateRateLayer(double[] AppliedRates, double[] TargetRates)
+        private static bool UpdateRateLayer(double[] AppliedRates)
         {
             bool Result = false;
             Dictionary<string, Color> legend = new Dictionary<string, Color>();
@@ -1402,7 +1401,7 @@ namespace RateController.RateMap
                 if (Props.MainForm.Products.ProductsAreOn() && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
                     cRateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
-                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates(), Props.MainForm.Products.BaseRates());
+                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates());
                 }
             }
             UpdateVariableRates();

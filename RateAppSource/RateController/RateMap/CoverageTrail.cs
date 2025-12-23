@@ -203,7 +203,15 @@ namespace RateController.Classes
         {
             if (maxRate <= minRate) return 0;
             double t = (value - minRate) / (maxRate - minRate);
-            if (t < 0) t = 0; if (t > 1) t = 1;
+            if (t < 0)
+            {
+                t = 0;
+            }
+            else if (t > 1)
+            {
+                t = 1;
+            }
+
             int idx = (int)Math.Floor(t * steps);
             if (idx == steps) idx = steps - 1;
             return idx;

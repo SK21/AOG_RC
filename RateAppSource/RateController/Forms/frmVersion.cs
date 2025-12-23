@@ -15,7 +15,7 @@ namespace RateController.Forms
         {
             InitializeComponent();
             mf = CallingForm;
-            VC = new clsVersionChecker(mf);
+            VC = new clsVersionChecker();
         }
 
         private void btnOK_Click(object sender, EventArgs e)

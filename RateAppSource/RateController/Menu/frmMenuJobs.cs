@@ -23,13 +23,11 @@ namespace RateController.Menu
         private bool IsNewJob = false;
         private int JobToCopyFromID = -1;
         private frmMenu MainMenu;
-        private FormStart mf;
 
-        public frmMenuJobs(FormStart main, frmMenu menu)
+        public frmMenuJobs( frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
-            mf = main;
             this.Tag = false;
         }
 
@@ -343,9 +341,6 @@ namespace RateController.Menu
             }
         }
 
-        private void btnResetField_Click(object sender, EventArgs e)
-        {
-        }
 
         private void butActivity_Click(object sender, EventArgs e)
         {

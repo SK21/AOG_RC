@@ -136,7 +136,7 @@ namespace RateController.Menu
                     case 1:
                         // width
                         double.TryParse(val, out tempD);
-                        if (tempD == 0) tempD = LastValue;
+                        if (tempD <0.01) tempD = LastValue;
                         using (var form = new FormNumeric(0, 10000, tempD))
                         {
                             var result = form.ShowDialog();
@@ -165,8 +165,9 @@ namespace RateController.Menu
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Props.WriteErrorLog("frmMenuSections/DGV_CellClick:" + ex.Message);
             }
         }
 
@@ -219,7 +220,7 @@ namespace RateController.Menu
                     case 3:
                         // width
                         double.TryParse(val, out tempD);
-                        if (tempD == 0) tempD = LastValue;
+                        if (tempD <0.01) tempD = LastValue;
                         using (var form = new FormNumeric(0, 10000, tempD))
                         {
                             var result = form.ShowDialog();
@@ -248,8 +249,9 @@ namespace RateController.Menu
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Props.WriteErrorLog("frmMenuSections/DGV2_CellClick: " + ex.Message);
             }
         }
 
