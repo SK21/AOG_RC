@@ -21,13 +21,15 @@ namespace RateController.Forms
         private int MaxviewTop = 0;
         private int MaxZoom = 10;
         private Point MouseDownLocation;
-        private int PreviewLeft = 0;
-        private int PreviewTop = 0;
-        private int PreviewZoom = 10;
+
         private Color[] palette = new Color[]
     {
                 Color.Red, Color.Green, Color.Blue, Color.Orange, Color.Purple, Color.Teal, Color.Brown, Color.Magenta
     };
+
+        private int PreviewLeft = 0;
+        private int PreviewTop = 0;
+        private int PreviewZoom = 10;
 
         public frmMap()
         {
@@ -80,6 +82,11 @@ namespace RateController.Forms
             SetEditMode(false, true);
             MapController.ResetMarkers();
             UpdateForm();
+        }
+
+        private void btnCentre_Click(object sender, EventArgs e)
+        {
+            MapController.CenterMap();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -367,6 +374,7 @@ namespace RateController.Forms
 
                     pnlTabs.Visible = false;
                     pnlControls.Visible = false;
+                    pnlControls2.Visible = false;
 
                     this.Width = 300;
                     this.Height = 300;
@@ -403,6 +411,7 @@ namespace RateController.Forms
 
                     pnlTabs.Visible = true;
                     pnlControls.Visible = true;
+                    pnlControls2.Visible = true;
 
                     this.Bounds = Screen.GetWorkingArea(this);
                     pnlMain.Size = new Size(this.ClientSize.Width - 565, this.ClientSize.Height - 28);
@@ -428,12 +437,12 @@ namespace RateController.Forms
                     if (Props.UseLargeScreen)
                     {
                         Props.MainForm.LSLeft = this.Left + 25;
-                        Props.MainForm.LSTop = this.Top + pnlTabs.Top + pnlTabs.Height + 55;
+                        Props.MainForm.LSTop = this.Top + pnlTabs.Top + pnlTabs.Height + 40;
                     }
                     else
                     {
                         Props.MainForm.Left = this.Left + 25;
-                        Props.MainForm.Top = this.Top + pnlTabs.Top + pnlTabs.Height + 55;
+                        Props.MainForm.Top = this.Top + pnlTabs.Top + pnlTabs.Height + pnlControls2.Height + 40;
                     }
                 }
                 MapController.DisplaySizeUpdate(ckWindow.Checked);
@@ -471,14 +480,6 @@ namespace RateController.Forms
                 SetEditMode(ckNew.Checked);
                 if (ckNew.Checked) EnterDefaultZoneValues();
             }
-        }
-
-        private void EnterDefaultZoneValues()
-        {
-                tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
-            int zoneIndex = MapController.ZoneCount + 1;
-            Color ZoneColor = palette[zoneIndex % palette.Length];
-            SetSelectedColor(ZoneColor);
         }
 
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
@@ -612,6 +613,14 @@ namespace RateController.Forms
             if (!Initializing) EditInProgress = true;
         }
 
+        private void EnterDefaultZoneValues()
+        {
+            tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
+            int zoneIndex = MapController.ZoneCount + 1;
+            Color ZoneColor = palette[zoneIndex % palette.Length];
+            SetSelectedColor(ZoneColor);
+        }
+
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
             CloseCleanup();
@@ -643,7 +652,6 @@ namespace RateController.Forms
                 {
                     tb.BackColor = Properties.Settings.Default.MainBackColour;
                 }
-
 
                 pnlMap.Controls.Add(MapController.Map);
 
@@ -854,6 +862,52 @@ namespace RateController.Forms
             timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
         }
 
+        private void tbLat_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!Initializing)
+            {
+                double Latitude;
+                if (!double.TryParse(tbLat.Text, out Latitude) || Latitude < -90.0 || Latitude > 90.0)
+                {
+                    System.Media.SystemSounds.Exclamation.Play();
+                    Props.ShowMessage("Latitude must be a number between -90 and 90.");
+                    e.Cancel = true;
+                }
+                else
+                {
+                    double Longitude;
+                    if (double.TryParse(tbLong.Text, out Longitude) || Longitude < -180.0 || Longitude > 180.0)
+                    {
+                        PointLatLng location = new PointLatLng(Latitude, Longitude);
+                        MapController.SetTractorPosition(location,true);
+                    }
+                }
+            }
+        }
+
+        private void tbLong_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!Initializing)
+            {
+                double Longitude;
+                if (!double.TryParse(tbLong.Text, out Longitude) || Longitude < -180.0 || Longitude > 180.0)
+                {
+                    System.Media.SystemSounds.Exclamation.Play();
+                    Props.ShowMessage("Longitude must be a number between -180 and 180.");
+                    e.Cancel = true;
+                }
+                else
+                {
+                    double Latitude;
+                    if (double.TryParse(tbLat.Text, out Latitude) || Latitude < -90.0 || Latitude > 90.0)
+                    {
+                        PointLatLng location = new PointLatLng(Latitude, Longitude);
+                        MapController.SetTractorPosition(location,true);
+                    }
+                }
+            }
+        }
+
         private void tbName_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!Initializing) EditInProgress = true;
@@ -1038,6 +1092,9 @@ namespace RateController.Forms
                         break;
                 }
 
+                tbLong.Text = MapController.TractorPosition.Lng.ToString("N7");
+                tbLat.Text = MapController.TractorPosition.Lat.ToString("N7");
+
                 Initializing = false;
             }
             catch (Exception ex)
@@ -1095,9 +1152,34 @@ namespace RateController.Forms
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void tbLong_Enter(object sender, EventArgs e)
         {
-            MapController.CenterMap();
+            double tempD;
+            double.TryParse(tbLong.Text, out tempD);
+            using (var form = new FormNumeric(-180, 180, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbLong.Text = form.ReturnValue.ToString("N7");
+                }
+            }
+
+        }
+
+        private void tbLat_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbLat.Text, out tempD);
+            using (var form = new FormNumeric(-90, 90, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbLat.Text = form.ReturnValue.ToString("N7");
+                }
+            }
+
         }
     }
 }

@@ -1229,7 +1229,7 @@ namespace RateController.RateMap
             }
         }
 
-        private static void SetTractorPosition(PointLatLng NewLocation)
+        public static void SetTractorPosition(PointLatLng NewLocation, bool CenterMap = false)
         {
             if (cState == MapState.Tracking || cState == MapState.Preview)
             {
@@ -1248,9 +1248,11 @@ namespace RateController.RateMap
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
 
-                if (cState == MapState.Preview) gmap.Position = NewLocation;
+                if (cState == MapState.Preview || CenterMap) gmap.Position = NewLocation;
             }
         }
+
+        public static PointLatLng TractorPosition { get { return cTractorPosition; } }
 
         private static bool ShouldSkipHistoryBuild(string mapPath, IReadOnlyList<RateReading> readings)
         {

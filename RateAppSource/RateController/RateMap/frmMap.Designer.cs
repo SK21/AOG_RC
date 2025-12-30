@@ -39,9 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ckRecord = new System.Windows.Forms.CheckBox();
             this.pnlControls = new System.Windows.Forms.Panel();
-            this.btnHelp = new System.Windows.Forms.Button();
             this.ckKML = new System.Windows.Forms.CheckBox();
             this.ckWindow = new System.Windows.Forms.CheckBox();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.btnZoomIn = new System.Windows.Forms.Button();
@@ -87,7 +87,12 @@
             this.btnTitleZoomIn = new System.Windows.Forms.Button();
             this.lbTitle = new System.Windows.Forms.Label();
             this.btnTitleZoomOut = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pnlControls2 = new System.Windows.Forms.Panel();
+            this.btnCentre = new System.Windows.Forms.Button();
+            this.tbLat = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbLong = new System.Windows.Forms.TextBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -96,6 +101,7 @@
             this.tabFiles.SuspendLayout();
             this.pnlTabs.SuspendLayout();
             this.tlpTitle.SuspendLayout();
+            this.pnlControls2.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckRateData
@@ -208,35 +214,16 @@
             // 
             // pnlControls
             // 
-            this.pnlControls.Controls.Add(this.btnHelp);
             this.pnlControls.Controls.Add(this.ckZones);
             this.pnlControls.Controls.Add(this.ckKML);
             this.pnlControls.Controls.Add(this.ckWindow);
             this.pnlControls.Controls.Add(this.ckSatView);
-            this.pnlControls.Controls.Add(this.btnClose);
             this.pnlControls.Controls.Add(this.ckRateData);
             this.pnlControls.Controls.Add(this.ckUseVR);
             this.pnlControls.Location = new System.Drawing.Point(439, 2);
             this.pnlControls.Name = "pnlControls";
-            this.pnlControls.Size = new System.Drawing.Size(97, 598);
+            this.pnlControls.Size = new System.Drawing.Size(97, 438);
             this.pnlControls.TabIndex = 386;
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHelp.Location = new System.Drawing.Point(14, 445);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(70, 63);
-            this.btnHelp.TabIndex = 392;
-            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnHelp.UseVisualStyleBackColor = false;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // ckKML
             // 
@@ -268,6 +255,23 @@
             this.ckWindow.UseVisualStyleBackColor = true;
             this.ckWindow.CheckedChanged += new System.EventHandler(this.ckWindow_CheckedChanged);
             // 
+            // btnHelp
+            // 
+            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
+            this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHelp.Location = new System.Drawing.Point(385, 4);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(70, 63);
+            this.btnHelp.TabIndex = 392;
+            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
             // btnClose
             // 
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
@@ -276,7 +280,7 @@
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-            this.btnClose.Location = new System.Drawing.Point(14, 517);
+            this.btnClose.Location = new System.Drawing.Point(461, 4);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(70, 63);
             this.btnClose.TabIndex = 386;
@@ -851,22 +855,79 @@
             this.btnTitleZoomOut.UseVisualStyleBackColor = true;
             this.btnTitleZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
-            // button1
+            // pnlControls2
             // 
-            this.button1.Location = new System.Drawing.Point(354, 472);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 64);
-            this.button1.TabIndex = 392;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.pnlControls2.Controls.Add(this.label5);
+            this.pnlControls2.Controls.Add(this.tbLong);
+            this.pnlControls2.Controls.Add(this.label4);
+            this.pnlControls2.Controls.Add(this.btnCentre);
+            this.pnlControls2.Controls.Add(this.btnHelp);
+            this.pnlControls2.Controls.Add(this.tbLat);
+            this.pnlControls2.Controls.Add(this.btnClose);
+            this.pnlControls2.Location = new System.Drawing.Point(2, 446);
+            this.pnlControls2.Name = "pnlControls2";
+            this.pnlControls2.Size = new System.Drawing.Size(534, 76);
+            this.pnlControls2.TabIndex = 393;
+            // 
+            // btnCentre
+            // 
+            this.btnCentre.BackColor = System.Drawing.Color.Transparent;
+            this.btnCentre.FlatAppearance.BorderSize = 0;
+            this.btnCentre.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnCentre.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCentre.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCentre.Image = global::RateController.Properties.Resources.arrows_in_cardinal;
+            this.btnCentre.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCentre.Location = new System.Drawing.Point(309, 4);
+            this.btnCentre.Name = "btnCentre";
+            this.btnCentre.Size = new System.Drawing.Size(70, 63);
+            this.btnCentre.TabIndex = 393;
+            this.btnCentre.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCentre.UseVisualStyleBackColor = false;
+            this.btnCentre.Click += new System.EventHandler(this.btnCentre_Click);
+            // 
+            // tbLat
+            // 
+            this.tbLat.Location = new System.Drawing.Point(159, 38);
+            this.tbLat.Name = "tbLat";
+            this.tbLat.Size = new System.Drawing.Size(144, 29);
+            this.tbLat.TabIndex = 394;
+            this.tbLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbLat.Enter += new System.EventHandler(this.tbLat_Enter);
+            this.tbLat.Validating += new System.ComponentModel.CancelEventHandler(this.tbLat_Validating);
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(10, 43);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(116, 24);
+            this.label4.TabIndex = 395;
+            this.label4.Text = "Latitude";
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(10, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(116, 24);
+            this.label5.TabIndex = 397;
+            this.label5.Text = "Longitude";
+            // 
+            // tbLong
+            // 
+            this.tbLong.Location = new System.Drawing.Point(159, 4);
+            this.tbLong.Name = "tbLong";
+            this.tbLong.Size = new System.Drawing.Size(144, 29);
+            this.tbLong.TabIndex = 396;
+            this.tbLong.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbLong.Enter += new System.EventHandler(this.tbLong_Enter);
+            this.tbLong.Validating += new System.ComponentModel.CancelEventHandler(this.tbLong_Validating);
             // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(955, 616);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.pnlControls2);
             this.Controls.Add(this.tlpTitle);
             this.Controls.Add(this.pnlTabs);
             this.Controls.Add(this.pnlControls);
@@ -892,6 +953,8 @@
             this.tabFiles.ResumeLayout(false);
             this.pnlTabs.ResumeLayout(false);
             this.tlpTitle.ResumeLayout(false);
+            this.pnlControls2.ResumeLayout(false);
+            this.pnlControls2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -954,6 +1017,11 @@
         private System.Windows.Forms.Button btnTitleZoomIn;
         private System.Windows.Forms.Label lbTitle;
         private System.Windows.Forms.Button btnTitleZoomOut;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel pnlControls2;
+        private System.Windows.Forms.Button btnCentre;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox tbLong;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox tbLat;
     }
 }

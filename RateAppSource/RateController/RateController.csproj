@@ -762,6 +762,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\arrows-in-cardinal.png" />
     <None Include="Resources\x-square48.png" />
     <None Include="Resources\x-square.png" />
     <None Include="Resources\plus-square48.png" />
