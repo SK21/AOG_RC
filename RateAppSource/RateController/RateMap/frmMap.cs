@@ -24,6 +24,10 @@ namespace RateController.Forms
         private int PreviewLeft = 0;
         private int PreviewTop = 0;
         private int PreviewZoom = 10;
+        private Color[] palette = new Color[]
+    {
+                Color.Red, Color.Green, Color.Blue, Color.Orange, Color.Purple, Color.Teal, Color.Brown, Color.Magenta
+    };
 
         public frmMap()
         {
@@ -464,9 +468,17 @@ namespace RateController.Forms
                 ckEdit.Enabled = !ckNew.Checked;
                 MapController.EditingZones = ckNew.Checked;
                 ckNew.FlatAppearance.BorderSize = ckNew.Checked ? 1 : 0;
-                tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
                 SetEditMode(ckNew.Checked);
+                if (ckNew.Checked) EnterDefaultZoneValues();
             }
+        }
+
+        private void EnterDefaultZoneValues()
+        {
+                tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
+            int zoneIndex = MapController.ZoneCount + 1;
+            Color ZoneColor = palette[zoneIndex % palette.Length];
+            SetSelectedColor(ZoneColor);
         }
 
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
