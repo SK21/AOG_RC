@@ -1082,5 +1082,10 @@ namespace RateController.Forms
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MapController.CenterMap();
+        }
     }
 }

@@ -87,6 +87,7 @@
             this.btnTitleZoomIn = new System.Windows.Forms.Button();
             this.lbTitle = new System.Windows.Forms.Label();
             this.btnTitleZoomOut = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -781,7 +782,7 @@
             this.tlpTitle.Controls.Add(this.btnTitleZoomIn, 2, 0);
             this.tlpTitle.Controls.Add(this.lbTitle, 0, 0);
             this.tlpTitle.Controls.Add(this.btnTitleZoomOut, 1, 0);
-            this.tlpTitle.Location = new System.Drawing.Point(307, 492);
+            this.tlpTitle.Location = new System.Drawing.Point(628, 491);
             this.tlpTitle.Name = "tlpTitle";
             this.tlpTitle.RowCount = 1;
             this.tlpTitle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -850,11 +851,22 @@
             this.btnTitleZoomOut.UseVisualStyleBackColor = true;
             this.btnTitleZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(354, 472);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 64);
+            this.button1.TabIndex = 392;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(955, 616);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.tlpTitle);
             this.Controls.Add(this.pnlTabs);
             this.Controls.Add(this.pnlControls);
@@ -942,5 +954,6 @@
         private System.Windows.Forms.Button btnTitleZoomIn;
         private System.Windows.Forms.Label lbTitle;
         private System.Windows.Forms.Button btnTitleZoomOut;
+        private System.Windows.Forms.Button button1;
     }
 }

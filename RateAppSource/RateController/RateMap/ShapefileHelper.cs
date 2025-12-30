@@ -11,6 +11,11 @@ namespace RateController.Classes
 {
     public class ShapefileHelper
     {
+        private Color[] palette = new Color[]
+            {
+                Color.Red, Color.Green, Color.Blue, Color.Orange, Color.Purple, Color.Teal, Color.Brown, Color.Magenta
+            };
+
         public ShapefileHelper()
         {
         }
@@ -23,12 +28,14 @@ namespace RateController.Classes
             {
                 using (var shapefile = Shapefile.OpenRead(shapefilePath))
                 {
+                    int zoneIndex = 0;
                     foreach (var feature in shapefile)
                     {
                         if (feature.Geometry is Polygon polygon)
                         {
-                            var mapZone = CreateMapZone(feature, polygon, attributeMapping);
+                            var mapZone = CreateMapZone(feature, polygon, attributeMapping, zoneIndex);
                             if (mapZone != null) mapZones.Add(mapZone);
+                            zoneIndex++;
                         }
                         else if (feature.Geometry is MultiPolygon multiPolygon)
                         {
@@ -36,8 +43,9 @@ namespace RateController.Classes
                             {
                                 if (poly is Polygon multiPolygonPolygon)
                                 {
-                                    var mapZone = CreateMapZone(feature, multiPolygonPolygon, attributeMapping);
+                                    var mapZone = CreateMapZone(feature, multiPolygonPolygon, attributeMapping, zoneIndex);
                                     if (mapZone != null) mapZones.Add(mapZone);
+                                    zoneIndex++;
                                 }
                             }
                         }
@@ -209,14 +217,11 @@ namespace RateController.Classes
             }
         }
 
-        private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> attributeMapping)
+        private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> attributeMapping, int zoneIndex)
         {
-            string Name = "Unnamed Zone";
-            double RateA = 0.0;
-            double RateB = 0.0;
-            double RateC = 0.0;
-            double RateD = 0.0;
-            Color ZoneColor = Color.Blue;
+            string Name = null;
+            double RateA = 0.0, RateB = 0.0, RateC = 0.0, RateD = 0.0;
+            Color ZoneColor = palette[zoneIndex % palette.Length]; // Default color
             MapZone NewZone = null;
 
             try
@@ -225,6 +230,8 @@ namespace RateController.Classes
                 {
                     // loading RC shapefile
                     if (feature.Attributes.Exists("Name")) Name = feature.Attributes["Name"].ToString();
+                    else if (feature.Attributes.Exists("ID")) Name = feature.Attributes["ID"].ToString();
+
                     if (feature.Attributes.Exists("ProductA") && double.TryParse(feature.Attributes["ProductA"]?.ToString(), out double ra)) RateA = ra;
                     if (feature.Attributes.Exists("ProductB") && double.TryParse(feature.Attributes["ProductB"]?.ToString(), out double rb)) RateB = rb;
                     if (feature.Attributes.Exists("ProductC") && double.TryParse(feature.Attributes["ProductC"]?.ToString(), out double rc)) RateC = rc;
@@ -233,7 +240,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    // importing shapefile
+                    // importing shapefile with mapping
                     foreach (var kvp in attributeMapping)
                     {
                         if (feature.Attributes.Exists(kvp.Value))
@@ -243,23 +250,18 @@ namespace RateController.Classes
                                 case "Name":
                                     Name = feature.Attributes[kvp.Value].ToString();
                                     break;
-
                                 case "ProductA":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double ra2)) RateA = ra2;
                                     break;
-
                                 case "ProductB":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rb2)) RateB = rb2;
                                     break;
-
                                 case "ProductC":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rc2)) RateC = rc2;
                                     break;
-
                                 case "ProductD":
                                     if (double.TryParse(feature.Attributes[kvp.Value].ToString(), out double rd2)) RateD = rd2;
                                     break;
-
                                 case "Color":
                                     ZoneColor = ColorTranslator.FromHtml(feature.Attributes[kvp.Value].ToString());
                                     break;
@@ -267,6 +269,10 @@ namespace RateController.Classes
                         }
                     }
                 }
+
+                // Assign default name if not found
+                if (string.IsNullOrWhiteSpace(Name))
+                    Name = $"Zone {zoneIndex + 1}";
 
                 var rates = new Dictionary<string, double>
                 {
