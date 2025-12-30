@@ -115,73 +115,88 @@ namespace RateController.Classes
                     LastCount = 0;
                 }
 
-                // Using a using block ensures the file is closed immediately after reading.
-                using (var reader = new StreamReader(JobManager.CurrentRateDataPath))
+                string expectedHeader = "Timestamp,Latitude,Longitude,AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5,TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
+
+                // Check and fix header if missing
+                string[] allLines = File.ReadAllLines(JobManager.CurrentRateDataPath);
+                if (allLines.Length > 0)
                 {
-                    if (!reader.EndOfStream)
+                    string firstLine = allLines[0].Trim();
+                    if (string.IsNullOrWhiteSpace(firstLine) || !firstLine.Equals(expectedHeader, StringComparison.OrdinalIgnoreCase))
                     {
-                        // Read and discard header line.
-                        string headerLine = reader.ReadLine();
+                        // Header is missing or invalid: prepend it
+                        List<string> linesWithHeader = new List<string> { expectedHeader };
+                        linesWithHeader.AddRange(allLines);
+                        File.WriteAllLines(JobManager.CurrentRateDataPath, linesWithHeader);
+                        Props.WriteErrorLog($"DataCollector/LoadData: Missing or invalid header in {JobManager.CurrentRateDataPath}. Header added automatically.");
+                        allLines = linesWithHeader.ToArray();
+                    }
+                }
+                else
+                {
+                    // Empty file: add header
+                    File.WriteAllText(JobManager.CurrentRateDataPath, expectedHeader + Environment.NewLine);
+                    Props.WriteErrorLog($"DataCollector/LoadData: Empty file {JobManager.CurrentRateDataPath}. Header added.");
+                    allLines = new string[] { expectedHeader };
+                }
 
-                        while (!reader.EndOfStream)
+                // Now parse the lines (skip header)
+                for (int i = 1; i < allLines.Length; i++)
+                {
+                    string line = allLines[i];
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+
+                    string[] parts = line.Split(',');
+
+                    // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
+                    if (parts.Length < 13)
+                        continue;
+
+                    // Parse basic values.
+                    DateTime timestamp;
+                    double latitude, longitude;
+
+                    if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
+                    !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
+                    !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
+                    {
+                        continue;
+                    }
+
+                    // Parse applied rates.
+                    List<double> appliedRates = new List<double>();
+                    for (int j = 3; j < 8; j++)
+                    {
+                        double rate;
+                        if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
                         {
-                            string line = reader.ReadLine();
-                            if (string.IsNullOrWhiteSpace(line))
-                                continue;
+                            appliedRates.Add(rate);
+                        }
+                    }
 
-                            // Assuming the CSV format matches our SaveDataToCsv header.
-                            // Split on comma. This simple approach assumes that the data values do not contain commas.
-                            string[] parts = line.Split(',');
+                    // Parse target rates.
+                    List<double> targetRates = new List<double>();
+                    for (int j = 8; j < 13; j++)
+                    {
+                        double rate;
+                        if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                        {
+                            targetRates.Add(rate);
+                        }
+                    }
 
-                            // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
-                            if (parts.Length < 13)
-                                continue;
-
-                            // Parse basic values.
-                            DateTime timestamp;
-                            double latitude, longitude;
-
-                            if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
-                            !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
-                            !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
-                            {
-                                continue;
-                            }
-
-                            // Parse applied rates.
-                            List<double> appliedRates = new List<double>();
-                            for (int i = 3; i < 8; i++)
-                            {
-                                double rate;
-                                if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
-                                {
-                                    appliedRates.Add(rate);
-                                }
-                            }
-
-                            // Parse target rates.
-                            List<double> targetRates = new List<double>();
-                            for (int i = 8; i < 13; i++)
-                            {
-                                double rate;
-                                if (double.TryParse(parts[i], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
-                                {
-                                    targetRates.Add(rate);
-                                }
-                            }
-
-                            // Only add the reading if the number of applied and target rates match.
-                            if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
-                            {
-                                var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
-                                lock (_lock)
-                                {
-                                    Readings.Add(reading);
-                                }
-                            }
+                    // Only add the reading if the number of applied and target rates match.
+                    if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
+                    {
+                        var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
+                        lock (_lock)
+                        {
+                            Readings.Add(reading);
                         }
                     }
                 }
+
                 // After fully loading the CSV, set lastSavedIndex to the current count of readings.
                 lock (_lock)
                 {
@@ -243,25 +258,36 @@ namespace RateController.Classes
                     List<RateReading> snapshot;
                     lock (_lock)
                     {
-                        // Skip the readings that have already been saved.
                         snapshot = Readings.Skip(lastSavedIndex).ToList();
-                        // Update the index so that next time only the new items will be written.
                         lastSavedIndex = Readings.Count;
                     }
 
                     bool fileExists = File.Exists(DataFilePath);
+                    string header = "Timestamp,Latitude,Longitude," +
+                                    "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
+                                    "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
+
                     using (var writer = new StreamWriter(DataFilePath, append: true))
                     {
-                        // If the file does not yet exist, write the header.
-                        if (!fileExists)
+                        // Check if header is missing (file exists but no header)
+                        if (fileExists)
                         {
-                            string header = "Timestamp,Latitude,Longitude," +
-                                            "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
-                                            "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
+                            string firstLine = File.ReadLines(DataFilePath).FirstOrDefault();
+                            if (string.IsNullOrWhiteSpace(firstLine) || !firstLine.Contains("Timestamp"))
+                            {
+                                // Prepend header by rewriting the file
+                                var existingLines = File.ReadAllLines(DataFilePath);
+                                File.WriteAllText(DataFilePath, header + Environment.NewLine);
+                                File.AppendAllLines(DataFilePath, existingLines);
+                            }
+                        }
+                        else
+                        {
+                            // New file: write header
                             writer.WriteLine(header);
                         }
 
-                        // Write each reading as a CSV line.
+                        // Append new data
                         foreach (var reading in snapshot)
                         {
                             string timestamp = reading.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
@@ -269,7 +295,6 @@ namespace RateController.Classes
                             string lon = reading.Longitude.ToString(CultureInfo.InvariantCulture);
                             string basicValues = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", timestamp, lat, lon);
 
-                            // Prepare the applied rates columns (filling unused columns with empty strings).
                             string[] appliedColumns = new string[5];
                             for (int i = 0; i < 5; i++)
                             {
@@ -279,7 +304,6 @@ namespace RateController.Classes
                             }
                             string appliedData = string.Join(",", appliedColumns);
 
-                            // Prepare the target rates columns.
                             string[] targetColumns = new string[5];
                             for (int i = 0; i < 5; i++)
                             {
@@ -289,7 +313,6 @@ namespace RateController.Classes
                             }
                             string targetData = string.Join(",", targetColumns);
 
-                            // Construct the full CSV line.
                             string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, targetData);
                             writer.WriteLine(csvLine);
                         }
