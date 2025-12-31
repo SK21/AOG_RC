@@ -736,28 +736,14 @@ namespace RateController.RateMap
 
             try
             {
-                var features = new List<NetTopologySuite.Features.IFeature>();
+                var shapefileHelper = new ShapefileHelper();
 
-                // Collect zone features
-                if (mapZones != null && mapZones.Count > 0)
-                {
-                    foreach (var mapZone in mapZones)
-                    {
-                        var zoneAtts = new NetTopologySuite.Features.AttributesTable
-                        {
-                            { "Name", mapZone.Name },
-                            { "ProductA", mapZone.Rates["ProductA"] },
-                            { "ProductB", mapZone.Rates["ProductB"] },
-                            { "ProductC", mapZone.Rates["ProductC"] },
-                            { "ProductD", mapZone.Rates["ProductD"] },
-                            { "Color", ColorTranslator.ToHtml(mapZone.ZoneColor) },
-                            { "Type", "Zone" }
-                        };
-                        features.Add(new NetTopologySuite.Features.Feature(mapZone.Geometry, zoneAtts));
-                    }
-                }
+                // Save zone features to the specified filePath
+                shapefileHelper.SaveMapZones(filePath, mapZones);
 
-                // Collect applied overlay features (coverage polygons)
+                // Save applied coverage features to JobApplied.shp in the job's map folder
+                string appliedPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), "JobApplied.shp");
+
                 if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
 
                 bool haveCoverage = false;
@@ -791,77 +777,39 @@ namespace RateController.RateMap
                     }
                 }
 
-                if (haveCoverage && AppliedOverlay.Polygons != null && AppliedOverlay.Polygons.Count > 0)
+                if (haveCoverage)
                 {
-                    foreach (var gp in AppliedOverlay.Polygons)
+                    shapefileHelper.SaveOverlayPolygons(appliedPath, AppliedOverlay);
+                }
+                else
+                {
+                    // No coverage to save: remove existing applied shapefile if it exists
+                    try
                     {
-                        if (gp == null || gp.Points == null || gp.Points.Count < 3) continue;
-
-                        var coords = new List<NetTopologySuite.Geometries.Coordinate>(gp.Points.Count + 1);
-                        for (int i = 0; i < gp.Points.Count; i++)
+                        if (Props.IsPathSafe(appliedPath))
                         {
-                            var p = gp.Points[i];
-                            coords.Add(new NetTopologySuite.Geometries.Coordinate(p.Lng, p.Lat));
+                            string shp = System.IO.Path.ChangeExtension(appliedPath, ".shp");
+                            string dbf = System.IO.Path.ChangeExtension(appliedPath, ".dbf");
+                            string shx = System.IO.Path.ChangeExtension(appliedPath, ".shx");
+                            string prj = System.IO.Path.ChangeExtension(appliedPath, ".prj");
+                            string qix = System.IO.Path.ChangeExtension(appliedPath, ".qix");
+
+                            if (System.IO.File.Exists(shp)) System.IO.File.Delete(shp);
+                            if (System.IO.File.Exists(dbf)) System.IO.File.Delete(dbf);
+                            if (System.IO.File.Exists(shx)) System.IO.File.Delete(shx);
+                            if (System.IO.File.Exists(prj)) System.IO.File.Delete(prj);
+                            if (System.IO.File.Exists(qix)) System.IO.File.Delete(qix);
                         }
-                        if (!coords[0].Equals2D(coords[coords.Count - 1]))
-                        {
-                            coords.Add(coords[0]);
-                        }
-
-                        var ring = new NetTopologySuite.Geometries.LinearRing(coords.ToArray());
-                        var poly = new NetTopologySuite.Geometries.Polygon(ring);
-
-                        Color fillColor = Color.Transparent;
-                        try
-                        {
-                            var sb = gp.Fill as SolidBrush;
-                            if (sb != null) fillColor = sb.Color;
-                        }
-                        catch { }
-
-                        var covAtts = new NetTopologySuite.Features.AttributesTable
-                        {
-                            { "Name", string.IsNullOrEmpty(gp.Name) ? "Coverage" : gp.Name },
-                            { "Color", ColorTranslator.ToHtml(Color.FromArgb(255, fillColor)) },
-                            { "Alpha", fillColor.A },
-                            { "Type", "Coverage" }
-                        };
-
-                        features.Add(new NetTopologySuite.Features.Feature(poly, covAtts));
                     }
-                }
-
-                if (features.Count > 0)
-                {
-                    NetTopologySuite.IO.Esri.Shapefile.WriteAllFeatures(features, filePath);
-                    return;
-                }
-
-                try
-                {
-                    if (Props.IsPathSafe(filePath))
+                    catch (Exception ex)
                     {
-                        string shp = System.IO.Path.ChangeExtension(filePath, ".shp");
-                        string dbf = System.IO.Path.ChangeExtension(filePath, ".dbf");
-                        string shx = System.IO.Path.ChangeExtension(filePath, ".shx");
-                        string prj = System.IO.Path.ChangeExtension(filePath, ".prj");
-                        string qix = System.IO.Path.ChangeExtension(filePath, ".qix");
-
-                        if (System.IO.File.Exists(shp)) System.IO.File.Delete(shp);
-                        if (System.IO.File.Exists(dbf)) System.IO.File.Delete(dbf);
-                        if (System.IO.File.Exists(shx)) System.IO.File.Delete(shx);
-                        if (System.IO.File.Exists(prj)) System.IO.File.Delete(prj);
-                        if (System.IO.File.Exists(qix)) System.IO.File.Delete(qix);
+                        Props.WriteErrorLog("MapController/SaveMapToFile cleanup applied: " + ex.Message);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Props.WriteErrorLog("MapController/SaveMapToFile cleanup: " + ex.Message);
                 }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("MapController/SaveMapToFile combined: " + ex.Message);
+                Props.WriteErrorLog("MapController/SaveMapToFile: " + ex.Message);
             }
         }
 
