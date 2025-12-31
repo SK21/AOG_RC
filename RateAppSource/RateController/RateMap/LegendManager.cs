@@ -19,11 +19,11 @@ namespace RateController.Classes
         private static readonly Regex LegendNumberRegex = new Regex(@"(?<![A-Za-z])(-?\d+(?:[\.,]\d+)?)(?![A-Za-z])", RegexOptions.Compiled);
 
         private readonly GMapControl gmap;
+        private bool cEnabled;
         private Dictionary<string, Color> lastLegend;
         private Bitmap legendBitmap;
         private Font legendFont;
         private PictureBox legendHost;
-        private bool cEnabled;
         private int legendRightMarginPx = 0;
         private string legendSignature;
 
@@ -64,6 +64,46 @@ namespace RateController.Classes
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates a legend for applied bins from a list of MapZone objects.
+        /// Groups by color and uses the min/max range of ProductA for each bin.
+        /// Ensures all colors present in the polygons are represented, up to 5 bins.
+        /// </summary>
+        public static Dictionary<string, Color> CreateAppliedLegend(List<MapZone> zones)
+        {
+            if (zones == null)
+                return null;
+
+            // Only consider zones named "Applied Zone"
+            var appliedZones = zones
+                .Where(z => z.Name.StartsWith("Applied Zone", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (appliedZones.Count == 0)
+                return null;
+
+            // Group by color (each bin uses a unique color from the palette or shapefile)
+            // Use all unique colors present, up to 5 bins
+            var bins = appliedZones
+                .GroupBy(z => z.ZoneColor)
+                .Take(5)
+                .ToList();
+
+            var legend = new Dictionary<string, Color>();
+            foreach (var bin in bins)
+            {
+                // Compute min and max rate for the bin (using ProductA as the main rate field)
+                var rates = bin.Select(z => z.Rates.ContainsKey("ProductA") ? z.Rates["ProductA"] : 0.0).ToList();
+                double min = rates.Min();
+                double max = rates.Max();
+                string label = (Math.Abs(max - min) < 1e-6)
+                    ? min.ToString("N1")
+                    : $"{min:N1} - {max:N1}";
+                legend[label] = bin.Key;
+            }
+            return legend;
         }
 
         public void Clear()

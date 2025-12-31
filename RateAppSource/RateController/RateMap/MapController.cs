@@ -656,19 +656,12 @@ namespace RateController.RateMap
             bool Result = false;
             try
             {
-                AppliedLegend = new Dictionary<string, Color>();
                 var shapefileHelper = new ShapefileHelper();
 
                 mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
 
-                // check for AppliedRate shapefile
-                foreach(var zone in mapZones)
-                {
-                    if(zone.Name.StartsWith("Applied Zone",StringComparison.OrdinalIgnoreCase))
-                    {
-                        AppliedLegend[zone.Name] = zone.ZoneColor;
-                    }
-                }
+                // Build applied legend from loaded zones using LegendManager
+                AppliedLegend = LegendManager.CreateAppliedLegend(mapZones);
 
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in mapZones)
