@@ -60,6 +60,7 @@ namespace RateController.RateMap
         private static List<PointLatLng> NewZoneVertices;
         private static STRtree<MapZone> STRtreeZoneIndex;
         private static byte ZoneTransparency = 100;
+        private static Dictionary<string, Color> AppliedLegend = null;
 
         #endregion Zones
 
@@ -109,12 +110,12 @@ namespace RateController.RateMap
 
         public static bool LegendOverlayEnabled
         {
-            get { return legendManager != null && legendManager.LegendOverlayEnabled; }
+            get { return legendManager != null && legendManager.Enabled; }
             set
             {
                 if (legendManager != null)
                 {
-                    legendManager.LegendOverlayEnabled = value;
+                    legendManager.Enabled = value;
                     ShowLegend(ColorLegend, true);
                 }
             }
@@ -655,9 +656,19 @@ namespace RateController.RateMap
             bool Result = false;
             try
             {
+                AppliedLegend = new Dictionary<string, Color>();
                 var shapefileHelper = new ShapefileHelper();
 
                 mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
+
+                // check for AppliedRate shapefile
+                foreach(var zone in mapZones)
+                {
+                    if(zone.Name.StartsWith("Applied Zone",StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppliedLegend[zone.Name] = zone.ZoneColor;
+                    }
+                }
 
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in mapZones)
@@ -870,8 +881,17 @@ namespace RateController.RateMap
                 var readings = cRateCollector.GetReadings();
                 if (readings == null || readings.Count == 0)
                 {
-                    legendManager?.Clear();
-                    ColorLegend = null;
+                    // use applied polygons from shapefile
+                    if (AppliedLegend!=null && AppliedLegend.Count > 0)
+                    {
+                        ColorLegend = AppliedLegend;
+                        ShowLegend(ColorLegend, true);
+                    }
+                    else
+                    {
+                        legendManager?.Clear();
+                        ColorLegend = null;
+                    }
                     gmap.Refresh();
                 }
                 else if (Props.MainForm.Sections != null)

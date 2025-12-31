@@ -23,7 +23,7 @@ namespace RateController.Classes
         private Bitmap legendBitmap;
         private Font legendFont;
         private PictureBox legendHost;
-        private bool legendOverlayEnabled;
+        private bool cEnabled;
         private int legendRightMarginPx = 0;
         private string legendSignature;
 
@@ -45,16 +45,15 @@ namespace RateController.Classes
             this.gmap.SizeChanged += Gmap_SizeChanged;
         }
 
-        // Previously an auto-property. We now invoke update/clear when toggled so enabling later shows existing legend.
-        public bool LegendOverlayEnabled
+        public bool Enabled
         {
-            get { return legendOverlayEnabled; }
+            get { return cEnabled; }
             set
             {
-                if (legendOverlayEnabled != value)
+                if (cEnabled != value)
                 {
-                    legendOverlayEnabled = value;
-                    if (legendOverlayEnabled)
+                    cEnabled = value;
+                    if (cEnabled)
                     {
                         // Rebuild legend if we already have content
                         UpdateLegend(lastLegend);
@@ -136,7 +135,7 @@ namespace RateController.Classes
 
             if (legendHost == null) return;
 
-            if (!LegendOverlayEnabled || legend == null || legend.Count == 0)
+            if (!cEnabled || legend == null || legend.Count == 0)
             {
                 Clear();
                 return;

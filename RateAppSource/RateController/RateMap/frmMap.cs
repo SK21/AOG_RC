@@ -659,7 +659,6 @@ namespace RateController.Forms
                 MapController.MapZoomed += MapController_MapZoomed;
                 MapController.MapLeftClicked += MapController_MapLeftClicked;
                 MapController.LoadMap();
-                MapController.LegendOverlayEnabled = !ckWindow.Checked;
                 MapController.Enabled = true;
 
                 Props.ScreensSwitched += Props_ScreensSwitched;
