@@ -779,7 +779,7 @@ namespace RateController.RateMap
 
                 if (haveCoverage)
                 {
-                    shapefileHelper.SaveOverlayPolygons(appliedPath, AppliedOverlay);
+                    shapefileHelper.SaveAppliedMap(appliedPath, AppliedOverlay);
                 }
                 else
                 {

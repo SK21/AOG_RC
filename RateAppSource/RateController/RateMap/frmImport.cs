@@ -3,6 +3,7 @@ using RateController.Language;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RateController.Forms
@@ -76,11 +77,13 @@ namespace RateController.Forms
 
             dgvMapping.Rows.Clear();
 
-            // Create a ComboBox for each predefined attribute
+            // Auto-match: try to find a shapefile attribute with the same name (case-insensitive)
             foreach (var predefined in predefinedAttributes)
             {
-                // Create a new row in the DataGridView
-                int rowIndex = dgvMapping.Rows.Add(predefined, string.Empty); // Add a row with the predefined attribute name
+                string matched = shapefileAttributes
+                    .FirstOrDefault(attr => string.Equals(attr, predefined, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+
+                int rowIndex = dgvMapping.Rows.Add(predefined, matched);
             }
         }
 

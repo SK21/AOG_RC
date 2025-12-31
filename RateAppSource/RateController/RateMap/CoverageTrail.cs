@@ -175,7 +175,7 @@ namespace RateController.Classes
                         if (alpha > 200) alpha = 200;
                         var fill = Color.FromArgb(alpha, shade.R, shade.G, shade.B);
 
-                        var poly = new GMapPolygon(polyPoints, "aog_swath_band")
+                        var poly = new GMapPolygon(polyPoints, "swath_band")
                         {
                             Stroke = Pens.Transparent,
                             Fill = new SolidBrush(fill)
