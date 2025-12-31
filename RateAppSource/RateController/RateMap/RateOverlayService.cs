@@ -106,6 +106,7 @@ namespace RateController.Classes
                         overlay.Polygons[i].Tag = rates;
                     }
                 }
+                legend = _trail.CreateLegend(minRate, maxRate, 5);
                 return true;
             }
             catch (Exception ex)

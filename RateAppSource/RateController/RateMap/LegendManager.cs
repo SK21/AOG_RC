@@ -13,7 +13,7 @@ namespace RateController.Classes
     /// Manages the legend rendering and layout for the map view.
     /// Renders a fixed-position legend using a PictureBox hosted on the GMap control.
     /// </summary>
-    public sealed class LegendManager : IDisposable
+    public class LegendManager : IDisposable
     {
         // Regex to find standalone numeric tokens (with optional decimals) and not part of alpha words (e.g., avoid P1)
         private static readonly Regex LegendNumberRegex = new Regex(@"(?<![A-Za-z])(-?\d+(?:[\.,]\d+)?)(?![A-Za-z])", RegexOptions.Compiled);
@@ -26,7 +26,6 @@ namespace RateController.Classes
         private bool legendOverlayEnabled;
         private int legendRightMarginPx = 0;
         private string legendSignature;
-        // backing field
 
         public LegendManager(GMapControl gmap)
         {
@@ -64,20 +63,6 @@ namespace RateController.Classes
                     {
                         Clear();
                     }
-                }
-            }
-        }
-
-        public int LegendRightMarginPx
-        {
-            get { return legendRightMarginPx; }
-            set
-            {
-                if (legendRightMarginPx != value)
-                {
-                    legendRightMarginPx = value < 0 ? 0 : value;
-                    // reposition/redraw when margin changes
-                    UpdateLegend(lastLegend);
                 }
             }
         }

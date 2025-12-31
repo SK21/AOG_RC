@@ -1,5 +1,6 @@
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,10 +12,6 @@ namespace RateController.Classes
     {
         // Use same epsilon as RateOverlayService
         private const double ZeroRate = 0.001;
-
-        // Base color for coverage shading: GreenYellow (#ADFF2F)
-        // Changed from AOG teal to GreenYellow to match requested theme
-        private static readonly Color CoverageBase = Color.GreenYellow;
 
         private readonly object _lock = new object();
 
@@ -112,7 +109,8 @@ namespace RateController.Classes
             {
                 double a = minRate + (i * band);
                 double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
-                var color = ShadeForBand(i, steps, forLegend: true);
+                // Use the centralized palette for legend colors
+                var color = Palette.Colors[i % Palette.Colors.Length];
                 legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
             }
             return legend;
@@ -168,17 +166,12 @@ namespace RateController.Classes
                         polyPoints.AddRange(rightChain);
                         polyPoints.Add(leftChain[0]);
 
-                        var shade = ShadeForBand(band, steps, forLegend: false);
-
-                        // Make higher-rate bands more opaque to improve contrast on satellite tiles
-                        int alpha = 100 + (band * 22); // 0..4 -> 100..188
-                        if (alpha > 200) alpha = 200;
-                        var fill = Color.FromArgb(alpha, shade.R, shade.G, shade.B);
+                        var baseColor = Palette.Colors[band % Palette.Colors.Length];
 
                         var poly = new GMapPolygon(polyPoints, "swath_band")
                         {
                             Stroke = Pens.Transparent,
-                            Fill = new SolidBrush(fill)
+                            Fill = new SolidBrush(baseColor)
                         };
                         overlay.Polygons.Add(poly);
 
@@ -247,58 +240,11 @@ namespace RateController.Classes
             currRight = Offset(curr, -px * halfWidth, -py * halfWidth, metersPerDegLng, metersPerDegLat);
         }
 
-        private static Color GetBandColor(double minRate, double maxRate, double value)
-        {
-            const int steps = 5;
-            int idx = BandIndex(minRate, maxRate, value, steps);
-            return ShadeForBand(idx, steps, forLegend: false);
-        }
-
-        private static Color Lerp(Color a, Color b, double t)
-        {
-            if (t < 0) t = 0; if (t > 1) t = 1;
-            int r = (int)Math.Round(a.R + (b.R - a.R) * t);
-            int g = (int)Math.Round(a.G + (b.G - a.G) * t);
-            int bl = (int)Math.Round(a.B + (b.B - a.B) * t);
-            return Color.FromArgb(r, g, bl);
-        }
-
         private static PointLatLng Offset(PointLatLng src, double eastMeters, double northMeters, double metersPerDegLng, double metersPerDegLat)
         {
             double dLng = eastMeters / metersPerDegLng;
             double dLat = northMeters / metersPerDegLat;
             return new PointLatLng(src.Lat + dLat, src.Lng + dLng);
-        }
-
-        private static Color ShadeForBand(int index, int steps, bool forLegend)
-        {
-            // Darker range around GreenYellow: keep slight lightening at low band and darken more at high band
-            const double MaxWhite = 0.18; // subtle lift for lowest band
-            const double MaxBlack = 0.50; // deeper dark for highest band
-
-            double r = (steps <= 1) ? 1.0 : (double)index / (steps - 1); // 0..1
-
-            double blendWhite = (1.0 - r) * MaxWhite;
-            Color c1 = Lerp(CoverageBase, Color.White, blendWhite);
-
-            double blendBlack = r * MaxBlack;
-            Color c2 = Lerp(c1, Color.Black, blendBlack);
-
-            if (forLegend)
-            {
-                return Color.FromArgb(255, c2); // opaque in legend
-            }
-            return c2; // caller handles polygon alpha
-        }
-
-        private static bool ShouldFillWedge(PointLatLng a, PointLatLng b)
-        {
-            const double metersPerDegLat = 111320.0;
-            double dLat = (a.Lat - b.Lat) * metersPerDegLat;
-            double metersPerDegLng = metersPerDegLat * Math.Cos(a.Lat * Math.PI / 180.0);
-            double dLng = (a.Lng - b.Lng) * metersPerDegLng;
-            double distMeters = Math.Sqrt(dLat * dLat + dLng * dLng);
-            return distMeters > 0.05;
         }
 
         private sealed class Segment

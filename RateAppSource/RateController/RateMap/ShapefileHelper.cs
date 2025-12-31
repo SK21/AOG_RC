@@ -5,6 +5,7 @@ using NetTopologySuite.IO.Esri;
 using NetTopologySuite.Operation.Union;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,37 +14,9 @@ using System.Linq;
 
 namespace RateController.Classes
 {
-    internal static class ZoneFields
-    {
-        public const string Name = "Name";
-        public const string Color = "Color";
-        public const string ProductA = "ProductA";
-        public const string ProductB = "ProductB";
-        public const string ProductC = "ProductC";
-        public const string ProductD = "ProductD";
-    }
-
-    internal sealed class AppliedPolygon
-    {
-        public Polygon Geometry { get; set; }
-        public AttributesTable Attributes { get; set; }
-        public double Acres { get; set; }
-        public double RateValue { get; set; }
-    }
-
     public class ShapefileHelper
     {
-        private readonly Color[] palette = new Color[]
-        {
-            Color.Red, Color.Green, Color.Blue, Color.Orange,
-            Color.Purple, Color.Teal, Color.Brown, Color.Magenta
-        };
-
-        // ============================================================
-        // PUBLIC API
-        // ============================================================
-
-        public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping=null)
+        public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping = null)
         {
             var zones = new List<MapZone>();
 
@@ -69,7 +42,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("CreateZoneList: " + ex.Message);
+                Props.WriteErrorLog("ShapefileHelper/CreateZoneList: " + ex.Message);
             }
 
             return zones;
@@ -141,46 +114,30 @@ namespace RateController.Classes
             }
         }
 
-        // ============================================================
-        // APPLIED MAP HELPERS
-        // ============================================================
-
-        private List<AppliedPolygon> CollectOverlayPolygons(GMapOverlay overlay, string rateField)
+        private static AttributesTable BuildAttributes(GMapPolygon gp, Dictionary<string, double> rates)
         {
-            var result = new List<AppliedPolygon>();
-            if (overlay == null || overlay.Polygons == null)
-                return result;
+            Color fill = Color.Transparent;
+            if (gp.Fill is SolidBrush) fill = ((SolidBrush)gp.Fill).Color;
 
-            foreach (var gp in overlay.Polygons)
+            double a = 0, b = 0, c = 0, d = 0;
+
+            if (rates != null)
             {
-                if (gp == null || gp.Points == null || gp.Points.Count < 3)
-                    continue;
-
-                try
-                {
-                    Polygon polygon = BuildPolygon(gp);
-                    double acres = CalculateAcres(polygon);
-
-                    double rateValue = 0;
-                    var rates = gp.Tag as Dictionary<string, double>;
-                    if (rates != null && rates.ContainsKey(rateField))
-                        rateValue = rates[rateField];
-
-                    result.Add(new AppliedPolygon
-                    {
-                        Geometry = polygon,
-                        Acres = acres,
-                        RateValue = rateValue,
-                        Attributes = BuildAttributes(gp, rates)
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Props.WriteErrorLog("CollectOverlayPolygons: " + ex.Message);
-                }
+                if (rates.ContainsKey(ZoneFields.ProductA)) a = rates[ZoneFields.ProductA];
+                if (rates.ContainsKey(ZoneFields.ProductB)) b = rates[ZoneFields.ProductB];
+                if (rates.ContainsKey(ZoneFields.ProductC)) c = rates[ZoneFields.ProductC];
+                if (rates.ContainsKey(ZoneFields.ProductD)) d = rates[ZoneFields.ProductD];
             }
 
-            return result;
+            return new AttributesTable
+            {
+                { ZoneFields.Name, string.IsNullOrWhiteSpace(gp.Name) ? "Coverage" : gp.Name },
+                { ZoneFields.Color, ColorTranslator.ToHtml(Color.FromArgb(255, fill)) },
+                { ZoneFields.ProductA, a },
+                { ZoneFields.ProductB, b },
+                { ZoneFields.ProductC, c },
+                { ZoneFields.ProductD, d }
+            };
         }
 
         private static Polygon BuildPolygon(GMapPolygon gp)
@@ -207,25 +164,6 @@ namespace RateController.Classes
             return poly;
         }
 
-        private static AttributesTable BuildAttributes(
-            GMapPolygon gp,
-            Dictionary<string, double> rates)
-        {
-            Color fill = Color.Transparent;
-            if (gp.Fill is SolidBrush)
-                fill = ((SolidBrush)gp.Fill).Color;
-
-            return new AttributesTable
-            {
-                { ZoneFields.Name, string.IsNullOrWhiteSpace(gp.Name) ? "Coverage" : gp.Name },
-                { ZoneFields.Color, ColorTranslator.ToHtml(Color.FromArgb(255, fill)) },
-                { ZoneFields.ProductA, rates != null && rates.ContainsKey(ZoneFields.ProductA) ? rates[ZoneFields.ProductA] : 0 },
-                { ZoneFields.ProductB, rates != null && rates.ContainsKey(ZoneFields.ProductB) ? rates[ZoneFields.ProductB] : 0 },
-                { ZoneFields.ProductC, rates != null && rates.ContainsKey(ZoneFields.ProductC) ? rates[ZoneFields.ProductC] : 0 },
-                { ZoneFields.ProductD, rates != null && rates.ContainsKey(ZoneFields.ProductD) ? rates[ZoneFields.ProductD] : 0 }
-            };
-        }
-
         private static double[] ComputeRateBins(List<AppliedPolygon> polys)
         {
             var values = polys
@@ -245,48 +183,23 @@ namespace RateController.Classes
             return bins;
         }
 
-        private List<Tuple<Geometry, AttributesTable>> MergeBins(
-            List<AppliedPolygon> polys,
-            double[] bins,
-            double minAreaAcres)
+        private static void DeleteIfExists(string path)
         {
-            var output = new List<Tuple<Geometry, AttributesTable>>();
-            int zoneCounter = 1;
-
-            for (int bin = 0; bin < 5; bin++)
+            try
             {
-                var group = polys
-                    .Where(p => p.RateValue >= bins[bin] &&
-                               (bin == 4 || p.RateValue < bins[bin + 1]))
-                    .ToList();
-
-                if (group.Count == 0)
-                    continue;
-
-                var merged = UnaryUnionOp.Union(group.Select(p => p.Geometry));
-
-                double avgA = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductA]));
-                double avgB = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductB]));
-                double avgC = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductC]));
-                double avgD = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductD]));
-
-                foreach (var geom in SplitGeometry(merged))
-                {
-                    output.Add(Tuple.Create(
-                        geom,
-                        new AttributesTable
-                        {
-                            { ZoneFields.Name, "Applied Zone " + zoneCounter++ },
-                            { ZoneFields.Color, group[0].Attributes[ZoneFields.Color] },
-                            { ZoneFields.ProductA, avgA },
-                            { ZoneFields.ProductB, avgB },
-                            { ZoneFields.ProductC, avgC },
-                            { ZoneFields.ProductD, avgD }
-                        }));
-                }
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                    File.Delete(path);
             }
+            catch { }
+        }
 
-            return output;
+        private static void DeleteShapefileSet(string basePath)
+        {
+            if (!Props.IsPathSafe(basePath))
+                return;
+
+            foreach (var ext in new[] { ".shp", ".shx", ".dbf", ".prj", ".qix" })
+                DeleteIfExists(Path.ChangeExtension(basePath, ext));
         }
 
         private static IEnumerable<Geometry> SplitGeometry(Geometry g)
@@ -296,9 +209,18 @@ namespace RateController.Classes
             return new[] { g };
         }
 
-        private static bool WriteOrCleanupShapefile(
-            string path,
-            List<Tuple<Geometry, AttributesTable>> data)
+        private static Polygon TransformRing(LinearRing ring, ICoordinateTransformation tf)
+        {
+            var coords = new List<Coordinate>();
+            foreach (var c in ring.Coordinates)
+            {
+                var t = tf.MathTransform.Transform(new[] { c.X, c.Y });
+                coords.Add(new Coordinate(t[0], t[1]));
+            }
+            return new Polygon(new LinearRing(coords.ToArray()));
+        }
+
+        private static bool WriteOrCleanupShapefile(string path, List<Tuple<Geometry, AttributesTable>> data)
         {
             if (data.Count == 0)
             {
@@ -314,66 +236,11 @@ namespace RateController.Classes
             return true;
         }
 
-        // ============================================================
-        // ZONE IMPORT HELPERS
-        // ============================================================
-
-        private void AddZone(
-            IFeature feature,
-            Polygon polygon,
-            Dictionary<string, string> mapping,
-            int index,
-            List<MapZone> zones)
+        private void AddZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index, List<MapZone> zones)
         {
             var zone = CreateMapZone(feature, polygon, mapping, index);
-            if (zone != null)
-                zones.Add(zone);
+            if (zone != null) zones.Add(zone);
         }
-
-        private MapZone CreateMapZone(
-            IFeature feature,
-            Polygon polygon,
-            Dictionary<string, string> mapping,
-            int index)
-        {
-            try
-            {
-                string name = "Zone " + (index + 1);
-                var rates = new Dictionary<string, double>
-                {
-                    { ZoneFields.ProductA, 0 },
-                    { ZoneFields.ProductB, 0 },
-                    { ZoneFields.ProductC, 0 },
-                    { ZoneFields.ProductD, 0 }
-                };
-
-                Color color = palette[index % palette.Length];
-
-                if (mapping == null)
-                {
-                    if (feature.Attributes.Exists(ZoneFields.Name))
-                        name = feature.Attributes[ZoneFields.Name].ToString();
-
-                    foreach (var k in rates.Keys.ToList())
-                        if (feature.Attributes.Exists(k))
-                            rates[k] = Convert.ToDouble(feature.Attributes[k]);
-
-                    if (feature.Attributes.Exists(ZoneFields.Color))
-                        color = ColorTranslator.FromHtml(feature.Attributes[ZoneFields.Color].ToString());
-                }
-
-                return new MapZone(name, polygon, rates, color);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("CreateMapZone: " + ex.Message);
-                return null;
-            }
-        }
-
-        // ============================================================
-        // GEOMETRY & FILE HELPERS
-        // ============================================================
 
         private double CalculateAcres(Polygon polygon)
         {
@@ -402,36 +269,164 @@ namespace RateController.Classes
             }
         }
 
-        private static Polygon TransformRing(
-            LinearRing ring,
-            ICoordinateTransformation tf)
+        private List<AppliedPolygon> CollectOverlayPolygons(GMapOverlay overlay, string rateField)
         {
-            var coords = new List<Coordinate>();
-            foreach (var c in ring.Coordinates)
+            var results = new List<AppliedPolygon>();
+            if (overlay == null || overlay.Polygons == null)
+                return results;
+
+            foreach (var gp in overlay.Polygons)
             {
-                var t = tf.MathTransform.Transform(new[] { c.X, c.Y });
-                coords.Add(new Coordinate(t[0], t[1]));
+                if (gp == null || gp.Points == null || gp.Points.Count < 3)
+                    continue;
+
+                try
+                {
+                    var poly = BuildPolygon(gp);
+                    if (poly == null)
+                        continue;
+
+                    double acres = CalculateAcres(poly);
+
+                    var rates = gp.Tag as Dictionary<string, double>;
+                    if (rates == null)
+                        continue;
+
+                    double rateValue;
+                    if (!rates.TryGetValue(rateField, out rateValue))
+                        rateValue = 0;
+
+                    results.Add(new AppliedPolygon
+                    {
+                        Geometry = poly,
+                        Acres = acres,
+                        RateValue = rateValue,
+                        Attributes = BuildAttributes(gp, rates)
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("CollectOverlayPolygons: " + ex.Message);
+                }
             }
-            return new Polygon(new LinearRing(coords.ToArray()));
+
+            return results;
         }
 
-        private static void DeleteShapefileSet(string basePath)
-        {
-            if (!Props.IsPathSafe(basePath))
-                return;
-
-            foreach (var ext in new[] { ".shp", ".shx", ".dbf", ".prj", ".qix" })
-                DeleteIfExists(Path.ChangeExtension(basePath, ext));
-        }
-
-        private static void DeleteIfExists(string path)
+        private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index)
         {
             try
             {
-                if (!string.IsNullOrEmpty(path) && File.Exists(path))
-                    File.Delete(path);
+                string name = "Zone " + (index + 1);
+                var rates = new Dictionary<string, double>
+                {
+                    { ZoneFields.ProductA, 0 },
+                    { ZoneFields.ProductB, 0 },
+                    { ZoneFields.ProductC, 0 },
+                    { ZoneFields.ProductD, 0 }
+                };
+
+                Color color = Palette.Colors[index % Palette.Colors.Length];
+
+                if (mapping == null)
+                {
+                    if (feature.Attributes.Exists(ZoneFields.Name)) name = feature.Attributes[ZoneFields.Name].ToString();
+
+                    foreach (var k in rates.Keys.ToList())
+                    {
+                        if (feature.Attributes.Exists(k)) rates[k] = Convert.ToDouble(feature.Attributes[k]);
+                    }
+
+                    if (feature.Attributes.Exists(ZoneFields.Color)) color = ColorTranslator.FromHtml(feature.Attributes[ZoneFields.Color].ToString());
+                }
+                else
+                {
+                    // Map the zone name
+                    string nameField = mapping.ContainsKey(ZoneFields.Name) ? mapping[ZoneFields.Name] : ZoneFields.Name;
+                    if (feature.Attributes.Exists(nameField)) name = feature.Attributes[nameField].ToString();
+
+                    // Map the rates
+                    foreach (var k in rates.Keys.ToList())
+                    {
+                        string mappedField = mapping.ContainsKey(k) ? mapping[k] : k;
+                        if (feature.Attributes.Exists(mappedField)) rates[k] = Convert.ToDouble(feature.Attributes[mappedField]);
+                    }
+
+                    // Map the color
+                    string colorField = mapping.ContainsKey(ZoneFields.Color) ? mapping[ZoneFields.Color] : ZoneFields.Color;
+                    if (feature.Attributes.Exists(colorField)) color = ColorTranslator.FromHtml(feature.Attributes[colorField].ToString());
+                }
+
+                return new MapZone(name, polygon, rates, color);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("CreateMapZone: " + ex.Message);
+                return null;
+            }
         }
+
+        private List<Tuple<Geometry, AttributesTable>> MergeBins(List<AppliedPolygon> polys, double[] bins, double minAreaAcres)
+        {
+            var output = new List<Tuple<Geometry, AttributesTable>>();
+            int zoneCounter = 1;
+
+            for (int bin = 0; bin < 5; bin++)
+            {
+                var group = polys
+                    .Where(p => p.RateValue >= bins[bin] &&
+                               (bin == 4 || p.RateValue < bins[bin + 1]))
+                    .ToList();
+
+                if (group.Count == 0)
+                    continue;
+
+                var merged = UnaryUnionOp.Union(group.Select(p => p.Geometry));
+
+                double avgA = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductA]));
+                double avgB = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductB]));
+                double avgC = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductC]));
+                double avgD = group.Average(p => Convert.ToDouble(p.Attributes[ZoneFields.ProductD]));
+
+                // Assign a color from the palette for this bin
+                Color binColor = Palette.Colors[bin % Palette.Colors.Length];
+                string binColorHtml = ColorTranslator.ToHtml(binColor);
+
+                foreach (var geom in SplitGeometry(merged))
+                {
+                    output.Add(Tuple.Create(
+                        geom,
+                        new AttributesTable
+                        {
+                            { ZoneFields.Name, "Applied Zone " + zoneCounter++ },
+                            { ZoneFields.Color, binColorHtml },
+                            { ZoneFields.ProductA, avgA },
+                            { ZoneFields.ProductB, avgB },
+                            { ZoneFields.ProductC, avgC },
+                            { ZoneFields.ProductD, avgD }
+                        }));
+                }
+            }
+
+            return output;
+        }
+    }
+
+    internal static class ZoneFields
+    {
+        public const string Color = "Color";
+        public const string Name = "Name";
+        public const string ProductA = "ProductA";
+        public const string ProductB = "ProductB";
+        public const string ProductC = "ProductC";
+        public const string ProductD = "ProductD";
+    }
+
+    internal sealed class AppliedPolygon
+    {
+        public double Acres { get; set; }
+        public AttributesTable Attributes { get; set; }
+        public Polygon Geometry { get; set; }
+        public double RateValue { get; set; }
     }
 }

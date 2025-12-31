@@ -446,6 +446,7 @@ namespace RateController.Forms
                     }
                 }
                 MapController.DisplaySizeUpdate(ckWindow.Checked);
+                MapController.LegendOverlayEnabled = !ckWindow.Checked;
                 timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
             }
             catch (Exception ex)

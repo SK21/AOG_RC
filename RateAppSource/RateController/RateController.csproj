@@ -523,6 +523,7 @@
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />
     <Compile Include="RateMap\MapZone.cs" />
+    <Compile Include="RateMap\Palette.cs" />
     <Compile Include="RateMap\RateOverlayService.cs" />
     <Compile Include="RateMap\RateReading.cs" />
     <Compile Include="RateMap\ShapefileHelper.cs" />
