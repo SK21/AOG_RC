@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using RateController.Language;
+using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -108,7 +109,7 @@ namespace RateController.Forms
                     string MapPath = JobManager.MapPath(JobManager.CurrentJobID);
                     if (shapefileHelper.SaveMapZones(MapPath, mapZones))
                     {
-                        //mf.Tls.Manager.LoadMap();
+                        MapController.LoadMap();
                         Result = true;
                     }
                 }

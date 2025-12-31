@@ -84,8 +84,28 @@ namespace RateController.Classes
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
 
-                // Keep legend: shades derived from AOG color
-                legend = _trail.CreateLegend(minRate, maxRate, 5);
+                // After drawing the trail, assign applied rates to each polygon for shapefile export
+                if (legendType == RateType.Applied && overlay.Polygons.Count > 0)
+                {
+                    int polygonCount = overlay.Polygons.Count;
+                    int readingCount = readings.Count;
+                    int maxProducts = readings.Max(r => r.AppliedRates?.Length ?? 0);
+
+                    // Map polygons to readings (approximate: one polygon per segment)
+                    for (int i = 0; i < polygonCount; i++)
+                    {
+                        // Use the i-th reading, or last if out of range
+                        int readingIdx = Math.Min(i, readingCount - 1);
+                        var rates = new Dictionary<string, double>
+                        {
+                            { "ProductA", (readings[readingIdx].AppliedRates.Length > 0) ? readings[readingIdx].AppliedRates[0] : 0.0 },
+                            { "ProductB", (readings[readingIdx].AppliedRates.Length > 1) ? readings[readingIdx].AppliedRates[1] : 0.0 },
+                            { "ProductC", (readings[readingIdx].AppliedRates.Length > 2) ? readings[readingIdx].AppliedRates[2] : 0.0 },
+                            { "ProductD", (readings[readingIdx].AppliedRates.Length > 3) ? readings[readingIdx].AppliedRates[3] : 0.0 }
+                        };
+                        overlay.Polygons[i].Tag = rates;
+                    }
+                }
                 return true;
             }
             catch (Exception ex)

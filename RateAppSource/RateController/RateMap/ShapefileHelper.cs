@@ -180,12 +180,15 @@ namespace RateController.Classes
                         }
                         catch { }
 
+                        var rates = gp.Tag as Dictionary<string, double>;
                         var atts = new AttributesTable
                         {
                             { "Name", string.IsNullOrEmpty(gp.Name) ? "Coverage" : gp.Name },
                             { "Color", ColorTranslator.ToHtml(Color.FromArgb(255, fillColor)) },
-                            { "Alpha", fillColor.A },
-                            { "Acres", acres }
+                            { "ProductA", rates != null && rates.ContainsKey("ProductA") ? rates["ProductA"] : 0.0 },
+                            { "ProductB", rates != null && rates.ContainsKey("ProductB") ? rates["ProductB"] : 0.0 },
+                            { "ProductC", rates != null && rates.ContainsKey("ProductC") ? rates["ProductC"] : 0.0 },
+                            { "ProductD", rates != null && rates.ContainsKey("ProductD") ? rates["ProductD"] : 0.0 }
                         };
 
                         polygonData.Add((poly, atts, acres));
