@@ -3,6 +3,7 @@ using GMap.NET.WindowsForms;
 using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,25 +12,20 @@ namespace RateController.Classes
 {
     public class MapZone
     {
-
-        public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor)
+        public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor, ZoneType zoneType)
         {
             Name = name;
             Geometry = geometry;
             Rates = rates;
             ZoneColor = zoneColor;
+            ZoneType = zoneType;
         }
 
         public Polygon Geometry { get; set; }
-
         public string Name { get; set; }
-        public bool MatchesGeometry(Polygon other)
-        {
-            return Geometry.EqualsTopologically(other);
-        }
-
         public Dictionary<string, double> Rates { get; set; }
         public Color ZoneColor { get; set; }
+        public ZoneType ZoneType { get; set; }
 
         public bool Contains(PointLatLng point)
         {
@@ -75,7 +71,7 @@ namespace RateController.Classes
             return totalArea;
         }
 
-        public List<GMapPolygon> ToGMapPolygons(byte Transparentcy=50)
+        public List<GMapPolygon> ToGMapPolygons(byte Transparentcy = 50)
         {
             var polygons = new List<GMapPolygon>();
             try

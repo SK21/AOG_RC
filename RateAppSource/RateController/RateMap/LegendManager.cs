@@ -30,7 +30,7 @@ namespace RateController.Classes
         public LegendManager(GMapControl gmap)
         {
             this.gmap = gmap ?? throw new ArgumentNullException(nameof(gmap));
-            legendFont = new Font("Arial", 11);
+            legendFont = new Font("Microsoft Sans Serif", 14);
 
             legendHost = new PictureBox
             {
@@ -66,44 +66,43 @@ namespace RateController.Classes
             }
         }
 
-        /// <summary>
-        /// Creates a legend for applied bins from a list of MapZone objects.
-        /// Groups by color and uses the min/max range of ProductA for each bin.
-        /// Ensures all colors present in the polygons are represented, up to 5 bins.
-        /// </summary>
         public static Dictionary<string, Color> CreateAppliedLegend(List<MapZone> zones)
         {
             if (zones == null)
                 return null;
 
-            // Only consider zones named "Applied Zone"
             var appliedZones = zones
                 .Where(z => z.Name.StartsWith("Applied Zone", StringComparison.OrdinalIgnoreCase))
+                .Where(z => z.Rates != null && z.Rates.ContainsKey("ProductA"))
                 .ToList();
 
             if (appliedZones.Count == 0)
                 return null;
 
-            // Group by color (each bin uses a unique color from the palette or shapefile)
-            // Use all unique colors present, up to 5 bins
-            var bins = appliedZones
-                .GroupBy(z => z.ZoneColor)
-                .Take(5)
-                .ToList();
-
             var legend = new Dictionary<string, Color>();
-            foreach (var bin in bins)
+
+            var groups = appliedZones
+                .GroupBy(z => new
+                {
+                    Rate = z.Rates["ProductA"],
+                    z.ZoneColor
+                })
+                .OrderBy(g => g.Key.Rate);
+
+            foreach (var group in groups)
             {
-                // Compute min and max rate for the bin (using ProductA as the main rate field)
-                var rates = bin.Select(z => z.Rates.ContainsKey("ProductA") ? z.Rates["ProductA"] : 0.0).ToList();
-                double min = rates.Min();
-                double max = rates.Max();
-                string label = (Math.Abs(max - min) < 1e-6)
-                    ? min.ToString("N1")
-                    : $"{min:N1} - {max:N1}";
-                legend[label] = bin.Key;
+                double rate = group.Key.Rate;
+
+                if (double.IsNaN(rate) || double.IsInfinity(rate))
+                    continue;
+
+                string label = rate.ToString("N1");
+
+                // One entry per rate/color
+                legend[label] = group.Key.ZoneColor;
             }
-            return legend;
+
+            return legend.Count > 0 ? legend : null;
         }
 
         public void Clear()
@@ -171,59 +170,44 @@ namespace RateController.Classes
 
         public void UpdateLegend(Dictionary<string, Color> legend)
         {
-            lastLegend = legend;
-
-            if (legendHost == null) return;
-
             if (!cEnabled || legend == null || legend.Count == 0)
             {
                 Clear();
-                return;
             }
-
-            // Build a signature to detect changes in legend content (order + color)
-            string newSig;
-            unchecked
+            else
             {
-                var orderedForSig = OrderLegend(legend);
-                var adjustedForSig = AdjustLegendLabels(orderedForSig);
-                var parts = new List<string>(adjustedForSig.Count);
-                foreach (var kv in adjustedForSig)
+                double Val = 0;
+                SortedDictionary<double, Color> SortedLegend = new SortedDictionary<double, Color>();
+                foreach (var kv in legend)
                 {
-                    var col = kv.Value;
-                    string key = FormatLegendLabelNoDecimals(kv.Key);
-                    parts.Add(key + "#" + col.ToArgb().ToString("X8"));
+                    Val = double.TryParse(kv.Key, out Val) ? Val : 0;
+                    if (Val > 0) SortedLegend.Add(Val, kv.Value);
                 }
-                newSig = string.Join("|", parts);
-            }
 
-            const int itemHeight = 25;
-            const int leftMargin = 10;
-            const int swatch = 20;
-            const int gap = 10;
-            const int rightMargin = 10;
+                const int itemHeight = 25;
+                const int leftMargin = 10;
+                const int swatch = 20;
+                const int gap = 10;
+                const int rightMargin = 10;
 
-            var orderedItems = OrderLegend(legend);
-            var adjustedItems = AdjustLegendLabels(orderedItems);
-
-            int maxTextWidth = 0;
-            using (var measurementBmp = new Bitmap(1, 1))
-            using (var measurementG = Graphics.FromImage(measurementBmp))
-            {
-                foreach (var item in adjustedItems)
+                // Measure max text width
+                int maxTextWidth = 0;
+                string Label = "";
+                using (var bmp = new Bitmap(1, 1))
+                using (var g = Graphics.FromImage(bmp))
                 {
-                    string label = FormatLegendLabelNoDecimals(item.Key);
-                    var textSize = measurementG.MeasureString(label, legendFont);
-                    if (textSize.Width > maxTextWidth) maxTextWidth = (int)Math.Ceiling(textSize.Width);
+                    foreach (var kv in SortedLegend)
+                    {
+                        Label = kv.Key.ToString("N1");
+                        var size = g.MeasureString(Label, legendFont);
+                        maxTextWidth = Math.Max(maxTextWidth, (int)Math.Ceiling(size.Width));
+                    }
                 }
-            }
 
-            int maxContentWidth = swatch + gap + maxTextWidth;
-            int legendHeight = (legend.Count * itemHeight) + (leftMargin * 2);
-            int legendWidth = Math.Max(120, leftMargin + maxContentWidth + rightMargin);
+                int maxContentWidth = swatch + gap + maxTextWidth;
+                int legendHeight = (legend.Count * itemHeight) + (leftMargin * 2);
+                int legendWidth = Math.Max(120, leftMargin + maxContentWidth + rightMargin);
 
-            if (legendBitmap == null || !string.Equals(newSig, legendSignature, StringComparison.Ordinal))
-            {
                 legendBitmap?.Dispose();
                 legendBitmap = new Bitmap(legendWidth, legendHeight);
 
@@ -235,128 +219,32 @@ namespace RateController.Classes
 
                     int anchorStartX = Math.Max(leftMargin, (legendWidth - maxContentWidth) / 2);
                     int y = leftMargin;
-                    foreach (var item in adjustedItems)
+
+                    foreach (var kv in SortedLegend)
                     {
-                        string label = FormatLegendLabelNoDecimals(item.Key);
-                        var textSize = g2.MeasureString(label, legendFont);
-                        int startX = anchorStartX;
+                        Label = kv.Key.ToString("N1");
+                        Color color = kv.Value;
+                        var textSize = g2.MeasureString(Label, legendFont);
                         int swatchTop = y + (itemHeight - swatch) / 2;
-                        using (var brush = new SolidBrush(item.Value))
+
+                        using (var brush = new SolidBrush(color))
                         {
-                            g2.FillRectangle(brush, startX, swatchTop, swatch, swatch);
-                            g2.DrawRectangle(Pens.White, startX, swatchTop, swatch, swatch);
+                            g2.FillRectangle(brush, anchorStartX, swatchTop, swatch, swatch);
+                            g2.DrawRectangle(Pens.White, anchorStartX, swatchTop, swatch, swatch);
                         }
+
                         float textY = y + (itemHeight - textSize.Height) / 2f;
-                        g2.DrawString(label, legendFont, Brushes.White, new PointF(startX + swatch + gap, textY));
+                        g2.DrawString(Label, legendFont, Brushes.White,
+                            new PointF(anchorStartX + swatch + gap, textY));
+
                         y += itemHeight;
                     }
                 }
-                legendSignature = newSig;
+
+                legendHost.Image = legendBitmap;
+                legendHost.Visible = true;
+                PositionLegendHost();
             }
-
-            legendHost.Image = legendBitmap;
-            legendHost.Visible = true;
-            PositionLegendHost();
-        }
-
-        private static List<KeyValuePair<string, Color>> AdjustLegendLabels(List<KeyValuePair<string, Color>> orderedLegend)
-        {
-            var result = new List<KeyValuePair<string, Color>>();
-            if (orderedLegend == null || orderedLegend.Count == 0) return result;
-
-            int? prevEnd = null;
-
-            foreach (var kv in orderedLegend)
-            {
-                var nums = ExtractLegendNumbers(kv.Key);
-                string newLabel = kv.Key;
-
-                if (nums.Count >= 2)
-                {
-                    int lower = (int)Math.Round(nums[0]);
-                    int upper = (int)Math.Round(nums[1]);
-
-                    if (prevEnd.HasValue && lower <= prevEnd.Value)
-                    {
-                        lower = prevEnd.Value + 1;
-                    }
-
-                    if (lower > upper)
-                    {
-                        upper = lower;
-                    }
-
-                    newLabel = (lower == upper) ? lower.ToString(CultureInfo.InvariantCulture)
-                                                : string.Format(CultureInfo.InvariantCulture, "{0}-{1}", lower, upper);
-                    prevEnd = upper;
-                }
-                else if (nums.Count == 1)
-                {
-                    int val = (int)Math.Round(nums[0]);
-                    if (prevEnd.HasValue && val <= prevEnd.Value)
-                    {
-                        val = prevEnd.Value + 1;
-                    }
-                    newLabel = val.ToString(CultureInfo.InvariantCulture);
-                    prevEnd = val;
-                }
-                else
-                {
-                    newLabel = kv.Key;
-                }
-
-                result.Add(new KeyValuePair<string, Color>(newLabel, kv.Value));
-            }
-
-            return result;
-        }
-
-        private static List<double> ExtractLegendNumbers(string label)
-        {
-            var nums = new List<double>();
-            if (string.IsNullOrEmpty(label)) return nums;
-            foreach (Match m in LegendNumberRegex.Matches(label))
-            {
-                var s = m.Groups[1].Value.Replace(',', '.');
-                double val;
-                if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
-                {
-                    nums.Add(val);
-                }
-            }
-            return nums;
-        }
-
-        private static string FormatLegendLabelNoDecimals(string label)
-        {
-            if (string.IsNullOrEmpty(label)) return label ?? string.Empty;
-            return LegendNumberRegex.Replace(label, m =>
-            {
-                var s = m.Groups[1].Value.Replace(',', '.');
-                double val;
-                if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
-                {
-                    int ival = (int)Math.Round(val);
-                    return ival.ToString(CultureInfo.InvariantCulture);
-                }
-                return m.Value;
-            });
-        }
-
-        private static List<KeyValuePair<string, Color>> OrderLegend(Dictionary<string, Color> legend)
-        {
-            if (legend == null || legend.Count == 0) return new List<KeyValuePair<string, Color>>();
-
-            var ordered = legend
-                .Select(kv => new { kv.Key, kv.Value, nums = ExtractLegendNumbers(kv.Key) })
-                .OrderBy(x => x.nums.Count > 0 ? 0 : 1)
-                .ThenBy(x => x.nums.Count > 0 ? x.nums[0] : double.MaxValue)
-                .ThenBy(x => x.nums.Count > 1 ? x.nums[1] : double.MaxValue)
-                .ThenBy(x => x.Key, StringComparer.Ordinal)
-                .Select(x => new KeyValuePair<string, Color>(x.Key, x.Value))
-                .ToList();
-
-            return ordered;
         }
 
         private void Gmap_SizeChanged(object sender, EventArgs e)

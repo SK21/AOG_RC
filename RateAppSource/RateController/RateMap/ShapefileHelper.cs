@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using static GMap.NET.Entity.OpenStreetMapGraphHopperRouteEntity;
 
 namespace RateController.Classes
 {
@@ -35,7 +36,9 @@ namespace RateController.Classes
                         {
                             var mp = (MultiPolygon)feature.Geometry;
                             foreach (Polygon poly in mp.Geometries)
+                            {
                                 AddZone(feature, poly, attributeMapping, index++, zones);
+                            }
                         }
                     }
                 }
@@ -63,13 +66,43 @@ namespace RateController.Classes
             try
             {
                 var polygons = CollectOverlayPolygons(overlay, rateField);
-                if (polygons.Count == 0)
-                    return false;
+                if (polygons.Count == 0) return false;
 
-                var bins = ComputeRateBins(polygons);
+                // rate bins
+                var values = polygons
+                .Select(p => p.RateValue)
+                .Where(v => !double.IsNaN(v) && !double.IsInfinity(v))
+                .OrderBy(v => v)
+                .ToArray();
+
+                var bins = new double[6];
+                for (int i = 0; i < bins.Length; i++)
+                {
+                    int idx = (int)Math.Floor((values.Length - 1) * i / 5.0);
+                    if (idx < 0) idx = 0;
+                    if (idx >= values.Length) idx = values.Length - 1;
+                    bins[i] = values[idx];
+                }
+
                 var merged = MergeBins(polygons, bins, minAreaAcres);
 
-                return WriteOrCleanupShapefile(shapefilePath, merged);
+                return UpdateShapefile(shapefilePath, merged);
+
+
+                //// update shapefile
+                //if (merged.Count == 0)
+                //{
+                //    DeleteShapefileSet(shapefilePath);
+                //    return true;
+                //}
+
+                //var features = new List<IFeature>();
+                //foreach (var d in merged)
+                //    features.Add(new NetTopologySuite.Feature(d.Item1, d.Item2));
+
+                //Shapefile.WriteAllFeatures(features, path);
+                //return true;
+
             }
             catch (Exception ex)
             {
@@ -136,7 +169,7 @@ namespace RateController.Classes
                 { ZoneFields.ProductA, a },
                 { ZoneFields.ProductB, b },
                 { ZoneFields.ProductC, c },
-                { ZoneFields.ProductD, d }
+                { ZoneFields.ProductD, d },
             };
         }
 
@@ -164,24 +197,6 @@ namespace RateController.Classes
             return poly;
         }
 
-        private static double[] ComputeRateBins(List<AppliedPolygon> polys)
-        {
-            var values = polys
-                .Select(p => p.RateValue)
-                .Where(v => !double.IsNaN(v) && !double.IsInfinity(v))
-                .OrderBy(v => v)
-                .ToArray();
-
-            var bins = new double[6];
-            for (int i = 0; i < bins.Length; i++)
-            {
-                int idx = (int)Math.Floor((values.Length - 1) * i / 5.0);
-                if (idx < 0) idx = 0;
-                if (idx >= values.Length) idx = values.Length - 1;
-                bins[i] = values[idx];
-            }
-            return bins;
-        }
 
         private static void DeleteIfExists(string path)
         {
@@ -199,7 +214,7 @@ namespace RateController.Classes
                 return;
 
             foreach (var ext in new[] { ".shp", ".shx", ".dbf", ".prj", ".qix" })
-                DeleteIfExists(Path.ChangeExtension(basePath, ext));
+                DeleteIfExists(System.IO.Path.ChangeExtension(basePath, ext));
         }
 
         private static IEnumerable<Geometry> SplitGeometry(Geometry g)
@@ -220,7 +235,7 @@ namespace RateController.Classes
             return new Polygon(new LinearRing(coords.ToArray()));
         }
 
-        private static bool WriteOrCleanupShapefile(string path, List<Tuple<Geometry, AttributesTable>> data)
+        private static bool UpdateShapefile(string path, List<Tuple<Geometry, AttributesTable>> data)
         {
             if (data.Count == 0)
             {
@@ -357,11 +372,14 @@ namespace RateController.Classes
                     if (feature.Attributes.Exists(colorField)) color = ColorTranslator.FromHtml(feature.Attributes[colorField].ToString());
                 }
 
-                return new MapZone(name, polygon, rates, color);
+                ZoneType cZoneType = ZoneType.Target;
+                if (feature.Attributes.Exists(ZoneFields.ZoneType)) cZoneType = Enum.TryParse(feature.Attributes[ZoneFields.ZoneType].ToString(), out cZoneType) ? cZoneType : ZoneType.Target;
+
+                return new MapZone(name, polygon, rates, color, cZoneType);
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("CreateMapZone: " + ex.Message);
+                Props.WriteErrorLog("ShapefileHelper/CreateMapZone: " + ex.Message);
                 return null;
             }
         }
@@ -403,7 +421,8 @@ namespace RateController.Classes
                             { ZoneFields.ProductA, avgA },
                             { ZoneFields.ProductB, avgB },
                             { ZoneFields.ProductC, avgC },
-                            { ZoneFields.ProductD, avgD }
+                            { ZoneFields.ProductD, avgD },
+                            { ZoneFields.ZoneType, ZoneType.Applied }
                         }));
                 }
             }
@@ -420,6 +439,7 @@ namespace RateController.Classes
         public const string ProductB = "ProductB";
         public const string ProductC = "ProductC";
         public const string ProductD = "ProductD";
+        public const string ZoneType = "ZoneType";
     }
 
     internal sealed class AppliedPolygon

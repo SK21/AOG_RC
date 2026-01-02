@@ -17,6 +17,13 @@ namespace RateController.RateMap
     public enum MapState
     { Preview, EditZones, Tracking, Positioning }
 
+    public enum ZoneType
+    {
+        Target,
+        Applied
+    }
+
+
     // Preview - small preview window and tracking tractor position
     // EditZones - creating zones, no tracking
     // Tracking - following tractor position
@@ -403,7 +410,7 @@ namespace RateController.RateMap
                         { "ProductB", Rt1 },
                         { "ProductC", Rt2 },
                         { "ProductD", Rt3 }
-                    }, zoneColor);
+                    }, zoneColor,ZoneType.Target);
 
                     mapZones.Add(NewZone);
                     zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(ZoneTransparency));
