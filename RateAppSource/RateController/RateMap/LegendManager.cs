@@ -15,8 +15,6 @@ namespace RateController.Classes
     /// </summary>
     public class LegendManager : IDisposable
     {
-        // Regex to find standalone numeric tokens (with optional decimals) and not part of alpha words (e.g., avoid P1)
-        private static readonly Regex LegendNumberRegex = new Regex(@"(?<![A-Za-z])(-?\d+(?:[\.,]\d+)?)(?![A-Za-z])", RegexOptions.Compiled);
 
         private readonly GMapControl gmap;
         private bool cEnabled;
@@ -25,7 +23,6 @@ namespace RateController.Classes
         private Font legendFont;
         private PictureBox legendHost;
         private int legendRightMarginPx = 0;
-        private string legendSignature;
 
         public LegendManager(GMapControl gmap)
         {
@@ -119,7 +116,6 @@ namespace RateController.Classes
                     legendBitmap.Dispose();
                     legendBitmap = null;
                 }
-                legendSignature = null;
             }
             catch (Exception ex)
             {
@@ -147,7 +143,6 @@ namespace RateController.Classes
                 }
                 legendBitmap?.Dispose();
                 legendBitmap = null;
-                legendSignature = null;
                 legendFont?.Dispose();
                 legendFont = null;
             }
@@ -176,6 +171,8 @@ namespace RateController.Classes
             }
             else
             {
+                lastLegend = legend;
+
                 double Val = 0;
                 SortedDictionary<double, Color> SortedLegend = new SortedDictionary<double, Color>();
                 foreach (var kv in legend)

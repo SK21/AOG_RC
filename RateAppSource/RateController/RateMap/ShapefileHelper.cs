@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using static GMap.NET.Entity.OpenStreetMapGraphHopperRouteEntity;
 
 namespace RateController.Classes
 {
