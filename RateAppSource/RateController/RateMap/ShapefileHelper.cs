@@ -63,52 +63,52 @@ namespace RateController.Classes
 
         public bool SaveAppliedMap(string shapefilePath, GMapOverlay overlay, double minAreaAcres = 0.5, string rateField = ZoneFields.ProductA)
         {
+            bool Result = false;
             try
             {
                 var polygons = CollectOverlayPolygons(overlay, rateField);
-                if (polygons.Count == 0) return false;
-
-                // rate bins
-                var values = polygons
-                .Select(p => p.RateValue)
-                .Where(v => !double.IsNaN(v) && !double.IsInfinity(v))
-                .OrderBy(v => v)
-                .ToArray();
-
-                var bins = new double[6];
-                for (int i = 0; i < bins.Length; i++)
+                if (polygons.Count > 0)
                 {
-                    int idx = (int)Math.Floor((values.Length - 1) * i / 5.0);
-                    if (idx < 0) idx = 0;
-                    if (idx >= values.Length) idx = values.Length - 1;
-                    bins[i] = values[idx];
+                    // rate bins
+                    var values = polygons
+                    .Select(p => p.RateValue)
+                    .Where(v => !double.IsNaN(v) && !double.IsInfinity(v))
+                    .OrderBy(v => v)
+                    .ToArray();
+
+                    var bins = new double[6];
+                    for (int i = 0; i < bins.Length; i++)
+                    {
+                        int idx = (int)Math.Floor((values.Length - 1) * i / 5.0);
+                        if (idx < 0) idx = 0;
+                        if (idx >= values.Length) idx = values.Length - 1;
+                        bins[i] = values[idx];
+                    }
+
+                    var merged = MergeBins(polygons, bins, minAreaAcres);
+
+                    // update shapefile
+                    if (merged.Count > 0)
+                    {
+                        var features = new List<IFeature>();
+                        foreach (var d in merged)
+                        {
+                            features.Add(new Feature(d.Item1, d.Item2));
+                        }
+                        Shapefile.WriteAllFeatures(features, shapefilePath);
+                    }
+                    else
+                    {
+                        DeleteShapefileSet(shapefilePath);
+                    }
+                    Result = true;
                 }
-
-                var merged = MergeBins(polygons, bins, minAreaAcres);
-
-                return UpdateShapefile(shapefilePath, merged);
-
-
-                //// update shapefile
-                //if (merged.Count == 0)
-                //{
-                //    DeleteShapefileSet(shapefilePath);
-                //    return true;
-                //}
-
-                //var features = new List<IFeature>();
-                //foreach (var d in merged)
-                //    features.Add(new NetTopologySuite.Feature(d.Item1, d.Item2));
-
-                //Shapefile.WriteAllFeatures(features, path);
-                //return true;
-
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("SaveAppliedMap: " + ex.Message);
-                return false;
             }
+            return Result;
         }
 
         public bool SaveMapZones(string shapefilePath, List<MapZone> mapZones)
@@ -197,7 +197,6 @@ namespace RateController.Classes
             return poly;
         }
 
-
         private static void DeleteIfExists(string path)
         {
             try
@@ -233,22 +232,6 @@ namespace RateController.Classes
                 coords.Add(new Coordinate(t[0], t[1]));
             }
             return new Polygon(new LinearRing(coords.ToArray()));
-        }
-
-        private static bool UpdateShapefile(string path, List<Tuple<Geometry, AttributesTable>> data)
-        {
-            if (data.Count == 0)
-            {
-                DeleteShapefileSet(path);
-                return true;
-            }
-
-            var features = new List<IFeature>();
-            foreach (var d in data)
-                features.Add(new Feature(d.Item1, d.Item2));
-
-            Shapefile.WriteAllFeatures(features, path);
-            return true;
         }
 
         private void AddZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index, List<MapZone> zones)
