@@ -1,10 +1,9 @@
 using GMap.NET.WindowsForms;
+using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -15,7 +14,6 @@ namespace RateController.Classes
     /// </summary>
     public class LegendManager : IDisposable
     {
-
         private readonly GMapControl gmap;
         private bool cEnabled;
         private Dictionary<string, Color> lastLegend;
@@ -63,43 +61,44 @@ namespace RateController.Classes
             }
         }
 
-        public static Dictionary<string, Color> CreateAppliedLegend(List<MapZone> zones)
+        public static Dictionary<string, Color> CreateAppliedLegend(List<MapZone> zones, string ProductFilter = "ProductA")
         {
-            if (zones == null)
-                return null;
-
-            var appliedZones = zones
-                .Where(z => z.Name.StartsWith("Applied Zone", StringComparison.OrdinalIgnoreCase))
-                .Where(z => z.Rates != null && z.Rates.ContainsKey("ProductA"))
-                .ToList();
-
-            if (appliedZones.Count == 0)
-                return null;
-
             var legend = new Dictionary<string, Color>();
 
-            var groups = appliedZones
-                .GroupBy(z => new
-                {
-                    Rate = z.Rates["ProductA"],
-                    z.ZoneColor
-                })
-                .OrderBy(g => g.Key.Rate);
-
-            foreach (var group in groups)
+            if (zones != null)
             {
-                double rate = group.Key.Rate;
+                var appliedZones = zones
+                    .Where(z => z.ZoneType == ZoneType.Applied)
+                    .Where(z => z.Rates != null && z.Rates.ContainsKey(ProductFilter))
+                    .ToList();
+                if (appliedZones.Count > 0)
+                {
+                    var groups = appliedZones
+                        .GroupBy(z => new
+                        {
+                            Rate = z.Rates[ProductFilter],
+                            z.ZoneColor
+                        })
+                        .OrderBy(g => g.Key.Rate);
 
-                if (double.IsNaN(rate) || double.IsInfinity(rate))
-                    continue;
-
-                string label = rate.ToString("N1");
-
-                // One entry per rate/color
-                legend[label] = group.Key.ZoneColor;
+                    foreach (var group in groups)
+                    {
+                        double rate = group.Key.Rate;
+                        if (rate > 0 && rate < 100000)
+                        {
+                            string label = rate.ToString("N1");
+                            legend[label] = group.Key.ZoneColor;
+                        }
+                    }
+                }
             }
 
-            return legend.Count > 0 ? legend : null;
+            if (legend.Count == 0)
+            {
+                legend.Add("No data", Color.Gray);
+            }
+
+            return legend;
         }
 
         public void Clear()
@@ -121,6 +120,28 @@ namespace RateController.Classes
             {
                 Props.WriteErrorLog("LegendManager/Clear: " + ex.Message);
             }
+        }
+
+        public static Dictionary<string, Color> CreateAppliedLegendCSV(double minRate, double maxRate, int steps = 5)
+        {
+            var legend = new Dictionary<string, Color>();
+
+            if (minRate < maxRate)
+            {
+                double band = (maxRate - minRate) / steps;
+                for (int i = 0; i < steps; i++)
+                {
+                    double a = minRate + (i * band);
+                    double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
+                    var color = Palette.Colors[i % Palette.Colors.Length];
+                    legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
+                }
+            }
+            else
+            {
+                legend.Add("No data", Color.Gray);
+            }
+            return legend;
         }
 
         public void Dispose()

@@ -94,28 +94,6 @@ namespace RateController.Classes
             }
         }
 
-        public Dictionary<string, Color> CreateLegend(double minRate, double maxRate, int steps = 5)
-        {
-            var legend = new Dictionary<string, Color>();
-
-            if (double.IsNaN(minRate) || double.IsNaN(maxRate) || maxRate <= minRate)
-            {
-                legend.Add("No data", Color.Gray);
-                return legend;
-            }
-
-            double band = (maxRate - minRate) / steps;
-            for (int i = 0; i < steps; i++)
-            {
-                double a = minRate + (i * band);
-                double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
-                // Use the centralized palette for legend colors
-                var color = Palette.Colors[i % Palette.Colors.Length];
-                legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
-            }
-            return legend;
-        }
-
         public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate)
         {
             if (overlay == null) return;
@@ -210,14 +188,8 @@ namespace RateController.Classes
             return idx;
         }
 
-        private static void ComputeCorners(
-            PointLatLng prev,
-            PointLatLng curr,
-            double widthMeters,
-            out PointLatLng prevLeft,
-            out PointLatLng prevRight,
-            out PointLatLng currLeft,
-            out PointLatLng currRight)
+        private static void ComputeCorners(PointLatLng prev, PointLatLng curr, double widthMeters, out PointLatLng prevLeft,
+            out PointLatLng prevRight, out PointLatLng currLeft, out PointLatLng currRight)
         {
             const double metersPerDegLat = 111320.0;
             double latRad = prev.Lat * Math.PI / 180.0;

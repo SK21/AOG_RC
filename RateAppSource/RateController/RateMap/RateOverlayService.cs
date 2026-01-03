@@ -1,9 +1,9 @@
+using GMap.NET;
+using GMap.NET.WindowsForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using GMap.NET;
-using GMap.NET.WindowsForms;
 
 namespace RateController.Classes
 {
@@ -14,13 +14,7 @@ namespace RateController.Classes
 
         private readonly CoverageTrail _trail = new CoverageTrail();
 
-        public bool BuildFromHistory(
-            GMapOverlay overlay,
-            IReadOnlyList<RateReading> readings,
-            double implementWidthMeters,
-            RateType legendType,
-            int rateIndex,
-            out Dictionary<string, Color> legend)
+        public bool BuildFromHistory(GMapOverlay overlay, IReadOnlyList<RateReading> readings, double implementWidthMeters, int rateIndex, out Dictionary<string, Color> legend)
         {
             legend = new Dictionary<string, Color>();
             try
@@ -32,10 +26,7 @@ namespace RateController.Classes
                 if (maxLen == 0) return false;
                 if (rateIndex >= maxLen) rateIndex = 0;
 
-                // Choose the series (applied or target) for scale computation based on legend type
-                IEnumerable<double> baseSeries = (legendType == RateType.Applied)
-                    ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
-                    : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
+                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
 
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
@@ -54,10 +45,7 @@ namespace RateController.Classes
                     var currPoint = new PointLatLng(r.Latitude, r.Longitude);
                     double heading = i == 0 ? 0.0 : BearingDegrees(prevPoint, currPoint);
 
-                    // Rate value chosen by legend type for coloring; bridging decision also uses this
-                    double rateValue = legendType == RateType.Applied
-                        ? (r.AppliedRates.Length > rateIndex ? r.AppliedRates[rateIndex] : 0.0)
-                        : (r.TargetRates.Length > rateIndex ? r.TargetRates[rateIndex] : 0.0);
+                    double rateValue = (r.AppliedRates.Length > rateIndex ? r.AppliedRates[rateIndex] : 0.0);
 
                     bool canBridge = rateValue > RateEpsilon;
                     if (i > 0)
@@ -85,7 +73,7 @@ namespace RateController.Classes
                 _trail.DrawTrail(overlay, minRate, maxRate);
 
                 // After drawing the trail, assign applied rates to each polygon for shapefile export
-                if (legendType == RateType.Applied && overlay.Polygons.Count > 0)
+                if (overlay.Polygons.Count > 0)
                 {
                     int polygonCount = overlay.Polygons.Count;
                     int readingCount = readings.Count;
@@ -106,7 +94,7 @@ namespace RateController.Classes
                         overlay.Polygons[i].Tag = rates;
                     }
                 }
-                legend = _trail.CreateLegend(minRate, maxRate, 5);
+                legend = LegendManager.CreateAppliedLegendCSV(minRate, maxRate, 5);
                 return true;
             }
             catch (Exception ex)
@@ -118,16 +106,8 @@ namespace RateController.Classes
 
         public void Reset() => _trail.Reset();
 
-        public bool UpdateRatesOverlayLive(
-                    GMapOverlay overlay,
-            IReadOnlyList<RateReading> readings,
-            PointLatLng tractorPos,
-            double headingDegrees,
-            double implementWidthMeters,
-            double? appliedOverride,
-            out Dictionary<string, Color> legend,
-            RateType legendType,
-            int rateIndex)
+        public bool UpdateRatesOverlayLive(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,
+            double implementWidthMeters, double? appliedOverride, out Dictionary<string, Color> legend, int rateIndex)
         {
             legend = new Dictionary<string, Color>();
 
@@ -139,25 +119,14 @@ namespace RateController.Classes
 
                 var last = readings.Last();
 
-                // Select series for scale computation based on legend type
-                IEnumerable<double> baseSeries = (legendType == RateType.Applied)
-                    ? readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex])
-                    : readings.Where(r => r.TargetRates.Length > rateIndex).Select(r => r.TargetRates[rateIndex]);
+                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
 
                 if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                // Choose current value based on legend type; appliedOverride only applies to Applied view
                 double currValue;
-                if (legendType == RateType.Applied)
-                {
-                    double appliedBase = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
-                    currValue = appliedOverride ?? appliedBase;
-                }
-                else
-                {
-                    currValue = (last.TargetRates.Length > rateIndex) ? last.TargetRates[rateIndex] : 0.0;
-                }
+                double appliedBase = (last.AppliedRates.Length > rateIndex) ? last.AppliedRates[rateIndex] : 0.0;
+                currValue = appliedOverride ?? appliedBase;
 
                 // Distance gate prevents trail bridging after relocation
                 const double maxSnapMeters = 5.0;
@@ -174,8 +143,7 @@ namespace RateController.Classes
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
 
-                // Keep legend: shades derived from AOG color
-                legend = _trail.CreateLegend(minRate, maxRate, 5);
+                legend = LegendManager.CreateAppliedLegendCSV(minRate, maxRate, 5);
 
                 return true;
             }

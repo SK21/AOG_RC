@@ -49,7 +49,6 @@ namespace RateController.RateMap
         #region Saved Properties
 
         private static int cProductRates;
-        private static RateType cRateTypeDisplay;
         private static bool cShowRates;
         private static bool cShowTiles;
         private static bool cShowZones;
@@ -77,7 +76,6 @@ namespace RateController.RateMap
         private static DateTime _lastHistoryLastTimestamp;
         private static string _lastLoadedMapPath;
         private static int _lastProductRates = -1;
-        private static RateType _lastRateTypeDisplay = RateType.Applied;
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
         private static DataCollector cRateCollector;
@@ -667,18 +665,29 @@ namespace RateController.RateMap
 
                 mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
 
-                // Build applied legend from loaded zones using LegendManager
-                AppliedLegend = LegendManager.CreateAppliedLegend(mapZones);
+                // Separate zones by type
+                var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
+                var appliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
 
+                // target zones 
                 zoneOverlay.Polygons.Clear();
-                foreach (var mapZone in mapZones)
+                foreach (var mapZone in targetZones)
                 {
                     zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
                 }
-
                 BuildZoneIndex();
                 ShowZoneOverlay();
+
+                // applied zones 
+                AppliedOverlay.Polygons.Clear();
+                foreach (var mapZone in appliedZones)
+                {
+                    AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
+                }
+                AppliedLegend = LegendManager.CreateAppliedLegend(mapZones);
                 ShowRatesOverlay();
+
+                // kml
                 kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
                 ReloadJobKmls();
 
@@ -781,7 +790,6 @@ namespace RateController.RateMap
                             AppliedOverlay,
                             readings,
                             implementWidth,
-                            cRateTypeDisplay,
                             cProductRates,
                             out legendFromHistory
                         );
@@ -901,7 +909,6 @@ namespace RateController.RateMap
                         AppliedOverlay,
                         readings,
                         Props.MainForm.Sections.TotalWidth(false),
-                        cRateTypeDisplay,
                         cProductRates,
                         out histLegend
                     );
@@ -1092,7 +1099,6 @@ namespace RateController.RateMap
         private static void LoadData()
         {
             cProductRates = int.TryParse(Props.GetProp("MapProductRates"), out int pr) ? pr : 0;
-            cRateTypeDisplay = Enum.TryParse(Props.GetProp("RateDisplayType"), out RateType tp) ? tp : RateType.Applied;
             cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
             cShowZones = bool.TryParse(Props.GetProp("MapShowZones"), out bool sz) ? sz : true;
             cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
@@ -1231,7 +1237,6 @@ namespace RateController.RateMap
                    _lastHistoryCount == readings.Count &&
                    _lastHistoryLastTimestamp == lastTs &&
                    _lastProductRates == cProductRates &&                 // ensure product selection matches
-                   _lastRateTypeDisplay == cRateTypeDisplay &&           // ensure display type matches
                    AppliedOverlay != null &&
                    AppliedOverlay.Polygons != null &&
                    AppliedOverlay.Polygons.Count > 0;
@@ -1246,7 +1251,6 @@ namespace RateController.RateMap
             else
             {
                 legendManager?.Clear();
-                //LegendToShow = null;
             }
         }
 
@@ -1348,7 +1352,6 @@ namespace RateController.RateMap
                             Props.MainForm.Sections.TotalWidth(false),
                             Rates,
                             out legend,
-                            cRateTypeDisplay,
                             cProductRates
                         );
                     }

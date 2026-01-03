@@ -445,8 +445,8 @@ namespace RateController.Forms
                         Props.MainForm.Top = this.Top + pnlTabs.Top + pnlTabs.Height + pnlControls2.Height + 40;
                     }
                 }
-                MapController.DisplaySizeUpdate(ckWindow.Checked);
                 MapController.LegendOverlayEnabled = !ckWindow.Checked;
+                MapController.DisplaySizeUpdate(ckWindow.Checked);
                 timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
             }
             catch (Exception ex)
