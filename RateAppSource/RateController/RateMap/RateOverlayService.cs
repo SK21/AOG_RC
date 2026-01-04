@@ -1,5 +1,6 @@
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,7 +10,6 @@ namespace RateController.Classes
 {
     public sealed class RateOverlayService
     {
-        // Match CoverageTrail deadband so "0" means no coverage
         private const double RateEpsilon = 0.01;
 
         private readonly CoverageTrail _trail = new CoverageTrail();
@@ -28,7 +28,7 @@ namespace RateController.Classes
 
                 IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
 
-                if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
+                if (!MapController.TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
                 _trail.Reset();
@@ -94,7 +94,7 @@ namespace RateController.Classes
                         overlay.Polygons[i].Tag = rates;
                     }
                 }
-                legend = LegendManager.CreateAppliedLegendCSV(minRate, maxRate, 5);
+                legend = LegendManager.CreateAppliedLegend(minRate, maxRate, 5);
                 return true;
             }
             catch (Exception ex)
@@ -121,7 +121,7 @@ namespace RateController.Classes
 
                 IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
 
-                if (!TryComputeScale(baseSeries, out double minRate, out double maxRate))
+                if (!MapController.TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
                 double currValue;
@@ -143,7 +143,7 @@ namespace RateController.Classes
 
                 _trail.DrawTrail(overlay, minRate, maxRate);
 
-                legend = LegendManager.CreateAppliedLegendCSV(minRate, maxRate, 5);
+                legend = LegendManager.CreateAppliedLegend(minRate, maxRate, 5);
 
                 return true;
             }
@@ -175,45 +175,6 @@ namespace RateController.Classes
             double dx = (bLng - a.Lng) * metersPerDegLng;
             double dy = (bLat - a.Lat) * metersPerDegLat;
             return Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        // Robust scale estimator: 2nd–98th percentiles over non-zero values.
-        private static bool TryComputeScale(IEnumerable<double> values, out double minRate, out double maxRate)
-        {
-            var vals = values
-                .Where(v => v > RateEpsilon && !double.IsNaN(v) && !double.IsInfinity(v))
-                .OrderBy(v => v)
-                .ToArray();
-
-            minRate = 0; maxRate = 0;
-            if (vals.Length == 0) return false;
-
-            if (vals.Length < 10)
-            {
-                minRate = vals.First();
-                maxRate = vals.Last();
-            }
-            else
-            {
-                int loIdx = (int)Math.Floor(0.02 * (vals.Length - 1));
-                int hiIdx = (int)Math.Ceiling(0.98 * (vals.Length - 1));
-                minRate = vals[loIdx];
-                maxRate = vals[hiIdx];
-
-                if (maxRate <= minRate)
-                {
-                    minRate = vals.First();
-                    maxRate = vals.Last();
-                }
-            }
-
-            if (Math.Abs(maxRate - minRate) < 1e-9)
-            {
-                double pad = Math.Max(0.05 * maxRate, 1.0);
-                minRate = Math.Max(0, maxRate - pad);
-                maxRate = maxRate + pad;
-            }
-            return true;
         }
     }
 }

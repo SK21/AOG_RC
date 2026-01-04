@@ -684,7 +684,7 @@ namespace RateController.RateMap
                 {
                     AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
                 }
-                AppliedLegend = LegendManager.CreateAppliedLegend(mapZones);
+                AppliedLegend = LegendManager.BuildAppliedZonesLegend(mapZones);
                 ShowRatesOverlay();
 
                 // kml
@@ -702,6 +702,45 @@ namespace RateController.RateMap
             }
             return Result;
         }
+
+        public static bool TryComputeScale(IEnumerable<double> values, out double minRate, out double maxRate)
+        {
+            var vals = values
+                .Where(v => v > 0.01 && !double.IsNaN(v) && !double.IsInfinity(v))
+                .OrderBy(v => v)
+                .ToArray();
+
+            minRate = 0; maxRate = 0;
+            if (vals.Length == 0) return false;
+
+            if (vals.Length < 10)
+            {
+                minRate = vals.First();
+                maxRate = vals.Last();
+            }
+            else
+            {
+                int loIdx = (int)Math.Floor(0.02 * (vals.Length - 1));
+                int hiIdx = (int)Math.Ceiling(0.98 * (vals.Length - 1));
+                minRate = vals[loIdx];
+                maxRate = vals[hiIdx];
+
+                if (maxRate <= minRate)
+                {
+                    minRate = vals.First();
+                    maxRate = vals.Last();
+                }
+            }
+
+            if (Math.Abs(maxRate - minRate) < 0.01)
+            {
+                double pad = Math.Max(0.05 * maxRate, 1.0);
+                minRate = Math.Max(0, maxRate - pad);
+                maxRate = maxRate + pad;
+            }
+            return true;
+        }
+
 
         public static void ResetMarkers()
         {
@@ -760,71 +799,6 @@ namespace RateController.RateMap
 
                 // Save zone features to the specified filePath
                 shapefileHelper.SaveMapZones(filePath, mapZones);
-
-                // Save applied coverage features to JobApplied.shp in the job's map folder
-                string appliedPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), "JobApplied.shp");
-
-                if (AppliedOverlay == null) AppliedOverlay = new GMapOverlay("AppliedRates");
-
-                bool haveCoverage = false;
-                if (AppliedOverlay.Polygons != null && AppliedOverlay.Polygons.Count > 0)
-                {
-                    haveCoverage = true;
-                }
-                else
-                {
-                    var readings = cRateCollector?.GetReadings();
-                    if (readings != null && readings.Count > 0)
-                    {
-                        AppliedOverlay.Polygons.Clear();
-
-                        double implementWidth = 24.0;
-                        if (Props.MainForm.Sections != null)
-                        {
-                            try { implementWidth = Props.MainForm.Sections.TotalWidth(false); }
-                            catch (Exception ex) { Props.WriteErrorLog($"MapController: implement width - {ex.Message}"); }
-                        }
-
-                        Dictionary<string, Color> legendFromHistory;
-                        haveCoverage = overlayService.BuildFromHistory(
-                            AppliedOverlay,
-                            readings,
-                            implementWidth,
-                            cProductRates,
-                            out legendFromHistory
-                        );
-                    }
-                }
-
-                if (haveCoverage)
-                {
-                    shapefileHelper.SaveAppliedMap(appliedPath, AppliedOverlay);
-                }
-                else
-                {
-                    // No coverage to save: remove existing applied shapefile if it exists
-                    try
-                    {
-                        if (Props.IsPathSafe(appliedPath))
-                        {
-                            string shp = System.IO.Path.ChangeExtension(appliedPath, ".shp");
-                            string dbf = System.IO.Path.ChangeExtension(appliedPath, ".dbf");
-                            string shx = System.IO.Path.ChangeExtension(appliedPath, ".shx");
-                            string prj = System.IO.Path.ChangeExtension(appliedPath, ".prj");
-                            string qix = System.IO.Path.ChangeExtension(appliedPath, ".qix");
-
-                            if (System.IO.File.Exists(shp)) System.IO.File.Delete(shp);
-                            if (System.IO.File.Exists(dbf)) System.IO.File.Delete(dbf);
-                            if (System.IO.File.Exists(shx)) System.IO.File.Delete(shx);
-                            if (System.IO.File.Exists(prj)) System.IO.File.Delete(prj);
-                            if (System.IO.File.Exists(qix)) System.IO.File.Delete(qix);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Props.WriteErrorLog("MapController/SaveMapToFile cleanup applied: " + ex.Message);
-                    }
-                }
             }
             catch (Exception ex)
             {

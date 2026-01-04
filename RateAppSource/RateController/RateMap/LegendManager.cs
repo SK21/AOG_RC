@@ -61,43 +61,51 @@ namespace RateController.Classes
             }
         }
 
-        public static Dictionary<string, Color> CreateAppliedLegend(List<MapZone> zones, string ProductFilter = "ProductA")
+        public static Dictionary<string, Color> BuildAppliedZonesLegend(List<MapZone> zones, int ProductFilter = 0)
         {
             var legend = new Dictionary<string, Color>();
 
-            if (zones != null)
-            {
-                var appliedZones = zones
-                    .Where(z => z.ZoneType == ZoneType.Applied)
-                    .Where(z => z.Rates != null && z.Rates.ContainsKey(ProductFilter))
-                    .ToList();
-                if (appliedZones.Count > 0)
-                {
-                    var groups = appliedZones
-                        .GroupBy(z => new
-                        {
-                            Rate = z.Rates[ProductFilter],
-                            z.ZoneColor
-                        })
-                        .OrderBy(g => g.Key.Rate);
+            string productKey = $"Product{(char)('A' + ProductFilter)}";
+            var appliedRates = zones
+                .Where(z => z.ZoneType == ZoneType.Applied)
+                .Where(z => z.Rates != null && z.Rates.ContainsKey(productKey))
+                .Select(z => z.Rates[productKey])
+                .Where(r => r > 0.01);
 
-                    foreach (var group in groups)
-                    {
-                        double rate = group.Key.Rate;
-                        if (rate > 0 && rate < 100000)
-                        {
-                            string label = rate.ToString("N1");
-                            legend[label] = group.Key.ZoneColor;
-                        }
-                    }
+            if (appliedRates.Any())
+            {
+                if (MapController.TryComputeScale(appliedRates, out double minRate, out double maxRate))
+                {
+                    legend = CreateAppliedLegend(minRate, maxRate, 5);
                 }
             }
-
-            if (legend.Count == 0)
+            else
             {
                 legend.Add("No data", Color.Gray);
             }
 
+            return legend;
+        }
+
+        public static Dictionary<string, Color> CreateAppliedLegend(double minRate, double maxRate, int steps = 5)
+        {
+            var legend = new Dictionary<string, Color>();
+
+            if (minRate < maxRate)
+            {
+                double band = (maxRate - minRate) / steps;
+                for (int i = 0; i < steps; i++)
+                {
+                    double a = minRate + (i * band);
+                    double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
+                    var color = Palette.Colors[i % Palette.Colors.Length];
+                    legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
+                }
+            }
+            else
+            {
+                legend.Add("No data", Color.Gray);
+            }
             return legend;
         }
 
@@ -120,28 +128,6 @@ namespace RateController.Classes
             {
                 Props.WriteErrorLog("LegendManager/Clear: " + ex.Message);
             }
-        }
-
-        public static Dictionary<string, Color> CreateAppliedLegendCSV(double minRate, double maxRate, int steps = 5)
-        {
-            var legend = new Dictionary<string, Color>();
-
-            if (minRate < maxRate)
-            {
-                double band = (maxRate - minRate) / steps;
-                for (int i = 0; i < steps; i++)
-                {
-                    double a = minRate + (i * band);
-                    double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
-                    var color = Palette.Colors[i % Palette.Colors.Length];
-                    legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
-                }
-            }
-            else
-            {
-                legend.Add("No data", Color.Gray);
-            }
-            return legend;
         }
 
         public void Dispose()
@@ -194,14 +180,6 @@ namespace RateController.Classes
             {
                 lastLegend = legend;
 
-                double Val = 0;
-                SortedDictionary<double, Color> SortedLegend = new SortedDictionary<double, Color>();
-                foreach (var kv in legend)
-                {
-                    Val = double.TryParse(kv.Key, out Val) ? Val : 0;
-                    if (Val > 0) SortedLegend.Add(Val, kv.Value);
-                }
-
                 const int itemHeight = 25;
                 const int leftMargin = 10;
                 const int swatch = 20;
@@ -210,14 +188,12 @@ namespace RateController.Classes
 
                 // Measure max text width
                 int maxTextWidth = 0;
-                string Label = "";
                 using (var bmp = new Bitmap(1, 1))
                 using (var g = Graphics.FromImage(bmp))
                 {
-                    foreach (var kv in SortedLegend)
+                    foreach (var kv in legend)
                     {
-                        Label = kv.Key.ToString("N1");
-                        var size = g.MeasureString(Label, legendFont);
+                        var size = g.MeasureString(kv.Key, legendFont);
                         maxTextWidth = Math.Max(maxTextWidth, (int)Math.Ceiling(size.Width));
                     }
                 }
@@ -238,11 +214,10 @@ namespace RateController.Classes
                     int anchorStartX = Math.Max(leftMargin, (legendWidth - maxContentWidth) / 2);
                     int y = leftMargin;
 
-                    foreach (var kv in SortedLegend)
+                    foreach (var kv in legend)
                     {
-                        Label = kv.Key.ToString("N1");
                         Color color = kv.Value;
-                        var textSize = g2.MeasureString(Label, legendFont);
+                        var textSize = g2.MeasureString(kv.Key, legendFont);
                         int swatchTop = y + (itemHeight - swatch) / 2;
 
                         using (var brush = new SolidBrush(color))
@@ -252,7 +227,7 @@ namespace RateController.Classes
                         }
 
                         float textY = y + (itemHeight - textSize.Height) / 2f;
-                        g2.DrawString(Label, legendFont, Brushes.White,
+                        g2.DrawString(kv.Key, legendFont, Brushes.White,
                             new PointF(anchorStartX + swatch + gap, textY));
 
                         y += itemHeight;
