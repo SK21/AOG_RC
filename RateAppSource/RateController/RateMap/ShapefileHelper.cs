@@ -6,8 +6,8 @@ using NetTopologySuite.Operation.Union;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -28,14 +28,16 @@ namespace RateController.Classes
                     {
                         if (feature.Geometry is Polygon)
                         {
-                            AddZone(feature, (Polygon)feature.Geometry, attributeMapping, index++, zones);
+                            var zone = CreateMapZone(feature, (Polygon)feature.Geometry, attributeMapping, index++);
+                            if (zone != null) zones.Add(zone);
                         }
                         else if (feature.Geometry is MultiPolygon)
                         {
                             var mp = (MultiPolygon)feature.Geometry;
                             foreach (Polygon poly in mp.Geometries)
                             {
-                                AddZone(feature, poly, attributeMapping, index++, zones);
+                                var zone = CreateMapZone(feature, poly, attributeMapping, index++);
+                                if (zone != null) zones.Add(zone);
                             }
                         }
                     }
@@ -171,12 +173,6 @@ namespace RateController.Classes
             return new[] { g };
         }
 
-        private void AddZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index, List<MapZone> zones)
-        {
-            var zone = CreateMapZone(feature, polygon, mapping, index);
-            if (zone != null) zones.Add(zone);
-        }
-
         private bool BuildNewAppliedZones(out List<MapZone> NewAppliedZones)
         {
             bool Result = false;
@@ -200,10 +196,7 @@ namespace RateController.Classes
                     RateOverlayService overlayService = new RateOverlayService();
                     GMapOverlay AppliedOverlay = new GMapOverlay();
 
-                    MapController.RateCollector.LoadData(); // ensure fresh data
-                    var readings = MapController.RateCollector.GetReadings();
-
-                    bool histOk = overlayService.BuildFromHistory(AppliedOverlay, readings, Props.MainForm.Sections.TotalWidth(false), MapController.ProductFilter, out histLegend);
+                    bool histOk = overlayService.BuildFromHistory(AppliedOverlay, out histLegend);
                     if (histOk && AppliedOverlay.Polygons.Count > 0)
                     {
                         int count = 0;
@@ -386,6 +379,7 @@ namespace RateController.Classes
 
                 Color binColor = Palette.Colors[group.Key % Palette.Colors.Length];
 
+                Debug.Print("Save applied");
                 foreach (var geom in SplitGeometry(merged))
                 {
                     if (geom is Polygon poly)
@@ -396,6 +390,7 @@ namespace RateController.Classes
                             rates: avgRates,
                             zoneColor: binColor,
                             zoneType: ZoneType.Applied));
+                        Debug.Print("Applied Zone " + (zoneCounter - 1).ToString() + ", " + binColor.ToString());
                     }
                 }
             }

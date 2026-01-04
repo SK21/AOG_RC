@@ -8,25 +8,30 @@ using System.Linq;
 
 namespace RateController.Classes
 {
-    public sealed class RateOverlayService
+    public  class RateOverlayService
     {
         private const double RateEpsilon = 0.01;
 
         private readonly CoverageTrail _trail = new CoverageTrail();
 
-        public bool BuildFromHistory(GMapOverlay overlay, IReadOnlyList<RateReading> readings, double implementWidthMeters, int rateIndex, out Dictionary<string, Color> legend)
+        public bool BuildFromHistory(GMapOverlay overlay, out Dictionary<string, Color> legend)
         {
             legend = new Dictionary<string, Color>();
             try
             {
+                MapController.RateCollector.LoadData(); // ensure fresh data
+                var readings = MapController.RateCollector.GetReadings();
+                double implementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
+                int ProductFilter = MapController.ProductFilter;
+
                 if (overlay == null || readings == null || readings.Count < 2) return false;
                 if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
 
                 int maxLen = readings.Max(r => (r.AppliedRates?.Length ?? 0));
                 if (maxLen == 0) return false;
-                if (rateIndex >= maxLen) rateIndex = 0;
+                if (ProductFilter >= maxLen) ProductFilter = 0;
 
-                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
+                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > ProductFilter).Select(r => r.AppliedRates[ProductFilter]);
 
                 if (!MapController.TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
@@ -45,7 +50,7 @@ namespace RateController.Classes
                     var currPoint = new PointLatLng(r.Latitude, r.Longitude);
                     double heading = i == 0 ? 0.0 : BearingDegrees(prevPoint, currPoint);
 
-                    double rateValue = (r.AppliedRates.Length > rateIndex ? r.AppliedRates[rateIndex] : 0.0);
+                    double rateValue = (r.AppliedRates.Length > ProductFilter ? r.AppliedRates[ProductFilter] : 0.0);
 
                     bool canBridge = rateValue > RateEpsilon;
                     if (i > 0)

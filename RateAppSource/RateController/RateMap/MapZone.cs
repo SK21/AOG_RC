@@ -6,6 +6,7 @@ using ProjNet.CoordinateSystems.Transformations;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace RateController.Classes
@@ -24,7 +25,11 @@ namespace RateController.Classes
         public Polygon Geometry { get; set; }
         public string Name { get; set; }
         public Dictionary<string, double> Rates { get; set; }
-        public Color ZoneColor { get; set; }
+        public Color ZoneColor
+        {
+            get;
+            set;
+        }
         public ZoneType ZoneType { get; set; }
 
         public bool Contains(PointLatLng point)
