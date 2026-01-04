@@ -317,12 +317,4 @@ namespace RateController.Classes
         public const string ProductD = "ProductD";
         public const string ZoneType = "ZoneType";
     }
-
-    internal sealed class AppliedPolygon
-    {
-        public double Acres { get; set; }
-        public AttributesTable Attributes { get; set; }
-        public Polygon Geometry { get; set; }
-        public double RateValue { get; set; }
-    }
 }
