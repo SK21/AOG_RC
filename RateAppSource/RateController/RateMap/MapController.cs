@@ -48,7 +48,7 @@ namespace RateController.RateMap
 
         #region Saved Properties
 
-        private static int cProductRates;
+        private static int cProductFilter;
         private static bool cShowRates;
         private static bool cShowTiles;
         private static bool cShowZones;
@@ -148,15 +148,15 @@ namespace RateController.RateMap
             }
         }
 
-        public static int ProductRates
+        public static int ProductFilter
         {
-            get { return cProductRates; }
+            get { return cProductFilter; }
             set
             {
                 if (value >= 0 && (value < Props.MaxProducts - 2))
                 {
-                    cProductRates = value;
-                    Props.SetProp("MapProductRates", cProductRates.ToString());
+                    cProductFilter = value;
+                    Props.SetProp("MapProductFilter", cProductFilter.ToString());
                     ShowRatesOverlay();
                 }
             }
@@ -754,8 +754,7 @@ namespace RateController.RateMap
             try
             {
                 var shapefileHelper = new ShapefileHelper();
-                shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
-                Result = true;
+                Result = shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
             }
             catch (Exception ex)
             {
@@ -883,7 +882,7 @@ namespace RateController.RateMap
                         AppliedOverlay,
                         readings,
                         Props.MainForm.Sections.TotalWidth(false),
-                        cProductRates,
+                        cProductFilter,
                         out histLegend
                     );
                     ColorLegend = histLegend;
@@ -1072,7 +1071,7 @@ namespace RateController.RateMap
 
         private static void LoadData()
         {
-            cProductRates = int.TryParse(Props.GetProp("MapProductRates"), out int pr) ? pr : 0;
+            cProductFilter = int.TryParse(Props.GetProp("MapProductFilter"), out int pr) ? pr : 0;
             cShowRates = bool.TryParse(Props.GetProp("MapShowRates"), out bool sr) ? sr : false;
             cShowZones = bool.TryParse(Props.GetProp("MapShowZones"), out bool sz) ? sz : true;
             cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
@@ -1210,7 +1209,7 @@ namespace RateController.RateMap
             return string.Equals(_lastLoadedMapPath, mapPath, StringComparison.Ordinal) &&
                    _lastHistoryCount == readings.Count &&
                    _lastHistoryLastTimestamp == lastTs &&
-                   _lastProductRates == cProductRates &&                 // ensure product selection matches
+                   _lastProductRates == cProductFilter &&                 // ensure product selection matches
                    AppliedOverlay != null &&
                    AppliedOverlay.Polygons != null &&
                    AppliedOverlay.Polygons.Count > 0;
@@ -1316,7 +1315,7 @@ namespace RateController.RateMap
                     }
                     else
                     {
-                        double Rates = AppliedRates[cProductRates];  // product rates to display
+                        double Rates = AppliedRates[cProductFilter];  // product rates to display
 
                         Result = overlayService.UpdateRatesOverlayLive(
                             AppliedOverlay,
@@ -1326,7 +1325,7 @@ namespace RateController.RateMap
                             Props.MainForm.Sections.TotalWidth(false),
                             Rates,
                             out legend,
-                            cProductRates
+                            cProductFilter
                         );
                     }
                 }

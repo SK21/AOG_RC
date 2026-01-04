@@ -685,7 +685,7 @@ namespace RateController.Forms
                 MapController.MapIsDisplayed = true;
 
                 timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
-                lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
+                lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
 
                 // Sync checkbox with saved preference
                 bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
@@ -1027,7 +1027,7 @@ namespace RateController.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
         }
 
         private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
@@ -1073,7 +1073,7 @@ namespace RateController.Forms
 
                 ckRecord.Checked = MapController.RateCollector.Enabled;
 
-                switch (MapController.ProductRates)
+                switch (MapController.ProductFilter)
                 {
                     case 1:
                         rbProductB.Checked = true;
@@ -1106,12 +1106,12 @@ namespace RateController.Forms
 
         private void UpdateProductToDisplay()
         {
-            if (rbProductA.Checked) MapController.ProductRates = 0;
-            else if (rbProductB.Checked) MapController.ProductRates = 1;
-            else if (rbProductC.Checked) MapController.ProductRates = 2;
-            else MapController.ProductRates = 3;
+            if (rbProductA.Checked) MapController.ProductFilter = 0;
+            else if (rbProductB.Checked) MapController.ProductFilter = 1;
+            else if (rbProductC.Checked) MapController.ProductFilter = 2;
+            else MapController.ProductFilter = 3;
 
-            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductRates).ToString("N0");
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
         }
 
         private void UpdateScrollbars()

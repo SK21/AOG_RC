@@ -3,12 +3,11 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO.Esri;
 using NetTopologySuite.Operation.Union;
-using ProjNet.CoordinateSystems;
-using ProjNet.CoordinateSystems.Transformations;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -65,16 +64,15 @@ namespace RateController.Classes
             bool Result = false;
             try
             {
-                if (mapZones == null || mapZones.Count == 0)
-                {
-                    DeleteShapefileSet(shapefilePath);
-                }
-                else
+                bool UseRecordedData = false;
+                List<MapZone> AppliedZones = new List<MapZone>();
+                var features = new List<IFeature>();
+
+                if (mapZones != null && mapZones.Count > 0)
                 {
                     // target zones
                     var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
 
-                    var features = new List<IFeature>();
                     foreach (var z in targetZones)
                     {
                         features.Add(new Feature(
@@ -87,53 +85,47 @@ namespace RateController.Classes
                             { ZoneFields.ProductC, z.Rates[ZoneFields.ProductC] },
                             { ZoneFields.ProductD, z.Rates[ZoneFields.ProductD] },
                             { ZoneFields.Color, ColorTranslator.ToHtml(z.ZoneColor) },
-                            { ZoneFields.ZoneType,ZoneType.Target }
+                            { ZoneFields.ZoneType, ZoneType.Target.ToString() }
                             }));
                     }
 
                     // applied zones
-                    // check for recorded data
-                    bool AppliedData = false;
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (MapController.RateCollector.DataPoints(i) > 0)
+                    UseRecordedData = BuildNewAppliedZones(out AppliedZones);
+                }
+
+                if (!UseRecordedData)
+                {
+                    // use existing applied zones
+                    AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
+                }
+
+                AppliedZones = MergeApplied(AppliedZones);
+
+                foreach (var z in AppliedZones)
+                {
+                    features.Add(new Feature(
+                        z.Geometry,
+                        new AttributesTable
                         {
-                            AppliedData = true;
-                            break;
-                        }
-                    }
-
-                    List<MapZone> AppliedZones = new List<MapZone>();
-                    if (AppliedData)
-                    {
-                        // create new applied zones
-
-                    }
-                    else
-                    {
-                        // use existing applied zones
-                        AppliedZones = MergeApplied(mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList());
-                    }
-
-                    foreach (var z in AppliedZones)
-                    {
-                        features.Add(new Feature(
-                            z.Geometry,
-                            new AttributesTable
-                            {
                             { ZoneFields.Name, z.Name },
                             { ZoneFields.ProductA, z.Rates[ZoneFields.ProductA] },
                             { ZoneFields.ProductB, z.Rates[ZoneFields.ProductB] },
                             { ZoneFields.ProductC, z.Rates[ZoneFields.ProductC] },
                             { ZoneFields.ProductD, z.Rates[ZoneFields.ProductD] },
                             { ZoneFields.Color, ColorTranslator.ToHtml(z.ZoneColor) },
-                            { ZoneFields.ZoneType,ZoneType.Applied }
-                            }));
-                    }
-
-                    Shapefile.WriteAllFeatures(features, shapefilePath);
+                            { ZoneFields.ZoneType, ZoneType.Applied.ToString() }
+                        }));
                 }
-                Result = true;
+
+                if (features.Count > 0)
+                {
+                    Shapefile.WriteAllFeatures(features, shapefilePath);
+                    Result = true;
+                }
+                else
+                {
+                    DeleteShapefileSet(shapefilePath);
+                }
             }
             catch (Exception ex)
             {
@@ -183,6 +175,72 @@ namespace RateController.Classes
         {
             var zone = CreateMapZone(feature, polygon, mapping, index);
             if (zone != null) zones.Add(zone);
+        }
+
+        private bool BuildNewAppliedZones(out List<MapZone> NewAppliedZones)
+        {
+            bool Result = false;
+            NewAppliedZones = new List<MapZone>();
+
+            try
+            {
+                // check for recorded data
+                bool RecordedData = false;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (MapController.RateCollector.DataPoints(i) > 0)
+                    {
+                        RecordedData = true;
+                        break;
+                    }
+                }
+                if (RecordedData)
+                {
+                    Dictionary<string, Color> histLegend;
+                    RateOverlayService overlayService = new RateOverlayService();
+                    GMapOverlay AppliedOverlay = new GMapOverlay();
+
+                    MapController.RateCollector.LoadData(); // ensure fresh data
+                    var readings = MapController.RateCollector.GetReadings();
+
+                    bool histOk = overlayService.BuildFromHistory(AppliedOverlay, readings, Props.MainForm.Sections.TotalWidth(false), MapController.ProductFilter, out histLegend);
+                    if (histOk && AppliedOverlay.Polygons.Count > 0)
+                    {
+                        int count = 0;
+                        foreach (var polygon in AppliedOverlay.Polygons)
+                        {
+                            NewAppliedZones.Add(new MapZone(
+                                name: $"Applied Zone {count++}",
+                                geometry: ConvertToNtsPolygon(polygon),
+                                rates: (Dictionary<string, double>)polygon.Tag,
+                                zoneColor: Color.AliceBlue, // relies on MergeApplied to set correct color
+                                zoneType: ZoneType.Applied));
+                        }
+                        Result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ShapefileHelper/BuildNewAppliedZones: " + ex.Message);
+            }
+
+            return Result;
+        }
+
+        private Polygon ConvertToNtsPolygon(GMapPolygon gmapPolygon)
+        {
+            var coords = new List<Coordinate>();
+            foreach (var point in gmapPolygon.Points)
+            {
+                coords.Add(new Coordinate(point.Lng, point.Lat));
+            }
+            // Ensure closed
+            if (coords.Count > 0 && !coords[0].Equals(coords[coords.Count - 1]))
+            {
+                coords.Add(coords[0]);
+            }
+            return new Polygon(new LinearRing(coords.ToArray()));
         }
 
         private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index)
@@ -273,7 +331,46 @@ namespace RateController.Classes
 
             foreach (var group in groups)
             {
-                Geometry merged = UnaryUnionOp.Union(group.Select(z => z.Geometry));
+                var cleaned = group
+                    .Select(z =>
+                    {
+                        try
+                        {
+                            return z.Geometry.Buffer(0);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                    })
+                    .Where(g => g != null && !g.IsEmpty)
+                    .ToList();
+
+                if (cleaned.Count == 0)
+                    continue;
+
+                Geometry merged;
+
+                try
+                {
+                    merged = UnaryUnionOp.Union(cleaned);
+                }
+                catch (TopologyException)
+                {
+                    // Last-resort fallback: union incrementally
+                    merged = cleaned[0];
+                    for (int i = 1; i < cleaned.Count; i++)
+                    {
+                        try
+                        {
+                            merged = merged.Union(cleaned[i]);
+                        }
+                        catch
+                        {
+                            // skip bad geometry
+                        }
+                    }
+                }
 
                 if (merged == null || merged.IsEmpty)
                     continue;
