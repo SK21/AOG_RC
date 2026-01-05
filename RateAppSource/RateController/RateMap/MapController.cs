@@ -1095,12 +1095,17 @@ namespace RateController.RateMap
             cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
         }
 
-        private static Dictionary<string, Color> LoadPersistedLegend()
+        public static Dictionary<string, Color> LoadPersistedLegend(string basePath=null)
         {
             try
             {
-                var basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
-                string legendPath = basePath + ".AppliedLegend.json";
+                if(basePath==null)
+                {
+                 basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
+
+                }
+
+                string legendPath = basePath + "_AppliedLegend.json";
                 if (!File.Exists(legendPath))
                 {
                     return null;
@@ -1239,17 +1244,19 @@ namespace RateController.RateMap
             }
         }
 
-        private static void SaveAppliedLegend(string legendPath)
+        public static void SaveAppliedLegend(string legendPath,Dictionary<string,Color> LegendToSave=null)
         {
             try
             {
-                if (ColorLegend == null || ColorLegend.Count == 0)
+                if (LegendToSave == null) LegendToSave = ColorLegend;
+
+                if (LegendToSave == null || LegendToSave.Count == 0)
                 {
                     return;
                 }
 
                 var bands = new List<LegendBand>();
-                foreach (var kvp in ColorLegend)
+                foreach (var kvp in LegendToSave)
                 {
                     var parts = kvp.Key.Split('-');
                     if (parts.Length != 2) continue;
@@ -1271,7 +1278,7 @@ namespace RateController.RateMap
                 }
 
                 var basePath = Path.ChangeExtension(legendPath, null); // strip .shp
-                var appliedLegendPath = basePath + ".AppliedLegend.json";
+                var appliedLegendPath = basePath + "_AppliedLegend.json";
 
                 var json = System.Text.Json.JsonSerializer.Serialize(bands);
                 File.WriteAllText(appliedLegendPath, json);

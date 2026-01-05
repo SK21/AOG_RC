@@ -3,6 +3,8 @@ using RateController.Language;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -106,10 +108,17 @@ namespace RateController.Forms
                         }
                     }
 
+                    string MapPath = JobManager.MapPath(JobManager.CurrentJobID);
+
+                    Dictionary<string, Color> SavedLegend = MapController.LoadPersistedLegend(Path.ChangeExtension(selectedShapefilePath, null));
+                    if (SavedLegend != null)
+                    {
+                        MapController.SaveAppliedLegend(Path.ChangeExtension(MapPath, null), SavedLegend);
+                    }
+
                     var shapefileHelper = new ShapefileHelper();
                     var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
 
-                    string MapPath = JobManager.MapPath(JobManager.CurrentJobID);
                     if (shapefileHelper.SaveMapZones(MapPath, mapZones))
                     {
                         MapController.LoadMap();
