@@ -3,6 +3,7 @@ using GMap.NET.WindowsForms;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 

@@ -887,10 +887,8 @@ namespace RateController.RateMap
                     // use historical applied zones from shapefile
                     if (HistoricalAppliedZones.Count > 0)
                     {
-                        Debug.Print("Load applied");
                         foreach (var mapZone in HistoricalAppliedZones)
                         {
-                            Debug.Print(mapZone.Name + ", " + mapZone.ZoneColor.ToString());
                             AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
                         }
                         // Build legend that matches persisted applied zones

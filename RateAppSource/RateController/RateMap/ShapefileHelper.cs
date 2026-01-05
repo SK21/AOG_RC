@@ -203,20 +203,10 @@ namespace RateController.Classes
                         int count = 0;
                         foreach (var polygon in AppliedOverlay.Polygons)
                         {
-                            // Try to preserve the polygon fill color used in the live overlay.
                             Color zoneColor = Color.AliceBlue;
-                            try
+                            if (polygon.Fill is SolidBrush sb)
                             {
-                                var solidBrush = polygon.Fill as SolidBrush;
-                                if (solidBrush != null)
-                                {
-                                    // Store an opaque version of the color; transparency is handled at render time.
-                                    zoneColor = Color.FromArgb(255, solidBrush.Color);
-                                }
-                            }
-                            catch
-                            {
-                                // Ignore failures and keep default color.
+                                zoneColor = Color.FromArgb(255, sb.Color);
                             }
 
                             NewAppliedZones.Add(new MapZone(
@@ -396,7 +386,6 @@ namespace RateController.Classes
 
                 Color binColor = Palette.Colors[group.Key % Palette.Colors.Length];
 
-                Debug.Print("Save applied");
                 foreach (var geom in SplitGeometry(merged))
                 {
                     if (geom is Polygon poly)
@@ -407,7 +396,6 @@ namespace RateController.Classes
                             rates: avgRates,
                             zoneColor: binColor,
                             zoneType: ZoneType.Applied));
-                        Debug.Print("Applied Zone " + (zoneCounter - 1).ToString() + ", " + binColor.ToString());
                     }
                 }
             }

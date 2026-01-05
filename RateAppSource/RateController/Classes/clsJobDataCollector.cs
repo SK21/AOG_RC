@@ -22,7 +22,6 @@ namespace RateController.Classes
 
         public clsJobDataCollector()
         {
-            Debug.Print("Data Collector");
             LastQuantity = new double[Props.MaxProducts];
             LastHectares = new double[Props.MaxProducts];
             ProductData = new JobProductData[Props.MaxProducts];
