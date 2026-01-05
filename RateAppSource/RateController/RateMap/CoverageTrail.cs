@@ -145,7 +145,7 @@ namespace RateController.Classes
                         polyPoints.AddRange(rightChain);
                         polyPoints.Add(leftChain[0]);
 
-                        var baseColor = Palette.Colors[band % Palette.Colors.Length];
+                        var baseColor=Palette.GetColor(band);
 
                         var poly = new GMapPolygon(polyPoints, "swath_band")
                         {

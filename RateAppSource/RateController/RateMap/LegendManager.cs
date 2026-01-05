@@ -98,7 +98,7 @@ namespace RateController.Classes
                 {
                     double a = minRate + (i * band);
                     double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
-                    var color = Palette.Colors[i % Palette.Colors.Length];
+                    var color = Palette.GetColor(i,255);
                     legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
                 }
             }

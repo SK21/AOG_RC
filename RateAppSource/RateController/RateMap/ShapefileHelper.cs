@@ -256,7 +256,7 @@ namespace RateController.Classes
                     { ZoneFields.ProductD, 0 }
                 };
 
-                Color color = Palette.Colors[index % Palette.Colors.Length];
+                Color color = Palette.GetColor(index);
 
                 if (mapping == null)
                 {
@@ -306,31 +306,25 @@ namespace RateController.Classes
             if (appliedZones == null || appliedZones.Count == 0)
                 return result;
 
-            // Extract rates used by legend
-            var rates = appliedZones
-                .Where(z => z.ZoneType == ZoneType.Applied)
-                .Select(z => z.Rates[ZoneFields.ProductA])
+            // Only consider applied zones
+            var appliedOnly = appliedZones
+                .Where(z => z != null && z.ZoneType == ZoneType.Applied && z.Geometry != null)
                 .ToList();
 
-            if (!MapController.TryComputeScale(rates, out double minRate, out double maxRate))
+            if (appliedOnly.Count == 0)
                 return result;
 
-            int binCount = Palette.Colors.Length;
             int zoneCounter = 1;
 
-            // Group zones by legend bin
-            var groups = appliedZones
-                .Where(z => z.ZoneType == ZoneType.Applied)
-                .GroupBy(z =>
-                    GetLegendBin(
-                        z.Rates[ZoneFields.ProductA],
-                        minRate,
-                        maxRate,
-                        binCount))
-                .OrderBy(g => g.Key);
+            // Group zones by their existing color so we preserve the
+            // color that was assigned in BuildNewAppliedZones / history overlay.
+            var groups = appliedOnly
+                .GroupBy(z => z.ZoneColor)
+                .ToList();
 
             foreach (var group in groups)
             {
+                // Clean geometries with a zero-width buffer to fix minor topology issues
                 var cleaned = group
                     .Select(z =>
                     {
@@ -375,7 +369,8 @@ namespace RateController.Classes
                 if (merged == null || merged.IsEmpty)
                     continue;
 
-                // Average rates inside bin (matches visual meaning)
+                // Average rates inside color group (so merged zone still represents
+                // the same rate band, just with smoothed geometry)
                 var avgRates = new Dictionary<string, double>
                 {
                     { ZoneFields.ProductA, group.Average(z => z.Rates[ZoneFields.ProductA]) },
@@ -384,7 +379,9 @@ namespace RateController.Classes
                     { ZoneFields.ProductD, group.Average(z => z.Rates[ZoneFields.ProductD]) }
                 };
 
-                Color binColor = Palette.Colors[group.Key % Palette.Colors.Length];
+                Color groupColor = group.Key;
+
+                Debug.Print("Save applied (merge by color " + groupColor + ")");
 
                 foreach (var geom in SplitGeometry(merged))
                 {
@@ -394,8 +391,9 @@ namespace RateController.Classes
                             name: $"Applied Zone {zoneCounter++}",
                             geometry: poly,
                             rates: avgRates,
-                            zoneColor: binColor,
+                            zoneColor: groupColor,
                             zoneType: ZoneType.Applied));
+                        Debug.Print("Applied Zone " + (zoneCounter - 1).ToString() + ", " + groupColor.ToString());
                     }
                 }
             }

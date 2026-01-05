@@ -66,7 +66,6 @@ namespace RateController.RateMap
         private static List<MapZone> mapZones;
         private static List<PointLatLng> NewZoneVertices;
         private static STRtree<MapZone> STRtreeZoneIndex;
-        private static byte ZoneTransparency = 100;
 
         #endregion Zones
 
@@ -414,7 +413,7 @@ namespace RateController.RateMap
                     }, zoneColor, ZoneType.Target);
 
                     mapZones.Add(NewZone);
-                    zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(ZoneTransparency));
+                    zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(Palette.ZoneTransparency));
 
                     NewZoneVertices.Clear();
                     NewZoneMarkerOverlay.Markers.Clear();
@@ -513,7 +512,7 @@ namespace RateController.RateMap
                 foreach (var zone in zonesToRemove)
                 {
                     // remove polygons from overlay that match the ones created for this zone
-                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(ZoneTransparency);
+                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(Palette.ZoneTransparency);
                     foreach (var polygonToRemove in polygonsToRemove)
                     {
                         if (polygonToRemove == null) continue;
@@ -596,7 +595,7 @@ namespace RateController.RateMap
                     // Refresh polygons in overlay to reflect new color
                     if (zoneOverlay != null)
                     {
-                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(ZoneTransparency);
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(Palette.ZoneTransparency);
                         foreach (var polygonToReplace in polygonsForZone)
                         {
                             if (polygonToReplace == null) continue;
@@ -676,7 +675,7 @@ namespace RateController.RateMap
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in targetZones)
                 {
-                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
+                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
                 }
                 BuildTargetZonesIndex();
                 ShowTargetZonesOverlay();
@@ -889,7 +888,7 @@ namespace RateController.RateMap
                     {
                         foreach (var mapZone in HistoricalAppliedZones)
                         {
-                            AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
+                            AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
                         }
                         // Build legend that matches persisted applied zones
                         ColorLegend = LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
