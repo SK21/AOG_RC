@@ -21,14 +21,13 @@ namespace RateController.Classes
             {
                 MapController.RateCollector.LoadData(); // ensure fresh data
                 var readings = MapController.RateCollector.GetReadings();
-                double implementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
-                int ProductFilter = MapController.ProductFilter;
-
                 if (overlay == null || readings == null || readings.Count < 2) return false;
-                if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
+
 
                 int maxLen = readings.Max(r => (r.AppliedRates?.Length ?? 0));
                 if (maxLen == 0) return false;
+
+                int ProductFilter = MapController.ProductFilter;
                 if (ProductFilter >= maxLen) ProductFilter = 0;
 
                 IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > ProductFilter).Select(r => r.AppliedRates[ProductFilter]);
@@ -43,6 +42,9 @@ namespace RateController.Classes
                 // Relocation / gap guards (mirrors live logic + time gap)
                 const double maxSnapMeters = 5.0;          // break if spatial gap exceeds this
                 const double MaxGapSeconds = 3.0;          // break if temporal gap (record interval ~1s) too large
+
+                double implementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
+                if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
 
                 for (int i = 0; i < readings.Count; i++)
                 {

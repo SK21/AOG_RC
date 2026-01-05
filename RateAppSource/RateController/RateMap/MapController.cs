@@ -878,12 +878,13 @@ namespace RateController.RateMap
                 bool AppliedFound = false;
                 if (overlayService.BuildFromHistory(AppliedOverlay, out histLegend))
                 {
+                    // Use legend returned from history build
                     ColorLegend = histLegend;
                     AppliedFound = true;
                 }
                 else
                 {
-                    // use historical applied zones
+                    // use historical applied zones from shapefile
                     if (HistoricalAppliedZones.Count > 0)
                     {
                         Debug.Print("Load applied");
@@ -892,7 +893,8 @@ namespace RateController.RateMap
                             Debug.Print(mapZone.Name + ", " + mapZone.ZoneColor.ToString());
                             AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(ZoneTransparency));
                         }
-                        ColorLegend = LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones);
+                        // Build legend that matches persisted applied zones
+                        ColorLegend = LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
                         AppliedFound = true;
                     }
                 }

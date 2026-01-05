@@ -108,24 +108,29 @@ namespace RateController
         public float TotalWidth(bool ReturnFeet = false)
         {
             float Result = 0;
-            float cWorkingWidth_cm = 0;
 
-            for (int i = 0; i < Props.MaxSections; i++)
+            if (cSections.Count >= Props.MaxSections)
             {
-                if (cSections[i].Enabled)
+                float cWorkingWidth_cm = 0;
+
+                for (int i = 0; i < Props.MaxSections; i++)
                 {
-                    cWorkingWidth_cm += Item(i).Width_cm;
+                    if (cSections[i].Enabled)
+                    {
+                        cWorkingWidth_cm += Item(i).Width_cm;
+                    }
+                }
+
+                if (ReturnFeet)
+                {
+                    Result = (float)(cWorkingWidth_cm * 0.032808);   // feet
+                }
+                else
+                {
+                    Result = (float)(cWorkingWidth_cm * 0.01);    // meters
                 }
             }
 
-            if (ReturnFeet)
-            {
-                Result = (float)(cWorkingWidth_cm * 0.032808);   // feet
-            }
-            else
-            {
-                Result = (float)(cWorkingWidth_cm * 0.01);    // meters
-            }
             return Result;
         }
 

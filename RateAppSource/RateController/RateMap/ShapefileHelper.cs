@@ -190,6 +190,7 @@ namespace RateController.Classes
                         break;
                     }
                 }
+
                 if (RecordedData)
                 {
                     Dictionary<string, Color> histLegend;
@@ -202,11 +203,27 @@ namespace RateController.Classes
                         int count = 0;
                         foreach (var polygon in AppliedOverlay.Polygons)
                         {
+                            // Try to preserve the polygon fill color used in the live overlay.
+                            Color zoneColor = Color.AliceBlue;
+                            try
+                            {
+                                var solidBrush = polygon.Fill as SolidBrush;
+                                if (solidBrush != null)
+                                {
+                                    // Store an opaque version of the color; transparency is handled at render time.
+                                    zoneColor = Color.FromArgb(255, solidBrush.Color);
+                                }
+                            }
+                            catch
+                            {
+                                // Ignore failures and keep default color.
+                            }
+
                             NewAppliedZones.Add(new MapZone(
                                 name: $"Applied Zone {count++}",
                                 geometry: ConvertToNtsPolygon(polygon),
                                 rates: (Dictionary<string, double>)polygon.Tag,
-                                zoneColor: Color.AliceBlue, // relies on MergeApplied to set correct color
+                                zoneColor: zoneColor,
                                 zoneType: ZoneType.Applied));
                         }
                         Result = true;

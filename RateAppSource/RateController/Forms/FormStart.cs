@@ -62,62 +62,17 @@ namespace RateController
         public FormStart()
         {
             InitializeComponent();
+            Props.MainForm = this;
 
-            #region // language
-
+            // language
             lbRate.Text = Lang.lgCurrentRate;
             lbTarget.Text = Lang.lgTargetRate;
             lbCoverage.Text = Lang.lgCoverage;
             lbRemaining.Text = Lang.lgTank_Remaining;
 
-            #endregion // language
-
-            Props.MainForm = this;
-            Props.CheckFolders();
-            Props.OpenFile(Properties.Settings.Default.CurrentFile);
-
-            JobManager.Initialize();
-            MapController.Initialize();
-            Props.JobCollector.Enabled = true;
-
-            Tls = new clsTools();
-
-            //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
-
-            UDPaog = new UDPComm(this, 17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
-            UDPmodules = new UDPComm(this, 29999, 28888, 1480, "UDPmodules");                   // arduino
-
-            AutoSteerPGN = new PGN254(this);
-            SectionsPGN = new PGN235(this);
-            MachineConfig = new PGN238(this);
-            MachineData = new PGN239(this);
-
-            SwitchBox = new PGN32618(this);
-            ModulesStatus = new PGN32401(this);
-
-            Sections = new clsSections(this);
-            Products = new clsProducts(this);
-            RCalarm = new clsAlarm(this, btAlarm);
-
+            // UI label arrays
             ProdName = new Label[] { prd0, prd1, prd2, prd3, prd4, prd5 };
             Rates = new Label[] { rt0, rt1, rt2, rt3, rt4, rt5 };
-
-            RelayObjects = new clsRelays(this);
-
-            RelaySettings = new PGN32501[Props.MaxModules];
-            for (int i = 0; i < Props.MaxModules; i++)
-            {
-                RelaySettings[i] = new PGN32501(this, i);
-            }
-
-            Zones = new clsZones(this);
-            vSwitchBox = new clsVirtualSwitchBox(this);
-            ModuleConfig = new PGN32700(this);
-            AOGsections = new PGN229(this);
-            SectionControl = new clsSectionControl(this);
-            ScaleIndicator = new PGN32296(this);
-            GPS = new PGN208(this);
-            WheelSpeed = new PGN32504(this);
         }
 
         public event EventHandler ColorChanged;
@@ -332,7 +287,7 @@ namespace RateController
                     {
                         lbCoverage.Text = CoverageDescriptions[Prd.CoverageUnits] + " Left";
                         double RT = Prd.SmoothRate();
-                        if (RT <0.01) RT = Prd.TargetRate();
+                        if (RT < 0.01) RT = Prd.TargetRate();
 
                         if ((RT > 0) && (Prd.TankStart > 0))
                         {
@@ -683,6 +638,49 @@ namespace RateController
         {
             try
             {
+                Props.CheckFolders();
+                Props.OpenFile(Properties.Settings.Default.CurrentFile);
+
+                Tls = new clsTools();
+
+                //UDPaog = new UDPComm(this, 16666, 17777, 16660, "127.0.0.255");       // AGIO
+
+                UDPaog = new UDPComm(this, 17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
+                UDPmodules = new UDPComm(this, 29999, 28888, 1480, "UDPmodules");                   // arduino
+
+                AutoSteerPGN = new PGN254(this);
+                SectionsPGN = new PGN235(this);
+                MachineConfig = new PGN238(this);
+                MachineData = new PGN239(this);
+
+                SwitchBox = new PGN32618(this);
+                ModulesStatus = new PGN32401(this);
+
+                Sections = new clsSections(this);
+                Products = new clsProducts(this);
+                RCalarm = new clsAlarm(this, btAlarm);
+
+                RelayObjects = new clsRelays(this);
+
+                RelaySettings = new PGN32501[Props.MaxModules];
+                for (int i = 0; i < Props.MaxModules; i++)
+                {
+                    RelaySettings[i] = new PGN32501(this, i);
+                }
+
+                Zones = new clsZones(this);
+                vSwitchBox = new clsVirtualSwitchBox(this);
+                ModuleConfig = new PGN32700(this);
+                AOGsections = new PGN229(this);
+                SectionControl = new clsSectionControl(this);
+                ScaleIndicator = new PGN32296(this);
+                GPS = new PGN208(this);
+                WheelSpeed = new PGN32504(this);
+
+                JobManager.Initialize();
+                MapController.Initialize();
+                Props.JobCollector.Enabled = true;
+
                 Props.LoadFormLocation(this);
 
                 CurrentPage = 5;

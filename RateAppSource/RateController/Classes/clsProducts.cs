@@ -48,17 +48,23 @@ namespace RateController
 
         public double[] BaseRates()
         {
-            double[] Result = new double[Props.MaxProducts - 2];
-            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            int ProductCount = Props.MaxProducts - 2;   // last 2 are fans
+            double[] Result = new double[ProductCount];
+
+            if (cProducts.Count >= ProductCount)
             {
-                if (cProducts[i].Enabled && cProducts[i].BumpButtons == false)
+                for (int i = 0; i < ProductCount; i++)
                 {
-                    Result[i] = cProducts[i].RateSet;
+                    if (cProducts[i].Enabled && cProducts[i].BumpButtons == false)
+                    {
+                        Result[i] = cProducts[i].RateSet;
+                    }
+                    else
+                    {
+                        Result[i] = 0;
+                    }
                 }
-                else
-                {
-                    Result[i] = 0;
-                }
+
             }
             return Result;
         }
