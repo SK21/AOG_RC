@@ -8,8 +8,8 @@ namespace RateController.RateMap
 
         private static readonly Color[] Colors = new Color[]
         {
-            Color.Red, Color.Green, Color.Blue, Color.Orange,
-            Color.Purple, Color.Teal, Color.Brown, Color.Magenta
+            Color.Green, Color.Blue, Color.Orange,
+            Color.Purple, Color.Teal, Color.Brown, Color.Magenta, Color.Red
         };
 
         public static Color GetColor(int index, byte trns = ZoneTransparency)

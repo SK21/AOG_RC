@@ -104,7 +104,7 @@ namespace RateController.Classes
                     throw new FileNotFoundException("The specified data file was not found.", JobManager.CurrentRateDataPath);
 
                 SaveStopWatch.Reset();
-                SaveData(LastSavePath); // save any unrecorded data
+                SaveData(); // save any unrecorded data
 
                 // Clear the existing readings before loading.
                 lock (_lock)
@@ -247,11 +247,14 @@ namespace RateController.Classes
             }
         }
 
-        public void SaveData(string DataFilePath)
+        public void SaveData(string DataFilePath = null)
         {
             try
             {
-                if (DataFilePath != null)
+                if (DataFilePath == null) DataFilePath = LastSavePath;
+
+                bool canSave = DataFilePath != null;
+                if (canSave)
                 {
                     LastSavePath = DataFilePath;
                     List<RateReading> snapshot;
@@ -261,66 +264,98 @@ namespace RateController.Classes
                         lastSavedIndex = Readings.Count;
                     }
 
-                    bool fileExists = File.Exists(DataFilePath);
-                    string header = "Timestamp,Latitude,Longitude," +
-                                    "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
-                                    "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
-
-                    using (var writer = new StreamWriter(DataFilePath, append: true))
+                    if (snapshot.Count > 0)
                     {
-                        // Check if header is missing (file exists but no header)
+                        bool fileExists = File.Exists(DataFilePath);
+                        string header = "Timestamp,Latitude,Longitude," +
+                                        "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
+                                        "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
+
                         if (fileExists)
                         {
-                            string firstLine = File.ReadLines(DataFilePath).FirstOrDefault();
-                            if (string.IsNullOrWhiteSpace(firstLine) || !firstLine.Contains("Timestamp"))
+                            string firstLine = null;
+                            foreach (string line in File.ReadLines(DataFilePath))
                             {
-                                // Prepend header by rewriting the file
-                                var existingLines = File.ReadAllLines(DataFilePath);
-                                File.WriteAllText(DataFilePath, header + Environment.NewLine);
-                                File.AppendAllLines(DataFilePath, existingLines);
+                                firstLine = line;
+                                break;
+                            }
+
+                            bool headerIsMissing = false;
+                            if (string.IsNullOrWhiteSpace(firstLine))
+                            {
+                                headerIsMissing = true;
+                            }
+                            else if (!firstLine.StartsWith("Timestamp", StringComparison.OrdinalIgnoreCase))
+                            {
+                                headerIsMissing = true;
+                            }
+
+                            if (headerIsMissing)
+                            {
+                                string[] existingLines = File.ReadAllLines(DataFilePath);
+                                using (var headerWriter = new StreamWriter(DataFilePath, false))
+                                {
+                                    headerWriter.WriteLine(header);
+                                    for (int i = 0; i < existingLines.Length; i++)
+                                    {
+                                        headerWriter.WriteLine(existingLines[i]);
+                                    }
+                                }
                             }
                         }
-                        else
+
+                        using (var writer = new StreamWriter(DataFilePath, true))
                         {
-                            // New file: write header
-                            writer.WriteLine(header);
-                        }
-
-                        // Append new data
-                        foreach (var reading in snapshot)
-                        {
-                            string timestamp = reading.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
-                            string lat = reading.Latitude.ToString(CultureInfo.InvariantCulture);
-                            string lon = reading.Longitude.ToString(CultureInfo.InvariantCulture);
-                            string basicValues = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", timestamp, lat, lon);
-
-                            string[] appliedColumns = new string[5];
-                            for (int i = 0; i < 5; i++)
+                            if (!fileExists)
                             {
-                                appliedColumns[i] = i < reading.AppliedRates.Length
-                                    ? reading.AppliedRates[i].ToString(CultureInfo.InvariantCulture)
-                                    : "";
+                                writer.WriteLine(header);
                             }
-                            string appliedData = string.Join(",", appliedColumns);
 
-                            string[] targetColumns = new string[5];
-                            for (int i = 0; i < 5; i++)
+                            foreach (var reading in snapshot)
                             {
-                                targetColumns[i] = i < reading.TargetRates.Length
-                                    ? reading.TargetRates[i].ToString(CultureInfo.InvariantCulture)
-                                    : "";
-                            }
-                            string targetData = string.Join(",", targetColumns);
+                                string timestamp = reading.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                                string lat = reading.Latitude.ToString(CultureInfo.InvariantCulture);
+                                string lon = reading.Longitude.ToString(CultureInfo.InvariantCulture);
+                                string basicValues = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", timestamp, lat, lon);
 
-                            string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, targetData);
-                            writer.WriteLine(csvLine);
+                                string[] appliedColumns = new string[5];
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < reading.AppliedRates.Length)
+                                    {
+                                        appliedColumns[i] = reading.AppliedRates[i].ToString(CultureInfo.InvariantCulture);
+                                    }
+                                    else
+                                    {
+                                        appliedColumns[i] = string.Empty;
+                                    }
+                                }
+                                string appliedData = string.Join(",", appliedColumns);
+
+                                string[] targetColumns = new string[5];
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < reading.TargetRates.Length)
+                                    {
+                                        targetColumns[i] = reading.TargetRates[i].ToString(CultureInfo.InvariantCulture);
+                                    }
+                                    else
+                                    {
+                                        targetColumns[i] = string.Empty;
+                                    }
+                                }
+                                string targetData = string.Join(",", targetColumns);
+
+                                string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, targetData);
+                                writer.WriteLine(csvLine);
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("DataCollector/SaveDataToCSV: " + ex.Message);
+                Props.WriteErrorLog("DataCollector/SaveData: " + ex.Message);
             }
         }
 

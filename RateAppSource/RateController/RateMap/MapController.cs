@@ -336,6 +336,9 @@ namespace RateController.RateMap
                 UpdateTimer?.Stop();
                 UpdateTimer.Tick -= UpdateTimer_Tick;
 
+                cRateCollector.SaveData();
+                cRateCollector = null;
+
                 JobManager.JobChanged -= JobManager_JobChanged;
 
                 if (gmap != null)
@@ -370,8 +373,6 @@ namespace RateController.RateMap
                 MapChanged = null;
                 MapLeftClicked = null;
                 MapZoomed = null;
-
-                cRateCollector = null;
             }
             catch (Exception ex)
             {
