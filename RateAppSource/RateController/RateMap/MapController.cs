@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -57,12 +58,12 @@ namespace RateController.RateMap
 
         #region Zones
 
-        private static List<MapZone> HistoricalAppliedZones = new List<MapZone>();
         private static MapZone CurrentZone = null;
         private static Color CurrentZoneColor;
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
         private static double[] CurrentZoneRates;
+        private static List<MapZone> HistoricalAppliedZones = new List<MapZone>();
         private static List<MapZone> mapZones;
         private static List<PointLatLng> NewZoneVertices;
         private static STRtree<MapZone> STRtreeZoneIndex;
@@ -711,6 +712,8 @@ namespace RateController.RateMap
             {
                 var shapefileHelper = new ShapefileHelper();
                 Result = shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
+
+                if (Result) SaveLegendSidecar(JobManager.CurrentMapPath);
             }
             catch (Exception ex)
             {
@@ -752,7 +755,8 @@ namespace RateController.RateMap
                 var shapefileHelper = new ShapefileHelper();
 
                 // Save zone features to the specified filePath
-                shapefileHelper.SaveMapZones(filePath, mapZones);
+              bool Result=  shapefileHelper.SaveMapZones(filePath, mapZones);
+                if (Result) SaveLegendSidecar(filePath);
             }
             catch (Exception ex)
             {
@@ -891,7 +895,8 @@ namespace RateController.RateMap
                             AppliedOverlay = AddPolygons(AppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
                         }
                         // Build legend that matches persisted applied zones
-                        ColorLegend = LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
+                        // Try to load a persisted legend first
+                        ColorLegend = LoadPersistedLegend() ?? LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
                         AppliedFound = true;
                     }
                 }
@@ -1090,6 +1095,50 @@ namespace RateController.RateMap
             cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
         }
 
+        private static Dictionary<string, Color> LoadPersistedLegend()
+        {
+            try
+            {
+                string legendPath = JobManager.CurrentMapPath + ".legend.json";
+                if (!File.Exists(legendPath))
+                {
+                    return null;
+                }
+
+                var json = File.ReadAllText(legendPath);
+                var bands = System.Text.Json.JsonSerializer.Deserialize<List<LegendBand>>(json);
+                if (bands == null || bands.Count == 0)
+                {
+                    return null;
+                }
+
+                // Filter to current product
+                var filtered = bands
+                    .Where(b => b.ProductIndex == cProductFilter)
+                    .OrderBy(b => b.Min)
+                    .ToList();
+
+                if (filtered.Count == 0)
+                {
+                    return null;
+                }
+
+                var dict = new Dictionary<string, Color>();
+                foreach (var b in filtered)
+                {
+                    string label = string.Format("{0:N1} - {1:N1}", b.Min, b.Max);
+                    var color = ColorTranslator.FromHtml(b.ColorHtml);
+                    dict[label] = color;
+                }
+                return dict;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/LoadPersistedLegend: " + ex.Message);
+                return null;
+            }
+        }
+
         private static string PersistKmlToJob(string sourcePath)
         {
             try
@@ -1186,6 +1235,56 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
+            }
+        }
+
+        private static void SaveLegendSidecar(string legendPath)
+        {
+            try
+            {
+                if (HistoricalAppliedZones == null || HistoricalAppliedZones.Count == 0)
+                {
+                    return;
+                }
+
+                // Build legend for current product filter from the zones we just saved.
+                var legendDict = LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
+                if (legendDict == null || legendDict.Count == 0)
+                {
+                    return;
+                }
+
+                var bands = new List<LegendBand>();
+                foreach (var kvp in legendDict)
+                {
+                    // kvp.Key is "min - max"
+                    var parts = kvp.Key.Split('-');
+                    if (parts.Length != 2) continue;
+
+                    if (!double.TryParse(parts[0], out double min)) continue;
+                    if (!double.TryParse(parts[1], out double max)) continue;
+
+                    bands.Add(new LegendBand
+                    {
+                        Min = min,
+                        Max = max,
+                        ColorHtml = ColorTranslator.ToHtml(kvp.Value),
+                        ProductIndex = cProductFilter
+                    });
+                }
+
+                if (bands.Count == 0)
+                {
+                    return;
+                }
+
+                legendPath = Path.GetDirectoryName(legendPath) + ".legend.json";
+                var json = System.Text.Json.JsonSerializer.Serialize(bands);
+                File.WriteAllText(legendPath, json);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SaveLegendSidecar: " + ex.Message);
             }
         }
 
