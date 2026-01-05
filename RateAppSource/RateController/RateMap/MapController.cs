@@ -898,7 +898,7 @@ namespace RateController.RateMap
                 }
                 if (AppliedFound)
                 {
-                    ShowLegend(histLegend, true);
+                    ShowLegend(ColorLegend, true);
                 }
                 else
                 {
