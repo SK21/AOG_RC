@@ -713,7 +713,7 @@ namespace RateController.RateMap
                 var shapefileHelper = new ShapefileHelper();
                 Result = shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
 
-                if (Result) SaveLegendSidecar(JobManager.CurrentMapPath);
+                if (Result) SaveAppliedLegend(JobManager.CurrentMapPath);
             }
             catch (Exception ex)
             {
@@ -756,7 +756,7 @@ namespace RateController.RateMap
 
                 // Save zone features to the specified filePath
               bool Result=  shapefileHelper.SaveMapZones(filePath, mapZones);
-                if (Result) SaveLegendSidecar(filePath);
+                if (Result) SaveAppliedLegend(filePath);
             }
             catch (Exception ex)
             {
@@ -1099,7 +1099,8 @@ namespace RateController.RateMap
         {
             try
             {
-                string legendPath = JobManager.CurrentMapPath + ".legend.json";
+                var basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
+                string legendPath = basePath + ".AppliedLegend.json";
                 if (!File.Exists(legendPath))
                 {
                     return null;
@@ -1238,29 +1239,20 @@ namespace RateController.RateMap
             }
         }
 
-        private static void SaveLegendSidecar(string legendPath)
+        private static void SaveAppliedLegend(string legendPath)
         {
             try
             {
-                if (HistoricalAppliedZones == null || HistoricalAppliedZones.Count == 0)
-                {
-                    return;
-                }
-
-                // Build legend for current product filter from the zones we just saved.
-                var legendDict = LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
-                if (legendDict == null || legendDict.Count == 0)
+                if (ColorLegend == null || ColorLegend.Count == 0)
                 {
                     return;
                 }
 
                 var bands = new List<LegendBand>();
-                foreach (var kvp in legendDict)
+                foreach (var kvp in ColorLegend)
                 {
-                    // kvp.Key is "min - max"
                     var parts = kvp.Key.Split('-');
                     if (parts.Length != 2) continue;
-
                     if (!double.TryParse(parts[0], out double min)) continue;
                     if (!double.TryParse(parts[1], out double max)) continue;
 
@@ -1278,13 +1270,15 @@ namespace RateController.RateMap
                     return;
                 }
 
-                legendPath = Path.GetDirectoryName(legendPath) + ".legend.json";
+                var basePath = Path.ChangeExtension(legendPath, null); // strip .shp
+                var appliedLegendPath = basePath + ".AppliedLegend.json";
+
                 var json = System.Text.Json.JsonSerializer.Serialize(bands);
-                File.WriteAllText(legendPath, json);
+                File.WriteAllText(appliedLegendPath, json);
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("MapController/SaveLegendSidecar: " + ex.Message);
+                Props.WriteErrorLog("MapController/SaveAppliedLegend: " + ex.Message);
             }
         }
 

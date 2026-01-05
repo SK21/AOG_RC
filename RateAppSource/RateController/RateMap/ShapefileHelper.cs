@@ -21,23 +21,26 @@ namespace RateController.Classes
 
             try
             {
-                using (var shapefile = Shapefile.OpenRead(shapefilePath))
+                if (IsValidShapefile(shapefilePath))
                 {
-                    int index = 0;
-                    foreach (var feature in shapefile)
+                    using (var shapefile = Shapefile.OpenRead(shapefilePath))
                     {
-                        if (feature.Geometry is Polygon)
+                        int index = 0;
+                        foreach (var feature in shapefile)
                         {
-                            var zone = CreateMapZone(feature, (Polygon)feature.Geometry, attributeMapping, index++);
-                            if (zone != null) zones.Add(zone);
-                        }
-                        else if (feature.Geometry is MultiPolygon)
-                        {
-                            var mp = (MultiPolygon)feature.Geometry;
-                            foreach (Polygon poly in mp.Geometries)
+                            if (feature.Geometry is Polygon)
                             {
-                                var zone = CreateMapZone(feature, poly, attributeMapping, index++);
+                                var zone = CreateMapZone(feature, (Polygon)feature.Geometry, attributeMapping, index++);
                                 if (zone != null) zones.Add(zone);
+                            }
+                            else if (feature.Geometry is MultiPolygon)
+                            {
+                                var mp = (MultiPolygon)feature.Geometry;
+                                foreach (Polygon poly in mp.Geometries)
+                                {
+                                    var zone = CreateMapZone(feature, poly, attributeMapping, index++);
+                                    if (zone != null) zones.Add(zone);
+                                }
                             }
                         }
                     }
@@ -153,17 +156,6 @@ namespace RateController.Classes
 
             foreach (var ext in new[] { ".shp", ".shx", ".dbf", ".prj", ".qix" })
                 DeleteIfExists(System.IO.Path.ChangeExtension(basePath, ext));
-        }
-
-        private static int GetLegendBin(double rate, double minRate, double maxRate, int binCount)
-        {
-            if (rate <= minRate) return 0;
-            if (rate >= maxRate) return binCount - 1;
-
-            double t = (rate - minRate) / (maxRate - minRate);
-            int bin = (int)Math.Floor(t * binCount);
-
-            return Math.Max(0, Math.Min(bin, binCount - 1));
         }
 
         private static IEnumerable<Geometry> SplitGeometry(Geometry g)
@@ -297,6 +289,17 @@ namespace RateController.Classes
                 Props.WriteErrorLog("ShapefileHelper/CreateMapZone: " + ex.Message);
                 return null;
             }
+        }
+
+        private bool IsValidShapefile(string fullPath)
+        {
+            string directory = Path.GetDirectoryName(fullPath);
+            string filenameWithoutExt = Path.GetFileNameWithoutExtension(fullPath);
+            string pathWithoutExtension = Path.Combine(directory, filenameWithoutExt);
+
+            return File.Exists(pathWithoutExtension + ".shp") &&
+                   File.Exists(pathWithoutExtension + ".shx") &&
+                   File.Exists(pathWithoutExtension + ".dbf");
         }
 
         private List<MapZone> MergeApplied(List<MapZone> appliedZones)
