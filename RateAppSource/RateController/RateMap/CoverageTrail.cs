@@ -42,7 +42,10 @@ namespace RateController.Classes
                     return;
                 }
 
-                if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
+                if (implementWidthMeters <= 0)
+                {
+                    implementWidthMeters = 0.01;
+                }
 
                 var prev = _prev;
                 var curr = pos;
@@ -55,6 +58,17 @@ namespace RateController.Classes
                 double dyMeters = (curr.Lat - prev.Lat) * metersPerDegLat;
                 double distMeters = Math.Sqrt(dxMeters * dxMeters + dyMeters * dyMeters);
 
+                // Large-gap break: if we jumped too far, start a new run and don't bridge.
+                double maxGapMeters = 5.0; // tweak as needed
+                if (distMeters > maxGapMeters)
+                {
+                    _hasPrev = false;
+                    _prev = curr;
+                    _runId++;
+                    return;
+                }
+
+                // Very small movement: synthesize a minimal segment along heading
                 if (distMeters < 0.01)
                 {
                     double synth = Math.Max(implementWidthMeters * 0.02, 0.02);
@@ -66,7 +80,10 @@ namespace RateController.Classes
                     curr = new PointLatLng(prev.Lat + dLat, prev.Lng + dLng);
                 }
 
-                PointLatLng prevLeft, prevRight, currLeft, currRight;
+                PointLatLng prevLeft;
+                PointLatLng prevRight;
+                PointLatLng currLeft;
+                PointLatLng currRight;
                 ComputeCorners(prev, curr, implementWidthMeters, out prevLeft, out prevRight, out currLeft, out currRight);
 
                 _segments.Add(new Segment
