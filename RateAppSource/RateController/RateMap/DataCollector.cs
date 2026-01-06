@@ -18,10 +18,8 @@ namespace RateController.Classes
         private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(30);
         private readonly Stopwatch SaveStopWatch = new Stopwatch();
         private bool cEnabled = true;
-        private int LastCount = 0;
         private double LastLatitude = 0;
         private double LastLongitude = 0;
-        private int LastProductID = -1;
         private int lastSavedIndex = 0;
         private string LastSavePath;
         private bool ReadyForNewData = false;
@@ -67,8 +65,6 @@ namespace RateController.Classes
             {
                 Readings.Clear();
                 lastSavedIndex = 0;
-                LastProductID = -1;
-                LastCount = 0;
                 if (Props.IsPathSafe(JobManager.CurrentRateDataPath)) File.Delete(JobManager.CurrentRateDataPath);
             }
         }
@@ -132,18 +128,7 @@ namespace RateController.Classes
 
         public int DataPoints(int ProductID)
         {
-            int Result = 0;
-            if ((lastSavedIndex == Readings.Count) && (ProductID == LastProductID))
-            {
-                Result = LastCount;
-            }
-            else
-            {
-                LastCount = Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
-                LastProductID = ProductID;
-                Result = LastCount;
-            }
-            return Result;
+            return Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
         }
 
         public IReadOnlyList<RateReading> GetReadings()
@@ -158,81 +143,80 @@ namespace RateController.Classes
         {
             try
             {
-                if (!File.Exists(JobManager.CurrentRateDataPath))
-                    throw new FileNotFoundException("The specified data file was not found.", JobManager.CurrentRateDataPath);
-
-                SaveStopWatch.Reset();
-                SaveData(); // save any unrecorded data
-
-                // Clear the existing readings before loading.
-                lock (_lock)
+                if (File.Exists(JobManager.CurrentRateDataPath))
                 {
-                    Readings.Clear();
-                    LastProductID = -1;
-                    LastCount = 0;
-                }
+                    SaveStopWatch.Reset();
+                    SaveData(); // save any unrecorded data
 
-                if (CSVheaderValid(JobManager.CurrentRateDataPath))
-                {
-                    string[] allLines = File.ReadAllLines(JobManager.CurrentRateDataPath);
-
-                    // parse the lines (skip header)
-                    for (int i = 1; i < allLines.Length; i++)
+                    // Clear the existing readings before loading.
+                    lock (_lock)
                     {
-                        string line = allLines[i];
-                        if (string.IsNullOrWhiteSpace(line))
-                            continue;
+                        Readings.Clear();
+                    }
 
-                        string[] parts = line.Split(',');
+                    if (CSVheaderValid(JobManager.CurrentRateDataPath))
+                    {
+                        string[] allLines = File.ReadAllLines(JobManager.CurrentRateDataPath);
 
-                        // There should be 9 parts: Timestamp, Latitude, Longitude + 5 applied + width.
-                        if (parts.Length < 9)
-                            continue;
-
-                        // Parse basic values.
-                        DateTime timestamp;
-                        double latitude, longitude;
-
-                        if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
-                        !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
-                        !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
+                        // parse the lines (skip header)
+                        for (int i = 1; i < allLines.Length; i++)
                         {
-                            continue;
-                        }
+                            string line = allLines[i];
+                            if (string.IsNullOrWhiteSpace(line))
+                                continue;
 
-                        // Parse applied rates.
-                        List<double> appliedRates = new List<double>();
-                        for (int j = 3; j < 8; j++)
-                        {
-                            double rate;
-                            if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                            string[] parts = line.Split(',');
+
+                            // There should be 9 parts: Timestamp, Latitude, Longitude + 5 applied + width.
+                            if (parts.Length < 9)
+                                continue;
+
+                            // Parse basic values.
+                            DateTime timestamp;
+                            double latitude, longitude;
+
+                            if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
+                            !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
+                            !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
                             {
-                                appliedRates.Add(rate);
+                                continue;
                             }
-                        }
 
-                        // Parse implement width
-                        double width = double.TryParse(parts[8], NumberStyles.Number, CultureInfo.InvariantCulture, out double wd) ? wd : 0;
-
-                        if (appliedRates.Count > 0)
-                        {
-                            var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), width);
-                            lock (_lock)
+                            // Parse applied rates.
+                            List<double> appliedRates = new List<double>();
+                            for (int j = 3; j < 8; j++)
                             {
-                                Readings.Add(reading);
+                                double rate;
+                                if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                                {
+                                    appliedRates.Add(rate);
+                                }
+                            }
+
+                            // Parse implement width
+                            double width = double.TryParse(parts[8], NumberStyles.Number, CultureInfo.InvariantCulture, out double wd) ? wd : 0;
+
+                            if (appliedRates.Count > 0)
+                            {
+                                var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), width);
+                                lock (_lock)
+                                {
+                                    Readings.Add(reading);
+                                }
                             }
                         }
                     }
-                }
 
-                // After fully loading the CSV, set lastSavedIndex to the current count of readings.
-                lock (_lock)
-                {
-                    lastSavedIndex = Readings.Count;
-                }
+                    // After fully loading the CSV, set lastSavedIndex to the current count of readings.
+                    lock (_lock)
+                    {
+                        lastSavedIndex = Readings.Count;
+                    }
 
-                if (cEnabled) SaveStopWatch.Start();
+                    if (cEnabled) SaveStopWatch.Start();
+                }
             }
+
             catch (Exception ex)
             {
                 Props.WriteErrorLog("DataCollector/LoadData: " + ex.Message);
@@ -317,7 +301,7 @@ namespace RateController.Classes
                                 }
                                 string appliedData = string.Join(",", appliedColumns);
 
-                                string ImplementWidthMeters = Props.MainForm.Sections.TotalWidth(false).ToString();
+                                string ImplementWidthMeters = reading.ImplementWidthMeters.ToString(CultureInfo.InvariantCulture);
 
                                 string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, ImplementWidthMeters);
                                 writer.WriteLine(csvLine);
