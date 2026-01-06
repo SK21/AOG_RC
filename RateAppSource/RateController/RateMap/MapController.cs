@@ -210,8 +210,22 @@ namespace RateController.RateMap
 
         public static Color ZoneColor => CurrentZoneColor;
 
-        public static int ZoneCount
-        { get { return STRtreeZoneIndex.Count; } }
+
+        public static int ZoneCount(ZoneType type = ZoneType.Target)
+        {
+            int Result = 0;
+            if (type == ZoneType.Target)
+            {
+                var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
+                Result = targetZones.Count;
+            }
+            else
+            {
+                var AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
+                Result = AppliedZones.Count;
+            }
+            return Result;
+        }
 
         public static double ZoneHectares => CurrentZoneHectares;
 
@@ -415,7 +429,7 @@ namespace RateController.RateMap
                     }, zoneColor, ZoneType.Target);
 
                     mapZones.Add(NewZone);
-                    zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(Palette.ZoneTransparency));
+                    zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(Palette.TargetZoneTransparency));
 
                     NewZoneVertices.Clear();
                     NewZoneMarkerOverlay.Markers.Clear();
@@ -597,7 +611,7 @@ namespace RateController.RateMap
                     // Refresh polygons in overlay to reflect new color
                     if (zoneOverlay != null)
                     {
-                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(Palette.ZoneTransparency);
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(Palette.TargetZoneTransparency);
                         foreach (var polygonToReplace in polygonsForZone)
                         {
                             if (polygonToReplace == null) continue;
@@ -677,7 +691,7 @@ namespace RateController.RateMap
                 zoneOverlay.Polygons.Clear();
                 foreach (var mapZone in targetZones)
                 {
-                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
+                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(Palette.TargetZoneTransparency));
                 }
                 BuildTargetZonesIndex();
                 ShowTargetZonesOverlay();

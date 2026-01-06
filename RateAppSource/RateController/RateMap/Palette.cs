@@ -5,6 +5,7 @@ namespace RateController.RateMap
     public static class Palette
     {
         public const byte ZoneTransparency = 150;
+        public const byte TargetZoneTransparency = 100;
 
         private static readonly Color[] Colors = new Color[]
         {

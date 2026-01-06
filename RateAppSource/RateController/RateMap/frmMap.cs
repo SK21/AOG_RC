@@ -22,11 +22,6 @@ namespace RateController.Forms
         private int MaxZoom = 10;
         private Point MouseDownLocation;
 
-        private Color[] palette = new Color[]
-    {
-                Color.Red, Color.Green, Color.Blue, Color.Orange, Color.Purple, Color.Teal, Color.Brown, Color.Magenta
-    };
-
         private int PreviewLeft = 0;
         private int PreviewTop = 0;
         private int PreviewZoom = 10;
@@ -616,10 +611,16 @@ namespace RateController.Forms
 
         private void EnterDefaultZoneValues()
         {
-            tbName.Text = "Zone " + (MapController.ZoneCount + 1).ToString("N0");
-            int zoneIndex = MapController.ZoneCount + 1;
-            Color ZoneColor = palette[zoneIndex % palette.Length];
-            SetSelectedColor(ZoneColor);
+            int zoneIndex = MapController.ZoneCount() + 1;
+            tbName.Text = "Zone " + zoneIndex.ToString("N0");
+            if (zoneIndex < colorComboBox.Items.Count)
+            {
+                colorComboBox.SelectedIndex = zoneIndex;
+            }
+            else
+            {
+                colorComboBox.SelectedIndex = 1;
+            }
         }
 
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
@@ -862,6 +863,20 @@ namespace RateController.Forms
             timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
         }
 
+        private void tbLat_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbLat.Text, out tempD);
+            using (var form = new FormNumeric(-90, 90, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbLat.Text = form.ReturnValue.ToString("N7");
+                }
+            }
+        }
+
         private void tbLat_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!Initializing)
@@ -879,8 +894,22 @@ namespace RateController.Forms
                     if (double.TryParse(tbLong.Text, out Longitude) || Longitude < -180.0 || Longitude > 180.0)
                     {
                         PointLatLng location = new PointLatLng(Latitude, Longitude);
-                        MapController.SetTractorPosition(location,true);
+                        MapController.SetTractorPosition(location, true);
                     }
+                }
+            }
+        }
+
+        private void tbLong_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbLong.Text, out tempD);
+            using (var form = new FormNumeric(-180, 180, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbLong.Text = form.ReturnValue.ToString("N7");
                 }
             }
         }
@@ -902,7 +931,7 @@ namespace RateController.Forms
                     if (double.TryParse(tbLat.Text, out Latitude) || Latitude < -90.0 || Latitude > 90.0)
                     {
                         PointLatLng location = new PointLatLng(Latitude, Longitude);
-                        MapController.SetTractorPosition(location,true);
+                        MapController.SetTractorPosition(location, true);
                     }
                 }
             }
@@ -1150,36 +1179,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void tbLong_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbLong.Text, out tempD);
-            using (var form = new FormNumeric(-180, 180, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbLong.Text = form.ReturnValue.ToString("N7");
-                }
-            }
-
-        }
-
-        private void tbLat_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbLat.Text, out tempD);
-            using (var form = new FormNumeric(-90, 90, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbLat.Text = form.ReturnValue.ToString("N7");
-                }
-            }
-
         }
     }
 }

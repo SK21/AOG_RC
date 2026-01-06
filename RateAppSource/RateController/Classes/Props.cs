@@ -61,12 +61,12 @@ namespace RateController.Classes
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;
         private static string cActivityFileName = "";
-        private static string cAppDate = "17-Dec-2025";
+        private static string cAppDate = "06-Jan-2026";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.1.5";
+        private static string cAppVersion = "4.1.6";
         private static string cCurrentMenuName = "";
         private static string cDefaultDir;
         private static int cDefaultProduct;
