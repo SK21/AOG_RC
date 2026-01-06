@@ -193,69 +193,107 @@ namespace RateController.Classes
             if (!cEnabled || legend == null || legend.Count == 0)
             {
                 Clear();
+                return;
             }
-            else
+
+            lastLegend = legend;
+
+            const int itemHeight = 25;
+            const int leftMargin = 10;
+            const int swatch = 20;
+            const int gap = 10;
+            const int rightMargin = 10;
+            const int dashGap = 6;
+
+            // Measure max widths of left and right values
+            float maxLeftWidth = 0;
+            float maxRightWidth = 0;
+            float dashWidth;
+
+            using (var bmp = new Bitmap(1, 1))
+            using (var g = Graphics.FromImage(bmp))
             {
-                lastLegend = legend;
+                dashWidth = g.MeasureString("-", legendFont).Width;
 
-                const int itemHeight = 25;
-                const int leftMargin = 10;
-                const int swatch = 20;
-                const int gap = 10;
-                const int rightMargin = 10;
-
-                // Measure max text width
-                int maxTextWidth = 0;
-                using (var bmp = new Bitmap(1, 1))
-                using (var g = Graphics.FromImage(bmp))
+                foreach (var kv in legend)
                 {
-                    foreach (var kv in legend)
-                    {
-                        var size = g.MeasureString(kv.Key, legendFont);
-                        maxTextWidth = Math.Max(maxTextWidth, (int)Math.Ceiling(size.Width));
-                    }
+                    var parts = kv.Key.Split('-');
+                    if (parts.Length != 2)
+                        continue;
+
+                    var left = parts[0].Trim();
+                    var right = parts[1].Trim();
+
+                    maxLeftWidth = Math.Max(maxLeftWidth, g.MeasureString(left, legendFont).Width);
+                    maxRightWidth = Math.Max(maxRightWidth, g.MeasureString(right, legendFont).Width);
                 }
-
-                int maxContentWidth = swatch + gap + maxTextWidth;
-                int legendHeight = (legend.Count * itemHeight) + (leftMargin * 2);
-                int legendWidth = Math.Max(120, leftMargin + maxContentWidth + rightMargin);
-
-                legendBitmap?.Dispose();
-                legendBitmap = new Bitmap(legendWidth, legendHeight);
-
-                using (var g2 = Graphics.FromImage(legendBitmap))
-                using (var backBrush = new SolidBrush(Color.Black))
-                {
-                    g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                    g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
-
-                    int anchorStartX = Math.Max(leftMargin, (legendWidth - maxContentWidth) / 2);
-                    int y = leftMargin;
-
-                    foreach (var kv in legend)
-                    {
-                        Color color = kv.Value;
-                        var textSize = g2.MeasureString(kv.Key, legendFont);
-                        int swatchTop = y + (itemHeight - swatch) / 2;
-
-                        using (var brush = new SolidBrush(color))
-                        {
-                            g2.FillRectangle(brush, anchorStartX, swatchTop, swatch, swatch);
-                            g2.DrawRectangle(Pens.White, anchorStartX, swatchTop, swatch, swatch);
-                        }
-
-                        float textY = y + (itemHeight - textSize.Height) / 2f;
-                        g2.DrawString(kv.Key, legendFont, Brushes.White,
-                            new PointF(anchorStartX + swatch + gap, textY));
-
-                        y += itemHeight;
-                    }
-                }
-
-                legendHost.Image = legendBitmap;
-                legendHost.Visible = true;
-                PositionLegendHost();
             }
+
+            int textBlockWidth = (int)Math.Ceiling(
+                maxLeftWidth + dashGap + dashWidth + dashGap + maxRightWidth);
+
+            int contentWidth = swatch + gap + textBlockWidth;
+            int legendHeight = (legend.Count * itemHeight) + (leftMargin * 2);
+            int legendWidth = Math.Max(120, leftMargin + contentWidth + rightMargin);
+
+            legendBitmap?.Dispose();
+            legendBitmap = new Bitmap(legendWidth, legendHeight);
+
+            using (var g2 = Graphics.FromImage(legendBitmap))
+            using (var backBrush = new SolidBrush(Color.Black))
+            {
+                g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
+
+                int anchorStartX = Math.Max(leftMargin, (legendWidth - contentWidth) / 2);
+                int y = leftMargin;
+
+                foreach (var kv in legend)
+                {
+                    Color color = kv.Value;
+                    int swatchTop = y + (itemHeight - swatch) / 2;
+
+                    using (var brush = new SolidBrush(color))
+                    {
+                        g2.FillRectangle(brush, anchorStartX, swatchTop, swatch, swatch);
+                        g2.DrawRectangle(Pens.White, anchorStartX, swatchTop, swatch, swatch);
+                    }
+
+                    var parts = kv.Key.Split('-');
+                    string left = parts.Length > 0 ? parts[0].Trim() : "";
+                    string right = parts.Length > 1 ? parts[1].Trim() : "";
+
+                    var leftSize = g2.MeasureString(left, legendFont);
+                    var rightSize = g2.MeasureString(right, legendFont);
+                    var dashSize = g2.MeasureString("-", legendFont);
+
+                    float textY = y + (itemHeight - leftSize.Height) / 2f;
+
+                    float textStartX = anchorStartX + swatch + gap;
+
+                    // Left value (left-aligned)
+                    g2.DrawString(left, legendFont, Brushes.White,
+                        new PointF(textStartX, textY));
+
+                    // Dash (centered)
+                    float dashX = textStartX + maxLeftWidth + dashGap;
+                    g2.DrawString("-", legendFont, Brushes.White,
+                        new PointF(dashX, textY));
+
+                    // Right value (right-aligned)
+                    float rightX = textStartX + maxLeftWidth + dashGap + dashSize.Width + dashGap
+                                   + maxRightWidth - rightSize.Width;
+
+                    g2.DrawString(right, legendFont, Brushes.White,
+                        new PointF(rightX, textY));
+
+                    y += itemHeight;
+                }
+            }
+
+            legendHost.Image = legendBitmap;
+            legendHost.Visible = true;
+            PositionLegendHost();
         }
 
         private void Gmap_SizeChanged(object sender, EventArgs e)
