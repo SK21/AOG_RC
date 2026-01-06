@@ -700,10 +700,104 @@ namespace RateController.RateMap
             return Result;
         }
 
+        public static Dictionary<string, Color> LoadPersistedLegend(string basePath = null)
+        {
+            try
+            {
+                if (basePath == null)
+                {
+                    basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
+                }
+
+                string legendPath = basePath + "_AppliedLegend.json";
+                if (!File.Exists(legendPath))
+                {
+                    return null;
+                }
+
+                var json = File.ReadAllText(legendPath);
+                var bands = System.Text.Json.JsonSerializer.Deserialize<List<LegendBand>>(json);
+                if (bands == null || bands.Count == 0)
+                {
+                    return null;
+                }
+
+                // Filter to current product
+                var filtered = bands
+                    .Where(b => b.ProductIndex == cProductFilter)
+                    .OrderBy(b => b.Min)
+                    .ToList();
+
+                if (filtered.Count == 0)
+                {
+                    return null;
+                }
+
+                var dict = new Dictionary<string, Color>();
+                foreach (var b in filtered)
+                {
+                    string label = string.Format("{0:N1} - {1:N1}", b.Min, b.Max);
+                    var color = ColorTranslator.FromHtml(b.ColorHtml);
+                    dict[label] = color;
+                }
+                return dict;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/LoadPersistedLegend: " + ex.Message);
+                return null;
+            }
+        }
+
         public static void ResetMarkers()
         {
             NewZoneVertices.Clear();
             NewZoneMarkerOverlay.Markers.Clear();
+        }
+
+        public static void SaveAppliedLegend(string legendPath, Dictionary<string, Color> LegendToSave = null)
+        {
+            try
+            {
+                if (LegendToSave == null) LegendToSave = ColorLegend;
+
+                if (LegendToSave == null || LegendToSave.Count == 0)
+                {
+                    return;
+                }
+
+                var bands = new List<LegendBand>();
+                foreach (var kvp in LegendToSave)
+                {
+                    var parts = kvp.Key.Split('-');
+                    if (parts.Length != 2) continue;
+                    if (!double.TryParse(parts[0], out double min)) continue;
+                    if (!double.TryParse(parts[1], out double max)) continue;
+
+                    bands.Add(new LegendBand
+                    {
+                        Min = min,
+                        Max = max,
+                        ColorHtml = ColorTranslator.ToHtml(kvp.Value),
+                        ProductIndex = cProductFilter
+                    });
+                }
+
+                if (bands.Count == 0)
+                {
+                    return;
+                }
+
+                var basePath = Path.ChangeExtension(legendPath, null); // strip .shp
+                var appliedLegendPath = basePath + "_AppliedLegend.json";
+
+                var json = System.Text.Json.JsonSerializer.Serialize(bands);
+                File.WriteAllText(appliedLegendPath, json);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SaveAppliedLegend: " + ex.Message);
+            }
         }
 
         public static bool SaveMap()
@@ -756,7 +850,7 @@ namespace RateController.RateMap
                 var shapefileHelper = new ShapefileHelper();
 
                 // Save zone features to the specified filePath
-              bool Result=  shapefileHelper.SaveMapZones(filePath, mapZones);
+                bool Result = shapefileHelper.SaveMapZones(filePath, mapZones);
                 if (Result) SaveAppliedLegend(filePath);
             }
             catch (Exception ex)
@@ -1096,56 +1190,6 @@ namespace RateController.RateMap
             cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
         }
 
-        public static Dictionary<string, Color> LoadPersistedLegend(string basePath=null)
-        {
-            try
-            {
-                if(basePath==null)
-                {
-                 basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
-
-                }
-
-                string legendPath = basePath + "_AppliedLegend.json";
-                if (!File.Exists(legendPath))
-                {
-                    return null;
-                }
-
-                var json = File.ReadAllText(legendPath);
-                var bands = System.Text.Json.JsonSerializer.Deserialize<List<LegendBand>>(json);
-                if (bands == null || bands.Count == 0)
-                {
-                    return null;
-                }
-
-                // Filter to current product
-                var filtered = bands
-                    .Where(b => b.ProductIndex == cProductFilter)
-                    .OrderBy(b => b.Min)
-                    .ToList();
-
-                if (filtered.Count == 0)
-                {
-                    return null;
-                }
-
-                var dict = new Dictionary<string, Color>();
-                foreach (var b in filtered)
-                {
-                    string label = string.Format("{0:N1} - {1:N1}", b.Min, b.Max);
-                    var color = ColorTranslator.FromHtml(b.ColorHtml);
-                    dict[label] = color;
-                }
-                return dict;
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/LoadPersistedLegend: " + ex.Message);
-                return null;
-            }
-        }
-
         private static string PersistKmlToJob(string sourcePath)
         {
             try
@@ -1242,51 +1286,6 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
-            }
-        }
-
-        public static void SaveAppliedLegend(string legendPath,Dictionary<string,Color> LegendToSave=null)
-        {
-            try
-            {
-                if (LegendToSave == null) LegendToSave = ColorLegend;
-
-                if (LegendToSave == null || LegendToSave.Count == 0)
-                {
-                    return;
-                }
-
-                var bands = new List<LegendBand>();
-                foreach (var kvp in LegendToSave)
-                {
-                    var parts = kvp.Key.Split('-');
-                    if (parts.Length != 2) continue;
-                    if (!double.TryParse(parts[0], out double min)) continue;
-                    if (!double.TryParse(parts[1], out double max)) continue;
-
-                    bands.Add(new LegendBand
-                    {
-                        Min = min,
-                        Max = max,
-                        ColorHtml = ColorTranslator.ToHtml(kvp.Value),
-                        ProductIndex = cProductFilter
-                    });
-                }
-
-                if (bands.Count == 0)
-                {
-                    return;
-                }
-
-                var basePath = Path.ChangeExtension(legendPath, null); // strip .shp
-                var appliedLegendPath = basePath + "_AppliedLegend.json";
-
-                var json = System.Text.Json.JsonSerializer.Serialize(bands);
-                File.WriteAllText(appliedLegendPath, json);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/SaveAppliedLegend: " + ex.Message);
             }
         }
 

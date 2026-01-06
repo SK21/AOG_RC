@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Timers;
 
 namespace RateController.Classes
 {
     public class DataCollector : IDisposable
     {
         public const string CSVheader = "Timestamp,Latitude,Longitude," + "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," + "WidthMeters";
-        private const int RecordIntervalMS = 1000;
+        private const int SaveIntervalSeconds = 30;
         private readonly object _lock = new object();
 
         private readonly List<RateReading> Readings = new List<RateReading>();
-        private readonly TimeSpan SaveInterval = TimeSpan.FromSeconds(30);
-        private readonly Stopwatch SaveStopWatch = new Stopwatch();
         private bool cEnabled = true;
         private double LastLatitude = 0;
         private double LastLongitude = 0;
         private int lastSavedIndex = 0;
         private string LastSavePath;
-        private bool ReadyForNewData = false;
-        private Timer RecordTimer;
+        private DateTime LastSaveTime = DateTime.Now;
 
         public DataCollector()
         {
@@ -31,10 +26,6 @@ namespace RateController.Classes
 
             cEnabled = bool.TryParse(Props.GetProp("RecordRates"), out bool rec) ? rec : true;
 
-            RecordTimer = new Timer();
-            RecordTimer.Elapsed += RecordTimer_Elapsed;
-            RecordTimer.Interval = RecordIntervalMS;
-            RecordTimer.Enabled = cEnabled;
             JobManager.JobChanged += Props_JobChanged;
             Props.ProfileChanged += Props_ProfileChanged;
         }
@@ -45,17 +36,7 @@ namespace RateController.Classes
             set
             {
                 cEnabled = value;
-                RecordTimer.Enabled = cEnabled;
                 Props.SetProp("RecordRates", cEnabled.ToString());
-
-                if (cEnabled)
-                {
-                    SaveStopWatch.Start();
-                }
-                else
-                {
-                    SaveStopWatch.Stop();
-                }
             }
         }
 
@@ -128,14 +109,14 @@ namespace RateController.Classes
 
         public int DataPoints(int ProductID)
         {
-            return Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
+            lock (_lock)
+            {
+                return Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
+            }
         }
 
         public void Dispose()
         {
-            RecordTimer?.Stop();
-            RecordTimer?.Dispose();
-
             JobManager.JobChanged -= Props_JobChanged;
             Props.ProfileChanged -= Props_ProfileChanged;
         }
@@ -154,7 +135,6 @@ namespace RateController.Classes
             {
                 if (File.Exists(JobManager.CurrentRateDataPath))
                 {
-                    SaveStopWatch.Reset();
                     SaveData(); // save any unrecorded data
 
                     // Clear the existing readings before loading.
@@ -221,8 +201,6 @@ namespace RateController.Classes
                     {
                         lastSavedIndex = Readings.Count;
                     }
-
-                    if (cEnabled) SaveStopWatch.Start();
                 }
             }
             catch (Exception ex)
@@ -233,14 +211,11 @@ namespace RateController.Classes
 
         public void RecordReading(double latitude, double longitude, double[] appliedRates)
         {
-            if (ReadyForNewData && Props.ProductsAreOn)
+            if (cEnabled)
             {
                 double ImplementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
-                ReadyForNewData = false;
-                RecordTimer.Enabled = cEnabled;
 
                 bool IsValid = true;
-
                 if (appliedRates == null || appliedRates.Length == 0 || appliedRates.Length > 5)
                 {
                     IsValid = false;
@@ -252,17 +227,16 @@ namespace RateController.Classes
 
                 if (IsValid && HasMoved(latitude, longitude))
                 {
-                    var reading = new RateReading(DateTime.UtcNow, latitude, longitude, appliedRates, ImplementWidthMeters);
+                    var reading = new RateReading(DateTime.Now, latitude, longitude, appliedRates, ImplementWidthMeters);
                     lock (_lock)
                     {
                         Readings.Add(reading);
+                    }
 
-                        if (SaveStopWatch.Elapsed >= SaveInterval)
-                        {
-                            SaveStopWatch.Reset();
-                            SaveData(JobManager.CurrentRateDataPath);
-                            SaveStopWatch.Start();
-                        }
+                    if ((DateTime.Now - LastSaveTime).TotalSeconds > SaveIntervalSeconds)
+                    {
+                        SaveData(JobManager.CurrentRateDataPath);
+                        LastSaveTime = DateTime.Now;
                     }
                 }
             }
@@ -347,12 +321,6 @@ namespace RateController.Classes
         private void Props_ProfileChanged(object sender, EventArgs e)
         {
             LoadData();
-        }
-
-        private void RecordTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            ReadyForNewData = true;
-            RecordTimer.Enabled = false;
         }
     }
 }
