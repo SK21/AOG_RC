@@ -8,7 +8,7 @@ using System.Timers;
 
 namespace RateController.Classes
 {
-    public class DataCollector
+    public class DataCollector : IDisposable
     {
         public const string CSVheader = "Timestamp,Latitude,Longitude," + "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," + "WidthMeters";
         private const int RecordIntervalMS = 1000;
@@ -131,6 +131,15 @@ namespace RateController.Classes
             return Readings.Count(r => r.AppliedRates.Length > ProductID && r.AppliedRates[ProductID] > 0);
         }
 
+        public void Dispose()
+        {
+            RecordTimer?.Stop();
+            RecordTimer?.Dispose();
+
+            JobManager.JobChanged -= Props_JobChanged;
+            Props.ProfileChanged -= Props_ProfileChanged;
+        }
+
         public IReadOnlyList<RateReading> GetReadings()
         {
             lock (_lock)
@@ -216,7 +225,6 @@ namespace RateController.Classes
                     if (cEnabled) SaveStopWatch.Start();
                 }
             }
-
             catch (Exception ex)
             {
                 Props.WriteErrorLog("DataCollector/LoadData: " + ex.Message);
