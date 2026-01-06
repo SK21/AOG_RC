@@ -10,6 +10,7 @@ namespace RateController.Classes
 {
     public class DataCollector
     {
+        public const string CSVheader = "Timestamp,Latitude,Longitude," + "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," + "WidthMeters";
         private const int RecordIntervalMS = 1000;
         private readonly object _lock = new object();
 
@@ -72,6 +73,63 @@ namespace RateController.Classes
             }
         }
 
+        public bool CSVheaderValid(string DataFilePath = null)
+        {
+            bool Result = false;
+            try
+            {
+                if (DataFilePath == null) DataFilePath = LastSavePath;
+
+                if (DataFilePath != null)
+                {
+                    if (!File.Exists(DataFilePath))
+                    {
+                        using (var writer = new StreamWriter(DataFilePath, false))
+                        {
+                            writer.WriteLine(CSVheader);
+                        }
+                    }
+
+                    string firstLine = null;
+                    foreach (string line in File.ReadLines(DataFilePath))
+                    {
+                        firstLine = line;
+                        break;
+                    }
+
+                    bool headerIsMissing = false;
+                    if (string.IsNullOrWhiteSpace(firstLine))
+                    {
+                        headerIsMissing = true;
+                    }
+                    else if (!firstLine.StartsWith("Timestamp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        headerIsMissing = true;
+                    }
+
+                    // prepend header to any existing data
+                    if (headerIsMissing)
+                    {
+                        string[] existingLines = File.ReadAllLines(DataFilePath);
+                        using (var headerWriter = new StreamWriter(DataFilePath, false))
+                        {
+                            headerWriter.WriteLine(CSVheader);
+                            for (int i = 0; i < existingLines.Length; i++)
+                            {
+                                headerWriter.WriteLine(existingLines[i]);
+                            }
+                        }
+                    }
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("DataCollector/CheckCSVheader: " + ex.Message);
+            }
+            return Result;
+        }
+
         public int DataPoints(int ProductID)
         {
             int Result = 0;
@@ -114,84 +172,55 @@ namespace RateController.Classes
                     LastCount = 0;
                 }
 
-                string expectedHeader = "Timestamp,Latitude,Longitude,AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5,TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
-
-                // Check and fix header if missing
-                string[] allLines = File.ReadAllLines(JobManager.CurrentRateDataPath);
-                if (allLines.Length > 0)
+                if (CSVheaderValid(JobManager.CurrentRateDataPath))
                 {
-                    string firstLine = allLines[0].Trim();
-                    if (string.IsNullOrWhiteSpace(firstLine) || !firstLine.Equals(expectedHeader, StringComparison.OrdinalIgnoreCase))
+                    string[] allLines = File.ReadAllLines(JobManager.CurrentRateDataPath);
+
+                    // parse the lines (skip header)
+                    for (int i = 1; i < allLines.Length; i++)
                     {
-                        // Header is missing or invalid: prepend it
-                        List<string> linesWithHeader = new List<string> { expectedHeader };
-                        linesWithHeader.AddRange(allLines);
-                        File.WriteAllLines(JobManager.CurrentRateDataPath, linesWithHeader);
-                        Props.WriteErrorLog($"DataCollector/LoadData: Missing or invalid header in {JobManager.CurrentRateDataPath}. Header added automatically.");
-                        allLines = linesWithHeader.ToArray();
-                    }
-                }
-                else
-                {
-                    // Empty file: add header
-                    File.WriteAllText(JobManager.CurrentRateDataPath, expectedHeader + Environment.NewLine);
-                    Props.WriteErrorLog($"DataCollector/LoadData: Empty file {JobManager.CurrentRateDataPath}. Header added.");
-                    allLines = new string[] { expectedHeader };
-                }
+                        string line = allLines[i];
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
 
-                // Now parse the lines (skip header)
-                for (int i = 1; i < allLines.Length; i++)
-                {
-                    string line = allLines[i];
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
+                        string[] parts = line.Split(',');
 
-                    string[] parts = line.Split(',');
+                        // There should be 9 parts: Timestamp, Latitude, Longitude + 5 applied + width.
+                        if (parts.Length < 9)
+                            continue;
 
-                    // There should be 13 parts: Timestamp, Latitude, Longitude + 5 applied + 5 target.
-                    if (parts.Length < 13)
-                        continue;
+                        // Parse basic values.
+                        DateTime timestamp;
+                        double latitude, longitude;
 
-                    // Parse basic values.
-                    DateTime timestamp;
-                    double latitude, longitude;
-
-                    if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
-                    !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
-                    !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
-                    {
-                        continue;
-                    }
-
-                    // Parse applied rates.
-                    List<double> appliedRates = new List<double>();
-                    for (int j = 3; j < 8; j++)
-                    {
-                        double rate;
-                        if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                        if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out timestamp) ||
+                        !double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out latitude) ||
+                        !double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out longitude))
                         {
-                            appliedRates.Add(rate);
+                            continue;
                         }
-                    }
 
-                    // Parse target rates.
-                    List<double> targetRates = new List<double>();
-                    for (int j = 8; j < 13; j++)
-                    {
-                        double rate;
-                        if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                        // Parse applied rates.
+                        List<double> appliedRates = new List<double>();
+                        for (int j = 3; j < 8; j++)
                         {
-                            targetRates.Add(rate);
+                            double rate;
+                            if (double.TryParse(parts[j], NumberStyles.Number, CultureInfo.InvariantCulture, out rate))
+                            {
+                                appliedRates.Add(rate);
+                            }
                         }
-                    }
 
-                    // Only add the reading if the number of applied and target rates match.
-                    if (appliedRates.Count == targetRates.Count && appliedRates.Count > 0)
-                    {
-                        var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), targetRates.ToArray());
-                        lock (_lock)
+                        // Parse implement width
+                        double width = double.TryParse(parts[8], NumberStyles.Number, CultureInfo.InvariantCulture, out double wd) ? wd : 0;
+
+                        if (appliedRates.Count > 0)
                         {
-                            Readings.Add(reading);
+                            var reading = new RateReading(timestamp, latitude, longitude, appliedRates.ToArray(), width);
+                            lock (_lock)
+                            {
+                                Readings.Add(reading);
+                            }
                         }
                     }
                 }
@@ -206,14 +235,15 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("DataCollector/LoadDataFromCSV: " + ex.Message);
+                Props.WriteErrorLog("DataCollector/LoadData: " + ex.Message);
             }
         }
 
-        public void RecordReading(double latitude, double longitude, double[] appliedRates, double[] targetRates)
+        public void RecordReading(double latitude, double longitude, double[] appliedRates)
         {
             if (ReadyForNewData && Props.ProductsAreOn)
             {
+                double ImplementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
                 ReadyForNewData = false;
                 RecordTimer.Enabled = cEnabled;
 
@@ -223,15 +253,14 @@ namespace RateController.Classes
                 {
                     IsValid = false;
                 }
-                else if (targetRates == null || targetRates.Length == 0 || targetRates.Length > 5)
+                else if (ImplementWidthMeters < 0.01)
                 {
                     IsValid = false;
                 }
-                else if (appliedRates.Length != targetRates.Length) IsValid = false;
 
                 if (IsValid && HasMoved(latitude, longitude))
                 {
-                    var reading = new RateReading(DateTime.UtcNow, latitude, longitude, appliedRates, targetRates);
+                    var reading = new RateReading(DateTime.UtcNow, latitude, longitude, appliedRates, ImplementWidthMeters);
                     lock (_lock)
                     {
                         Readings.Add(reading);
@@ -253,8 +282,7 @@ namespace RateController.Classes
             {
                 if (DataFilePath == null) DataFilePath = LastSavePath;
 
-                bool canSave = DataFilePath != null;
-                if (canSave)
+                if (DataFilePath != null)
                 {
                     LastSavePath = DataFilePath;
                     List<RateReading> snapshot;
@@ -264,53 +292,10 @@ namespace RateController.Classes
                         lastSavedIndex = Readings.Count;
                     }
 
-                    if (snapshot.Count > 0)
+                    if (snapshot.Count > 0 && CSVheaderValid())
                     {
-                        bool fileExists = File.Exists(DataFilePath);
-                        string header = "Timestamp,Latitude,Longitude," +
-                                        "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
-                                        "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
-
-                        if (fileExists)
-                        {
-                            string firstLine = null;
-                            foreach (string line in File.ReadLines(DataFilePath))
-                            {
-                                firstLine = line;
-                                break;
-                            }
-
-                            bool headerIsMissing = false;
-                            if (string.IsNullOrWhiteSpace(firstLine))
-                            {
-                                headerIsMissing = true;
-                            }
-                            else if (!firstLine.StartsWith("Timestamp", StringComparison.OrdinalIgnoreCase))
-                            {
-                                headerIsMissing = true;
-                            }
-
-                            if (headerIsMissing)
-                            {
-                                string[] existingLines = File.ReadAllLines(DataFilePath);
-                                using (var headerWriter = new StreamWriter(DataFilePath, false))
-                                {
-                                    headerWriter.WriteLine(header);
-                                    for (int i = 0; i < existingLines.Length; i++)
-                                    {
-                                        headerWriter.WriteLine(existingLines[i]);
-                                    }
-                                }
-                            }
-                        }
-
                         using (var writer = new StreamWriter(DataFilePath, true))
                         {
-                            if (!fileExists)
-                            {
-                                writer.WriteLine(header);
-                            }
-
                             foreach (var reading in snapshot)
                             {
                                 string timestamp = reading.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
@@ -332,21 +317,9 @@ namespace RateController.Classes
                                 }
                                 string appliedData = string.Join(",", appliedColumns);
 
-                                string[] targetColumns = new string[5];
-                                for (int i = 0; i < 5; i++)
-                                {
-                                    if (i < reading.TargetRates.Length)
-                                    {
-                                        targetColumns[i] = reading.TargetRates[i].ToString(CultureInfo.InvariantCulture);
-                                    }
-                                    else
-                                    {
-                                        targetColumns[i] = string.Empty;
-                                    }
-                                }
-                                string targetData = string.Join(",", targetColumns);
+                                string ImplementWidthMeters = Props.MainForm.Sections.TotalWidth(false).ToString();
 
-                                string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, targetData);
+                                string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", basicValues, appliedData, ImplementWidthMeters);
                                 writer.WriteLine(csvLine);
                             }
                         }

@@ -43,9 +43,6 @@ namespace RateController.Classes
                 const double maxSnapMeters = 5.0;          // break if spatial gap exceeds this
                 const double MaxGapSeconds = 3.0;          // break if temporal gap (record interval ~1s) too large
 
-                double implementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
-                if (implementWidthMeters <= 0) implementWidthMeters = 0.01;
-
                 for (int i = 0; i < readings.Count; i++)
                 {
                     var r = readings[i];
@@ -66,7 +63,7 @@ namespace RateController.Classes
 
                     if (canBridge)
                     {
-                        _trail.AddPoint(currPoint, heading, rateValue, implementWidthMeters);
+                        _trail.AddPoint(currPoint, heading, rateValue, r.ImplementWidthMeters);
                     }
                     else
                     {

@@ -520,12 +520,6 @@
     </Compile>
     <Compile Include="RateMap\CoverageTrail.cs" />
     <Compile Include="RateMap\KmlLayerManager.cs" />
-    <Compile Include="RateMap\Legend.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RateMap\Legend.Designer.cs">
-      <DependentUpon>Legend.cs</DependentUpon>
-    </Compile>
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />
     <Compile Include="RateMap\MapZone.cs" />
@@ -703,9 +697,6 @@
     </Compile>
     <EmbeddedResource Include="Forms\RCRestore.resx">
       <DependentUpon>RCRestore.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RateMap\Legend.resx">
-      <DependentUpon>Legend.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Help\frmMap.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
