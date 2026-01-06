@@ -9,9 +9,7 @@ namespace RateController.Classes
     public class DataCollector : IDisposable
     {
         public const string CSVheader = "Timestamp,Latitude,Longitude," + "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," + "WidthMeters";
-        private const int SaveIntervalSeconds = 30;
         private readonly object _lock = new object();
-
         private readonly List<RateReading> Readings = new List<RateReading>();
         private bool cEnabled = true;
         private double LastLatitude = 0;
@@ -19,9 +17,11 @@ namespace RateController.Classes
         private int lastSavedIndex = 0;
         private string LastSavePath;
         private DateTime LastSaveTime = DateTime.Now;
+        private int SaveIntervalSeconds = 30;
 
-        public DataCollector()
+        public DataCollector(int SaveToDiscSeconds = 30)
         {
+            SaveIntervalSeconds = SaveToDiscSeconds;
             LoadData();
 
             cEnabled = bool.TryParse(Props.GetProp("RecordRates"), out bool rec) ? rec : true;
