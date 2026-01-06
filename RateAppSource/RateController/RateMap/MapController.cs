@@ -1410,7 +1410,7 @@ namespace RateController.RateMap
                             readings,
                             cTractorPosition,
                             cTravelHeading,
-                            Props.MainForm.Sections.TotalWidth(false),
+                            Props.MainForm.Sections.TotalWidth(),
                             Rates,
                             out legend,
                             cProductFilter

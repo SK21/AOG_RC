@@ -135,6 +135,9 @@ namespace RateController.Classes
             {
                 if (File.Exists(JobManager.CurrentRateDataPath))
                 {
+                    // Ensure file is in the new format before loading
+                    ConvertOldCsvToNewFormat(JobManager.CurrentRateDataPath);
+
                     SaveData(); // save any unrecorded data
 
                     // Clear the existing readings before loading.
@@ -184,6 +187,7 @@ namespace RateController.Classes
 
                             // Parse implement width
                             double width = double.TryParse(parts[8], NumberStyles.Number, CultureInfo.InvariantCulture, out double wd) ? wd : 0;
+                            if (width < 0.1) width = Props.MainForm.Sections.TotalWidth();  // fall back to current implement width
 
                             if (appliedRates.Count > 0)
                             {
@@ -213,7 +217,7 @@ namespace RateController.Classes
         {
             if (cEnabled)
             {
-                double ImplementWidthMeters = Props.MainForm.Sections.TotalWidth(false);
+                double ImplementWidthMeters = Props.MainForm.Sections.TotalWidth();
 
                 bool IsValid = true;
                 if (appliedRates == null || appliedRates.Length == 0 || appliedRates.Length > 5)
@@ -295,6 +299,81 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 Props.WriteErrorLog("DataCollector/SaveData: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Converts a legacy CSV file (with TargetRate1-5 columns) to the new format
+        /// that stores WidthMeters as the last column. In the converted file,
+        /// TargetRate columns are removed and WidthMeters is populated from the
+        /// current implement width.
+        /// </summary>
+        private void ConvertOldCsvToNewFormat(string dataFilePath)
+        {
+            string OldCSVheader = "Timestamp,Latitude,Longitude," + "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," + "TargetRate1,TargetRate2,TargetRate3,TargetRate4,TargetRate5";
+            try
+            {
+                if (string.IsNullOrWhiteSpace(dataFilePath) || !File.Exists(dataFilePath))
+                {
+                    return;
+                }
+
+                string[] lines = File.ReadAllLines(dataFilePath);
+                if (lines.Length == 0)
+                {
+                    return;
+                }
+
+                string header = lines[0];
+
+                // Only convert if the file is clearly in the old format
+                if (!string.Equals(header, OldCSVheader, StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                double implementWidth = Props.MainForm.Sections.TotalWidth();
+
+                var newLines = new List<string>(lines.Length)
+                {
+                    CSVheader
+                };
+
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    string line = lines[i];
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        continue;
+                    }
+
+                    string[] parts = line.Split(',');
+
+                    // Old format: 3 (Timestamp, Lat, Lon) + 5 applied + 5 target = 13
+                    if (parts.Length < 13)
+                    {
+                        continue;
+                    }
+
+                    // Copy first 8 columns (timestamp, lat, lon, applied1-5)
+                    string[] newParts = new string[9];
+                    for (int j = 0; j < 8; j++)
+                    {
+                        newParts[j] = parts[j];
+                    }
+
+                    // WidthMeters from current implement width
+                    newParts[8] = implementWidth.ToString(CultureInfo.InvariantCulture);
+
+                    newLines.Add(string.Join(",", newParts));
+                }
+
+                // Overwrite the file with the new format
+                File.WriteAllLines(dataFilePath, newLines.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("DataCollector/ConvertOldCsvToNewFormat: " + ex.Message);
             }
         }
 
