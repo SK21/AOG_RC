@@ -94,18 +94,36 @@ namespace RateController.Classes
             if (minRate < maxRate)
             {
                 double band = (maxRate - minRate) / steps;
+
+                // Determine formatting and increment rules based on magnitude
+                bool largeNumbers = (minRate >= 1000 || maxRate >= 1000);
+                string format = largeNumbers ? "N0" : "N1";
+                double increment = largeNumbers ? 1.0 : 0.1;
+
+                double a = minRate;
+
                 for (int i = 0; i < steps; i++)
                 {
-                    double a = minRate + (i * band);
-                    double b = (i == steps - 1) ? maxRate : minRate + ((i + 1) * band);
+                    double b = (i == steps - 1)
+                        ? maxRate
+                        : a + band;
+
+                    // Round to avoid floating-point artifacts
+                    a = Math.Round(a, 3);
+                    b = Math.Round(b, 3);
+
                     var color = Palette.GetColor(i, 255);
-                    legend.Add(string.Format("{0:N1} - {1:N1}", a, b), color);
+                    legend.Add($"{a.ToString(format)} - {b.ToString(format)}", color);
+
+                    // Next band starts just above the previous band
+                    a = b + increment;
                 }
             }
             else
             {
                 legend.Add("No data", Color.Gray);
             }
+
             return legend;
         }
 

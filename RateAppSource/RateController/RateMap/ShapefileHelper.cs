@@ -69,13 +69,11 @@ namespace RateController.Classes
             bool Result = false;
             try
             {
-                bool UseRecordedData = false;
-                List<MapZone> AppliedZones = new List<MapZone>();
                 var features = new List<IFeature>();
 
+                // target zones
                 if (mapZones != null && mapZones.Count > 0)
                 {
-                    // target zones
                     var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
 
                     foreach (var z in targetZones)
@@ -93,25 +91,26 @@ namespace RateController.Classes
                             { ZoneFields.ZoneType, ZoneType.Target.ToString() }
                             }));
                     }
-
-                    // applied zones
-                    UseRecordedData = BuildNewAppliedZones(out AppliedZones);
                 }
 
-                if (!UseRecordedData)
+                // applied zones
+                List<MapZone> AppliedZones = new List<MapZone>();
+                if (!BuildNewAppliedZones(out AppliedZones))
                 {
                     // use existing applied zones
-                    AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
+                    if (mapZones != null) AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
                 }
 
-                AppliedZones = MergeApplied(AppliedZones);
-
-                foreach (var z in AppliedZones)
+                if (AppliedZones.Count > 0)
                 {
-                    features.Add(new Feature(
-                        z.Geometry,
-                        new AttributesTable
-                        {
+                    AppliedZones = MergeApplied(AppliedZones);
+
+                    foreach (var z in AppliedZones)
+                    {
+                        features.Add(new Feature(
+                            z.Geometry,
+                            new AttributesTable
+                            {
                             { ZoneFields.Name, z.Name },
                             { ZoneFields.ProductA, z.Rates[ZoneFields.ProductA] },
                             { ZoneFields.ProductB, z.Rates[ZoneFields.ProductB] },
@@ -119,7 +118,8 @@ namespace RateController.Classes
                             { ZoneFields.ProductD, z.Rates[ZoneFields.ProductD] },
                             { ZoneFields.Color, ColorTranslator.ToHtml(z.ZoneColor) },
                             { ZoneFields.ZoneType, ZoneType.Applied.ToString() }
-                        }));
+                            }));
+                    }
                 }
 
                 if (features.Count > 0)

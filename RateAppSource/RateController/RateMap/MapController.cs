@@ -742,19 +742,16 @@ namespace RateController.RateMap
                     .OrderBy(b => b.Min)
                     .ToList();
 
-                if (filtered.Count == 0)
+                int Steps= filtered.Count;
+                if(Steps==0)
                 {
                     return null;
                 }
 
-                var dict = new Dictionary<string, Color>();
-                foreach (var b in filtered)
-                {
-                    string label = string.Format("{0:N1} - {1:N1}", b.Min, b.Max);
-                    var color = ColorTranslator.FromHtml(b.ColorHtml);
-                    dict[label] = color;
-                }
-                return dict;
+                double globalMin = filtered.First().Min;
+                double globalMax = filtered.Max(b => b.Max);
+
+                return LegendManager.CreateAppliedLegend(globalMin, globalMax, Steps);
             }
             catch (Exception ex)
             {
