@@ -384,8 +384,6 @@ namespace RateController.Classes
 
                 Color groupColor = group.Key;
 
-                Debug.Print("Save applied (merge by color " + groupColor + ")");
-
                 foreach (var geom in SplitGeometry(merged))
                 {
                     if (geom is Polygon poly)
@@ -396,7 +394,6 @@ namespace RateController.Classes
                             rates: avgRates,
                             zoneColor: groupColor,
                             zoneType: ZoneType.Applied));
-                        Debug.Print("Applied Zone " + (zoneCounter - 1).ToString() + ", " + groupColor.ToString());
                     }
                 }
             }
