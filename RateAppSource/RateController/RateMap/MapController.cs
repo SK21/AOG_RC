@@ -1398,11 +1398,23 @@ namespace RateController.RateMap
                 gmap.Refresh();
             }
         }
+        private static bool LegendsDiffer(Dictionary<string, Color> A, Dictionary<string, Color> B)
+        {
+            if (A == B) return false;
+            if (A == null || B == null) return true;
+            if (A.Count != B.Count) return true;
 
+            foreach (var kvp in A)
+            {
+                if (!B.TryGetValue(kvp.Key, out Color bColor)) return true;
+                if (bColor != kvp.Value) return true;
+            }
+            return false;
+        }
         private static bool UpdateRateLayer(double[] AppliedRates)
         {
             bool Result = false;
-            Dictionary<string, Color> legend = new Dictionary<string, Color>();
+            Dictionary<string, Color> newLegend = new Dictionary<string, Color>();
             try
             {
                 if (cShowRates && cMapIsDisplayed && (cState == MapState.Tracking || cState == MapState.Preview))
@@ -1423,12 +1435,16 @@ namespace RateController.RateMap
                             cTravelHeading,
                             Props.MainForm.Sections.TotalWidth(),
                             Rates,
-                            out legend,
+                            out newLegend,
                             cProductFilter
                         );
                     }
                 }
-                ColorLegend = legend;
+                if (LegendsDiffer(ColorLegend, newLegend))
+                {
+                    ColorLegend = newLegend;
+                    if (LegendOverlayEnabled) ShowLegend(ColorLegend);
+                }
             }
             catch (Exception ex)
             {
