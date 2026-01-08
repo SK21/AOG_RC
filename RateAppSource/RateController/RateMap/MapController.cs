@@ -1345,6 +1345,7 @@ namespace RateController.RateMap
                             _lastHistoryCount = 0;
                             _lastHistoryLastTimestamp = DateTime.MinValue;
                         }
+                        _lastProductRates = cProductFilter;
                     }
                     gmap.Refresh();
                     MapChanged?.Invoke(null, EventArgs.Empty);
