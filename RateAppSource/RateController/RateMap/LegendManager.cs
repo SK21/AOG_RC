@@ -3,6 +3,7 @@ using RateController.RateMap;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -25,14 +26,13 @@ namespace RateController.Classes
     /// </summary>
     public class LegendManager : IDisposable
     {
-        private static Dictionary<string, Color> cAppliedLegend;
         private readonly GMapControl gmap;
+        private Dictionary<string, Color> cAppliedLegend;
         private bool cEnabled;
         private Dictionary<string, Color> lastLegend;
         private Bitmap legendBitmap;
         private Font legendFont;
         private PictureBox legendHost;
-        private int legendRightMarginPx = 0;
 
         public LegendManager(GMapControl gmap)
         {
@@ -156,7 +156,8 @@ namespace RateController.Classes
                     b = Math.Round(b, 3);
 
                     var color = Palette.GetColor(i, 255);
-                    legend.Add($"{a.ToString(format)} - {b.ToString(format)}", color);
+                    legend.Add(string.Format(CultureInfo.CurrentCulture, "{0} - {1}", a.ToString(format, CultureInfo.CurrentCulture),
+                        b.ToString(format, CultureInfo.CurrentCulture)), color);
 
                     // Next band starts just above the previous band
                     a = b + increment;
@@ -286,8 +287,13 @@ namespace RateController.Classes
                 {
                     var parts = kvp.Key.Split('-');
                     if (parts.Length != 2) continue;
-                    if (!double.TryParse(parts[0], out double min)) continue;
-                    if (!double.TryParse(parts[1], out double max)) continue;
+
+                    string leftText = parts[0].Trim();
+                    string rightText = parts[1].Trim();
+
+                    // Parse using current culture because labels were formatted with CurrentCulture
+                    if (!double.TryParse(leftText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out double min)) continue;
+                    if (!double.TryParse(rightText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out double max)) continue;
 
                     bands.Add(new LegendBand
                     {
@@ -445,7 +451,7 @@ namespace RateController.Classes
         {
             if (legendHost == null || legendBitmap == null || !legendHost.Visible || gmap == null) return;
             int marginTop = 10;
-            int marginRight = 10 + legendRightMarginPx; // include scrollbar margin
+            int marginRight = 10;
             legendHost.Left = gmap.Width - legendHost.Width - marginRight;
             legendHost.Top = marginTop;
             legendHost.BringToFront();
