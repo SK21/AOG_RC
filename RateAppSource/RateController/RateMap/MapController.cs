@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -53,7 +52,6 @@ namespace RateController.RateMap
         public static LegendManager legendManager;
         private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         private static bool cMapIsDisplayed = false;
-        private static Dictionary<string, Color> ColorLegend;
         private static DataCollector cRateCollector;
         private static MapState cState;
         private static PointLatLng cTractorPosition;
@@ -86,19 +84,6 @@ namespace RateController.RateMap
         {
             get { return UpdateTimer.Enabled; }
             set { UpdateTimer.Enabled = value; }
-        }
-
-        public static bool LegendOverlayEnabled
-        {
-            get { return legendManager != null && legendManager.Enabled; }
-            set
-            {
-                if (legendManager != null)
-                {
-                    legendManager.Enabled = value;
-                    ShowLegend(ColorLegend, true);
-                }
-            }
         }
 
         public static GMapControl Map
@@ -258,7 +243,6 @@ namespace RateController.RateMap
                 ZnOverlays.ResetTrail();
                 ZnOverlays.AppliedOverlay.Polygons.Clear();
                 legendManager?.Clear();
-                ColorLegend = null;
                 gmap.Refresh();
                 MapChanged?.Invoke(null, EventArgs.Empty);
             }
@@ -371,7 +355,7 @@ namespace RateController.RateMap
             {
                 cState = MapState.Tracking;
             }
-            ShowLegend(ColorLegend);
+            legendManager.ShowLegend();
         }
 
         public static double GetRate(int RateID)
@@ -462,51 +446,6 @@ namespace RateController.RateMap
             }
         }
 
-        public static void SaveAppliedLegend(string legendPath, Dictionary<string, Color> LegendToSave = null)
-        {
-            try
-            {
-                if (LegendToSave == null) LegendToSave = ColorLegend;
-
-                if (LegendToSave == null || LegendToSave.Count == 0)
-                {
-                    return;
-                }
-
-                var bands = new List<LegendBand>();
-                foreach (var kvp in LegendToSave)
-                {
-                    var parts = kvp.Key.Split('-');
-                    if (parts.Length != 2) continue;
-                    if (!double.TryParse(parts[0], out double min)) continue;
-                    if (!double.TryParse(parts[1], out double max)) continue;
-
-                    bands.Add(new LegendBand
-                    {
-                        Min = min,
-                        Max = max,
-                        ColorHtml = ColorTranslator.ToHtml(kvp.Value),
-                        ProductIndex = cProductFilter
-                    });
-                }
-
-                if (bands.Count == 0)
-                {
-                    return;
-                }
-
-                var basePath = Path.ChangeExtension(legendPath, null); // strip .shp
-                var appliedLegendPath = basePath + "_AppliedLegend.json";
-
-                var json = System.Text.Json.JsonSerializer.Serialize(bands);
-                File.WriteAllText(appliedLegendPath, json);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/SaveAppliedLegend: " + ex.Message);
-            }
-        }
-
         public static void SaveMap(string filePath = null)
         {
             try
@@ -520,7 +459,7 @@ namespace RateController.RateMap
                 var shapefileHelper = new ShapefileHelper();
                 bool Result = shapefileHelper.SaveMapZones(filePath, zones);
 
-                if (Result) SaveAppliedLegend(filePath);
+                if (Result) legendManager.SaveAppliedLegend(filePath);
             }
             catch (Exception ex)
             {
@@ -531,10 +470,10 @@ namespace RateController.RateMap
         public static bool SaveMapImage(string FilePath)
         {
             bool Result = false;
-            bool PrevShow = LegendOverlayEnabled;
+            bool PrevShow = legendManager.Enabled;
             try
             {
-                LegendOverlayEnabled = true;
+                legendManager.Enabled = true;
                 gmap.Refresh();
                 gmap.Update();
 
@@ -549,7 +488,7 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/SaveMapImage: " + ex.Message);
             }
-            LegendOverlayEnabled = PrevShow;
+            legendManager.Enabled = PrevShow;
             return Result;
         }
 
@@ -636,7 +575,6 @@ namespace RateController.RateMap
             }
             return true;
         }
-
 
         private static RectLatLng GetOverallRectLatLng()
         {
@@ -836,18 +774,6 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/ReloadJobKmls: " + ex.Message);
-            }
-        }
-
-        private static void ShowLegend(Dictionary<string, Color> LegendToShow, bool Show = true)
-        {
-            if (Show && cState != MapState.Preview)
-            {
-                legendManager?.UpdateLegend(LegendToShow);
-            }
-            else
-            {
-                legendManager?.Clear();
             }
         }
 

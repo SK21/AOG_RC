@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace RateController.Classes
 {
-    public sealed class LegendBand
+    public class LegendBand
     {
         public string ColorHtml { get; set; }
         public double Max { get; set; }
@@ -25,6 +25,7 @@ namespace RateController.Classes
     /// </summary>
     public class LegendManager : IDisposable
     {
+        private static Dictionary<string, Color> cAppliedLegend;
         private readonly GMapControl gmap;
         private bool cEnabled;
         private Dictionary<string, Color> lastLegend;
@@ -49,6 +50,16 @@ namespace RateController.Classes
 
             // Reposition on size changes
             this.gmap.SizeChanged += Gmap_SizeChanged;
+            cAppliedLegend = new Dictionary<string, Color>();
+        }
+
+        public Dictionary<string, Color> AppliedLegend
+        {
+            get { return cAppliedLegend; }
+            set
+            {
+                if (LegendsDiffer(cAppliedLegend, value)) cAppliedLegend = value;
+            }
         }
 
         public bool Enabled
@@ -72,7 +83,7 @@ namespace RateController.Classes
             }
         }
 
-        public static Dictionary<string, Color> BuildAppliedZonesLegend(List<MapZone> zones, int ProductFilter = 0)
+        public Dictionary<string, Color> BuildAppliedZonesLegend(List<MapZone> zones, int ProductFilter = 0)
         {
             var legend = new Dictionary<string, Color>();
 
@@ -98,7 +109,28 @@ namespace RateController.Classes
             return legend;
         }
 
-        public static Dictionary<string, Color> CreateAppliedLegend(double minRate, double maxRate, int steps = 5)
+        public void Clear()
+        {
+            try
+            {
+                if (legendHost != null)
+                {
+                    if (legendHost.Image != null) legendHost.Image = null;
+                    legendHost.Visible = false;
+                }
+                if (legendBitmap != null)
+                {
+                    legendBitmap.Dispose();
+                    legendBitmap = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("LegendManager/Clear: " + ex.Message);
+            }
+        }
+
+        public Dictionary<string, Color> CreateAppliedLegend(double minRate, double maxRate, int steps = 5)
         {
             var legend = new Dictionary<string, Color>();
 
@@ -138,27 +170,6 @@ namespace RateController.Classes
             return legend;
         }
 
-        public void Clear()
-        {
-            try
-            {
-                if (legendHost != null)
-                {
-                    if (legendHost.Image != null) legendHost.Image = null;
-                    legendHost.Visible = false;
-                }
-                if (legendBitmap != null)
-                {
-                    legendBitmap.Dispose();
-                    legendBitmap = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("LegendManager/Clear: " + ex.Message);
-            }
-        }
-
         public void Dispose()
         {
             try
@@ -194,14 +205,121 @@ namespace RateController.Classes
             legendHost?.BringToFront();
         }
 
+        public bool LegendsDiffer(Dictionary<string, Color> A, Dictionary<string, Color> B)
+        {
+            if (A == B) return false;
+            if (A == null || B == null) return true;
+            if (A.Count != B.Count) return true;
+
+            foreach (var kvp in A)
+            {
+                if (!B.TryGetValue(kvp.Key, out Color bColor)) return true;
+                if (bColor != kvp.Value) return true;
+            }
+            return false;
+        }
+
+        public Dictionary<string, Color> LoadPersistedLegend(string basePath = null)
+        {
+            try
+            {
+                if (basePath == null)
+                {
+                    basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
+                }
+
+                string legendPath = basePath + "_AppliedLegend.json";
+                if (!File.Exists(legendPath))
+                {
+                    return null;
+                }
+
+                var json = File.ReadAllText(legendPath);
+                var bands = System.Text.Json.JsonSerializer.Deserialize<List<LegendBand>>(json);
+                if (bands == null || bands.Count == 0)
+                {
+                    return null;
+                }
+
+                // Filter to current product
+                var filtered = bands
+                    .Where(b => b.ProductIndex == MapController.ProductFilter)
+                    .OrderBy(b => b.Min)
+                    .ToList();
+
+                int Steps = filtered.Count;
+                if (Steps == 0)
+                {
+                    return null;
+                }
+
+                double globalMin = filtered.First().Min;
+                double globalMax = filtered.Max(b => b.Max);
+
+                return CreateAppliedLegend(globalMin, globalMax, Steps);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("LegendManager/LoadPersistedLegend: " + ex.Message);
+                return null;
+            }
+        }
+
         public void OnMapZoomChanged()
         {
             PositionLegendHost();
         }
-        public void ShowLegend(Dictionary<string,Color> LegendToShow,bool Show=true)
+
+        public void SaveAppliedLegend(string legendPath, Dictionary<string, Color> LegendToSave = null)
         {
-            if(Show && MapController.State!=MapState.Preview && cEnabled)
+            try
             {
+                if (LegendToSave == null) LegendToSave = cAppliedLegend;
+
+                if (LegendToSave == null || LegendToSave.Count == 0)
+                {
+                    return;
+                }
+
+                var bands = new List<LegendBand>();
+                foreach (var kvp in LegendToSave)
+                {
+                    var parts = kvp.Key.Split('-');
+                    if (parts.Length != 2) continue;
+                    if (!double.TryParse(parts[0], out double min)) continue;
+                    if (!double.TryParse(parts[1], out double max)) continue;
+
+                    bands.Add(new LegendBand
+                    {
+                        Min = min,
+                        Max = max,
+                        ColorHtml = ColorTranslator.ToHtml(kvp.Value),
+                        ProductIndex = MapController.ProductFilter
+                    });
+                }
+
+                if (bands.Count == 0)
+                {
+                    return;
+                }
+
+                var basePath = Path.ChangeExtension(legendPath, null); // strip .shp
+                var appliedLegendPath = basePath + "_AppliedLegend.json";
+
+                var json = System.Text.Json.JsonSerializer.Serialize(bands);
+                File.WriteAllText(appliedLegendPath, json);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("LegendManager/SaveAppliedLegend: " + ex.Message);
+            }
+        }
+
+        public void ShowLegend(Dictionary<string, Color> LegendToShow = null, bool Show = true)
+        {
+            if (Show && MapController.State != MapState.Preview && cEnabled)
+            {
+                if (LegendToShow == null) LegendToShow = cAppliedLegend;
                 UpdateLegend(LegendToShow);
             }
             else
@@ -209,6 +327,7 @@ namespace RateController.Classes
                 Clear();
             }
         }
+
         public void UpdateLegend(Dictionary<string, Color> legend)
         {
             if (!cEnabled || legend == null || legend.Count == 0)
@@ -331,65 +450,5 @@ namespace RateController.Classes
             legendHost.Top = marginTop;
             legendHost.BringToFront();
         }
-        public  bool LegendsDiffer(Dictionary<string, Color> A, Dictionary<string, Color> B)
-        {
-            if (A == B) return false;
-            if (A == null || B == null) return true;
-            if (A.Count != B.Count) return true;
-
-            foreach (var kvp in A)
-            {
-                if (!B.TryGetValue(kvp.Key, out Color bColor)) return true;
-                if (bColor != kvp.Value) return true;
-            }
-            return false;
-        }
-
-        public Dictionary<string, Color> LoadPersistedLegend(string basePath = null)
-        {
-            try
-            {
-                if (basePath == null)
-                {
-                    basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
-                }
-
-                string legendPath = basePath + "_AppliedLegend.json";
-                if (!File.Exists(legendPath))
-                {
-                    return null;
-                }
-
-                var json = File.ReadAllText(legendPath);
-                var bands = System.Text.Json.JsonSerializer.Deserialize<List<LegendBand>>(json);
-                if (bands == null || bands.Count == 0)
-                {
-                    return null;
-                }
-
-                // Filter to current product
-                var filtered = bands
-                    .Where(b => b.ProductIndex == MapController.ProductFilter)
-                    .OrderBy(b => b.Min)
-                    .ToList();
-
-                int Steps = filtered.Count;
-                if (Steps == 0)
-                {
-                    return null;
-                }
-
-                double globalMin = filtered.First().Min;
-                double globalMax = filtered.Max(b => b.Max);
-
-                return CreateAppliedLegend(globalMin, globalMax, Steps);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("LegendManager/LoadPersistedLegend: " + ex.Message);
-                return null;
-            }
-        }
-
     }
 }

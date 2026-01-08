@@ -21,7 +21,6 @@ namespace RateController.RateMap
     public class ZoneManager
     {
         private const double NearZero = 0.01;
-        private static Dictionary<string, Color> cAppliedLegend;
         private static GMapOverlay cNewZoneMarkerOverlay;
         private static int LastHistoryCount;
         private static DateTime LastHistoryLastTimestamp;
@@ -42,7 +41,6 @@ namespace RateController.RateMap
             cNewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
             cAppliedOverlay = new GMapOverlay("AppliedRates");
             cTargetOverlay = new GMapOverlay("TargetRates");
-            cAppliedLegend = new Dictionary<string, Color>();
             NewZoneVertices = new List<PointLatLng>();
 
             cShowApplied = bool.TryParse(Props.GetProp("MapShowAppliedOverlay"), out bool sr) ? sr : false;
@@ -50,9 +48,6 @@ namespace RateController.RateMap
         }
 
         public event EventHandler ZonesChanged;
-
-        public Dictionary<string, Color> AppliedLegend
-        { get { return cAppliedLegend; } }
 
         public GMapOverlay AppliedOverlay
         { get { return cAppliedOverlay; } }
@@ -183,7 +178,7 @@ namespace RateController.RateMap
                         overlay.Polygons[i].Tag = rates;
                     }
                 }
-                legend = LegendManager.CreateAppliedLegend(minRate, maxRate, 5);
+                legend = MapController.legendManager.CreateAppliedLegend(minRate, maxRate, 5);
                 return true;
             }
             catch (Exception ex)
@@ -452,7 +447,7 @@ namespace RateController.RateMap
         public void ResetAppliedOverlay()
         {
             ResetTrail();
-            MapController.legendManager.ShowLegend(cAppliedLegend, false);
+            MapController.legendManager.ShowLegend(null, false);
             AppliedOverlay.Clear();
         }
 
@@ -483,7 +478,7 @@ namespace RateController.RateMap
                         if (BuildAppliedFromHistory(cAppliedOverlay, out histLegend))
                         {
                             // Use legend returned from history build
-                            cAppliedLegend = histLegend;
+                            MapController.legendManager.AppliedLegend = histLegend;
                             OverlayIsCurrent = true;
                         }
                         else
@@ -497,7 +492,7 @@ namespace RateController.RateMap
                                 }
                                 // Build legend that matches persisted applied zones
                                 // Try to load a persisted legend first
-                                cAppliedLegend = MapController.legendManager.LoadPersistedLegend() ?? LegendManager.BuildAppliedZonesLegend(cAppliedZonesList, MapController.ProductFilter);
+                                MapController.legendManager.AppliedLegend = MapController.legendManager.LoadPersistedLegend() ?? MapController.legendManager.BuildAppliedZonesLegend(cAppliedZonesList, MapController.ProductFilter);
                                 OverlayIsCurrent = true;
                             }
                         }
@@ -523,7 +518,7 @@ namespace RateController.RateMap
                     if (OverlayIsCurrent)
                     {
                         MapController.AddOverlay(cAppliedOverlay);
-                        MapController.legendManager.ShowLegend(cAppliedLegend);
+                        MapController.legendManager.ShowLegend();
                     }
                     else
                     {
@@ -589,7 +584,7 @@ namespace RateController.RateMap
                     }
                 }
 
-                if (MapController.legendManager.LegendsDiffer(cAppliedLegend, newLegend)) cAppliedLegend = newLegend;
+                MapController.legendManager.AppliedLegend = newLegend;
             }
             catch (Exception ex)
             {
@@ -717,7 +712,7 @@ namespace RateController.RateMap
 
                 Trail.DrawTrail(overlay, minRate, maxRate);
 
-                legend = LegendManager.CreateAppliedLegend(minRate, maxRate, 5);
+                legend = MapController.legendManager.CreateAppliedLegend(minRate, maxRate, 5);
 
                 return true;
             }

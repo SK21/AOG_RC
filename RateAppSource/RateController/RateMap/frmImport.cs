@@ -113,7 +113,7 @@ namespace RateController.Forms
                     Dictionary<string, Color> SavedLegend = MapController.legendManager.LoadPersistedLegend(Path.ChangeExtension(selectedShapefilePath, null));
                     if (SavedLegend != null)
                     {
-                        MapController.SaveAppliedLegend(Path.ChangeExtension(MapPath, null), SavedLegend);
+                        MapController.legendManager.SaveAppliedLegend(Path.ChangeExtension(MapPath, null), SavedLegend);
                     }
 
                     var shapefileHelper = new ShapefileHelper();
