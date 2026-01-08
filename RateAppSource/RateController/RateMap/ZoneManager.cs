@@ -30,20 +30,20 @@ namespace RateController.RateMap
         private static List<PointLatLng> NewZoneVertices;
         private readonly CoverageTrail Trail = new CoverageTrail();
         private GMapOverlay cAppliedOverlay;
+        private List<MapZone> cAppliedZonesList = new List<MapZone>();
         private bool cShowApplied;
         private bool cShowTarget;
         private GMapOverlay cTargetOverlay;
-        private List<MapZone> cTargetZones = new List<MapZone>();
-        private List<MapZone> HistoricalAppliedZones = new List<MapZone>();
+        private List<MapZone> cTargetZonesList = new List<MapZone>();
         private STRtree<MapZone> STRtreeZoneIndex;
 
         public ZoneManager()
         {
+            cNewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
             cAppliedOverlay = new GMapOverlay("AppliedRates");
             cTargetOverlay = new GMapOverlay("TargetRates");
             cAppliedLegend = new Dictionary<string, Color>();
             NewZoneVertices = new List<PointLatLng>();
-            cNewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
 
             cShowApplied = bool.TryParse(Props.GetProp("MapShowAppliedOverlay"), out bool sr) ? sr : false;
             cShowTarget = bool.TryParse(Props.GetProp("MapShowTargetOverlay"), out bool sz) ? sz : true;
@@ -68,8 +68,14 @@ namespace RateController.RateMap
             }
         }
 
+        public List<MapZone> AppliedZonesList
+        { get { return cAppliedZonesList; } }
+
         public GMapOverlay NewZoneMarkerOverlay
         { get { return cNewZoneMarkerOverlay; } }
+
+        public STRtree<MapZone> Rtree
+        { get { return STRtreeZoneIndex; } }
 
         public GMapOverlay TargetOverlay
         { get { return cTargetOverlay; } }
@@ -84,6 +90,9 @@ namespace RateController.RateMap
                 ShowTargetOverlay();
             }
         }
+
+        public List<MapZone> TargetZoneslist
+        { get { return cTargetZonesList; } }
 
         public void AddVertex(PointLatLng point)
         {
@@ -243,7 +252,10 @@ namespace RateController.RateMap
             cAppliedOverlay = null;
             cTargetOverlay = null;
             cNewZoneMarkerOverlay = null;
+            cAppliedZonesList = null;
+            cTargetZonesList = null;
             ResetTrail();
+            STRtreeZoneIndex = null;
         }
 
         public bool CreateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
@@ -280,7 +292,7 @@ namespace RateController.RateMap
                         { "ProductD", Rt3 }
                     }, zoneColor, ZoneType.Target);
 
-                    cTargetZones.Add(NewZone);
+                    cTargetZonesList.Add(NewZone);
                     AddPolygons(cTargetOverlay, NewZone.ToGMapPolygons(Palette.TargetZoneTransparency));
 
                     NewZoneVertices.Clear();
@@ -324,10 +336,10 @@ namespace RateController.RateMap
             bool Result = false;
             try
             {
-                if (string.IsNullOrEmpty(name) || cTargetZones == null || cTargetOverlay == null) return false;
+                if (string.IsNullOrEmpty(name) || cTargetZonesList == null || cTargetOverlay == null) return false;
 
                 // collect all zones with the given name (multi-polygons often share the same name)
-                var zonesToRemove = cTargetZones.Where(z => string.Equals(z.Name, name, StringComparison.Ordinal)).ToList();
+                var zonesToRemove = cTargetZonesList.Where(z => string.Equals(z.Name, name, StringComparison.Ordinal)).ToList();
                 if (zonesToRemove.Count == 0) return false;
 
                 foreach (var zone in zonesToRemove)
@@ -353,7 +365,7 @@ namespace RateController.RateMap
                 foreach (var p in leftovers) cTargetOverlay.Polygons.Remove(p);
 
                 // remove zones from the internal list
-                cTargetZones.RemoveAll(z => string.Equals(z.Name, name, StringComparison.Ordinal));
+                cTargetZonesList.RemoveAll(z => string.Equals(z.Name, name, StringComparison.Ordinal));
 
                 if (Result)
                 {
@@ -429,8 +441,8 @@ namespace RateController.RateMap
             List<MapZone> mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
 
             // split zones by type
-            cTargetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
-            HistoricalAppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
+            cTargetZonesList = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
+            cAppliedZonesList = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
 
             BuildTargetZonesIndex();
             ShowTargetOverlay();
@@ -477,15 +489,15 @@ namespace RateController.RateMap
                         else
                         {
                             // use historical applied zones from shapefile
-                            if (HistoricalAppliedZones.Count > 0)
+                            if (cAppliedZonesList.Count > 0)
                             {
-                                foreach (var mapZone in HistoricalAppliedZones)
+                                foreach (var mapZone in cAppliedZonesList)
                                 {
                                     AddPolygons(cAppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
                                 }
                                 // Build legend that matches persisted applied zones
                                 // Try to load a persisted legend first
-                                cAppliedLegend = MapController.legendManager.LoadPersistedLegend() ?? LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, MapController.ProductFilter);
+                                cAppliedLegend = MapController.legendManager.LoadPersistedLegend() ?? LegendManager.BuildAppliedZonesLegend(cAppliedZonesList, MapController.ProductFilter);
                                 OverlayIsCurrent = true;
                             }
                         }
@@ -537,7 +549,7 @@ namespace RateController.RateMap
             {
                 // Rebuild polygons to ensure correct rendering after map resize
                 cTargetOverlay.Polygons.Clear();
-                foreach (var mapZone in cTargetZones)
+                foreach (var mapZone in cTargetZonesList)
                 {
                     AddPolygons(cTargetOverlay, mapZone.ToGMapPolygons(Palette.TargetZoneTransparency));
                 }
@@ -549,6 +561,11 @@ namespace RateController.RateMap
                 MapController.RemoveOverlay(cTargetOverlay);
             }
             MapController.Refresh();
+        }
+
+        public int TargetZoneCount()
+        {
+            return cTargetZonesList.Count;
         }
 
         public void UpdateAppliedOverlay(double[] AppliedRates)
@@ -621,7 +638,7 @@ namespace RateController.RateMap
             try
             {
                 STRtreeZoneIndex = new STRtree<MapZone>();
-                foreach (var z in cTargetZones)
+                foreach (var z in cTargetZonesList)
                 {
                     if (z?.Geometry == null) continue;
                     var env = z.Geometry.EnvelopeInternal;
@@ -714,7 +731,7 @@ namespace RateController.RateMap
         private bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
         {
             bool Result = false;
-            foreach (MapZone zn in cTargetZones)
+            foreach (MapZone zn in cTargetZonesList)
             {
                 if (string.Equals(zn.Name, Name, StringComparison.OrdinalIgnoreCase) && zn != ExcludeZone)
                 {

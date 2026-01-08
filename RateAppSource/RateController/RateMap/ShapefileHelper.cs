@@ -64,7 +64,7 @@ namespace RateController.Classes
             return new List<string>();
         }
 
-        public bool SaveMapZones(string shapefilePath, List<MapZone> mapZones)
+        public bool SaveMapZones(string shapefilePath, List<MapZone> ZonesToSave)
         {
             bool Result = false;
             try
@@ -72,9 +72,9 @@ namespace RateController.Classes
                 var features = new List<IFeature>();
 
                 // target zones
-                if (mapZones != null && mapZones.Count > 0)
+                if (ZonesToSave != null && ZonesToSave.Count > 0)
                 {
-                    var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
+                    var targetZones = ZonesToSave.Where(z => z.ZoneType == ZoneType.Target).ToList();
 
                     foreach (var z in targetZones)
                     {
@@ -98,7 +98,7 @@ namespace RateController.Classes
                 if (!MapController.ZnOverlays.BuildNewAppliedZones(out AppliedZones))
                 {
                     // use existing applied zones
-                    if (mapZones != null) AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
+                    if (ZonesToSave != null) AppliedZones = ZonesToSave.Where(z => z.ZoneType == ZoneType.Applied).ToList();
                 }
 
                 if (AppliedZones.Count > 0)

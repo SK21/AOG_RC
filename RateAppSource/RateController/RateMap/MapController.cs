@@ -3,7 +3,6 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
@@ -49,13 +48,6 @@ namespace RateController.RateMap
         private static bool cShowTiles;
 
         #endregion Saved Properties
-
-        #region Zones
-
-        private static List<MapZone> mapZones;
-        private static STRtree<MapZone> STRtreeZoneIndex;
-
-        #endregion Zones
 
         public static readonly ZoneManager ZnOverlays = new ZoneManager();
         public static LegendManager legendManager;
@@ -148,7 +140,6 @@ namespace RateController.RateMap
         public static DataCollector RateCollector
         { get { return cRateCollector; } }
 
-
         public static bool ShowTiles
         {
             get { return cShowTiles; }
@@ -163,7 +154,6 @@ namespace RateController.RateMap
                 gmap.Refresh();
             }
         }
-
 
         public static MapState State
         { get { return cState; } }
@@ -198,6 +188,16 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/AddKmlLayer: " + ex.Message);
                 return false;
+            }
+        }
+
+        public static void AddOverlay(GMapOverlay NewOverlay)
+        {
+            if (NewOverlay != null)
+            {
+                bool overlayExists = gmap.Overlays.Any(o => o.Id == NewOverlay.Id);
+                if (!overlayExists) gmap.Overlays.Add(NewOverlay);
+                legendManager.EnsureLegendTop();
             }
         }
 
@@ -305,10 +305,6 @@ namespace RateController.RateMap
                 gmap?.Dispose();
                 gmap = null;
 
-                STRtreeZoneIndex = null;
-                mapZones?.Clear();
-                mapZones = null;
-
                 MapChanged = null;
                 MapLeftClicked = null;
                 MapZoomed = null;
@@ -401,9 +397,6 @@ namespace RateController.RateMap
             InitializeMap();
             legendManager = new LegendManager(gmap);
 
-            // map zones
-            mapZones = new List<MapZone>();
-
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
             gmap.MouseClick += Gmap_MouseClick;
 
@@ -447,6 +440,26 @@ namespace RateController.RateMap
         {
             gmap.Refresh();
             MapChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static void RemoveOverlay(GMapOverlay overlay)
+        {
+            // create a list of overlays matching the ID.(there could be multiple)
+            // Remove the overlays in the list from the overlays collection.
+            try
+            {
+                if (overlay != null)
+                {
+                    var overlaysToRemove = gmap.Overlays.Where(o => o.Id == overlay.Id).ToList();
+                    foreach (var o in overlaysToRemove) gmap.Overlays.Remove(o);
+                    // keep legend host on top after any removal
+                    legendManager.EnsureLegendTop();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
+            }
         }
 
         public static void SaveAppliedLegend(string legendPath, Dictionary<string, Color> LegendToSave = null)
@@ -494,22 +507,25 @@ namespace RateController.RateMap
             }
         }
 
-        public static bool SaveMap()
+        public static void SaveMap(string filePath = null)
         {
-            bool Result = false;
             try
             {
-                var shapefileHelper = new ShapefileHelper();
-                Result = shapefileHelper.SaveMapZones(JobManager.CurrentMapPath, mapZones);
+                if (filePath == null) filePath = JobManager.CurrentMapPath;
 
-                if (Result) SaveAppliedLegend(JobManager.CurrentMapPath);
+                List<MapZone> zones = new List<MapZone>();
+                zones.AddRange(ZnOverlays.TargetZoneslist);
+                zones.AddRange(ZnOverlays.AppliedZonesList);
+
+                var shapefileHelper = new ShapefileHelper();
+                bool Result = shapefileHelper.SaveMapZones(filePath, zones);
+
+                if (Result) SaveAppliedLegend(filePath);
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/SaveMap: " + ex.Message);
             }
-
-            return Result;
         }
 
         public static bool SaveMapImage(string FilePath)
@@ -535,22 +551,6 @@ namespace RateController.RateMap
             }
             LegendOverlayEnabled = PrevShow;
             return Result;
-        }
-
-        public static void SaveMapToFile(string filePath)
-        {
-            try
-            {
-                var shapefileHelper = new ShapefileHelper();
-
-                // Save zone features to the specified filePath
-                bool Result = shapefileHelper.SaveMapZones(filePath, mapZones);
-                if (Result) SaveAppliedLegend(filePath);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/SaveMapToFile: " + ex.Message);
-            }
         }
 
         public static void SetKmlVisibility(bool visible)
@@ -599,7 +599,6 @@ namespace RateController.RateMap
             }
         }
 
-
         public static bool TryComputeScale(IEnumerable<double> values, out double minRate, out double maxRate)
         {
             var vals = values
@@ -638,44 +637,6 @@ namespace RateController.RateMap
             return true;
         }
 
-        public static int ZoneCount(ZoneType type = ZoneType.Target)
-        {
-            int Result = 0;
-            if (type == ZoneType.Target)
-            {
-                var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
-                Result = targetZones.Count;
-            }
-            else
-            {
-                var AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
-                Result = AppliedZones.Count;
-            }
-            return Result;
-        }
-
-        public static void AddOverlay(GMapOverlay NewOverlay)
-        {
-            if (NewOverlay != null)
-            {
-                bool overlayExists = gmap.Overlays.Any(o => o.Id == NewOverlay.Id);
-                if (!overlayExists) gmap.Overlays.Add(NewOverlay);
-                EnsureLegendTop();
-            }
-        }
-
-
-        private static void EnsureLegendTop()
-        {
-            try
-            {
-                legendManager?.EnsureLegendTop();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/EnsureLegendTop: " + ex.Message);
-            }
-        }
 
         private static RectLatLng GetOverallRectLatLng()
         {
@@ -849,20 +810,6 @@ namespace RateController.RateMap
             }
         }
 
-        private static void Props_RateDataSettingsChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                // Reload persisted settings and rebuild overlay accordingly
-                LoadData();
-                ZnOverlays.ShowAppliedOverlay();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/Props_RateDataSettingsChanged: " + ex.Message);
-            }
-        }
-
         private static void ReloadJobKmls()
         {
             try
@@ -892,26 +839,6 @@ namespace RateController.RateMap
             }
         }
 
-        public static void RemoveOverlay(GMapOverlay overlay)
-        {
-            // create a list of overlays matching the ID.(there could be multiple)
-            // Remove the overlays in the list from the overlays collection.
-            try
-            {
-                if (overlay != null)
-                {
-                    var overlaysToRemove = gmap.Overlays.Where(o => o.Id == overlay.Id).ToList();
-                    foreach (var o in overlaysToRemove) gmap.Overlays.Remove(o);
-                    // keep legend host on top after any removal
-                    EnsureLegendTop();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
-            }
-        }
-
         private static void ShowLegend(Dictionary<string, Color> LegendToShow, bool Show = true)
         {
             if (Show && cState != MapState.Preview)
@@ -923,7 +850,6 @@ namespace RateController.RateMap
                 legendManager?.Clear();
             }
         }
-
 
         private static void UpdateTimer_Tick(object sender, EventArgs e)
         {
@@ -945,15 +871,15 @@ namespace RateController.RateMap
             try
             {
                 CurrentZone.TractorIsFound = false;
-                if (STRtreeZoneIndex != null)
+                if (ZnOverlays.Rtree != null)
                 {
                     // Query spatial index for candidate zones near the tractor
                     var ptEnv = new Envelope(cTractorPosition.Lng, cTractorPosition.Lng, cTractorPosition.Lat, cTractorPosition.Lat);
-                    var candidates = STRtreeZoneIndex.Query(ptEnv);
+                    var candidates = ZnOverlays.Rtree.Query(ptEnv);
                     if (candidates != null && candidates.Count > 0)
                     {
                         // emulate previous last-wins behavior: zones added later have priority
-                        foreach (var zone in candidates.OrderByDescending(z => mapZones.IndexOf(z)))
+                        foreach (var zone in candidates.OrderByDescending(z => ZnOverlays.TargetZoneslist.IndexOf(z)))
                         {
                             if (zone.Contains(cTractorPosition))
                             {

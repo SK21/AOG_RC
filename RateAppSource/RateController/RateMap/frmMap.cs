@@ -143,7 +143,7 @@ namespace RateController.Forms
                 {
                     try
                     {
-                        MapController.SaveMapToFile(saveFileDialog.FileName);
+                        MapController.SaveMap(saveFileDialog.FileName);
 
                         string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
                         imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
@@ -611,7 +611,7 @@ namespace RateController.Forms
 
         private void EnterDefaultZoneValues()
         {
-            int zoneIndex = MapController.ZoneCount() + 1;
+            int zoneIndex = MapController.ZnOverlays.TargetZoneCount() + 1;
             tbName.Text = "Zone " + zoneIndex.ToString("N0");
             if (zoneIndex < colorComboBox.Items.Count)
             {
