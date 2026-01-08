@@ -30,7 +30,7 @@ namespace RateController.RateMap
     {
         #region GMap
 
-        private static GMapControl gmap;
+        private static GMapControl gmap = new GMapControl();
         private static GMarkerGoogle tractorMarker;
 
         #endregion GMap
@@ -373,13 +373,15 @@ namespace RateController.RateMap
 
         public static void Initialize()
         {
-            cRateCollector = new DataCollector();
-            LoadData();
-            JobManager.JobChanged += JobManager_JobChanged;
+            cProductFilter = int.TryParse(Props.GetProp("MapProductFilter"), out int pr) ? pr : 0;
+            cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
 
+            cRateCollector = new DataCollector();
+            JobManager.JobChanged += JobManager_JobChanged;
             cState = MapState.Tracking;
-            InitializeMap();
+
             legendManager = new LegendManager(gmap);
+            InitializeMap();
 
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
             gmap.MouseClick += Gmap_MouseClick;
@@ -657,14 +659,12 @@ namespace RateController.RateMap
                 CacheLocation = Props.ApplicationFolder + "\\MapCache"
             };
 
-            GMapProvider.TTLCache = 24 * 60 * 7; // minutes (e.g., 24 hours) 7 days
+            GMapProvider.TTLCache = 24 * 60 * 7; // minutes, 7 days
 
             double Lat = 0;
             double Lng = TimeZoneInfo.Local.BaseUtcOffset.TotalHours * 15.0;    // estimated longitude
             if (double.TryParse(Props.GetProp("LastMapLat"), out double latpos)) Lat = latpos;
             if (double.TryParse(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
-
-            gmap = new GMapControl();
 
             if (cShowTiles)
             {
@@ -704,12 +704,6 @@ namespace RateController.RateMap
         private static void JobManager_JobChanged(object sender, EventArgs e)
         {
             LoadMap();
-        }
-
-        private static void LoadData()
-        {
-            cProductFilter = int.TryParse(Props.GetProp("MapProductFilter"), out int pr) ? pr : 0;
-            cShowTiles = bool.TryParse(Props.GetProp("MapShowTiles"), out bool st) ? st : true;
         }
 
         private static string PersistKmlToJob(string sourcePath)
@@ -819,7 +813,7 @@ namespace RateController.RateMap
                 }
                 if (!CurrentZone.TractorIsFound && Props.MainForm.Products != null)
                 {
-                    // use target rates
+                    // use base rates
                     CurrentZone.Zone.Name = "Base Rate";
                     CurrentZone.Zone.Rates.Clear();
                     int count = 0;
