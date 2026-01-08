@@ -301,7 +301,7 @@ namespace RateController.Forms
             }
             else
             {
-                EditSaved = MapController.EditZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor, out Error);
+                EditSaved = MapController.ZnOverlays.EditZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor, out Error);
             }
 
             if (EditSaved)
@@ -480,7 +480,7 @@ namespace RateController.Forms
 
         private void ckRateData_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing) MapController.ShowRates = ckRateData.Checked;
+            if (!Initializing) MapController.ZnOverlays.AppliedOverlayVisible = ckRateData.Checked;
         }
 
         private void ckRecord_CheckedChanged(object sender, EventArgs e)
@@ -538,7 +538,7 @@ namespace RateController.Forms
 
         private void ckZones_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing) MapController.ShowZones = ckZones.Checked;
+            if (!Initializing) MapController.ZnOverlays.TargetOverlayVisible = ckZones.Checked;
         }
 
         private void CloseCleanup()
@@ -1076,27 +1076,27 @@ namespace RateController.Forms
                 Initializing = true;
                 ckUseVR.Checked = Props.VariableRateEnabled;
                 ckSatView.Checked = MapController.ShowTiles;
-                ckRateData.Checked = MapController.ShowRates;
-                ckZones.Checked = MapController.ShowZones;
+                ckRateData.Checked = MapController.ZnOverlays.AppliedOverlayVisible;
+                ckZones.Checked = MapController.ZnOverlays.TargetOverlayVisible;
 
                 if (!EditInProgress)
                 {
-                    tbName.Text = MapController.ZoneName;
+                    tbName.Text = CurrentZone.Zone.Name;
                     tbP1.Text = MapController.GetRate(0).ToString("N1");
                     tbP2.Text = MapController.GetRate(1).ToString("N1");
                     tbP3.Text = MapController.GetRate(2).ToString("N1");
                     tbP4.Text = MapController.GetRate(3).ToString("N1");
-                    SetSelectedColor(MapController.ZoneColor);
+                    SetSelectedColor(CurrentZone.Zone.ZoneColor);
                 }
 
                 if (Props.UseMetric)
                 {
-                    lbArea.Text = MapController.ZoneHectares.ToString("N1");
+                    lbArea.Text = CurrentZone.Hectares.ToString("N1");
                     lbAreaName.Text = "Hectares";
                 }
                 else
                 {
-                    lbArea.Text = (MapController.ZoneHectares * 2.47).ToString("N1");
+                    lbArea.Text = (CurrentZone.Hectares * 2.47).ToString("N1");
                     lbAreaName.Text = "Acres";
                 }
 
