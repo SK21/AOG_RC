@@ -25,11 +25,13 @@ namespace RateController.Classes
         public Polygon Geometry { get; set; }
         public string Name { get; set; }
         public Dictionary<string, double> Rates { get; set; }
+
         public Color ZoneColor
         {
             get;
             set;
         }
+
         public ZoneType ZoneType { get; set; }
 
         public bool Contains(PointLatLng point)

@@ -95,7 +95,7 @@ namespace RateController.Classes
 
                 // applied zones
                 List<MapZone> AppliedZones = new List<MapZone>();
-                if (!BuildNewAppliedZones(out AppliedZones))
+                if (!MapController.ZnOverlays.BuildNewAppliedZones(out AppliedZones))
                 {
                     // use existing applied zones
                     if (mapZones != null) AppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
@@ -165,75 +165,7 @@ namespace RateController.Classes
             return new[] { g };
         }
 
-        private bool BuildNewAppliedZones(out List<MapZone> NewAppliedZones)
-        {
-            bool Result = false;
-            NewAppliedZones = new List<MapZone>();
 
-            try
-            {
-                // check for recorded data
-                bool RecordedData = false;
-                for (int i = 0; i < 4; i++)
-                {
-                    if (MapController.RateCollector.DataPoints(i) > 0)
-                    {
-                        RecordedData = true;
-                        break;
-                    }
-                }
-
-                if (RecordedData)
-                {
-                    Dictionary<string, Color> histLegend;
-                    RateOverlayService overlayService = new RateOverlayService();
-                    GMapOverlay AppliedOverlay = new GMapOverlay();
-
-                    bool histOk = overlayService.BuildFromHistory(AppliedOverlay, out histLegend);
-                    if (histOk && AppliedOverlay.Polygons.Count > 0)
-                    {
-                        int count = 0;
-                        foreach (var polygon in AppliedOverlay.Polygons)
-                        {
-                            Color zoneColor = Color.AliceBlue;
-                            if (polygon.Fill is SolidBrush sb)
-                            {
-                                zoneColor = Color.FromArgb(255, sb.Color);
-                            }
-
-                            NewAppliedZones.Add(new MapZone(
-                                name: $"Applied Zone {count++}",
-                                geometry: ConvertToNtsPolygon(polygon),
-                                rates: (Dictionary<string, double>)polygon.Tag,
-                                zoneColor: zoneColor,
-                                zoneType: ZoneType.Applied));
-                        }
-                        Result = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("ShapefileHelper/BuildNewAppliedZones: " + ex.Message);
-            }
-
-            return Result;
-        }
-
-        private Polygon ConvertToNtsPolygon(GMapPolygon gmapPolygon)
-        {
-            var coords = new List<Coordinate>();
-            foreach (var point in gmapPolygon.Points)
-            {
-                coords.Add(new Coordinate(point.Lng, point.Lat));
-            }
-            // Ensure closed
-            if (coords.Count > 0 && !coords[0].Equals(coords[coords.Count - 1]))
-            {
-                coords.Add(coords[0]);
-            }
-            return new Polygon(new LinearRing(coords.ToArray()));
-        }
 
         private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index)
         {

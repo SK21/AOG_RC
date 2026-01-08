@@ -1,20 +1,41 @@
-using GMap.NET;
+﻿using GMap.NET;
 using GMap.NET.WindowsForms;
-using RateController.RateMap;
+using NetTopologySuite.Geometries;
+using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RateController.Classes
+namespace RateController.RateMap
 {
-    public  class RateOverlayService
+    public class ZoneManager
     {
-        private const double RateEpsilon = 0.01;
+        private static Dictionary<string, Color> cAppliedLegend;
+        private readonly CoverageTrail Trail = new CoverageTrail();
+        private GMapOverlay cAppliedOverlay;
+        private GMapOverlay cTargetOverlay;
+        private const double NearZero = 0.01;
 
-        private readonly CoverageTrail _trail = new CoverageTrail();
+        public ZoneManager()
+        {
+            cAppliedOverlay = new GMapOverlay("AppliedRates");
+            cTargetOverlay = new GMapOverlay("TargetRates");
+            cAppliedLegend = new Dictionary<string, Color>();
+        }
 
-        public bool BuildFromHistory(GMapOverlay overlay, out Dictionary<string, Color> legend)
+        public Dictionary<string, Color> AppliedLegend
+        { get { return cAppliedLegend; } }
+
+        public GMapOverlay AppliedOverlay
+        { get { return cAppliedOverlay; } }
+
+        public GMapOverlay TargetOverlay
+        { get { return cTargetOverlay; } }
+
+        public bool BuildAppliedFromHistory(GMapOverlay overlay, out Dictionary<string, Color> legend)
         {
             legend = new Dictionary<string, Color>();
             try
@@ -22,7 +43,6 @@ namespace RateController.Classes
                 MapController.RateCollector.LoadData(); // ensure fresh data
                 var readings = MapController.RateCollector.GetReadings();
                 if (overlay == null || readings == null || readings.Count < 2) return false;
-
 
                 int maxLen = readings.Max(r => (r.AppliedRates?.Length ?? 0));
                 if (maxLen == 0) return false;
@@ -35,7 +55,7 @@ namespace RateController.Classes
                 if (!MapController.TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
 
-                _trail.Reset();
+                Trail.Reset();
                 PointLatLng prevPoint = new PointLatLng(readings[0].Latitude, readings[0].Longitude);
                 DateTime prevTime = readings[0].Timestamp;
 
@@ -51,7 +71,7 @@ namespace RateController.Classes
 
                     double rateValue = (r.AppliedRates.Length > ProductFilter ? r.AppliedRates[ProductFilter] : 0.0);
 
-                    bool canBridge = rateValue > RateEpsilon;
+                    bool canBridge = rateValue > NearZero;
                     if (i > 0)
                     {
                         double distToPrev = DistanceMeters(currPoint, prevPoint.Lat, prevPoint.Lng);
@@ -63,18 +83,18 @@ namespace RateController.Classes
 
                     if (canBridge)
                     {
-                        _trail.AddPoint(currPoint, heading, rateValue, r.ImplementWidthMeters);
+                        Trail.AddPoint(currPoint, heading, rateValue, r.ImplementWidthMeters);
                     }
                     else
                     {
-                        _trail.Break();
+                        Trail.Break();
                     }
 
                     prevPoint = currPoint;
                     prevTime = r.Timestamp;
                 }
 
-                _trail.DrawTrail(overlay, minRate, maxRate);
+                Trail.DrawTrail(overlay, minRate, maxRate);
 
                 // After drawing the trail, assign applied rates to each polygon for shapefile export
                 if (overlay.Polygons.Count > 0)
@@ -103,14 +123,75 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog($"RateOverlayService.BuildFromHistory: {ex.Message}");
+                Props.WriteErrorLog($"ZoneManager/BuildFromHistory: {ex.Message}");
                 return false;
             }
         }
 
-        public void Reset() => _trail.Reset();
+        public bool BuildNewAppliedZones(out List<MapZone> NewAppliedZones)
+        {
+            bool Result = false;
+            NewAppliedZones = new List<MapZone>();
 
-        public bool UpdateRatesOverlayLive(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,
+            try
+            {
+                // check for recorded data
+                bool RecordedData = false;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (MapController.RateCollector.DataPoints(i) > 0)
+                    {
+                        RecordedData = true;
+                        break;
+                    }
+                }
+
+                if (RecordedData)
+                {
+                    Dictionary<string, Color> histLegend;
+                    GMapOverlay AppliedOverlay = new GMapOverlay();
+
+                    bool histOk = BuildAppliedFromHistory(AppliedOverlay, out histLegend);
+                    if (histOk && AppliedOverlay.Polygons.Count > 0)
+                    {
+                        int count = 0;
+                        foreach (var polygon in AppliedOverlay.Polygons)
+                        {
+                            Color zoneColor = Color.AliceBlue;
+                            if (polygon.Fill is SolidBrush sb)
+                            {
+                                zoneColor = Color.FromArgb(255, sb.Color);
+                            }
+
+                            NewAppliedZones.Add(new MapZone(
+                                name: $"Applied Zone {count++}",
+                                geometry: ConvertToNtsPolygon(polygon),
+                                rates: (Dictionary<string, double>)polygon.Tag,
+                                zoneColor: zoneColor,
+                                zoneType: ZoneType.Applied));
+                        }
+                        Result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/BuildNewAppliedZones: " + ex.Message);
+            }
+
+            return Result;
+        }
+
+        public void Close()
+        {
+            cAppliedOverlay = null;
+            cTargetOverlay = null;
+            ResetTrail();
+        }
+
+        public void ResetTrail() => Trail.Reset();
+
+        public bool UpdateTrail(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,
             double implementWidthMeters, double? appliedOverride, out Dictionary<string, Color> legend, int rateIndex)
         {
             legend = new Dictionary<string, Color>();
@@ -136,16 +217,16 @@ namespace RateController.Classes
                 const double maxSnapMeters = 5.0;
                 double distToLast = DistanceMeters(tractorPos, last.Latitude, last.Longitude);
 
-                if (currValue > RateEpsilon && distToLast <= maxSnapMeters)
+                if (currValue > NearZero && distToLast <= maxSnapMeters)
                 {
-                    _trail.AddPoint(tractorPos, headingDegrees, currValue, implementWidthMeters);
+                    Trail.AddPoint(tractorPos, headingDegrees, currValue, implementWidthMeters);
                 }
                 else
                 {
-                    _trail.Break();
+                    Trail.Break();
                 }
 
-                _trail.DrawTrail(overlay, minRate, maxRate);
+                Trail.DrawTrail(overlay, minRate, maxRate);
 
                 legend = LegendManager.CreateAppliedLegend(minRate, maxRate, 5);
 
@@ -153,7 +234,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog($"RateOverlayService.UpdateRatesOverlayLive: {ex.Message}");
+                Props.WriteErrorLog($"ZoneManager/UpdateRatesOverlayLive: {ex.Message}");
                 return false;
             }
         }
@@ -179,6 +260,21 @@ namespace RateController.Classes
             double dx = (bLng - a.Lng) * metersPerDegLng;
             double dy = (bLat - a.Lat) * metersPerDegLat;
             return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        private Polygon ConvertToNtsPolygon(GMapPolygon gmapPolygon)
+        {
+            var coords = new List<Coordinate>();
+            foreach (var point in gmapPolygon.Points)
+            {
+                coords.Add(new Coordinate(point.Lng, point.Lat));
+            }
+            // Ensure closed
+            if (coords.Count > 0 && !coords[0].Equals(coords[coords.Count - 1]))
+            {
+                coords.Add(coords[0]);
+            }
+            return new Polygon(new LinearRing(coords.ToArray()));
         }
     }
 }
