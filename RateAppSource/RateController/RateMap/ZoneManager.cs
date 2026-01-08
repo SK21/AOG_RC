@@ -1,30 +1,45 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
+using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.RateMap
 {
     public class ZoneManager
     {
+        private const double NearZero = 0.01;
         private static Dictionary<string, Color> cAppliedLegend;
+        private static GMapOverlay cNewZoneMarkerOverlay;
+        private static int LastHistoryCount;
+        private static DateTime LastHistoryLastTimestamp;
+        private static string LastLoadedMapPath;
+        private static int LastProductRates = -1;
+        private static List<PointLatLng> NewZoneVertices;
         private readonly CoverageTrail Trail = new CoverageTrail();
         private GMapOverlay cAppliedOverlay;
         private GMapOverlay cTargetOverlay;
-        private const double NearZero = 0.01;
+        private List<MapZone> cTargetZones = new List<MapZone>();
+        private List<MapZone> HistoricalAppliedZones = new List<MapZone>();
+        private STRtree<MapZone> STRtreeZoneIndex;
 
         public ZoneManager()
         {
             cAppliedOverlay = new GMapOverlay("AppliedRates");
             cTargetOverlay = new GMapOverlay("TargetRates");
             cAppliedLegend = new Dictionary<string, Color>();
+            NewZoneVertices = new List<PointLatLng>();
+            cNewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
         }
+
+        public event EventHandler VerticesChanged;
+
+        public event EventHandler ZonesChanged;
 
         public Dictionary<string, Color> AppliedLegend
         { get { return cAppliedLegend; } }
@@ -32,8 +47,17 @@ namespace RateController.RateMap
         public GMapOverlay AppliedOverlay
         { get { return cAppliedOverlay; } }
 
+        public GMapOverlay NewZoneMarkerOverlay
+        { get { return cNewZoneMarkerOverlay; } }
+
         public GMapOverlay TargetOverlay
         { get { return cTargetOverlay; } }
+
+        public void AddVertex(PointLatLng point)
+        {
+            NewZoneVertices.Add(point);
+            cNewZoneMarkerOverlay.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.red_small));
+        }
 
         public bool BuildAppliedFromHistory(GMapOverlay overlay, out Dictionary<string, Color> legend)
         {
@@ -186,12 +210,307 @@ namespace RateController.RateMap
         {
             cAppliedOverlay = null;
             cTargetOverlay = null;
+            cNewZoneMarkerOverlay = null;
             ResetTrail();
+        }
+
+        public bool CreateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
+        {
+            bool Result = false;
+            ErrorCode = 0;
+            try
+            {
+                if (ZoneNameFound(name))
+                {
+                    ErrorCode = 1;
+                }
+                else if (NewZoneVertices.Count < 3)
+                {
+                    ErrorCode = 2;
+                }
+                else
+                {
+                    var geometryFactory = new GeometryFactory();
+                    var coordinates = NewZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
+
+                    if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
+                    {
+                        Array.Resize(ref coordinates, coordinates.Length + 1);
+                        coordinates[coordinates.Length - 1] = coordinates[0];
+                    }
+                    var polygon = geometryFactory.CreatePolygon(coordinates);
+
+                    MapZone NewZone = new MapZone(name, polygon, new Dictionary<string, double>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    }, zoneColor, ZoneType.Target);
+
+                    cTargetZones.Add(NewZone);
+                    AddPolygons(cTargetOverlay, NewZone.ToGMapPolygons(Palette.TargetZoneTransparency));
+
+                    NewZoneVertices.Clear();
+                    cNewZoneMarkerOverlay.Markers.Clear();
+
+                    BuildTargetZonesIndex();
+
+                    ZonesChanged?.Invoke(null, EventArgs.Empty);
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/CreateZone: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public void DeleteLastVertex()
+        {
+            try
+            {
+                if (NewZoneVertices.Count > 0)
+                {
+                    NewZoneVertices.RemoveAt(NewZoneVertices.Count - 1);
+                    if (cNewZoneMarkerOverlay.Markers.Count > 0)
+                    {
+                        cNewZoneMarkerOverlay.Markers.RemoveAt(cNewZoneMarkerOverlay.Markers.Count - 1);
+                    }
+                    VerticesChanged?.Invoke(null, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/DeleteLastVertex: " + ex.Message);
+            }
+        }
+
+        public void LoadZones()
+        {
+            var shapefileHelper = new ShapefileHelper();
+            List<MapZone> mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
+
+            // split zones by type
+            cTargetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
+            HistoricalAppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
+
+            BuildTargetZonesIndex();
+            ShowTargetOverlay();
+            ShowAppliedOverlay();
+        }
+
+        public void ResetAppliedOverlay()
+        {
+            ResetTrail();
+            MapController.legendManager.ShowLegend(cAppliedLegend, false);
+            AppliedOverlay.Clear();
+        }
+
+        public void ResetMarkers()
+        {
+            NewZoneVertices.Clear();
+            cNewZoneMarkerOverlay.Markers.Clear();
         }
 
         public void ResetTrail() => Trail.Reset();
 
-        public bool UpdateTrail(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,
+        public void ShowAppliedOverlay()
+        {
+            try
+            {
+                // Decide whether to rebuild coverage from history
+                var readings = MapController.RateCollector.GetReadings();
+                bool OverlayValid = AppliedOverlayValid(JobManager.CurrentMapPath, readings);
+
+                if (!OverlayValid)
+                {
+                    // rebuild applied overlay
+
+                    cAppliedOverlay.Polygons.Clear();
+                    Dictionary<string, Color> histLegend;
+                    if (BuildAppliedFromHistory(cAppliedOverlay, out histLegend))
+                    {
+                        // Use legend returned from history build
+                        cAppliedLegend = histLegend;
+                        OverlayValid = true;
+                    }
+                    else
+                    {
+                        // use historical applied zones from shapefile
+                        if (HistoricalAppliedZones.Count > 0)
+                        {
+                            foreach (var mapZone in HistoricalAppliedZones)
+                            {
+                                AddPolygons(cAppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
+                            }
+                            // Build legend that matches persisted applied zones
+                            // Try to load a persisted legend first
+                            cAppliedLegend = MapController.legendManager.LoadPersistedLegend() ?? LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, MapController.ProductFilter);
+                            OverlayValid = true;
+                        }
+                    }
+
+                    if (OverlayValid)
+                    {
+                        // update signature after a successful build
+                        LastLoadedMapPath = JobManager.CurrentMapPath;
+                        if (readings != null && readings.Count > 0)
+                        {
+                            LastHistoryCount = readings.Count;
+                            LastHistoryLastTimestamp = readings[readings.Count - 1].Timestamp;
+                        }
+                        else
+                        {
+                            LastHistoryCount = 0;
+                            LastHistoryLastTimestamp = DateTime.MinValue;
+                        }
+                        LastProductRates = MapController.ProductFilter;
+                    }
+                }
+
+                if (OverlayValid)
+                {
+                    MapController.ShowOverlay(cAppliedOverlay, ZoneType.Applied);
+                    MapController.legendManager.ShowLegend(cAppliedLegend);
+                }
+                else
+                {
+                    ResetAppliedOverlay();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/ShowAppliedOverlay: " + ex.Message);
+            }
+        }
+
+        public void ShowTargetOverlay()
+        {
+            // Rebuild polygons to ensure correct rendering after map resize
+            cTargetOverlay.Polygons.Clear();
+            foreach (var mapZone in cTargetZones)
+            {
+                AddPolygons(cTargetOverlay, mapZone.ToGMapPolygons(Palette.TargetZoneTransparency));
+            }
+
+            MapController.ShowOverlay(cTargetOverlay, ZoneType.Target);
+        }
+
+        public void UpdateAppliedOverlay(double[] AppliedRates)
+        {
+            Dictionary<string, Color> newLegend = new Dictionary<string, Color>();
+            try
+            {
+                if (MapController.ShowRates && MapController.MapIsDisplayed && (MapController.State == MapState.Tracking || MapController.State == MapState.Preview))
+                {
+                    var readings = MapController.RateCollector.GetReadings();
+                    if (readings == null || readings.Count == 0)
+                    {
+                        ResetAppliedOverlay();
+                    }
+                    else
+                    {
+                        double Rates = AppliedRates[MapController.ProductFilter];  // product rates to display
+
+                        UpdateTrail(cAppliedOverlay, readings, MapController.TractorPosition, MapController.TravelHeading,
+                           Props.MainForm.Sections.TotalWidth(), Rates, out newLegend, MapController.ProductFilter);
+                    }
+                }
+
+                if (MapController.legendManager.LegendsDiffer(cAppliedLegend, newLegend)) cAppliedLegend = newLegend;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/UpdateAppliedOverlay: " + ex.Message);
+            }
+        }
+
+        private void AddPolygons(GMapOverlay overlay, List<GMapPolygon> polygons)
+        {
+            foreach (var polygon in polygons)
+            {
+                // remove stroke(border) to match AOG polygon look overlap-free
+                polygon.Stroke = Pens.Transparent;
+                overlay.Polygons.Add(polygon);
+            }
+        }
+
+        private bool AppliedOverlayValid(string mapPath, IReadOnlyList<RateReading> readings)
+        {
+            if (string.IsNullOrEmpty(mapPath) || readings == null || readings.Count == 0) return false;
+
+            var lastTs = readings[readings.Count - 1].Timestamp;
+            return string.Equals(LastLoadedMapPath, mapPath, StringComparison.Ordinal) &&
+                   LastHistoryCount == readings.Count &&
+                   LastHistoryLastTimestamp == lastTs &&
+                   LastProductRates == MapController.ProductFilter &&                 // ensure product selection matches
+                   cAppliedOverlay.Polygons != null &&
+                   cAppliedOverlay.Polygons.Count > 0;
+        }
+
+        private double BearingDegrees(PointLatLng a, PointLatLng b)
+        {
+            double lat1 = a.Lat * Math.PI / 180.0;
+            double lat2 = b.Lat * Math.PI / 180.0;
+            double dLon = (b.Lng - a.Lng) * Math.PI / 180.0;
+
+            double y = Math.Sin(dLon) * Math.Cos(lat2);
+            double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
+            double brng = Math.Atan2(y, x) * 180.0 / Math.PI;
+            return (brng + 360.0) % 360.0;
+        }
+
+        private void BuildTargetZonesIndex()
+        {
+            // build a STRtree object for efficiently working with spatial objects (zones)
+            try
+            {
+                STRtreeZoneIndex = new STRtree<MapZone>();
+                foreach (var z in cTargetZones)
+                {
+                    if (z?.Geometry == null) continue;
+                    var env = z.Geometry.EnvelopeInternal;
+                    if (env == null) continue;
+                    STRtreeZoneIndex.Insert(env, z);
+                }
+                STRtreeZoneIndex.Build();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/BuildZoneIndex: " + ex.Message);
+                STRtreeZoneIndex = null; // fallback gracefully
+            }
+        }
+
+        private Polygon ConvertToNtsPolygon(GMapPolygon gmapPolygon)
+        {
+            var coords = new List<Coordinate>();
+            foreach (var point in gmapPolygon.Points)
+            {
+                coords.Add(new Coordinate(point.Lng, point.Lat));
+            }
+            // Ensure closed
+            if (coords.Count > 0 && !coords[0].Equals(coords[coords.Count - 1]))
+            {
+                coords.Add(coords[0]);
+            }
+            return new Polygon(new LinearRing(coords.ToArray()));
+        }
+
+        private double DistanceMeters(PointLatLng a, double bLat, double bLng)
+        {
+            const double metersPerDegLat = 111320.0;
+            double latRad = a.Lat * Math.PI / 180.0;
+            double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
+
+            double dx = (bLng - a.Lng) * metersPerDegLng;
+            double dy = (bLat - a.Lat) * metersPerDegLat;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        private bool UpdateTrail(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,
             double implementWidthMeters, double? appliedOverride, out Dictionary<string, Color> legend, int rateIndex)
         {
             legend = new Dictionary<string, Color>();
@@ -239,42 +558,18 @@ namespace RateController.RateMap
             }
         }
 
-        private static double BearingDegrees(PointLatLng a, PointLatLng b)
+        private bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
         {
-            double lat1 = a.Lat * Math.PI / 180.0;
-            double lat2 = b.Lat * Math.PI / 180.0;
-            double dLon = (b.Lng - a.Lng) * Math.PI / 180.0;
-
-            double y = Math.Sin(dLon) * Math.Cos(lat2);
-            double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
-            double brng = Math.Atan2(y, x) * 180.0 / Math.PI;
-            return (brng + 360.0) % 360.0;
-        }
-
-        private static double DistanceMeters(PointLatLng a, double bLat, double bLng)
-        {
-            const double metersPerDegLat = 111320.0;
-            double latRad = a.Lat * Math.PI / 180.0;
-            double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
-
-            double dx = (bLng - a.Lng) * metersPerDegLng;
-            double dy = (bLat - a.Lat) * metersPerDegLat;
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        private Polygon ConvertToNtsPolygon(GMapPolygon gmapPolygon)
-        {
-            var coords = new List<Coordinate>();
-            foreach (var point in gmapPolygon.Points)
+            bool Result = false;
+            foreach (MapZone zn in cTargetZones)
             {
-                coords.Add(new Coordinate(point.Lng, point.Lat));
+                if (string.Equals(zn.Name, Name, StringComparison.OrdinalIgnoreCase) && zn != ExcludeZone)
+                {
+                    Result = true;
+                    break;
+                }
             }
-            // Ensure closed
-            if (coords.Count > 0 && !coords[0].Equals(coords[coords.Count - 1]))
-            {
-                coords.Add(coords[0]);
-            }
-            return new Polygon(new LinearRing(coords.ToArray()));
+            return Result;
         }
     }
 }

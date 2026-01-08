@@ -39,9 +39,7 @@ namespace RateController.RateMap
 
         #region Overlays
 
-        private static GMapOverlay AppliedOverlay;
         private static GMapOverlay gpsMarkerOverlay;
-        private static GMapOverlay NewZoneMarkerOverlay;
         private static GMapOverlay zoneOverlay;
 
         #endregion Overlays
@@ -62,26 +60,20 @@ namespace RateController.RateMap
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
         private static double[] CurrentZoneRates;
-        private static List<MapZone> HistoricalAppliedZones = new List<MapZone>();
         private static List<MapZone> mapZones;
-        private static List<PointLatLng> NewZoneVertices;
         private static STRtree<MapZone> STRtreeZoneIndex;
 
         #endregion Zones
 
-        private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         public static readonly ZoneManager ZnOverlays = new ZoneManager();
-        private static int _lastHistoryCount;
-        private static DateTime _lastHistoryLastTimestamp;
-        private static string _lastLoadedMapPath;
-        private static int _lastProductRates = -1;
+        public static LegendManager legendManager;
+        private static readonly KmlLayerManager kmlLayerManager = new KmlLayerManager();
         private static bool cMapIsDisplayed = false;
         private static Dictionary<string, Color> ColorLegend;
         private static DataCollector cRateCollector;
         private static MapState cState;
         private static PointLatLng cTractorPosition;
         private static double cTravelHeading;
-        private static LegendManager legendManager;
         private static System.Windows.Forms.Timer UpdateTimer;
 
         public static event EventHandler MapChanged;
@@ -156,7 +148,7 @@ namespace RateController.RateMap
                 {
                     cProductFilter = value;
                     Props.SetProp("MapProductFilter", cProductFilter.ToString());
-                    ShowAppliedZonesOverlay();
+                    ZnOverlays.ShowAppliedOverlay();
                 }
             }
         }
@@ -171,7 +163,7 @@ namespace RateController.RateMap
             {
                 cShowRates = value;
                 Props.SetProp("MapShowRates", cShowRates.ToString());
-                ShowAppliedZonesOverlay();
+                ZnOverlays.ShowAppliedOverlay();
             }
         }
 
@@ -206,6 +198,9 @@ namespace RateController.RateMap
 
         public static PointLatLng TractorPosition
         { get { return cTractorPosition; } }
+
+        public static double TravelHeading
+        { get { return cTravelHeading; } }
 
         public static Color ZoneColor => CurrentZoneColor;
 
@@ -354,9 +349,7 @@ namespace RateController.RateMap
                     gmap.Overlays.Clear();
                 }
 
-                zoneOverlay = null;
                 gpsMarkerOverlay = null;
-                NewZoneMarkerOverlay = null;
 
                 gmap?.Dispose();
                 gmap = null;
@@ -373,60 +366,6 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/Close: " + ex.Message);
             }
-        }
-
-        public static bool CreateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
-        {
-            bool Result = false;
-            ErrorCode = 0;
-            try
-            {
-                if (ZoneNameFound(name))
-                {
-                    ErrorCode = 1;
-                }
-                else if (NewZoneVertices.Count < 3)
-                {
-                    ErrorCode = 2;
-                }
-                else
-                {
-                    var geometryFactory = new GeometryFactory();
-                    var coordinates = NewZoneVertices.ConvertAll(p => new Coordinate(p.Lng, p.Lat)).ToArray();
-
-                    if (!coordinates[0].Equals(coordinates[coordinates.Length - 1]))
-                    {
-                        Array.Resize(ref coordinates, coordinates.Length + 1);
-                        coordinates[coordinates.Length - 1] = coordinates[0];
-                    }
-                    var polygon = geometryFactory.CreatePolygon(coordinates);
-
-                    MapZone NewZone = new MapZone(name, polygon, new Dictionary<string, double>
-                    {
-                        { "ProductA", Rt0 },
-                        { "ProductB", Rt1 },
-                        { "ProductC", Rt2 },
-                        { "ProductD", Rt3 }
-                    }, zoneColor, ZoneType.Target);
-
-                    mapZones.Add(NewZone);
-                    zoneOverlay = AddPolygons(zoneOverlay, NewZone.ToGMapPolygons(Palette.TargetZoneTransparency));
-
-                    NewZoneVertices.Clear();
-                    NewZoneMarkerOverlay.Markers.Clear();
-
-                    BuildTargetZonesIndex();
-                    UpdateVariableRates();
-                    gmap.Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                    Result = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/CreateZone: " + ex.Message);
-            }
-            return Result;
         }
 
         public static void DeleteKmlLayer(string filePath)
@@ -472,26 +411,6 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
-            }
-        }
-
-        public static void DeleteLastVertex()
-        {
-            try
-            {
-                if (NewZoneVertices.Count > 0)
-                {
-                    NewZoneVertices.RemoveAt(NewZoneVertices.Count - 1);
-                    if (NewZoneMarkerOverlay.Markers.Count > 0)
-                    {
-                        NewZoneMarkerOverlay.Markers.RemoveAt(NewZoneMarkerOverlay.Markers.Count - 1);
-                    }
-                    gmap.Refresh();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/DeleteLastVertex: " + ex.Message);
             }
         }
 
@@ -639,7 +558,6 @@ namespace RateController.RateMap
 
             // map zones
             mapZones = new List<MapZone>();
-            NewZoneVertices = new List<PointLatLng>();
 
             gmap.OnMapZoomChanged += Gmap_OnMapZoomChanged;
             gmap.MouseClick += Gmap_MouseClick;
@@ -653,6 +571,9 @@ namespace RateController.RateMap
 
             bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
             SetKmlVisibility(kmlVisible);
+
+            ZnOverlays.VerticesChanged += ZnOverlays_VerticesChanged;
+            ZnOverlays.ZonesChanged += ZnOverlays_ZonesChanged;
         }
 
         public static bool LoadMap()
@@ -660,24 +581,7 @@ namespace RateController.RateMap
             bool Result = false;
             try
             {
-                var shapefileHelper = new ShapefileHelper();
-
-                mapZones = shapefileHelper.CreateZoneList(JobManager.CurrentMapPath);
-
-                // split zones by type
-                var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
-                HistoricalAppliedZones = mapZones.Where(z => z.ZoneType == ZoneType.Applied).ToList();
-
-                // target zones
-                zoneOverlay.Polygons.Clear();
-                foreach (var mapZone in targetZones)
-                {
-                    zoneOverlay = AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(Palette.TargetZoneTransparency));
-                }
-                BuildTargetZonesIndex();
-                ShowTargetZonesOverlay();
-
-                ShowAppliedZonesOverlay();
+                ZnOverlays.LoadZones();
 
                 // kml
                 kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
@@ -693,58 +597,6 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("MapController/LoadMap: " + ex.Message);
             }
             return Result;
-        }
-
-        public static Dictionary<string, Color> LoadPersistedLegend(string basePath = null)
-        {
-            try
-            {
-                if (basePath == null)
-                {
-                    basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null);
-                }
-
-                string legendPath = basePath + "_AppliedLegend.json";
-                if (!File.Exists(legendPath))
-                {
-                    return null;
-                }
-
-                var json = File.ReadAllText(legendPath);
-                var bands = System.Text.Json.JsonSerializer.Deserialize<List<LegendBand>>(json);
-                if (bands == null || bands.Count == 0)
-                {
-                    return null;
-                }
-
-                // Filter to current product
-                var filtered = bands
-                    .Where(b => b.ProductIndex == cProductFilter)
-                    .OrderBy(b => b.Min)
-                    .ToList();
-
-                int Steps = filtered.Count;
-                if (Steps == 0)
-                {
-                    return null;
-                }
-
-                double globalMin = filtered.First().Min;
-                double globalMax = filtered.Max(b => b.Max);
-
-                return LegendManager.CreateAppliedLegend(globalMin, globalMax, Steps);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/LoadPersistedLegend: " + ex.Message);
-                return null;
-            }
-        }
-
-        public static void ResetMarkers()
-        {
-            NewZoneVertices.Clear();
-            NewZoneMarkerOverlay.Markers.Clear();
         }
 
         public static void SaveAppliedLegend(string legendPath, Dictionary<string, Color> LegendToSave = null)
@@ -897,6 +749,21 @@ namespace RateController.RateMap
             }
         }
 
+        public static void ShowOverlay(GMapOverlay Olay, ZoneType type)
+        {
+            if (cShowZones)
+            {
+                AddOverlay(Olay);
+            }
+            else
+            {
+                RemoveOverlay(Olay);
+                if (type == ZoneType.Applied) legendManager.Clear();
+            }
+            gmap.Refresh();
+            MapChanged?.Invoke(null, EventArgs.Empty);
+        }
+
         public static bool TryComputeScale(IEnumerable<double> values, out double minRate, out double maxRate)
         {
             var vals = values
@@ -970,52 +837,6 @@ namespace RateController.RateMap
                 overlay.Polygons.Add(polygon);
             }
             return overlay;
-        }
-
-        private static void BuildAppliedOverlay()
-        {
-            try
-            {
-                ZnOverlays.AppliedOverlay.Polygons.Clear();
-                AddOverlay(ZnOverlays.AppliedOverlay);
-
-                Dictionary<string, Color> histLegend;
-                bool AppliedFound = false;
-                if (ZnOverlays.BuildAppliedFromHistory(ZnOverlays.AppliedOverlay, out histLegend))
-                {
-                    // Use legend returned from history build
-                    ColorLegend = histLegend;
-                    AppliedFound = true;
-                }
-                else
-                {
-                    // use historical applied zones from shapefile
-                    if (HistoricalAppliedZones.Count > 0)
-                    {
-                        foreach (var mapZone in HistoricalAppliedZones)
-                        {
-                            AppliedOverlay = AddPolygons(ZnOverlays.AppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
-                        }
-                        // Build legend that matches persisted applied zones
-                        // Try to load a persisted legend first
-                        ColorLegend = LoadPersistedLegend() ?? LegendManager.BuildAppliedZonesLegend(HistoricalAppliedZones, cProductFilter);
-                        AppliedFound = true;
-                    }
-                }
-                if (AppliedFound)
-                {
-                    ShowLegend(ColorLegend, true);
-                }
-                else
-                {
-                    legendManager.Clear();
-                    ColorLegend = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/BuildAppliedZones: " + ex.Message);
-            }
         }
 
         private static void BuildTargetZonesIndex()
@@ -1099,8 +920,7 @@ namespace RateController.RateMap
 
                     case MapState.EditZones:
                         var point = gmap.FromLocalToLatLng(e.X, e.Y);
-                        NewZoneVertices.Add(point);
-                        NewZoneMarkerOverlay.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.red_small));
+                        ZnOverlays.AddVertex(point);
                         break;
 
                     case MapState.Tracking:
@@ -1165,7 +985,6 @@ namespace RateController.RateMap
             // overlays
             zoneOverlay = new GMapOverlay("mapzones");
             gpsMarkerOverlay = new GMapOverlay("gpsMarkers");
-            NewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
 
             tractorMarker = new GMarkerGoogle(new PointLatLng(Lat, Lng), GMarkerGoogleType.green);
             tractorMarker.IsHitTestVisible = false;
@@ -1177,8 +996,8 @@ namespace RateController.RateMap
             UpdateVariableRates();
 
             AddOverlay(gpsMarkerOverlay);
-            AddOverlay(NewZoneMarkerOverlay);
-            AddOverlay(zoneOverlay);
+            AddOverlay(ZnOverlays.NewZoneMarkerOverlay);
+            AddOverlay(ZnOverlays.TargetOverlay);
             AddOverlay(ZnOverlays.AppliedOverlay);
             gmap.Refresh();
         }
@@ -1186,20 +1005,6 @@ namespace RateController.RateMap
         private static void JobManager_JobChanged(object sender, EventArgs e)
         {
             LoadMap();
-        }
-
-        private static bool LegendsDiffer(Dictionary<string, Color> A, Dictionary<string, Color> B)
-        {
-            if (A == B) return false;
-            if (A == null || B == null) return true;
-            if (A.Count != B.Count) return true;
-
-            foreach (var kvp in A)
-            {
-                if (!B.TryGetValue(kvp.Key, out Color bColor)) return true;
-                if (bColor != kvp.Value) return true;
-            }
-            return false;
         }
 
         private static void LoadData()
@@ -1252,7 +1057,7 @@ namespace RateController.RateMap
             {
                 // Reload persisted settings and rebuild overlay accordingly
                 LoadData();
-                ShowAppliedZonesOverlay();
+                ZnOverlays.ShowAppliedOverlay();
             }
             catch (Exception ex)
             {
@@ -1309,72 +1114,6 @@ namespace RateController.RateMap
             }
         }
 
-        private static bool ShouldSkipHistoryBuild(string mapPath, IReadOnlyList<RateReading> readings)
-        {
-            if (string.IsNullOrEmpty(mapPath) || readings == null || readings.Count == 0) return false;
-
-            var lastTs = readings[readings.Count - 1].Timestamp;
-            return string.Equals(_lastLoadedMapPath, mapPath, StringComparison.Ordinal) &&
-                   _lastHistoryCount == readings.Count &&
-                   _lastHistoryLastTimestamp == lastTs &&
-                   _lastProductRates == cProductFilter &&                 // ensure product selection matches
-                   AppliedOverlay != null &&
-                   AppliedOverlay.Polygons != null &&
-                   AppliedOverlay.Polygons.Count > 0;
-        }
-
-        private static void ShowAppliedZonesOverlay()
-        {
-            try
-            {
-                if (cShowRates)
-                {
-                    // Decide whether to rebuild coverage from history
-                    var readings = cRateCollector?.GetReadings();
-                    bool SkipRebuild = ShouldSkipHistoryBuild(JobManager.CurrentMapPath, readings);
-
-                    if (SkipRebuild)
-                    {
-                        AddOverlay(AppliedOverlay);
-                        ShowLegend(ColorLegend);
-                    }
-                    else
-                    {
-                        BuildAppliedOverlay();
-
-                        // update signature after a successful build
-                        _lastLoadedMapPath = JobManager.CurrentMapPath;
-                        if (readings != null && readings.Count > 0)
-                        {
-                            _lastHistoryCount = readings.Count;
-                            _lastHistoryLastTimestamp = readings[readings.Count - 1].Timestamp;
-                        }
-                        else
-                        {
-                            _lastHistoryCount = 0;
-                            _lastHistoryLastTimestamp = DateTime.MinValue;
-                        }
-                        _lastProductRates = cProductFilter;
-                    }
-                    gmap.Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                }
-                else
-                {
-                    // remove rates overlay
-                    ZnOverlays.ResetTrail();
-                    RemoveOverlay(AppliedOverlay);
-                    legendManager?.Clear();
-                    gmap.Refresh();
-                    MapChanged?.Invoke(null, EventArgs.Empty);
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/ShowRatesOverlay: " + ex.Message);
-            }
-        }
-
         private static void ShowLegend(Dictionary<string, Color> LegendToShow, bool Show = true)
         {
             if (Show && cState != MapState.Preview)
@@ -1421,48 +1160,6 @@ namespace RateController.RateMap
             }
         }
 
-        private static bool UpdateRateLayer(double[] AppliedRates)
-        {
-            bool Result = false;
-            Dictionary<string, Color> newLegend = new Dictionary<string, Color>();
-            try
-            {
-                if (cShowRates && cMapIsDisplayed && (cState == MapState.Tracking || cState == MapState.Preview))
-                {
-                    var readings = cRateCollector.GetReadings();
-                    if (readings == null || readings.Count == 0)
-                    {
-                        ClearAppliedRatesOverlay();
-                    }
-                    else
-                    {
-                        double Rates = AppliedRates[cProductFilter];  // product rates to display
-
-                        Result = ZnOverlays.UpdateTrail(
-                            AppliedOverlay,
-                            readings,
-                            cTractorPosition,
-                            cTravelHeading,
-                            Props.MainForm.Sections.TotalWidth(),
-                            Rates,
-                            out newLegend,
-                            cProductFilter
-                        );
-                    }
-                }
-                if (LegendsDiffer(ColorLegend, newLegend))
-                {
-                    ColorLegend = newLegend;
-                    if (LegendOverlayEnabled) ShowLegend(ColorLegend);
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/UpdateRateLayer: " + ex.Message);
-            }
-            return Result;
-        }
-
         private static void UpdateTimer_Tick(object sender, EventArgs e)
         {
             if (Props.MainForm.GPS.Connected())
@@ -1472,7 +1169,7 @@ namespace RateController.RateMap
                 if (Props.MainForm.Products.ProductsAreOn() && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
                     cRateCollector.RecordReading(Position.Lat, Position.Lng, Props.MainForm.Products.ProductAppliedRates());
-                    if (cShowRates && cMapIsDisplayed) UpdateRateLayer(Props.MainForm.Products.ProductAppliedRates());
+                    ZnOverlays.UpdateAppliedOverlay(Props.MainForm.Products.ProductAppliedRates());
                 }
             }
             UpdateVariableRates();
@@ -1523,6 +1220,16 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("MapController/UpdateVariableRates: " + ex.Message);
             }
+        }
+
+        private static void ZnOverlays_VerticesChanged(object sender, EventArgs e)
+        {
+            gmap.Refresh();
+        }
+
+        private static void ZnOverlays_ZonesChanged(object sender, EventArgs e)
+        {
+            UpdateVariableRates();
         }
 
         private static bool ZoneNameFound(string Name, MapZone ExcludeZone = null)

@@ -110,7 +110,7 @@ namespace RateController.Forms
 
                     string MapPath = JobManager.MapPath(JobManager.CurrentJobID);
 
-                    Dictionary<string, Color> SavedLegend = MapController.LoadPersistedLegend(Path.ChangeExtension(selectedShapefilePath, null));
+                    Dictionary<string, Color> SavedLegend = MapController.legendManager.LoadPersistedLegend(Path.ChangeExtension(selectedShapefilePath, null));
                     if (SavedLegend != null)
                     {
                         MapController.SaveAppliedLegend(Path.ChangeExtension(MapPath, null), SavedLegend);

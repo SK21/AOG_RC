@@ -75,7 +75,7 @@ namespace RateController.Forms
         private void btnCancel_Click(object sender, EventArgs e)
         {
             SetEditMode(false, true);
-            MapController.ResetMarkers();
+            MapController.ZnOverlays.ResetMarkers();
             UpdateForm();
         }
 
@@ -94,7 +94,7 @@ namespace RateController.Forms
             switch (MapController.State)
             {
                 case MapState.EditZones:
-                    MapController.DeleteLastVertex();
+                    MapController.ZnOverlays.DeleteLastVertex();
                     break;
 
                 case MapState.Positioning:
@@ -297,7 +297,7 @@ namespace RateController.Forms
             bool EditSaved = false;
             if (ckNew.Checked)
             {
-                EditSaved = MapController.CreateZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor, out Error);
+                EditSaved = MapController.ZnOverlays.CreateZone(tbName.Text, RateA, RateB, RateC, RateD, SelectedColor, out Error);
             }
             else
             {
