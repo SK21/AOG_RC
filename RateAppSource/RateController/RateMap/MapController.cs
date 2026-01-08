@@ -55,7 +55,7 @@ namespace RateController.RateMap
 
         #region Zones
 
-        private static MapZone CurrentZone = null;
+        private static MapZone cCurrentZone = null;
         private static Color CurrentZoneColor;
         private static double CurrentZoneHectares;
         private static string CurrentZoneName = "";
@@ -414,59 +414,9 @@ namespace RateController.RateMap
             }
         }
 
-        public static bool DeleteZone(string name)
+        public static void Refresh()
         {
-            bool Result = false;
-            try
-            {
-                if (string.IsNullOrEmpty(name) || mapZones == null || zoneOverlay == null) return false;
-
-                // collect all zones with the given name (multi-polygons often share the same name)
-                var zonesToRemove = mapZones.Where(z => string.Equals(z.Name, name, StringComparison.Ordinal)).ToList();
-                if (zonesToRemove.Count == 0) return false;
-
-                foreach (var zone in zonesToRemove)
-                {
-                    // remove polygons from overlay that match the ones created for this zone
-                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(Palette.ZoneTransparency);
-                    foreach (var polygonToRemove in polygonsToRemove)
-                    {
-                        if (polygonToRemove == null) continue;
-
-                        var polygonInOverlay = zoneOverlay.Polygons
-                            .FirstOrDefault(polygon => polygon.Points.SequenceEqual(polygonToRemove.Points));
-
-                        if (polygonInOverlay != null)
-                        {
-                            zoneOverlay.Polygons.Remove(polygonInOverlay);
-                            Result = true;
-                        }
-                    }
-                }
-
-                // also remove any remaining polygons in the overlay that carry this name (safety)
-                var leftovers = zoneOverlay.Polygons.Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) || (p.Name != null && p.Name.StartsWith(name + "_hole", StringComparison.Ordinal))).ToList();
-                foreach (var p in leftovers) zoneOverlay.Polygons.Remove(p);
-
-                // remove zones from the internal list
-                mapZones.RemoveAll(z => string.Equals(z.Name, name, StringComparison.Ordinal));
-
-                if (Result)
-                {
-                    RemoveOverlay(zoneOverlay);
-                    AddOverlay(zoneOverlay);
-
-                    BuildTargetZonesIndex();
-
-                    gmap.Refresh();
-                    SaveMap();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("MapController/DeleteZone: " + ex.Message);
-            }
-            return Result;
+            gmap.Refresh();
         }
 
         public static void DisplaySizeUpdate(bool Preview)
@@ -489,7 +439,7 @@ namespace RateController.RateMap
             ErrorCode = 0;
             try
             {
-                MapZone ZoneToEdit = CurrentZone;
+                MapZone ZoneToEdit = cCurrentZone;
                 if (ZoneNameFound(name, ZoneToEdit))
                 {
                     // check for duplicate name
@@ -572,7 +522,6 @@ namespace RateController.RateMap
             bool kmlVisible = bool.TryParse(Props.GetProp("KmlVisible"), out var v) ? v : true;
             SetKmlVisibility(kmlVisible);
 
-            ZnOverlays.VerticesChanged += ZnOverlays_VerticesChanged;
             ZnOverlays.ZonesChanged += ZnOverlays_ZonesChanged;
         }
 
@@ -1179,7 +1128,7 @@ namespace RateController.RateMap
         {
             try
             {
-                bool ZoneFound = false;
+                CurrentZone.TractorIsFound = false;
                 if (STRtreeZoneIndex != null)
                 {
                     // Query spatial index for candidate zones near the tractor
@@ -1192,28 +1141,32 @@ namespace RateController.RateMap
                         {
                             if (zone.Contains(cTractorPosition))
                             {
-                                CurrentZoneName = zone.Name;
-                                CurrentZoneRates[0] = zone.Rates["ProductA"];
-                                CurrentZoneRates[1] = zone.Rates["ProductB"];
-                                CurrentZoneRates[2] = zone.Rates["ProductC"];
-                                CurrentZoneRates[3] = zone.Rates["ProductD"];
-                                CurrentZoneColor = zone.ZoneColor;
-                                CurrentZoneHectares = zone.Hectares();
-                                ZoneFound = true;
-                                CurrentZone = zone;
+                                CurrentZone.Zone = zone;
+                                CurrentZone.Hectares = zone.Hectares();
+                                CurrentZone.TractorIsFound = true;
                                 break;
                             }
                         }
                     }
                 }
-                if (!ZoneFound && Props.MainForm.Products != null)
+                if (!CurrentZone.TractorIsFound && Props.MainForm.Products != null)
                 {
                     // use target rates
                     CurrentZoneName = "Base Rate";
                     CurrentZoneRates = Props.MainForm.Products.BaseRates();
                     CurrentZoneColor = Color.Blue;
                     CurrentZoneHectares = 0;
-                    CurrentZone = null;
+                    cCurrentZone = null;
+
+                    CurrentZone.Zone.Name = "Base Rate";
+                    CurrentZone.Zone.Rates.Clear();
+                    int count = 0;
+                    foreach(double rate in Props.MainForm.Products.BaseRates())
+                    {
+                        CurrentZone.Zone.Rates[ZoneFields.Products[count++]] = rate;
+                    }
+                    CurrentZone.Zone.ZoneColor = Color.Blue;
+                    CurrentZone.Hectares = 0;
                 }
             }
             catch (Exception ex)
@@ -1222,10 +1175,6 @@ namespace RateController.RateMap
             }
         }
 
-        private static void ZnOverlays_VerticesChanged(object sender, EventArgs e)
-        {
-            gmap.Refresh();
-        }
 
         private static void ZnOverlays_ZonesChanged(object sender, EventArgs e)
         {

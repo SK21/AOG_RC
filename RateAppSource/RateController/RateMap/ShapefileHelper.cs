@@ -334,14 +334,4 @@ namespace RateController.Classes
         }
     }
 
-    internal static class ZoneFields
-    {
-        public const string Color = "Color";
-        public const string Name = "Name";
-        public const string ProductA = "ProductA";
-        public const string ProductB = "ProductB";
-        public const string ProductC = "ProductC";
-        public const string ProductD = "ProductD";
-        public const string ZoneType = "ZoneType";
-    }
 }

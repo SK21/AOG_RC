@@ -98,7 +98,7 @@ namespace RateController.Forms
                     break;
 
                 case MapState.Positioning:
-                    if (MapController.DeleteZone(tbName.Text))
+                    if (MapController.ZnOverlays.DeleteZone(tbName.Text))
                     {
                         SetEditMode(false, true);
                         UpdateForm();

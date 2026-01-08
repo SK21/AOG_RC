@@ -13,6 +13,7 @@ namespace RateController.Classes
 {
     public class MapZone
     {
+
         public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor, ZoneType zoneType)
         {
             Name = name;
@@ -153,4 +154,18 @@ namespace RateController.Classes
             return new Polygon(new LinearRing(transformedCoordinates));
         }
     }
+
+    public static class ZoneFields
+    {
+        public const string Color = "Color";
+        public const string Name = "Name";
+        public const string ProductA = "ProductA";
+        public const string ProductB = "ProductB";
+        public const string ProductC = "ProductC";
+        public const string ProductD = "ProductD";
+        public const string ZoneType = "ZoneType";
+
+        public static readonly string[] Products = { ProductA, ProductB, ProductC, ProductD };
+    }
+
 }

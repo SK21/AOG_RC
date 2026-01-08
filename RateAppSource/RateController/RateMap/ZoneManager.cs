@@ -27,7 +27,6 @@ namespace RateController.RateMap
         private List<MapZone> cTargetZones = new List<MapZone>();
         private List<MapZone> HistoricalAppliedZones = new List<MapZone>();
         private STRtree<MapZone> STRtreeZoneIndex;
-
         public ZoneManager()
         {
             cAppliedOverlay = new GMapOverlay("AppliedRates");
@@ -37,7 +36,6 @@ namespace RateController.RateMap
             cNewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
         }
 
-        public event EventHandler VerticesChanged;
 
         public event EventHandler ZonesChanged;
 
@@ -278,13 +276,122 @@ namespace RateController.RateMap
                     {
                         cNewZoneMarkerOverlay.Markers.RemoveAt(cNewZoneMarkerOverlay.Markers.Count - 1);
                     }
-                    VerticesChanged?.Invoke(null, EventArgs.Empty);
+                    MapController.Refresh();
                 }
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("ZoneManager/DeleteLastVertex: " + ex.Message);
             }
+        }
+        public  bool EditZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
+        {
+            // rates, color
+            bool Result = false;
+            ErrorCode = 0;
+            try
+            {
+                MapZone ZoneToEdit = CurrentZone;
+                if (ZoneNameFound(name, ZoneToEdit))
+                {
+                    // check for duplicate name
+                    ErrorCode = 1;
+                }
+                else
+                {
+                    ZoneToEdit.Name = name;
+                    Dictionary<string, double> NewRates = new Dictionary<string, double>
+                    {
+                        { "ProductA", Rt0 },
+                        { "ProductB", Rt1 },
+                        { "ProductC", Rt2 },
+                        { "ProductD", Rt3 }
+                    };
+                    ZoneToEdit.Rates = NewRates;
+                    ZoneToEdit.ZoneColor = zoneColor;
+
+                    // Refresh polygons in overlay to reflect new color
+                    if (zoneOverlay != null)
+                    {
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(Palette.TargetZoneTransparency);
+                        foreach (var polygonToReplace in polygonsForZone)
+                        {
+                            if (polygonToReplace == null) continue;
+                            var existing = zoneOverlay.Polygons
+                                .FirstOrDefault(p => p.Points.SequenceEqual(polygonToReplace.Points));
+                            if (existing != null)
+                            {
+                                zoneOverlay.Polygons.Remove(existing);
+                            }
+                        }
+                        zoneOverlay = AddPolygons(zoneOverlay, polygonsForZone);
+                    }
+
+                    UpdateVariableRates();
+                    gmap.Refresh();
+                    MapChanged?.Invoke(null, EventArgs.Empty);
+                    Result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/EditZone: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public bool DeleteZone(string name)
+        {
+            bool Result = false;
+            try
+            {
+                if (string.IsNullOrEmpty(name) || cTargetZones == null || cTargetOverlay == null) return false;
+
+                // collect all zones with the given name (multi-polygons often share the same name)
+                var zonesToRemove = cTargetZones.Where(z => string.Equals(z.Name, name, StringComparison.Ordinal)).ToList();
+                if (zonesToRemove.Count == 0) return false;
+
+                foreach (var zone in zonesToRemove)
+                {
+                    // remove polygons from overlay that match the ones created for this zone
+                    List<GMapPolygon> polygonsToRemove = zone.ToGMapPolygons(Palette.ZoneTransparency);
+                    foreach (var polygonToRemove in polygonsToRemove)
+                    {
+                        if (polygonToRemove == null) continue;
+
+                        var polygonInOverlay = cTargetOverlay.Polygons.FirstOrDefault(polygon => polygon.Points.SequenceEqual(polygonToRemove.Points));
+
+                        if (polygonInOverlay != null)
+                        {
+                            cTargetOverlay.Polygons.Remove(polygonInOverlay);
+                            Result = true;
+                        }
+                    }
+                }
+
+                // also remove any remaining polygons in the overlay that carry this name (safety)
+                var leftovers = cTargetOverlay.Polygons.Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) || (p.Name != null && p.Name.StartsWith(name + "_hole", StringComparison.Ordinal))).ToList();
+                foreach (var p in leftovers) cTargetOverlay.Polygons.Remove(p);
+
+                // remove zones from the internal list
+                cTargetZones.RemoveAll(z => string.Equals(z.Name, name, StringComparison.Ordinal));
+
+                if (Result)
+                {
+                    //RemoveOverlay(zoneOverlay);   todo: check if this is necessary
+                    //AddOverlay(zoneOverlay);
+
+                    BuildTargetZonesIndex();
+
+                    MapController.Refresh();
+                    MapController.SaveMap();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/DeleteZone: " + ex.Message);
+            }
+            return Result;
         }
 
         public void LoadZones()
@@ -571,5 +678,12 @@ namespace RateController.RateMap
             }
             return Result;
         }
+    }
+
+    public static class CurrentZone
+    {
+        public static MapZone Zone { get; set; } = null;
+        public static double Hectares { get; set; } = 0.0;
+        public static bool TractorIsFound { get; set; } = false;
     }
 }
