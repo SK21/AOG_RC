@@ -1384,6 +1384,18 @@ namespace RateController.RateMap
                 try
                 {
                     if (zoneOverlay == null) zoneOverlay = new GMapOverlay("mapzones");
+
+                    // Rebuild polygons to ensure correct rendering after map resize
+                    zoneOverlay.Polygons.Clear();
+                    if (mapZones != null)
+                    {
+                        var targetZones = mapZones.Where(z => z.ZoneType == ZoneType.Target).ToList();
+                        foreach (var mapZone in targetZones)
+                        {
+                            AddPolygons(zoneOverlay, mapZone.ToGMapPolygons(Palette.TargetZoneTransparency));
+                        }
+                    }
+
                     AddOverlay(zoneOverlay);
                     gmap.Refresh();
                 }
