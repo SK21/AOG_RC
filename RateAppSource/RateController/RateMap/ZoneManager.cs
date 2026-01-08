@@ -15,25 +15,25 @@ namespace RateController.RateMap
     {
         public static double Hectares { get; set; } = 0.0;
         public static bool TractorIsFound { get; set; } = false;
-        public static MapZone Zone { get; set; } = null;
+        public static MapZone Zone { get; set; } = new MapZone("Base Rate", null, new Dictionary<string, double>(), Color.Blue, ZoneType.Target);
     }
 
     public class ZoneManager
     {
         private const double NearZero = 0.01;
-        private static GMapOverlay cNewZoneMarkerOverlay;
-        private static int LastHistoryCount;
-        private static DateTime LastHistoryLastTimestamp;
-        private static string LastLoadedMapPath;
-        private static int LastProductRates = -1;
-        private static List<PointLatLng> NewZoneVertices;
         private readonly CoverageTrail Trail = new CoverageTrail();
         private GMapOverlay cAppliedOverlay;
         private List<MapZone> cAppliedZonesList = new List<MapZone>();
+        private GMapOverlay cNewZoneMarkerOverlay;
         private bool cShowApplied;
         private bool cShowTarget;
         private GMapOverlay cTargetOverlay;
         private List<MapZone> cTargetZonesList = new List<MapZone>();
+        private int LastHistoryCount;
+        private DateTime LastHistoryLastTimestamp;
+        private string LastLoadedMapPath;
+        private int LastProductRates = -1;
+        private List<PointLatLng> NewZoneVertices;
         private STRtree<MapZone> STRtreeZoneIndex;
 
         public ZoneManager()
@@ -110,7 +110,7 @@ namespace RateController.RateMap
                 int ProductFilter = MapController.ProductFilter;
                 if (ProductFilter >= maxLen) ProductFilter = 0;
 
-                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > ProductFilter).Select(r => r.AppliedRates[ProductFilter]);
+                var baseSeries = readings.Where(r => r.AppliedRates != null && r.AppliedRates.Length > ProductFilter).Select(r => r.AppliedRates[ProductFilter]);
 
                 if (!MapController.TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
@@ -688,7 +688,7 @@ namespace RateController.RateMap
 
                 var last = readings.Last();
 
-                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
+                IEnumerable<double> baseSeries = readings.Where(r => r.AppliedRates != null && r.AppliedRates.Length > rateIndex).Select(r => r.AppliedRates[rateIndex]);
 
                 if (!MapController.TryComputeScale(baseSeries, out double minRate, out double maxRate))
                     return false;
