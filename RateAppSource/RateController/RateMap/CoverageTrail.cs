@@ -3,7 +3,6 @@ using GMap.NET.WindowsForms;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -112,9 +111,9 @@ namespace RateController.Classes
             }
         }
 
-        public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate,out List<double> PolyRates)
+        public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate, out List<double> PolyRates)
         {
-            PolyRates=new List<double>();
+            PolyRates = new List<double>();
             if (overlay == null) return;
 
             lock (_lock)
@@ -139,15 +138,18 @@ namespace RateController.Classes
                     while (i < segs.Count)
                     {
                         double RateTotal = segs[i].Rate;
+                        int count = 1;
+
                         int band = BandIndex(minRate, maxRate, segs[i].Rate, steps);
                         int j = i + 1;
                         while (j < segs.Count && BandIndex(minRate, maxRate, segs[j].Rate, steps) == band)
                         {
                             RateTotal += segs[j].Rate;
                             j++;
+                            count++;
                         }
 
-                        PolyRates.Add(RateTotal/j);
+                        PolyRates.Add(RateTotal / count);
 
                         // i..(j-1) is one contiguous band group
                         var leftChain = new List<PointLatLng>();
@@ -167,7 +169,7 @@ namespace RateController.Classes
                         polyPoints.AddRange(rightChain);
                         polyPoints.Add(leftChain[0]);
 
-                        var baseColor=Palette.GetColor(band);
+                        var baseColor = Palette.GetColor(band);
 
                         var poly = new GMapPolygon(polyPoints, "swath_band")
                         {

@@ -6,7 +6,6 @@ using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -216,7 +215,6 @@ namespace RateController.RateMap
                         };
                         rates[ZoneFields.Products[ProductFilter]] = rate;
 
-                        Debug.Print(i.ToString() + ": " + rates["ProductA"].ToString());
                         overlay.Polygons[i].Tag = rates;
                     }
                 }
