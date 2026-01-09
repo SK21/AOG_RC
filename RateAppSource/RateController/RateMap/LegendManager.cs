@@ -58,7 +58,11 @@ namespace RateController.Classes
             get { return cAppliedLegend; }
             set
             {
-                if (LegendsDiffer(cAppliedLegend, value)) cAppliedLegend = value;
+                if (LegendsDiffer(cAppliedLegend, value))
+                {
+                    cAppliedLegend = value;
+                    ShowLegend();
+                }
             }
         }
 

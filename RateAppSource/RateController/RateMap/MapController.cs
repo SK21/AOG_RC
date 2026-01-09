@@ -803,7 +803,8 @@ namespace RateController.RateMap
                         {
                             if (zone.Contains(cTractorPosition))
                             {
-                                CurrentZone.Zone = zone;
+                                // Use a deep copy so CurrentZone.Zone is detached from the original
+                                CurrentZone.Zone = ZoneManager.CloneZoneForCurrent(zone);
                                 CurrentZone.Hectares = zone.Hectares();
                                 CurrentZone.TractorIsFound = true;
                                 break;
@@ -813,15 +814,25 @@ namespace RateController.RateMap
                 }
                 if (!CurrentZone.TractorIsFound && Props.MainForm.Products != null)
                 {
-                    // use base rates
-                    CurrentZone.Zone.Name = "Base Rate";
-                    CurrentZone.Zone.Rates.Clear();
+                    // create a fresh base-rate zone instead of mutating an existing one
+                    var baseZone = new MapZone(
+                        "Base Rate",
+                        null,
+                        new Dictionary<string, double>(),
+                        Color.Blue,
+                        ZoneType.Target);
+
                     int count = 0;
                     foreach (double rate in Props.MainForm.Products.BaseRates())
                     {
-                        CurrentZone.Zone.Rates[ZoneFields.Products[count++]] = rate;
+                        if (count >= ZoneFields.Products.Length)
+                        {
+                            break;
+                        }
+                        baseZone.Rates[ZoneFields.Products[count++]] = rate;
                     }
-                    CurrentZone.Zone.ZoneColor = Color.Blue;
+
+                    CurrentZone.Zone = baseZone;
                     CurrentZone.Hectares = 0;
                 }
             }

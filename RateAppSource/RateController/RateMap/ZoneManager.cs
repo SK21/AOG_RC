@@ -89,6 +89,44 @@ namespace RateController.RateMap
         public List<MapZone> TargetZoneslist
         { get { return cTargetZonesList; } }
 
+        /// <summary>
+        /// Creates a deep copy of the given zone for use as the CurrentZone.
+        /// All public data is copied, including geometry and rates, so that
+        /// mutations to CurrentZone.Zone do not affect the original MapZone.
+        /// </summary>
+        public static MapZone CloneZoneForCurrent(MapZone source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            // Deep-copy geometry as a Polygon using NTS API if present
+            Polygon clonedGeometry = null;
+            if (source.Geometry != null)
+            {
+                // Geometry.Copy() preserves the concrete type when possible
+                clonedGeometry = source.Geometry.Copy() as Polygon;
+            }
+
+            // Deep-copy rates dictionary
+            var clonedRates = new Dictionary<string, double>(source.Rates.Count);
+            foreach (var kvp in source.Rates)
+            {
+                clonedRates[kvp.Key] = kvp.Value;
+            }
+
+            // Construct new MapZone with copied data
+            var clone = new MapZone(
+                source.Name,
+                clonedGeometry,
+                clonedRates,
+                source.ZoneColor,
+                source.ZoneType);
+
+            return clone;
+        }
+
         public void AddVertex(PointLatLng point)
         {
             NewZoneVertices.Add(point);
