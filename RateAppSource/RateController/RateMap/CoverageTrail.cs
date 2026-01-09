@@ -112,8 +112,9 @@ namespace RateController.Classes
             }
         }
 
-        public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate)
+        public void DrawTrail(GMapOverlay overlay, double minRate, double maxRate,out List<double> PolyRates)
         {
+            PolyRates=new List<double>();
             if (overlay == null) return;
 
             lock (_lock)
@@ -137,12 +138,16 @@ namespace RateController.Classes
                     int i = 0;
                     while (i < segs.Count)
                     {
+                        double RateTotal = segs[i].Rate;
                         int band = BandIndex(minRate, maxRate, segs[i].Rate, steps);
                         int j = i + 1;
                         while (j < segs.Count && BandIndex(minRate, maxRate, segs[j].Rate, steps) == band)
                         {
+                            RateTotal += segs[j].Rate;
                             j++;
                         }
+
+                        PolyRates.Add(RateTotal/j);
 
                         // i..(j-1) is one contiguous band group
                         var leftChain = new List<PointLatLng>();

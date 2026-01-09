@@ -6,6 +6,7 @@ using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -192,30 +193,34 @@ namespace RateController.RateMap
                     prevTime = r.Timestamp;
                 }
 
-                Trail.DrawTrail(overlay, minRate, maxRate);
+                List<double> AveRates = new List<double>();
+                Trail.DrawTrail(overlay, minRate, maxRate, out AveRates);
 
                 // After drawing the trail, assign applied rates to each polygon for shapefile export
                 if (overlay.Polygons.Count > 0)
                 {
                     int polygonCount = overlay.Polygons.Count;
-                    int readingCount = readings.Count;
-                    int maxProducts = readings.Max(r => r.AppliedRates?.Length ?? 0);
+                    int AveRatesCount = AveRates.Count;
 
-                    // Map polygons to readings (approximate: one polygon per segment)
                     for (int i = 0; i < polygonCount; i++)
                     {
-                        // Use the i-th reading, or last if out of range
-                        int readingIdx = Math.Min(i, readingCount - 1);
+                        double rate = 0;
+                        if (i < AveRatesCount) rate = AveRates[i];
+
                         var rates = new Dictionary<string, double>
                         {
-                            { "ProductA", (readings[readingIdx].AppliedRates.Length > 0) ? readings[readingIdx].AppliedRates[0] : 0.0 },
-                            { "ProductB", (readings[readingIdx].AppliedRates.Length > 1) ? readings[readingIdx].AppliedRates[1] : 0.0 },
-                            { "ProductC", (readings[readingIdx].AppliedRates.Length > 2) ? readings[readingIdx].AppliedRates[2] : 0.0 },
-                            { "ProductD", (readings[readingIdx].AppliedRates.Length > 3) ? readings[readingIdx].AppliedRates[3] : 0.0 }
+                            { ZoneFields.ProductA, 0 },
+                            { ZoneFields.ProductB, 0 },
+                            { ZoneFields.ProductC, 0 },
+                            { ZoneFields.ProductD, 0 },
                         };
+                        rates[ZoneFields.Products[ProductFilter]] = rate;
+
+                        Debug.Print(i.ToString() + ": " + rates["ProductA"].ToString());
                         overlay.Polygons[i].Tag = rates;
                     }
                 }
+
                 legend = MapController.legendManager.CreateAppliedLegend(minRate, maxRate, 5);
                 return true;
             }
@@ -748,7 +753,8 @@ namespace RateController.RateMap
                     Trail.Break();
                 }
 
-                Trail.DrawTrail(overlay, minRate, maxRate);
+                List<double> temp = new List<double>();
+                Trail.DrawTrail(overlay, minRate, maxRate, out temp);
 
                 legend = MapController.legendManager.CreateAppliedLegend(minRate, maxRate, 5);
 

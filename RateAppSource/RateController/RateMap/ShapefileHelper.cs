@@ -165,8 +165,6 @@ namespace RateController.Classes
             return new[] { g };
         }
 
-
-
         private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index)
         {
             try
@@ -333,5 +331,4 @@ namespace RateController.Classes
             return result;
         }
     }
-
 }
