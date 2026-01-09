@@ -3,7 +3,6 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
-using NetTopologySuite.Triangulate.Tri;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
@@ -262,47 +261,12 @@ namespace RateController.RateMap
                                 zoneColor = Color.FromArgb(255, sb.Color);
                             }
 
-                            // geometry for this applied swath
-                            Polygon geom = ConvertToNtsPolygon(polygon);
-
-                            // raw instantaneous rates (tag was set in BuildAppliedFromHistory)
-                            var taggedRates = polygon.Tag as Dictionary<string, double>;
-                            if (taggedRates == null)
-                            {
-                                taggedRates = new Dictionary<string, double>
-                            {
-                                { ZoneFields.ProductA, 0.0 },
-                                { ZoneFields.ProductB, 0.0 },
-                                { ZoneFields.ProductC, 0.0 },
-                                { ZoneFields.ProductD, 0.0 }
-                            };
-                            }
-
-                            var zone = new MapZone(
+                            NewAppliedZones.Add(new MapZone(
                                 name: $"Applied Zone {count++}",
-                                geometry: geom,
-                                rates: taggedRates,
+                                geometry: ConvertToNtsPolygon(polygon),
+                                rates: (Dictionary<string, double>)polygon.Tag,
                                 zoneColor: zoneColor,
-                                zoneType: ZoneType.Applied);
-
-                            // Approximate quantity applied in this swath:
-                            //   applied = rate (units/ha) * areaHa
-                            double areaHa = zone.Hectares();
-                            if (areaHa > 0.0 && zone.AppliedTotals != null)
-                            {
-                                double rA, rB, rC, rD;
-                                taggedRates.TryGetValue(ZoneFields.ProductA, out rA);
-                                taggedRates.TryGetValue(ZoneFields.ProductB, out rB);
-                                taggedRates.TryGetValue(ZoneFields.ProductC, out rC);
-                                taggedRates.TryGetValue(ZoneFields.ProductD, out rD);
-
-                                zone.AppliedTotals[ZoneFields.ProductA] += rA * areaHa;
-                                zone.AppliedTotals[ZoneFields.ProductB] += rB * areaHa;
-                                zone.AppliedTotals[ZoneFields.ProductC] += rC * areaHa;
-                                zone.AppliedTotals[ZoneFields.ProductD] += rD * areaHa;
-                            }
-
-                            NewAppliedZones.Add(zone);
+                                zoneType: ZoneType.Applied));
                         }
                         Result = true;
                     }
