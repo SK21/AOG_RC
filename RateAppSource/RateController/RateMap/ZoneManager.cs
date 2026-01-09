@@ -24,6 +24,7 @@ namespace RateController.RateMap
         private readonly CoverageTrail Trail = new CoverageTrail();
         private GMapOverlay cAppliedOverlay;
         private List<MapZone> cAppliedZonesList = new List<MapZone>();
+        private int[] cLookAheadSeconds = new int[Props.MaxProducts - 2];
         private GMapOverlay cNewZoneMarkerOverlay;
         private bool cShowApplied;
         private bool cShowTarget;
@@ -45,6 +46,8 @@ namespace RateController.RateMap
 
             cShowApplied = bool.TryParse(Props.GetProp("MapShowAppliedOverlay"), out bool sr) ? sr : false;
             cShowTarget = bool.TryParse(Props.GetProp("MapShowTargetOverlay"), out bool sz) ? sz : true;
+
+            LoadData();
         }
 
         public event EventHandler ZonesChanged;
@@ -65,6 +68,22 @@ namespace RateController.RateMap
 
         public List<MapZone> AppliedZonesList
         { get { return cAppliedZonesList; } }
+
+        public int[] LookAheadSeconds
+        {
+            get { return cLookAheadSeconds; }
+            set
+            {
+                if (value.Count() == cLookAheadSeconds.Count())
+                {
+                    cLookAheadSeconds = value;
+                    for (int i = 0; i < cLookAheadSeconds.Count(); i++)
+                    {
+                        Props.SetProp("LookAhead" + i.ToString(), cLookAheadSeconds[i].ToString());
+                    }
+                }
+            }
+        }
 
         public GMapOverlay NewZoneMarkerOverlay
         { get { return cNewZoneMarkerOverlay; } }
@@ -714,6 +733,15 @@ namespace RateController.RateMap
             double dx = (bLng - a.Lng) * metersPerDegLng;
             double dy = (bLat - a.Lat) * metersPerDegLat;
             return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        private void LoadData()
+        {
+            int tme = 0;
+            for (int i = 0; i < cLookAheadSeconds.Count(); i++)
+            {
+                cLookAheadSeconds[i] = int.TryParse(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 0;
+            }
         }
 
         private bool UpdateTrail(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,

@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RateController.Forms
@@ -330,6 +331,39 @@ namespace RateController.Forms
             }
         }
 
+        private void btnTimeCancel_Click(object sender, EventArgs e)
+        {
+            Initializing = true;
+            LoadTimes();
+            Initializing = false;
+            SetButtons(false);
+        }
+
+        private void btnTimeDefaults_Click(object sender, EventArgs e)
+        {
+            tbTime1.Text = "3";
+            tbTime2.Text = "3";
+            tbTime3.Text = "3";
+            tbTime4.Text = "3";
+        }
+
+        private void btnTimeOK_Click(object sender, EventArgs e)
+        {
+            int[] times = new int[4];
+            int tme = 0;
+            times[0] = int.TryParse(tbTime1.Text, out tme) ? tme : 0;
+            times[1] = int.TryParse(tbTime2.Text, out tme) ? tme : 0;
+            times[2] = int.TryParse(tbTime3.Text, out tme) ? tme : 0;
+            times[3] = int.TryParse(tbTime4.Text, out tme) ? tme : 0;
+
+            MapController.ZnOverlays.LookAheadSeconds = times;
+
+            Initializing = true;
+            LoadTimes();
+            Initializing = false;
+            SetButtons(false);
+        }
+
         private void btnTitleClose_Click(object sender, EventArgs e)
         {
             Close();
@@ -648,7 +682,7 @@ namespace RateController.Forms
                 tlpTitle.Top = 0;
                 tlpTitle.Left = 0;
 
-                tabControl1.ItemSize = new Size((tabControl1.Width - 10) / tabControl1.TabCount, tabControl1.ItemSize.Height);
+                tabControl1.ItemSize = new Size((tabControl1.Width - 14) / tabControl1.TabCount, tabControl1.ItemSize.Height);
 
                 foreach (TabPage tb in tabControl1.TabPages)
                 {
@@ -759,6 +793,16 @@ namespace RateController.Forms
             }
         }
 
+        private void LoadTimes()
+        {
+            int[] times = MapController.ZnOverlays.LookAheadSeconds;
+            int count = times.Count();
+            if (count > 0) tbTime1.Text = times[0].ToString("N0");
+            if (count > 1) tbTime2.Text = times[1].ToString("N0");
+            if (count > 2) tbTime3.Text = times[2].ToString("N0");
+            if (count > 3) tbTime4.Text = times[3].ToString("N0");
+        }
+
         private void MapController_MapChanged(object sender, EventArgs e)
         {
             UpdateForm();
@@ -824,6 +868,23 @@ namespace RateController.Forms
 
                 Props.SetAppProp("MapMaxLeft", this.Left.ToString());
                 Props.SetAppProp("MapMaxTop", this.Top.ToString());
+            }
+        }
+
+        private void SetButtons(bool Edited)
+        {
+            if (!Initializing)
+            {
+                if (Edited)
+                {
+                    btnTimeCancel.Enabled = true;
+                    btnTimeOK.Enabled = true;
+                }
+                else
+                {
+                    btnTimeCancel.Enabled = false;
+                    btnTimeOK.Enabled = false;
+                }
             }
         }
 
@@ -1054,6 +1115,67 @@ namespace RateController.Forms
             }
         }
 
+        private void tbTime1_Enter(object sender, EventArgs e)
+        {
+            int temp;
+            int.TryParse(tbTime1.Text, out temp);
+            using (var form = new FormNumeric(0, 30, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbTime1.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbTime1_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbTime2_Enter(object sender, EventArgs e)
+        {
+            int temp;
+            int.TryParse(tbTime2.Text, out temp);
+            using (var form = new FormNumeric(0, 30, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbTime2.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbTime3_Enter(object sender, EventArgs e)
+        {
+            int temp;
+            int.TryParse(tbTime3.Text, out temp);
+            using (var form = new FormNumeric(0, 30, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbTime3.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbTime4_Enter(object sender, EventArgs e)
+        {
+            int temp;
+            int.TryParse(tbTime4.Text, out temp);
+            using (var form = new FormNumeric(0, 30, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbTime4.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
@@ -1123,6 +1245,8 @@ namespace RateController.Forms
 
                 tbLong.Text = MapController.TractorPosition.Lng.ToString("N7");
                 tbLat.Text = MapController.TractorPosition.Lat.ToString("N7");
+
+                LoadTimes();
 
                 Initializing = false;
             }
