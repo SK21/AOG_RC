@@ -930,7 +930,7 @@ namespace RateController
             double Result = 0;
             if (Props.VariableRateEnabled && !Props.RateCalibrationOn)
             {
-                Result = MapController.GetRate(ID);
+                Result = MapController.GetRateWithLookAhead(ID);
             }
             else
             {

@@ -371,6 +371,31 @@ namespace RateController.RateMap
             return Result;
         }
 
+        public static double GetRateWithLookAhead(int RateID)
+        {
+            double Result = 0.0;
+
+            try
+            {
+                if (RateID >= 0 && RateID < ZoneFields.Products.Length)
+                {
+                    double speedMps = Props.Speed_KMH / 3.6;
+
+                    // Delegate to ZoneManager helper, which:
+                    // - uses cLookAheadSeconds[RateID] to compute look-ahead distance
+                    // - finds the look-ahead zone, if any
+                    // - falls back to CurrentZone.Zone when look-ahead is 0 or no zone
+
+                    Result = ZnOverlays.GetTargetRateWithLookAhead(RateID, cTractorPosition, cTravelHeading, speedMps);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/GetRateWithLookAhead: " + ex.Message);
+            }
+
+            return Result;
+        }
         public static void Initialize()
         {
             cProductFilter = int.TryParse(Props.GetProp("MapProductFilter"), out int pr) ? pr : 0;

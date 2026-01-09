@@ -793,6 +793,159 @@ namespace RateController.RateMap
             }
         }
 
+        /// <summary>
+        /// Computes the target zone at a look-ahead position for a specific product index,
+        /// based on the configured look-ahead time (seconds), current speed (m/s),
+        /// tractor position, and heading.
+        /// If look-ahead for this product is zero or no zone is found, returns null.
+        /// </summary>
+        /// <param name="productIndex">Index into ZoneFields.Products / AppliedRates.</param>
+        /// <param name="tractorPos">Current tractor GPS position.</param>
+        /// <param name="headingDegrees">Current heading in degrees (0..360).</param>
+        /// <param name="speedMetersPerSecond">Current ground speed in m/s.</param>
+        /// <returns>Look-ahead MapZone or null if not available.</returns>
+        public MapZone GetLookAheadZoneForProduct(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
+        {
+            try
+            {
+                if (productIndex < 0 || productIndex >= cLookAheadSeconds.Length)
+                {
+                    return null;
+                }
+
+                int delaySeconds = cLookAheadSeconds[productIndex];
+                if (delaySeconds <= 0 || speedMetersPerSecond <= 0.0)
+                {
+                    // no look-ahead configured or not moving
+                    return null;
+                }
+
+                if (STRtreeZoneIndex == null)
+                {
+                    // no target zones loaded/indexed
+                    return null;
+                }
+
+                double lookAheadDistanceMeters = speedMetersPerSecond * delaySeconds;
+
+                PointLatLng lookAheadPoint = ProjectPoint(tractorPos, headingDegrees, lookAheadDistanceMeters);
+
+                return FindZoneAtPoint(lookAheadPoint);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/GetLookAheadZoneForProduct: " + ex.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the target rate for a product index, optionally using look-ahead
+        /// if configured. If no look-ahead zone is found, falls back to the current zone.
+        /// </summary>
+        /// <param name="productIndex">Index of the product/rate.</param>
+        /// <param name="tractorPos">Current tractor GPS position.</param>
+        /// <param name="headingDegrees">Current heading in degrees (0..360).</param>
+        /// <param name="speedMetersPerSecond">Current ground speed in m/s.</param>
+        /// <returns>Target rate in the appropriate units, or 0.0 if none.</returns>
+        public double GetTargetRateWithLookAhead(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
+        {
+            double targetRate = 0.0;
+
+            try
+            {
+                // Try look-ahead zone first
+                MapZone lookAheadZone = GetLookAheadZoneForProduct(productIndex, tractorPos, headingDegrees, speedMetersPerSecond);
+
+                MapZone zoneToUse = lookAheadZone ?? CurrentZone.Zone;
+                if (zoneToUse == null || zoneToUse.Rates == null)
+                {
+                    return 0.0;
+                }
+
+                if (productIndex < 0 || productIndex >= ZoneFields.Products.Length)
+                {
+                    return 0.0;
+                }
+
+                string productKey = ZoneFields.Products[productIndex];
+
+                double value;
+                if (zoneToUse.Rates.TryGetValue(productKey, out value))
+                {
+                    targetRate = value;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/GetTargetRateWithLookAhead: " + ex.Message);
+            }
+
+            return targetRate;
+        }
+
+        /// <summary>
+        /// Projects a point forward by distanceMeters along headingDegrees using
+        /// a simple local-plane approximation consistent with DistanceMeters().
+        /// </summary>
+        private PointLatLng ProjectPoint(PointLatLng origin, double headingDegrees, double distanceMeters)
+        {
+            const double metersPerDegLat = 111320.0;
+            double latRad = origin.Lat * Math.PI / 180.0;
+            double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
+
+            double headingRad = headingDegrees * Math.PI / 180.0;
+
+            double dx = Math.Sin(headingRad) * distanceMeters; // east-west
+            double dy = Math.Cos(headingRad) * distanceMeters; // north-south
+
+            double dLat = dy / metersPerDegLat;
+            double dLng = dx / metersPerDegLng;
+
+            return new PointLatLng(origin.Lat + dLat, origin.Lng + dLng);
+        }
+
+        /// <summary>
+        /// Uses the STRtree index to find the first target zone whose geometry
+        /// contains the given point. Returns null if none is found.
+        /// </summary>
+        private MapZone FindZoneAtPoint(PointLatLng point)
+        {
+            if (STRtreeZoneIndex == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                const double epsilon = 1e-6;
+                var env = new Envelope(point.Lng - epsilon, point.Lng + epsilon, point.Lat - epsilon, point.Lat + epsilon);
+
+                IList<MapZone> candidates = STRtreeZoneIndex.Query(env);
+                if (candidates == null || candidates.Count == 0)
+                {
+                    return null;
+                }
+
+                var gf = new GeometryFactory();
+                var pt = gf.CreatePoint(new Coordinate(point.Lng, point.Lat));
+
+                foreach (MapZone zone in candidates)
+                {
+                    if (zone != null && zone.Geometry != null && zone.Geometry.Contains(pt))
+                    {
+                        return zone;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/FindZoneAtPoint: " + ex.Message);
+            }
+
+            return null;
+        }
+
         private bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
         {
             bool Result = false;
