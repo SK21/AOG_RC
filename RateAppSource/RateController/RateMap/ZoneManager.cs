@@ -839,41 +839,62 @@ namespace RateController.RateMap
             }
         }
 
-        /// <summary>
-        /// Returns the target rate for a product index, optionally using look-ahead
-        /// if configured. If no look-ahead zone is found, falls back to the current zone.
-        /// </summary>
-        /// <param name="productIndex">Index of the product/rate.</param>
-        /// <param name="tractorPos">Current tractor GPS position.</param>
-        /// <param name="headingDegrees">Current heading in degrees (0..360).</param>
-        /// <param name="speedMetersPerSecond">Current ground speed in m/s.</param>
-        /// <returns>Target rate in the appropriate units, or 0.0 if none.</returns>
         public double GetTargetRateWithLookAhead(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
         {
             double targetRate = 0.0;
 
             try
             {
-                // Try look-ahead zone first
-                MapZone lookAheadZone = GetLookAheadZoneForProduct(productIndex, tractorPos, headingDegrees, speedMetersPerSecond);
-
-                MapZone zoneToUse = lookAheadZone ?? CurrentZone.Zone;
-                if (zoneToUse == null || zoneToUse.Rates == null)
+                if (productIndex >= 0 && productIndex < ZoneFields.Products.Length)
                 {
-                    return 0.0;
-                }
+                    MapZone zoneToUse = null;
+                    if (productIndex < cLookAheadSeconds.Length && cLookAheadSeconds[productIndex] > 0 && speedMetersPerSecond > 0.0)
+                    {
+                        // use look-ahead rate
 
-                if (productIndex < 0 || productIndex >= ZoneFields.Products.Length)
-                {
-                    return 0.0;
-                }
+                        // look-ahead point
+                        int delaySeconds = cLookAheadSeconds[productIndex];
+                        double lookAheadDistanceMeters = speedMetersPerSecond * delaySeconds;
+                        PointLatLng lookAheadPoint = ProjectPoint(tractorPos, headingDegrees, lookAheadDistanceMeters);
 
-                string productKey = ZoneFields.Products[productIndex];
+                        MapZone lookAheadZone = FindZoneAtPoint(lookAheadPoint);
+                        if (lookAheadZone == null)
+                        {
+                            // use base rate at projected point
+                            var rates = Props.MainForm.Products.BaseRates();
+                            targetRate= rates[productIndex];
+                        }
+                        else
+                        {
+                            // use zone rate at project point 
+                            zoneToUse = lookAheadZone;
+                            if (zoneToUse != null && zoneToUse.Rates != null)
+                            {
+                                string productKey = ZoneFields.Products[productIndex];
 
-                double value;
-                if (zoneToUse.Rates.TryGetValue(productKey, out value))
-                {
-                    targetRate = value;
+                                double value;
+                                if (zoneToUse.Rates.TryGetValue(productKey, out value))
+                                {
+                                    targetRate = value;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // use current rate
+                        zoneToUse = CurrentZone.Zone;
+                        if (zoneToUse != null && zoneToUse.Rates != null)
+                        {
+                            string productKey = ZoneFields.Products[productIndex];
+
+                            double value;
+                            if (zoneToUse.Rates.TryGetValue(productKey, out value))
+                            {
+                                targetRate = value;
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
