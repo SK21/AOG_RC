@@ -322,10 +322,10 @@ namespace RateController.RateMap
 
                     MapZone NewZone = new MapZone(name, polygon, new Dictionary<string, double>
                     {
-                        { "ProductA", Rt0 },
-                        { "ProductB", Rt1 },
-                        { "ProductC", Rt2 },
-                        { "ProductD", Rt3 }
+                        { ZoneFields.ProductA, Rt0 },
+                        { ZoneFields.ProductB, Rt1 },
+                        { ZoneFields.ProductC, Rt2 },
+                        { ZoneFields.ProductD, Rt3 }
                     }, zoneColor, ZoneType.Target);
 
                     cTargetZonesList.Add(NewZone);

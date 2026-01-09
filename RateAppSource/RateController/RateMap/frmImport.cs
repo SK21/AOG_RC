@@ -75,7 +75,7 @@ namespace RateController.Forms
             }
 
             // Map predefined attributes to shapefile attributes
-            var predefinedAttributes = new[] { "Name", "ProductA", "ProductB", "ProductC", "ProductD", "Color" };
+            var predefinedAttributes = new[] { ZoneFields.Name, ZoneFields.ProductA, ZoneFields.ProductB, ZoneFields.ProductC, ZoneFields.ProductD, ZoneFields.Color };
 
             dgvMapping.Rows.Clear();
 
