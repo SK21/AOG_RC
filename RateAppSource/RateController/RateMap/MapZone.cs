@@ -21,11 +21,27 @@ namespace RateController.Classes
             Rates = rates;
             ZoneColor = zoneColor;
             ZoneType = zoneType;
+
+            // Initialize applied totals per product (optional for target zones)
+            AppliedTotals = new Dictionary<string, double>
+            {
+                { ZoneFields.ProductA, 0.0 },
+                { ZoneFields.ProductB, 0.0 },
+                { ZoneFields.ProductC, 0.0 },
+                { ZoneFields.ProductD, 0.0 }
+            };
         }
 
         public Polygon Geometry { get; set; }
         public string Name { get; set; }
         public Dictionary<string, double> Rates { get; set; }
+
+        /// <summary>
+        /// Total quantity applied in this zone per product (same keys as Rates).
+        /// Units should match the product quantity units (e.g., L, kg, etc.).
+        /// Only meaningful for applied zones.
+        /// </summary>
+        public Dictionary<string, double> AppliedTotals { get; set; }
 
         public Color ZoneColor
         {
@@ -78,7 +94,32 @@ namespace RateController.Classes
             }
             return totalArea;
         }
+        /// <summary>
+        /// Returns the average applied rate for the given product key
+        /// (e.g. ZoneFields.ProductA) computed as AppliedTotals[productKey] / Hectares().
+        /// Returns 0 if area is zero or product key is missing.
+        /// </summary>
+        public double GetAverageAppliedRate(string productKey)
+        {
+            if (string.IsNullOrEmpty(productKey))
+            {
+                return 0.0;
+            }
 
+            double areaHa = Hectares();
+            if (areaHa <= 0.0 || AppliedTotals == null)
+            {
+                return 0.0;
+            }
+
+            double total;
+            if (!AppliedTotals.TryGetValue(productKey, out total))
+            {
+                return 0.0;
+            }
+
+            return total / areaHa;
+        }
         public List<GMapPolygon> ToGMapPolygons(byte Transparentcy = 50)
         {
             var polygons = new List<GMapPolygon>();

@@ -12,11 +12,9 @@ namespace RateController.Classes
 {
     public class LegendBand
     {
-        public string ColorHtml { get; set; }
+        public string ColorHtml { get; set; }        // e.g. "#FF0000"
         public double Max { get; set; }
         public double Min { get; set; }
-
-        // e.g. "#FF0000"
         public int ProductIndex { get; set; }   // 0 = ProductA, 1 = ProductB, ...
     }
 

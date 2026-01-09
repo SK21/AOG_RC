@@ -107,15 +107,20 @@ namespace RateController.Classes
 
                     foreach (var z in AppliedZones)
                     {
+                        double avgA = z.GetAverageAppliedRate(ZoneFields.ProductA);
+                        double avgB = z.GetAverageAppliedRate(ZoneFields.ProductB);
+                        double avgC = z.GetAverageAppliedRate(ZoneFields.ProductC);
+                        double avgD = z.GetAverageAppliedRate(ZoneFields.ProductD);
+
                         features.Add(new Feature(
                             z.Geometry,
                             new AttributesTable
                             {
                             { ZoneFields.Name, z.Name },
-                            { ZoneFields.ProductA, z.Rates[ZoneFields.ProductA] },
-                            { ZoneFields.ProductB, z.Rates[ZoneFields.ProductB] },
-                            { ZoneFields.ProductC, z.Rates[ZoneFields.ProductC] },
-                            { ZoneFields.ProductD, z.Rates[ZoneFields.ProductD] },
+                            { ZoneFields.ProductA, avgA },
+                            { ZoneFields.ProductB, avgB },
+                            { ZoneFields.ProductC, avgC },
+                            { ZoneFields.ProductD, avgD },
                             { ZoneFields.Color, ColorTranslator.ToHtml(z.ZoneColor) },
                             { ZoneFields.ZoneType, ZoneType.Applied.ToString() }
                             }));
@@ -259,13 +264,38 @@ namespace RateController.Classes
 
             foreach (var group in groups)
             {
+                // Precompute areas for weighting. Skip any with zero/negative area.
+                var zonesWithArea = new List<(MapZone Zone, double AreaHa)>();
+                foreach (var z in group)
+                {
+                    double areaHa = 0.0;
+                    try
+                    {
+                        areaHa = z.Hectares();
+                    }
+                    catch
+                    {
+                        // ignore area errors, keep area=0 so it will be skipped from weighting
+                    }
+
+                    if (areaHa > 0.0)
+                    {
+                        zonesWithArea.Add((z, areaHa));
+                    }
+                }
+
+                if (zonesWithArea.Count == 0)
+                {
+                    continue;
+                }
+
                 // Clean geometries with a zero-width buffer to fix minor topology issues
-                var cleaned = group
-                    .Select(z =>
+                var cleaned = zonesWithArea
+                    .Select(t =>
                     {
                         try
                         {
-                            return z.Geometry.Buffer(0);
+                            return t.Zone.Geometry.Buffer(0);
                         }
                         catch
                         {
@@ -276,7 +306,9 @@ namespace RateController.Classes
                     .ToList();
 
                 if (cleaned.Count == 0)
+                {
                     continue;
+                }
 
                 Geometry merged;
 
@@ -304,14 +336,39 @@ namespace RateController.Classes
                 if (merged == null || merged.IsEmpty)
                     continue;
 
-                // Average rates inside color group (so merged zone still represents
-                // the same rate band, just with smoothed geometry)
+                // Sum totals and area across the group
+                double sumAreaHa = 0.0;
+                double sumTotA = 0.0;
+                double sumTotB = 0.0;
+                double sumTotC = 0.0;
+                double sumTotD = 0.0;
+
+                foreach (var t in zonesWithArea)
+                {
+                    sumAreaHa += t.AreaHa;
+
+                    if (t.Zone.AppliedTotals != null)
+                    {
+                        double v;
+                        if (t.Zone.AppliedTotals.TryGetValue(ZoneFields.ProductA, out v)) sumTotA += v;
+                        if (t.Zone.AppliedTotals.TryGetValue(ZoneFields.ProductB, out v)) sumTotB += v;
+                        if (t.Zone.AppliedTotals.TryGetValue(ZoneFields.ProductC, out v)) sumTotC += v;
+                        if (t.Zone.AppliedTotals.TryGetValue(ZoneFields.ProductD, out v)) sumTotD += v;
+                    }
+                }
+
+                if (sumAreaHa <= 0.0)
+                {
+                    continue;
+                }
+
+                // Compute average rates = totalApplied / totalArea
                 var avgRates = new Dictionary<string, double>
                 {
-                    { ZoneFields.ProductA, group.Average(z => z.Rates[ZoneFields.ProductA]) },
-                    { ZoneFields.ProductB, group.Average(z => z.Rates[ZoneFields.ProductB]) },
-                    { ZoneFields.ProductC, group.Average(z => z.Rates[ZoneFields.ProductC]) },
-                    { ZoneFields.ProductD, group.Average(z => z.Rates[ZoneFields.ProductD]) }
+                    { ZoneFields.ProductA, sumTotA / sumAreaHa },
+                    { ZoneFields.ProductB, sumTotB / sumAreaHa },
+                    { ZoneFields.ProductC, sumTotC / sumAreaHa },
+                    { ZoneFields.ProductD, sumTotD / sumAreaHa }
                 };
 
                 Color groupColor = group.Key;
@@ -320,12 +377,24 @@ namespace RateController.Classes
                 {
                     if (geom is Polygon poly)
                     {
-                        result.Add(new MapZone(
+                        var mergedZone = new MapZone(
                             name: $"Applied Zone {zoneCounter++}",
                             geometry: poly,
                             rates: avgRates,
                             zoneColor: groupColor,
-                            zoneType: ZoneType.Applied));
+                            zoneType: ZoneType.Applied);
+
+                        // Keep total applied and area on the merged zone too (optional)
+                        double mergedAreaHa = mergedZone.Hectares();
+                        if (mergedAreaHa > 0.0 && mergedZone.AppliedTotals != null)
+                        {
+                            mergedZone.AppliedTotals[ZoneFields.ProductA] = sumTotA;
+                            mergedZone.AppliedTotals[ZoneFields.ProductB] = sumTotB;
+                            mergedZone.AppliedTotals[ZoneFields.ProductC] = sumTotC;
+                            mergedZone.AppliedTotals[ZoneFields.ProductD] = sumTotD;
+                        }
+
+                        result.Add(mergedZone);
                     }
                 }
             }
