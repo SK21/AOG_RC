@@ -106,6 +106,7 @@
             this.btnTimeOK = new System.Windows.Forms.Button();
             this.btnTimeCancel = new System.Windows.Forms.Button();
             this.btnTimeDefaults = new System.Windows.Forms.Button();
+            this.ckAutoTune = new System.Windows.Forms.CheckBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -939,6 +940,7 @@
             // 
             // tabVR
             // 
+            this.tabVR.Controls.Add(this.ckAutoTune);
             this.tabVR.Controls.Add(this.btnTimeDefaults);
             this.tabVR.Controls.Add(this.btnTimeOK);
             this.tabVR.Controls.Add(this.btnTimeCancel);
@@ -961,7 +963,7 @@
             // 
             // tbTime1
             // 
-            this.tbTime1.Location = new System.Drawing.Point(261, 75);
+            this.tbTime1.Location = new System.Drawing.Point(261, 67);
             this.tbTime1.Name = "tbTime1";
             this.tbTime1.Size = new System.Drawing.Size(80, 29);
             this.tbTime1.TabIndex = 364;
@@ -971,7 +973,7 @@
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(81, 77);
+            this.label6.Location = new System.Drawing.Point(81, 69);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(116, 24);
             this.label6.TabIndex = 365;
@@ -979,7 +981,7 @@
             // 
             // tbTime2
             // 
-            this.tbTime2.Location = new System.Drawing.Point(261, 129);
+            this.tbTime2.Location = new System.Drawing.Point(261, 121);
             this.tbTime2.Name = "tbTime2";
             this.tbTime2.Size = new System.Drawing.Size(80, 29);
             this.tbTime2.TabIndex = 366;
@@ -989,7 +991,7 @@
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(81, 239);
+            this.label7.Location = new System.Drawing.Point(81, 231);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(116, 24);
             this.label7.TabIndex = 371;
@@ -997,7 +999,7 @@
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(81, 131);
+            this.label8.Location = new System.Drawing.Point(81, 123);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(116, 24);
             this.label8.TabIndex = 367;
@@ -1005,7 +1007,7 @@
             // 
             // tbTime4
             // 
-            this.tbTime4.Location = new System.Drawing.Point(261, 237);
+            this.tbTime4.Location = new System.Drawing.Point(261, 229);
             this.tbTime4.Name = "tbTime4";
             this.tbTime4.Size = new System.Drawing.Size(80, 29);
             this.tbTime4.TabIndex = 370;
@@ -1015,7 +1017,7 @@
             // 
             // tbTime3
             // 
-            this.tbTime3.Location = new System.Drawing.Point(261, 183);
+            this.tbTime3.Location = new System.Drawing.Point(261, 175);
             this.tbTime3.Name = "tbTime3";
             this.tbTime3.Size = new System.Drawing.Size(80, 29);
             this.tbTime3.TabIndex = 368;
@@ -1025,7 +1027,7 @@
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(81, 185);
+            this.label9.Location = new System.Drawing.Point(81, 177);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 24);
             this.label9.TabIndex = 369;
@@ -1034,7 +1036,7 @@
             // label10
             // 
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(85, 37);
+            this.label10.Location = new System.Drawing.Point(85, 24);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(256, 24);
             this.label10.TabIndex = 372;
@@ -1051,7 +1053,7 @@
             this.btnTimeOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnTimeOK.Image = global::RateController.Properties.Resources.Save;
             this.btnTimeOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTimeOK.Location = new System.Drawing.Point(346, 308);
+            this.btnTimeOK.Location = new System.Drawing.Point(345, 298);
             this.btnTimeOK.Name = "btnTimeOK";
             this.btnTimeOK.Size = new System.Drawing.Size(70, 63);
             this.btnTimeOK.TabIndex = 373;
@@ -1069,7 +1071,7 @@
             this.btnTimeCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnTimeCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnTimeCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTimeCancel.Location = new System.Drawing.Point(271, 308);
+            this.btnTimeCancel.Location = new System.Drawing.Point(270, 298);
             this.btnTimeCancel.Name = "btnTimeCancel";
             this.btnTimeCancel.Size = new System.Drawing.Size(70, 63);
             this.btnTimeCancel.TabIndex = 374;
@@ -1086,13 +1088,27 @@
             this.btnTimeDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnTimeDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
             this.btnTimeDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTimeDefaults.Location = new System.Drawing.Point(196, 308);
+            this.btnTimeDefaults.Location = new System.Drawing.Point(195, 298);
             this.btnTimeDefaults.Name = "btnTimeDefaults";
             this.btnTimeDefaults.Size = new System.Drawing.Size(70, 63);
             this.btnTimeDefaults.TabIndex = 375;
             this.btnTimeDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnTimeDefaults.UseVisualStyleBackColor = false;
             this.btnTimeDefaults.Click += new System.EventHandler(this.btnTimeDefaults_Click);
+            // 
+            // ckAutoTune
+            // 
+            this.ckAutoTune.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckAutoTune.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckAutoTune.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckAutoTune.Location = new System.Drawing.Point(40, 297);
+            this.ckAutoTune.Name = "ckAutoTune";
+            this.ckAutoTune.Size = new System.Drawing.Size(89, 64);
+            this.ckAutoTune.TabIndex = 376;
+            this.ckAutoTune.Text = "Auto Tune";
+            this.ckAutoTune.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckAutoTune.UseVisualStyleBackColor = true;
+            this.ckAutoTune.CheckedChanged += new System.EventHandler(this.ckAutoTune_CheckedChanged);
             // 
             // frmMap
             // 
@@ -1210,5 +1226,6 @@
         private System.Windows.Forms.Button btnTimeOK;
         private System.Windows.Forms.Button btnTimeCancel;
         private System.Windows.Forms.Button btnTimeDefaults;
+        private System.Windows.Forms.CheckBox ckAutoTune;
     }
 }

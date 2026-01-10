@@ -37,15 +37,24 @@ namespace RateController.RateMap
         private List<PointLatLng> NewZoneVertices;
         private STRtree<MapZone> STRtreeZoneIndex;
 
+        #region auto tune
+
+        private bool cAutoTune = false;
+        private bool[] cHasLastSample = new bool[Props.MaxProducts - 2];
+        private double[] cLastAppliedRate = new double[Props.MaxProducts - 2];
+        private PointLatLng[] cLastSamplePosition = new PointLatLng[Props.MaxProducts - 2];
+        private DateTime[] cLastSampleTime = new DateTime[Props.MaxProducts - 2];
+        private int[] cLastTuneDirection = new int[Props.MaxProducts - 2];
+        private MapZone[] cLastZoneAtPosition = new MapZone[Props.MaxProducts - 2];
+
+        #endregion auto tune
+
         public ZoneManager()
         {
             cNewZoneMarkerOverlay = new GMapOverlay("tempMarkers");
             cAppliedOverlay = new GMapOverlay("AppliedRates");
             cTargetOverlay = new GMapOverlay("TargetRates");
             NewZoneVertices = new List<PointLatLng>();
-
-            cShowApplied = bool.TryParse(Props.GetProp("MapShowAppliedOverlay"), out bool sr) ? sr : false;
-            cShowTarget = bool.TryParse(Props.GetProp("MapShowTargetOverlay"), out bool sz) ? sz : true;
 
             LoadData();
         }
@@ -68,6 +77,16 @@ namespace RateController.RateMap
 
         public List<MapZone> AppliedZonesList
         { get { return cAppliedZonesList; } }
+
+        public bool AutoTune
+        {
+            get { return cAutoTune; }
+            set
+            {
+                cAutoTune = value;
+                Props.SetProp("MapAutoTune", cAutoTune.ToString());
+            }
+        }
 
         public int[] LookAheadSeconds
         {
@@ -304,6 +323,7 @@ namespace RateController.RateMap
 
         public void Close()
         {
+            LookAheadSeconds = cLookAheadSeconds;   // save any changes from auto tuning
             cAppliedOverlay = null;
             cTargetOverlay = null;
             cNewZoneMarkerOverlay = null;
@@ -488,6 +508,87 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("ZoneManger/EditZone: " + ex.Message);
             }
             return Result;
+        }
+
+        /// <summary>
+        /// Computes the target zone at a look-ahead position for a specific product index,
+        /// based on the configured look-ahead time (seconds), current speed (m/s),
+        /// tractor position, and heading.
+        /// If look-ahead for this product is zero or no zone is found, returns null.
+        /// </summary>
+        /// <param name="productIndex">Index into ZoneFields.Products / AppliedRates.</param>
+        /// <param name="tractorPos">Current tractor GPS position.</param>
+        /// <param name="headingDegrees">Current heading in degrees (0..360).</param>
+        /// <param name="speedMetersPerSecond">Current ground speed in m/s.</param>
+        /// <returns>Look-ahead MapZone or null if not available.</returns>
+
+        public double GetTargetRateWithLookAhead(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
+        {
+            double targetRate = 0.0;
+
+            try
+            {
+                if (productIndex >= 0 && productIndex < ZoneFields.Products.Length)
+                {
+                    MapZone zoneToUse = null;
+                    if (productIndex < cLookAheadSeconds.Length && cLookAheadSeconds[productIndex] > 0 && speedMetersPerSecond > 0.0)
+                    {
+                        // use look-ahead rate
+
+                        // look-ahead point
+                        int delaySeconds = cLookAheadSeconds[productIndex];
+                        double lookAheadDistanceMeters = speedMetersPerSecond * delaySeconds;
+                        PointLatLng lookAheadPoint = ProjectPoint(tractorPos, headingDegrees, lookAheadDistanceMeters);
+
+                        MapZone lookAheadZone = FindZoneAtPoint(lookAheadPoint);
+                        if (lookAheadZone == null)
+                        {
+                            // use base rate at projected point
+                            var rates = Props.MainForm.Products.BaseRates();
+                            targetRate = rates[productIndex];
+                        }
+                        else
+                        {
+                            // use zone rate at project point
+                            zoneToUse = lookAheadZone;
+                            if (zoneToUse != null && zoneToUse.Rates != null)
+                            {
+                                string productKey = ZoneFields.Products[productIndex];
+
+                                double value;
+                                if (zoneToUse.Rates.TryGetValue(productKey, out value))
+                                {
+                                    targetRate = value;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // use current rate
+                        zoneToUse = CurrentZone.Zone;
+                        if (zoneToUse != null && zoneToUse.Rates != null)
+                        {
+                            string productKey = ZoneFields.Products[productIndex];
+
+                            double value;
+                            if (zoneToUse.Rates.TryGetValue(productKey, out value))
+                            {
+                                targetRate = value;
+                            }
+                        }
+                    }
+
+                    // auto-tune user-provided look-ahead time (persisted)
+                    AutoTuneLookAhead(productIndex, tractorPos);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/GetTargetRateWithLookAhead: " + ex.Message);
+            }
+
+            return targetRate;
         }
 
         public void LoadZones()
@@ -675,6 +776,170 @@ namespace RateController.RateMap
                    cAppliedOverlay.Polygons.Count > 0;
         }
 
+        /// <summary>
+        /// Auto-adjusts the user-provided look-ahead seconds for the given product index.
+        /// Uses APPLIED rates (ProductAppliedRates) vs desired (zone/base) and includes
+        /// a distance/time response window so non-instant rate changes are allowed.
+        /// </summary>
+        private void AutoTuneLookAhead(int productIndex, PointLatLng tractorPos)
+        {
+            try
+            {
+                if (!cAutoTune)
+                {
+                    return;
+                }
+
+                if (productIndex < 0 || productIndex >= cLookAheadSeconds.Length)
+                {
+                    return;
+                }
+
+                // 1) Get current applied rate for this product
+                double appliedRate = 0.0;
+                if (Props.MainForm != null && Props.MainForm.Products != null)
+                {
+                    double[] appliedArray = Props.MainForm.Products.ProductAppliedRates();
+                    if (appliedArray != null && productIndex < appliedArray.Length)
+                    {
+                        appliedRate = appliedArray[productIndex];
+                    }
+                }
+
+                // 2) Determine current zone at tractor position (defined or base).
+                MapZone currentZone = null;
+                if (Rtree != null)
+                {
+                    var env = new Envelope(tractorPos.Lng, tractorPos.Lng, tractorPos.Lat, tractorPos.Lat);
+                    var candidates = Rtree.Query(env);
+                    if (candidates != null && candidates.Count > 0)
+                    {
+                        foreach (var z in candidates.OrderByDescending(z => cTargetZonesList.IndexOf(z)))
+                        {
+                            if (z.Contains(tractorPos))
+                            {
+                                currentZone = z;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                bool inDefinedZone = currentZone != null;
+                double baseRate = 0.0;
+                if (!inDefinedZone && Props.MainForm != null && Props.MainForm.Products != null)
+                {
+                    var baseRates = Props.MainForm.Products.BaseRates();
+                    if (baseRates != null && productIndex < baseRates.Length)
+                    {
+                        baseRate = baseRates[productIndex];
+                    }
+                }
+
+                MapZone lastZone = cLastZoneAtPosition[productIndex];
+                double lastAppliedRate = cLastAppliedRate[productIndex];
+                bool hasLast = cHasLastSample[productIndex];
+
+                // 3) Desired rate at current position (zone or base).
+                double desiredRate = 0.0;
+                if (inDefinedZone && currentZone.Rates != null)
+                {
+                    string key = ZoneFields.Products[productIndex];
+                    double v;
+                    if (currentZone.Rates.TryGetValue(key, out v))
+                    {
+                        desiredRate = v;
+                    }
+                }
+                else
+                {
+                    desiredRate = baseRate;
+                }
+
+                if (hasLast)
+                {
+                    bool zoneChanged = !ReferenceEquals(lastZone, currentZone);
+
+                    // Reset pending direction when zone changes
+                    if (zoneChanged) cLastTuneDirection[productIndex] = 0;
+
+                    // 5% relative threshold with a small absolute floor to avoid noise at low rates
+                    const double pctThreshold = 0.05;      // 5%
+                    const double absFloor = 0.1;           // minimum meaningful difference
+                    double threshold = Math.Max(Math.Abs(desiredRate) * pctThreshold, absFloor);
+
+                    bool rateChanged = Math.Abs(appliedRate - lastAppliedRate) > threshold;
+
+                    // 4) Response window: ensure we give the system some distance/time
+                    // to react before judging early/late behavior.
+                    const double minMetersBetweenSamples = 3.0;   // tune for your machine
+                    const double minSecondsBetweenSamples = 2.0;  // tune for your machine
+
+                    double distMoved = DistanceMeters(cLastSamplePosition[productIndex], tractorPos.Lat, tractorPos.Lng);
+
+                    double secondsSinceLast = (DateTime.UtcNow - cLastSampleTime[productIndex]).TotalSeconds;
+
+                    bool responseWindowOk = distMoved >= minMetersBetweenSamples && secondsSinceLast >= minSecondsBetweenSamples;
+
+                    // Only consider tuning when we are around a boundary / rate change
+                    // AND the implement had some time/distance to respond.
+                    if ((zoneChanged || rateChanged) && responseWindowOk)
+                    {
+                        const int stepSeconds = 1;  // tuning step
+                        const int minSeconds = 0;
+                        const int maxSeconds = 10;  // adjust as needed
+
+                        int tuneDirection = 0;
+
+                        // Early → look-ahead too big
+                        if (appliedRate > desiredRate + threshold)
+                        {
+                            tuneDirection = -1;
+                        }
+                        // Late → look-ahead too small
+                        else if (appliedRate + threshold < desiredRate)
+                        {
+                            tuneDirection = +1;
+                        }
+
+                        if (tuneDirection == 0)
+                        {
+                            // No meaningful error → clear pending tune
+                            cLastTuneDirection[productIndex] = 0;
+                        }
+                        else
+                        {
+                            // Require two consecutive samples with same direction
+                            if (cLastTuneDirection[productIndex] == tuneDirection)
+                            {
+                                int newValue = cLookAheadSeconds[productIndex] + tuneDirection * stepSeconds;
+                                cLookAheadSeconds[productIndex] = Math.Max(minSeconds, Math.Min(maxSeconds, newValue));
+
+                                // Reset after successful tune to avoid repeated nudges
+                                cLastTuneDirection[productIndex] = 0;
+                            }
+                            else
+                            {
+                                // First sample: remember direction, don't tune yet
+                                cLastTuneDirection[productIndex] = tuneDirection;
+                            }
+                        }
+                    }
+                }
+
+                // 5) Store for next iteration (using applied rate)
+                cLastZoneAtPosition[productIndex] = currentZone;
+                cLastAppliedRate[productIndex] = appliedRate;
+                cLastSamplePosition[productIndex] = tractorPos;
+                cLastSampleTime[productIndex] = DateTime.UtcNow;
+                cHasLastSample[productIndex] = true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/AutoTuneLookAhead: " + ex.Message);
+            }
+        }
+
         private double BearingDegrees(PointLatLng a, PointLatLng b)
         {
             double lat1 = a.Lat * Math.PI / 180.0;
@@ -735,8 +1000,53 @@ namespace RateController.RateMap
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
+        /// <summary>
+        /// Uses the STRtree index to find the first target zone whose geometry
+        /// contains the given point. Returns null if none is found.
+        /// </summary>
+        private MapZone FindZoneAtPoint(PointLatLng point)
+        {
+            if (STRtreeZoneIndex == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                const double epsilon = 1e-6;
+                var env = new Envelope(point.Lng - epsilon, point.Lng + epsilon, point.Lat - epsilon, point.Lat + epsilon);
+
+                IList<MapZone> candidates = STRtreeZoneIndex.Query(env);
+                if (candidates == null || candidates.Count == 0)
+                {
+                    return null;
+                }
+
+                var gf = new GeometryFactory();
+                var pt = gf.CreatePoint(new Coordinate(point.Lng, point.Lat));
+
+                foreach (MapZone zone in candidates)
+                {
+                    if (zone != null && zone.Geometry != null && zone.Geometry.Contains(pt))
+                    {
+                        return zone;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/FindZoneAtPoint: " + ex.Message);
+            }
+
+            return null;
+        }
+
         private void LoadData()
         {
+            cShowApplied = bool.TryParse(Props.GetProp("MapShowAppliedOverlay"), out bool sr) ? sr : false;
+            cShowTarget = bool.TryParse(Props.GetProp("MapShowTargetOverlay"), out bool sz) ? sz : true;
+            cAutoTune = bool.TryParse(Props.GetProp("MapAutoTune"), out bool au) ? au : false;
+
             int tme = 0;
             for (int i = 0; i < cLookAheadSeconds.Count(); i++)
             {
@@ -744,8 +1054,29 @@ namespace RateController.RateMap
             }
         }
 
+        /// <summary>
+        /// Projects a point forward by distanceMeters along headingDegrees using
+        /// a simple local-plane approximation consistent with DistanceMeters().
+        /// </summary>
+        private PointLatLng ProjectPoint(PointLatLng origin, double headingDegrees, double distanceMeters)
+        {
+            const double metersPerDegLat = 111320.0;
+            double latRad = origin.Lat * Math.PI / 180.0;
+            double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
+
+            double headingRad = headingDegrees * Math.PI / 180.0;
+
+            double dx = Math.Sin(headingRad) * distanceMeters; // east-west
+            double dy = Math.Cos(headingRad) * distanceMeters; // north-south
+
+            double dLat = dy / metersPerDegLat;
+            double dLng = dx / metersPerDegLng;
+
+            return new PointLatLng(origin.Lat + dLat, origin.Lng + dLng);
+        }
+
         private bool UpdateTrail(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,
-            double implementWidthMeters, double? appliedOverride, out Dictionary<string, Color> legend, int rateIndex)
+                    double implementWidthMeters, double? appliedOverride, out Dictionary<string, Color> legend, int rateIndex)
         {
             legend = new Dictionary<string, Color>();
 
@@ -791,180 +1122,6 @@ namespace RateController.RateMap
                 Props.WriteErrorLog($"ZoneManager/UpdateRatesOverlayLive: {ex.Message}");
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Computes the target zone at a look-ahead position for a specific product index,
-        /// based on the configured look-ahead time (seconds), current speed (m/s),
-        /// tractor position, and heading.
-        /// If look-ahead for this product is zero or no zone is found, returns null.
-        /// </summary>
-        /// <param name="productIndex">Index into ZoneFields.Products / AppliedRates.</param>
-        /// <param name="tractorPos">Current tractor GPS position.</param>
-        /// <param name="headingDegrees">Current heading in degrees (0..360).</param>
-        /// <param name="speedMetersPerSecond">Current ground speed in m/s.</param>
-        /// <returns>Look-ahead MapZone or null if not available.</returns>
-        public MapZone GetLookAheadZoneForProduct(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
-        {
-            try
-            {
-                if (productIndex < 0 || productIndex >= cLookAheadSeconds.Length)
-                {
-                    return null;
-                }
-
-                int delaySeconds = cLookAheadSeconds[productIndex];
-                if (delaySeconds <= 0 || speedMetersPerSecond <= 0.0)
-                {
-                    // no look-ahead configured or not moving
-                    return null;
-                }
-
-                if (STRtreeZoneIndex == null)
-                {
-                    // no target zones loaded/indexed
-                    return null;
-                }
-
-                double lookAheadDistanceMeters = speedMetersPerSecond * delaySeconds;
-
-                PointLatLng lookAheadPoint = ProjectPoint(tractorPos, headingDegrees, lookAheadDistanceMeters);
-
-                return FindZoneAtPoint(lookAheadPoint);
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("ZoneManager/GetLookAheadZoneForProduct: " + ex.Message);
-                return null;
-            }
-        }
-
-        public double GetTargetRateWithLookAhead(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
-        {
-            double targetRate = 0.0;
-
-            try
-            {
-                if (productIndex >= 0 && productIndex < ZoneFields.Products.Length)
-                {
-                    MapZone zoneToUse = null;
-                    if (productIndex < cLookAheadSeconds.Length && cLookAheadSeconds[productIndex] > 0 && speedMetersPerSecond > 0.0)
-                    {
-                        // use look-ahead rate
-
-                        // look-ahead point
-                        int delaySeconds = cLookAheadSeconds[productIndex];
-                        double lookAheadDistanceMeters = speedMetersPerSecond * delaySeconds;
-                        PointLatLng lookAheadPoint = ProjectPoint(tractorPos, headingDegrees, lookAheadDistanceMeters);
-
-                        MapZone lookAheadZone = FindZoneAtPoint(lookAheadPoint);
-                        if (lookAheadZone == null)
-                        {
-                            // use base rate at projected point
-                            var rates = Props.MainForm.Products.BaseRates();
-                            targetRate= rates[productIndex];
-                        }
-                        else
-                        {
-                            // use zone rate at project point 
-                            zoneToUse = lookAheadZone;
-                            if (zoneToUse != null && zoneToUse.Rates != null)
-                            {
-                                string productKey = ZoneFields.Products[productIndex];
-
-                                double value;
-                                if (zoneToUse.Rates.TryGetValue(productKey, out value))
-                                {
-                                    targetRate = value;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // use current rate
-                        zoneToUse = CurrentZone.Zone;
-                        if (zoneToUse != null && zoneToUse.Rates != null)
-                        {
-                            string productKey = ZoneFields.Products[productIndex];
-
-                            double value;
-                            if (zoneToUse.Rates.TryGetValue(productKey, out value))
-                            {
-                                targetRate = value;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("ZoneManager/GetTargetRateWithLookAhead: " + ex.Message);
-            }
-
-            return targetRate;
-        }
-
-        /// <summary>
-        /// Projects a point forward by distanceMeters along headingDegrees using
-        /// a simple local-plane approximation consistent with DistanceMeters().
-        /// </summary>
-        private PointLatLng ProjectPoint(PointLatLng origin, double headingDegrees, double distanceMeters)
-        {
-            const double metersPerDegLat = 111320.0;
-            double latRad = origin.Lat * Math.PI / 180.0;
-            double metersPerDegLng = metersPerDegLat * Math.Cos(latRad);
-
-            double headingRad = headingDegrees * Math.PI / 180.0;
-
-            double dx = Math.Sin(headingRad) * distanceMeters; // east-west
-            double dy = Math.Cos(headingRad) * distanceMeters; // north-south
-
-            double dLat = dy / metersPerDegLat;
-            double dLng = dx / metersPerDegLng;
-
-            return new PointLatLng(origin.Lat + dLat, origin.Lng + dLng);
-        }
-
-        /// <summary>
-        /// Uses the STRtree index to find the first target zone whose geometry
-        /// contains the given point. Returns null if none is found.
-        /// </summary>
-        private MapZone FindZoneAtPoint(PointLatLng point)
-        {
-            if (STRtreeZoneIndex == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                const double epsilon = 1e-6;
-                var env = new Envelope(point.Lng - epsilon, point.Lng + epsilon, point.Lat - epsilon, point.Lat + epsilon);
-
-                IList<MapZone> candidates = STRtreeZoneIndex.Query(env);
-                if (candidates == null || candidates.Count == 0)
-                {
-                    return null;
-                }
-
-                var gf = new GeometryFactory();
-                var pt = gf.CreatePoint(new Coordinate(point.Lng, point.Lat));
-
-                foreach (MapZone zone in candidates)
-                {
-                    if (zone != null && zone.Geometry != null && zone.Geometry.Contains(pt))
-                    {
-                        return zone;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("ZoneManager/FindZoneAtPoint: " + ex.Message);
-            }
-
-            return null;
         }
 
         private bool ZoneNameFound(string Name, MapZone ExcludeZone = null)

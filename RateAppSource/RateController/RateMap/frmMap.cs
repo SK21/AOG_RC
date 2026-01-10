@@ -1247,6 +1247,7 @@ namespace RateController.Forms
                 tbLat.Text = MapController.TractorPosition.Lat.ToString("N7");
 
                 LoadTimes();
+                ckAutoTune.Checked = MapController.ZnOverlays.AutoTune;
 
                 Initializing = false;
             }
@@ -1303,6 +1304,11 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
+        }
+
+        private void ckAutoTune_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) MapController.ZnOverlays.AutoTune = ckAutoTune.Checked;
         }
     }
 }
