@@ -815,7 +815,7 @@ namespace RateController.RateMap
         {
             try
             {
-                CurrentZone.TractorIsFound = false;
+                CurrentZone.IsDefined = false;
                 if (ZnOverlays.Rtree != null)
                 {
                     // Query spatial index for candidate zones near the tractor
@@ -831,13 +831,13 @@ namespace RateController.RateMap
                                 // Use a deep copy so CurrentZone.Zone is detached from the original
                                 CurrentZone.Zone = ZoneManager.CloneZoneForCurrent(zone);
                                 CurrentZone.Hectares = zone.Hectares();
-                                CurrentZone.TractorIsFound = true;
+                                CurrentZone.IsDefined = true;
                                 break;
                             }
                         }
                     }
                 }
-                if (!CurrentZone.TractorIsFound && Props.MainForm.Products != null)
+                if (!CurrentZone.IsDefined && Props.MainForm.Products != null)
                 {
                     // create a fresh base-rate zone instead of mutating an existing one
                     var baseZone = new MapZone(

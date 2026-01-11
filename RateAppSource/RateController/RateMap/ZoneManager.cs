@@ -6,6 +6,7 @@ using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -14,7 +15,7 @@ namespace RateController.RateMap
     public static class CurrentZone
     {
         public static double Hectares { get; set; } = 0.0;
-        public static bool TractorIsFound { get; set; } = false;
+        public static bool IsDefined { get; set; } = false;
         public static MapZone Zone { get; set; } = new MapZone("Base Rate", null, new Dictionary<string, double>(), Color.Blue, ZoneType.Target);
     }
 
@@ -24,7 +25,7 @@ namespace RateController.RateMap
         private readonly CoverageTrail Trail = new CoverageTrail();
         private GMapOverlay cAppliedOverlay;
         private List<MapZone> cAppliedZonesList = new List<MapZone>();
-        private int[] cLookAheadSeconds = new int[Props.MaxProducts - 2];
+        private double[] cLookAheadSeconds = new double[Props.MaxProducts - 2];
         private GMapOverlay cNewZoneMarkerOverlay;
         private bool cShowApplied;
         private bool cShowTarget;
@@ -40,12 +41,11 @@ namespace RateController.RateMap
         #region auto tune
 
         private bool cAutoTune = false;
-        private bool[] cHasLastSample = new bool[Props.MaxProducts - 2];
-        private double[] cLastAppliedRate = new double[Props.MaxProducts - 2];
-        private PointLatLng[] cLastSamplePosition = new PointLatLng[Props.MaxProducts - 2];
-        private DateTime[] cLastSampleTime = new DateTime[Props.MaxProducts - 2];
-        private int[] cLastTuneDirection = new int[Props.MaxProducts - 2];
-        private MapZone[] cLastZoneAtPosition = new MapZone[Props.MaxProducts - 2];
+        private DateTime TuningLoopTime = new DateTime();
+        private int[] TuningState = new int[Props.MaxProducts - 2];
+        private DateTime[] TuningTimeMatchApplied = new DateTime[Props.MaxProducts - 2];
+        private DateTime[] TuningTimeMatchTarget = new DateTime[Props.MaxProducts - 2];
+        private DateTime[] TuningTimeStart = new DateTime[Props.MaxProducts - 2];
 
         #endregion auto tune
 
@@ -88,7 +88,7 @@ namespace RateController.RateMap
             }
         }
 
-        public int[] LookAheadSeconds
+        public double[] LookAheadSeconds
         {
             get { return cLookAheadSeconds; }
             set
@@ -536,7 +536,7 @@ namespace RateController.RateMap
                         // use look-ahead rate
 
                         // look-ahead point
-                        int delaySeconds = cLookAheadSeconds[productIndex];
+                        double delaySeconds = cLookAheadSeconds[productIndex];
                         double lookAheadDistanceMeters = speedMetersPerSecond * delaySeconds;
                         PointLatLng lookAheadPoint = ProjectPoint(tractorPos, headingDegrees, lookAheadDistanceMeters);
 
@@ -580,7 +580,7 @@ namespace RateController.RateMap
                     }
 
                     // auto-tune user-provided look-ahead time (persisted)
-                    AutoTuneLookAhead(productIndex, tractorPos);
+                    AutoTuneLookAhead(productIndex, targetRate);
                 }
             }
             catch (Exception ex)
@@ -776,163 +776,77 @@ namespace RateController.RateMap
                    cAppliedOverlay.Polygons.Count > 0;
         }
 
-        /// <summary>
-        /// Auto-adjusts the user-provided look-ahead seconds for the given product index.
-        /// Uses APPLIED rates (ProductAppliedRates) vs desired (zone/base) and includes
-        /// a distance/time response window so non-instant rate changes are allowed.
-        /// </summary>
-        private void AutoTuneLookAhead(int productIndex, PointLatLng tractorPos)
+        private void AutoTuneLookAhead(int ProductID, double LookAheadTargetRate)
         {
             try
             {
-                if (!cAutoTune)
+                if ((DateTime.Now - TuningLoopTime).TotalMilliseconds > 500)
                 {
-                    return;
-                }
-
-                if (productIndex < 0 || productIndex >= cLookAheadSeconds.Length)
-                {
-                    return;
-                }
-
-                // 1) Get current applied rate for this product
-                double appliedRate = 0.0;
-                if (Props.MainForm != null && Props.MainForm.Products != null)
-                {
-                    double[] appliedArray = Props.MainForm.Products.ProductAppliedRates();
-                    if (appliedArray != null && productIndex < appliedArray.Length)
+                    TuningLoopTime = DateTime.Now;
+                    if (cAutoTune && Props.Speed_KMH > 3)
                     {
-                        appliedRate = appliedArray[productIndex];
-                    }
-                }
+                        double CZR = CurrentZone.Zone.Rates[ZoneFields.Products[ProductID]];    // current zone target rate
+                        double LZR = LookAheadTargetRate;      // look-ahead zone target rate
 
-                // 2) Determine current zone at tractor position (defined or base).
-                MapZone currentZone = null;
-                if (Rtree != null)
-                {
-                    var env = new Envelope(tractorPos.Lng, tractorPos.Lng, tractorPos.Lat, tractorPos.Lat);
-                    var candidates = Rtree.Query(env);
-                    if (candidates != null && candidates.Count > 0)
-                    {
-                        foreach (var z in candidates.OrderByDescending(z => cTargetZonesList.IndexOf(z)))
+                        switch (TuningState[ProductID])
                         {
-                            if (z.Contains(tractorPos))
-                            {
-                                currentZone = z;
+                            case 0:
+                                // find zone boundary
+                                if (CZR != LZR)
+                                {
+                                    TuningState[ProductID] = 1;
+                                    TuningTimeStart[ProductID] = DateTime.Now;
+                                }
                                 break;
-                            }
+
+                            case 1:
+                                // check for time out
+                                if ((DateTime.Now - TuningTimeStart[ProductID]).TotalSeconds < 30)
+                                {
+                                    // find when rate applied rate matches target rate, 10% leeway
+                                    double diff = Math.Abs(LZR - Props.MainForm.Products.Item(ProductID).CurrentRate());
+                                    if ((diff < (LZR * 0.1)) && TuningTimeMatchApplied[ProductID] == DateTime.MinValue)
+                                    {
+                                        TuningTimeMatchApplied[ProductID] = DateTime.Now;
+                                    }
+
+                                    // find when tractor is in new zone, either before or after rate matches
+                                    if (CZR == LZR && TuningTimeMatchTarget[ProductID] == DateTime.MinValue)
+                                    {
+                                        TuningTimeMatchTarget[ProductID] = DateTime.Now;
+                                    }
+
+                                    // find when both times have occured
+                                    if (TuningTimeMatchApplied[ProductID] != DateTime.MinValue && TuningTimeMatchTarget[ProductID] != DateTime.MinValue)
+                                    {
+                                        // adjust look-ahead time
+                                        double AdjustSeconds = (TuningTimeMatchApplied[ProductID] - TuningTimeMatchTarget[ProductID]).TotalSeconds;
+                                        AdjustSeconds = Math.Max(-3.0, Math.Min(3.0, AdjustSeconds));
+                                        double newLookAhead = cLookAheadSeconds[ProductID] + AdjustSeconds * 0.25;
+                                        if (newLookAhead >= 0 && newLookAhead < 10) cLookAheadSeconds[ProductID] = newLookAhead;
+
+                                        TuningState[ProductID] = 0;
+                                        TuningTimeMatchTarget[ProductID] = DateTime.MinValue;
+                                        TuningTimeMatchApplied[ProductID] = DateTime.MinValue;
+                                    }
+                                }
+                                else
+                                {
+                                    // cancel tuning
+                                    TuningState[ProductID] = 0;
+                                    TuningTimeMatchTarget[ProductID] = DateTime.MinValue;
+                                    TuningTimeMatchApplied[ProductID] = DateTime.MinValue;
+                                }
+                                break;
                         }
                     }
-                }
-
-                bool inDefinedZone = currentZone != null;
-                double baseRate = 0.0;
-                if (!inDefinedZone && Props.MainForm != null && Props.MainForm.Products != null)
-                {
-                    var baseRates = Props.MainForm.Products.BaseRates();
-                    if (baseRates != null && productIndex < baseRates.Length)
+                    else
                     {
-                        baseRate = baseRates[productIndex];
+                        TuningState[ProductID] = 0;
+                        TuningTimeMatchTarget[ProductID] = DateTime.MinValue;
+                        TuningTimeMatchApplied[ProductID] = DateTime.MinValue;
                     }
                 }
-
-                MapZone lastZone = cLastZoneAtPosition[productIndex];
-                double lastAppliedRate = cLastAppliedRate[productIndex];
-                bool hasLast = cHasLastSample[productIndex];
-
-                // 3) Desired rate at current position (zone or base).
-                double desiredRate = 0.0;
-                if (inDefinedZone && currentZone.Rates != null)
-                {
-                    string key = ZoneFields.Products[productIndex];
-                    double v;
-                    if (currentZone.Rates.TryGetValue(key, out v))
-                    {
-                        desiredRate = v;
-                    }
-                }
-                else
-                {
-                    desiredRate = baseRate;
-                }
-
-                if (hasLast)
-                {
-                    bool zoneChanged = !ReferenceEquals(lastZone, currentZone);
-
-                    // Reset pending direction when zone changes
-                    if (zoneChanged) cLastTuneDirection[productIndex] = 0;
-
-                    // 5% relative threshold with a small absolute floor to avoid noise at low rates
-                    const double pctThreshold = 0.05;      // 5%
-                    const double absFloor = 0.1;           // minimum meaningful difference
-                    double threshold = Math.Max(Math.Abs(desiredRate) * pctThreshold, absFloor);
-
-                    bool rateChanged = Math.Abs(appliedRate - lastAppliedRate) > threshold;
-
-                    // 4) Response window: ensure we give the system some distance/time
-                    // to react before judging early/late behavior.
-                    const double minMetersBetweenSamples = 3.0;   // tune for your machine
-                    const double minSecondsBetweenSamples = 2.0;  // tune for your machine
-
-                    double distMoved = DistanceMeters(cLastSamplePosition[productIndex], tractorPos.Lat, tractorPos.Lng);
-
-                    double secondsSinceLast = (DateTime.UtcNow - cLastSampleTime[productIndex]).TotalSeconds;
-
-                    bool responseWindowOk = distMoved >= minMetersBetweenSamples && secondsSinceLast >= minSecondsBetweenSamples;
-
-                    // Only consider tuning when we are around a boundary / rate change
-                    // AND the implement had some time/distance to respond.
-                    if ((zoneChanged || rateChanged) && responseWindowOk)
-                    {
-                        const int stepSeconds = 1;  // tuning step
-                        const int minSeconds = 0;
-                        const int maxSeconds = 10;  // adjust as needed
-
-                        int tuneDirection = 0;
-
-                        // Early → look-ahead too big
-                        if (appliedRate > desiredRate + threshold)
-                        {
-                            tuneDirection = -1;
-                        }
-                        // Late → look-ahead too small
-                        else if (appliedRate + threshold < desiredRate)
-                        {
-                            tuneDirection = +1;
-                        }
-
-                        if (tuneDirection == 0)
-                        {
-                            // No meaningful error → clear pending tune
-                            cLastTuneDirection[productIndex] = 0;
-                        }
-                        else
-                        {
-                            // Require two consecutive samples with same direction
-                            if (cLastTuneDirection[productIndex] == tuneDirection)
-                            {
-                                int newValue = cLookAheadSeconds[productIndex] + tuneDirection * stepSeconds;
-                                cLookAheadSeconds[productIndex] = Math.Max(minSeconds, Math.Min(maxSeconds, newValue));
-
-                                // Reset after successful tune to avoid repeated nudges
-                                cLastTuneDirection[productIndex] = 0;
-                            }
-                            else
-                            {
-                                // First sample: remember direction, don't tune yet
-                                cLastTuneDirection[productIndex] = tuneDirection;
-                            }
-                        }
-                    }
-                }
-
-                // 5) Store for next iteration (using applied rate)
-                cLastZoneAtPosition[productIndex] = currentZone;
-                cLastAppliedRate[productIndex] = appliedRate;
-                cLastSamplePosition[productIndex] = tractorPos;
-                cLastSampleTime[productIndex] = DateTime.UtcNow;
-                cHasLastSample[productIndex] = true;
             }
             catch (Exception ex)
             {
@@ -1047,10 +961,10 @@ namespace RateController.RateMap
             cShowTarget = bool.TryParse(Props.GetProp("MapShowTargetOverlay"), out bool sz) ? sz : true;
             cAutoTune = bool.TryParse(Props.GetProp("MapAutoTune"), out bool au) ? au : false;
 
-            int tme = 0;
+            double tme = 0;
             for (int i = 0; i < cLookAheadSeconds.Count(); i++)
             {
-                cLookAheadSeconds[i] = int.TryParse(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 0;
+                cLookAheadSeconds[i] = double.TryParse(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 0.001;
             }
         }
 

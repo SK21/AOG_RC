@@ -1,4 +1,4 @@
-using GMap.NET;
+﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems;
@@ -11,9 +11,21 @@ using System.Drawing;
 
 namespace RateController.Classes
 {
+    public static class ZoneFields
+    {
+        public const string Color = "Color";
+        public const string Name = "Name";
+        public const string ProductA = "ProductA";
+        public const string ProductB = "ProductB";
+        public const string ProductC = "ProductC";
+        public const string ProductD = "ProductD";
+        public const string ZoneType = "ZoneType";
+
+        public static readonly string[] Products = { ProductA, ProductB, ProductC, ProductD };
+    }
+
     public class MapZone
     {
-
         public MapZone(string name, Polygon geometry, Dictionary<string, double> rates, Color zoneColor, ZoneType zoneType)
         {
             Name = name;
@@ -26,6 +38,23 @@ namespace RateController.Classes
         public Polygon Geometry { get; set; }
         public string Name { get; set; }
         public Dictionary<string, double> Rates { get; set; }
+        public MapZone Clone()
+        {
+            // Deep‑clone the geometry
+            var clonedGeometry = (Polygon)Geometry.Copy();
+
+            // Deep‑clone the rates dictionary
+            var clonedRates = new Dictionary<string, double>(Rates);
+
+            // Create a new MapZone with copied values
+            return new MapZone(
+                name: string.Copy(Name),
+                geometry: clonedGeometry,
+                rates: clonedRates,
+                zoneColor: Color.FromArgb(ZoneColor.A, ZoneColor.R, ZoneColor.G, ZoneColor.B),
+                zoneType: ZoneType
+            );
+        }
 
         public Color ZoneColor
         {
@@ -40,6 +69,27 @@ namespace RateController.Classes
             var coordinate = new Coordinate(point.Lng, point.Lat);
             var pointGeometry = new NetTopologySuite.Geometries.Point(coordinate);
             return Geometry.Contains(pointGeometry);
+        }
+
+        public bool GeometryEquals(MapZone other, double tolerance = 0)
+        {
+            if (other == null || other.Geometry == null || Geometry == null)
+                return false;
+
+            // Same reference → equal
+            if (ReferenceEquals(Geometry, other.Geometry))
+                return true;
+
+            // Exact coordinate match
+            if (tolerance == 0 && Geometry.EqualsExact(other.Geometry))
+                return true;
+
+            // Tolerant coordinate match
+            if (tolerance > 0 && Geometry.EqualsExact(other.Geometry, tolerance))
+                return true;
+
+            // Topological equality (shape is the same even if vertex order differs)
+            return Geometry.EqualsTopologically(other.Geometry);
         }
 
         public double Hectares()
@@ -154,18 +204,4 @@ namespace RateController.Classes
             return new Polygon(new LinearRing(transformedCoordinates));
         }
     }
-
-    public static class ZoneFields
-    {
-        public const string Color = "Color";
-        public const string Name = "Name";
-        public const string ProductA = "ProductA";
-        public const string ProductB = "ProductB";
-        public const string ProductC = "ProductC";
-        public const string ProductD = "ProductD";
-        public const string ZoneType = "ZoneType";
-
-        public static readonly string[] Products = { ProductA, ProductB, ProductC, ProductD };
-    }
-
 }
