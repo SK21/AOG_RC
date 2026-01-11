@@ -800,8 +800,8 @@ namespace RateController.RateMap
                                 break;
 
                             case 1:
-                                // check for time out
-                                if ((DateTime.Now - TuningTimeStart[ProductID]).TotalSeconds < 30)
+                                // check for timed out
+                                if ((DateTime.Now - TuningTimeStart[ProductID]).TotalSeconds < 20)
                                 {
                                     // find when rate applied rate matches target rate, 10% leeway
                                     double diff = Math.Abs(LZR - Props.MainForm.Products.Item(ProductID).CurrentRate());

@@ -799,10 +799,10 @@ namespace RateController.Forms
         {
             double[] times = MapController.ZnOverlays.LookAheadSeconds;
             int count = times.Count();
-            if (count > 0) tbTime1.Text = times[0].ToString("N2");
-            if (count > 1) tbTime2.Text = times[1].ToString("N2");
-            if (count > 2) tbTime3.Text = times[2].ToString("N2");
-            if (count > 3) tbTime4.Text = times[3].ToString("N2");
+            if (count > 0) tbTime1.Text = times[0].ToString("N1");
+            if (count > 1) tbTime2.Text = times[1].ToString("N1");
+            if (count > 2) tbTime3.Text = times[2].ToString("N1");
+            if (count > 3) tbTime4.Text = times[3].ToString("N1");
         }
 
         private void MapController_MapChanged(object sender, EventArgs e)
@@ -881,11 +881,15 @@ namespace RateController.Forms
                 {
                     btnTimeCancel.Enabled = true;
                     btnTimeOK.Enabled = true;
+                    btnClose.Enabled = false;
+                    ckWindow.Enabled = false;
                 }
                 else
                 {
                     btnTimeCancel.Enabled = false;
                     btnTimeOK.Enabled = false;
+                    btnClose.Enabled = true;
+                    ckWindow.Enabled = true;
                 }
             }
         }
