@@ -8,15 +8,20 @@ namespace RateController.Classes
 {
     public static class JobManager
     {
+        private static readonly string JobDataName = "JobData.txt";
         private static readonly object SyncLock = new object();
+        private static readonly string ZoneShapeFileName = "Job";
         private static bool cJobFilter = true;
         private static string cJobsFolder;
         private static bool cShowJobs;
-        private static readonly string JobDataName = "JobData.txt";
-        private static readonly string ZoneShapeFileName = "Job";
         private static List<Job> JobsList;
 
         public static event EventHandler JobChanged;
+
+        public static Job CurrentJob
+        {
+            get { return SearchJob(CurrentJobID); }
+        }
 
         public static string CurrentJobDescription
         {
@@ -53,10 +58,7 @@ namespace RateController.Classes
                 }
             }
         }
-        public static Job CurrentJob
-        {
-            get { return SearchJob(CurrentJobID); }
-        }
+
         public static string CurrentMapPath
         {
             get

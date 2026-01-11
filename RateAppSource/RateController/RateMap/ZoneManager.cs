@@ -639,7 +639,13 @@ namespace RateController.RateMap
                         if (BuildAppliedFromHistory(cAppliedOverlay, out histLegend))
                         {
                             // Use legend returned from history build
-                            MapController.legendManager.AppliedLegend = histLegend;
+                            LegendObject LegObj = new LegendObject
+                            {
+                                Legend = histLegend,
+                                ProductName = Props.MainForm.Products.Item(MapController.ProductFilter).ProductName
+                            };
+                            MapController.legendManager.AppliedLegendObject = LegObj;
+
                             OverlayIsCurrent = true;
                         }
                         else
@@ -653,7 +659,18 @@ namespace RateController.RateMap
                                 }
                                 // Build legend that matches persisted applied zones
                                 // Try to load a persisted legend first
-                                MapController.legendManager.AppliedLegend = MapController.legendManager.LoadPersistedLegend() ?? MapController.legendManager.BuildAppliedZonesLegend(cAppliedZonesList, MapController.ProductFilter);
+                                LegendObject LoadedLegend = MapController.legendManager.LoadPersistedLegend();
+                                if (LoadedLegend == null)
+                                {
+                                    Dictionary<string, Color> AppliedLegend = MapController.legendManager.BuildAppliedZonesLegend(cAppliedZonesList, MapController.ProductFilter);
+                                    LoadedLegend = new LegendObject
+                                    {
+                                        Legend = AppliedLegend,
+                                        ProductName = Props.MainForm.Products.Item(MapController.ProductFilter).ProductName
+                                    };
+                                }
+                                MapController.legendManager.AppliedLegendObject = LoadedLegend;
+
                                 OverlayIsCurrent = true;
                             }
                         }
@@ -745,7 +762,12 @@ namespace RateController.RateMap
                     }
                 }
 
-                MapController.legendManager.AppliedLegend = newLegend;
+                LegendObject LegObj = new LegendObject
+                {
+                    Legend = newLegend,
+                    ProductName = Props.MainForm.Products.Item(MapController.ProductFilter).ProductName
+                };
+                MapController.legendManager.AppliedLegendObject = LegObj;
             }
             catch (Exception ex)
             {

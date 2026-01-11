@@ -484,6 +484,11 @@ namespace RateController.Forms
             }
         }
 
+        private void ckAutoTune_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) MapController.ZnOverlays.AutoTune = ckAutoTune.Checked;
+        }
+
         private void ckEdit_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing)
@@ -1187,6 +1192,11 @@ namespace RateController.Forms
             lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
         }
 
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if (!btnTimeOK.Enabled) LoadTimes();  // don't update when user is editing
+        }
+
         private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
         {
             MouseDownLocation = e.Location;
@@ -1310,17 +1320,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void ckAutoTune_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) MapController.ZnOverlays.AutoTune = ckAutoTune.Checked;
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            if (!btnTimeOK.Enabled) LoadTimes();  // don't update when user is editing
-
         }
     }
 }

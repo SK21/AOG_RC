@@ -18,6 +18,9 @@ namespace RateController.Classes
 
         // e.g. "#FF0000"
         public int ProductIndex { get; set; }   // 0 = ProductA, 1 = ProductB, ...
+
+        // Store the product name used when the legend was saved
+        public string ProductName { get; set; }
     }
 
     /// <summary>
@@ -27,9 +30,9 @@ namespace RateController.Classes
     public class LegendManager : IDisposable
     {
         private readonly GMapControl gmap;
-        private Dictionary<string, Color> cAppliedLegend;
+        private LegendObject cAppliedLegendObject;
         private bool cEnabled;
-        private Dictionary<string, Color> lastLegend;
+        private LegendObject LastLegendObject;
         private Bitmap legendBitmap;
         private Font legendFont;
         private PictureBox legendHost;
@@ -50,18 +53,38 @@ namespace RateController.Classes
 
             // Reposition on size changes
             this.gmap.SizeChanged += Gmap_SizeChanged;
-            cAppliedLegend = new Dictionary<string, Color>();
+
+            cAppliedLegendObject = new LegendObject
+            {
+                Legend = new Dictionary<string, Color>(),
+                ProductName = Props.MainForm.Products.Item(MapController.ProductFilter).ProductName
+            };
         }
 
-        public Dictionary<string, Color> AppliedLegend
+        public LegendObject AppliedLegendObject
         {
-            get { return cAppliedLegend; }
+            get { return cAppliedLegendObject; }
             set
             {
-                if (LegendsDiffer(cAppliedLegend, value))
+                if (value == null)
                 {
-                    cAppliedLegend = value;
-                    ShowLegend();
+                    Clear();
+                }
+                else
+                {
+                    if (cAppliedLegendObject == null)
+                    {
+                        cAppliedLegendObject = value;
+                        ShowLegend();
+                    }
+                    else
+                    {
+                        if (LegendsDiffer(cAppliedLegendObject.Legend, value.Legend))
+                        {
+                            cAppliedLegendObject = value;
+                            ShowLegend();
+                        }
+                    }
                 }
             }
         }
@@ -77,7 +100,7 @@ namespace RateController.Classes
                     if (cEnabled)
                     {
                         // Rebuild legend if we already have content
-                        UpdateLegend(lastLegend);
+                        UpdateLegend(LastLegendObject);
                     }
                     else
                     {
@@ -127,11 +150,17 @@ namespace RateController.Classes
                     legendBitmap.Dispose();
                     legendBitmap = null;
                 }
+                LastLegendObject = null;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("LegendManager/Clear: " + ex.Message);
             }
+        }
+
+        public void ClearAppliedLegendObject()
+        {
+            cAppliedLegendObject = null;
         }
 
         public Dictionary<string, Color> CreateAppliedLegend(double minRate, double maxRate, int steps = 5)
@@ -224,7 +253,7 @@ namespace RateController.Classes
             return false;
         }
 
-        public Dictionary<string, Color> LoadPersistedLegend(string basePath = null)
+        public LegendObject LoadPersistedLegend(string basePath = null)
         {
             try
             {
@@ -261,7 +290,15 @@ namespace RateController.Classes
                 double globalMin = filtered.First().Min;
                 double globalMax = filtered.Max(b => b.Max);
 
-                return CreateAppliedLegend(globalMin, globalMax, Steps);
+                string ProdName = filtered.Select(b => b.ProductName).FirstOrDefault(n => !string.IsNullOrEmpty(n));
+
+                Dictionary<string, Color> AppliedLegend = CreateAppliedLegend(globalMin, globalMax, Steps);
+
+                return new LegendObject
+                {
+                    Legend = AppliedLegend,
+                    ProductName = ProdName
+                };
             }
             catch (Exception ex)
             {
@@ -275,19 +312,21 @@ namespace RateController.Classes
             PositionLegendHost();
         }
 
-        public void SaveAppliedLegend(string legendPath, Dictionary<string, Color> LegendToSave = null)
+        public void SaveAppliedLegend(string legendPath, LegendObject LegObj = null)
         {
             try
             {
-                if (LegendToSave == null) LegendToSave = cAppliedLegend;
+                if (LegObj == null) LegObj = cAppliedLegendObject;
 
-                if (LegendToSave == null || LegendToSave.Count == 0)
+                if (LegObj == null || LegObj.Legend == null || LegObj.Legend.Count == 0)
                 {
                     return;
                 }
 
+                string currentProductName = LegObj.ProductName;
+
                 var bands = new List<LegendBand>();
-                foreach (var kvp in LegendToSave)
+                foreach (var kvp in LegObj.Legend)
                 {
                     var parts = kvp.Key.Split('-');
                     if (parts.Length != 2) continue;
@@ -304,7 +343,8 @@ namespace RateController.Classes
                         Min = min,
                         Max = max,
                         ColorHtml = ColorTranslator.ToHtml(kvp.Value),
-                        ProductIndex = MapController.ProductFilter
+                        ProductIndex = MapController.ProductFilter,
+                        ProductName = currentProductName
                     });
                 }
 
@@ -325,12 +365,12 @@ namespace RateController.Classes
             }
         }
 
-        public void ShowLegend(Dictionary<string, Color> LegendToShow = null, bool Show = true)
+        public void ShowLegend(LegendObject LegObj = null, bool Show = true)
         {
             if (Show && MapController.State != MapState.Preview && cEnabled)
             {
-                if (LegendToShow == null) LegendToShow = cAppliedLegend;
-                UpdateLegend(LegendToShow);
+                if (LegObj == null) LegObj = cAppliedLegendObject;
+                UpdateLegend(LegObj);
             }
             else
             {
@@ -338,17 +378,17 @@ namespace RateController.Classes
             }
         }
 
-        public void UpdateLegend(Dictionary<string, Color> legend)
+        public void UpdateLegend(LegendObject LegObj = null)
         {
-            if (!cEnabled || legend == null || legend.Count == 0)
+            if (LegObj == null) LegObj = cAppliedLegendObject;
+
+            if (!cEnabled || LegObj == null || LegObj.Legend == null || LegObj.Legend.Count == 0)
             {
                 Clear();
                 return;
             }
 
-            string Title = Props.MainForm.Products.Item(MapController.ProductFilter).ProductName;
-
-            lastLegend = legend;
+            LastLegendObject = LegObj;
 
             const int itemHeight = 25;
             const int leftMargin = 10;
@@ -368,15 +408,15 @@ namespace RateController.Classes
                 float maxLeftWidth = 0;
                 float maxRightWidth = 0;
                 float dashWidth;
-                float titleWidth;
-                float titleHeight;
+                float titleWidth = 0;
+                float titleHeight = 0;
 
                 using (var bmp = new Bitmap(1, 1))
                 using (var g = Graphics.FromImage(bmp))
                 {
                     dashWidth = g.MeasureString("-", legendFont).Width;
 
-                    foreach (var kv in legend)
+                    foreach (var kv in LegObj.Legend)
                     {
                         var parts = kv.Key.Split('-');
                         if (parts.Length != 2)
@@ -391,16 +431,19 @@ namespace RateController.Classes
                         maxRightWidth = Math.Max(maxRightWidth, g.MeasureString(right, legendFont).Width);
                     }
 
-                    var titleSize = g.MeasureString(Title, underlineFont);
-                    titleWidth = titleSize.Width;
-                    titleHeight = titleSize.Height;
+                    if (LegObj.ProductName != null)
+                    {
+                        var titleSize = g.MeasureString(LegObj.ProductName, underlineFont);
+                        titleWidth = titleSize.Width;
+                        titleHeight = titleSize.Height;
+                    }
                 }
 
                 int textBlockWidth = (int)Math.Ceiling(
                     maxLeftWidth + dashGap + dashWidth + dashGap + maxRightWidth);
 
                 int contentWidth = swatch + gap + textBlockWidth;
-                int legendItemsHeight = (legend.Count * itemHeight);
+                int legendItemsHeight = LegObj.Legend.Count * itemHeight;
                 int titlePadding = 8; // vertical space between top and title / title and first item
                 int legendHeight = (int)Math.Ceiling(titleHeight) + (titlePadding * 2) + legendItemsHeight + (leftMargin * 2);
                 int legendWidth = Math.Max(120, (int)Math.Ceiling(Math.Max(titleWidth, leftMargin + contentWidth + rightMargin)));
@@ -414,16 +457,27 @@ namespace RateController.Classes
                     g2.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                     g2.FillRectangle(backBrush, 0, 0, legendWidth, legendHeight);
 
-                    // Draw title centered at top
-                    var titleSize = g2.MeasureString(Title, underlineFont);
-                    float titleX = (legendWidth - titleSize.Width) / 2f;
-                    float titleY = leftMargin;
-                    g2.DrawString(Title, underlineFont, Brushes.White, new PointF(titleX, titleY));
-
+                    // Center the swatch + text block inside the legend
                     int anchorStartX = Math.Max(leftMargin, (legendWidth - contentWidth) / 2);
-                    int y = (int)(titleY + titleSize.Height + titlePadding);
 
-                    foreach (var kv in legend)
+                    float titleY = leftMargin;
+                    int y;
+
+                    if (LegObj.ProductName != null)
+                    {
+                        var titleSize = g2.MeasureString(LegObj.ProductName, underlineFont);
+                        float titleX = (legendWidth - titleSize.Width) / 2f;
+                        g2.DrawString(LegObj.ProductName, underlineFont, Brushes.White, new PointF(titleX, titleY));
+
+                        y = (int)(titleY + titleSize.Height + titlePadding);
+                    }
+                    else
+                    {
+                        // No title => start items just below margin
+                        y = leftMargin;
+                    }
+
+                    foreach (var kv in LegObj.Legend)
                     {
                         Color color = kv.Value;
                         int swatchTop = y + (itemHeight - swatch) / 2;
@@ -497,5 +551,11 @@ namespace RateController.Classes
             legendHost.Top = marginTop;
             legendHost.BringToFront();
         }
+    }
+
+    public class LegendObject
+    {
+        public Dictionary<string, Color> Legend { get; set; }
+        public string ProductName { get; set; }
     }
 }

@@ -162,7 +162,6 @@ namespace RateController
             Sections.Load();
             Sections.CheckSwitchDefinitions();
 
-            Products.Load();
             CurrentPage = Props.DefaultProduct + 1;
 
             RelayObjects.Load();
@@ -657,8 +656,10 @@ namespace RateController
                 ModulesStatus = new PGN32401(this);
 
                 Sections = new clsSections(this);
-                Products = new clsProducts(this);
                 RCalarm = new clsAlarm(this, btAlarm);
+
+                Products = new clsProducts(this);
+                Products.Load();
 
                 RelayObjects = new clsRelays(this);
 

@@ -6,6 +6,7 @@ using NetTopologySuite.Geometries;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -396,6 +397,7 @@ namespace RateController.RateMap
 
             return Result;
         }
+
         public static void Initialize()
         {
             cProductFilter = int.TryParse(Props.GetProp("MapProductFilter"), out int pr) ? pr : 0;
@@ -429,6 +431,7 @@ namespace RateController.RateMap
             bool Result = false;
             try
             {
+                legendManager.ClearAppliedLegendObject();
                 ZnOverlays.LoadZones();
 
                 // kml
