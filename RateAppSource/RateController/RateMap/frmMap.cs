@@ -472,7 +472,6 @@ namespace RateController.Forms
                 }
                 MapController.legendManager.Enabled = !ckWindow.Checked;
                 MapController.DisplaySizeUpdate(ckWindow.Checked);
-                SetTimer1Enabled();
             }
             catch (Exception ex)
             {
@@ -582,7 +581,6 @@ namespace RateController.Forms
             {
                 MapController.MapIsDisplayed = false;
                 timer1.Enabled = false;
-                timer2.Enabled = false;
 
                 // Remove the control from the panel first
                 pnlMap.Controls.Remove(MapController.Map);
@@ -723,7 +721,6 @@ namespace RateController.Forms
 
                 MapController.MapIsDisplayed = true;
 
-                SetTimer1Enabled();
                 lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
 
                 // Sync checkbox with saved preference
@@ -732,7 +729,8 @@ namespace RateController.Forms
                 MapController.SetKmlVisibility(kmlVisible);
 
                 SetTitle();
-                timer2.Enabled = true;
+                timer1.Enabled = true;
+                SetEditMode(false, true);
             }
             catch (Exception ex)
             {
@@ -927,21 +925,10 @@ namespace RateController.Forms
             }
         }
 
-        private void SetTimer1Enabled()
-        {
-            timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
-            if (timer1.Enabled) UpdateFileCount();
-        }
-
         private void SetTitle()
         {
             string job = JobManager.CurrentJob.Name;
             lbTitle.Text = job.Length <= 15 ? job : job.Substring(0, 15);
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetTimer1Enabled();
         }
 
         private void tbLat_Enter(object sender, EventArgs e)
@@ -1198,16 +1185,32 @@ namespace RateController.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            UpdateFileCount();
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            if (!btnTimeOK.Enabled) // don't update when user is editing
+            if (!ckWindow.Checked)
             {
-                Initializing = true;
-                LoadTimes();
-                Initializing = false;
+                switch (tabControl1.SelectedTab.Name)
+                {
+                    case "tabData":
+                        UpdateFileCount();
+                        break;
+
+                    case "tabVR":
+                        if (!btnTimeOK.Enabled) // don't update when user is editing
+                        {
+                            Initializing = true;
+                            LoadTimes();
+                            Initializing = false;
+                        }
+                        break;
+
+                    case "tabZones":
+                        if (!btnOK.Enabled) // don't update when user is editing
+                        {
+                            Initializing = true;
+                            UpdateZoneDetails();
+                            Initializing = false;
+                        }
+                        break;
+                }
             }
         }
 
@@ -1236,26 +1239,7 @@ namespace RateController.Forms
                 ckRateData.Checked = MapController.ZnOverlays.AppliedOverlayVisible;
                 ckZones.Checked = MapController.ZnOverlays.TargetOverlayVisible;
 
-                if (!EditInProgress)
-                {
-                    tbName.Text = CurrentZone.Zone.Name;
-                    tbP1.Text = MapController.GetRate(0).ToString("N1");
-                    tbP2.Text = MapController.GetRate(1).ToString("N1");
-                    tbP3.Text = MapController.GetRate(2).ToString("N1");
-                    tbP4.Text = MapController.GetRate(3).ToString("N1");
-                    SetSelectedColor(CurrentZone.Zone.ZoneColor);
-                }
-
-                if (Props.UseMetric)
-                {
-                    lbArea.Text = CurrentZone.Hectares.ToString("N1");
-                    lbAreaName.Text = "Hectares";
-                }
-                else
-                {
-                    lbArea.Text = (CurrentZone.Hectares * 2.47).ToString("N1");
-                    lbAreaName.Text = "Acres";
-                }
+                UpdateZoneDetails();
 
                 ckRecord.Checked = MapController.RateCollector.Enabled;
 
@@ -1329,6 +1313,30 @@ namespace RateController.Forms
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMap/UpdateScrollbars: " + ex.Message);
+            }
+        }
+
+        private void UpdateZoneDetails()
+        {
+            if (!EditInProgress)
+            {
+                tbName.Text = CurrentZone.Zone.Name;
+                tbP1.Text = MapController.GetRate(0).ToString("N1");
+                tbP2.Text = MapController.GetRate(1).ToString("N1");
+                tbP3.Text = MapController.GetRate(2).ToString("N1");
+                tbP4.Text = MapController.GetRate(3).ToString("N1");
+                SetSelectedColor(CurrentZone.Zone.ZoneColor);
+            }
+
+            if (Props.UseMetric)
+            {
+                lbArea.Text = CurrentZone.Hectares.ToString("N1");
+                lbAreaName.Text = "Hectares";
+            }
+            else
+            {
+                lbArea.Text = (CurrentZone.Hectares * 2.47).ToString("N1");
+                lbAreaName.Text = "Acres";
             }
         }
 

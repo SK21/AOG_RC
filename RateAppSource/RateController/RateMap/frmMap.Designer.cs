@@ -106,7 +106,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnCentre = new System.Windows.Forms.Button();
             this.tbLat = new System.Windows.Forms.TextBox();
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -574,7 +573,6 @@
             this.tabControl1.Size = new System.Drawing.Size(431, 435);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 389;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabZones
             // 
@@ -1092,12 +1090,6 @@
             this.tbLat.Enter += new System.EventHandler(this.tbLat_Enter);
             this.tbLat.Validating += new System.ComponentModel.CancelEventHandler(this.tbLat_Validating);
             // 
-            // timer2
-            // 
-            this.timer2.Enabled = true;
-            this.timer2.Interval = 1000;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1214,6 +1206,5 @@
         private System.Windows.Forms.Button btnTimeOK;
         private System.Windows.Forms.Button btnTimeCancel;
         private System.Windows.Forms.CheckBox ckAutoTune;
-        private System.Windows.Forms.Timer timer2;
     }
 }
