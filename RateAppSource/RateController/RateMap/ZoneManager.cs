@@ -610,6 +610,8 @@ namespace RateController.RateMap
             ResetTrail();
             MapController.legendManager.ShowLegend(null, false);
             AppliedOverlay.Clear();
+            LastHistoryCount = 0;
+            LastHistoryLastTimestamp = DateTime.MinValue;
         }
 
         public void ResetMarkers()

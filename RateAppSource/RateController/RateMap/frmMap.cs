@@ -1194,7 +1194,12 @@ namespace RateController.Forms
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if (!btnTimeOK.Enabled) LoadTimes();  // don't update when user is editing
+            if (!btnTimeOK.Enabled) // don't update when user is editing
+            {
+                Initializing = true;
+                LoadTimes();  
+                Initializing= false;
+            }
         }
 
         private void tlpTitle_MouseDown(object sender, MouseEventArgs e)

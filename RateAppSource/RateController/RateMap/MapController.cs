@@ -432,6 +432,7 @@ namespace RateController.RateMap
             try
             {
                 legendManager.ClearAppliedLegendObject();
+                ZnOverlays.ResetAppliedOverlay();
                 ZnOverlays.LoadZones();
 
                 // kml
