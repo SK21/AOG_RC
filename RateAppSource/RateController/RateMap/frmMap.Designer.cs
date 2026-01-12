@@ -82,7 +82,6 @@
             this.btnExport = new System.Windows.Forms.Button();
             this.tabVR = new System.Windows.Forms.TabPage();
             this.ckAutoTune = new System.Windows.Forms.CheckBox();
-            this.btnTimeDefaults = new System.Windows.Forms.Button();
             this.btnTimeOK = new System.Windows.Forms.Button();
             this.btnTimeCancel = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -781,7 +780,6 @@
             // tabVR
             // 
             this.tabVR.Controls.Add(this.ckAutoTune);
-            this.tabVR.Controls.Add(this.btnTimeDefaults);
             this.tabVR.Controls.Add(this.btnTimeOK);
             this.tabVR.Controls.Add(this.btnTimeCancel);
             this.tabVR.Controls.Add(this.label10);
@@ -806,7 +804,7 @@
             this.ckAutoTune.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckAutoTune.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckAutoTune.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckAutoTune.Location = new System.Drawing.Point(40, 297);
+            this.ckAutoTune.Location = new System.Drawing.Point(85, 297);
             this.ckAutoTune.Name = "ckAutoTune";
             this.ckAutoTune.Size = new System.Drawing.Size(89, 64);
             this.ckAutoTune.TabIndex = 376;
@@ -814,23 +812,6 @@
             this.ckAutoTune.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckAutoTune.UseVisualStyleBackColor = true;
             this.ckAutoTune.CheckedChanged += new System.EventHandler(this.ckAutoTune_CheckedChanged);
-            // 
-            // btnTimeDefaults
-            // 
-            this.btnTimeDefaults.BackColor = System.Drawing.Color.Transparent;
-            this.btnTimeDefaults.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTimeDefaults.FlatAppearance.BorderSize = 0;
-            this.btnTimeDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTimeDefaults.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnTimeDefaults.Image = global::RateController.Properties.Resources.VehFileLoad;
-            this.btnTimeDefaults.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnTimeDefaults.Location = new System.Drawing.Point(195, 298);
-            this.btnTimeDefaults.Name = "btnTimeDefaults";
-            this.btnTimeDefaults.Size = new System.Drawing.Size(70, 63);
-            this.btnTimeDefaults.TabIndex = 375;
-            this.btnTimeDefaults.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnTimeDefaults.UseVisualStyleBackColor = false;
-            this.btnTimeDefaults.Click += new System.EventHandler(this.btnTimeDefaults_Click);
             // 
             // btnTimeOK
             // 
@@ -1232,7 +1213,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnTimeOK;
         private System.Windows.Forms.Button btnTimeCancel;
-        private System.Windows.Forms.Button btnTimeDefaults;
         private System.Windows.Forms.CheckBox ckAutoTune;
         private System.Windows.Forms.Timer timer2;
     }

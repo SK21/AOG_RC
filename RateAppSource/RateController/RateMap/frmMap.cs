@@ -339,14 +339,6 @@ namespace RateController.Forms
             SetButtons(false);
         }
 
-        private void btnTimeDefaults_Click(object sender, EventArgs e)
-        {
-            tbTime1.Text = "3";
-            tbTime2.Text = "3";
-            tbTime3.Text = "3";
-            tbTime4.Text = "3";
-        }
-
         private void btnTimeOK_Click(object sender, EventArgs e)
         {
             double[] times = new double[4];
@@ -476,7 +468,7 @@ namespace RateController.Forms
                 }
                 MapController.legendManager.Enabled = !ckWindow.Checked;
                 MapController.DisplaySizeUpdate(ckWindow.Checked);
-                timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
+                SetTimer1Enabled();
             }
             catch (Exception ex)
             {
@@ -596,6 +588,7 @@ namespace RateController.Forms
                 MapController.MapLeftClicked -= MapController_MapLeftClicked;
                 Props.ScreensSwitched -= Props_ScreensSwitched;
                 Props.AppExit -= Props_AppExit;
+                Props.ProfileChanged -= Props_ProfileChanged;
 
                 if (!ckWindow.Checked)
                 {
@@ -677,6 +670,7 @@ namespace RateController.Forms
                 MapController.MapChanged += MapController_MapChanged;
                 JobManager.JobChanged += JobManager_JobChanged;
                 Props.AppExit += Props_AppExit;
+                Props.ProfileChanged += Props_ProfileChanged;
 
                 this.BackColor = Properties.Settings.Default.MainBackColour;
                 tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
@@ -725,7 +719,7 @@ namespace RateController.Forms
 
                 MapController.MapIsDisplayed = true;
 
-                timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
+                SetTimer1Enabled();
                 lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
 
                 // Sync checkbox with saved preference
@@ -844,6 +838,11 @@ namespace RateController.Forms
             CloseCleanup();
         }
 
+        private void Props_ProfileChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
+        }
+
         private void Props_ScreensSwitched(object sender, EventArgs e)
         {
             ChangeMapSize();
@@ -924,6 +923,12 @@ namespace RateController.Forms
             }
         }
 
+        private void SetTimer1Enabled()
+        {
+            timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
+            if (timer1.Enabled) UpdateFileCount();
+        }
+
         private void SetTitle()
         {
             string job = JobManager.CurrentJob.Name;
@@ -932,7 +937,7 @@ namespace RateController.Forms
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            timer1.Enabled = (tabControl1.SelectedTab.Name == "tabData" && !ckWindow.Checked);
+            SetTimer1Enabled();
         }
 
         private void tbLat_Enter(object sender, EventArgs e)
@@ -1189,7 +1194,7 @@ namespace RateController.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
+            UpdateFileCount();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -1197,8 +1202,8 @@ namespace RateController.Forms
             if (!btnTimeOK.Enabled) // don't update when user is editing
             {
                 Initializing = true;
-                LoadTimes();  
-                Initializing= false;
+                LoadTimes();
+                Initializing = false;
             }
         }
 
@@ -1210,6 +1215,11 @@ namespace RateController.Forms
         private void tlpTitle_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+        }
+
+        private void UpdateFileCount()
+        {
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
         }
 
         private void UpdateForm()

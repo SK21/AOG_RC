@@ -6,7 +6,6 @@ using NetTopologySuite.Index.Strtree;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -57,6 +56,7 @@ namespace RateController.RateMap
             NewZoneVertices = new List<PointLatLng>();
 
             LoadData();
+            Props.ProfileChanged += Props_ProfileChanged;
         }
 
         public event EventHandler ZonesChanged;
@@ -331,6 +331,7 @@ namespace RateController.RateMap
             cTargetZonesList = null;
             ResetTrail();
             STRtreeZoneIndex = null;
+            Props.ProfileChanged -= Props_ProfileChanged;
         }
 
         public bool CreateZone(string name, double Rt0, double Rt1, double Rt2, double Rt3, Color zoneColor, out int ErrorCode)
@@ -510,18 +511,6 @@ namespace RateController.RateMap
             return Result;
         }
 
-        /// <summary>
-        /// Computes the target zone at a look-ahead position for a specific product index,
-        /// based on the configured look-ahead time (seconds), current speed (m/s),
-        /// tractor position, and heading.
-        /// If look-ahead for this product is zero or no zone is found, returns null.
-        /// </summary>
-        /// <param name="productIndex">Index into ZoneFields.Products / AppliedRates.</param>
-        /// <param name="tractorPos">Current tractor GPS position.</param>
-        /// <param name="headingDegrees">Current heading in degrees (0..360).</param>
-        /// <param name="speedMetersPerSecond">Current ground speed in m/s.</param>
-        /// <returns>Look-ahead MapZone or null if not available.</returns>
-
         public double GetTargetRateWithLookAhead(int productIndex, PointLatLng tractorPos, double headingDegrees, double speedMetersPerSecond)
         {
             double targetRate = 0.0;
@@ -655,25 +644,40 @@ namespace RateController.RateMap
                             // use historical applied zones from shapefile
                             if (cAppliedZonesList.Count > 0)
                             {
-                                foreach (var mapZone in cAppliedZonesList)
-                                {
-                                    AddPolygons(cAppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
-                                }
-                                // Build legend that matches persisted applied zones
-                                // Try to load a persisted legend first
-                                LegendObject LoadedLegend = MapController.legendManager.LoadPersistedLegend();
-                                if (LoadedLegend == null)
-                                {
-                                    Dictionary<string, Color> AppliedLegend = MapController.legendManager.BuildAppliedZonesLegend(cAppliedZonesList, MapController.ProductFilter);
-                                    LoadedLegend = new LegendObject
-                                    {
-                                        Legend = AppliedLegend,
-                                        ProductName = Props.MainForm.Products.Item(MapController.ProductFilter).ProductName
-                                    };
-                                }
-                                MapController.legendManager.AppliedLegendObject = LoadedLegend;
+                                int productIndex = MapController.ProductFilter;
+                                string productKey = ZoneFields.Products[productIndex];
 
-                                OverlayIsCurrent = true;
+                                // Filter zones that actually have a rate for the selected product
+                                List<MapZone> zonesForProduct = cAppliedZonesList
+                                    .Where(z => z != null &&
+                                                z.Rates != null &&
+                                                z.Rates.ContainsKey(productKey) &&
+                                                z.Rates[productKey] > NearZero)
+                                    .ToList();
+
+                                if (zonesForProduct.Count > 0)
+                                {
+                                    foreach (MapZone mapZone in zonesForProduct)
+                                    {
+                                        AddPolygons(cAppliedOverlay, mapZone.ToGMapPolygons(Palette.ZoneTransparency));
+                                    }
+
+                                    // Build legend that matches persisted applied zones for this product
+                                    LegendObject LoadedLegend = MapController.legendManager.LoadPersistedLegend();
+                                    if (LoadedLegend == null)
+                                    {
+                                        Dictionary<string, Color> AppliedLegend = MapController.legendManager.BuildAppliedZonesLegend(zonesForProduct, productIndex);
+
+                                        LoadedLegend = new LegendObject
+                                        {
+                                            Legend = AppliedLegend,
+                                            ProductName = Props.MainForm.Products.Item(productIndex).ProductName
+                                        };
+                                    }
+                                    MapController.legendManager.AppliedLegendObject = LoadedLegend;
+
+                                    OverlayIsCurrent = true;
+                                }
                             }
                         }
 
@@ -988,7 +992,7 @@ namespace RateController.RateMap
             double tme = 0;
             for (int i = 0; i < cLookAheadSeconds.Count(); i++)
             {
-                cLookAheadSeconds[i] = double.TryParse(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 0.001;
+                cLookAheadSeconds[i] = double.TryParse(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 1;
             }
         }
 
@@ -1011,6 +1015,11 @@ namespace RateController.RateMap
             double dLng = dx / metersPerDegLng;
 
             return new PointLatLng(origin.Lat + dLat, origin.Lng + dLng);
+        }
+
+        private void Props_ProfileChanged(object sender, EventArgs e)
+        {
+            LoadData();
         }
 
         private bool UpdateTrail(GMapOverlay overlay, IReadOnlyList<RateReading> readings, PointLatLng tractorPos, double headingDegrees,

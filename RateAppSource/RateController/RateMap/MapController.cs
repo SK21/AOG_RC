@@ -6,7 +6,6 @@ using NetTopologySuite.Geometries;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -118,6 +117,7 @@ namespace RateController.RateMap
                 {
                     cProductFilter = value;
                     Props.SetProp("MapProductFilter", cProductFilter.ToString());
+                    ZnOverlays.ResetAppliedOverlay();
                     ZnOverlays.ShowAppliedOverlay();
                 }
             }
