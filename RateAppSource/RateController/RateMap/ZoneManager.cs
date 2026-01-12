@@ -468,40 +468,47 @@ namespace RateController.RateMap
             ErrorCode = 0;
             try
             {
-                MapZone ZoneToEdit = CurrentZone.Zone;
-                if (ZoneNameFound(name, ZoneToEdit))
+                MapZone ZoneToEdit = FindZoneAtPoint(MapController.TractorPosition);
+                if (ZoneToEdit == null)
                 {
-                    // check for duplicate name
-                    ErrorCode = 1;
+                    ErrorCode = 3;
                 }
                 else
                 {
-                    ZoneToEdit.Name = name;
-                    Dictionary<string, double> NewRates = new Dictionary<string, double>
+                    if (ZoneNameFound(name, ZoneToEdit))
+                    {
+                        // check for duplicate name
+                        ErrorCode = 1;
+                    }
+                    else
+                    {
+                        ZoneToEdit.Name = name;
+                        Dictionary<string, double> NewRates = new Dictionary<string, double>
                     {
                         { ZoneFields.Products[0], Rt0 },
                         { ZoneFields.Products[1], Rt1 },
                         { ZoneFields.Products[2], Rt2 },
                         { ZoneFields.Products[3], Rt3 }
                     };
-                    ZoneToEdit.Rates = NewRates;
-                    ZoneToEdit.ZoneColor = zoneColor;
+                        ZoneToEdit.Rates = NewRates;
+                        ZoneToEdit.ZoneColor = zoneColor;
 
-                    // Refresh polygons in overlay to reflect new color
-                    var polygonsForZone = ZoneToEdit.ToGMapPolygons(Palette.TargetZoneTransparency);
-                    foreach (var polygonToReplace in polygonsForZone)
-                    {
-                        if (polygonToReplace == null) continue;
-                        var existing = cTargetOverlay.Polygons.FirstOrDefault(p => p.Points.SequenceEqual(polygonToReplace.Points));
-                        if (existing != null)
+                        // Refresh polygons in overlay to reflect new color
+                        var polygonsForZone = ZoneToEdit.ToGMapPolygons(Palette.TargetZoneTransparency);
+                        foreach (var polygonToReplace in polygonsForZone)
                         {
-                            cTargetOverlay.Polygons.Remove(existing);
+                            if (polygonToReplace == null) continue;
+                            var existing = cTargetOverlay.Polygons.FirstOrDefault(p => p.Points.SequenceEqual(polygonToReplace.Points));
+                            if (existing != null)
+                            {
+                                cTargetOverlay.Polygons.Remove(existing);
+                            }
                         }
-                    }
-                    AddPolygons(cTargetOverlay, polygonsForZone);
+                        AddPolygons(cTargetOverlay, polygonsForZone);
 
-                    ZonesChanged?.Invoke(null, EventArgs.Empty);
-                    Result = true;
+                        ZonesChanged?.Invoke(null, EventArgs.Empty);
+                        Result = true;
+                    }
                 }
             }
             catch (Exception ex)

@@ -324,6 +324,10 @@ namespace RateController.Forms
                         Message += "\n\nNot enough points.";
                         break;
 
+                    case 3:
+                        Message += "\n\nZone not found.";
+                        break;
+
                     default:
                         break;
                 }
