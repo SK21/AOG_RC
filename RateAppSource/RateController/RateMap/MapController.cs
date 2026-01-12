@@ -553,16 +553,15 @@ namespace RateController.RateMap
             {
                 if (!cTractorPosition.IsEmpty)
                 {
-                    double deltaLng = NewLocation.Lng - cTractorPosition.Lng;
-                    double deltaLat = NewLocation.Lat - cTractorPosition.Lat;
+                    double dist = GetDistanceMeters(cTractorPosition, NewLocation);
 
-                    double movementThreshold = 0.0000001;
-                    if (Math.Abs(deltaLng) > movementThreshold || Math.Abs(deltaLat) > movementThreshold)
+                    if (dist > 0.1 && Props.Speed_KMH > 0.5)
                     {
+                        double deltaLng = NewLocation.Lng - cTractorPosition.Lng;
+                        double deltaLat = NewLocation.Lat - cTractorPosition.Lat;
                         cTravelHeading = (Math.Atan2(deltaLng, deltaLat) * 180.0 / Math.PI + 360.0) % 360.0;
                     }
                 }
-
                 cTractorPosition = NewLocation;
                 tractorMarker.Position = NewLocation;
 
@@ -606,6 +605,23 @@ namespace RateController.RateMap
                 maxRate = maxRate + pad;
             }
             return true;
+        }
+
+        private static double GetDistanceMeters(PointLatLng a, PointLatLng b)
+        {
+            const double earthRadiusMeters = 6371000.0;
+
+            // Convert degrees to radians
+            double lat1 = a.Lat * Math.PI / 180.0;
+            double lat2 = b.Lat * Math.PI / 180.0;
+            double dLat = (b.Lat - a.Lat) * Math.PI / 180.0;
+            double dLng = (b.Lng - a.Lng) * Math.PI / 180.0;
+
+            double x = dLng * Math.Cos((lat1 + lat2) * 0.5);
+            double y = dLat;
+
+            double distance = Math.Sqrt(x * x + y * y) * earthRadiusMeters;
+            return distance;
         }
 
         private static RectLatLng GetOverallRectLatLng()

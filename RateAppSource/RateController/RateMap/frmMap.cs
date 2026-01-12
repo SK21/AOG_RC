@@ -1209,10 +1209,18 @@ namespace RateController.Forms
                             UpdateZoneDetails();
                             Initializing = false;
                         }
+                        if (TractorIsMoving()) UpdatePosition();
                         break;
                 }
+                tbLong.Enabled = !TractorIsMoving();
+                tbLat.Enabled = !TractorIsMoving();
             }
         }
+        private bool TractorIsMoving()
+        {
+            return Props.Speed_KMH > 0.5;
+        }
+
 
         private void tlpTitle_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1240,6 +1248,7 @@ namespace RateController.Forms
                 ckZones.Checked = MapController.ZnOverlays.TargetOverlayVisible;
 
                 UpdateZoneDetails();
+                UpdatePosition();
 
                 ckRecord.Checked = MapController.RateCollector.Enabled;
 
@@ -1261,9 +1270,6 @@ namespace RateController.Forms
                         rbProductA.Checked = true;
                         break;
                 }
-
-                tbLong.Text = MapController.TractorPosition.Lng.ToString("N7");
-                tbLat.Text = MapController.TractorPosition.Lat.ToString("N7");
 
                 LoadTimes();
                 ckAutoTune.Checked = MapController.ZnOverlays.AutoTune;
@@ -1316,6 +1322,13 @@ namespace RateController.Forms
             }
         }
 
+        private void UpdatePosition()
+        {
+
+            tbLong.Text = MapController.TractorPosition.Lng.ToString("N7");
+            tbLat.Text = MapController.TractorPosition.Lat.ToString("N7");
+
+        }
         private void UpdateZoneDetails()
         {
             if (!EditInProgress)
