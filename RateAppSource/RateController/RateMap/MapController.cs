@@ -135,8 +135,9 @@ namespace RateController.RateMap
                 Props.SetProp("MapShowTiles", cShowTiles.ToString());
 
                 gmap.MapProvider = value
-                    ? (GMapProvider)ArcGIS_World_Imagery_Provider.Instance
+                    ? (GMapProvider)GetPreferredProvider()
                     : (GMapProvider)GMapProviders.EmptyProvider;
+
                 gmap.Refresh();
             }
         }
@@ -639,6 +640,21 @@ namespace RateController.RateMap
             return Result;
         }
 
+        private static GMapProvider GetPreferredProvider()
+        {
+            // chooses the main provider and falls back to a secondary one when needed
+            GMapProvider Result = null;
+            if (ArcGIS_World_Imagery_Provider.IsTemporarilyUnavailable && ((DateTime.Now - ArcGIS_World_Imagery_Provider.LastFailure).TotalMinutes < 5))
+            {
+                Result = (GMapProvider)BingSatelliteMapProvider.Instance;
+            }
+            else
+            {
+                Result = (GMapProvider)ArcGIS_World_Imagery_Provider.Instance;
+            }
+            return Result;
+        }
+
         private static void Gmap_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -697,7 +713,7 @@ namespace RateController.RateMap
 
             if (cShowTiles)
             {
-                gmap.MapProvider = (GMapProvider)ArcGIS_World_Imagery_Provider.Instance;
+                gmap.MapProvider = (GMapProvider)GetPreferredProvider();
             }
             else
             {
