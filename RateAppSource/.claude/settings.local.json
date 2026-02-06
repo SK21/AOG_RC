@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(cmake --build:*)",
+      "Bash(timeout:*)",
+      "Bash(tasklist:*)",
+      "Bash(nuget restore:*)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" \"G:/Sync/Documents/GitHub/SK21/AOG_RC/RateAppSource/RateController.sln\" /p:Configuration=Debug /t:Build /m)",
+      "Bash(cmd /c \"\"\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"\" \"\"G:\\\\Sync\\\\Documents\\\\GitHub\\\\SK21\\\\AOG_RC\\\\RateAppSource\\\\RateController.sln\"\" /p:Configuration=Debug /t:Build /m\")",
+      "Bash(cmd //c build.bat)",
+      "Bash(cmd //c \"G:\\\\Sync\\\\Documents\\\\GitHub\\\\SK21\\\\AOG_RC\\\\RateAppSource\\\\build.bat\")"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+RC_ESP32 can connect to the rate app by using the ESP32 access point. Connect to the tablet to the ESP32 access point.(RateModule ...) In the rate app set the subnet to the access point network. 
+
+To have windows auto re-connect to the ESP32 access point use method 1 on this page:
+httpswww.kapilarya.comhow-to-use-wifi-and-ethernet-at-same-time-in-windows-11
+
+The access point is at 192.168.200 + module number. For example module 2 would be at 192.168.200.2. There is no password for the access point.
+
+If using the client mode and the ESP32 can't connect to the network after 5 tries it will revert back to AP mode only.

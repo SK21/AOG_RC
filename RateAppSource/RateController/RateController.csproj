@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EFB6511F-DF23-4D67-B1C9-4A47CA3147DC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>RateController</RootNamespace>
+    <AssemblyName>RateController</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>5.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\RateControllerApp\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RateControlOff.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GMap.NET.Core, Version=1.7.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.5\lib\net40\GMap.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms, Version=1.7.5.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.5\lib\net40\GMap.NET.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Keypad">
+      <HintPath>.\Keypad.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=2.0.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.2.6.0\lib\netstandard2.0\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite.Features, Version=2.0.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.Features.2.2.0\lib\netstandard2.0\NetTopologySuite.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite.IO.Esri.Shapefile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.IO.Esri.Shapefile.1.2.0\lib\netstandard2.0\NetTopologySuite.IO.Esri.Shapefile.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
+      <HintPath>..\packages\ProjNET.2.1.0\lib\netstandard2.0\ProjNET.dll</HintPath>
+    </Reference>
+    <Reference Include="RepeatButtonControl">
+      <HintPath>.\RepeatButtonControl.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpKml.Core, Version=6.1.0.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpKml.Core.6.1.0\lib\net462\SharpKml.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VerticalBar">
+      <HintPath>.\VerticalBar.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\clsAlarm.cs" />
+    <Compile Include="Classes\clsCalibrate.cs" />
+    <Compile Include="Classes\clsCalibrates.cs" />
+    <Compile Include="Classes\clsJobDataCollector.cs" />
+    <Compile Include="Classes\clsProduct.cs" />
+    <Compile Include="Classes\clsProducts.cs" />
+    <Compile Include="Classes\clsRelay.cs" />
+    <Compile Include="Classes\clsRelays.cs" />
+    <Compile Include="Classes\clsSection.cs" />
+    <Compile Include="Classes\clsSectionControl.cs" />
+    <Compile Include="Classes\clsSections.cs" />
+    <Compile Include="Classes\clsSensorSettings.cs" />
+    <Compile Include="Classes\clsTools.cs" />
+    <Compile Include="Classes\clsVersionChecker.cs" />
+    <Compile Include="Classes\clsVirtualSwitchBox.cs" />
+    <Compile Include="Classes\clsZone.cs" />
+    <Compile Include="Classes\clsZones.cs" />
+    <Compile Include="Classes\Core.cs" />
+    <Compile Include="Classes\FileNameValidator.cs" />
+    <Compile Include="Classes\IsoBusComm.cs" />
+    <Compile Include="Classes\JobManager.cs" />
+    <Compile Include="Classes\ParcelManager.cs" />
+    <Compile Include="Classes\Props.cs" />
+    <Compile Include="Classes\UDPcomm.cs" />
+    <Compile Include="Forms\FormNumeric.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormNumeric.Designer.cs">
+      <DependentUpon>FormNumeric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmHelp.Designer.cs">
+      <DependentUpon>frmHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmJobReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmJobReport.Designer.cs">
+      <DependentUpon>frmJobReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMsgBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMsgBox.Designer.cs">
+      <DependentUpon>frmMsgBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmPressureDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmPressureDisplay.Designer.cs">
+      <DependentUpon>frmPressureDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmRate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmRate.Designer.cs">
+      <DependentUpon>frmRate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmResetQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmResetQuantity.Designer.cs">
+      <DependentUpon>frmResetQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmScaleDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmScaleDisplay.Designer.cs">
+      <DependentUpon>frmScaleDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSpeedCal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSpeedCal.Designer.cs">
+      <DependentUpon>frmSpeedCal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSwitches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSwitches.Designer.cs">
+      <DependentUpon>frmSwitches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmVersion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmVersion.Designer.cs">
+      <DependentUpon>frmVersion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RCRestore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RCRestore.Designer.cs">
+      <DependentUpon>RCRestore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.fr.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.hu.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.hu.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.lt.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.lt.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.nl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.nl.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.pl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.pl.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Language\Lang.ru.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.ru.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenu.Designer.cs">
+      <DependentUpon>frmMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuCalibrate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuCalibrate.Designer.cs">
+      <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuColor.Designer.cs">
+      <DependentUpon>frmMenuColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuConfig.Designer.cs">
+      <DependentUpon>frmMenuConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuControl.Designer.cs">
+      <DependentUpon>frmMenuControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuData.Designer.cs">
+      <DependentUpon>frmMenuData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuHelp.Designer.cs">
+      <DependentUpon>frmMenuHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuJobs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuJobs.Designer.cs">
+      <DependentUpon>frmMenuJobs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuLanguage.Designer.cs">
+      <DependentUpon>frmMenuLanguage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuMode.Designer.cs">
+      <DependentUpon>frmMenuMode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuMonitoring.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuMonitoring.Designer.cs">
+      <DependentUpon>frmMenuMonitoring.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuNetwork.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuNetwork.Designer.cs">
+      <DependentUpon>frmMenuNetwork.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuOptions.Designer.cs">
+      <DependentUpon>frmMenuOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuPins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuPins.Designer.cs">
+      <DependentUpon>frmMenuPins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuPressure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuPressure.Designer.cs">
+      <DependentUpon>frmMenuPressure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuPrimed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuPrimed.Designer.cs">
+      <DependentUpon>frmMenuPrimed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuProfiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuProfiles.Designer.cs">
+      <DependentUpon>frmMenuProfiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuRate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRate.Designer.cs">
+      <DependentUpon>frmMenuRate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuRateGraph.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRateGraph.Designer.cs">
+      <DependentUpon>frmMenuRateGraph.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuRelayPins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRelayPins.Designer.cs">
+      <DependentUpon>frmMenuRelayPins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuRelays.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuRelays.Designer.cs">
+      <DependentUpon>frmMenuRelays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuSections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuSections.Designer.cs">
+      <DependentUpon>frmMenuSections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuSettings.Designer.cs">
+      <DependentUpon>frmMenuSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuSwitches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuSwitches.Designer.cs">
+      <DependentUpon>frmMenuSwitches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuValves.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuValves.Designer.cs">
+      <DependentUpon>frmMenuValves.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PGNs\PGN100.cs" />
+    <Compile Include="PGNs\PGN208.cs" />
+    <Compile Include="PGNs\PGN229.cs" />
+    <Compile Include="PGNs\PGN234.cs" />
+    <Compile Include="PGNs\PGN235.cs" />
+    <Compile Include="PGNs\PGN238.cs" />
+    <Compile Include="PGNs\PGN239.cs" />
+    <Compile Include="PGNs\PGN254.cs" />
+    <Compile Include="PGNs\PGN32296.cs" />
+    <Compile Include="PGNs\PGN32400.cs" />
+    <Compile Include="PGNs\PGN32401.cs" />
+    <Compile Include="PGNs\PGN32500.cs" />
+    <Compile Include="PGNs\PGN32501.cs" />
+    <Compile Include="PGNs\PGN32502.cs" />
+    <Compile Include="PGNs\PGN32503.cs" />
+    <Compile Include="PGNs\PGN32504.cs" />
+    <Compile Include="PGNs\PGN32618.cs" />
+    <Compile Include="PGNs\PGN32700.cs" />
+    <Compile Include="Printing\RichTexBoxPrinterRTF.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RateMap\ArcGIS_World_Imagery_Provider.cs" />
+    <Compile Include="RateMap\CoverageTrail.cs" />
+    <Compile Include="RateMap\DataCollector.cs" />
+    <Compile Include="RateMap\ElevationOverlayCreator.cs" />
+    <Compile Include="RateMap\frmImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RateMap\frmImport.Designer.cs">
+      <DependentUpon>frmImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RateMap\frmMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RateMap\frmMap.Designer.cs">
+      <DependentUpon>frmMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RateMap\kmlLayerManager.cs" />
+    <Compile Include="RateMap\LegendManager.cs" />
+    <Compile Include="RateMap\MapController.cs" />
+    <Compile Include="RateMap\MapZone.cs" />
+    <Compile Include="RateMap\Palette.cs" />
+    <Compile Include="RateMap\RateReading.cs" />
+    <Compile Include="RateMap\ShapefileHelper.cs" />
+    <Compile Include="RateMap\YieldOverlayCreator.cs" />
+    <Compile Include="RateMap\ZoneManager.cs" />
+    <EmbeddedResource Include="Forms\FormNumeric.resx">
+      <DependentUpon>FormNumeric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmHelp.resx">
+      <DependentUpon>frmHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmJobReport.resx">
+      <DependentUpon>frmJobReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMsgBox.resx">
+      <DependentUpon>frmMsgBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmPressureDisplay.resx">
+      <DependentUpon>frmPressureDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmRate.resx">
+      <DependentUpon>frmRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmResetQuantity.resx">
+      <DependentUpon>frmResetQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmScaleDisplay.resx">
+      <DependentUpon>frmScaleDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSpeedCal.resx">
+      <DependentUpon>frmSpeedCal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSwitches.resx">
+      <DependentUpon>frmSwitches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmVersion.resx">
+      <DependentUpon>frmVersion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RCRestore.resx">
+      <DependentUpon>RCRestore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.fr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.hu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.hu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.lt.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.lt.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.nl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.nl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.pl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.pl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Language\Lang.ru.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lang.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenu.resx">
+      <DependentUpon>frmMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuCalibrate.resx">
+      <DependentUpon>frmMenuCalibrate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuColor.resx">
+      <DependentUpon>frmMenuColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuConfig.resx">
+      <DependentUpon>frmMenuConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuControl.resx">
+      <DependentUpon>frmMenuControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuData.resx">
+      <DependentUpon>frmMenuData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuHelp.resx">
+      <DependentUpon>frmMenuHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuJobs.resx">
+      <DependentUpon>frmMenuJobs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuLanguage.resx">
+      <DependentUpon>frmMenuLanguage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuMode.resx">
+      <DependentUpon>frmMenuMode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuMonitoring.resx">
+      <DependentUpon>frmMenuMonitoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuNetwork.resx">
+      <DependentUpon>frmMenuNetwork.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuOptions.resx">
+      <DependentUpon>frmMenuOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuPins.resx">
+      <DependentUpon>frmMenuPins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuPressure.resx">
+      <DependentUpon>frmMenuPressure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuPrimed.resx">
+      <DependentUpon>frmMenuPrimed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuProfiles.resx">
+      <DependentUpon>frmMenuProfiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRate.resx">
+      <DependentUpon>frmMenuRate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRateGraph.resx">
+      <DependentUpon>frmMenuRateGraph.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRelayPins.resx">
+      <DependentUpon>frmMenuRelayPins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuRelays.resx">
+      <DependentUpon>frmMenuRelays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuSections.resx">
+      <DependentUpon>frmMenuSections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuSettings.resx">
+      <DependentUpon>frmMenuSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuSwitches.resx">
+      <DependentUpon>frmMenuSwitches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuValves.resx">
+      <DependentUpon>frmMenuValves.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="RateMap\frmImport.resx">
+      <DependentUpon>frmImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RateMap\frmMap.resx">
+      <DependentUpon>frmMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Help\frmMap.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuCalibrate.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuConfig.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuControl.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuHelp.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuJobs.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuNetwork.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuOptions.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuPressure.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuPrimed.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuProfiles.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuRate.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuRelays.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuSections.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuSettings.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Help\frmMenuSwitches.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RateControlOff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+</Project>

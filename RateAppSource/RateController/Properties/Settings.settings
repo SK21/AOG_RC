@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RateController.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CurrentFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default.rcs</Value>
+    </Setting>
+    <Setting Name="CurrentLanguage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">none</Value>
+    </Setting>
+    <Setting Name="MainBackColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">210, 220, 230</Value>
+    </Setting>
+    <Setting Name="DisplayBackColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">210, 220, 230</Value>
+    </Setting>
+    <Setting Name="CurrentJob" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DisplayForeColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="MainForeColour" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="MenuFontSmall" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif, 14.25pt</Value>
+    </Setting>
+    <Setting Name="MouseDown" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">DarkSlateBlue</Value>
+    </Setting>
+    <Setting Name="DisplayForeColourUser" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="DisplayBackColourUser" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">210, 220, 230</Value>
+    </Setting>
+    <Setting Name="LastFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

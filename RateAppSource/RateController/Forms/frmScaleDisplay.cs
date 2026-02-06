@@ -1,0 +1,221 @@
+﻿using RateController.Classes;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace RateController
+{
+    public partial class frmScaleDisplay : Form
+    {
+        private int cDisplayMode = 0;
+        private int cProductID;
+
+        private Point MouseDownLocation;
+        private double StartingAcres = 0;
+        private double StartingWeight = 0;
+        private double TareWeight = 0;
+
+        public frmScaleDisplay(int ProductID)
+        {
+            InitializeComponent();
+            cProductID = ProductID;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
+            int borderWidth = 1;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
+        }
+
+        private void btnScale_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Click to cycle through display.\nCurrent weight, Applied weight, Area, and Rate.";
+
+            Props.ShowMessage(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void Core_ColorChanged(object sender, EventArgs e)
+        {
+            lbValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
+        }
+
+        private double CurrentAcres()
+        {
+            double Area = Core.Products.Item(cProductID).CurrentCoverage();
+            return Area;
+        }
+
+        private void frmScaleDisplay_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Props.SaveFormLocation(this, cProductID.ToString());
+            timer1.Enabled = false;
+            SaveData();
+
+            Core.ColorChanged -= Core_ColorChanged;
+        }
+
+        private void frmScaleDisplay_Load(object sender, EventArgs e)
+        {
+            this.Text = "Scale " + Prd();
+            Core.ColorChanged += Core_ColorChanged;
+            Props.LoadFormLocation(this, cProductID.ToString());
+            timer1.Enabled = true;
+            LoadData();
+            lbValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            UpdateForm();
+        }
+
+        private void lbValue_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            string Message = "Click to reset starting weight and acres.\nRight click to reset tare weight.";
+
+            Props.ShowMessage(Message);
+            hlpevent.Handled = true;
+        }
+
+        private void lbValue_MouseClick(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    var Hlp = new frmMsgBox("Reset starting weight and acres?", "Reset", true);
+                    Hlp.TopMost = true;
+
+                    Hlp.ShowDialog();
+                    bool Result = Hlp.Result;
+                    Hlp.Close();
+                    if (Result)
+                    {
+                        StartingAcres = CurrentAcres();
+                        StartingWeight = NetWeight();
+                    }
+                    break;
+
+                case MouseButtons.Right:
+                    var Hlp2 = new frmMsgBox("Reset tare weight?", "Reset", true);
+                    Hlp2.TopMost = true;
+
+                    Hlp2.ShowDialog();
+                    bool Result2 = Hlp2.Result;
+                    Hlp2.Close();
+                    if (Result2)
+                    {
+                        TareWeight = Core.ScaleIndicator.Value(cProductID);
+                    }
+                    break;
+            }
+        }
+
+        private void LoadData()
+        {
+            if (int.TryParse(Props.GetProp("Scale_DisplayMode" + cProductID.ToString()), out int md)) cDisplayMode = md;
+            if (double.TryParse(Props.GetProp("Scale_Area" + cProductID.ToString()), out double ar)) StartingAcres = ar;
+            if (double.TryParse(Props.GetProp("Scale_Weight" + cProductID.ToString()), out double wt)) StartingWeight = wt;
+            if (double.TryParse(Props.GetProp("Scale_Tare" + cProductID.ToString()), out double ta)) TareWeight = ta;
+        }
+
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+        }
+
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left)
+            {
+                this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            }
+        }
+
+        private double NetWeight()
+        {
+            double wt = Core.ScaleIndicator.Value(cProductID) - TareWeight;
+            return wt;
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    cDisplayMode++;
+                    if (cDisplayMode > 3) cDisplayMode = 0;
+                    UpdateForm();
+                    break;
+
+                case MouseButtons.Right:
+                    break;
+            }
+        }
+
+        private string Prd()
+        {
+            return (cProductID + 1).ToString();
+        }
+
+        private void SaveData()
+        {
+            Props.SetProp("Scale_DisplayMode" + cProductID.ToString(), cDisplayMode.ToString());
+            Props.SetProp("Scale_Area" + cProductID.ToString(), StartingAcres.ToString());
+            Props.SetProp("Scale_Weight" + cProductID.ToString(), StartingWeight.ToString());
+            Props.SetProp("Scale_Tare" + cProductID.ToString(), TareWeight.ToString());
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateForm();
+        }
+
+        private void UpdateForm()
+        {
+            try
+            {
+                switch (cDisplayMode)
+                {
+                    case 1:
+                        // applied
+                        lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied " + Prd() + ")";
+                        break;
+
+                    case 2:
+                        // acres
+                        lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area " + Prd() + ")";
+                        break;
+
+                    case 3:
+                        // rate
+                        double Applied = StartingWeight - NetWeight();
+                        double Area = StartingAcres - CurrentAcres();
+                        double Rate = 0;
+                        if (Area > 0)
+                        {
+                            Rate = Applied / Area;
+                        }
+                        lbValue.Text = Rate.ToString("N1") + "\n(Rate " + Prd() + ")";
+                        break;
+
+                    default:
+                        // weight
+                        lbValue.Text = NetWeight().ToString("N1") + "\n(Weight " + Prd() + ")";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmScaleDisplay/UpdateForm: " + ex.Message);
+            }
+        }
+    }
+}
