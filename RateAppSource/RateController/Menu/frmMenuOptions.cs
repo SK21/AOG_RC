@@ -54,6 +54,10 @@ namespace RateController.Menu
                 {
                     Props.SpeedMode = SpeedType.GPS;
                 }
+                else if (rbIsoBusSpeed.Checked)
+                {
+                    Props.SpeedMode = SpeedType.ISOBUS;
+                }
                 else if (rbWheel.Checked)
                 {
                     Props.SpeedMode = SpeedType.Wheel;
@@ -98,6 +102,82 @@ namespace RateController.Menu
                     butUpdateModules.Enabled = rbWheel.Checked;
                 }
 
+
+                // ISOBUS settings
+                // Save CAN driver and COM port BEFORE starting gateway (so UpdateGatewayConfig uses new values)
+                if (rbAdapter2.Checked)
+                {
+                    Props.CurrentCanDriver = CanDriver.InnoMaker;
+                }
+                else if (rbAdapter3.Checked)
+                {
+                    Props.CurrentCanDriver = CanDriver.PCAN;
+                }
+                else
+                {
+                    Props.CurrentCanDriver = CanDriver.SLCAN;
+                }
+
+                if (cbComPort.SelectedItem != null)
+                {
+                    Props.CanPort = cbComPort.SelectedItem.ToString();
+                }
+
+                // Check if diagnostics setting changed
+                bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
+                Props.ShowCanDiagnostics = ckDiagnostics.Checked;
+
+                if (ckIsoBus.Checked && !Props.IsobusEnabled)
+                {
+                    // Start ISOBUS gateway - first ensure clean state
+                    Core.IsobusComm?.StopGateway();
+                    Core.IsobusComm?.StopUDP();
+                    System.Threading.Thread.Sleep(300);
+
+                    bool udpStarted = Core.IsobusComm?.StartUDP() ?? false;
+                    bool gatewayStarted = Core.IsobusComm?.StartGateway() ?? false;
+
+                    if (gatewayStarted && udpStarted)
+                    {
+                        Props.IsobusEnabled = true;
+                        Props.ShowMessage("ISOBUS Gateway started.");
+                    }
+                    else if (!gatewayStarted)
+                    {
+                        Props.ShowMessage("Failed to start ISOBUS Gateway. Check that IsobusGateway.exe exists.");
+                        Core.IsobusComm?.StopUDP();
+                    }
+                    else
+                    {
+                        Props.IsobusEnabled = true;
+                        Props.ShowMessage("ISOBUS Gateway started but UDP failed.");
+                    }
+                }
+                else if (!ckIsoBus.Checked && Props.IsobusEnabled)
+                {
+                    // Stop ISOBUS gateway
+                    Core.IsobusComm?.StopGateway();
+                    Core.IsobusComm?.StopUDP();
+                    Props.IsobusEnabled = false;
+                    Props.ShowMessage("ISOBUS Gateway stopped.");
+
+                    // If ISOBUS speed was selected, switch to GPS
+                    if (rbIsoBusSpeed.Checked)
+                    {
+                        rbAOG.Checked = true;
+                        Props.SpeedMode = SpeedType.GPS;
+                    }
+                }
+
+                // Restart gateway if diagnostics changed and ISOBUS is enabled (to apply console visibility)
+                if (diagnosticsChanged && Props.IsobusEnabled && Core.IsobusComm != null)
+                {
+                    Core.IsobusComm.StopGateway();
+                    System.Threading.Thread.Sleep(500);
+                    Core.IsobusComm.StartGateway();
+                    Props.ShowMessage(ckDiagnostics.Checked ? "Gateway diagnostics enabled." : "Gateway diagnostics disabled.");
+                }
+
                 SetButtons(false);
                 UpdateForm();
             }
@@ -107,9 +187,31 @@ namespace RateController.Menu
             }
         }
 
+
+        private void btnRefreshPorts_Click(object sender, EventArgs e)
+        {
+            RefreshComPorts();
+        }
+
         private void butUpdateModules_Click(object sender, EventArgs e)
         {
             Core.WheelSpeed.Send();
+        }
+
+        private void cbComPort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) SetButtons(true);
+        }
+
+        private void ckDiagnostics_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) SetButtons(true);
+        }
+
+        private void ckIsobusEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+
         }
 
         private void ckLargeScreen_CheckedChanged(object sender, EventArgs e)
@@ -119,6 +221,7 @@ namespace RateController.Menu
 
         private void frmMenuDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
+            timer1.Enabled = false;
             Props.SaveFormLocation(this);
         }
 
@@ -135,9 +238,29 @@ namespace RateController.Menu
             lbPulses.Font = new Font(lbPulses.Font.FontFamily, 12f, lbPulses.Font.Style,
                                 lbPulses.Font.Unit, lbPulses.Font.GdiCharSet, lbPulses.Font.GdiVerticalFont);
 
+            tabControl1.ItemSize = new Size((tabControl1.Width - 14) / tabControl1.TabCount, tabControl1.ItemSize.Height);
+
+            foreach (TabPage tb in tabControl1.TabPages)
+            {
+                tb.BackColor = Properties.Settings.Default.MainBackColour;
+            }
+
+            timer1.Enabled = true;
+
             PositionForm();
             SetBoxes();
             UpdateForm();
+        }
+
+        private void gbNetwork_Paint(object sender, PaintEventArgs e)
+        {
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+        }
+
+        private void groupBox4_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -151,7 +274,25 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
+        private void rbAdapter1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                SetButtons(true);
+                UpdatePortVisibility();
+            }
+        }
+
         private void rbAOG_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                SetButtons(true);
+                SetBoxes();
+            }
+        }
+
+        private void rbISOBUS_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing)
             {
@@ -170,6 +311,28 @@ namespace RateController.Menu
             }
         }
 
+        private void RefreshComPorts()
+        {
+            cbComPort.Items.Clear();
+            string[] ports = SerialPort.GetPortNames();
+            Array.Sort(ports);
+            foreach (string port in ports)
+            {
+                cbComPort.Items.Add(port);
+            }
+
+            // Select current port if it exists
+            int index = cbComPort.FindStringExact(Props.CanPort);
+            if (index >= 0)
+            {
+                cbComPort.SelectedIndex = index;
+            }
+            else if (cbComPort.Items.Count > 0)
+            {
+                cbComPort.SelectedIndex = 0;
+            }
+        }
+
         private void SetBoxes()
         {
             tbWheelModule.Enabled = rbWheel.Checked;
@@ -182,6 +345,9 @@ namespace RateController.Menu
             butUpdateModules.Enabled = rbWheel.Checked;
             lbPulses.Enabled = rbWheel.Checked;
             btnCal.Enabled = rbWheel.Checked;
+
+            // ISOBUS speed option only available when ISOBUS is enabled
+            rbIsoBusSpeed.Enabled = ckIsoBus.Checked;
         }
 
         private void SetButtons(bool Edited)
@@ -318,6 +484,39 @@ namespace RateController.Menu
             }
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            // Check if ISOBUS is enabled and comm object exists
+            if (Core.IsobusComm != null && Props.IsobusEnabled)
+            {
+                // lbConnected = Actual ISOBUS module data being received (PGN 32400/32401)
+                if (Core.IsobusComm.ModuleDataReceiving)
+                {
+                    lbConnected.Image = Properties.Resources.On;
+                }
+                else
+                {
+                    lbConnected.Image = Properties.Resources.Off;
+                }
+
+                // lbDriverFound = Gateway process responding via UDP
+                if (Core.IsobusComm.GatewayConnected)
+                {
+                    lbDriverFound.Image = Properties.Resources.On;
+                }
+                else
+                {
+                    lbDriverFound.Image = Properties.Resources.Off;
+                }
+            }
+            else
+            {
+                // ISOBUS not enabled - show off for both
+                lbConnected.Image = Properties.Resources.Off;
+                lbDriverFound.Image = Properties.Resources.Off;
+            }
+        }
+
         private void UpdateForm()
         {
             Initializing = true;
@@ -330,6 +529,10 @@ namespace RateController.Menu
 
                 case SpeedType.Simulated:
                     rbSimulated.Checked = true;
+                    break;
+
+                case SpeedType.ISOBUS:
+                    rbIsoBusSpeed.Checked = true;
                     break;
 
                 default:
@@ -365,10 +568,42 @@ namespace RateController.Menu
 
             ckMetric.Checked = Props.UseMetric;
             ckRateDisplay.Checked = Props.UseRateDisplay;
+            ckIsoBus.Checked = Props.IsobusEnabled;
+
+            switch (Props.CurrentCanDriver)
+            {
+                case CanDriver.InnoMaker:
+                    rbAdapter2.Checked = true;
+                    break;
+
+                case CanDriver.PCAN:
+                    rbAdapter3.Checked = true;
+                    break;
+
+                default:
+                    rbAdapter1.Checked = true;  // SLCAN
+                    break;
+            }
+
+            ckDiagnostics.Checked = Props.ShowCanDiagnostics;
+
+            RefreshComPorts();
+            UpdatePortVisibility();
 
             SetBoxes();
 
+            gbxDrivers.Enabled = !ckIsoBus.Checked;
+            //ckDiagnostics.Enabled = !ckIsoBus.Checked;
+
             Initializing = false;
+        }
+
+        private void UpdatePortVisibility()
+        {
+            // Only SLCAN uses COM port - other drivers are native USB
+            bool showPort = rbAdapter1.Checked;  // rbAdapter1 = SLCAN
+            gbxPort.Visible = showPort;
+            gbxPort.Enabled = !ckIsoBus.Checked;
         }
 
         private bool ValidPin(int pin)
