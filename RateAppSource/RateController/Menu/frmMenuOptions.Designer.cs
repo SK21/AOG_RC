@@ -584,7 +584,12 @@
             this.ckIsoBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckIsoBus.UseVisualStyleBackColor = true;
             this.ckIsoBus.CheckedChanged += new System.EventHandler(this.ckIsobusEnabled_CheckedChanged);
-            // 
+            //
+            // timer1
+            //
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            //
             // frmMenuOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);

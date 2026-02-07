@@ -202,7 +202,7 @@ namespace RateController.Menu
 
         private void UpdateForm()
         {
-            if (Core.ModulesStatus.ElapsedTime(cModuleID) > 4000)
+            if (!Core.ModulesStatus.Connected(cModuleID))
             {
                 lbInoID.Text = "--";
                 lbModID.Text = "--";

@@ -174,6 +174,7 @@
             this.pbQuantity.TabIndex = 0;
             this.pbQuantity.Tag = "0";
             this.pbQuantity.Value = 95;
+            this.pbQuantity.Click += new System.EventHandler(this.lbQuantityAmount_Click);
             this.pbQuantity.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.pbQuantity.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
