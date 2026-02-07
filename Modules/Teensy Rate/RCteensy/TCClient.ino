@@ -73,6 +73,12 @@ struct TCClientData {
     // Current setpoint from TC
     float setpointRate[MaxProductCount];   // Target rate from DDI 1
     uint8_t sectionState = 0;              // Section states from DDI 157
+
+    // Measurement request tracking (per DDI)
+    uint32_t measurementIntervalDDI2 = 0;   // Requested interval for DDI 2 (ms), 0 = not requested
+    uint32_t measurementIntervalDDI48 = 0;  // Requested interval for DDI 48 (ms), 0 = not requested
+    uint32_t measurementIntervalDDI157 = 0; // Requested interval for DDI 157 (ms), 0 = not requested
+    bool measurementsRequested = false;     // True if any measurement has been requested
 };
 
 TCClientData tcClient;
@@ -86,6 +92,7 @@ void TCClient_SendStructureLabelRequest();
 void TCClient_SendDDOP();
 void TCClient_SendActivationRequest();
 void TCClient_SendProcessData();
+void TCClient_SendValueForDDI(uint16_t elementNumber, uint16_t ddi);
 void TCClient_HandleTCStatus(const CAN_message_t& msg);
 void TCClient_HandleProcessData(const CAN_message_t& msg);
 void TCClient_HandleTPData(const CAN_message_t& msg);
@@ -365,6 +372,18 @@ void TCClient_HandleProcessData(const CAN_message_t& msg, uint8_t pf, uint8_t ps
             }
             break;
 
+        case PD_CMD_REQUEST_VALUE: {
+            // TC Server requesting current value for a DDI/element
+            uint16_t reqElement = (msg.buf[0] >> 4) | ((uint16_t)msg.buf[1] << 4);
+            uint16_t reqDdi = msg.buf[2] | ((uint16_t)msg.buf[3] << 8);
+            Serial.print("TC Request Value DDI ");
+            Serial.print(reqDdi);
+            Serial.print(" Element ");
+            Serial.println(reqElement);
+            TCClient_SendValueForDDI(reqElement, reqDdi);
+            break;
+        }
+
         // PD_CMD_OBJECT_POOL_TRANSFER_RESP and PD_CMD_OBJECT_POOL_ACTIVATE_RESP
         // are now handled via DD commands above
 
@@ -471,15 +490,58 @@ void TCClient_HandleValueCommand(const CAN_message_t& msg) {
 
 void TCClient_HandleMeasurementRequest(const CAN_message_t& msg) {
     // TC is setting up a measurement trigger
-    // We'll just send data at our regular interval
     // ISO 11783-10 format: element in byte0 high nibble + byte1, DDI in bytes 2-3
     uint16_t elementNumber = (msg.buf[0] >> 4) | ((uint16_t)msg.buf[1] << 4);
     uint16_t ddi = msg.buf[2] | ((uint16_t)msg.buf[3] << 8);
+    uint8_t command = msg.buf[0] & 0x0F;
 
-    Serial.print("TC Measurement request DDI ");
+    // Extract interval/threshold value from bytes 4-7
+    uint32_t value = msg.buf[4] | ((uint32_t)msg.buf[5] << 8) |
+                     ((uint32_t)msg.buf[6] << 16) | ((uint32_t)msg.buf[7] << 24);
+
+    Serial.print("TC Measurement request cmd=0x");
+    Serial.print(command, HEX);
+    Serial.print(" DDI ");
     Serial.print(ddi);
     Serial.print(" Element ");
-    Serial.println(elementNumber);
+    Serial.print(elementNumber);
+    Serial.print(" value=");
+    Serial.println(value);
+
+    // Store per-DDI measurement interval for time-based requests
+    if (command == PD_CMD_MEASUREMENT_TIME_INTERVAL) {
+        switch (ddi) {
+            case DDI_ACTUAL_VOLUME_PER_AREA:
+                tcClient.measurementIntervalDDI2 = value;
+                break;
+            case DDI_ACTUAL_VOLUME:
+                tcClient.measurementIntervalDDI48 = value;
+                break;
+            case DDI_SECTION_CONTROL_STATE:
+                tcClient.measurementIntervalDDI157 = value;
+                break;
+        }
+
+        tcClient.measurementsRequested = true;
+
+        // Use the shortest requested interval as the global processDataInterval
+        uint32_t shortest = 0xFFFFFFFF;
+        if (tcClient.measurementIntervalDDI2 > 0 && tcClient.measurementIntervalDDI2 < shortest)
+            shortest = tcClient.measurementIntervalDDI2;
+        if (tcClient.measurementIntervalDDI48 > 0 && tcClient.measurementIntervalDDI48 < shortest)
+            shortest = tcClient.measurementIntervalDDI48;
+        if (tcClient.measurementIntervalDDI157 > 0 && tcClient.measurementIntervalDDI157 < shortest)
+            shortest = tcClient.measurementIntervalDDI157;
+
+        if (shortest < 0xFFFFFFFF) {
+            tcClient.processDataInterval = (uint16_t)shortest;
+            Serial.print("TC processDataInterval updated to ");
+            Serial.println(tcClient.processDataInterval);
+        }
+    }
+
+    // Respond immediately with current value for this DDI
+    TCClient_SendValueForDDI(elementNumber, ddi);
 }
 
 //=============================================================================
@@ -703,6 +765,50 @@ void TCClient_SendProcessDataAck(uint16_t element, uint16_t ddi, uint8_t errorCo
 
     ISOBUS.write(msg);
     canStats.txCount++;
+}
+
+//=============================================================================
+// Value Response Helper
+//=============================================================================
+
+void TCClient_SendValueForDDI(uint16_t elementNumber, uint16_t ddi) {
+    // Determine sensor index from element number
+    uint8_t senId = 0;
+    if (elementNumber >= ELEMENT_SECTION_BASE) {
+        senId = (elementNumber - ELEMENT_SECTION_BASE);
+        if (senId >= MaxProductCount) senId = 0;
+    }
+
+    int32_t value = 0;
+    switch (ddi) {
+        case DDI_ACTUAL_VOLUME_PER_AREA:
+            // Current rate in mm³/m² (1 L/ha = 100 mm³/m²)
+            value = TCClient_ConvertRateToDDI(Sensor[senId].UPM);
+            break;
+        case DDI_ACTUAL_VOLUME:
+            // Accumulated volume in mL
+            if (Sensor[senId].MeterCal > 0) {
+                value = (int32_t)((Sensor[senId].TotalPulses / Sensor[senId].MeterCal) * 1000.0);
+            }
+            break;
+        case DDI_SECTION_CONTROL_STATE:
+            // Current section state
+            if (elementNumber >= ELEMENT_SECTION_BASE) {
+                uint8_t section = elementNumber - ELEMENT_SECTION_BASE;
+                if (section < 8) {
+                    value = (RelayLo & (1 << section)) ? 1 : 0;
+                } else if (section < 16) {
+                    value = (RelayHi & (1 << (section - 8))) ? 1 : 0;
+                }
+            } else if (elementNumber == ELEMENT_BOOM) {
+                value = RelayLo | ((uint16_t)RelayHi << 8);
+            }
+            break;
+        default:
+            return;  // Unknown DDI, don't respond
+    }
+
+    TCClient_SendValueMessage(elementNumber, ddi, value);
 }
 
 //=============================================================================

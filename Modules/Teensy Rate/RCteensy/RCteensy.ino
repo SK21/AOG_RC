@@ -191,12 +191,12 @@ void loop()
 		CANBus_Update();
 		break;
 	case 3:
-		// TC Client only
+		// TC Client only - STANDARD ISOBUS
 		CANBus_MaintainAddress();  // Handle address claiming
 		CANBus_Receive();          // Handle incoming CAN (address claim, TP, etc.)
 		TP_Update();               // Transport Protocol state machine
 		TCClient_Update();         // TC Client state machine
-		CANBus_SendProprietaryStatus();  // Send PWM/Hz and module ident for RC display
+		// NO proprietary status - standard ISOBUS only
 		break;
 	case 4:
 		// UDP + TC Client
