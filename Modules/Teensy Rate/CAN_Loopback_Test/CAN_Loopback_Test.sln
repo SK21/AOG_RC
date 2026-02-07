@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAN_Loopback_Test", "CAN_Loopback_Test.vcxproj", "{864BD204-F494-4A80-54F7-AB5F8F98795F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Debug|ARM.ActiveCfg = Debug|ARM
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Debug|ARM.Build.0 = Debug|ARM
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Debug|ARM.Deploy.0 = Debug|ARM
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Debug|ARM64.Build.0 = Debug|ARM64
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Release|ARM.ActiveCfg = Release|ARM
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Release|ARM.Build.0 = Release|ARM
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Release|ARM.Deploy.0 = Release|ARM
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Release|ARM64.ActiveCfg = Release|ARM64
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Release|ARM64.Build.0 = Release|ARM64
+		{864BD204-F494-4A80-54F7-AB5F8F98795F}.Release|ARM64.Deploy.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C6FB1B2-E00B-41B0-8BDF-090A7FA4B50E}
+	EndGlobalSection
+EndGlobal

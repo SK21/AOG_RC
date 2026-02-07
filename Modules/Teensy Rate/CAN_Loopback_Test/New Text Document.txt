@@ -1,0 +1,21 @@
+Compiling 'CAN_Loopback_Test' for 'Teensy 4.1 (teensy41)'
+Build Folder: "file:///C:/Users/CoxDa/AppData/Local/Temp/VMBuilds/CAN_Loopback_Test/teensy41/Release"
+CAN_Loopback_Test.ino: In function void setup()
+CAN_Loopback_Test.ino: 29:21: error: 'FLEXCAN_MCR_LPRIOEN' was not declared in this scope; did you mean 'FLEXCAN_MCR_LPRIO_EN'?
+   29 |     FLEXCAN1_MCR |= FLEXCAN_MCR_LPRIOEN
+   |                     ^~~~~~~~~~~~~~~~~~~
+   |                     FLEXCAN_MCR_LPRIO_EN
+CAN_Loopback_Test.ino: 30:23: error: 'FLEXCAN_CTRL1_LPB' was not declared in this scope; did you mean 'FLEXCAN_CTRL_LPB'?
+   30 |     FLEXCAN1_CTRL1 |= FLEXCAN_CTRL1_LPB;  \\ Loopback enable
+   |                       ^~~~~~~~~~~~~~~~~
+   |                       FLEXCAN_CTRL_LPB
+CAN_Loopback_Test.ino: 31:24: error: 'FLEXCAN_CTRL1_LOM' was not declared in this scope; did you mean 'FLEXCAN_CTRL_LOM'?
+   31 |     FLEXCAN1_CTRL1 &= ~FLEXCAN_CTRL1_LOM; \\ Disable listen-only
+   |                        ^~~~~~~~~~~~~~~~~
+   |                        FLEXCAN_CTRL_LOM
+ 
+ 
+ 
+ 
+Error compiling project sources
+Build failed for project 'CAN_Loopback_Test'

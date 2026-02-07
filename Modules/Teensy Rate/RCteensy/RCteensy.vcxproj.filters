@@ -41,6 +41,13 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
     <ClCompile Include="WheelSpeed.ino" />
+    <ClCompile Include="CANBus.ino" />
+    <ClCompile Include="DDOP.ino" />
+    <ClCompile Include="TCClient.ino" />
+    <ClCompile Include="TP.ino" />
+    <ClCompile Include="TCDefs.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">

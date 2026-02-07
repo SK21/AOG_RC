@@ -253,6 +253,21 @@ void DoSetup()
 
 	pinMode(LED_BUILTIN, OUTPUT);
 
+	// CAN/ISOBUS initialization
+	if (MDL.CommMode == 1 || MDL.CommMode == 2 || MDL.CommMode == 3 || MDL.CommMode == 4)
+	{
+		Serial.println("");
+		CANBus_Begin();
+	}
+
+	// TC Client initialization (CommMode 3 or 4)
+	if (MDL.CommMode == 3 || MDL.CommMode == 4)
+	{
+		Serial.println("");
+		TP_Begin();
+		TCClient_Begin();
+	}
+
 	Serial.println("");
 	Serial.print("Sensors enabled: ");
 	Serial.println(MDL.SensorCount);
@@ -318,6 +333,29 @@ void DoSetup()
 	else
 	{
 		Serial.println(F("ADS1115: Disabled "));
+	}
+
+	Serial.print(F("Comm Mode: "));
+	switch (MDL.CommMode)
+	{
+	case 0:
+		Serial.println(F("UDP only"));
+		break;
+	case 1:
+		Serial.println(F("CAN/ISOBUS Proprietary"));
+		break;
+	case 2:
+		Serial.println(F("UDP + CAN/ISOBUS Proprietary"));
+		break;
+	case 3:
+		Serial.println(F("TC Client only"));
+		break;
+	case 4:
+		Serial.println(F("UDP + TC Client"));
+		break;
+	default:
+		Serial.println(F("Unknown"));
+		break;
 	}
 
 	Serial.println("");
@@ -428,6 +466,7 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
+	MDL.CommMode = 3;  // Default to CAN Proprietary (working), change to 3 for TC Client
 }
 
 bool ValidData()
