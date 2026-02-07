@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
-    public class RateSetChangedEventArgs : EventArgs
-    {
-        public int ProductIndex { get; }
-
-        public RateSetChangedEventArgs(int index)
-        {
-            ProductIndex = index;
-        }
-    }
-
     public class clsProducts
     {
         public IList<clsProduct> Items; // access records by index
         private List<clsProduct> cProducts = new List<clsProduct>();
+        private ProductState[] cProductsState = new ProductState[Props.MaxProducts];
         private DateTime LastSave;
 
         public clsProducts()
         {
             Items = cProducts.AsReadOnly();
+            Core.UpdateStatus += Core_UpdateStatus;
+            Core.AppExit += Core_AppExit;
+
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                cProductsState[i] = ProductState.Off;
+            }
         }
 
         public double[] BaseRates()
@@ -65,11 +60,6 @@ namespace RateController.Classes
                 Props.WriteErrorLog("clsProducts/Connected: " + ex.Message);
             }
             return Result;
-        }
-
-        public int Count()
-        {
-            return cProducts.Count;
         }
 
         public clsProduct Item(int ProdID)  // access records by Product ID
@@ -116,38 +106,6 @@ namespace RateController.Classes
             SetEnabledDefault();
         }
 
-        public int NextEnabledProduct(int CurrentProduct)
-        {
-            int Result = CurrentProduct;
-            int EnabledID = -1;
-            for (int i = CurrentProduct + 1; i < Props.MaxProducts - 2; i++)
-            {
-                if (cProducts[i].Enabled)
-                {
-                    EnabledID = i;
-                    break;
-                }
-            }
-            if (EnabledID != -1) Result = EnabledID;
-            return Result;
-        }
-
-        public int PreviousEnabledProduct(int CurrentProduct)
-        {
-            int Result = CurrentProduct;
-            int EnabledID = -1;
-            for (int i = CurrentProduct - 1; i >= 0; i--)
-            {
-                if (cProducts[i].Enabled)
-                {
-                    EnabledID = i;
-                    break;
-                }
-            }
-            if (EnabledID != -1) Result = EnabledID;
-            return Result;
-        }
-
         public double[] ProductAppliedRates()
         {
             double[] Result = new double[Props.MaxProducts - 2];
@@ -171,6 +129,16 @@ namespace RateController.Classes
                     Result = true;
                     break;
                 }
+            }
+            return Result;
+        }
+
+        public ProductState ProductsState(int ID)
+        {
+            ProductState Result = ProductState.Off;
+            if (ID >= 0 && ID < Props.MaxProducts)
+            {
+                Result = cProductsState[ID];
             }
             return Result;
         }
@@ -216,23 +184,6 @@ namespace RateController.Classes
                 }
             }
             return Result;
-        }
-
-        public void Update(bool SaveNow = false)
-        {
-            for (int i = 0; i < Props.MaxProducts; i++)
-            {
-                cProducts[i].Update();
-            }
-
-            if (((DateTime.Now - LastSave).TotalSeconds > 60) || SaveNow)
-            {
-                for (int i = 0; i < Props.MaxProducts; i++)
-                {
-                    cProducts[i].Save();
-                }
-                LastSave = DateTime.Now;
-            }
         }
 
         public void UpdateSensorSettings()
@@ -282,6 +233,19 @@ namespace RateController.Classes
             }
         }
 
+        private void Core_AppExit(object sender, EventArgs e)
+        {
+            Core.UpdateStatus -= Core_UpdateStatus;
+            Core.AppExit -= Core_AppExit;
+            Update(true);
+        }
+
+        private void Core_UpdateStatus(object sender, EventArgs e)
+        {
+            Update();
+            UpdateStatus();
+        }
+
         private int ListID(int ProdID)
         {
             int Result = -1;
@@ -295,5 +259,66 @@ namespace RateController.Classes
             }
             return Result;
         }
+
+        private void Update(bool SaveNow = false)
+        {
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                cProducts[i].Update();
+            }
+
+            if (((DateTime.Now - LastSave).TotalSeconds > 60) || SaveNow)
+            {
+                for (int i = 0; i < Props.MaxProducts; i++)
+                {
+                    cProducts[i].Save();
+                }
+                LastSave = DateTime.Now;
+            }
+        }
+
+        private void UpdateStatus()
+        {
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                clsProduct pd = Item(i);
+                ProductState NewState;
+
+                if (!pd.Enabled)
+                {
+                    NewState = ProductState.Off;
+                }
+                else if (Core.RCalarm.Alarms[i])
+                {
+                    NewState = ProductState.Error;
+                }
+                else if (pd.RateSensorData.ModuleSending())
+                {
+                    if (pd.RateSensorData.ModuleReceiving())
+                    {
+                        NewState = ProductState.On;
+                    }
+                    else
+                    {
+                        NewState = ProductState.Sending;
+                    }
+                }
+                else
+                {
+                    NewState = ProductState.Off;
+                }
+                cProductsState[i] = NewState;
+            }
+        }
+    }
+
+    public class RateSetChangedEventArgs : EventArgs
+    {
+        public RateSetChangedEventArgs(int index)
+        {
+            ProductIndex = index;
+        }
+
+        public int ProductIndex { get; }
     }
 }

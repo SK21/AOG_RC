@@ -78,7 +78,6 @@ namespace RateController.Classes
 
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => Sections.Save());
-                SafeTry(() => Products.Update(true));
                 SafeTry(() => LogRunTime());
                 Result = true;
             }
@@ -265,8 +264,9 @@ namespace RateController.Classes
         private static void MainTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             SafeEvent.Raise(UpdateStatus);
-            Products.Update();
             SectionControl.ReadRateSwitches();
+            SendRelays();
+            RCalarm.CheckAlarms();
         }
 
         private static void SafeTry(Action action)

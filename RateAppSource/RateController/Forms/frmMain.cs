@@ -3,6 +3,7 @@ using RateController.Language;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace RateController.Forms
 {
@@ -93,12 +94,15 @@ namespace RateController.Forms
         #endregion Images
 
         private int AlarmButtonCountDown = 5;
-        private bool[] Alarms;
         private bool FlashState;
         private int LastAlarm;
+        private bool LastAogConnected;
+        private ProductState[] LastState = new ProductState[Props.MaxProducts];
+        private bool LastUseLight;
+        private bool LastVRenabled;
         private Point MouseDownLocation;
         private PictureBox[] ProductIcons = new PictureBox[6];
-        private bool ShowFans = false;
+        private bool ShowFans;
 
         public frmMain()
         {
@@ -106,14 +110,6 @@ namespace RateController.Forms
         }
 
         public event EventHandler Minimize;
-
-        public void SendRelays()
-        {
-            for (int i = 0; i < Props.MaxModules; i++)
-            {
-                if (Core.ModulesStatus.Connected(i)) Core.RelaySettings[i].Send();
-            }
-        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -188,50 +184,6 @@ namespace RateController.Forms
             Core.RequestUserExit();
         }
 
-        private void CheckAlarms()
-        {
-            if (Core.RCalarm.AlarmIsOn(out Alarms))
-            {
-                if (!btAlarm.Visible) AlarmButtonCountDown--;
-                btAlarm.Visible = (AlarmButtonCountDown < 1);
-                if (btAlarm.Visible)
-                {
-                    btAlarm.BringToFront();
-                    FlashState = !FlashState;
-
-                    for (int i = 0; i < Props.MaxProducts; i++)
-                    {
-                        if (Alarms[i])
-                        {
-                            if (LastAlarm != i)
-                            {
-                                // switch to first alarming product
-                                LastAlarm = i;
-                                Props.CurrentProduct = i;
-                                SwitchDisplay(false);
-                                UpdateForm();
-                            }
-                            if (FlashState)
-                            {
-                                btAlarm.Text = Core.Tls.ClipText((i + 1).ToString() + ". " + Core.Products.Item(i).ProductName, 20);
-                            }
-                            else
-                            {
-                                btAlarm.Text = "Rate Alarm";
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                btAlarm.Visible = false;
-                LastAlarm = -1;
-                AlarmButtonCountDown = 5;
-            }
-        }
-
         private void Core_ColorChanged(object sender, EventArgs e)
         {
             SetColors();
@@ -243,8 +195,7 @@ namespace RateController.Forms
         private void Core_UpdateStatus(object sender, EventArgs e)
         {
             UpdateForm();
-            SendRelays();
-            CheckAlarms();
+            ShowAlarmButton();
         }
 
         private void Fans_Click(object sender, EventArgs e)
@@ -283,10 +234,13 @@ namespace RateController.Forms
             ProductIcons[4] = prod5;
             ProductIcons[5] = Fans;
 
-            Alarms = new bool[Props.MaxProducts];
-
             Props.LoadFormLocation(this);
             SetColors();
+
+            for (int i = 0; i < Props.MaxProducts; i++)
+            {
+                LastState[i] = ProductState.Off;
+            }
 
             SwitchDisplay(false);
             UpdateSwitches();
@@ -416,6 +370,50 @@ namespace RateController.Forms
             foreach (Control c in this.Controls)
             {
                 c.ForeColor = Properties.Settings.Default.DisplayForeColour;
+            }
+        }
+
+        private void ShowAlarmButton()
+        {
+            if (Core.RCalarm.AlarmIsOn)
+            {
+                if (!btAlarm.Visible) AlarmButtonCountDown--;
+                btAlarm.Visible = (AlarmButtonCountDown < 1);
+                if (btAlarm.Visible)
+                {
+                    btAlarm.BringToFront();
+                    FlashState = !FlashState;
+
+                    for (int i = 0; i < Props.MaxProducts; i++)
+                    {
+                        if (Core.RCalarm.Alarms[i])
+                        {
+                            if (LastAlarm != i)
+                            {
+                                // switch to first alarming product
+                                LastAlarm = i;
+                                Props.CurrentProduct = i;
+                                SwitchDisplay(false);
+                                UpdateForm();
+                            }
+                            if (FlashState)
+                            {
+                                btAlarm.Text = Core.Tls.ClipText((i + 1).ToString() + ". " + Core.Products.Item(i).ProductName, 20);
+                            }
+                            else
+                            {
+                                btAlarm.Text = "Rate Alarm";
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                btAlarm.Visible = false;
+                LastAlarm = -1;
+                AlarmButtonCountDown = 5;
             }
         }
 
@@ -587,76 +585,83 @@ namespace RateController.Forms
         private void UpdateStatusIcons()
         {
             bool UseLight = Core.Tls.UseLightContrast();
+            bool ThemeChanged = (UseLight != LastUseLight);
+            LastUseLight = UseLight;
 
+            // products
             for (int i = 0; i < Props.MaxProducts - 1; i++)
             {
-                if (Alarms[i])
+                ProductState CurrentState = Core.Products.ProductsState(i);
+                Image img;
+                if (CurrentState != LastState[i] || ThemeChanged)
                 {
-                    if (FlashState)
+                    switch (CurrentState)
                     {
-                        ProductIcons[i].Image = UseLight ? ImagesErrorLight[i] : ImagesError[i];
-                    }
-                    else
-                    {
-                        clsProduct pd = Core.Products.Item(i);
-                        if (pd.RateSensorData.ModuleSending())
-                        {
-                            if (pd.RateSensorData.ModuleReceiving())
+                        case ProductState.On:
+                            img = UseLight ? ImagesOnLight[i] : ImagesOn[i];
+                            break;
+
+                        case ProductState.Sending:
+                            img = UseLight ? ImagesRCVlight[i] : ImagesRCV[i];
+                            break;
+
+                        case ProductState.Error:
+                            if (FlashState)
                             {
-                                ProductIcons[i].Image = UseLight ? ImagesOnLight[i] : ImagesOn[i];
+                                img = UseLight ? ImagesErrorLight[i] : ImagesError[i];
                             }
                             else
                             {
-                                ProductIcons[i].Image = UseLight ? ImagesRCVlight[i] : ImagesRCV[i];
+                                img = UseLight ? ImagesOnLight[i] : ImagesOn[i];
                             }
-                        }
-                        else
-                        {
-                            ProductIcons[i].Image = UseLight ? ImagesOffLight[i] : ImagesOff[i];
-                        }
+                            break;
+
+                        default:
+                            img = UseLight ? ImagesOffLight[i] : ImagesOff[i];
+                            break;
                     }
+                    ProductIcons[i].Image = img;
+                    LastState[i] = CurrentState;
+                }
+            }
+
+            // Rx button
+            if (ThemeChanged || Props.VariableRateEnabled != LastVRenabled)
+            {
+                LastVRenabled = Props.VariableRateEnabled;
+                if (Props.VariableRateEnabled)
+                {
+                    btnVR.Image = UseLight ? Properties.Resources.VRonLight : Properties.Resources.VRon;
                 }
                 else
                 {
-                    clsProduct pd = Core.Products.Item(i);
-                    if (pd.RateSensorData.ModuleSending())
-                    {
-                        if (pd.RateSensorData.ModuleReceiving())
-                        {
-                            ProductIcons[i].Image = UseLight ? ImagesOnLight[i] : ImagesOn[i];
-                        }
-                        else
-                        {
-                            ProductIcons[i].Image = UseLight ? ImagesRCVlight[i] : ImagesRCV[i];
-                        }
-                    }
-                    else
-                    {
-                        ProductIcons[i].Image = UseLight ? ImagesOffLight[i] : ImagesOff[i];
-                    }
+                    btnVR.Image = UseLight ? Properties.Resources.VRoffLight : Properties.Resources.VRoff;
                 }
             }
 
-            if (Props.VariableRateEnabled)
+            // other buttons
+            if (ThemeChanged)
             {
-                btnVR.Image = UseLight ? Properties.Resources.VRonLight : Properties.Resources.VRon;
-            }
-            else
-            {
-                btnVR.Image = UseLight ? Properties.Resources.VRoffLight : Properties.Resources.VRoff;
+                btnMenu.Image = UseLight ? Properties.Resources.MenuLight : Properties.Resources.article;
+                btnMinimize.Image = UseLight ? Properties.Resources.MinimizeLight : Properties.Resources.arrow_circle_down_right;
+                butPowerOff.Image = UseLight ? Properties.Resources.SwitchOffLight : Properties.Resources.SwitchOff;
             }
 
-            btnMenu.Image = UseLight ? Properties.Resources.MenuLight : Properties.Resources.article;
-            btnMinimize.Image = UseLight ? Properties.Resources.MinimizeLight : Properties.Resources.arrow_circle_down_right;
-            butPowerOff.Image = UseLight ? Properties.Resources.SwitchOffLight : Properties.Resources.SwitchOff;
+            // AOG
+            bool aogConnected = Core.GPS.TWOLconnected() || Core.AutoSteerPGN.Connected();
 
-            if (Core.GPS.TWOLconnected() || Core.AutoSteerPGN.Connected())
+            if (ThemeChanged || aogConnected != LastAogConnected)
             {
-                pbAOGstatus.Image = UseLight ? Properties.Resources.AOG_On_Light : Properties.Resources.AOG_On;
-            }
-            else
-            {
-                pbAOGstatus.Image = UseLight ? Properties.Resources.AOG_Off_Light : Properties.Resources.AOG_Off;
+                LastAogConnected = Core.GPS.TWOLconnected() || Core.AutoSteerPGN.Connected();
+
+                if (Core.GPS.TWOLconnected() || Core.AutoSteerPGN.Connected())
+                {
+                    pbAOGstatus.Image = UseLight ? Properties.Resources.AOG_On_Light : Properties.Resources.AOG_On;
+                }
+                else
+                {
+                    pbAOGstatus.Image = UseLight ? Properties.Resources.AOG_Off_Light : Properties.Resources.AOG_Off;
+                }
             }
         }
 

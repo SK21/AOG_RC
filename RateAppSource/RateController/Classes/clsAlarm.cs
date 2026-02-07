@@ -10,20 +10,28 @@ namespace RateController.Classes
     {
         private readonly System.Media.SoundPlayer sound;
         private DateTime? alarmStart;
+        private bool cAlarmIsOn;
+        private bool[] cAlarms;
         private bool IsPlaying;
         private bool SilenceAlarm;
-
 
         public clsAlarm()
         {
             sound = new System.Media.SoundPlayer(RateController.Properties.Resources.Loud_Alarm_Clock_Buzzer_Muk1984_493547174);
+            cAlarms = new bool[Props.MaxProducts];
         }
 
-        public bool AlarmIsOn(out bool[] ProductAlarms)
+        public bool AlarmIsOn
+        { get { return cAlarmIsOn; } }
+
+        public bool[] Alarms
+        { get { return cAlarms; } }
+
+        public bool CheckAlarms()
         {
-            ProductAlarms = new bool[Props.MaxProducts];
             double AlarmSetPoint;
-            bool AlarmIsOn = false;
+            cAlarmIsOn = false;
+            cAlarms = new bool[Props.MaxProducts];
 
             if (Core.Sections.WorkRatePerHour() > 0)
             {
@@ -35,26 +43,26 @@ namespace RateController.Classes
                         AlarmSetPoint = (100 - Prd.OffRateSetting) / 100.0;
                         if (Prd.SmoothRate() < (Prd.TargetRate() * AlarmSetPoint))
                         {
-                            AlarmIsOn = true;
-                            ProductAlarms[Prd.ID] = true;
+                            cAlarmIsOn = true;
+                            cAlarms[Prd.ID] = true;
                         }
-                        if (!ProductAlarms[Prd.ID])
+                        if (!cAlarms[Prd.ID])
                         {
                             // too high?
                             AlarmSetPoint = (100 + Prd.OffRateSetting) / 100.0;
                             if (Prd.SmoothRate() > (Prd.TargetRate() * AlarmSetPoint))
                             {
-                                AlarmIsOn = true;
-                                ProductAlarms[Prd.ID] = true;
+                                cAlarmIsOn = true;
+                                cAlarms[Prd.ID] = true;
                             }
                         }
                     }
                 }
             }
 
-            UpdateSound(AlarmIsOn);
+            UpdateSound(cAlarmIsOn);
 
-            return AlarmIsOn;
+            return cAlarmIsOn;
         }
 
         public void Silence()

@@ -33,6 +33,9 @@ namespace RateController.Classes
         ESP_Rate
     }
 
+    public enum ProductState
+    { Off, On, Sending, Error }
+
     public enum RateType
     { Applied, Target }
 
@@ -75,6 +78,7 @@ namespace RateController.Classes
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
         private static string cAppVersion = "4.3.0";
+        private static string cCanPort = "COM7";
         private static CanDriver cCurrentCanDriver = CanDriver.SLCAN;
         private static string cCurrentMenuName = "";
         private static int cCurrentProduct;
@@ -95,7 +99,6 @@ namespace RateController.Classes
         private static bool cResumeAfterPrime;
         private static int cSensorSettingsMaxID = -1;
         private static bool cShowCanDiagnostics = false;
-        private static string cCanPort = "COM7";
         private static bool cShowPressure;
         private static bool[] cShowScale = new bool[4];
         private static bool cShowSwitches;
@@ -152,6 +155,19 @@ namespace RateController.Classes
 
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
+
+        public static string CanPort
+        {
+            get { return cCanPort; }
+            set
+            {
+                if (cCanPort != value)
+                {
+                    cCanPort = value;
+                    SetAppProp("CanPort", cCanPort);
+                }
+            }
+        }
 
         public static CanDriver CurrentCanDriver
         {
@@ -311,19 +327,6 @@ namespace RateController.Classes
                 {
                     cShowCanDiagnostics = value;
                     SetAppProp("CanDiagnostics", cShowCanDiagnostics.ToString());
-                }
-            }
-        }
-
-        public static string CanPort
-        {
-            get { return cCanPort; }
-            set
-            {
-                if (cCanPort != value)
-                {
-                    cCanPort = value;
-                    SetAppProp("CanPort", cCanPort);
                 }
             }
         }
@@ -490,7 +493,6 @@ namespace RateController.Classes
                 DisplayRate();
             }
         }
-
 
         public static bool UseZones
         {
