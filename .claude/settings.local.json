@@ -48,7 +48,10 @@
       "Bash(dotnet build:*)",
       "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" RateController/RateController.csproj /p:Configuration=Release /p:Platform=x86 /t:Build /v:minimal)",
       "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" RateController.csproj -p:Configuration=Release -p:Platform=x86 -t:Build -v:minimal)",
-      "Bash(.build_gateway.bat)"
+      "Bash(.build_gateway.bat)",
+      "Bash(powershell.exe -Command \"Get-ChildItem ''C:\\\\Program Files\\\\Microsoft Visual Studio\\\\'' -ErrorAction SilentlyContinue\")",
+      "Bash(powershell.exe -Command \"Set-Location ''F:\\\\Documents\\\\GitHub\\\\RateControl\\\\Gateway\\\\IsobusGateway''; & .\\\\build_gateway.bat 2>&1\")",
+      "Bash(powershell.exe:*)"
     ]
   }
 }

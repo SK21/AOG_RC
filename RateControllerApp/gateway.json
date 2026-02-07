@@ -1,0 +1,39 @@
+{
+    "can": {
+        "driver": "slcan",
+        "port": "COM7",
+        "serialBaudRate": 115200,
+        "bitrate": 250000
+    },
+    "udp": {
+        "listenPort": 32700,
+        "sendPort": 32701,
+        "rateControllerIP": "127.0.0.1"
+    },
+    "isobus": {
+        "preferredAddress": 129,
+        "industryGroup": 2,
+        "deviceClass": 0,
+        "deviceClassInstance": 0,
+        "functionCode": 130,
+        "functionInstance": 0,
+        "manufacturerCode": 0,
+        "identityNumber": 1
+    },
+    "products": [
+        {
+            "name": "Product 1",
+            "units": "kg/ha",
+            "ddi": 6
+        },
+        {
+            "name": "Product 2",
+            "units": "L/ha",
+            "ddi": 1
+        }
+    ],
+    "logging": {
+        "level": "debug",
+        "file": "gateway.log"
+    }
+}

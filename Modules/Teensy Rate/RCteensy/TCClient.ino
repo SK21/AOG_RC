@@ -487,11 +487,11 @@ void TCClient_HandleMeasurementRequest(const CAN_message_t& msg) {
 //=============================================================================
 
 void TCClient_SendWorkingSetMaster() {
-    // PGN 65199 (0xFE8F) - Working Set Master
+    // PGN 65037 (0xFE0D) - Working Set Master
     // Announces this device as a Working Set Master
 
     CAN_message_t msg;
-    msg.id = (7UL << 26) | (0xFE8FUL << 8) | ISOBUSid.address;
+    msg.id = (7UL << 26) | (0xFE0DUL << 8) | ISOBUSid.address;
     msg.flags.extended = 1;
     msg.len = 8;
 

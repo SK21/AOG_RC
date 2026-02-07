@@ -583,6 +583,7 @@
             this.ckIsoBus.Text = "Enabled";
             this.ckIsoBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckIsoBus.UseVisualStyleBackColor = true;
+            this.ckIsoBus.CheckedChanged += new System.EventHandler(this.ckIsobusEnabled_CheckedChanged);
             // 
             // frmMenuOptions
             // 

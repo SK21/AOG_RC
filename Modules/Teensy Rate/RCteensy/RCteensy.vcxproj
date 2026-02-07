@@ -222,7 +222,7 @@
       <ForcedIncludeFiles>c:\program files\microsoft visual studio\18\community\common7\ide\extensions\2bqx1gfn.tss\Micro Platforms\default\vm-intelli-pre.h;C:\Users\CoxDa\AppData\Local\Temp\VMBuilds\RCteensy\teensy41\Debug\.vmintelli\85ecc3a44d230bbdbff18c8c0b74bfea\vm-intelli-gcc-defines.h;c:\program files\microsoft visual studio\18\community\common7\ide\extensions\2bqx1gfn.tss\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.RCteensy.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__HARDWARE_imxrt1062__;__HARDWARE_IMXRT1062__;_VMDEBUG=1;__IMXRT1062__;TEENSYDUINO=159;ARDUINO=108019;ARDUINO_TEENSY41;F_CPU=450000000;USB_SERIAL;LAYOUT_US_ENGLISH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__HARDWARE_imxrt1062__;__HARDWARE_IMXRT1062__;__IMXRT1062__;TEENSYDUINO=159;ARDUINO=108019;ARDUINO_TEENSY41;F_CPU=450000000;USB_SERIAL;LAYOUT_US_ENGLISH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
