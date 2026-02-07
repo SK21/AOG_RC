@@ -15,14 +15,8 @@ RC starts with the main screen. If AOG is connected the AOG icon will be green. 
 
 ## Rate control repositories
 
-- RC_App (main application)
-  https://github.com/SK21/RC_App
-
-- RC_Gateway (optional C++ helper for Isobus)
-  https://github.com/SK21/RC_Gateway
-
-- RC_Modules (Arduino / Teensy firmware)
-  https://github.com/SK21/RC_Modules
+- AOG_RC (main application)
+  https://github.com/SK21/AOG_RC
 
 - Rate_Control (module pcbs)
   https://github.com/AgOpenGPS-Official/Rate_Control
@@ -30,8 +24,6 @@ RC starts with the main screen. If AOG is connected the AOG icon will be green. 
 - PCBsetup (module firmware installation)
   https://github.com/SK21/PCBsetup
 
-- AOG_RC (archived previous version)
-  https://github.com/SK21/AOG_RC
 
 
 
