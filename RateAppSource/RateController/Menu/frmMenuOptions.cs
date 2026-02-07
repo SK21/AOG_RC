@@ -593,7 +593,7 @@ namespace RateController.Menu
             SetBoxes();
 
             gbxDrivers.Enabled = !ckIsoBus.Checked;
-            //ckDiagnostics.Enabled = !ckIsoBus.Checked;
+            ckDiagnostics.Enabled = !ckIsoBus.Checked;
 
             Initializing = false;
         }
