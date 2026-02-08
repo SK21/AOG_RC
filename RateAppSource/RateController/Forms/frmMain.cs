@@ -534,8 +534,7 @@ namespace RateController.Forms
                 if (Props.ShowCoverageRemaining)
                 {
                     lbCoverage.Text = Core.Tls.ClipText(Lang.lgAreaRemain, 14);
-                    double RT = Prd.SmoothRate();
-                    if (RT < 0.01) RT = Prd.TargetRate();
+                    double RT = Prd.TargetRate();
 
                     if ((RT > 0) && (Prd.TankStart > 0))
                     {
