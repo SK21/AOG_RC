@@ -150,14 +150,14 @@ namespace RateController.Menu
             clsCalibrate Cal = Cals.Item(0);
             Cal.Description = lbName0;
             Cal.Power = btnPwr0;
-            Cal.Pulses = lbPulses0;
-            Cal.RateBox = tbRate0;
-            Cal.CalFactorBox = tbFactor0;
-            Cal.Expected = lbExpected0;
-            Cal.Measured = tbMeasured0;
-            Cal.Progress = pb0;
-            Cal.Locked = btnSet0;
-            Cal.PWMDisplay = lbPWM0;
+            Cal.Pulses = lbPulsesData;
+            Cal.RateBox = tbBaseRate;
+            Cal.CalFactorBox = tbMeterCal;
+            Cal.Expected = lbExpectedData;
+            Cal.Measured = tbMeasured;
+            Cal.Progress = pbRunning;
+            Cal.Locked = btnLocked;
+            Cal.PWMDisplay = lbPWMData;
             Cal.StopRun = btnCalStop;
 
             Cal = Cals.Item(1);
