@@ -249,7 +249,6 @@ void CANBus_Receive() {
 
             case 0xE800:  // Acknowledgment (ACKM) PGN 59392
                 {
-                    // Debug: show what we're being told
                     uint8_t ctrl = msg.buf[0];
                     uint32_t ackedPgn = msg.buf[5] | (msg.buf[6] << 8) | ((uint32_t)msg.buf[7] << 16);
                     Serial.print("  ACKM: ");
@@ -260,6 +259,15 @@ void CANBus_Receive() {
                     else Serial.print(ctrl);
                     Serial.print(" for PGN 0x");
                     Serial.println(ackedPgn, HEX);
+
+                    // If TC Server NACKs our process data command, fast-fail to retry
+                    if (ctrl == 1 && ackedPgn == 0xCB00 && (MDL.CommMode == 3 || MDL.CommMode == 4)) {
+                        uint8_t tcState = TCClient_GetState();
+                        if (tcState >= 4 && tcState <= 9) {  // Any waiting state after structure label
+                            Serial.println("TC Server NACK - not registered, retrying");
+                            TCClient_SetState(TC_ERROR);
+                        }
+                    }
                 }
                 break;
 

@@ -71,6 +71,7 @@ void TCClient_HandleTCStatus(const CAN_message_t& msg);
 void TCClient_HandleProcessData(const CAN_message_t& msg, uint8_t pf, uint8_t ps);
 bool TCClient_IsActive();
 uint8_t TCClient_GetState();
+void TCClient_SetState(TCClientState newState);
 uint8_t TCClient_GetTCAddress();
 float TCClient_GetSetpointRate(uint8_t sensorId);
 

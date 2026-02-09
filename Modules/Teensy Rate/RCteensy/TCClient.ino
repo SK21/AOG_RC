@@ -149,8 +149,8 @@ void TCClient_Update() {
             break;
 
         case TC_WAIT_FOR_TC:
-            // We have seen TC Server, wait 2 seconds for bus to stabilize
-            if (stateTime >= 2000) {
+            // We have seen TC Server, brief wait for bus to stabilize
+            if (stateTime >= 500) {
                 TCClient_SetState(TC_SEND_WORKING_SET_MASTER);
             }
             // Check for TC timeout
@@ -166,12 +166,12 @@ void TCClient_Update() {
             if (!tcClient.wsAnnounced) {
                 // Re-send address claim to ensure Gateway has registered us
                 CANBus_SendAddressClaim();
-                delay(500);  // Wait for AgIsoStack++ to register external control function
+                delay(50);  // Brief wait for AgIsoStack++ to register external control function
                 TCClient_SendWorkingSetMaster();
                 tcClient.wsAnnounced = true;
             }
-            // Wait longer for Gateway to process Working Set Master
-            if (stateTime >= 2000) {
+            // Wait for Gateway to process Working Set Master
+            if (stateTime >= 500) {
                 TCClient_SetState(TC_WAIT_STRUCTURE_LABEL);
                 TCClient_SendStructureLabelRequest();
             }
@@ -179,8 +179,8 @@ void TCClient_Update() {
 
         case TC_WAIT_STRUCTURE_LABEL:
             // Wait for structure label response or timeout
-            // Wait longer to ensure Gateway has fully registered us
-            if (stateTime >= 3000) {
+            // Gateway always returns "not cached", so short timeout is fine
+            if (stateTime >= 500) {
                 // No cached DDOP, need to upload - first request permission
                 tcClient.structureLabelMatched = false;
                 TCClient_SetState(TC_REQUEST_OBJECT_POOL_TRANSFER);
@@ -195,7 +195,7 @@ void TCClient_Update() {
 
         case TC_WAIT_OBJECT_POOL_TRANSFER_RESP:
             // Wait for permission to send DDOP
-            if (stateTime >= 5000) {
+            if (stateTime >= 2000) {
                 Serial.println("Request Object Pool Transfer timeout");
                 TCClient_SetState(TC_ERROR);
             }
@@ -222,7 +222,7 @@ void TCClient_Update() {
 
         case TC_WAIT_ACTIVATION:
             // Wait for activation response
-            if (stateTime >= 5000) {
+            if (stateTime >= 2000) {
                 Serial.println("Activation timeout");
                 TCClient_SetState(TC_ERROR);
             }
@@ -245,7 +245,7 @@ void TCClient_Update() {
 
         case TC_ERROR:
             // Wait before retry
-            if (stateTime >= 5000) {
+            if (stateTime >= 2000) {
                 tcClient.wsAnnounced = false;
                 TCClient_SetState(TC_IDLE);
             }
