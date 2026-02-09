@@ -55,10 +55,11 @@ struct TPSession {
     uint8_t packetsRemaining = 0;  // Packets remaining in current CTS window
     uint32_t lastTime = 0;         // Timeout tracking
 
-    // Send buffer (points to DDOP buffer or other source)
+    // Send buffer (points to DDOP buffer, VT pool, or other source)
     const uint8_t* sendBuffer = nullptr;
     uint16_t sendOffset = 0;
-    bool hasCmdByte = false;       // True if command byte needs to be prepended (DDOP transfer)
+    bool hasCmdByte = false;       // True if command byte needs to be prepended
+    uint8_t cmdByte = 0;           // Command byte to prepend (e.g. 0x61 for DDOP, 0x11 for VT pool)
 
     // Receive buffer
     uint8_t receiveBuffer[TP_MAX_MESSAGE_SIZE];
@@ -100,6 +101,8 @@ void TP_Reset() {
     tpSession.packetsRemaining = 0;
     tpSession.sendBuffer = nullptr;
     tpSession.sendOffset = 0;
+    tpSession.hasCmdByte = false;
+    tpSession.cmdByte = 0;
     tpSession.receiveOffset = 0;
 }
 
@@ -114,15 +117,18 @@ void TP_SetReceiveCallback(TPReceiveCallback callback) {
 // Command byte for DDOP transfer: DeviceDescriptor (0x01) | ObjectPoolTransfer (0x06) << 4 = 0x61
 #define DDOP_TRANSFER_CMD  0x61
 
-bool TP_SendDDOP(uint8_t destAddr, const uint8_t* data, uint16_t size) {
-    // Initiate a TP session to send DDOP
-    // DDOP transfer requires command byte 0x61 prepended to the data
+bool TP_SendLargeMessage(uint8_t destAddr, uint32_t pgn, uint8_t cmdByteVal, const uint8_t* data, uint16_t size) {
+    // Initiate a TP session to send a large message with a command byte prepended
 
-    Serial.print("TP_SendDDOP called: dest=0x");
+    Serial.print("TP_SendLargeMessage: dest=0x");
     Serial.print(destAddr, HEX);
+    Serial.print(" pgn=0x");
+    Serial.print(pgn, HEX);
+    Serial.print(" cmd=0x");
+    Serial.print(cmdByteVal, HEX);
     Serial.print(" size=");
     Serial.print(size);
-    Serial.print(" current state=");
+    Serial.print(" state=");
     Serial.println(tpSession.state);
 
     if (tpSession.state != TP_STATE_IDLE) {
@@ -140,14 +146,15 @@ bool TP_SendDDOP(uint8_t destAddr, const uint8_t* data, uint16_t size) {
 
     tpSession.direction = TP_DIR_SEND;
     tpSession.partnerAddress = destAddr;
-    tpSession.pgn = 0xCB00;  // Process Data PGN (DDOP transfer uses this)
+    tpSession.pgn = pgn;
     tpSession.totalBytes = totalSize;  // Includes command byte
     tpSession.totalPackets = (totalSize + 6) / 7;  // 7 bytes per packet, round up
     tpSession.nextPacket = 1;
     tpSession.packetsRemaining = 0;
     tpSession.sendBuffer = data;
     tpSession.sendOffset = 0;
-    tpSession.hasCmdByte = true;  // Flag to prepend command byte
+    tpSession.hasCmdByte = true;       // Flag to prepend command byte
+    tpSession.cmdByte = cmdByteVal;    // Store command byte
     tpSession.lastTime = millis();
 
     tpSession.state = TP_STATE_SEND_RTS;
@@ -162,6 +169,16 @@ bool TP_SendDDOP(uint8_t destAddr, const uint8_t* data, uint16_t size) {
     Serial.println(tpSession.sendOffset);
 
     return true;
+}
+
+bool TP_SendDDOP(uint8_t destAddr, const uint8_t* data, uint16_t size) {
+    // DDOP transfer: PGN 0xCB00, command byte 0x61
+    return TP_SendLargeMessage(destAddr, 0xCB00, DDOP_TRANSFER_CMD, data, size);
+}
+
+bool TP_SendVTPool(uint8_t destAddr, const uint8_t* data, uint16_t size) {
+    // VT Object Pool transfer: PGN 0xE700, command byte 0x11
+    return TP_SendLargeMessage(destAddr, 0xE700, VT_POOL_TRANSFER_CMD, data, size);
 }
 
 void TP_SendRTS(uint8_t destAddr, uint32_t pgn, uint16_t size, uint8_t numPackets) {
@@ -298,7 +315,7 @@ void TP_SendDataPacketsNow() {
             if (tpSession.sendOffset < tpSession.totalBytes) {
                 // For DDOP transfer, first byte is command byte
                 if (tpSession.hasCmdByte && tpSession.sendOffset == 0) {
-                    data[i] = DDOP_TRANSFER_CMD;  // 0x61
+                    data[i] = tpSession.cmdByte;
                 } else {
                     // Adjust buffer index: if hasCmdByte, subtract 1 from sendOffset
                     uint16_t bufIdx = tpSession.hasCmdByte ? (tpSession.sendOffset - 1) : tpSession.sendOffset;

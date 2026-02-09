@@ -240,6 +240,12 @@ void CANBus_Receive() {
                 CANBus_HandleSpeed(msg, 0xFE49);
                 break;
 
+            case 0xFE6E:  // VT Status (PGN 65134) - broadcast
+                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
+                    VTClient_HandleVTStatus(msg);
+                }
+                break;
+
             case 0xFEF8:  // Task Controller Status (PGN 65272)
                 // Route to TC Client if in TC mode
                 if (MDL.CommMode == 3 || MDL.CommMode == 4) {
@@ -295,6 +301,14 @@ void CANBus_Receive() {
                             Serial.print("  -> ProcessData cmd=0x");
                             Serial.println(msg.buf[0], HEX);
                             TCClient_HandleProcessData(msg, pf, ps);
+                        }
+                    }
+                }
+                // Check for VT to ECU (PGN 0xE600, PDU1, pf=0xE6)
+                if (pf == 0xE6) {
+                    if (ps == ISOBUSid.address) {
+                        if (MDL.CommMode == 3 || MDL.CommMode == 4) {
+                            VTClient_HandleVTtoECU(msg);
                         }
                     }
                 }

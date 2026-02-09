@@ -266,6 +266,7 @@ void DoSetup()
 		Serial.println("");
 		TP_Begin();
 		TCClient_Begin();
+		VTClient_Begin();
 	}
 
 	Serial.println("");

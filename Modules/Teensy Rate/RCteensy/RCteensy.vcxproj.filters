@@ -48,6 +48,11 @@
     <ClCompile Include="TCDefs.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="VTClient.ino" />
+    <ClCompile Include="VTPool.ino" />
+    <ClCompile Include="VTDefs.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy.vsarduino.h">
