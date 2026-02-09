@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
     public class clsCalibrates
     {
         public IList<clsCalibrate> Items;
-        private const int MaxCalibrates = 4;
-
         private List<clsCalibrate> cCalibrates = new List<clsCalibrate>();
+        private int MaxCalibrates = Props.MaxProducts - 2;
 
         public clsCalibrates()
         {
             Items = cCalibrates.AsReadOnly();
         }
-
-        public event EventHandler<EventArgs> Edited;
 
         public void Close()
         {
@@ -42,8 +36,6 @@ namespace RateController.Classes
             {
                 clsCalibrate Cal = new clsCalibrate(i);
                 cCalibrates.Add(Cal);
-                Cal.Load();
-                Cal.Edited += Cal_Edited;
             }
         }
 
@@ -59,14 +51,6 @@ namespace RateController.Classes
                 }
             }
             return Result;
-        }
-
-        public void Reset()
-        {
-            for (int i = 0; i < cCalibrates.Count; i++)
-            {
-                cCalibrates[i].Reset();
-            }
         }
 
         public void Running(bool IsRunning)
@@ -92,19 +76,6 @@ namespace RateController.Classes
                 // save selected
                 cCalibrates[ListID(ID)].Save();
             }
-        }
-
-        public void Update()
-        {
-            for (int i = 0; i < cCalibrates.Count; i++)
-            {
-                cCalibrates[i].Update();
-            }
-        }
-
-        private void Cal_Edited(object sender, EventArgs e)
-        {
-            Edited(this, EventArgs.Empty);
         }
 
         private int ListID(int ID)
