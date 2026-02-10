@@ -53,8 +53,8 @@ void VTPool_WriteString(const char* str) {
 
 void VTPool_AddWorkingSet() {
     // Working Set object (type 0)
-    VTPool_WriteByte(VT_TYPE_WORKING_SET);  // Object type
     VTPool_WriteUint16(VT_OBJ_WORKING_SET); // Object ID
+    VTPool_WriteByte(VT_TYPE_WORKING_SET);  // Object type
     VTPool_WriteByte(VT_COLOUR_BLACK);      // Background colour
     VTPool_WriteByte(1);                    // Selectable: yes
     VTPool_WriteUint16(VT_OBJ_DATA_MASK);  // Active mask object ID
@@ -71,8 +71,8 @@ void VTPool_AddWorkingSet() {
 
 void VTPool_AddDataMask() {
     // Data Mask object (type 1)
-    VTPool_WriteByte(VT_TYPE_DATA_MASK);
     VTPool_WriteUint16(VT_OBJ_DATA_MASK);
+    VTPool_WriteByte(VT_TYPE_DATA_MASK);
     VTPool_WriteByte(VT_COLOUR_BLACK);       // Background colour
     VTPool_WriteUint16(VT_OBJ_SOFT_KEY_MASK); // Soft key mask reference
 
@@ -88,6 +88,8 @@ void VTPool_AddDataMask() {
     numObjects += numSections;
 
     VTPool_WriteByte(numObjects);
+    // Number of macro references (must be in header before child data)
+    VTPool_WriteByte(0);
 
     // Rate 1 objects (x, y positions)
     // Label "Rate 1" at top-left
@@ -153,15 +155,12 @@ void VTPool_AddDataMask() {
     VTPool_WriteUint16(VT_OBJ_STR_WORK);
     VTPool_WriteUint16(2);
     VTPool_WriteUint16(workY);
-
-    // Number of macro references
-    VTPool_WriteByte(0);
 }
 
 void VTPool_AddSoftKeyMask() {
     // Soft Key Mask (type 4) - empty for v1
-    VTPool_WriteByte(VT_TYPE_SOFT_KEY_MASK);
     VTPool_WriteUint16(VT_OBJ_SOFT_KEY_MASK);
+    VTPool_WriteByte(VT_TYPE_SOFT_KEY_MASK);
     VTPool_WriteByte(VT_COLOUR_BLACK);  // Background colour
     VTPool_WriteByte(0);                // Number of objects (empty)
     VTPool_WriteByte(0);                // Number of macro refs
@@ -170,8 +169,8 @@ void VTPool_AddSoftKeyMask() {
 void VTPool_AddOutputString(uint16_t objId, const char* text, uint16_t width,
                             uint16_t fontRef, uint8_t bgColour) {
     // Output String (type 11)
-    VTPool_WriteByte(VT_TYPE_OUTPUT_STRING);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_OUTPUT_STRING);
     VTPool_WriteUint16(width);         // Width
     VTPool_WriteUint16(16);            // Height
     VTPool_WriteByte(bgColour);        // Background colour
@@ -190,14 +189,15 @@ void VTPool_AddOutputString(uint16_t objId, const char* text, uint16_t width,
 void VTPool_AddOutputNumber(uint16_t objId, uint16_t width, uint16_t varRef,
                             uint16_t fontRef) {
     // Output Number (type 12)
-    VTPool_WriteByte(VT_TYPE_OUTPUT_NUMBER);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_OUTPUT_NUMBER);
     VTPool_WriteUint16(width);         // Width
     VTPool_WriteUint16(16);            // Height
     VTPool_WriteByte(VT_COLOUR_BLACK); // Background colour
     VTPool_WriteUint16(fontRef);       // Font attributes reference
     VTPool_WriteByte(0);               // Options (transparent bg)
     VTPool_WriteUint16(varRef);        // Variable reference
+    VTPool_WriteUint32(0);             // Value (initial, used when varRef=0xFFFF)
     VTPool_WriteUint32(0);             // Offset (0)
     // Scale: 0.1 as IEEE 754 float
     float scale = 0.1f;
@@ -207,16 +207,14 @@ void VTPool_AddOutputNumber(uint16_t objId, uint16_t width, uint16_t varRef,
     VTPool_WriteByte(1);               // Number of decimals
     VTPool_WriteByte(0);               // Format: fixed decimal
     VTPool_WriteByte(0);               // Justification: left
-    VTPool_WriteUint32(0);             // Min value
-    VTPool_WriteUint32(99999);         // Max value
     VTPool_WriteByte(0);               // Number of macro refs
 }
 
 void VTPool_AddOutputRectangle(uint16_t objId, uint16_t width, uint16_t height,
                                uint16_t lineRef, uint16_t fillRef) {
     // Output Rectangle (type 14)
-    VTPool_WriteByte(VT_TYPE_OUTPUT_RECTANGLE);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_OUTPUT_RECTANGLE);
     VTPool_WriteUint16(lineRef);       // Line attributes reference
     VTPool_WriteUint16(width);         // Width
     VTPool_WriteUint16(height);        // Height
@@ -227,16 +225,16 @@ void VTPool_AddOutputRectangle(uint16_t objId, uint16_t width, uint16_t height,
 
 void VTPool_AddNumberVariable(uint16_t objId, uint32_t initialValue) {
     // Number Variable (type 21)
-    VTPool_WriteByte(VT_TYPE_NUMBER_VARIABLE);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_NUMBER_VARIABLE);
     VTPool_WriteUint32(initialValue);  // Value
 }
 
 void VTPool_AddFontAttributes(uint16_t objId, uint8_t fontSize, uint8_t colour) {
     // Font Attributes (type 24)
     // fontSize: 0=6x8, 1=8x8, 2=8x12, 3=12x16, 4=16x16, 5=16x24, 6=24x32, 7=32x32
-    VTPool_WriteByte(VT_TYPE_FONT_ATTRIBUTES);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_FONT_ATTRIBUTES);
     VTPool_WriteByte(colour);          // Font colour
     VTPool_WriteByte(fontSize);        // Font size
     VTPool_WriteByte(0);               // Font type (0 = Latin 1)
@@ -246,8 +244,8 @@ void VTPool_AddFontAttributes(uint16_t objId, uint8_t fontSize, uint8_t colour) 
 
 void VTPool_AddLineAttributes(uint16_t objId, uint8_t colour, uint8_t width) {
     // Line Attributes (type 25)
-    VTPool_WriteByte(VT_TYPE_LINE_ATTRIBUTES);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_LINE_ATTRIBUTES);
     VTPool_WriteByte(colour);          // Line colour
     VTPool_WriteByte(width);           // Line width
     VTPool_WriteUint16(0xFFFF);        // Line art (solid)
@@ -257,8 +255,8 @@ void VTPool_AddLineAttributes(uint16_t objId, uint8_t colour, uint8_t width) {
 void VTPool_AddFillAttributes(uint16_t objId, uint8_t fillType, uint8_t colour) {
     // Fill Attributes (type 26)
     // fillType: 0=no fill, 1=fill with colour, 2=fill with pattern
-    VTPool_WriteByte(VT_TYPE_FILL_ATTRIBUTES);
     VTPool_WriteUint16(objId);
+    VTPool_WriteByte(VT_TYPE_FILL_ATTRIBUTES);
     VTPool_WriteByte(fillType);        // Fill type
     VTPool_WriteByte(colour);          // Fill colour
     VTPool_WriteUint16(0xFFFF);        // Fill pattern reference (none)

@@ -93,8 +93,9 @@ void VTClient_Update() {
     uint32_t now = millis();
     uint32_t stateTime = now - vtClient.stateEntryTime;
 
-    // Send Working Set Maintenance every 1s while connected
-    if (vtClient.state == VT_CONNECTED) {
+    // Send Working Set Maintenance every 1s during handshake and while connected
+    // Must be sent continuously from VT_WAIT_FOR_VT onwards to stay registered
+    if (vtClient.state >= VT_WAIT_FOR_VT && vtClient.state != VT_ERROR) {
         if (now - vtClient.lastMaintenanceTime >= VT_WS_MAINTENANCE_INTERVAL) {
             vtClient.lastMaintenanceTime = now;
             VTClient_SendWSMaintenance();
@@ -391,17 +392,19 @@ void VTClient_SendToVT(const uint8_t* data, uint8_t len) {
 }
 
 void VTClient_SendGetMemory() {
-    // Get Memory request
+    // Get Memory request (ISO 11783-6)
     // Byte 0: Function code 0xC0
-    // Bytes 1-4: Required memory (pool size)
+    // Byte 1: Reserved (0xFF)
+    // Bytes 2-5: Required memory in bytes (32-bit LE)
+    // Bytes 6-7: Reserved (0xFF)
     uint8_t data[8];
     data[0] = VT_FUNC_GET_MEMORY;
-    data[1] = 0xFF;  // Reserved
-    data[2] = 0xFF;
-    data[3] = vtPoolSize & 0xFF;
-    data[4] = (vtPoolSize >> 8) & 0xFF;
+    data[1] = 0xFF;
+    data[2] = vtPoolSize & 0xFF;
+    data[3] = (vtPoolSize >> 8) & 0xFF;
+    data[4] = 0;
     data[5] = 0;
-    data[6] = 0;
+    data[6] = 0xFF;
     data[7] = 0xFF;
 
     VTClient_SendToVT(data, 8);
@@ -446,13 +449,13 @@ void VTClient_SendEndOfPool() {
 }
 
 void VTClient_SendWSMaintenance() {
-    // Working Set Maintenance - must be sent every 1s while connected
+    // Working Set Maintenance - must be sent every 1s
     // Byte 0: Function code 0xFF
-    // Byte 1: Bitmask (bit 0 = initiating WS, should be 0 after connection)
+    // Byte 1: Bitmask (bit 0 = initiating WS, set until pool accepted)
     // Byte 2: VT version we support
     uint8_t data[8];
     data[0] = VT_FUNC_WORKING_SET_MAINTENANCE;
-    data[1] = 0x00;  // Not initiating (already connected)
+    data[1] = (vtClient.state == VT_CONNECTED) ? 0x00 : 0x01;  // Init bit set during handshake
     data[2] = vtClient.vtVersion;
     for (uint8_t i = 3; i < 8; i++) data[i] = 0xFF;
 

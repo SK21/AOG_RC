@@ -306,9 +306,12 @@ void CANBus_Receive() {
                 }
                 // Check for VT to ECU (PGN 0xE600, PDU1, pf=0xE6)
                 if (pf == 0xE6) {
-                    if (ps == ISOBUSid.address) {
-                        if (MDL.CommMode == 3 || MDL.CommMode == 4) {
+                    if (MDL.CommMode == 3 || MDL.CommMode == 4) {
+                        if (ps == ISOBUSid.address) {
                             VTClient_HandleVTtoECU(msg);
+                        } else if (ps == 0xFF && msg.buf[0] == VT_FUNC_VT_STATUS) {
+                            // VT Status broadcast (AgIsoStack++ sends on 0xE600, not 0xFE6E)
+                            VTClient_HandleVTStatus(msg);
                         }
                     }
                 }
