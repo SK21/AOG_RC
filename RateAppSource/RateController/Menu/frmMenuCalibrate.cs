@@ -148,8 +148,10 @@ namespace RateController.Menu
                 if (cl.Running) count++;
             }
             if (count == 1) StopCal();
-            Props.ShowMessage("Product " + (CurrentProduct + 1).ToString() + " calibrate meter speed / flow rate is set."
-                + " Run again and measure product output to calculate meter cal.");
+            Props.ShowMessage("Step 1 complete: Meter speed / flow rate has been set for Product "
+                 + (CurrentProduct + 1).ToString() 
+                 + ".\n\nProceed to Step 2: Run the calibration again and measure the product output to calculate the final meter calibration."
+             );
         }
 
         private void ChangeProduct(int NewProduct)

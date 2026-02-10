@@ -112,20 +112,23 @@ namespace RateController.PGNs
                 if (Props.RateCalibrationOn)
                 {
                     // calibrate
-                    RateSet = Prod.TargetUPM() * 1000.0;
-
-                    cData[9] |= (byte)(CommandPGN32500.CalibrationOn | CommandPGN32500.MasterOnMode);
-
-                    if (Prod.CalIsLocked)
+                    if (Prod.CalibrateOjbect?.PowerOn == true)
                     {
-                        // Testing Rate, run in manual at CalPWM
-                        cData[10] = (byte)Prod.ManualPWM;
-                        cData[11] = (byte)(Prod.ManualPWM >> 8);
-                    }
-                    else
-                    {
-                        // Setting PWM, auto on, find CalPWM
-                        cData[9] |= (byte)CommandPGN32500.AutoOn;
+                        RateSet = Prod.TargetUPM() * 1000.0;
+
+                        cData[9] |= (byte)(CommandPGN32500.CalibrationOn | CommandPGN32500.MasterOnMode);
+
+                        if (Prod.CalibrateOjbect?.Locked == true)
+                        {
+                            // Testing Rate, run in manual at CalPWM
+                            cData[10] = (byte)Prod.ManualPWM;
+                            cData[11] = (byte)(Prod.ManualPWM >> 8);
+                        }
+                        else
+                        {
+                            // Setting PWM, auto on, find CalPWM
+                            cData[9] |= (byte)CommandPGN32500.AutoOn;
+                        }
                     }
                 }
                 else

@@ -284,7 +284,7 @@ namespace RateController.Classes
                 clsProduct pd = Item(i);
                 ProductState NewState;
 
-                if (!pd.Enabled)
+                if (!pd.Enabled && pd.CalibrateOjbect?.PowerOn==false)
                 {
                     NewState = ProductState.Off;
                 }

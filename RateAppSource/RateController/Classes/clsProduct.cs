@@ -17,7 +17,6 @@ namespace RateController.Classes
         public PGN32400 RateSensorData;
         private double AccumulatedLast = 0;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
-        private bool cCalSettingPWM = false;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
         private bool cEnabled = false;
@@ -56,6 +55,7 @@ namespace RateController.Classes
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
+        private clsCalibrate cCalibrateOjbect=null;
 
         public clsProduct(int ProdID)
         {
@@ -222,10 +222,11 @@ namespace RateController.Classes
             { cAppMode = value; }
         }
 
-        public bool CalIsLocked
+
+        public clsCalibrate CalibrateOjbect
         {
-            get { return cCalSettingPWM; }
-            set { cCalSettingPWM = value; }
+            get { return cCalibrateOjbect; }
+            set { cCalibrateOjbect = value; }
         }
 
         public ControlTypeEnum ControlType

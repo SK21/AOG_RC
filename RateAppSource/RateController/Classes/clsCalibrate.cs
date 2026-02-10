@@ -31,6 +31,7 @@ namespace RateController.Classes
             cID = ID;
 
             cProduct = Core.Products.Item(cID);
+            cProduct.CalibrateOjbect = this;
             cMeterCal = cProduct.MeterCal;
             PulseCountStart = (int)cProduct.Pulses();
 
@@ -44,6 +45,7 @@ namespace RateController.Classes
 
             cCalPWM = int.TryParse(Props.GetProp(cProduct.ProductName + "_CalPWM"), out int pwm) ? pwm : 0;
         }
+        public clsProduct Product { get { return cProduct; } }
 
         public event EventHandler CalFinished;
 
@@ -263,7 +265,6 @@ namespace RateController.Classes
                 else
                 {
                     // Setting PWM, auto on, find CalPWM
-                    cProduct.CalIsLocked = false;
                 }
 
                 if (cRunning)
@@ -289,7 +290,6 @@ namespace RateController.Classes
                         CalFinished?.Invoke(this, EventArgs.Empty);
                     }
 
-                    cProduct.CalIsLocked = cLocked;
                     cProduct.ManualPWM = cCalPWM;
                 }
             }
