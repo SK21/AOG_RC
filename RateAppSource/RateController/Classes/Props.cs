@@ -72,7 +72,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "06-Feb-2026";
+        private static string cAppDate = "10-Feb-2026";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();

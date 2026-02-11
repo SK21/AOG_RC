@@ -198,6 +198,7 @@
             this.rbIsoBusSpeed.Text = "ISOBUS";
             this.rbIsoBusSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbIsoBusSpeed.UseVisualStyleBackColor = true;
+            this.rbIsoBusSpeed.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -221,6 +222,7 @@
             this.rbAOG.Text = "GPS";
             this.rbAOG.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAOG.UseVisualStyleBackColor = true;
+            this.rbAOG.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
             // 
             // btnCal
             // 
@@ -238,6 +240,7 @@
             this.btnCal.Text = "Calibrate";
             this.btnCal.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCal.UseVisualStyleBackColor = false;
+            this.btnCal.Click += new System.EventHandler(this.btnCal_Click);
             // 
             // groupBox1
             // 
@@ -304,6 +307,7 @@
             this.butUpdateModules.Text = "Send to Module";
             this.butUpdateModules.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butUpdateModules.UseVisualStyleBackColor = false;
+            this.butUpdateModules.Click += new System.EventHandler(this.butUpdateModules_Click);
             // 
             // tbWheelPin
             // 
@@ -315,6 +319,8 @@
             this.tbWheelPin.TabIndex = 239;
             this.tbWheelPin.TabStop = false;
             this.tbWheelPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelPin.Enter += new System.EventHandler(this.tbWheelPin_Enter);
+            this.tbWheelPin.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelPin_Validating);
             // 
             // rbSimulated
             // 
@@ -328,6 +334,7 @@
             this.rbSimulated.Text = "Simulated Speed";
             this.rbSimulated.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbSimulated.UseVisualStyleBackColor = true;
+            this.rbSimulated.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
             // 
             // tbWheelCal
             // 
@@ -339,6 +346,8 @@
             this.tbWheelCal.TabIndex = 240;
             this.tbWheelCal.TabStop = false;
             this.tbWheelCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelCal.Enter += new System.EventHandler(this.tbWheelCal_Enter);
+            this.tbWheelCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelCal_Validating);
             // 
             // tbSimSpeed
             // 
@@ -352,6 +361,8 @@
             this.tbSimSpeed.TabIndex = 338;
             this.tbSimSpeed.Text = "0";
             this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
+            this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
             // 
             // lbModule
             // 
@@ -376,6 +387,7 @@
             this.rbWheel.Text = "Wheel Sensor";
             this.rbWheel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbWheel.UseVisualStyleBackColor = true;
+            this.rbWheel.CheckedChanged += new System.EventHandler(this.rbWheel_CheckedChanged);
             // 
             // tbWheelModule
             // 
@@ -387,6 +399,8 @@
             this.tbWheelModule.TabIndex = 243;
             this.tbWheelModule.TabStop = false;
             this.tbWheelModule.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelModule.Enter += new System.EventHandler(this.tbWheelModule_Enter);
+            this.tbWheelModule.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelModule_Validating);
             // 
             // lbSimUnits
             // 
@@ -430,6 +444,7 @@
             this.gbxPort.TabIndex = 357;
             this.gbxPort.TabStop = false;
             this.gbxPort.Text = "Port";
+            this.gbxPort.Paint += new System.Windows.Forms.PaintEventHandler(this.gbNetwork_Paint);
             // 
             // btnRefresh
             // 
@@ -447,6 +462,7 @@
             this.btnRefresh.TabIndex = 356;
             this.btnRefresh.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnRefresh.UseVisualStyleBackColor = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefreshPorts_Click);
             // 
             // cbComPort
             // 
@@ -457,6 +473,7 @@
             this.cbComPort.Name = "cbComPort";
             this.cbComPort.Size = new System.Drawing.Size(100, 31);
             this.cbComPort.TabIndex = 353;
+            this.cbComPort.SelectedIndexChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
             // 
             // lbDriverFound
             // 
@@ -482,6 +499,7 @@
             this.ckDiagnostics.Text = "Diagnostics";
             this.ckDiagnostics.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDiagnostics.UseVisualStyleBackColor = true;
+            this.ckDiagnostics.CheckedChanged += new System.EventHandler(this.ckDiagnostics_CheckedChanged);
             // 
             // lbConnected
             // 
@@ -527,6 +545,7 @@
             this.gbxDrivers.TabIndex = 347;
             this.gbxDrivers.TabStop = false;
             this.gbxDrivers.Text = "Can Driver";
+            this.gbxDrivers.Paint += new System.Windows.Forms.PaintEventHandler(this.gbNetwork_Paint);
             // 
             // rbAdapter1
             // 
@@ -542,6 +561,7 @@
             this.rbAdapter1.Text = "SLCAN";
             this.rbAdapter1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAdapter1.UseVisualStyleBackColor = true;
+            this.rbAdapter1.CheckedChanged += new System.EventHandler(this.rbAdapter1_CheckedChanged);
             // 
             // rbAdapter3
             // 
@@ -555,6 +575,7 @@
             this.rbAdapter3.Text = "PCAN";
             this.rbAdapter3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAdapter3.UseVisualStyleBackColor = true;
+            this.rbAdapter3.CheckedChanged += new System.EventHandler(this.rbAdapter1_CheckedChanged);
             // 
             // rbAdapter2
             // 
@@ -568,6 +589,7 @@
             this.rbAdapter2.Text = "InnoMaker";
             this.rbAdapter2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAdapter2.UseVisualStyleBackColor = true;
+            this.rbAdapter2.CheckedChanged += new System.EventHandler(this.rbAdapter1_CheckedChanged);
             // 
             // ckIsoBus
             // 
@@ -584,12 +606,12 @@
             this.ckIsoBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckIsoBus.UseVisualStyleBackColor = true;
             this.ckIsoBus.CheckedChanged += new System.EventHandler(this.ckIsobusEnabled_CheckedChanged);
-            //
+            // 
             // timer1
-            //
+            // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            //
+            // 
             // frmMenuOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);

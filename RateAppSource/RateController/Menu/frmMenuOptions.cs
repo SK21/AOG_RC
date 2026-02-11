@@ -102,7 +102,6 @@ namespace RateController.Menu
                     butUpdateModules.Enabled = rbWheel.Checked;
                 }
 
-
                 // ISOBUS settings
                 // Save CAN driver and COM port BEFORE starting gateway (so UpdateGatewayConfig uses new values)
                 if (rbAdapter2.Checked)
@@ -187,7 +186,6 @@ namespace RateController.Menu
             }
         }
 
-
         private void btnRefreshPorts_Click(object sender, EventArgs e)
         {
             RefreshComPorts();
@@ -211,7 +209,6 @@ namespace RateController.Menu
         private void ckIsobusEnabled_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
-
         }
 
         private void ckLargeScreen_CheckedChanged(object sender, EventArgs e)
@@ -257,11 +254,6 @@ namespace RateController.Menu
             Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-        private void groupBox4_Paint(object sender, PaintEventArgs e)
-        {
-            GroupBox box = sender as GroupBox;
-            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
@@ -292,14 +284,6 @@ namespace RateController.Menu
             }
         }
 
-        private void rbISOBUS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing)
-            {
-                SetButtons(true);
-                SetBoxes();
-            }
-        }
 
         private void rbWheel_CheckedChanged(object sender, EventArgs e)
         {
@@ -378,16 +362,7 @@ namespace RateController.Menu
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(tbSimSpeed.Text, out tempD);
-            using (var form = new FormNumeric(0, 40, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbSimSpeed.Text = form.ReturnValue.ToString("N1");
-                }
-            }
+
         }
 
         private void tbSimSpeed_Validating(object sender, CancelEventArgs e)
