@@ -232,7 +232,7 @@ namespace RateController.Menu
                     // RC11-2, Teensy
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
-                    Set.RelayType = 1;
+                    Set.OnboardRelayType = 1;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
@@ -262,7 +262,7 @@ namespace RateController.Menu
                     // RC15, ESP32
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
-                    Set.RelayType = 5;
+                    Set.OnboardRelayType = 5;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
@@ -283,7 +283,7 @@ namespace RateController.Menu
                     // RC12-3, Nano
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
-                    Set.RelayType = 4;
+                    Set.OnboardRelayType = 4;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;

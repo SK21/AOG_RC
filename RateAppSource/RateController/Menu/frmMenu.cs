@@ -42,11 +42,10 @@ namespace RateController
         }
 
         public event EventHandler MenuMoved;
-
         public event EventHandler ModuleDefaultsSet;
-
         public event EventHandler ProductChanged;
         public event EventHandler ProductEnabled;
+        public event EventHandler SelectionChanged;
 
         public clsProduct CurrentProduct
         {
@@ -1260,6 +1259,7 @@ namespace RateController
         {
             cLastScreen = Name;
             Props.CurrentMenuName = cLastScreen;
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void SetLanguage()

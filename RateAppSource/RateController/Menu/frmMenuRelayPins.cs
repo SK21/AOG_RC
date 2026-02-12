@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -12,7 +13,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
 
-        public frmMenuRelayPins( frmMenu menu)
+        public frmMenuRelayPins(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
@@ -85,6 +86,25 @@ namespace RateController.Menu
             }
         }
 
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            tbRelay1.Text = "-";
+            tbRelay2.Text = "-";
+            tbRelay3.Text = "-";
+            tbRelay4.Text = "-";
+            tbRelay5.Text = "-";
+            tbRelay6.Text = "-";
+            tbRelay7.Text = "-";
+            tbRelay8.Text = "-";
+            tbRelay9.Text = "-";
+            tbRelay10.Text = "-";
+            tbRelay11.Text = "-";
+            tbRelay12.Text = "-";
+            tbRelay13.Text = "-";
+            tbRelay14.Text = "-";
+            tbRelay15.Text = "-";
+            tbRelay16.Text = "-";
+        }
 
         private void frmMenuRelayPins_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -98,23 +118,33 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+
+            lbLowRelays.Font = new Font(lbLowRelays.Font, FontStyle.Underline);
+            lbHighRelays.Font = new Font(lbLowRelays.Font, FontStyle.Underline);
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
+            MainMenu.SelectionChanged += MainMenu_SelectionChanged;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
             UpdateForm();
+        }
+
+        private void MainMenu_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateForm();
+        }
+
+        private void MainMenu_MenuMoved(object sender, EventArgs e)
+        {
+            PositionForm();
         }
 
         private void MainMenu_ModuleDefaultsSet(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
-        }
-
-        private void MainMenu_MenuMoved(object sender, EventArgs e)
-        {
-            PositionForm();
         }
 
         private void PositionForm()
@@ -184,27 +214,40 @@ namespace RateController.Menu
             tbRelay15.Text = display[27].ToString();
             tbRelay16.Text = display[28].ToString();
 
-            Initializing = false;
-        }
+            if (data[5] == 0)
+            {
+                if (data[6] == 0)
+                {
+                    lbLowRelays.Visible = false;
+                    lbHighRelays.Visible = false;
+                }
+                else
+                {
+                    lbLowRelays.Visible = true;
+                    lbLowRelays.Text = "Remote Relays";
+                    lbHighRelays.Visible = true;
+                    lbHighRelays.Text = "Remote Relays";
+                }
+            }
+            else
+            {
+                if (data[6] == 0)
+                {
+                    lbLowRelays.Visible = true;
+                    lbLowRelays.Text = "Onboard Relays";
+                    lbHighRelays.Visible = true;
+                    lbHighRelays.Text = "Onboard Relays";
+                }
+                else
+                {
+                    lbLowRelays.Visible = true;
+                    lbLowRelays.Text = "Onboard Relays";
+                    lbHighRelays.Visible = true;
+                    lbHighRelays.Text = "Remote Relays";
+                }
+            }
 
-        private void btnRescan_Click(object sender, EventArgs e)
-        {
-            tbRelay1.Text = "-";
-            tbRelay2.Text = "-";
-            tbRelay3.Text = "-";
-            tbRelay4.Text = "-";
-            tbRelay5.Text = "-";
-            tbRelay6.Text = "-";
-            tbRelay7.Text = "-";
-            tbRelay8.Text = "-";
-            tbRelay9.Text = "-";
-            tbRelay10.Text = "-";
-            tbRelay11.Text = "-";
-            tbRelay12.Text = "-";
-            tbRelay13.Text = "-";
-            tbRelay14.Text = "-";
-            tbRelay15.Text = "-";
-            tbRelay16.Text = "-";
+            Initializing = false;
         }
     }
 }

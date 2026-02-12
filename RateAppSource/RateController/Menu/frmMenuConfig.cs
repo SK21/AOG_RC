@@ -2,6 +2,7 @@
 using RateController.Classes;
 using RateController.Language;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -34,7 +35,8 @@ namespace RateController.Menu
                 Core.ModuleConfig.InvertRelay = ckRelayOn.Checked;
                 Core.ModuleConfig.InvertFlow = ckFlowOn.Checked;
                 Core.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
-                Core.ModuleConfig.RelayType = (byte)cbRelayControl.SelectedIndex;
+                Core.ModuleConfig.OnboardRelayType = (byte)cbOnboardRelays.SelectedIndex;
+                Core.ModuleConfig.RemoteRelayType = (byte)cbRemoteRelays.SelectedIndex;
                 Core.ModuleConfig.Save();
 
                 SetButtons(false);
@@ -59,6 +61,7 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
@@ -108,6 +111,7 @@ namespace RateController.Menu
             lbModuleID.Text = Lang.lgModuleID;
             lbSensorCount.Text = Lang.lgSensorCount;
             lbRelay.Text = Lang.lgRelayControl;
+            lbRemoteRelay.Text = Lang.lgRemoteRelayControl;
             ckRelayOn.Text = Lang.lgInvertRelays;
             ckFlowOn.Text = Lang.lgInvertFlow;
         }
@@ -151,7 +155,8 @@ namespace RateController.Menu
             byte[] data = Core.ModuleConfig.GetData();
             tbModuleID.Text = data[2].ToString();
             tbSensorCount.Text = data[3].ToString();
-            cbRelayControl.SelectedIndex = data[5];
+            cbOnboardRelays.SelectedIndex = data[5];
+            cbRemoteRelays.SelectedIndex = data[6];
             ckRelayOn.Checked = Core.ModuleConfig.InvertRelay;
             ckFlowOn.Checked = Core.ModuleConfig.InvertFlow;
             ckADS1115enabled.Checked = Core.ModuleConfig.ADS1115enabled;
@@ -166,7 +171,7 @@ namespace RateController.Menu
             ckADS1115enabled.Checked = false;
             tbModuleID.Text = "0";
             tbSensorCount.Text = "1";
-            cbRelayControl.SelectedIndex = 0;
+            cbOnboardRelays.SelectedIndex = 0;
         }
     }
 }

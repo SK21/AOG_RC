@@ -140,7 +140,7 @@ void DoSetup()
 	}
 
 	// wheel speed sensor
-	if (MDL.WheelSpeedPin != NC && !WheelMatch )
+	if (MDL.WheelSpeedPin != NC && !WheelMatch)
 	{
 		pinMode(MDL.WheelSpeedPin, INPUT_PULLUP);
 		attachInterrupt(digitalPinToInterrupt(MDL.WheelSpeedPin), ISR_Speed, FALLING);
@@ -149,11 +149,98 @@ void DoSetup()
 	analogWriteResolution(PWM_BITS);
 
 	// Relays
-	switch (MDL.RelayControl)
+	if (MDL.RemoteRelayControl > 0)
+	{
+		InitializeRelays(MDL.OnboardRelayControl, 7);
+		InitializeRelays(MDL.RemoteRelayControl, -1);
+	}
+	else
+	{
+		InitializeRelays(MDL.OnboardRelayControl, 15);
+	}
+
+	pinMode(LED_BUILTIN, OUTPUT);
+
+	Serial.println("");
+	Serial.print("Sensors enabled: ");
+	Serial.println(MDL.SensorCount);
+	Serial.println("");
+	Serial.println("Sensor 1: ");
+	Serial.print("Enabled: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[0].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[0].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.println(Sensor[0].PWMPin);
+
+	Serial.println("");
+	Serial.println("Sensor 2: ");
+	Serial.print("Flow Pin: ");
+	Serial.println(Sensor[1].FlowPin);
+	Serial.print("DIR Pin: ");
+	Serial.println(Sensor[1].DirPin);
+	Serial.print("PWM Pin: ");
+	Serial.println(Sensor[1].PWMPin);
+
+	Serial.println("");
+
+	Serial.print("Work Switch Pin: ");
+	if (MDL.WorkPin == NC)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.WorkPin);
+	}
+
+	Serial.print("Pressure Pin: ");
+	if (MDL.PressurePin == NC)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.PressurePin);
+	}
+
+	Serial.print(F("Wheel Speed Pin: "));
+	if (WheelMatch)
+	{
+		Serial.println(F("error, duplicate flow pin"));
+	}
+	else if (MDL.WheelSpeedPin == 255)
+	{
+		Serial.println(F("Disabled"));
+	}
+	else
+	{
+		Serial.println(MDL.WheelSpeedPin);
+	}
+
+	if (ADSfound)
+	{
+		Serial.println(F("ADS1115: Enabled "));
+	}
+	else
+	{
+		Serial.println(F("ADS1115: Disabled "));
+	}
+
+	Serial.println("");
+	Serial.println("Finished setup.");
+	Serial.println("");
+}
+
+void InitializeRelays(uint8_t Control, int8_t End)
+{
+	uint8_t ErrorCount;
+	switch (Control)
 	{
 	case 1:
 		// Relay GPIO Pins
-		for (int i = 0; i < 16; i++)
+		for (int i = 0; i <= End; i++)
 		{
 			if (MDL.RelayControlPins[i] < NC)
 			{
@@ -250,79 +337,6 @@ void DoSetup()
 		}
 		break;
 	}
-
-	pinMode(LED_BUILTIN, OUTPUT);
-
-	Serial.println("");
-	Serial.print("Sensors enabled: ");
-	Serial.println(MDL.SensorCount);
-	Serial.println("");
-	Serial.println("Sensor 1: ");
-	Serial.print("Enabled: ");
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[0].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[0].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.println(Sensor[0].PWMPin);
-
-	Serial.println("");
-	Serial.println("Sensor 2: ");
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[1].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[1].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.println(Sensor[1].PWMPin);
-
-	Serial.println("");
-
-	Serial.print("Work Switch Pin: ");
-	if (MDL.WorkPin == NC)
-	{
-		Serial.println(F("Disabled"));
-	}
-	else
-	{
-		Serial.println(MDL.WorkPin);
-	}
-
-	Serial.print("Pressure Pin: ");
-	if (MDL.PressurePin == NC)
-	{
-		Serial.println(F("Disabled"));
-	}
-	else
-	{
-		Serial.println(MDL.PressurePin);
-	}
-
-	Serial.print(F("Wheel Speed Pin: "));
-	if (WheelMatch)
-	{
-		Serial.println(F("error, duplicate flow pin"));
-	}
-	else if (MDL.WheelSpeedPin == 255)
-	{
-		Serial.println(F("Disabled"));
-	}
-	else
-	{
-		Serial.println(MDL.WheelSpeedPin);
-	}
-
-	if (ADSfound)
-	{
-		Serial.println(F("ADS1115: Enabled "));
-	}
-	else
-	{
-		Serial.println(F("ADS1115: Disabled "));
-	}
-
-	Serial.println("");
-	Serial.println("Finished setup.");
-	Serial.println("");
 }
 
 // eeprom map:
@@ -420,7 +434,7 @@ void LoadDefaults()
 	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
-	MDL.RelayControl = 1;
+	MDL.OnboardRelayControl = 1;
 	MDL.WorkPin = 30;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
@@ -450,7 +464,7 @@ bool ValidData()
 		}
 	}
 
-	if (Result && MDL.RelayControl == 1)
+	if (Result && MDL.OnboardRelayControl == 1)
 	{
 		// check GPIOs for relays
 		for (int i = 0; i < 16; i++)

@@ -1447,7 +1447,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Relay Control.
+        ///   Looks up a localized string similar to Onboard Relay Control.
         /// </summary>
         internal static string lgRelayControl {
             get {
@@ -1488,6 +1488,15 @@ namespace RateController.Language {
         internal static string lgRelays {
             get {
                 return ResourceManager.GetString("lgRelays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote Relay Control.
+        /// </summary>
+        internal static string lgRemoteRelayControl {
+            get {
+                return ResourceManager.GetString("lgRemoteRelayControl", resourceCulture);
             }
         }
         

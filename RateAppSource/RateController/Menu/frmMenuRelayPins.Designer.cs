@@ -64,6 +64,8 @@
             this.tbRelay1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.btnRescan = new System.Windows.Forms.Button();
+            this.lbLowRelays = new System.Windows.Forms.Label();
+            this.lbHighRelays = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -439,11 +441,33 @@
             this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
+            // lbLowRelays
+            // 
+            this.lbLowRelays.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLowRelays.Location = new System.Drawing.Point(51, 60);
+            this.lbLowRelays.Name = "lbLowRelays";
+            this.lbLowRelays.Size = new System.Drawing.Size(179, 24);
+            this.lbLowRelays.TabIndex = 241;
+            this.lbLowRelays.Text = "Onboard Relays";
+            this.lbLowRelays.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbHighRelays
+            // 
+            this.lbHighRelays.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHighRelays.Location = new System.Drawing.Point(297, 60);
+            this.lbHighRelays.Name = "lbHighRelays";
+            this.lbHighRelays.Size = new System.Drawing.Size(179, 24);
+            this.lbHighRelays.TabIndex = 242;
+            this.lbHighRelays.Text = "Remote Relays";
+            this.lbHighRelays.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmMenuRelayPins
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbHighRelays);
+            this.Controls.Add(this.lbLowRelays);
             this.Controls.Add(this.btnRescan);
             this.Controls.Add(this.tbRelay16);
             this.Controls.Add(this.label13);
@@ -526,5 +550,7 @@
         private System.Windows.Forms.TextBox tbRelay1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btnRescan;
+        private System.Windows.Forms.Label lbLowRelays;
+        private System.Windows.Forms.Label lbHighRelays;
     }
 }
