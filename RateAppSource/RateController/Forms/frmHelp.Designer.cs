@@ -74,7 +74,7 @@ namespace RateController
             this.Name = "frmHelp";
             this.ShowInTaskbar = false;
             this.Text = "Help";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmHelp_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHelp_FormClosing);
             this.Load += new System.EventHandler(this.frmHelp_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

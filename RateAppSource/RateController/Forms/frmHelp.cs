@@ -7,13 +7,13 @@ namespace RateController
 {
     public partial class frmHelp : Form
     {
-        // Track how many help windows are open
-        private static int OpenHelpCount = 0;
-
         // Easy-to-change cascading offset
         private static int OffsetX = 50;
+
         private static int OffsetY = 50;
 
+        // Track how many help windows are open
+        private static int OpenHelpCount = 0;
         // This instance's index in the cascade
         private int myIndex = 0;
 
@@ -44,6 +44,16 @@ namespace RateController
             myIndex = OpenHelpCount++;
         }
 
+        private void frmHelp_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Decrement count when closing
+            if (OpenHelpCount > 0)
+                OpenHelpCount--;
+
+            if (myIndex == 0) Props.SaveFormLocation(this);
+            timer1.Dispose();
+        }
+
         private void frmHelp_Load(object sender, EventArgs e)
         {
             try
@@ -63,21 +73,9 @@ namespace RateController
             }
         }
 
-        private void frmHelp_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            // Decrement count when closing
-            if (OpenHelpCount > 0)
-                OpenHelpCount--;
-
-            Props.SaveFormLocation(this);
-        }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Enabled = false;
-            timer1.Dispose();
-
-            Props.SaveFormLocation(this);
             Close();
         }
     }

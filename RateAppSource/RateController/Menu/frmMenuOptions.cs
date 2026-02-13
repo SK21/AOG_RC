@@ -127,6 +127,8 @@ namespace RateController.Menu
                 Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
                 Core.UseIsobusComm(ckIsoBus.Checked);
+                Core.ModuleConfig.Send();
+                Props.ShowMessage("Settings sent to module", "Config", 10000);
 
                 // Restart gateway if diagnostics changed and ISOBUS is enabled (to apply console visibility)
                 if (diagnosticsChanged && Props.IsobusEnabled && Core.IsobusComm != null)

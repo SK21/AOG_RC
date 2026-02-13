@@ -81,18 +81,6 @@ namespace RateController.PGNs
             }
         }
 
-        public byte CommMode
-        {
-            get
-            {
-                return cData[31];
-            }
-            set
-            {
-                cData[31] = value;
-            }
-        }
-
         public bool InvertFlow
         {
             get
@@ -172,11 +160,11 @@ namespace RateController.PGNs
             }
         }
 
-        public byte PressurePin
-        { set { cData[30] = value; } }
-
         public byte OnboardRelayType
         { set { cData[5] = value; } }
+
+        public byte PressurePin
+        { set { cData[30] = value; } }
 
         public byte RemoteRelayType
         { set { cData[6] = value; } }
@@ -255,6 +243,15 @@ namespace RateController.PGNs
 
         public void Save()
         {
+            if (Props.IsobusEnabled)
+            {
+                cData[31] = 3;
+            }
+            else
+            {
+                cData[31] = 0;
+            }
+
             String Name;
             for (int i = 2; i < cByteCount; i++)
             {
@@ -265,6 +262,15 @@ namespace RateController.PGNs
 
         public void Send()
         {
+            if (Props.IsobusEnabled)
+            {
+                cData[31] = 3;
+            }
+            else
+            {
+                cData[31] = 0;
+            }
+
             // CRC
             cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);
 

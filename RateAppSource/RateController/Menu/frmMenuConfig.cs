@@ -40,14 +40,12 @@ namespace RateController.Menu
 
                 if (rbEthernet.Checked)
                 {
-                    Core.ModuleConfig.CommMode = 0;
                     Core.UseIsobusComm(false);
                     if (!Props.IsobusEnabled) Props.ShowMessage("Send changes to module.","Help",10000);
                 }
                 else
                 {
                     // Isobus only for most pgns
-                    Core.ModuleConfig.CommMode = 3;
                     Core.UseIsobusComm(true);
                     if (Props.IsobusEnabled) Props.ShowMessage("Send changes to module. Check Isobus settings at Menu> Options> Isobus.", "Help", 10000);
                 }
