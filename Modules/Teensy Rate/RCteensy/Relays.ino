@@ -1,5 +1,5 @@
 
-// If both onboard relays are enabled and remote relays, onboard relays will do 0-7, remote will do 8-15.
+// If both onboard relays and remote relays are enabled, onboard relays will do 0-7, remote will do 8-15.
 // If only one or the other are enabled it will do 0-15.
 
 bool RelayStatus[16];
@@ -24,24 +24,16 @@ void CheckRelays()
 		NewHi = PowerRelayHi | InvertedHi;
 	}
 
-	OnboardRelays();
-	RemoteRelays();
-}
-
-void OnboardRelays()
-{
+	// onboard relays
 	byte End = 15;
 	if (MDL.RemoteRelayControl > 0) End = 7; // remote does last 8
 	ControlSwitch(0, End, MDL.OnboardRelayControl);
-	debug1=End;
-}
 
-void RemoteRelays()
-{
+
+	// remote relays
 	byte Start = 0;
 	if (MDL.OnboardRelayControl > 0) Start = 8; // onboard does first 8
 	ControlSwitch(Start, 15, MDL.RemoteRelayControl);
-	debug2=Start;
 }
 
 void ControlSwitch(byte Start, byte End, byte Control)

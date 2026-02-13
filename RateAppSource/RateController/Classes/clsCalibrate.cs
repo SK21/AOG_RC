@@ -361,6 +361,7 @@ namespace RateController.Classes
                     {
                         // calibration stopped
                         cRunning = false;
+                        cProduct.ManualPWM = 0;
                         cProduct.Enabled = false;
                         Reset();
                     }
@@ -586,6 +587,7 @@ namespace RateController.Classes
             cProduct.AppMode = ApplicationModeStart;
             cProduct.Enabled = ProductEnabledStart;
             cProduct.UseOffRateAlarm = AlarmStart;
+            cProduct.ManualPWM = 0;
 
             cProduct.Save();
             Running = false;

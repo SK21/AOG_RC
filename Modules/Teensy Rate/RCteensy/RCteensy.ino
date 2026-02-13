@@ -313,16 +313,13 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 	return Result;
 }
 
-	int debug1;
-	int debug2;
-
 void Blink()
 {
 	static bool State = false;
 	static elapsedMillis BlinkTmr;
 	static elapsedMicros LoopTmr;
-	static byte Count = 0;
-	static uint32_t MaxLoopTime = 0;
+	//static byte Count = 0;
+	//static uint32_t MaxLoopTime = 0;
 
 	if (BlinkTmr > 1000)
 	{
@@ -330,29 +327,29 @@ void Blink()
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
 
-		if (!FirmwareUpdateMode)
-		{
-			Serial.print(" Micros: ");
-			Serial.print(MaxLoopTime);
+		//if (!FirmwareUpdateMode)
+		//{
+		//	Serial.print(" Micros: ");
+		//	Serial.print(MaxLoopTime);
 
-			Serial.print(", ");
-			Serial.print(Ethernet.localIP());
+		//	Serial.print(", ");
+		//	Serial.print(Ethernet.localIP());
 
-			Serial.print(", ");
-			Serial.print(debug1);
+		//	Serial.print(", ");
+		//	Serial.print(debug1);
 
-			Serial.print(", ");
-			Serial.print(debug2);
+		//	Serial.print(", ");
+		//	Serial.print(debug2);
 
-			Serial.println("");
-		}
+		//	Serial.println("");
+		//}
 
-		if (Count++ > 10)
-		{
-			Count = 0;
-			MaxLoopTime = 0;
-		}
+		//if (Count++ > 10)
+		//{
+		//	Count = 0;
+		//	MaxLoopTime = 0;
+		//}
 	}
-	if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
-	LoopTmr = 0;
+	//if (LoopTmr > MaxLoopTime) MaxLoopTime = LoopTmr;
+	//LoopTmr = 0;
 }

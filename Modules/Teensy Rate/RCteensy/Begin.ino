@@ -240,6 +240,8 @@ void InitializeRelays(uint8_t Control, int8_t End)
 	{
 	case 1:
 		// Relay GPIO Pins
+		Serial.println("");
+		Serial.println("Using GPIO pins for relays.");
 		for (int i = 0; i <= End; i++)
 		{
 			if (MDL.RelayControlPins[i] < NC)
@@ -253,7 +255,7 @@ void InitializeRelays(uint8_t Control, int8_t End)
 	case 3:
 		// PCA9555 I/O expander on default address 0x20
 		Serial.println("");
-		Serial.println("Starting PCA9555 I/O Expander ...");
+		Serial.println("Starting PCA9555 I/O Expander for relays ...");
 		ErrorCount = 0;
 		while (!PCA9555PW_found)
 		{
@@ -286,7 +288,7 @@ void InitializeRelays(uint8_t Control, int8_t End)
 		// MCP23017 I/O expander on 0x20, 0x21
 
 		Serial.println("");
-		Serial.println("Starting MCP23017 ...");
+		Serial.println("Starting MCP23017 for relays ...");
 
 		ErrorCount = 0;
 		MCP23017address = 0x21;
