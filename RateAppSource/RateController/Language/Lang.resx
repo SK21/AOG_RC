@@ -253,7 +253,7 @@
     <value>Exit</value>
   </data>
   <data name="lgExpectedAmount" xml:space="preserve">
-    <value>Expected Amount</value>
+    <value>Exp.</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
@@ -349,10 +349,10 @@
     <value>Master Relay Only</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>Measured Amount</value>
+    <value>Amt.</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
-    <value>Meter Set</value>
+    <value>Set</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metric Units</value>
@@ -520,7 +520,7 @@
     <value>Relay</value>
   </data>
   <data name="lgRelayControl" xml:space="preserve">
-    <value>Relay Control</value>
+    <value>Onboard Relay Control</value>
   </data>
   <data name="lgRelayControlNumber" xml:space="preserve">
     <value>Number</value>
@@ -798,7 +798,7 @@
   <data name="lgRelayOnHigh" xml:space="preserve">
     <value />
   </data>
-  <data name="lgPWM" xml:space="preserve">
-    <value>PWM</value>
+  <data name="lgRemoteRelayControl" xml:space="preserve">
+    <value>Remote Relay Control</value>
   </data>
 </root>
