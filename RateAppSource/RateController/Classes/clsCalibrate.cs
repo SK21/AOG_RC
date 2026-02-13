@@ -204,6 +204,7 @@ namespace RateController.Classes
                 cProduct.AppMode = ApplicationModeStart;
                 cProduct.Enabled = ProductEnabledStart;
                 cProduct.UseOffRateAlarm = AlarmStart;
+                cProduct.ManualPWM = 0;
                 cProduct.Save();
             }
 

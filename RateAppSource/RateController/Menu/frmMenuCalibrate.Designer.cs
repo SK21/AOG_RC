@@ -65,7 +65,7 @@
             // 
             this.lbPWM.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbPWM.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.lbPWM.Location = new System.Drawing.Point(159, 536);
+            this.lbPWM.Location = new System.Drawing.Point(153, 536);
             this.lbPWM.Name = "lbPWM";
             this.lbPWM.Size = new System.Drawing.Size(110, 24);
             this.lbPWM.TabIndex = 433;

@@ -801,4 +801,7 @@
   <data name="lgRemoteRelayControl" xml:space="preserve">
     <value>Remote Relay Control</value>
   </data>
+  <data name="lgPWM" xml:space="preserve">
+    <value>PWM</value>
+  </data>
 </root>
