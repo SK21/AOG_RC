@@ -140,7 +140,7 @@ void DoSetup()
 	}
 
 	// wheel speed sensor
-	if (MDL.WheelSpeedPin != NC && !WheelMatch)
+	if (MDL.WheelSpeedPin != NC && !WheelMatch )
 	{
 		pinMode(MDL.WheelSpeedPin, INPUT_PULLUP);
 		attachInterrupt(digitalPinToInterrupt(MDL.WheelSpeedPin), ISR_Speed, FALLING);
@@ -149,17 +149,125 @@ void DoSetup()
 	analogWriteResolution(PWM_BITS);
 
 	// Relays
-	if (MDL.RemoteRelayControl > 0)
+	switch (MDL.RelayControl)
 	{
-		InitializeRelays(MDL.OnboardRelayControl, 7);
-		InitializeRelays(MDL.RemoteRelayControl, -1);
-	}
-	else
-	{
-		InitializeRelays(MDL.OnboardRelayControl, 15);
+	case 1:
+		// Relay GPIO Pins
+		for (int i = 0; i < 16; i++)
+		{
+			if (MDL.RelayControlPins[i] < NC)
+			{
+				pinMode(MDL.RelayControlPins[i], OUTPUT);
+			}
+		}
+		break;
+
+	case 2:
+	case 3:
+		// PCA9555 I/O expander on default address 0x20
+		Serial.println("");
+		Serial.println("Starting PCA9555 I/O Expander ...");
+		ErrorCount = 0;
+		while (!PCA9555PW_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(0x20);
+			PCA9555PW_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (PCA9555PW_found)
+		{
+			Serial.println("PCA9555 expander found.");
+
+			PCA.attach(Wire);
+			PCA.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
+			PCA.direction(PCA95x5::Direction::OUT_ALL);
+			PCA.write(PCA95x5::Level::H_ALL);
+		}
+		else
+		{
+			Serial.println("PCA9555 expander not found.");
+		}
+		Serial.println("");
+		break;
+
+	case 4:
+		// MCP23017 I/O expander on 0x20, 0x21
+
+		Serial.println("");
+		Serial.println("Starting MCP23017 ...");
+
+		ErrorCount = 0;
+		MCP23017address = 0x21;
+		while (!MCP23017_found)
+		{
+			// RC12-3
+			Serial.print(".");
+			Wire.beginTransmission(0x21);
+			MCP23017_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		if (!MCP23017_found)
+		{
+			ErrorCount = 0;
+			MCP23017address = 0x20;
+			while (!MCP23017_found)
+			{
+				Serial.print(".");
+				Wire.beginTransmission(MCP23017address);
+				MCP23017_found = (Wire.endTransmission() == 0);
+				ErrorCount++;
+				delay(500);
+				if (ErrorCount > 5) break;
+			}
+		}
+
+		Serial.println("");
+		if (MCP23017_found)
+		{
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x00); // IODIRA register
+			Wire.write(0x00); // set all of port A to outputs
+			Wire.endTransmission();
+
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x01); // IODIRB register
+			Wire.write(0x00); // set all of port B to outputs
+			Wire.endTransmission();
+
+			Serial.println("MCP23017 found.");
+		}
+		else
+		{
+			Serial.println("MCP23017 not found.");
+		}
+		break;
 	}
 
 	pinMode(LED_BUILTIN, OUTPUT);
+
+	// CAN/ISOBUS initialization
+	if (MDL.CommMode == 1 || MDL.CommMode == 2 || MDL.CommMode == 3 || MDL.CommMode == 4)
+	{
+		Serial.println("");
+		CANBus_Begin();
+	}
+
+	// TC Client initialization (CommMode 3 or 4)
+	if (MDL.CommMode == 3 || MDL.CommMode == 4)
+	{
+		Serial.println("");
+		TP_Begin();
+		TCClient_Begin();
+		VTClient_Begin();
+	}
 
 	Serial.println("");
 	Serial.print("Sensors enabled: ");
@@ -228,117 +336,32 @@ void DoSetup()
 		Serial.println(F("ADS1115: Disabled "));
 	}
 
+	Serial.print(F("Comm Mode: "));
+	switch (MDL.CommMode)
+	{
+	case 0:
+		Serial.println(F("UDP only"));
+		break;
+	case 1:
+		Serial.println(F("CAN/ISOBUS Proprietary"));
+		break;
+	case 2:
+		Serial.println(F("UDP + CAN/ISOBUS Proprietary"));
+		break;
+	case 3:
+		Serial.println(F("TC Client only"));
+		break;
+	case 4:
+		Serial.println(F("UDP + TC Client"));
+		break;
+	default:
+		Serial.println(F("Unknown"));
+		break;
+	}
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
-}
-
-void InitializeRelays(uint8_t Control, int8_t End)
-{
-	uint8_t ErrorCount;
-	switch (Control)
-	{
-	case 1:
-		// Relay GPIO Pins
-		Serial.println("");
-		Serial.println("Using GPIO pins for relays.");
-		for (int i = 0; i <= End; i++)
-		{
-			if (MDL.RelayControlPins[i] < NC)
-			{
-				pinMode(MDL.RelayControlPins[i], OUTPUT);
-			}
-		}
-		break;
-
-	case 2:
-	case 3:
-		// PCA9555 I/O expander on default address 0x20
-		Serial.println("");
-		Serial.println("Starting PCA9555 I/O Expander for relays ...");
-		ErrorCount = 0;
-		while (!PCA9555PW_found)
-		{
-			Serial.print(".");
-			Wire.beginTransmission(0x20);
-			PCA9555PW_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5) break;
-		}
-
-		Serial.println("");
-		if (PCA9555PW_found)
-		{
-			Serial.println("PCA9555 expander found.");
-
-			PCA.attach(Wire);
-			PCA.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
-			PCA.direction(PCA95x5::Direction::OUT_ALL);
-			PCA.write(PCA95x5::Level::H_ALL);
-		}
-		else
-		{
-			Serial.println("PCA9555 expander not found.");
-		}
-		Serial.println("");
-		break;
-
-	case 4:
-		// MCP23017 I/O expander on 0x20, 0x21
-
-		Serial.println("");
-		Serial.println("Starting MCP23017 for relays ...");
-
-		ErrorCount = 0;
-		MCP23017address = 0x21;
-		while (!MCP23017_found)
-		{
-			// RC12-3
-			Serial.print(".");
-			Wire.beginTransmission(0x21);
-			MCP23017_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5) break;
-		}
-
-		if (!MCP23017_found)
-		{
-			ErrorCount = 0;
-			MCP23017address = 0x20;
-			while (!MCP23017_found)
-			{
-				Serial.print(".");
-				Wire.beginTransmission(MCP23017address);
-				MCP23017_found = (Wire.endTransmission() == 0);
-				ErrorCount++;
-				delay(500);
-				if (ErrorCount > 5) break;
-			}
-		}
-
-		Serial.println("");
-		if (MCP23017_found)
-		{
-			Wire.beginTransmission(MCP23017address);
-			Wire.write(0x00); // IODIRA register
-			Wire.write(0x00); // set all of port A to outputs
-			Wire.endTransmission();
-
-			Wire.beginTransmission(MCP23017address);
-			Wire.write(0x01); // IODIRB register
-			Wire.write(0x00); // set all of port B to outputs
-			Wire.endTransmission();
-
-			Serial.println("MCP23017 found.");
-		}
-		else
-		{
-			Serial.println("MCP23017 not found.");
-		}
-		break;
-	}
 }
 
 // eeprom map:
@@ -436,7 +459,7 @@ void LoadDefaults()
 	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
-	MDL.OnboardRelayControl = 1;
+	MDL.RelayControl = 1;
 	MDL.WorkPin = 30;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
@@ -444,6 +467,7 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
+	MDL.CommMode = 3;  // Default to CAN Proprietary (working), change to 3 for TC Client
 }
 
 bool ValidData()
@@ -466,7 +490,7 @@ bool ValidData()
 		}
 	}
 
-	if (Result && MDL.OnboardRelayControl == 1)
+	if (Result && MDL.RelayControl == 1)
 	{
 		// check GPIOs for relays
 		for (int i = 0; i < 16; i++)

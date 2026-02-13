@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.3.11505.172
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36908.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RCteensy", "RCteensy.vcxproj", "{3A371B29-7AA1-F7C6-5388-37D5D5768B87}"
 EndProject
@@ -30,6 +30,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BDCCC950-EC95-41A9-84C0-124D63D22E05}
+		SolutionGuid = {3EAE6C12-9DB5-4380-B0B8-9372721A6610}
 	EndGlobalSection
 EndGlobal

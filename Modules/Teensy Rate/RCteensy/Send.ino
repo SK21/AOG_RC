@@ -99,43 +99,47 @@ void SendComm()
         //      bit 5   good pin configuration
         //14    CRC
 
-        Data[0] = 145;
-        Data[1] = 126;
-        Data[2] = MDL.ID;
-
-        if (MDL.PressurePin == NC) PressureReading = 0;
-        Data[3] = (byte)PressureReading;
-        Data[4] = (byte)(PressureReading >> 8);
-
-        // wheel speed, 10 X actual
-        if (MDL.WheelSpeedPin == NC) WheelSpeed = 0;
-        uint32_t Speed = WheelSpeed * 10.0;
-        Data[5] = Speed;
-        Data[6] = Speed >> 8;
-
-        Data[7] = WheelCounts;
-        Data[8] = WheelCounts >> 8;
-        Data[9] = WheelCounts >> 16;
-
-        Data[10] = InoType;
-        Data[11] = (byte)InoID;
-        Data[12] = InoID >> 8;
-
-        // status
-        Data[13] = 0;
-        if ((MDL.WorkPin != NC) && WorkPinOn()) Data[13] |= 0b00000001;
-
-        if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
-        if (GoodPins) Data[13] |= 0b00100000;
-
-        Data[14] = CRC(Data, 14, 0);
-
-        if (Ethernet.linkStatus() == LinkON)
+        // Skip when ISOBUS active - Gateway forwards 0xFF02 as PGN 32401
+        if (MDL.CommMode == 0)
         {
-            // send ethernet
-            UDPcomm.beginPacket(DestinationIP, DestinationPort);
-            UDPcomm.write(Data, 15);
-            UDPcomm.endPacket();
+            Data[0] = 145;
+            Data[1] = 126;
+            Data[2] = MDL.ID;
+
+            if (MDL.PressurePin == NC) PressureReading = 0;
+            Data[3] = (byte)PressureReading;
+            Data[4] = (byte)(PressureReading >> 8);
+
+            // wheel speed, 10 X actual
+            if (MDL.WheelSpeedPin == NC) WheelSpeed = 0;
+            uint32_t Speed = WheelSpeed * 10.0;
+            Data[5] = Speed;
+            Data[6] = Speed >> 8;
+
+            Data[7] = WheelCounts;
+            Data[8] = WheelCounts >> 8;
+            Data[9] = WheelCounts >> 16;
+
+            Data[10] = InoType;
+            Data[11] = (byte)InoID;
+            Data[12] = InoID >> 8;
+
+            // status
+            Data[13] = 0;
+            if ((MDL.WorkPin != NC) && WorkPinOn()) Data[13] |= 0b00000001;
+
+            if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
+            if (GoodPins) Data[13] |= 0b00100000;
+
+            Data[14] = CRC(Data, 14, 0);
+
+            if (Ethernet.linkStatus() == LinkON)
+            {
+                // send ethernet
+                UDPcomm.beginPacket(DestinationIP, DestinationPort);
+                UDPcomm.write(Data, 15);
+                UDPcomm.endPacket();
+            }
         }
     }
 }

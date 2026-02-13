@@ -273,10 +273,9 @@ void ReadPGNs(byte data[], uint16_t len)
 		//      bit 3 - work pin is momentary
 		//      bit 4 - Is3Wire valve
 		//      bit 5 - ADS1115 enabled
-		//5		onboard relay control type		0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
-		//										, 5 - PCA9685, 6 - PCF8574
-		//6	    remote relay control type		0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
-		//										, 5 - PCA9685, 6 - PCF8574
+		//5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
+		//                           , 5 - PCA9685, 6 - PCF8574
+		//6	    -
 		//7	    Sensor 0, Flow pin
 		//8     Sensor 0, Dir pin
 		//9     Sensor 0, PWM pin
@@ -305,9 +304,7 @@ void ReadPGNs(byte data[], uint16_t len)
 				MDL.Is3Wire = ((tmp & 16) == 16);
 				MDL.ADS1115Enabled = ((tmp & 32) == 32);
 
-				MDL.OnboardRelayControl = data[5];
-				MDL.RemoteRelayControl=data[6];
-
+				MDL.RelayControl = data[5];
 				Sensor[0].FlowPin = data[7];
 				Sensor[0].DirPin = data[8];
 				Sensor[0].PWMPin = data[9];
