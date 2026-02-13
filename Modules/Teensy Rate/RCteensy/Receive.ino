@@ -46,7 +46,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 14;
 
-		if (len > PGNlength - 1)
+		if (len > PGNlength - 1 && MDL.CommMode!=1 && MDL.CommMode!=3)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
@@ -103,7 +103,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 10;
 
-		if (len > PGNlength - 1)
+		if (len > PGNlength - 1 && MDL.CommMode != 1 && MDL.CommMode != 3)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
@@ -149,7 +149,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 24;
 
-		if (len > PGNlength - 1)
+		if (len > PGNlength - 1 && MDL.CommMode != 1 && MDL.CommMode != 3)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
@@ -244,7 +244,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 9;
 
-		if (len > PGNlength - 1)
+		if (len > PGNlength - 1 && MDL.CommMode != 1 && MDL.CommMode != 3)
 		{
 			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
 			{
@@ -284,7 +284,7 @@ void ReadPGNs(byte data[], uint16_t len)
 		//13    Relay pins 0-15, bytes 13-28
 		//29    work pin
 		//30    pressure pin
-		//31    -
+		//31    CommMode             0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary, 3 - TC Client, 4 - UDP + TC Client
 		//32    CRC
 
 		PGNlength = 33;
@@ -320,6 +320,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 				MDL.WorkPin = data[29];
 				MDL.PressurePin = data[30];
+				MDL.CommMode=data[31];
 
 				SaveData();
 				SCB_AIRCR = 0x05FA0004;	//restart the Teensy

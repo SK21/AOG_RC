@@ -46,7 +46,6 @@ namespace RateController
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(460, 184);
             this.panel1.TabIndex = 4;
-            this.panel1.Click += new System.EventHandler(this.panel1_Click);
             // 
             // label1
             // 
@@ -56,7 +55,6 @@ namespace RateController
             this.label1.Size = new System.Drawing.Size(60, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "label1";
-            this.label1.Click += new System.EventHandler(this.panel1_Click);
             // 
             // timer1
             // 

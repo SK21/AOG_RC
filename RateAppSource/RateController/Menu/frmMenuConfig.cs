@@ -37,6 +37,21 @@ namespace RateController.Menu
                 Core.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
                 Core.ModuleConfig.OnboardRelayType = (byte)cbOnboardRelays.SelectedIndex;
                 Core.ModuleConfig.RemoteRelayType = (byte)cbRemoteRelays.SelectedIndex;
+
+                if (rbEthernet.Checked)
+                {
+                    Core.ModuleConfig.CommMode = 0;
+                    Core.UseIsobusComm(false);
+                    if (!Props.IsobusEnabled) Props.ShowMessage("Send changes to module.","Help",10000);
+                }
+                else
+                {
+                    // Isobus only for most pgns
+                    Core.ModuleConfig.CommMode = 3;
+                    Core.UseIsobusComm(true);
+                    if (Props.IsobusEnabled) Props.ShowMessage("Send changes to module. Check Isobus settings at Menu> Options> Isobus.", "Help", 10000);
+                }
+
                 Core.ModuleConfig.Save();
 
                 SetButtons(false);
@@ -161,6 +176,15 @@ namespace RateController.Menu
             ckFlowOn.Checked = Core.ModuleConfig.InvertFlow;
             ckADS1115enabled.Checked = Core.ModuleConfig.ADS1115enabled;
 
+            if (Props.IsobusEnabled)
+            {
+                rbIsobus.Checked = true;
+            }
+            else
+            {
+                rbEthernet.Checked = true;
+            }
+
             Initializing = false;
         }
 
@@ -172,6 +196,11 @@ namespace RateController.Menu
             tbModuleID.Text = "0";
             tbSensorCount.Text = "1";
             cbOnboardRelays.SelectedIndex = 0;
+        }
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

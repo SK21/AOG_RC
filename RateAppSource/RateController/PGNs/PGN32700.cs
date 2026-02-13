@@ -1,9 +1,5 @@
 ﻿using RateController.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -34,7 +30,7 @@ namespace RateController.PGNs
         //13    Relay pins 0-15, bytes 13-28
         //29    work pin
         //30    pressure pin
-        //31    -
+        //31    CommMode             0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary, 3 - TC Client, 4 - UDP + TC Client
         //32    CRC
 
         private const byte cByteCount = 33;
@@ -82,6 +78,18 @@ namespace RateController.PGNs
                 {
                     cData[4] = (byte)(cData[4] & 0b1111_1011);
                 }
+            }
+        }
+
+        public byte CommMode
+        {
+            get
+            {
+                return cData[31];
+            }
+            set
+            {
+                cData[31] = value;
             }
         }
 
@@ -260,14 +268,12 @@ namespace RateController.PGNs
             // CRC
             cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);
 
+            Core.UDPmodules.Send(cData);
+
             // send - route through gateway if ISOBUS enabled
             if (Props.IsobusEnabled && Core.IsobusComm != null)
             {
                 Core.IsobusComm.SendModuleCommand(cData);
-            }
-            else
-            {
-                Core.UDPmodules.Send(cData);
             }
         }
     }

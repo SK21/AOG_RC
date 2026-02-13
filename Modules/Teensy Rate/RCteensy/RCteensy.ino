@@ -181,7 +181,7 @@ void loop()
 	{
 	case 0:
 		// UDP only
-		ReceiveUDP();
+		//ReceiveUDP();
 		break;
 	case 1:
 		// CAN Proprietary only
@@ -189,7 +189,7 @@ void loop()
 		break;
 	case 2:
 		// UDP + CAN Proprietary
-		ReceiveUDP();
+		//ReceiveUDP();
 		CANBus_Update();
 		break;
 	case 3:
@@ -203,7 +203,7 @@ void loop()
 		break;
 	case 4:
 		// UDP + TC Client
-		ReceiveUDP();
+		//ReceiveUDP();
 		CANBus_MaintainAddress();  // Handle address claiming
 		CANBus_Receive();          // Handle incoming CAN
 		TP_Update();
@@ -213,6 +213,7 @@ void loop()
 		break;
 	}
 
+	ReceiveUDP();
 	ReceiveUpdate();
 	SetPWM();
 

@@ -3,9 +3,6 @@ using RateController.PGNs;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Classes
@@ -215,6 +212,46 @@ namespace RateController.Classes
             SafeEvent.Raise(RestoreMain);
         }
 
+        public static void UseIsobusComm(bool UseIsobus)
+        {
+            if (UseIsobus && !Props.IsobusEnabled)
+            {
+                // Start ISOBUS gateway - first ensure clean state
+                Core.IsobusComm?.StopGateway();
+                Core.IsobusComm?.StopUDP();
+                System.Threading.Thread.Sleep(300);
+
+                bool udpStarted = Core.IsobusComm?.StartUDP() ?? false;
+                bool gatewayStarted = Core.IsobusComm?.StartGateway() ?? false;
+
+                if (gatewayStarted && udpStarted)
+                {
+                    Props.IsobusEnabled = true;
+                    Props.ShowMessage("ISOBUS Gateway started.","Help",10000);
+                }
+                else if (!gatewayStarted)
+                {
+                    Props.ShowMessage("Failed to start ISOBUS Gateway. Check that IsobusGateway.exe exists.");
+                    Core.IsobusComm?.StopUDP();
+                }
+                else
+                {
+                    Props.IsobusEnabled = true;
+                    Props.ShowMessage("ISOBUS Gateway started but UDP failed.");
+                }
+            }
+            else if (Props.IsobusEnabled)
+            {
+                // Stop ISOBUS gateway
+                Core.IsobusComm?.StopGateway();
+                Core.IsobusComm?.StopUDP();
+                Props.IsobusEnabled = false;
+                Props.ShowMessage("ISOBUS Gateway stopped.","Help",10000);
+
+                if (Props.SpeedMode == SpeedType.ISOBUS) Props.SpeedMode = SpeedType.GPS;
+            }
+        }
+
         public static void RequestRestart()
         {
             IsRestarting = true;
@@ -397,5 +434,4 @@ namespace RateController.Classes
             }
         }
     }
-
 }

@@ -126,47 +126,7 @@ namespace RateController.Menu
                 bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
                 Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-                if (ckIsoBus.Checked && !Props.IsobusEnabled)
-                {
-                    // Start ISOBUS gateway - first ensure clean state
-                    Core.IsobusComm?.StopGateway();
-                    Core.IsobusComm?.StopUDP();
-                    System.Threading.Thread.Sleep(300);
-
-                    bool udpStarted = Core.IsobusComm?.StartUDP() ?? false;
-                    bool gatewayStarted = Core.IsobusComm?.StartGateway() ?? false;
-
-                    if (gatewayStarted && udpStarted)
-                    {
-                        Props.IsobusEnabled = true;
-                        Props.ShowMessage("ISOBUS Gateway started.");
-                    }
-                    else if (!gatewayStarted)
-                    {
-                        Props.ShowMessage("Failed to start ISOBUS Gateway. Check that IsobusGateway.exe exists.");
-                        Core.IsobusComm?.StopUDP();
-                    }
-                    else
-                    {
-                        Props.IsobusEnabled = true;
-                        Props.ShowMessage("ISOBUS Gateway started but UDP failed.");
-                    }
-                }
-                else if (!ckIsoBus.Checked && Props.IsobusEnabled)
-                {
-                    // Stop ISOBUS gateway
-                    Core.IsobusComm?.StopGateway();
-                    Core.IsobusComm?.StopUDP();
-                    Props.IsobusEnabled = false;
-                    Props.ShowMessage("ISOBUS Gateway stopped.");
-
-                    // If ISOBUS speed was selected, switch to GPS
-                    if (rbIsoBusSpeed.Checked)
-                    {
-                        rbAOG.Checked = true;
-                        Props.SpeedMode = SpeedType.GPS;
-                    }
-                }
+                Core.UseIsobusComm(ckIsoBus.Checked);
 
                 // Restart gateway if diagnostics changed and ISOBUS is enabled (to apply console visibility)
                 if (diagnosticsChanged && Props.IsobusEnabled && Core.IsobusComm != null)
