@@ -1292,6 +1292,16 @@ namespace RateController.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SprayOff2 {
+            get {
+                object obj = ResourceManager.GetObject("SprayOff2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SprayOn {
             get {
                 object obj = ResourceManager.GetObject("SprayOn", resourceCulture);

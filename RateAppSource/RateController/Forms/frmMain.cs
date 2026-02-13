@@ -683,7 +683,7 @@ namespace RateController.Forms
             }
             else
             {
-                btnMaster.Image = Properties.Resources.SprayOff;
+                btnMaster.Image = Properties.Resources.SprayOff2;
             }
         }
     }
