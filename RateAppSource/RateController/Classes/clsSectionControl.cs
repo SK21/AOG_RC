@@ -1,9 +1,5 @@
 ﻿using RateController.PGNs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -221,18 +217,25 @@ namespace RateController.Classes
             }
             else
             {
+                bool MachineIsMoving = (Props.Speed_KMH > 0.1);
+                bool IsOn;
                 foreach (clsSection Sec in Core.Sections.Items)
                 {
                     if (Sec.Enabled)
                     {
-                        if (Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
+                        IsOn = false;
+                        if (!Core.SwitchBox.AutoSectionOn || MachineIsMoving)
                         {
-                            Sec.IsON = Core.SwitchBox.SectionSwitchOn(Sec.SwitchID);
+                            if (Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
+                            {
+                                IsOn = Core.SwitchBox.SectionSwitchOn(Sec.SwitchID);
+                            }
+                            else
+                            {
+                                IsOn = RCsectionOn[Sec.ID];
+                            }
                         }
-                        else
-                        {
-                            Sec.IsON = RCsectionOn[Sec.ID];
-                        }
+                        Sec.IsON = IsOn;
                     }
                 }
             }
