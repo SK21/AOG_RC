@@ -122,6 +122,13 @@ void VTClient_Update() {
         case VT_WAIT_FOR_VT:
             // Wait for VT Status to confirm VT is available
             if (vtClient.vtServerAddress != 0xFF) {
+                // Send Working Set Master if TC Client hasn't (standalone VT mode)
+                if (!tcClient.wsAnnounced && stateTime >= 200) {
+                    CANBus_SendAddressClaim();
+                    delay(50);
+                    TCClient_SendWorkingSetMaster();
+                    tcClient.wsAnnounced = true;
+                }
                 // Brief stabilization wait
                 if (stateTime >= 500) {
                     VTClient_SetState(VT_SEND_GET_MEMORY);

@@ -96,8 +96,8 @@ void CANBus_SendAddressClaim() {
     CAN_message_t msg;
 
     // Build 29-bit CAN ID for Address Claimed
-    // Priority=6, PGN=0xEE00, SA=claimed address
-    msg.id = (6UL << 26) | (0xEE00UL << 8) | ISOBUSid.address;
+    // Priority=6, PF=0xEE, DA=0xFF (global broadcast), SA=claimed address
+    msg.id = (6UL << 26) | (0xEEUL << 16) | (0xFFUL << 8) | ISOBUSid.address;
     msg.flags.extended = 1;
     msg.len = 8;
 

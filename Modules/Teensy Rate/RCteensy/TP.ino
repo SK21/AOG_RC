@@ -397,9 +397,9 @@ void TP_Update() {
                 uint8_t data[7];
                 for (int i = 0; i < 7; i++) {
                     if (tpSession.sendOffset < tpSession.totalBytes) {
-                        // For DDOP transfer, first byte is command byte
+                        // For large message transfer, first byte is command byte
                         if (tpSession.hasCmdByte && tpSession.sendOffset == 0) {
-                            data[i] = DDOP_TRANSFER_CMD;  // 0x61
+                            data[i] = tpSession.cmdByte;
                         } else {
                             // Adjust buffer index: if hasCmdByte, subtract 1 from sendOffset
                             uint16_t bufIdx = tpSession.hasCmdByte ? (tpSession.sendOffset - 1) : tpSession.sendOffset;
