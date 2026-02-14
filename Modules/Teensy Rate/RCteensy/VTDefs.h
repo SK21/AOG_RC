@@ -102,9 +102,9 @@ enum VTClientState {
 #define VT_TYPE_OUTPUT_NUMBER          12
 #define VT_TYPE_OUTPUT_RECTANGLE       14
 #define VT_TYPE_NUMBER_VARIABLE        21
-#define VT_TYPE_FONT_ATTRIBUTES        24
-#define VT_TYPE_LINE_ATTRIBUTES        25
-#define VT_TYPE_FILL_ATTRIBUTES        26
+#define VT_TYPE_FONT_ATTRIBUTES        23
+#define VT_TYPE_LINE_ATTRIBUTES        24
+#define VT_TYPE_FILL_ATTRIBUTES        25
 
 //=============================================================================
 // VT Colour Constants (ISO 11783-6 standard colour table)
