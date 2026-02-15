@@ -1,6 +1,6 @@
 
 // VTClient.ino - ISO 11783-6 Virtual Terminal Client
-// State machine, message handlers, and display update logic
+// State machine, message handlers, interaction handling, and display update logic
 // Runs alongside TC Client on the same CAN address
 
 //=============================================================================
@@ -13,6 +13,32 @@
 #define VT_IDLE_WAIT_FOR_TC       15000  // Max wait for TC_ACTIVE before starting VT (ms)
 #define VT_WS_MAINTENANCE_INTERVAL 1000  // Working Set Maintenance every 1s
 #define VT_DISPLAY_UPDATE_INTERVAL 250   // Display update every 250ms
+#define VT_AOG_TIMEOUT            3000   // AOG connection timeout (ms)
+
+//=============================================================================
+// Section Button Mapping
+//=============================================================================
+
+struct SectionButtonMap {
+    uint16_t sectionMask;     // bitmask of sections this button controls
+};
+
+SectionButtonMap sectionButtonMap[8];
+uint8_t numSectionButtons = 8;
+
+void VTClient_InitSectionMap() {
+    // Default equal split: 16 sections / 8 buttons = 2 sections per button
+    uint8_t sectionsPerButton = 16 / numSectionButtons;
+    for (uint8_t i = 0; i < 8; i++) {
+        sectionButtonMap[i].sectionMask = 0;
+        for (uint8_t s = 0; s < sectionsPerButton; s++) {
+            uint8_t section = i * sectionsPerButton + s;
+            if (section < 16) {
+                sectionButtonMap[i].sectionMask |= (1 << section);
+            }
+        }
+    }
+}
 
 //=============================================================================
 // VT Client State Variables
@@ -37,12 +63,21 @@ struct VTClientData {
     // Upload tracking
     bool poolUploadStarted = false;
 
+    // Interactive state
+    uint8_t currentProduct = 0;        // Currently displayed product index
+    float fixedSpeed = 0.0;            // User-entered fixed speed (km/h)
+
     // Last sent values (to avoid redundant updates)
     uint32_t lastRate1Actual = 0xFFFFFFFF;
     uint32_t lastRate1Target = 0xFFFFFFFF;
     uint32_t lastRate2Actual = 0xFFFFFFFF;
     uint32_t lastRate2Target = 0xFFFFFFFF;
-    uint16_t lastSectionStates = 0xFFFF;
+    uint32_t lastQtyApplied = 0xFFFFFFFF;
+    uint32_t lastAreaRemaining = 0xFFFFFFFF;
+    uint32_t lastTankLevel = 0xFFFFFFFF;
+    uint32_t lastSpeed = 0xFFFFFFFF;
+    uint8_t lastSectionStates = 0xFF;   // Combined button states (8 buttons)
+    uint8_t lastAOGState = 0xFF;        // 0xFF = unknown, 0 = disconnected, 1 = connected
 };
 
 VTClientData vtClient;
@@ -61,7 +96,11 @@ void VTClient_SendWSMaintenance();
 void VTClient_UpdateDisplay();
 void VTClient_SendChangeNumericValue(uint16_t objId, uint32_t value);
 void VTClient_SendChangeFillAttributes(uint16_t objId, uint8_t fillType, uint8_t colour);
+void VTClient_SendChangeAttribute(uint16_t objId, uint8_t attrId, uint32_t value);
 void VTClient_SetState(VTClientState newState);
+void VTClient_HandleButtonActivation(const CAN_message_t& msg);
+void VTClient_HandleSoftKeyActivation(const CAN_message_t& msg);
+void VTClient_HandleChangeNumericValue(const CAN_message_t& msg);
 
 //=============================================================================
 // Initialization
@@ -73,14 +112,24 @@ void VTClient_Begin() {
     vtClient.lastVTStatusTime = 0;
     vtClient.stateEntryTime = millis();
     vtClient.poolUploadStarted = false;
+    vtClient.currentProduct = 0;
+    vtClient.fixedSpeed = 0.0;
     vtClient.lastRate1Actual = 0xFFFFFFFF;
     vtClient.lastRate1Target = 0xFFFFFFFF;
     vtClient.lastRate2Actual = 0xFFFFFFFF;
     vtClient.lastRate2Target = 0xFFFFFFFF;
-    vtClient.lastSectionStates = 0xFFFF;
+    vtClient.lastQtyApplied = 0xFFFFFFFF;
+    vtClient.lastAreaRemaining = 0xFFFFFFFF;
+    vtClient.lastTankLevel = 0xFFFFFFFF;
+    vtClient.lastSpeed = 0xFFFFFFFF;
+    vtClient.lastSectionStates = 0xFF;
+    vtClient.lastAOGState = 0xFF;
 
-    // Build VT object pool at startup
-    VTPool_Build();
+    // Initialize default section button mapping
+    VTClient_InitSectionMap();
+
+    // Build VT object pool at startup (default 200x200, rebuilt after Get Hardware)
+    VTPool_Build(200, 200);
 
     Serial.println("VT Client initialized");
 }
@@ -271,13 +320,6 @@ void VTClient_SetState(VTClientState newState) {
 
 void VTClient_HandleVTStatus(const CAN_message_t& msg) {
     // PGN 0xFE6E - VT Status broadcast
-    // Byte 0: Active Working Set Master address
-    // Byte 1-2: Active Data/Alarm mask object ID
-    // Byte 3-4: Active Soft Key mask object ID
-    // Byte 5: VT busy coding (bit field)
-    // Byte 6: VT function code of current cmd being processed
-    // Byte 7: Reserved
-
     uint8_t sourceAddr = msg.id & 0xFF;
     vtClient.lastVTStatusTime = millis();
 
@@ -294,9 +336,6 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
 
     switch (funcCode) {
         case VT_FUNC_GET_MEMORY_RESP:
-            // Get Memory Response
-            // Byte 1: Version (VT version)
-            // Byte 2: 0=enough memory, 1=not enough
             vtClient.vtVersion = msg.buf[1];
             if (msg.buf[2] == 0) {
                 Serial.print("VT: Get Memory OK, VT version=");
@@ -309,13 +348,6 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
             break;
 
         case VT_FUNC_GET_NUM_SOFT_KEYS_RESP:
-            // Get Number of Soft Keys Response
-            // Byte 1: Navigation soft keys (x)
-            // Byte 2: (reserved)
-            // Byte 3: (reserved)
-            // Byte 4: Virtual soft keys (x)
-            // Byte 5: Virtual soft keys (y)
-            // Byte 6: Physical soft keys (number)
             vtClient.vtNumSoftKeys = msg.buf[4] * msg.buf[5];
             vtClient.vtNumPhysicalSoftKeys = msg.buf[6];
             Serial.print("VT: Soft keys: virtual=");
@@ -326,35 +358,29 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
             break;
 
         case VT_FUNC_GET_TEXT_FONT_DATA_RESP:
-            // Get Text Font Data Response
-            // Bytes 1-8 contain font size flags
             Serial.println("VT: Text Font Data received");
             VTClient_SetState(VT_SEND_GET_HARDWARE);
             break;
 
         case VT_FUNC_GET_HARDWARE_RESP:
-            // Get Hardware Response
-            // Byte 1: Graphic type (0=monochrome, 1=16 colour, 2=256 colour)
-            // Byte 2: Hardware (bit field)
-            // Byte 3-4: X pixels (width)
-            // Byte 5-6: Y pixels (height)
-            vtClient.vtColourDepth = msg.buf[1];
-            vtClient.vtWidth = msg.buf[3] | ((uint16_t)msg.buf[4] << 8);
-            vtClient.vtHeight = msg.buf[5] | ((uint16_t)msg.buf[6] << 8);
+            // Byte 0: Function code 0xC7
+            // Byte 2: Graphic type, Byte 4-5: width LE, Byte 6-7: height LE
+            vtClient.vtColourDepth = msg.buf[2];
+            vtClient.vtWidth = msg.buf[4] | ((uint16_t)msg.buf[5] << 8);
+            vtClient.vtHeight = msg.buf[6] | ((uint16_t)msg.buf[7] << 8);
             Serial.print("VT: Hardware - colours=");
             Serial.print(vtClient.vtColourDepth);
             Serial.print(" width=");
             Serial.print(vtClient.vtWidth);
             Serial.print(" height=");
             Serial.println(vtClient.vtHeight);
-            // Ready to upload object pool
+            // Rebuild pool scaled to actual VT display dimensions
+            VTPool_Build(vtClient.vtWidth, vtClient.vtHeight);
             vtClient.poolUploadStarted = false;
             VTClient_SetState(VT_UPLOAD_OBJECT_POOL);
             break;
 
         case VT_FUNC_END_OF_OBJECT_POOL_RESP:
-            // End of Object Pool Response
-            // Byte 1: Error code (0 = success)
             if (msg.buf[1] == 0) {
                 Serial.println("VT: Object pool accepted - VT Client CONNECTED");
                 // Force initial display update
@@ -362,7 +388,12 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
                 vtClient.lastRate1Target = 0xFFFFFFFF;
                 vtClient.lastRate2Actual = 0xFFFFFFFF;
                 vtClient.lastRate2Target = 0xFFFFFFFF;
-                vtClient.lastSectionStates = 0xFFFF;
+                vtClient.lastQtyApplied = 0xFFFFFFFF;
+                vtClient.lastAreaRemaining = 0xFFFFFFFF;
+                vtClient.lastTankLevel = 0xFFFFFFFF;
+                vtClient.lastSpeed = 0xFFFFFFFF;
+                vtClient.lastSectionStates = 0xFF;
+                vtClient.lastAOGState = 0xFF;
                 VTClient_SetState(VT_CONNECTED);
             } else {
                 Serial.print("VT: Object pool rejected, error=");
@@ -371,10 +402,156 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
             }
             break;
 
-        case VT_FUNC_SOFT_KEY_ACTIVATION:
         case VT_FUNC_BUTTON_ACTIVATION:
-            // User interaction - not handling in v1
+            VTClient_HandleButtonActivation(msg);
             break;
+
+        case VT_FUNC_SOFT_KEY_ACTIVATION:
+            VTClient_HandleSoftKeyActivation(msg);
+            break;
+
+        case VT_FUNC_CHANGE_NUMERIC_VALUE:
+            VTClient_HandleChangeNumericValue(msg);
+            break;
+    }
+}
+
+//=============================================================================
+// Interaction Handlers
+//=============================================================================
+
+void VTClient_HandleButtonActivation(const CAN_message_t& msg) {
+    // msg.buf[0] = 0x01 (Button Activation)
+    // msg.buf[1-2] = button object ID (LE)
+    // msg.buf[3] = key code (1-8 for section buttons)
+    // msg.buf[4] = activation type: 0=released, 1=pressed, 2=held, 3=aborted
+    uint8_t keyCode = msg.buf[3];
+    uint8_t activation = msg.buf[4];
+
+    // Only handle press events (activation == 1)
+    if (activation != 1) return;
+
+    if (keyCode >= 1 && keyCode <= 8) {
+        uint8_t btnIdx = keyCode - 1;
+
+        // If Auto is ON and AOG is connected, ignore section button presses
+        // (AOG controls sections in auto mode)
+        bool aogConnected = (millis() - Sensor[0].CommTime < VT_AOG_TIMEOUT);
+        if (Sensor[0].AutoOn && aogConnected) {
+            Serial.println("VT: Section button ignored (Auto+AOG active)");
+            return;
+        }
+
+        // Toggle the sections assigned to this button
+        uint16_t mask = sectionButtonMap[btnIdx].sectionMask;
+        uint16_t currentSections = RelayLo | ((uint16_t)RelayHi << 8);
+
+        // Check if any section in this group is currently on
+        bool anyOn = (currentSections & mask) != 0;
+
+        if (anyOn) {
+            // Turn off all sections in this group
+            currentSections &= ~mask;
+        } else {
+            // Turn on all sections in this group (only if master is on)
+            if (MasterOn) {
+                currentSections |= mask;
+            }
+        }
+
+        RelayLo = currentSections & 0xFF;
+        RelayHi = (currentSections >> 8) & 0xFF;
+
+        Serial.print("VT: Section button ");
+        Serial.print(keyCode);
+        Serial.print(anyOn ? " OFF" : " ON");
+        Serial.print(" mask=0x");
+        Serial.println(mask, HEX);
+    }
+}
+
+void VTClient_HandleSoftKeyActivation(const CAN_message_t& msg) {
+    // msg.buf[0] = 0x00 (Soft Key Activation)
+    // msg.buf[1-2] = key object ID (LE)
+    // msg.buf[3] = key code
+    // msg.buf[4] = activation type: 0=released, 1=pressed, 2=held, 3=aborted
+    uint8_t keyCode = msg.buf[3];
+    uint8_t activation = msg.buf[4];
+
+    // Only handle press events
+    if (activation != 1) return;
+
+    switch (keyCode) {
+        case VT_KEYCODE_AUTO:
+            // Toggle Auto mode for all sensors
+            {
+                bool newAuto = !Sensor[0].AutoOn;
+                for (uint8_t i = 0; i < MDL.SensorCount; i++) {
+                    Sensor[i].AutoOn = newAuto;
+                }
+                Serial.print("VT: Auto ");
+                Serial.println(newAuto ? "ON" : "OFF");
+            }
+            break;
+
+        case VT_KEYCODE_MASTER:
+            // Toggle Master on/off
+            MasterOn = !MasterOn;
+            if (!MasterOn) {
+                // Master off: turn off all relays
+                RelayLo = 0;
+                RelayHi = 0;
+            }
+            Serial.print("VT: Master ");
+            Serial.println(MasterOn ? "ON" : "OFF");
+            break;
+
+        case VT_KEYCODE_PROD_NEXT:
+            // Next product
+            vtClient.currentProduct++;
+            if (vtClient.currentProduct >= MDL.SensorCount) {
+                vtClient.currentProduct = 0;
+            }
+            // Force display refresh
+            vtClient.lastRate1Actual = 0xFFFFFFFF;
+            vtClient.lastRate1Target = 0xFFFFFFFF;
+            vtClient.lastQtyApplied = 0xFFFFFFFF;
+            Serial.print("VT: Product -> ");
+            Serial.println(vtClient.currentProduct);
+            break;
+
+        case VT_KEYCODE_PROD_PREV:
+            // Previous product
+            if (vtClient.currentProduct == 0) {
+                vtClient.currentProduct = MDL.SensorCount - 1;
+            } else {
+                vtClient.currentProduct--;
+            }
+            // Force display refresh
+            vtClient.lastRate1Actual = 0xFFFFFFFF;
+            vtClient.lastRate1Target = 0xFFFFFFFF;
+            vtClient.lastQtyApplied = 0xFFFFFFFF;
+            Serial.print("VT: Product -> ");
+            Serial.println(vtClient.currentProduct);
+            break;
+    }
+}
+
+void VTClient_HandleChangeNumericValue(const CAN_message_t& msg) {
+    // VT sends this when user edits an InputNumber
+    // msg.buf[0] = 0xA8
+    // msg.buf[1-2] = object ID (LE)
+    // msg.buf[3] = reserved (0xFF)
+    // msg.buf[4-7] = new value (32-bit LE)
+    uint16_t objId = msg.buf[1] | ((uint16_t)msg.buf[2] << 8);
+    uint32_t newValue = msg.buf[4] | ((uint32_t)msg.buf[5] << 8) |
+                        ((uint32_t)msg.buf[6] << 16) | ((uint32_t)msg.buf[7] << 24);
+
+    if (objId == VT_OBJ_VAR_SPEED) {
+        // Speed value is stored as raw * 10 (1 decimal place)
+        vtClient.fixedSpeed = newValue / 10.0f;
+        Serial.print("VT: Fixed speed set to ");
+        Serial.println(vtClient.fixedSpeed);
     }
 }
 
@@ -399,11 +576,6 @@ void VTClient_SendToVT(const uint8_t* data, uint8_t len) {
 }
 
 void VTClient_SendGetMemory() {
-    // Get Memory request (ISO 11783-6)
-    // Byte 0: Function code 0xC0
-    // Byte 1: Reserved (0xFF)
-    // Bytes 2-5: Required memory in bytes (32-bit LE)
-    // Bytes 6-7: Reserved (0xFF)
     uint8_t data[8];
     data[0] = VT_FUNC_GET_MEMORY;
     data[1] = 0xFF;
@@ -456,10 +628,6 @@ void VTClient_SendEndOfPool() {
 }
 
 void VTClient_SendWSMaintenance() {
-    // Working Set Maintenance - must be sent every 1s
-    // Byte 0: Function code 0xFF
-    // Byte 1: Bitmask (bit 0 = initiating WS, set until pool accepted)
-    // Byte 2: VT version we support
     uint8_t data[8];
     data[0] = VT_FUNC_WORKING_SET_MAINTENANCE;
     data[1] = (vtClient.state == VT_CONNECTED) ? 0x00 : 0x01;  // Init bit set during handshake
@@ -474,11 +642,6 @@ void VTClient_SendWSMaintenance() {
 //=============================================================================
 
 void VTClient_SendChangeNumericValue(uint16_t objId, uint32_t value) {
-    // Change Numeric Value command (func 0xA8)
-    // Byte 0: Function code
-    // Bytes 1-2: Object ID (little endian)
-    // Bytes 3-6: New value (little endian, 32-bit)
-    // Byte 7: Reserved
     uint8_t data[8];
     data[0] = VT_FUNC_CHANGE_NUMERIC_VALUE;
     data[1] = objId & 0xFF;
@@ -493,13 +656,6 @@ void VTClient_SendChangeNumericValue(uint16_t objId, uint32_t value) {
 }
 
 void VTClient_SendChangeFillAttributes(uint16_t objId, uint8_t fillType, uint8_t colour) {
-    // Change Fill Attributes command (func 0xAB)
-    // Byte 0: Function code
-    // Bytes 1-2: Object ID (little endian)
-    // Byte 3: Fill type
-    // Byte 4: Fill colour
-    // Bytes 5-6: Fill pattern object ID (0xFFFF = none)
-    // Byte 7: Reserved
     uint8_t data[8];
     data[0] = VT_FUNC_CHANGE_FILL_ATTRIBUTES;
     data[1] = objId & 0xFF;
@@ -513,24 +669,42 @@ void VTClient_SendChangeFillAttributes(uint16_t objId, uint8_t fillType, uint8_t
     VTClient_SendToVT(data, 8);
 }
 
+void VTClient_SendChangeAttribute(uint16_t objId, uint8_t attrId, uint32_t value) {
+    // Change Attribute command (func 0xAF)
+    uint8_t data[8];
+    data[0] = VT_FUNC_CHANGE_ATTRIBUTE;
+    data[1] = objId & 0xFF;
+    data[2] = (objId >> 8) & 0xFF;
+    data[3] = attrId;
+    data[4] = value & 0xFF;
+    data[5] = (value >> 8) & 0xFF;
+    data[6] = (value >> 16) & 0xFF;
+    data[7] = (value >> 24) & 0xFF;
+
+    VTClient_SendToVT(data, 8);
+}
+
 void VTClient_UpdateDisplay() {
-    // Update rate values - only send if changed to reduce bus traffic
+    // --- Rate values ---
+    // For SensorCount=1 or product switching, use currentProduct index
+    uint8_t prodIdx = vtClient.currentProduct;
+    if (prodIdx >= MDL.SensorCount) prodIdx = 0;
 
     // Rate 1 Actual (stored as value * 10 for 1 decimal place)
-    uint32_t rate1Actual = (uint32_t)(Sensor[0].UPM * 10.0);
+    uint32_t rate1Actual = (uint32_t)(Sensor[prodIdx].UPM * 10.0);
     if (rate1Actual != vtClient.lastRate1Actual) {
         VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE1_ACTUAL, rate1Actual);
         vtClient.lastRate1Actual = rate1Actual;
     }
 
     // Rate 1 Target
-    uint32_t rate1Target = (uint32_t)(Sensor[0].TargetUPM * 10.0);
+    uint32_t rate1Target = (uint32_t)(Sensor[prodIdx].TargetUPM * 10.0);
     if (rate1Target != vtClient.lastRate1Target) {
         VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE1_TARGET, rate1Target);
         vtClient.lastRate1Target = rate1Target;
     }
 
-    // Rate 2 (if second sensor present)
+    // Rate 2 (if 2-sensor layout and showing both)
     if (MDL.SensorCount > 1) {
         uint32_t rate2Actual = (uint32_t)(Sensor[1].UPM * 10.0);
         if (rate2Actual != vtClient.lastRate2Actual) {
@@ -545,33 +719,71 @@ void VTClient_UpdateDisplay() {
         }
     }
 
-    // Section states - update rectangle fill colours
+    // Quantity applied (TotalPulses / MeterCal, displayed as liters * 10)
+    uint32_t qtyApplied = 0;
+    if (Sensor[prodIdx].MeterCal > 0.0) {
+        qtyApplied = (uint32_t)((float)Sensor[prodIdx].TotalPulses / Sensor[prodIdx].MeterCal * 10.0);
+    }
+    if (qtyApplied != vtClient.lastQtyApplied) {
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_QTY_APPLIED, qtyApplied);
+        vtClient.lastQtyApplied = qtyApplied;
+    }
+
+    // Area remaining (placeholder - calculation TBD)
+    uint32_t areaRemaining = 0;  // TODO: compute area remaining in ha * 10
+    if (areaRemaining != vtClient.lastAreaRemaining) {
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_AREA_REM, areaRemaining);
+        vtClient.lastAreaRemaining = areaRemaining;
+    }
+
+    // Tank level (placeholder - needs tank capacity config)
+    uint32_t tankLevel = 0;  // TODO: compute tank level 0-1000 (0-100.0%)
+    if (tankLevel != vtClient.lastTankLevel) {
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_TANK_LEVEL, tankLevel);
+        vtClient.lastTankLevel = tankLevel;
+    }
+
+    // Speed display
+    // Priority: WheelSpeed > fixedSpeed (both are in km/h, stored * 10)
+    float currentSpeed = (WheelSpeed > 0.0) ? WheelSpeed : vtClient.fixedSpeed;
+    uint32_t speedVal = (uint32_t)(currentSpeed * 10.0);
+    if (speedVal != vtClient.lastSpeed) {
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_SPEED, speedVal);
+        vtClient.lastSpeed = speedVal;
+    }
+
+    // --- AOG connection indicator ---
+    bool aogConnected = (millis() - Sensor[0].CommTime < VT_AOG_TIMEOUT);
+    uint8_t aogState = aogConnected ? 1 : 0;
+    if (aogState != vtClient.lastAOGState) {
+        // Change AOG rectangle fill: green if connected, red if not
+        VTClient_SendChangeAttribute(VT_OBJ_RECT_AOG, 5,
+            aogConnected ? VT_OBJ_FILL_GREEN : VT_OBJ_FILL_RED);
+        vtClient.lastAOGState = aogState;
+    }
+
+    // --- Section button colours (8 buttons) ---
+    // Compute button states from relay bits using section mapping
     uint16_t currentSections = RelayLo | ((uint16_t)RelayHi << 8);
-    if (currentSections != vtClient.lastSectionStates) {
-        for (uint8_t i = 0; i < 16; i++) {
-            bool sectionOn = (currentSections >> i) & 0x01;
+    uint8_t buttonStates = 0;
+    for (uint8_t i = 0; i < 8; i++) {
+        if ((currentSections & sectionButtonMap[i].sectionMask) != 0) {
+            buttonStates |= (1 << i);
+        }
+    }
+
+    if (buttonStates != vtClient.lastSectionStates) {
+        for (uint8_t i = 0; i < 8; i++) {
+            bool btnOn = (buttonStates >> i) & 0x01;
             bool wasOn = (vtClient.lastSectionStates >> i) & 0x01;
 
-            // Only update sections that changed (or on first update when lastSectionStates == 0xFFFF)
-            if (sectionOn != wasOn || vtClient.lastSectionStates == 0xFFFF) {
-                uint16_t fillObjId = sectionOn ? VT_OBJ_FILL_GREEN : VT_OBJ_FILL_RED;
-                // Use Change Fill Attributes on the rectangle's fill reference
-                // We need to change the fill attribute reference of each rectangle
-                // Since all sections share fill objects, we use Change Attribute
-                // to change the rectangle's fill attribute object reference
-                uint8_t data[8];
-                data[0] = VT_FUNC_CHANGE_ATTRIBUTE;
-                data[1] = (VT_OBJ_SECTION_BASE + i) & 0xFF;
-                data[2] = ((VT_OBJ_SECTION_BASE + i) >> 8) & 0xFF;
-                data[3] = 5;  // Attribute ID 5 = fill attributes for OutputRectangle
-                data[4] = fillObjId & 0xFF;
-                data[5] = (fillObjId >> 8) & 0xFF;
-                data[6] = 0x00;
-                data[7] = 0x00;
-                VTClient_SendToVT(data, 8);
+            if (btnOn != wasOn || vtClient.lastSectionStates == 0xFF) {
+                // Change button background colour (attrID=3 for Button)
+                VTClient_SendChangeAttribute(VT_OBJ_BTN_SECTION_BASE + i, 3,
+                    btnOn ? VT_COLOUR_GREEN : VT_COLOUR_RED);
             }
         }
-        vtClient.lastSectionStates = currentSections;
+        vtClient.lastSectionStates = buttonStates;
     }
 }
 
