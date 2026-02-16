@@ -64,16 +64,17 @@ void VTPool_AddWorkingSet() {
 }
 
 void VTPool_AddOutputString(uint16_t objId, const char* text, uint16_t width,
-                            uint16_t height, uint16_t fontRef, uint8_t bgColour) {
+                            uint16_t height, uint16_t fontRef, uint8_t bgColour,
+                            uint8_t justify = 0, uint8_t options = 1) {
     VTPool_WriteUint16(objId);
     VTPool_WriteByte(VT_TYPE_OUTPUT_STRING);
     VTPool_WriteUint16(width);
     VTPool_WriteUint16(height);
     VTPool_WriteByte(bgColour);
     VTPool_WriteUint16(fontRef);
-    VTPool_WriteByte(0);               // Options (transparent)
+    VTPool_WriteByte(options);         // Options: bit0: 0=opaque, 1=transparent bg
     VTPool_WriteUint16(0xFFFF);        // No variable ref
-    VTPool_WriteByte(0);               // Justify: left
+    VTPool_WriteByte(justify);         // 0=left, 1=center, 2=right
     uint16_t len = strlen(text);
     VTPool_WriteUint16(len);
     for (uint16_t i = 0; i < len; i++) {
@@ -90,7 +91,7 @@ void VTPool_AddOutputNumber(uint16_t objId, uint16_t width, uint16_t height,
     VTPool_WriteUint16(height);
     VTPool_WriteByte(VT_COLOUR_BLACK);
     VTPool_WriteUint16(fontRef);
-    VTPool_WriteByte(0);               // Options (transparent)
+    VTPool_WriteByte(1);               // Options: bit0=1 = transparent background
     VTPool_WriteUint16(varRef);
     VTPool_WriteUint32(0);             // Value (initial)
     VTPool_WriteUint32(0);             // Offset
@@ -263,7 +264,7 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     VTPool_WriteByte(VT_TYPE_DATA_MASK);
     VTPool_WriteByte(VT_COLOUR_BLACK);
     VTPool_WriteUint16(VT_OBJ_SOFT_KEY_MASK);
-    VTPool_WriteByte(32);  // Total children
+    VTPool_WriteByte(31);  // Total children
     VTPool_WriteByte(0);   // No macros
 
     // --- Product buttons (6) at y=7 ---
@@ -273,26 +274,23 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
         VTPool_WriteUint16(SY(7));
     }
 
-    // --- Header (5 children) at y=33 ---
-    VTPool_WriteUint16(VT_OBJ_RECT_AOG);
-    VTPool_WriteUint16(SX(2));
-    VTPool_WriteUint16(SY(33));
-
+    // --- Header (4 children) at y=27 ---
     VTPool_WriteUint16(VT_OBJ_STR_AOG);
-    VTPool_WriteUint16(SX(3));
-    VTPool_WriteUint16(SY(34));
+    VTPool_WriteUint16(SX(2));
+    VTPool_WriteUint16(SY(27));
 
     VTPool_WriteUint16(VT_OBJ_NUM_SPEED);
-    VTPool_WriteUint16(SX(18));
-    VTPool_WriteUint16(SY(33));
+    VTPool_WriteUint16(SX(22));
+    VTPool_WriteUint16(SY(27));
 
     VTPool_WriteUint16(VT_OBJ_STR_SPEED_UNIT);
-    VTPool_WriteUint16(SX(60));
-    VTPool_WriteUint16(SY(35));
+    VTPool_WriteUint16(SX(55));
+    VTPool_WriteUint16(SY(29));
 
+    // --- Product name on second header line (y=45) ---
     VTPool_WriteUint16(VT_OBJ_STR_PRODUCT);
-    VTPool_WriteUint16(SX(90));
-    VTPool_WriteUint16(SY(33));
+    VTPool_WriteUint16(SX(2));
+    VTPool_WriteUint16(SY(45));
 
     // --- Current Rate row (y=67) ---
     VTPool_WriteUint16(VT_OBJ_STR_RATE1_LABEL);
@@ -391,11 +389,11 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     VTPool_AddNumberVariable(VT_OBJ_VAR_TANK_LEVEL, 0);
     VTPool_AddNumberVariable(VT_OBJ_VAR_SPEED, 0);
 
-    // === AOG indicator (rectangle + text) ===
-    VTPool_AddOutputRectangle(VT_OBJ_RECT_AOG, SX(14), SY(14),
-                              VT_OBJ_LINE_THIN, VT_OBJ_FILL_RED);
+    // === AOG indicator (opaque background string, red=disconnected, green=connected) ===
+    // Using OutputString with opaque bg (options=0) - change bg via attrID=2
     VTPool_AddOutputString(VT_OBJ_STR_AOG, "AOG",
-                           SX(12), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(18), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_RED,
+                           1, 0);  // justify=center, options=0 (opaque bg)
 
     // === Product description string (updated via Change String Value) ===
     VTPool_AddOutputString(VT_OBJ_STR_PRODUCT, "P1",
@@ -404,8 +402,8 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     // === Speed unit and OutputNumber ===
     VTPool_AddOutputString(VT_OBJ_STR_SPEED_UNIT, "km/h",
                            SX(25), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-    VTPool_AddOutputNumber(VT_OBJ_NUM_SPEED, SX(40), SY(14),
-                           VT_OBJ_VAR_SPEED, VT_OBJ_FONT_LARGE, 2);
+    VTPool_AddOutputNumber(VT_OBJ_NUM_SPEED, SX(30), SY(14),
+                           VT_OBJ_VAR_SPEED, VT_OBJ_FONT_YELLOW, 2);
 
     // === Data row labels (yellow small font) ===
     VTPool_AddOutputString(VT_OBJ_STR_RATE1_LABEL, "Cur Rate",
@@ -437,12 +435,13 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     VTPool_AddOutputNumber(VT_OBJ_NUM_AREA_REM, SX(72), SY(18),
                            VT_OBJ_VAR_AREA_REM, VT_OBJ_FONT_LARGE, 2);
 
-    // === 6 Product button label strings ===
+    // === 6 Product button label strings (centered) ===
     {
         const char* prodLabels[] = {"P1", "P2", "P3", "P4", "P5", "F"};
         for (uint8_t i = 0; i < 6; i++) {
             VTPool_AddOutputString(VT_OBJ_STR_BTN_PROD_BASE + i, prodLabels[i],
-                                   SX(16), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                                   SX(32), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK,
+                                   1);  // justify=center
         }
     }
 
@@ -450,21 +449,22 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     for (uint8_t i = 0; i < 6; i++) {
         VTPool_AddButton(VT_OBJ_BTN_PROD_BASE + i,
                          SX(32), SY(13),
-                         VT_COLOUR_RED,          // Inactive default
-                         VT_COLOUR_WHITE,
+                         VT_COLOUR_BLUE,         // Inactive default (blue)
+                         VT_COLOUR_BLACK,        // Border colour (hidden by no-border option)
                          VT_KEYCODE_PROD_BASE + i,  // Key codes 20-25
-                         0, 1);                  // 1 child
-        // Child: label string centered in button
+                         0x20, 1);               // bit5=no border, 1 child
+        // Child: label string fills button width (centered via justify)
         VTPool_WriteUint16(VT_OBJ_STR_BTN_PROD_BASE + i);
-        VTPool_WriteUint16(SX(8));
-        VTPool_WriteUint16(SY(1));
+        VTPool_WriteUint16(0);
+        VTPool_WriteUint16(0);
     }
 
-    // === 8 Section button label strings ===
+    // === 8 Section button label strings (centered) ===
     for (uint8_t i = 0; i < 8; i++) {
         char label[2] = { (char)('1' + i), '\0' };
         VTPool_AddOutputString(VT_OBJ_STR_BTN_SEC_BASE + i, label,
-                               SX(10), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                               SX(24), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK,
+                               1);  // justify=center
     }
 
     // === 8 Section buttons (each with number label child) ===
@@ -472,12 +472,12 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
         VTPool_AddButton(VT_OBJ_BTN_SECTION_BASE + i,
                          SX(24), SY(20),
                          VT_COLOUR_RED,       // BG colour (red = off)
-                         VT_COLOUR_WHITE,     // Border colour
+                         VT_COLOUR_BLACK,     // Border colour (hidden by no-border option)
                          i + 1,               // Key codes 1-8
-                         0, 1);               // Options: not latchable, 1 child
-        // Child: label string centered in button
+                         0x20, 1);            // bit5=no border, 1 child
+        // Child: label string fills button width (centered via justify)
         VTPool_WriteUint16(VT_OBJ_STR_BTN_SEC_BASE + i);
-        VTPool_WriteUint16(SX(7));
+        VTPool_WriteUint16(0);
         VTPool_WriteUint16(SY(4));
     }
 
@@ -488,49 +488,49 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
                        VT_OBJ_VAR_TANK_LEVEL, 0x21);
 
     // === Soft Key objects (6 action keys with label children) ===
-    VTPool_AddKey(VT_OBJ_SK_MENU, VT_COLOUR_BLACK, VT_KEYCODE_MENU, 1);
+    VTPool_AddKey(VT_OBJ_SK_MENU, VT_COLOUR_BLUE, VT_KEYCODE_MENU, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_MENU);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    VTPool_AddKey(VT_OBJ_SK_RQTY, VT_COLOUR_BLACK, VT_KEYCODE_RQTY, 1);
+    VTPool_AddKey(VT_OBJ_SK_RQTY, VT_COLOUR_BLUE, VT_KEYCODE_RQTY, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_RQTY);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    VTPool_AddKey(VT_OBJ_SK_RAREA, VT_COLOUR_BLACK, VT_KEYCODE_RAREA, 1);
+    VTPool_AddKey(VT_OBJ_SK_RAREA, VT_COLOUR_BLUE, VT_KEYCODE_RAREA, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_RAREA);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    VTPool_AddKey(VT_OBJ_SK_RX, VT_COLOUR_BLACK, VT_KEYCODE_RX, 1);
+    VTPool_AddKey(VT_OBJ_SK_RX, VT_COLOUR_BLUE, VT_KEYCODE_RX, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_RX);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    VTPool_AddKey(VT_OBJ_SK_AUTO, VT_COLOUR_BLACK, VT_KEYCODE_AUTO, 1);
+    VTPool_AddKey(VT_OBJ_SK_AUTO, VT_COLOUR_BLUE, VT_KEYCODE_AUTO, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_AUTO);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    VTPool_AddKey(VT_OBJ_SK_MASTER, VT_COLOUR_BLACK, VT_KEYCODE_MASTER, 1);
+    VTPool_AddKey(VT_OBJ_SK_MASTER, VT_COLOUR_BLUE, VT_KEYCODE_MASTER, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_MASTER);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    // Soft key label strings
+    // Soft key label strings (centered within key area)
     VTPool_AddOutputString(VT_OBJ_STR_SK_MENU, "Menu",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
     VTPool_AddOutputString(VT_OBJ_STR_SK_RQTY, "RQty",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
     VTPool_AddOutputString(VT_OBJ_STR_SK_RAREA, "RAra",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
     VTPool_AddOutputString(VT_OBJ_STR_SK_RX, "Rx",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
     VTPool_AddOutputString(VT_OBJ_STR_SK_AUTO, "Auto",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
     VTPool_AddOutputString(VT_OBJ_STR_SK_MASTER, "Mstr",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
 
     vtPoolSize = vtPoolWritePos;
 

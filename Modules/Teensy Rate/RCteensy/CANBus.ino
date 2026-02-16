@@ -200,6 +200,17 @@ void CANBus_Receive() {
                 CANBus_HandleAddressClaim(msg, sa);
                 break;
 
+            case 0xEA00:  // Request PGN (ISO 11783-3)
+                {
+                    // Respond to requests for Address Claim (PGN 0xEE00)
+                    uint32_t requestedPgn = msg.buf[0] | ((uint32_t)msg.buf[1] << 8) | ((uint32_t)msg.buf[2] << 16);
+                    if (requestedPgn == 0xEE00 && ISOBUSid.addressClaimed) {
+                        Serial.println("RX Request for Address Claim - responding");
+                        CANBus_SendAddressClaim();
+                    }
+                }
+                break;
+
             case 0xFF03:  // Rate Command (from Gateway)
                 CANBus_HandleRateCommand(msg);
                 break;

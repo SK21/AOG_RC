@@ -792,9 +792,9 @@ void VTClient_UpdateDisplay() {
     bool aogConnected = (millis() - Sensor[0].CommTime < VT_AOG_TIMEOUT);
     uint8_t aogState = aogConnected ? 1 : 0;
     if (aogState != vtClient.lastAOGState) {
-        // Change AOG rectangle fill: green if connected, red if not
-        VTClient_SendChangeAttribute(VT_OBJ_RECT_AOG, 5,
-            aogConnected ? VT_OBJ_FILL_GREEN : VT_OBJ_FILL_RED);
+        // Change AOG string background colour (attrID=2): green if connected, red if not
+        VTClient_SendChangeAttribute(VT_OBJ_STR_AOG, 2,
+            aogConnected ? VT_COLOUR_GREEN : VT_COLOUR_RED);
         vtClient.lastAOGState = aogState;
     }
 
@@ -822,10 +822,10 @@ void VTClient_UpdateDisplay() {
         vtClient.lastSectionStates = buttonStates;
     }
 
-    // --- Product button highlighting (green = active, red = inactive) ---
+    // --- Product button highlighting (green = active, blue = inactive) ---
     if (vtClient.currentProduct != vtClient.lastProductHighlight) {
         for (uint8_t i = 0; i < 6; i++) {
-            uint8_t colour = (i == vtClient.currentProduct) ? VT_COLOUR_GREEN : VT_COLOUR_RED;
+            uint8_t colour = (i == vtClient.currentProduct) ? VT_COLOUR_GREEN : VT_COLOUR_BLUE;
             // Button attrID=3 for background colour
             VTClient_SendChangeAttribute(VT_OBJ_BTN_PROD_BASE + i, 3, colour);
         }
@@ -844,7 +844,7 @@ void VTClient_UpdateDisplay() {
     uint8_t autoState = Sensor[0].AutoOn ? 1 : 0;
     if (autoState != vtClient.lastAutoKeyState) {
         VTClient_SendChangeAttribute(VT_OBJ_SK_AUTO, 1,
-            autoState ? VT_COLOUR_GREEN : VT_COLOUR_BLACK);
+            autoState ? VT_COLOUR_GREEN : VT_COLOUR_BLUE);
         vtClient.lastAutoKeyState = autoState;
     }
 
@@ -852,7 +852,7 @@ void VTClient_UpdateDisplay() {
     uint8_t masterState = MasterOn ? 1 : 0;
     if (masterState != vtClient.lastMasterKeyState) {
         VTClient_SendChangeAttribute(VT_OBJ_SK_MASTER, 1,
-            masterState ? VT_COLOUR_GREEN : VT_COLOUR_BLACK);
+            masterState ? VT_COLOUR_GREEN : VT_COLOUR_BLUE);
         vtClient.lastMasterKeyState = masterState;
     }
 
@@ -861,7 +861,7 @@ void VTClient_UpdateDisplay() {
     uint8_t rxState = rxOn ? 1 : 0;
     if (rxState != vtClient.lastRxKeyState) {
         VTClient_SendChangeAttribute(VT_OBJ_SK_RX, 1,
-            rxOn ? VT_COLOUR_GREEN : VT_COLOUR_BLACK);
+            rxOn ? VT_COLOUR_GREEN : VT_COLOUR_BLUE);
         vtClient.lastRxKeyState = rxState;
     }
 }
