@@ -128,6 +128,7 @@ enum VTClientState {
 #define VT_OBJ_FONT_LARGE         0x6000   // large yellow - data values
 #define VT_OBJ_FONT_SMALL         0x6001   // small white - status text, button labels
 #define VT_OBJ_FONT_YELLOW        0x6002   // small yellow - data labels, units
+#define VT_OBJ_FONT_TINY          0x6003
 #define VT_OBJ_LINE_THIN          0x6010
 #define VT_OBJ_FILL_GREEN         0x6020
 #define VT_OBJ_FILL_RED           0x6021
@@ -148,6 +149,10 @@ enum VTClientState {
 #define VT_OBJ_STR_SK_RQTY        0x7013
 #define VT_OBJ_STR_SK_RAREA       0x7014
 #define VT_OBJ_STR_SK_RX          0x7015
+#define VT_OBJ_STR_SK_RQTY_L1     0x7016   // "Rst"
+#define VT_OBJ_STR_SK_RQTY_L2     0x7017   // "Qty"
+#define VT_OBJ_STR_SK_RAREA_L1    0x7018
+#define VT_OBJ_STR_SK_RAREA_L2    0x7019
 
 // Key codes
 #define VT_KEYCODE_AUTO           10

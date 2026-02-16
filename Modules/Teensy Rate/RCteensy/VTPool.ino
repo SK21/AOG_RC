@@ -237,8 +237,33 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     Serial.println(dispH);
 
     // Scale macros: map 200-baseline coordinates to actual display size
-    #define SX(x) ((uint16_t)((uint32_t)(x) * dispW / 200))
-    #define SY(y) ((uint16_t)((uint32_t)(y) * dispH / 200))
+#define SX(x) ((uint16_t)((uint32_t)(x) * dispW / 200))
+#define SY(y) ((uint16_t)((uint32_t)(y) * dispH / 200))
+
+// ------------------------------------------------------------
+// Soft-key label helper macros
+// ------------------------------------------------------------
+
+// Center a single-line soft key label vertically
+#define ADD_SOFTKEY_LABEL(objId, text, fontObj)        \
+    VTPool_AddOutputString(objId, text, SX(24), SY(7), fontObj, VT_COLOUR_BLACK, 1); \
+    VTPool_WriteUint16(objId);                         \
+    VTPool_WriteUint16(0);                             \
+    VTPool_WriteUint16(SY(6));   /* vertical center */
+
+// Center a two-line soft key label vertically
+#define ADD_SOFTKEY_LABEL_2LINE(objId1, text1, objId2, text2, fontObj) \
+    /* Line 1 */                                                        \
+    VTPool_AddOutputString(objId1, text1, SX(24), SY(7), fontObj, VT_COLOUR_BLACK, 1); \
+    /* Line 2 */                                                        \
+    VTPool_AddOutputString(objId2, text2, SX(24), SY(7), fontObj, VT_COLOUR_BLACK, 1); \
+    /* Attach children */                                               \
+    VTPool_WriteUint16(objId1);                                         \
+    VTPool_WriteUint16(0);                                              \
+    VTPool_WriteUint16(SY(5));   /* top line */                         \
+    VTPool_WriteUint16(objId2);                                         \
+    VTPool_WriteUint16(0);                                              \
+    VTPool_WriteUint16(SY(13));  /* bottom line */
 
     // Choose font sizes based on display width
     // Size 2=8x12, 3=12x16, 5=16x24, 6=24x32
@@ -376,6 +401,10 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     VTPool_AddFontAttributes(VT_OBJ_FONT_LARGE, largeFontSize, VT_COLOUR_YELLOW);
     VTPool_AddFontAttributes(VT_OBJ_FONT_SMALL, smallFontSize, VT_COLOUR_WHITE);
     VTPool_AddFontAttributes(VT_OBJ_FONT_YELLOW, smallFontSize, VT_COLOUR_YELLOW);
+
+    uint8_t tinyFontSize = (smallFontSize > 2) ? (smallFontSize - 1) : smallFontSize;
+    VTPool_AddFontAttributes(VT_OBJ_FONT_TINY, tinyFontSize, VT_COLOUR_WHITE);
+
     VTPool_AddLineAttributes(VT_OBJ_LINE_THIN, VT_COLOUR_WHITE, 1);
     VTPool_AddFillAttributes(VT_OBJ_FILL_GREEN, 1, VT_COLOUR_GREEN);
     VTPool_AddFillAttributes(VT_OBJ_FILL_RED, 1, VT_COLOUR_RED);
@@ -488,49 +517,72 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
                        VT_OBJ_VAR_TANK_LEVEL, 0x21);
 
     // === Soft Key objects (6 action keys with label children) ===
+
+    // MENU (1 child)
     VTPool_AddKey(VT_OBJ_SK_MENU, VT_COLOUR_BLUE, VT_KEYCODE_MENU, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_MENU);
     VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(6));
 
-    VTPool_AddKey(VT_OBJ_SK_RQTY, VT_COLOUR_BLUE, VT_KEYCODE_RQTY, 1);
-    VTPool_WriteUint16(VT_OBJ_STR_SK_RQTY);
+    // RQTY (2 children)
+    VTPool_AddKey(VT_OBJ_SK_RQTY, VT_COLOUR_BLUE, VT_KEYCODE_RQTY, 2);
+    VTPool_WriteUint16(VT_OBJ_STR_SK_RQTY_L1);
     VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(5));
+    VTPool_WriteUint16(VT_OBJ_STR_SK_RQTY_L2);
     VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(13));
 
+    // RAREA (1 child)
     VTPool_AddKey(VT_OBJ_SK_RAREA, VT_COLOUR_BLUE, VT_KEYCODE_RAREA, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_RAREA);
     VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(6));
 
+    // RX (1 child)
     VTPool_AddKey(VT_OBJ_SK_RX, VT_COLOUR_BLUE, VT_KEYCODE_RX, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_RX);
     VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(6));
 
+    // AUTO (1 child)
     VTPool_AddKey(VT_OBJ_SK_AUTO, VT_COLOUR_BLUE, VT_KEYCODE_AUTO, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_AUTO);
     VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(6));
 
+    // MASTER (1 child)
     VTPool_AddKey(VT_OBJ_SK_MASTER, VT_COLOUR_BLUE, VT_KEYCODE_MASTER, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_MASTER);
     VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(SY(6));
 
-    // Soft key label strings (centered within key area)
+
+    // === Soft Key Label Strings (must come AFTER all Key objects) ===
+
+    // Single-line labels
     VTPool_AddOutputString(VT_OBJ_STR_SK_MENU, "Menu",
-                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
-    VTPool_AddOutputString(VT_OBJ_STR_SK_RQTY, "RQty",
-                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+        SX(24), SY(7), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+
     VTPool_AddOutputString(VT_OBJ_STR_SK_RAREA, "RAra",
-                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+        SX(24), SY(7), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+
     VTPool_AddOutputString(VT_OBJ_STR_SK_RX, "Rx",
-                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+        SX(24), SY(7), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+
     VTPool_AddOutputString(VT_OBJ_STR_SK_AUTO, "Auto",
-                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+        SX(24), SY(7), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+
     VTPool_AddOutputString(VT_OBJ_STR_SK_MASTER, "Mstr",
-                           SX(24), SY(10), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+        SX(24), SY(7), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK, 1);
+
+    // Two-line Rst Qty
+    VTPool_AddOutputString(VT_OBJ_STR_SK_RQTY_L1, "Rst",
+        SX(24), SY(7), VT_OBJ_FONT_TINY, VT_COLOUR_BLACK, 1);
+
+    VTPool_AddOutputString(VT_OBJ_STR_SK_RQTY_L2, "Qty",
+        SX(24), SY(7), VT_OBJ_FONT_TINY, VT_COLOUR_BLACK, 1);
+
 
     vtPoolSize = vtPoolWritePos;
 
@@ -553,3 +605,6 @@ const uint8_t* VTPool_GetBuffer() {
 uint16_t VTPool_GetSize() {
     return vtPoolSize;
 }
+
+
+
