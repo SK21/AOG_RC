@@ -70,8 +70,6 @@ struct VTClientData {
     // Last sent values (to avoid redundant updates)
     uint32_t lastRate1Actual = 0xFFFFFFFF;
     uint32_t lastRate1Target = 0xFFFFFFFF;
-    uint32_t lastRate2Actual = 0xFFFFFFFF;
-    uint32_t lastRate2Target = 0xFFFFFFFF;
     uint32_t lastQtyApplied = 0xFFFFFFFF;
     uint32_t lastAreaRemaining = 0xFFFFFFFF;
     uint32_t lastTankLevel = 0xFFFFFFFF;
@@ -79,6 +77,9 @@ struct VTClientData {
     uint8_t lastSectionStates = 0xFF;   // Combined button states (8 buttons)
     uint8_t lastAOGState = 0xFF;        // 0xFF = unknown, 0 = disconnected, 1 = connected
     uint8_t lastProductHighlight = 0xFF; // Which product button was last highlighted
+    uint8_t lastAutoKeyState = 0xFF;    // Auto soft key visual state
+    uint8_t lastMasterKeyState = 0xFF;  // Master soft key visual state
+    uint8_t lastRxKeyState = 0xFF;      // Rx soft key visual state
 };
 
 VTClientData vtClient;
@@ -118,8 +119,6 @@ void VTClient_Begin() {
     vtClient.fixedSpeed = 0.0;
     vtClient.lastRate1Actual = 0xFFFFFFFF;
     vtClient.lastRate1Target = 0xFFFFFFFF;
-    vtClient.lastRate2Actual = 0xFFFFFFFF;
-    vtClient.lastRate2Target = 0xFFFFFFFF;
     vtClient.lastQtyApplied = 0xFFFFFFFF;
     vtClient.lastAreaRemaining = 0xFFFFFFFF;
     vtClient.lastTankLevel = 0xFFFFFFFF;
@@ -127,6 +126,9 @@ void VTClient_Begin() {
     vtClient.lastSectionStates = 0xFF;
     vtClient.lastAOGState = 0xFF;
     vtClient.lastProductHighlight = 0xFF;
+    vtClient.lastAutoKeyState = 0xFF;
+    vtClient.lastMasterKeyState = 0xFF;
+    vtClient.lastRxKeyState = 0xFF;
 
     // Initialize default section button mapping
     VTClient_InitSectionMap();
@@ -389,8 +391,6 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
                 // Force initial display update
                 vtClient.lastRate1Actual = 0xFFFFFFFF;
                 vtClient.lastRate1Target = 0xFFFFFFFF;
-                vtClient.lastRate2Actual = 0xFFFFFFFF;
-                vtClient.lastRate2Target = 0xFFFFFFFF;
                 vtClient.lastQtyApplied = 0xFFFFFFFF;
                 vtClient.lastAreaRemaining = 0xFFFFFFFF;
                 vtClient.lastTankLevel = 0xFFFFFFFF;
@@ -398,6 +398,9 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
                 vtClient.lastSectionStates = 0xFF;
                 vtClient.lastAOGState = 0xFF;
                 vtClient.lastProductHighlight = 0xFF;
+                vtClient.lastAutoKeyState = 0xFF;
+                vtClient.lastMasterKeyState = 0xFF;
+                vtClient.lastRxKeyState = 0xFF;
                 VTClient_SetState(VT_CONNECTED);
             } else {
                 Serial.print("VT: Object pool rejected, error=");
@@ -427,7 +430,7 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
 void VTClient_HandleButtonActivation(const CAN_message_t& msg) {
     // msg.buf[0] = 0x01 (Button Activation)
     // msg.buf[1-2] = button object ID (LE)
-    // msg.buf[3] = key code (1-8 for section buttons)
+    // msg.buf[3] = key code (1-8 for section buttons, 20-25 for product buttons)
     // msg.buf[4] = activation type: 0=released, 1=pressed, 2=held, 3=aborted
     uint8_t keyCode = msg.buf[3];
     uint8_t activation = msg.buf[4];
@@ -435,6 +438,7 @@ void VTClient_HandleButtonActivation(const CAN_message_t& msg) {
     // Only handle press events (activation == 1)
     if (activation != 1) return;
 
+    // Section buttons (keyCodes 1-8)
     if (keyCode >= 1 && keyCode <= 8) {
         uint8_t btnIdx = keyCode - 1;
 
@@ -471,6 +475,22 @@ void VTClient_HandleButtonActivation(const CAN_message_t& msg) {
         Serial.print(anyOn ? " OFF" : " ON");
         Serial.print(" mask=0x");
         Serial.println(mask, HEX);
+    }
+
+    // Product buttons (keyCodes 20-25)
+    if (keyCode >= VT_KEYCODE_PROD_BASE && keyCode < VT_KEYCODE_PROD_BASE + 6) {
+        uint8_t prodIdx = keyCode - VT_KEYCODE_PROD_BASE;
+        if (prodIdx < MDL.SensorCount || prodIdx == 5) {  // 5=Fan always valid
+            vtClient.currentProduct = prodIdx;
+            // Force display refresh for new product
+            vtClient.lastRate1Actual = 0xFFFFFFFF;
+            vtClient.lastRate1Target = 0xFFFFFFFF;
+            vtClient.lastQtyApplied = 0xFFFFFFFF;
+            vtClient.lastAreaRemaining = 0xFFFFFFFF;
+            vtClient.lastProductHighlight = 0xFF;
+            Serial.print("VT: Product -> ");
+            Serial.println(prodIdx);
+        }
     }
 }
 
@@ -510,19 +530,28 @@ void VTClient_HandleSoftKeyActivation(const CAN_message_t& msg) {
             Serial.println(MasterOn ? "ON" : "OFF");
             break;
 
-        default:
-            // Product soft keys (keyCodes 20-25)
-            if (keyCode >= VT_KEYCODE_PROD_BASE && keyCode < VT_KEYCODE_PROD_BASE + 6) {
-                uint8_t prodIdx = keyCode - VT_KEYCODE_PROD_BASE;
-                if (prodIdx < MDL.SensorCount) {
-                    vtClient.currentProduct = prodIdx;
-                    // Force display refresh
-                    vtClient.lastRate1Actual = 0xFFFFFFFF;
-                    vtClient.lastRate1Target = 0xFFFFFFFF;
-                    vtClient.lastQtyApplied = 0xFFFFFFFF;
-                    vtClient.lastProductHighlight = 0xFF;
-                    Serial.print("VT: Product -> ");
-                    Serial.println(prodIdx);
+        case VT_KEYCODE_MENU:
+            Serial.println("VT: Menu pressed (not yet implemented)");
+            break;
+
+        case VT_KEYCODE_RQTY:
+            Serial.println("VT: Reset Qty pressed (phase 2: alarm mask)");
+            break;
+
+        case VT_KEYCODE_RAREA:
+            // Reset area remaining for current product
+            // TODO: zero area counter when area tracking is implemented
+            Serial.println("VT: Area reset");
+            break;
+
+        case VT_KEYCODE_RX:
+            // Toggle variable rate for current product
+            {
+                uint8_t idx = vtClient.currentProduct;
+                if (idx < MDL.SensorCount) {
+                    Sensor[idx].AutoOn = !Sensor[idx].AutoOn;
+                    Serial.print("VT: Rx (VR) ");
+                    Serial.println(Sensor[idx].AutoOn ? "ON" : "OFF");
                 }
             }
             break;
@@ -563,8 +592,16 @@ void VTClient_SendToVT(const uint8_t* data, uint8_t len) {
         msg.buf[i] = (i < len) ? data[i] : 0xFF;
     }
 
-    ISOBUS.write(msg);
+    bool ok = ISOBUS.write(msg);
     canStats.txCount++;
+
+    // Debug: log sent CAN frame
+    Serial.print("TX CAN ID=0x");
+    Serial.print(msg.id, HEX);
+    Serial.print(" func=0x");
+    Serial.print(data[0], HEX);
+    Serial.print(ok ? " OK" : " FAIL");
+    Serial.println();
 }
 
 void VTClient_SendGetMemory() {
@@ -627,6 +664,14 @@ void VTClient_SendWSMaintenance() {
     for (uint8_t i = 3; i < 8; i++) data[i] = 0xFF;
 
     VTClient_SendToVT(data, 8);
+
+    // Debug: log WS Maintenance with init bit state
+    Serial.print("VT: WSM sent init=");
+    Serial.print(data[1] & 0x01);
+    Serial.print(" ver=");
+    Serial.print(data[2]);
+    Serial.print(" to=0x");
+    Serial.println(vtClient.vtServerAddress, HEX);
 }
 
 //=============================================================================
@@ -692,7 +737,7 @@ void VTClient_SendChangeStringValue(uint16_t objId, const char* str, uint8_t len
 
 void VTClient_UpdateDisplay() {
     // --- Rate values ---
-    // For SensorCount=1 or product switching, use currentProduct index
+    // Use currentProduct index to select which sensor's data to show
     uint8_t prodIdx = vtClient.currentProduct;
     if (prodIdx >= MDL.SensorCount) prodIdx = 0;
 
@@ -710,22 +755,7 @@ void VTClient_UpdateDisplay() {
         vtClient.lastRate1Target = rate1Target;
     }
 
-    // Rate 2 (if 2-sensor layout and showing both)
-    if (MDL.SensorCount > 1) {
-        uint32_t rate2Actual = (uint32_t)(Sensor[1].UPM * 10.0);
-        if (rate2Actual != vtClient.lastRate2Actual) {
-            VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE2_ACTUAL, rate2Actual);
-            vtClient.lastRate2Actual = rate2Actual;
-        }
-
-        uint32_t rate2Target = (uint32_t)(Sensor[1].TargetUPM * 10.0);
-        if (rate2Target != vtClient.lastRate2Target) {
-            VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE2_TARGET, rate2Target);
-            vtClient.lastRate2Target = rate2Target;
-        }
-    }
-
-    // Quantity applied (TotalPulses / MeterCal, displayed as liters * 10)
+    // Quantity applied (TotalPulses / MeterCal, displayed as value * 10)
     uint32_t qtyApplied = 0;
     if (Sensor[prodIdx].MeterCal > 0.0) {
         qtyApplied = (uint32_t)((float)Sensor[prodIdx].TotalPulses / Sensor[prodIdx].MeterCal * 10.0);
@@ -736,7 +766,7 @@ void VTClient_UpdateDisplay() {
     }
 
     // Area remaining (placeholder - calculation TBD)
-    uint32_t areaRemaining = 0;  // TODO: compute area remaining in ha * 10
+    uint32_t areaRemaining = 0;  // TODO: compute area remaining * 10
     if (areaRemaining != vtClient.lastAreaRemaining) {
         VTClient_SendChangeNumericValue(VT_OBJ_VAR_AREA_REM, areaRemaining);
         vtClient.lastAreaRemaining = areaRemaining;
@@ -792,12 +822,12 @@ void VTClient_UpdateDisplay() {
         vtClient.lastSectionStates = buttonStates;
     }
 
-    // --- Product soft key highlighting (green = active, black = inactive) ---
+    // --- Product button highlighting (green = active, red = inactive) ---
     if (vtClient.currentProduct != vtClient.lastProductHighlight) {
         for (uint8_t i = 0; i < 6; i++) {
-            uint8_t colour = (i == vtClient.currentProduct) ? VT_COLOUR_GREEN : VT_COLOUR_BLACK;
-            // Key attrID=1 for background colour
-            VTClient_SendChangeAttribute(VT_OBJ_SK_PROD_BASE + i, 1, colour);
+            uint8_t colour = (i == vtClient.currentProduct) ? VT_COLOUR_GREEN : VT_COLOUR_RED;
+            // Button attrID=3 for background colour
+            VTClient_SendChangeAttribute(VT_OBJ_BTN_PROD_BASE + i, 3, colour);
         }
         // Update product description string in header
         const char* prodNames[] = {"P1", "P2", "P3", "P4", "P5", "Fn"};
@@ -806,6 +836,33 @@ void VTClient_UpdateDisplay() {
         VTClient_SendChangeStringValue(VT_OBJ_STR_PRODUCT,
             prodNames[idx], strlen(prodNames[idx]));
         vtClient.lastProductHighlight = vtClient.currentProduct;
+    }
+
+    // --- Soft key visual feedback ---
+
+    // Auto key colour (green = active, black = inactive)
+    uint8_t autoState = Sensor[0].AutoOn ? 1 : 0;
+    if (autoState != vtClient.lastAutoKeyState) {
+        VTClient_SendChangeAttribute(VT_OBJ_SK_AUTO, 1,
+            autoState ? VT_COLOUR_GREEN : VT_COLOUR_BLACK);
+        vtClient.lastAutoKeyState = autoState;
+    }
+
+    // Master key colour
+    uint8_t masterState = MasterOn ? 1 : 0;
+    if (masterState != vtClient.lastMasterKeyState) {
+        VTClient_SendChangeAttribute(VT_OBJ_SK_MASTER, 1,
+            masterState ? VT_COLOUR_GREEN : VT_COLOUR_BLACK);
+        vtClient.lastMasterKeyState = masterState;
+    }
+
+    // Rx key colour (reflects current product's VR state)
+    bool rxOn = (prodIdx < MDL.SensorCount) ? Sensor[prodIdx].AutoOn : false;
+    uint8_t rxState = rxOn ? 1 : 0;
+    if (rxState != vtClient.lastRxKeyState) {
+        VTClient_SendChangeAttribute(VT_OBJ_SK_RX, 1,
+            rxOn ? VT_COLOUR_GREEN : VT_COLOUR_BLACK);
+        vtClient.lastRxKeyState = rxState;
     }
 }
 

@@ -307,9 +307,17 @@ void CANBus_Receive() {
                 // Check for VT to ECU (PGN 0xE600, PDU1, pf=0xE6)
                 if (pf == 0xE6) {
                     if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                        if (ps == ISOBUSid.address) {
+                        // Debug: show func code of all 0xE600 messages
+                        Serial.print("  VT msg func=0x");
+                        Serial.print(msg.buf[0], HEX);
+                        Serial.print(" to=0x");
+                        Serial.println(ps, HEX);
+
+                        if (ps == ISOBUSid.address || ps == 0xFF) {
+                            // Route to VT handler (AgIsoStack++ VT Server sends responses to 0xFF)
                             VTClient_HandleVTtoECU(msg);
-                        } else if (ps == 0xFF && msg.buf[0] == VT_FUNC_VT_STATUS) {
+                        }
+                        if (ps == 0xFF && msg.buf[0] == VT_FUNC_VT_STATUS) {
                             // VT Status broadcast (AgIsoStack++ sends on 0xE600, not 0xFE6E)
                             VTClient_HandleVTStatus(msg);
                         }
