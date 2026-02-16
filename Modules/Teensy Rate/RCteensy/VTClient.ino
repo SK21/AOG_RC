@@ -78,6 +78,7 @@ struct VTClientData {
     uint32_t lastSpeed = 0xFFFFFFFF;
     uint8_t lastSectionStates = 0xFF;   // Combined button states (8 buttons)
     uint8_t lastAOGState = 0xFF;        // 0xFF = unknown, 0 = disconnected, 1 = connected
+    uint8_t lastProductHighlight = 0xFF; // Which product button was last highlighted
 };
 
 VTClientData vtClient;
@@ -101,6 +102,7 @@ void VTClient_SetState(VTClientState newState);
 void VTClient_HandleButtonActivation(const CAN_message_t& msg);
 void VTClient_HandleSoftKeyActivation(const CAN_message_t& msg);
 void VTClient_HandleChangeNumericValue(const CAN_message_t& msg);
+void VTClient_SendChangeStringValue(uint16_t objId, const char* str, uint8_t len);
 
 //=============================================================================
 // Initialization
@@ -124,6 +126,7 @@ void VTClient_Begin() {
     vtClient.lastSpeed = 0xFFFFFFFF;
     vtClient.lastSectionStates = 0xFF;
     vtClient.lastAOGState = 0xFF;
+    vtClient.lastProductHighlight = 0xFF;
 
     // Initialize default section button mapping
     VTClient_InitSectionMap();
@@ -394,6 +397,7 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
                 vtClient.lastSpeed = 0xFFFFFFFF;
                 vtClient.lastSectionStates = 0xFF;
                 vtClient.lastAOGState = 0xFF;
+                vtClient.lastProductHighlight = 0xFF;
                 VTClient_SetState(VT_CONNECTED);
             } else {
                 Serial.print("VT: Object pool rejected, error=");
@@ -506,33 +510,21 @@ void VTClient_HandleSoftKeyActivation(const CAN_message_t& msg) {
             Serial.println(MasterOn ? "ON" : "OFF");
             break;
 
-        case VT_KEYCODE_PROD_NEXT:
-            // Next product
-            vtClient.currentProduct++;
-            if (vtClient.currentProduct >= MDL.SensorCount) {
-                vtClient.currentProduct = 0;
+        default:
+            // Product soft keys (keyCodes 20-25)
+            if (keyCode >= VT_KEYCODE_PROD_BASE && keyCode < VT_KEYCODE_PROD_BASE + 6) {
+                uint8_t prodIdx = keyCode - VT_KEYCODE_PROD_BASE;
+                if (prodIdx < MDL.SensorCount) {
+                    vtClient.currentProduct = prodIdx;
+                    // Force display refresh
+                    vtClient.lastRate1Actual = 0xFFFFFFFF;
+                    vtClient.lastRate1Target = 0xFFFFFFFF;
+                    vtClient.lastQtyApplied = 0xFFFFFFFF;
+                    vtClient.lastProductHighlight = 0xFF;
+                    Serial.print("VT: Product -> ");
+                    Serial.println(prodIdx);
+                }
             }
-            // Force display refresh
-            vtClient.lastRate1Actual = 0xFFFFFFFF;
-            vtClient.lastRate1Target = 0xFFFFFFFF;
-            vtClient.lastQtyApplied = 0xFFFFFFFF;
-            Serial.print("VT: Product -> ");
-            Serial.println(vtClient.currentProduct);
-            break;
-
-        case VT_KEYCODE_PROD_PREV:
-            // Previous product
-            if (vtClient.currentProduct == 0) {
-                vtClient.currentProduct = MDL.SensorCount - 1;
-            } else {
-                vtClient.currentProduct--;
-            }
-            // Force display refresh
-            vtClient.lastRate1Actual = 0xFFFFFFFF;
-            vtClient.lastRate1Target = 0xFFFFFFFF;
-            vtClient.lastQtyApplied = 0xFFFFFFFF;
-            Serial.print("VT: Product -> ");
-            Serial.println(vtClient.currentProduct);
             break;
     }
 }
@@ -684,6 +676,20 @@ void VTClient_SendChangeAttribute(uint16_t objId, uint8_t attrId, uint32_t value
     VTClient_SendToVT(data, 8);
 }
 
+void VTClient_SendChangeStringValue(uint16_t objId, const char* str, uint8_t len) {
+    // Change String Value (func 0xB3) - for strings up to 3 chars (single CAN frame)
+    uint8_t data[8];
+    data[0] = VT_FUNC_CHANGE_STRING_VALUE;
+    data[1] = objId & 0xFF;
+    data[2] = (objId >> 8) & 0xFF;
+    data[3] = len & 0xFF;
+    data[4] = (len >> 8) & 0xFF;
+    for (uint8_t i = 0; i < 3; i++) {
+        data[5 + i] = (i < len) ? str[i] : 0xFF;
+    }
+    VTClient_SendToVT(data, 8);
+}
+
 void VTClient_UpdateDisplay() {
     // --- Rate values ---
     // For SensorCount=1 or product switching, use currentProduct index
@@ -784,6 +790,22 @@ void VTClient_UpdateDisplay() {
             }
         }
         vtClient.lastSectionStates = buttonStates;
+    }
+
+    // --- Product soft key highlighting (green = active, black = inactive) ---
+    if (vtClient.currentProduct != vtClient.lastProductHighlight) {
+        for (uint8_t i = 0; i < 6; i++) {
+            uint8_t colour = (i == vtClient.currentProduct) ? VT_COLOUR_GREEN : VT_COLOUR_BLACK;
+            // Key attrID=1 for background colour
+            VTClient_SendChangeAttribute(VT_OBJ_SK_PROD_BASE + i, 1, colour);
+        }
+        // Update product description string in header
+        const char* prodNames[] = {"P1", "P2", "P3", "P4", "P5", "Fn"};
+        uint8_t idx = vtClient.currentProduct;
+        if (idx > 5) idx = 0;
+        VTClient_SendChangeStringValue(VT_OBJ_STR_PRODUCT,
+            prodNames[idx], strlen(prodNames[idx]));
+        vtClient.lastProductHighlight = vtClient.currentProduct;
     }
 }
 

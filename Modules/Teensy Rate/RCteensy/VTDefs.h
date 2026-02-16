@@ -18,6 +18,7 @@
 #define VT_FUNC_BUTTON_ACTIVATION         0x01
 #define VT_FUNC_CHANGE_NUMERIC_VALUE      0xA8
 #define VT_FUNC_CHANGE_ATTRIBUTE          0xAF
+#define VT_FUNC_CHANGE_STRING_VALUE       0xB3
 #define VT_FUNC_CHANGE_FILL_ATTRIBUTES    0xAB
 #define VT_FUNC_OBJECT_POOL_TRANSFER      0x11
 #define VT_FUNC_END_OF_OBJECT_POOL        0x12
@@ -79,80 +80,83 @@ enum VTClientState {
 #define VT_OBJ_DATA_MASK          0x1000
 #define VT_OBJ_SOFT_KEY_MASK      0x2000
 
-// OutputString objects - labels
+// OutputString objects - labels and units
 #define VT_OBJ_STR_RATE1_LABEL    0x4000   // "Cur Rate"
-#define VT_OBJ_STR_RATE1_UNIT     0x4004   // "L/ha"
-#define VT_OBJ_STR_TARGET1_LABEL  0x4005   // "VR Target"
-#define VT_OBJ_STR_TARGET1_UNIT   0x4006   // "L/ha"
+#define VT_OBJ_STR_RATE1_UNIT     0x4004   // "G/ac"
+#define VT_OBJ_STR_TARGET1_LABEL  0x4005   // "Tgt Rate"
+#define VT_OBJ_STR_TARGET1_UNIT   0x4006   // "G/ac"
 #define VT_OBJ_STR_QTY_LABEL      0x4007   // "Applied"
-#define VT_OBJ_STR_QTY_UNIT       0x4008   // "L"
+#define VT_OBJ_STR_QTY_UNIT       0x4008   // "Gallons"
 #define VT_OBJ_STR_AREA_LABEL     0x400A   // "Area Rem"
-#define VT_OBJ_STR_AREA_UNIT      0x400B   // "ha"
-#define VT_OBJ_STR_SPEED_LABEL    0x400D   // "Speed"
+#define VT_OBJ_STR_AREA_UNIT      0x400B   // "Acres"
 #define VT_OBJ_STR_SPEED_UNIT     0x400E   // "km/h"
-#define VT_OBJ_STR_RATE2_LABEL    0x4010   // "Rate 2"
-#define VT_OBJ_STR_RATE2_UNIT     0x4014   // "L/ha"
-#define VT_OBJ_STR_TARGET2_LABEL  0x4015   // "Target 2"
-#define VT_OBJ_STR_TARGET2_UNIT   0x4016   // "L/ha"
 
 // OutputNumber objects
 #define VT_OBJ_NUM_RATE1_ACTUAL   0x4001
 #define VT_OBJ_NUM_RATE1_TARGET   0x4003
 #define VT_OBJ_NUM_QTY_APPLIED    0x4009
 #define VT_OBJ_NUM_AREA_REM       0x400C
-#define VT_OBJ_NUM_RATE2_ACTUAL   0x4011
-#define VT_OBJ_NUM_RATE2_TARGET   0x4013
 
-// InputNumber object
-#define VT_OBJ_INPUT_SPEED        0x400F   // InputNumber for speed entry
+// Speed display (OutputNumber on main page)
+#define VT_OBJ_NUM_SPEED          0x4017   // Speed OutputNumber (read-only display)
 
-// Section buttons (8 interactive buttons, replacing 16 indicator rectangles)
+// Section buttons (8 interactive buttons)
 #define VT_OBJ_BTN_SECTION_BASE   0x4100   // 0x4100-0x4107
+#define VT_OBJ_STR_BTN_SEC_BASE   0x4110   // 0x4110-0x4117 (section button labels "1"-"8")
 
 // AOG connection indicator
 #define VT_OBJ_RECT_AOG           0x4221   // AOG status rectangle
 #define VT_OBJ_STR_AOG            0x4220   // "AOG" text
-#define VT_OBJ_STR_PRODUCT        0x4222   // Product name string
+#define VT_OBJ_STR_PRODUCT        0x4222   // Product description (dynamic, e.g. "P1")
 
 // Tank bar graph
 #define VT_OBJ_BAR_TANK           0x4230   // Vertical tank level bar
 
+// Product buttons (6 buttons on data mask)
+#define VT_OBJ_BTN_PROD_BASE      0x4240   // 0x4240-0x4245
+#define VT_OBJ_STR_BTN_PROD_BASE  0x4250   // 0x4250-0x4255 (product button labels)
+
 // NumberVariable objects
 #define VT_OBJ_VAR_RATE1_ACTUAL   0x5000
 #define VT_OBJ_VAR_RATE1_TARGET   0x5001
-#define VT_OBJ_VAR_RATE2_ACTUAL   0x5002
-#define VT_OBJ_VAR_RATE2_TARGET   0x5003
 #define VT_OBJ_VAR_QTY_APPLIED    0x5004
 #define VT_OBJ_VAR_AREA_REM       0x5005
 #define VT_OBJ_VAR_TANK_LEVEL     0x5006
 #define VT_OBJ_VAR_SPEED          0x5007
 
 // Attribute objects
-#define VT_OBJ_FONT_LARGE         0x6000   // 12x16 white - values
-#define VT_OBJ_FONT_SMALL         0x6001   // 8x12 white - units, status text
-#define VT_OBJ_FONT_YELLOW        0x6002   // 8x12 yellow - labels
+#define VT_OBJ_FONT_LARGE         0x6000   // large yellow - data values
+#define VT_OBJ_FONT_SMALL         0x6001   // small white - status text, button labels
+#define VT_OBJ_FONT_YELLOW        0x6002   // small yellow - data labels, units
 #define VT_OBJ_LINE_THIN          0x6010
 #define VT_OBJ_FILL_GREEN         0x6020
 #define VT_OBJ_FILL_RED           0x6021
 #define VT_OBJ_FILL_GREY          0x6022
 
-// Soft Key objects
+// Soft Key objects (action keys)
 #define VT_OBJ_SK_AUTO            0x7000
 #define VT_OBJ_SK_MASTER          0x7001
-#define VT_OBJ_SK_PROD_NEXT       0x7002
-#define VT_OBJ_SK_PROD_PREV       0x7003
+#define VT_OBJ_SK_MENU            0x7002
+#define VT_OBJ_SK_RQTY            0x7003
+#define VT_OBJ_SK_RAREA           0x7004
+#define VT_OBJ_SK_RX              0x7005
 
 // Soft Key label strings
 #define VT_OBJ_STR_SK_AUTO        0x7010
 #define VT_OBJ_STR_SK_MASTER      0x7011
-#define VT_OBJ_STR_SK_PROD_NEXT   0x7012
-#define VT_OBJ_STR_SK_PROD_PREV   0x7013
+#define VT_OBJ_STR_SK_MENU        0x7012
+#define VT_OBJ_STR_SK_RQTY        0x7013
+#define VT_OBJ_STR_SK_RAREA       0x7014
+#define VT_OBJ_STR_SK_RX          0x7015
 
-// Soft Key key codes (unique per interaction type)
+// Key codes
 #define VT_KEYCODE_AUTO           10
 #define VT_KEYCODE_MASTER         11
-#define VT_KEYCODE_PROD_NEXT      12
-#define VT_KEYCODE_PROD_PREV      13
+#define VT_KEYCODE_PROD_BASE      20       // Key codes 20-25 for product buttons
+#define VT_KEYCODE_MENU           30
+#define VT_KEYCODE_RQTY           31
+#define VT_KEYCODE_RAREA          32
+#define VT_KEYCODE_RX             33
 
 //=============================================================================
 // VT Colour Constants (ISO 11783-6 standard colour table)

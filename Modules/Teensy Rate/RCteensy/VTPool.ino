@@ -147,11 +147,12 @@ void VTPool_AddFillAttributes(uint16_t objId, uint8_t fillType, uint8_t colour) 
     VTPool_WriteByte(0);         // No macros
 }
 
-// Button (type 6) - 13 bytes + children
+// Button (type 6) - 13 bytes + 6 bytes per child
 // Options: bit0=latchable, bit3=transparent bg, bit5=no border
+// Caller writes child refs after: ObjID(2LE)+X(2LE)+Y(2LE) each
 void VTPool_AddButton(uint16_t objId, uint16_t width, uint16_t height,
                       uint8_t bgColour, uint8_t borderColour, uint8_t keyCode,
-                      uint8_t options) {
+                      uint8_t options, uint8_t numChildren) {
     VTPool_WriteUint16(objId);
     VTPool_WriteByte(VT_TYPE_BUTTON);
     VTPool_WriteUint16(width);
@@ -160,7 +161,7 @@ void VTPool_AddButton(uint16_t objId, uint16_t width, uint16_t height,
     VTPool_WriteByte(borderColour);
     VTPool_WriteByte(keyCode);
     VTPool_WriteByte(options);
-    VTPool_WriteByte(0);  // No child objects
+    VTPool_WriteByte(numChildren);
     VTPool_WriteByte(0);  // No macros
 }
 
@@ -224,6 +225,8 @@ void VTPool_AddInputNumber(uint16_t objId, uint16_t width, uint16_t height,
 
 //=============================================================================
 // Main Build Function - scales to VT display dimensions
+// Unified layout for all SensorCount values. Product buttons switch
+// which product's data is displayed.
 //=============================================================================
 
 void VTPool_Build(uint16_t dispW, uint16_t dispH) {
@@ -255,214 +258,124 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     // === Structural objects ===
     VTPool_AddWorkingSet();
 
-    // --- Data Mask with child positions ---
+    // --- Data Mask (32 children) ---
     VTPool_WriteUint16(VT_OBJ_DATA_MASK);
     VTPool_WriteByte(VT_TYPE_DATA_MASK);
     VTPool_WriteByte(VT_COLOUR_BLACK);
     VTPool_WriteUint16(VT_OBJ_SOFT_KEY_MASK);
+    VTPool_WriteByte(32);  // Total children
+    VTPool_WriteByte(0);   // No macros
 
-    // Count children:
-    // Header: AOG rect + AOG text + product text = 3
-    // Section buttons: 8
-    // Tank bar: 1
-    // SensorCount=1: rate(label+unit+num) + target(label+unit+num) + applied(label+unit+num) + area(label+unit+num) + speed(label+unit+input) = 15
-    // SensorCount=2: rate1(label+actual+target+unit) + rate2(label+actual+target+unit) + applied(label+num+unit) + area(label+num+unit) + speed(label+unit+input) = 17
-    uint8_t numChildren;
-    if (MDL.SensorCount > 1) {
-        numChildren = 3 + 8 + 1 + 17;  // 29
-    } else {
-        numChildren = 3 + 8 + 1 + 15;  // 27
+    // --- Product buttons (6) at y=7 ---
+    for (uint8_t i = 0; i < 6; i++) {
+        VTPool_WriteUint16(VT_OBJ_BTN_PROD_BASE + i);
+        VTPool_WriteUint16(SX(1 + i * 33));
+        VTPool_WriteUint16(SY(7));
     }
-    VTPool_WriteByte(numChildren);
-    VTPool_WriteByte(0);  // No macros
 
-    // --- Header row (y=2) ---
-    // AOG indicator rectangle
+    // --- Header (5 children) at y=33 ---
     VTPool_WriteUint16(VT_OBJ_RECT_AOG);
     VTPool_WriteUint16(SX(2));
-    VTPool_WriteUint16(SY(2));
+    VTPool_WriteUint16(SY(33));
 
-    // AOG text overlay
     VTPool_WriteUint16(VT_OBJ_STR_AOG);
-    VTPool_WriteUint16(SX(4));
-    VTPool_WriteUint16(SY(2));
+    VTPool_WriteUint16(SX(3));
+    VTPool_WriteUint16(SY(34));
 
-    // Product name
+    VTPool_WriteUint16(VT_OBJ_NUM_SPEED);
+    VTPool_WriteUint16(SX(18));
+    VTPool_WriteUint16(SY(33));
+
+    VTPool_WriteUint16(VT_OBJ_STR_SPEED_UNIT);
+    VTPool_WriteUint16(SX(60));
+    VTPool_WriteUint16(SY(35));
+
     VTPool_WriteUint16(VT_OBJ_STR_PRODUCT);
-    VTPool_WriteUint16(SX(40));
-    VTPool_WriteUint16(SY(2));
+    VTPool_WriteUint16(SX(90));
+    VTPool_WriteUint16(SY(33));
 
-    // --- 8 Section buttons (y=152) ---
+    // --- Current Rate row (y=67) ---
+    VTPool_WriteUint16(VT_OBJ_STR_RATE1_LABEL);
+    VTPool_WriteUint16(SX(2));
+    VTPool_WriteUint16(SY(69));
+
+    VTPool_WriteUint16(VT_OBJ_NUM_RATE1_ACTUAL);
+    VTPool_WriteUint16(SX(56));
+    VTPool_WriteUint16(SY(67));
+
+    VTPool_WriteUint16(VT_OBJ_STR_RATE1_UNIT);
+    VTPool_WriteUint16(SX(130));
+    VTPool_WriteUint16(SY(69));
+
+    // --- Target Rate row (y=93) ---
+    VTPool_WriteUint16(VT_OBJ_STR_TARGET1_LABEL);
+    VTPool_WriteUint16(SX(2));
+    VTPool_WriteUint16(SY(95));
+
+    VTPool_WriteUint16(VT_OBJ_NUM_RATE1_TARGET);
+    VTPool_WriteUint16(SX(56));
+    VTPool_WriteUint16(SY(93));
+
+    VTPool_WriteUint16(VT_OBJ_STR_TARGET1_UNIT);
+    VTPool_WriteUint16(SX(130));
+    VTPool_WriteUint16(SY(95));
+
+    // --- Qty Applied row (y=120) ---
+    VTPool_WriteUint16(VT_OBJ_STR_QTY_LABEL);
+    VTPool_WriteUint16(SX(2));
+    VTPool_WriteUint16(SY(122));
+
+    VTPool_WriteUint16(VT_OBJ_NUM_QTY_APPLIED);
+    VTPool_WriteUint16(SX(56));
+    VTPool_WriteUint16(SY(120));
+
+    VTPool_WriteUint16(VT_OBJ_STR_QTY_UNIT);
+    VTPool_WriteUint16(SX(130));
+    VTPool_WriteUint16(SY(122));
+
+    // --- Area Remain row (y=147) ---
+    VTPool_WriteUint16(VT_OBJ_STR_AREA_LABEL);
+    VTPool_WriteUint16(SX(2));
+    VTPool_WriteUint16(SY(149));
+
+    VTPool_WriteUint16(VT_OBJ_NUM_AREA_REM);
+    VTPool_WriteUint16(SX(56));
+    VTPool_WriteUint16(SY(147));
+
+    VTPool_WriteUint16(VT_OBJ_STR_AREA_UNIT);
+    VTPool_WriteUint16(SX(130));
+    VTPool_WriteUint16(SY(149));
+
+    // --- Tank bar (right side) ---
+    VTPool_WriteUint16(VT_OBJ_BAR_TANK);
+    VTPool_WriteUint16(SX(172));
+    VTPool_WriteUint16(SY(33));
+
+    // --- Section buttons (8) at y=173 ---
     for (uint8_t i = 0; i < 8; i++) {
         VTPool_WriteUint16(VT_OBJ_BTN_SECTION_BASE + i);
-        VTPool_WriteUint16(SX(3 + i * 21));
-        VTPool_WriteUint16(SY(152));
+        VTPool_WriteUint16(SX(1 + i * 25));
+        VTPool_WriteUint16(SY(173));
     }
 
-    // --- Tank bar graph on right (x=176, y=18) ---
-    VTPool_WriteUint16(VT_OBJ_BAR_TANK);
-    VTPool_WriteUint16(SX(176));
-    VTPool_WriteUint16(SY(18));
+    // === End of Data Mask children (32 total) ===
 
-    if (MDL.SensorCount > 1) {
-        // === Compact 2-sensor layout ===
-        // Row 1 (y=20): Rate 1 - label + actual + target + unit
-        VTPool_WriteUint16(VT_OBJ_STR_RATE1_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(22));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_RATE1_ACTUAL);
-        VTPool_WriteUint16(SX(50));
-        VTPool_WriteUint16(SY(20));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_RATE1_TARGET);
-        VTPool_WriteUint16(SX(100));
-        VTPool_WriteUint16(SY(20));
-
-        VTPool_WriteUint16(VT_OBJ_STR_RATE1_UNIT);
-        VTPool_WriteUint16(SX(148));
-        VTPool_WriteUint16(SY(22));
-
-        // Row 2 (y=40): Rate 2
-        VTPool_WriteUint16(VT_OBJ_STR_RATE2_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(42));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_RATE2_ACTUAL);
-        VTPool_WriteUint16(SX(50));
-        VTPool_WriteUint16(SY(40));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_RATE2_TARGET);
-        VTPool_WriteUint16(SX(100));
-        VTPool_WriteUint16(SY(40));
-
-        VTPool_WriteUint16(VT_OBJ_STR_RATE2_UNIT);
-        VTPool_WriteUint16(SX(148));
-        VTPool_WriteUint16(SY(42));
-
-        // Row 3 (y=60): Applied
-        VTPool_WriteUint16(VT_OBJ_STR_QTY_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(62));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_QTY_APPLIED);
-        VTPool_WriteUint16(SX(50));
-        VTPool_WriteUint16(SY(60));
-
-        VTPool_WriteUint16(VT_OBJ_STR_QTY_UNIT);
-        VTPool_WriteUint16(SX(148));
-        VTPool_WriteUint16(SY(62));
-
-        // Row 4 (y=80): Area Rem
-        VTPool_WriteUint16(VT_OBJ_STR_AREA_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(82));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_AREA_REM);
-        VTPool_WriteUint16(SX(50));
-        VTPool_WriteUint16(SY(80));
-
-        VTPool_WriteUint16(VT_OBJ_STR_AREA_UNIT);
-        VTPool_WriteUint16(SX(148));
-        VTPool_WriteUint16(SY(82));
-
-        // Row 5 (y=100): Speed
-        VTPool_WriteUint16(VT_OBJ_STR_SPEED_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(102));
-
-        VTPool_WriteUint16(VT_OBJ_INPUT_SPEED);
-        VTPool_WriteUint16(SX(50));
-        VTPool_WriteUint16(SY(100));
-
-        VTPool_WriteUint16(VT_OBJ_STR_SPEED_UNIT);
-        VTPool_WriteUint16(SX(148));
-        VTPool_WriteUint16(SY(102));
-
-    } else {
-        // === Full 1-sensor layout ===
-        // "Cur Rate" label (y=18) + value (y=30)
-        VTPool_WriteUint16(VT_OBJ_STR_RATE1_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(18));
-
-        VTPool_WriteUint16(VT_OBJ_STR_RATE1_UNIT);
-        VTPool_WriteUint16(SX(138));
-        VTPool_WriteUint16(SY(18));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_RATE1_ACTUAL);
-        VTPool_WriteUint16(SX(4));
-        VTPool_WriteUint16(SY(30));
-
-        // "VR Target" label (y=44) + value (y=56)
-        VTPool_WriteUint16(VT_OBJ_STR_TARGET1_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(44));
-
-        VTPool_WriteUint16(VT_OBJ_STR_TARGET1_UNIT);
-        VTPool_WriteUint16(SX(138));
-        VTPool_WriteUint16(SY(44));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_RATE1_TARGET);
-        VTPool_WriteUint16(SX(4));
-        VTPool_WriteUint16(SY(56));
-
-        // "Applied" label (y=70) + value (y=82)
-        VTPool_WriteUint16(VT_OBJ_STR_QTY_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(70));
-
-        VTPool_WriteUint16(VT_OBJ_STR_QTY_UNIT);
-        VTPool_WriteUint16(SX(156));
-        VTPool_WriteUint16(SY(70));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_QTY_APPLIED);
-        VTPool_WriteUint16(SX(4));
-        VTPool_WriteUint16(SY(82));
-
-        // "Area Rem" label (y=96) + value (y=108)
-        VTPool_WriteUint16(VT_OBJ_STR_AREA_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(96));
-
-        VTPool_WriteUint16(VT_OBJ_STR_AREA_UNIT);
-        VTPool_WriteUint16(SX(148));
-        VTPool_WriteUint16(SY(96));
-
-        VTPool_WriteUint16(VT_OBJ_NUM_AREA_REM);
-        VTPool_WriteUint16(SX(4));
-        VTPool_WriteUint16(SY(108));
-
-        // "Speed" label (y=122) + InputNumber (y=134) + unit
-        VTPool_WriteUint16(VT_OBJ_STR_SPEED_LABEL);
-        VTPool_WriteUint16(SX(2));
-        VTPool_WriteUint16(SY(122));
-
-        VTPool_WriteUint16(VT_OBJ_STR_SPEED_UNIT);
-        VTPool_WriteUint16(SX(138));
-        VTPool_WriteUint16(SY(122));
-
-        VTPool_WriteUint16(VT_OBJ_INPUT_SPEED);
-        VTPool_WriteUint16(SX(4));
-        VTPool_WriteUint16(SY(134));
-    }
-
-    // === End of Data Mask children ===
-
-    // --- Soft Key Mask with 4 keys (no X/Y, VT positions them) ---
+    // --- Soft Key Mask with 6 action keys ---
     VTPool_WriteUint16(VT_OBJ_SOFT_KEY_MASK);
     VTPool_WriteByte(VT_TYPE_SOFT_KEY_MASK);
     VTPool_WriteByte(VT_COLOUR_BLACK);
-    VTPool_WriteByte(4);  // 4 soft key children
-    VTPool_WriteByte(0);  // No macros
+    VTPool_WriteByte(6);   // 6 soft key children
+    VTPool_WriteByte(0);   // No macros
     // Children are Key object IDs only (2 bytes each, no X/Y)
+    VTPool_WriteUint16(VT_OBJ_SK_MENU);
+    VTPool_WriteUint16(VT_OBJ_SK_RQTY);
+    VTPool_WriteUint16(VT_OBJ_SK_RAREA);
+    VTPool_WriteUint16(VT_OBJ_SK_RX);
     VTPool_WriteUint16(VT_OBJ_SK_AUTO);
     VTPool_WriteUint16(VT_OBJ_SK_MASTER);
-    VTPool_WriteUint16(VT_OBJ_SK_PROD_NEXT);
-    VTPool_WriteUint16(VT_OBJ_SK_PROD_PREV);
 
     // === Attribute objects ===
-    VTPool_AddFontAttributes(VT_OBJ_FONT_LARGE, largeFontSize, VT_COLOUR_WHITE);
+    VTPool_AddFontAttributes(VT_OBJ_FONT_LARGE, largeFontSize, VT_COLOUR_YELLOW);
     VTPool_AddFontAttributes(VT_OBJ_FONT_SMALL, smallFontSize, VT_COLOUR_WHITE);
     VTPool_AddFontAttributes(VT_OBJ_FONT_YELLOW, smallFontSize, VT_COLOUR_YELLOW);
     VTPool_AddLineAttributes(VT_OBJ_LINE_THIN, VT_COLOUR_WHITE, 1);
@@ -470,162 +383,153 @@ void VTPool_Build(uint16_t dispW, uint16_t dispH) {
     VTPool_AddFillAttributes(VT_OBJ_FILL_RED, 1, VT_COLOUR_RED);
     VTPool_AddFillAttributes(VT_OBJ_FILL_GREY, 1, VT_COLOUR_GREY);
 
-    // === Number Variables (8) ===
+    // === Number Variables (6) ===
     VTPool_AddNumberVariable(VT_OBJ_VAR_RATE1_ACTUAL, 0);
     VTPool_AddNumberVariable(VT_OBJ_VAR_RATE1_TARGET, 0);
-    VTPool_AddNumberVariable(VT_OBJ_VAR_RATE2_ACTUAL, 0);
-    VTPool_AddNumberVariable(VT_OBJ_VAR_RATE2_TARGET, 0);
     VTPool_AddNumberVariable(VT_OBJ_VAR_QTY_APPLIED, 0);
     VTPool_AddNumberVariable(VT_OBJ_VAR_AREA_REM, 0);
     VTPool_AddNumberVariable(VT_OBJ_VAR_TANK_LEVEL, 0);
     VTPool_AddNumberVariable(VT_OBJ_VAR_SPEED, 0);
 
     // === AOG indicator (rectangle + text) ===
-    VTPool_AddOutputRectangle(VT_OBJ_RECT_AOG, SX(34), SY(14),
+    VTPool_AddOutputRectangle(VT_OBJ_RECT_AOG, SX(14), SY(14),
                               VT_OBJ_LINE_THIN, VT_OBJ_FILL_RED);
     VTPool_AddOutputString(VT_OBJ_STR_AOG, "AOG",
-                           SX(30), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+                           SX(12), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
 
-    // === Product name string ===
-    VTPool_AddOutputString(VT_OBJ_STR_PRODUCT, "Product 1",
-                           SX(80), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    // === Product description string (updated via Change String Value) ===
+    VTPool_AddOutputString(VT_OBJ_STR_PRODUCT, "P1",
+                           SX(80), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
 
-    // === 8 Section buttons ===
+    // === Speed unit and OutputNumber ===
+    VTPool_AddOutputString(VT_OBJ_STR_SPEED_UNIT, "km/h",
+                           SX(25), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputNumber(VT_OBJ_NUM_SPEED, SX(40), SY(14),
+                           VT_OBJ_VAR_SPEED, VT_OBJ_FONT_LARGE, 2);
+
+    // === Data row labels (yellow small font) ===
+    VTPool_AddOutputString(VT_OBJ_STR_RATE1_LABEL, "Cur Rate",
+                           SX(52), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_TARGET1_LABEL, "Tgt Rate",
+                           SX(52), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_QTY_LABEL, "Applied",
+                           SX(52), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_AREA_LABEL, "Area Rem",
+                           SX(52), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+
+    // === Data row units (yellow small font) ===
+    VTPool_AddOutputString(VT_OBJ_STR_RATE1_UNIT, "G/ac",
+                           SX(38), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_TARGET1_UNIT, "G/ac",
+                           SX(38), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_QTY_UNIT, "Gallons",
+                           SX(38), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_AREA_UNIT, "Acres",
+                           SX(38), SY(14), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
+
+    // === Data row OutputNumbers (large yellow font, right-justified) ===
+    VTPool_AddOutputNumber(VT_OBJ_NUM_RATE1_ACTUAL, SX(72), SY(18),
+                           VT_OBJ_VAR_RATE1_ACTUAL, VT_OBJ_FONT_LARGE, 2);
+    VTPool_AddOutputNumber(VT_OBJ_NUM_RATE1_TARGET, SX(72), SY(18),
+                           VT_OBJ_VAR_RATE1_TARGET, VT_OBJ_FONT_LARGE, 2);
+    VTPool_AddOutputNumber(VT_OBJ_NUM_QTY_APPLIED, SX(72), SY(18),
+                           VT_OBJ_VAR_QTY_APPLIED, VT_OBJ_FONT_LARGE, 2);
+    VTPool_AddOutputNumber(VT_OBJ_NUM_AREA_REM, SX(72), SY(18),
+                           VT_OBJ_VAR_AREA_REM, VT_OBJ_FONT_LARGE, 2);
+
+    // === 6 Product button label strings ===
+    {
+        const char* prodLabels[] = {"P1", "P2", "P3", "P4", "P5", "F"};
+        for (uint8_t i = 0; i < 6; i++) {
+            VTPool_AddOutputString(VT_OBJ_STR_BTN_PROD_BASE + i, prodLabels[i],
+                                   SX(16), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+        }
+    }
+
+    // === 6 Product buttons (each with label child) ===
+    for (uint8_t i = 0; i < 6; i++) {
+        VTPool_AddButton(VT_OBJ_BTN_PROD_BASE + i,
+                         SX(32), SY(13),
+                         VT_COLOUR_RED,          // Inactive default
+                         VT_COLOUR_WHITE,
+                         VT_KEYCODE_PROD_BASE + i,  // Key codes 20-25
+                         0, 1);                  // 1 child
+        // Child: label string centered in button
+        VTPool_WriteUint16(VT_OBJ_STR_BTN_PROD_BASE + i);
+        VTPool_WriteUint16(SX(8));
+        VTPool_WriteUint16(SY(1));
+    }
+
+    // === 8 Section button label strings ===
+    for (uint8_t i = 0; i < 8; i++) {
+        char label[2] = { (char)('1' + i), '\0' };
+        VTPool_AddOutputString(VT_OBJ_STR_BTN_SEC_BASE + i, label,
+                               SX(10), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    }
+
+    // === 8 Section buttons (each with number label child) ===
     for (uint8_t i = 0; i < 8; i++) {
         VTPool_AddButton(VT_OBJ_BTN_SECTION_BASE + i,
-                         SX(19), SY(16),
+                         SX(24), SY(20),
                          VT_COLOUR_RED,       // BG colour (red = off)
                          VT_COLOUR_WHITE,     // Border colour
                          i + 1,               // Key codes 1-8
-                         0);                  // Options: not latchable
+                         0, 1);               // Options: not latchable, 1 child
+        // Child: label string centered in button
+        VTPool_WriteUint16(VT_OBJ_STR_BTN_SEC_BASE + i);
+        VTPool_WriteUint16(SX(7));
+        VTPool_WriteUint16(SY(4));
     }
 
     // === Tank bar graph ===
     // Vertical, grows upward: options = bit0(border) | bit5(grow positive) = 0x21
-    VTPool_AddBarGraph(VT_OBJ_BAR_TANK, SX(22), SY(130),
+    VTPool_AddBarGraph(VT_OBJ_BAR_TANK, SX(26), SY(135),
                        VT_COLOUR_GREEN, 0, 1000,
                        VT_OBJ_VAR_TANK_LEVEL, 0x21);
 
-    // === Speed InputNumber ===
-    if (MDL.SensorCount > 1) {
-        VTPool_AddInputNumber(VT_OBJ_INPUT_SPEED, SX(90), SY(16),
-                              VT_OBJ_FONT_LARGE, VT_OBJ_VAR_SPEED,
-                              0, 500, 1);  // 0.0 - 50.0 km/h
-    } else {
-        VTPool_AddInputNumber(VT_OBJ_INPUT_SPEED, SX(130), SY(16),
-                              VT_OBJ_FONT_LARGE, VT_OBJ_VAR_SPEED,
-                              0, 500, 1);  // 0.0 - 50.0 km/h
-    }
+    // === Soft Key objects (6 action keys with label children) ===
+    VTPool_AddKey(VT_OBJ_SK_MENU, VT_COLOUR_BLACK, VT_KEYCODE_MENU, 1);
+    VTPool_WriteUint16(VT_OBJ_STR_SK_MENU);
+    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(0);
 
-    // === Display strings and numbers (scaled) ===
-    if (MDL.SensorCount > 1) {
-        // Compact 2-sensor layout
-        VTPool_AddOutputString(VT_OBJ_STR_RATE1_LABEL, "Rate 1",
-                               SX(44), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_RATE1_ACTUAL, SX(46), SY(16),
-                               VT_OBJ_VAR_RATE1_ACTUAL, VT_OBJ_FONT_LARGE, 2);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_RATE1_TARGET, SX(46), SY(16),
-                               VT_OBJ_VAR_RATE1_TARGET, VT_OBJ_FONT_LARGE, 2);
-        VTPool_AddOutputString(VT_OBJ_STR_RATE1_UNIT, "L/ha",
-                               SX(28), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    VTPool_AddKey(VT_OBJ_SK_RQTY, VT_COLOUR_BLACK, VT_KEYCODE_RQTY, 1);
+    VTPool_WriteUint16(VT_OBJ_STR_SK_RQTY);
+    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(0);
 
-        VTPool_AddOutputString(VT_OBJ_STR_RATE2_LABEL, "Rate 2",
-                               SX(44), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_RATE2_ACTUAL, SX(46), SY(16),
-                               VT_OBJ_VAR_RATE2_ACTUAL, VT_OBJ_FONT_LARGE, 2);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_RATE2_TARGET, SX(46), SY(16),
-                               VT_OBJ_VAR_RATE2_TARGET, VT_OBJ_FONT_LARGE, 2);
-        VTPool_AddOutputString(VT_OBJ_STR_RATE2_UNIT, "L/ha",
-                               SX(28), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    VTPool_AddKey(VT_OBJ_SK_RAREA, VT_COLOUR_BLACK, VT_KEYCODE_RAREA, 1);
+    VTPool_WriteUint16(VT_OBJ_STR_SK_RAREA);
+    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(0);
 
-        VTPool_AddOutputString(VT_OBJ_STR_QTY_LABEL, "Applied",
-                               SX(44), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_QTY_APPLIED, SX(90), SY(16),
-                               VT_OBJ_VAR_QTY_APPLIED, VT_OBJ_FONT_LARGE, 2);
-        VTPool_AddOutputString(VT_OBJ_STR_QTY_UNIT, "L",
-                               SX(16), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    VTPool_AddKey(VT_OBJ_SK_RX, VT_COLOUR_BLACK, VT_KEYCODE_RX, 1);
+    VTPool_WriteUint16(VT_OBJ_STR_SK_RX);
+    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(0);
 
-        VTPool_AddOutputString(VT_OBJ_STR_AREA_LABEL, "Area Rem",
-                               SX(56), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_AREA_REM, SX(90), SY(16),
-                               VT_OBJ_VAR_AREA_REM, VT_OBJ_FONT_LARGE, 2);
-        VTPool_AddOutputString(VT_OBJ_STR_AREA_UNIT, "ha",
-                               SX(20), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-
-        VTPool_AddOutputString(VT_OBJ_STR_SPEED_LABEL, "Speed",
-                               SX(44), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputString(VT_OBJ_STR_SPEED_UNIT, "km/h",
-                               SX(28), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-    } else {
-        // Full 1-sensor layout
-        VTPool_AddOutputString(VT_OBJ_STR_RATE1_LABEL, "Cur Rate",
-                               SX(64), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputString(VT_OBJ_STR_RATE1_UNIT, "L/ha",
-                               SX(32), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_RATE1_ACTUAL, SX(130), SY(16),
-                               VT_OBJ_VAR_RATE1_ACTUAL, VT_OBJ_FONT_LARGE, 2);
-
-        VTPool_AddOutputString(VT_OBJ_STR_TARGET1_LABEL, "VR Target",
-                               SX(72), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputString(VT_OBJ_STR_TARGET1_UNIT, "L/ha",
-                               SX(32), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_RATE1_TARGET, SX(130), SY(16),
-                               VT_OBJ_VAR_RATE1_TARGET, VT_OBJ_FONT_LARGE, 2);
-
-        VTPool_AddOutputString(VT_OBJ_STR_QTY_LABEL, "Applied",
-                               SX(56), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputString(VT_OBJ_STR_QTY_UNIT, "L",
-                               SX(16), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_QTY_APPLIED, SX(130), SY(16),
-                               VT_OBJ_VAR_QTY_APPLIED, VT_OBJ_FONT_LARGE, 2);
-
-        VTPool_AddOutputString(VT_OBJ_STR_AREA_LABEL, "Area Rem",
-                               SX(64), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputString(VT_OBJ_STR_AREA_UNIT, "ha",
-                               SX(20), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-        VTPool_AddOutputNumber(VT_OBJ_NUM_AREA_REM, SX(130), SY(16),
-                               VT_OBJ_VAR_AREA_REM, VT_OBJ_FONT_LARGE, 2);
-
-        VTPool_AddOutputString(VT_OBJ_STR_SPEED_LABEL, "Speed",
-                               SX(40), SY(12), VT_OBJ_FONT_YELLOW, VT_COLOUR_BLACK);
-        VTPool_AddOutputString(VT_OBJ_STR_SPEED_UNIT, "km/h",
-                               SX(32), SY(12), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-    }
-
-    // === Soft Key objects (4 keys with label children) ===
-
-    // Auto key - 1 child (label string)
     VTPool_AddKey(VT_OBJ_SK_AUTO, VT_COLOUR_BLACK, VT_KEYCODE_AUTO, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_AUTO);
-    VTPool_WriteUint16(0);  // X
-    VTPool_WriteUint16(0);  // Y
+    VTPool_WriteUint16(0);
+    VTPool_WriteUint16(0);
 
-    // Master key
     VTPool_AddKey(VT_OBJ_SK_MASTER, VT_COLOUR_BLACK, VT_KEYCODE_MASTER, 1);
     VTPool_WriteUint16(VT_OBJ_STR_SK_MASTER);
     VTPool_WriteUint16(0);
     VTPool_WriteUint16(0);
 
-    // Product Next key
-    VTPool_AddKey(VT_OBJ_SK_PROD_NEXT, VT_COLOUR_BLACK, VT_KEYCODE_PROD_NEXT, 1);
-    VTPool_WriteUint16(VT_OBJ_STR_SK_PROD_NEXT);
-    VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
-
-    // Product Prev key
-    VTPool_AddKey(VT_OBJ_SK_PROD_PREV, VT_COLOUR_BLACK, VT_KEYCODE_PROD_PREV, 1);
-    VTPool_WriteUint16(VT_OBJ_STR_SK_PROD_PREV);
-    VTPool_WriteUint16(0);
-    VTPool_WriteUint16(0);
-
-    // Soft key label strings (small, VT sizes them to fit key area)
+    // Soft key label strings
+    VTPool_AddOutputString(VT_OBJ_STR_SK_MENU, "Menu",
+                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_SK_RQTY, "RQty",
+                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_SK_RAREA, "RAra",
+                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
+    VTPool_AddOutputString(VT_OBJ_STR_SK_RX, "Rx",
+                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
     VTPool_AddOutputString(VT_OBJ_STR_SK_AUTO, "Auto",
                            SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-    VTPool_AddOutputString(VT_OBJ_STR_SK_MASTER, "Master",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-    VTPool_AddOutputString(VT_OBJ_STR_SK_PROD_NEXT, "Prod+",
-                           SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
-    VTPool_AddOutputString(VT_OBJ_STR_SK_PROD_PREV, "Prod-",
+    VTPool_AddOutputString(VT_OBJ_STR_SK_MASTER, "Mstr",
                            SX(48), SY(14), VT_OBJ_FONT_SMALL, VT_COLOUR_BLACK);
 
     vtPoolSize = vtPoolWritePos;
