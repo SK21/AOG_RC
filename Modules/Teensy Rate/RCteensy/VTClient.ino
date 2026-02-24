@@ -24,12 +24,12 @@ struct SectionButtonMap {
 };
 
 SectionButtonMap sectionButtonMap[8];
-uint8_t numSectionButtons = 8;
+uint8_t numSectionButtons = VT_NUM_SECTION_BUTTONS;
 
 void VTClient_InitSectionMap() {
-    // Default equal split: 16 sections / 8 buttons = 2 sections per button
+    // Default equal split: 16 sections / 6 buttons
     uint8_t sectionsPerButton = 16 / numSectionButtons;
-    for (uint8_t i = 0; i < 8; i++) {
+    for (uint8_t i = 0; i < VT_NUM_SECTION_BUTTONS; i++) {
         sectionButtonMap[i].sectionMask = 0;
         for (uint8_t s = 0; s < sectionsPerButton; s++) {
             uint8_t section = i * sectionsPerButton + s;
@@ -133,8 +133,8 @@ void VTClient_Begin() {
     // Initialize default section button mapping
     VTClient_InitSectionMap();
 
-    // Build VT object pool at startup (default 200x200, rebuilt after Get Hardware)
-    VTPool_Build(200, 200);
+    // Load VT object pool at startup
+    VTPool_LoadIOP();
 
     Serial.println("VT Client initialized");
 }
@@ -379,8 +379,8 @@ void VTClient_HandleVTtoECU(const CAN_message_t& msg) {
             Serial.print(vtClient.vtWidth);
             Serial.print(" height=");
             Serial.println(vtClient.vtHeight);
-            // Rebuild pool scaled to actual VT display dimensions
-            VTPool_Build(vtClient.vtWidth, vtClient.vtHeight);
+            // IOP pool is pre-built at fixed dimensions; VT handles scaling
+            Serial.println("VT: Using IOP pool (VT will scale)");
             vtClient.poolUploadStarted = false;
             VTClient_SetState(VT_UPLOAD_OBJECT_POOL);
             break;
@@ -505,57 +505,9 @@ void VTClient_HandleSoftKeyActivation(const CAN_message_t& msg) {
     // Only handle press events
     if (activation != 1) return;
 
-    switch (keyCode) {
-        case VT_KEYCODE_AUTO:
-            // Toggle Auto mode for all sensors
-            {
-                bool newAuto = !Sensor[0].AutoOn;
-                for (uint8_t i = 0; i < MDL.SensorCount; i++) {
-                    Sensor[i].AutoOn = newAuto;
-                }
-                Serial.print("VT: Auto ");
-                Serial.println(newAuto ? "ON" : "OFF");
-            }
-            break;
-
-        case VT_KEYCODE_MASTER:
-            // Toggle Master on/off
-            MasterOn = !MasterOn;
-            if (!MasterOn) {
-                // Master off: turn off all relays
-                RelayLo = 0;
-                RelayHi = 0;
-            }
-            Serial.print("VT: Master ");
-            Serial.println(MasterOn ? "ON" : "OFF");
-            break;
-
-        case VT_KEYCODE_MENU:
-            Serial.println("VT: Menu pressed (not yet implemented)");
-            break;
-
-        case VT_KEYCODE_RQTY:
-            Serial.println("VT: Reset Qty pressed (phase 2: alarm mask)");
-            break;
-
-        case VT_KEYCODE_RAREA:
-            // Reset area remaining for current product
-            // TODO: zero area counter when area tracking is implemented
-            Serial.println("VT: Area reset");
-            break;
-
-        case VT_KEYCODE_RX:
-            // Toggle variable rate for current product
-            {
-                uint8_t idx = vtClient.currentProduct;
-                if (idx < MDL.SensorCount) {
-                    Sensor[idx].AutoOn = !Sensor[idx].AutoOn;
-                    Serial.print("VT: Rx (VR) ");
-                    Serial.println(Sensor[idx].AutoOn ? "ON" : "OFF");
-                }
-            }
-            break;
-    }
+    // TODO: Add soft key handling when soft keys are added to the IOP pool
+    Serial.print("VT: Soft key pressed, keyCode=");
+    Serial.println(keyCode);
 }
 
 void VTClient_HandleChangeNumericValue(const CAN_message_t& msg) {
@@ -741,17 +693,17 @@ void VTClient_UpdateDisplay() {
     uint8_t prodIdx = vtClient.currentProduct;
     if (prodIdx >= MDL.SensorCount) prodIdx = 0;
 
-    // Rate 1 Actual (stored as value * 10 for 1 decimal place)
+    // Rate Actual (stored as value * 10 for 1 decimal place)
     uint32_t rate1Actual = (uint32_t)(Sensor[prodIdx].UPM * 10.0);
     if (rate1Actual != vtClient.lastRate1Actual) {
-        VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE1_ACTUAL, rate1Actual);
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE, rate1Actual);
         vtClient.lastRate1Actual = rate1Actual;
     }
 
-    // Rate 1 Target
+    // Rate Target
     uint32_t rate1Target = (uint32_t)(Sensor[prodIdx].TargetUPM * 10.0);
     if (rate1Target != vtClient.lastRate1Target) {
-        VTClient_SendChangeNumericValue(VT_OBJ_VAR_RATE1_TARGET, rate1Target);
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_TARGET_RATE, rate1Target);
         vtClient.lastRate1Target = rate1Target;
     }
 
@@ -761,14 +713,14 @@ void VTClient_UpdateDisplay() {
         qtyApplied = (uint32_t)((float)Sensor[prodIdx].TotalPulses / Sensor[prodIdx].MeterCal * 10.0);
     }
     if (qtyApplied != vtClient.lastQtyApplied) {
-        VTClient_SendChangeNumericValue(VT_OBJ_VAR_QTY_APPLIED, qtyApplied);
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_QTY, qtyApplied);
         vtClient.lastQtyApplied = qtyApplied;
     }
 
     // Area remaining (placeholder - calculation TBD)
     uint32_t areaRemaining = 0;  // TODO: compute area remaining * 10
     if (areaRemaining != vtClient.lastAreaRemaining) {
-        VTClient_SendChangeNumericValue(VT_OBJ_VAR_AREA_REM, areaRemaining);
+        VTClient_SendChangeNumericValue(VT_OBJ_VAR_AREA, areaRemaining);
         vtClient.lastAreaRemaining = areaRemaining;
     }
 
@@ -788,28 +740,18 @@ void VTClient_UpdateDisplay() {
         vtClient.lastSpeed = speedVal;
     }
 
-    // --- AOG connection indicator ---
-    bool aogConnected = (millis() - Sensor[0].CommTime < VT_AOG_TIMEOUT);
-    uint8_t aogState = aogConnected ? 1 : 0;
-    if (aogState != vtClient.lastAOGState) {
-        // Change AOG string background colour (attrID=2): green if connected, red if not
-        VTClient_SendChangeAttribute(VT_OBJ_STR_AOG, 2,
-            aogConnected ? VT_COLOUR_GREEN : VT_COLOUR_RED);
-        vtClient.lastAOGState = aogState;
-    }
-
-    // --- Section button colours (8 buttons) ---
+    // --- Section button colours ---
     // Compute button states from relay bits using section mapping
     uint16_t currentSections = RelayLo | ((uint16_t)RelayHi << 8);
     uint8_t buttonStates = 0;
-    for (uint8_t i = 0; i < 8; i++) {
+    for (uint8_t i = 0; i < VT_NUM_SECTION_BUTTONS; i++) {
         if ((currentSections & sectionButtonMap[i].sectionMask) != 0) {
             buttonStates |= (1 << i);
         }
     }
 
     if (buttonStates != vtClient.lastSectionStates) {
-        for (uint8_t i = 0; i < 8; i++) {
+        for (uint8_t i = 0; i < VT_NUM_SECTION_BUTTONS; i++) {
             bool btnOn = (buttonStates >> i) & 0x01;
             bool wasOn = (vtClient.lastSectionStates >> i) & 0x01;
 
@@ -838,32 +780,7 @@ void VTClient_UpdateDisplay() {
         vtClient.lastProductHighlight = vtClient.currentProduct;
     }
 
-    // --- Soft key visual feedback ---
-
-    // Auto key colour (green = active, black = inactive)
-    uint8_t autoState = Sensor[0].AutoOn ? 1 : 0;
-    if (autoState != vtClient.lastAutoKeyState) {
-        VTClient_SendChangeAttribute(VT_OBJ_SK_AUTO, 1,
-            autoState ? VT_COLOUR_GREEN : VT_COLOUR_BLUE);
-        vtClient.lastAutoKeyState = autoState;
-    }
-
-    // Master key colour
-    uint8_t masterState = MasterOn ? 1 : 0;
-    if (masterState != vtClient.lastMasterKeyState) {
-        VTClient_SendChangeAttribute(VT_OBJ_SK_MASTER, 1,
-            masterState ? VT_COLOUR_GREEN : VT_COLOUR_BLUE);
-        vtClient.lastMasterKeyState = masterState;
-    }
-
-    // Rx key colour (reflects current product's VR state)
-    bool rxOn = (prodIdx < MDL.SensorCount) ? Sensor[prodIdx].AutoOn : false;
-    uint8_t rxState = rxOn ? 1 : 0;
-    if (rxState != vtClient.lastRxKeyState) {
-        VTClient_SendChangeAttribute(VT_OBJ_SK_RX, 1,
-            rxOn ? VT_COLOUR_GREEN : VT_COLOUR_BLUE);
-        vtClient.lastRxKeyState = rxState;
-    }
+    // TODO: Add soft key visual feedback when soft keys are added to the IOP pool
 }
 
 //=============================================================================

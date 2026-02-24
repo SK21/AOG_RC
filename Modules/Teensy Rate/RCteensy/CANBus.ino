@@ -302,6 +302,18 @@ void CANBus_Receive() {
                 }
                 break;
 
+            case 0xC700:  // Extended Transport Protocol - Connection Management
+                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
+                    TP_HandleETPCM(msg);
+                }
+                break;
+
+            case 0xC600:  // Extended Transport Protocol - Data Transfer
+                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
+                    TP_HandleETPDT(msg);
+                }
+                break;
+
             default:
                 // Check for Process Data PGNs (0xCB00 range) - destination specific
                 if (pf == 0xCB) {
