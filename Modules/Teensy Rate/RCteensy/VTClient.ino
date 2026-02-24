@@ -133,9 +133,6 @@ void VTClient_Begin() {
     // Initialize default section button mapping
     VTClient_InitSectionMap();
 
-    // Load VT object pool at startup
-    VTPool_LoadIOP();
-
     Serial.println("VT Client initialized");
 }
 
@@ -249,8 +246,8 @@ void VTClient_Update() {
             if (!vtClient.poolUploadStarted) {
                 if (!TP_IsBusy()) {
                     Serial.print("VT: Uploading object pool, size=");
-                    Serial.println(vtPoolSize);
-                    TP_SendVTPool(vtClient.vtServerAddress, vtPoolBuffer, vtPoolSize);
+                    Serial.println(VTPool_GetSize());
+                    TP_SendVTPool(vtClient.vtServerAddress, VTPool_GetBuffer(), VTPool_GetSize());
                     vtClient.poolUploadStarted = true;
                 }
                 // else: wait for TP to finish (e.g. DDOP transfer)
@@ -560,8 +557,8 @@ void VTClient_SendGetMemory() {
     uint8_t data[8];
     data[0] = VT_FUNC_GET_MEMORY;
     data[1] = 0xFF;
-    data[2] = vtPoolSize & 0xFF;
-    data[3] = (vtPoolSize >> 8) & 0xFF;
+    data[2] = VTPool_GetSize() & 0xFF;
+    data[3] = (VTPool_GetSize() >> 8) & 0xFF;
     data[4] = 0;
     data[5] = 0;
     data[6] = 0xFF;
@@ -569,7 +566,7 @@ void VTClient_SendGetMemory() {
 
     VTClient_SendToVT(data, 8);
     Serial.print("VT: Sent Get Memory, pool size=");
-    Serial.println(vtPoolSize);
+    Serial.println(VTPool_GetSize());
 }
 
 void VTClient_SendGetSoftKeys() {

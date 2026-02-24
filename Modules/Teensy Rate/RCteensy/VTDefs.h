@@ -215,14 +215,7 @@ uint8_t VTClient_GetState();
 //=============================================================================
 // Forward declarations for VT Pool functions (defined in VTPool.ino)
 //=============================================================================
-void VTPool_LoadIOP();
 const uint8_t* VTPool_GetBuffer();
 uint16_t VTPool_GetSize();
-
-//=============================================================================
-// External variables from VTPool.ino
-//=============================================================================
-extern uint8_t vtPoolBuffer[];
-extern uint16_t vtPoolSize;
 
 #endif // VT_DEFS_H
