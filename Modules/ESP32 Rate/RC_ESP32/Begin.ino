@@ -94,12 +94,9 @@ void DoSetup()
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDLnetwork.IP3 };
 
 	Ethernet.init(W5500_SS);   // SS pin
-	Ethernet.begin(LocalMac, 0);
-	Ethernet.setLocalIP(LocalIP);
-	IPAddress Mask(255, 255, 255, 0);
-	Ethernet.setSubnetMask(Mask);
-	IPAddress Gateway(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 1);
-	Ethernet.setGatewayIP(Gateway);
+	IPAddress Gateway(MDLnetwork.IP0,MDLnetwork.IP1,MDLnetwork.IP2,1);
+	IPAddress Mask(255,255,255,0);
+	Ethernet.begin(LocalMac,LocalIP,Gateway,Gateway,Mask);
 
 	delay(1500);
 	ChipFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
@@ -366,7 +363,7 @@ void DoSetup()
 		WiFi.softAP(AP.c_str(), nullptr, 6, false, 4);
 	}
 
-	dnsServer.start(DNS_PORT, "*", AP_LocalIP);
+	dnsServer.start(AP_DNS_PORT, "*", AP_LocalIP);
 
 	UDP_Wifi.begin(ListeningPort);
 

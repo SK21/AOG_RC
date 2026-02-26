@@ -1,7 +1,13 @@
 
+#include <Adafruit_SPIDevice.h>
+#include <Adafruit_I2CRegister.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_GenericDevice.h>
+#include <Adafruit_BusIO_Register.h>
+#include <index_html.h>
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 #include <PCF8574.h>		// https://github.com/RobTillaart/PCF8574
-#include <ESP2SOTA.h>		// https://github.com/pangodream/ESP2SOTA
+#include "ESP2SOTA_RC/ESP2SOTA_RC.h"	// modified from https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
 #include <WebServer.h>
@@ -13,16 +19,17 @@
 #include <Wire.h>
 
 #include <SPI.h>
-#include <Ethernet.h>
+#include <Ethernet_Generic.h>
 #include <EthernetUdp.h>
 
-#include <Adafruit_PWMServoDriver.h>
+#include <Adafruit_PWMServoDriver.h>	// Adafruit PCA9685 PWM Servo Driver Library
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 30115;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 25026;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
+const uint8_t PCB_Type = 0;		// 0 - RC15
 
 const uint8_t NC = 0xFF;		// Pin not connected
 const uint8_t ModStringLengths = 15;
@@ -151,7 +158,7 @@ IPAddress Wifi_DestinationIP(192, 168, 100, 255);
 WiFiClient client;
 WebServer server(80);
 DNSServer dnsServer;
-const byte DNS_PORT = 53;
+const byte AP_DNS_PORT = 53;
 
 // control page
 bool WifiMasterOn = false;
