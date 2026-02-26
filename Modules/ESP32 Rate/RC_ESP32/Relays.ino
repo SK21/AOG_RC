@@ -172,6 +172,7 @@ void CheckRelays()
 		// PCA9685
 		if (PCA9685_found)
 		{
+			bool UseSpareDRV = (MDL.SensorCount == 1 && PCB_Type == 0);	// use spare DRV for relay 8
 			if (MDL.Is3Wire)
 			{
 				// 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use IN1
@@ -186,11 +187,21 @@ void CheckRelays()
 						{
 							// on
 							PWMServoDriver.setPWM(IOpin, 4096, 0);
+							if (UseSpareDRV && i == 7)
+							{
+								analogWrite(25, 255);
+								analogWrite(26, 0);
+							}
 						}
 						else
 						{
 							// off
 							PWMServoDriver.setPWM(IOpin, 0, 4096);
+							if (UseSpareDRV && i == 7)
+							{
+								analogWrite(25, 0);
+								analogWrite(26, 255);
+							}
 						}
 						RelayStatus[i] = BitState;
 					}
@@ -211,38 +222,26 @@ void CheckRelays()
 							// on  
 							PWMServoDriver.setPWM(IOpin, 4096, 0);
 							PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
+							if (UseSpareDRV && i == 7)
+							{
+								analogWrite(25, 255);
+								analogWrite(26, 0);
+							}
 						}
 						else
 						{
 							// off
 							PWMServoDriver.setPWM(IOpin, 0, 4096);
 							PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
+							if (UseSpareDRV && i == 7)
+							{
+								analogWrite(25, 0);
+								analogWrite(26, 255);
+							}
 						}
 						RelayStatus[i] = BitState;
 					}
 				}
-			}
-		}
-
-		if (MDL.SensorCount == 1 && PCB_Type == 0)
-		{
-			// use spare DRV for relay 8
-			BitState = bitRead(NewLo, 7);
-			if (RelayStatus[7] != BitState)
-			{
-				if (BitState)
-				{
-					// on
-					analogWrite(25,255);
-					analogWrite(26,0);
-				}
-				else
-				{
-					// off
-					analogWrite(25,0);
-					analogWrite(26,255);
-				}
-				RelayStatus[7] = BitState;
 			}
 		}
 		break;

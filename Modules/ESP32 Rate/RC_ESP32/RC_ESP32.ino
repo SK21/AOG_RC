@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 25026;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 26026;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -396,6 +396,7 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //byte ReadReset;
 //uint32_t MaxLoopTime;
 //double debug1;
+//double debug2;
 //
 //// max loop about 2500, 18/Sep/2025
 //void Blink()
@@ -407,8 +408,11 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //
 //		Serial.print(MaxLoopTime);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug1);
+//		Serial.print(", ");
+//		Serial.print(debug1);
+//
+//		Serial.print(", ");
+//		Serial.print(debug2);
 //
 //		//Serial.print(", ");
 //		//Serial.print(WifiMasterOn);
