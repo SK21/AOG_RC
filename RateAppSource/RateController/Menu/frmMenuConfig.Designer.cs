@@ -43,10 +43,6 @@
             this.btnRescan = new System.Windows.Forms.Button();
             this.lbRemoteRelay = new System.Windows.Forms.Label();
             this.cbRemoteRelays = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbEthernet = new System.Windows.Forms.RadioButton();
-            this.rbCAN = new System.Windows.Forms.RadioButton();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -91,7 +87,7 @@
             this.ckADS1115enabled.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckADS1115enabled.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckADS1115enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckADS1115enabled.Location = new System.Drawing.Point(345, 479);
+            this.ckADS1115enabled.Location = new System.Drawing.Point(345, 409);
             this.ckADS1115enabled.Name = "ckADS1115enabled";
             this.ckADS1115enabled.Size = new System.Drawing.Size(117, 69);
             this.ckADS1115enabled.TabIndex = 175;
@@ -104,7 +100,7 @@
             // 
             this.lbRelay.AutoSize = true;
             this.lbRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRelay.Location = new System.Drawing.Point(59, 346);
+            this.lbRelay.Location = new System.Drawing.Point(59, 263);
             this.lbRelay.Name = "lbRelay";
             this.lbRelay.Size = new System.Drawing.Size(202, 24);
             this.lbRelay.TabIndex = 174;
@@ -123,7 +119,7 @@
             "MCP23017",
             "PCA9685",
             "PCF8574"});
-            this.cbOnboardRelays.Location = new System.Drawing.Point(270, 342);
+            this.cbOnboardRelays.Location = new System.Drawing.Point(270, 259);
             this.cbOnboardRelays.Name = "cbOnboardRelays";
             this.cbOnboardRelays.Size = new System.Drawing.Size(192, 32);
             this.cbOnboardRelays.TabIndex = 173;
@@ -136,7 +132,7 @@
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckFlowOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckFlowOn.Location = new System.Drawing.Point(204, 479);
+            this.ckFlowOn.Location = new System.Drawing.Point(204, 409);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckFlowOn.TabIndex = 170;
@@ -151,7 +147,7 @@
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRelayOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckRelayOn.Location = new System.Drawing.Point(63, 479);
+            this.ckRelayOn.Location = new System.Drawing.Point(63, 409);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckRelayOn.TabIndex = 169;
@@ -163,7 +159,7 @@
             // tbSensorCount
             // 
             this.tbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSensorCount.Location = new System.Drawing.Point(270, 285);
+            this.tbSensorCount.Location = new System.Drawing.Point(270, 188);
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 168;
@@ -176,7 +172,7 @@
             // 
             this.lbSensorCount.AutoSize = true;
             this.lbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorCount.Location = new System.Drawing.Point(59, 288);
+            this.lbSensorCount.Location = new System.Drawing.Point(59, 190);
             this.lbSensorCount.Name = "lbSensorCount";
             this.lbSensorCount.Size = new System.Drawing.Size(125, 24);
             this.lbSensorCount.TabIndex = 167;
@@ -185,7 +181,7 @@
             // tbModuleID
             // 
             this.tbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbModuleID.Location = new System.Drawing.Point(270, 229);
+            this.tbModuleID.Location = new System.Drawing.Point(270, 115);
             this.tbModuleID.Name = "tbModuleID";
             this.tbModuleID.Size = new System.Drawing.Size(58, 29);
             this.tbModuleID.TabIndex = 166;
@@ -198,7 +194,7 @@
             // 
             this.lbModuleID.AutoSize = true;
             this.lbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleID.Location = new System.Drawing.Point(59, 232);
+            this.lbModuleID.Location = new System.Drawing.Point(59, 117);
             this.lbModuleID.Name = "lbModuleID";
             this.lbModuleID.Size = new System.Drawing.Size(96, 24);
             this.lbModuleID.TabIndex = 165;
@@ -225,7 +221,7 @@
             // 
             this.lbRemoteRelay.AutoSize = true;
             this.lbRemoteRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRemoteRelay.Location = new System.Drawing.Point(59, 405);
+            this.lbRemoteRelay.Location = new System.Drawing.Point(59, 336);
             this.lbRemoteRelay.Name = "lbRemoteRelay";
             this.lbRemoteRelay.Size = new System.Drawing.Size(193, 24);
             this.lbRemoteRelay.TabIndex = 221;
@@ -244,61 +240,18 @@
             "MCP23017",
             "PCA9685",
             "PCF8574"});
-            this.cbRemoteRelays.Location = new System.Drawing.Point(270, 401);
+            this.cbRemoteRelays.Location = new System.Drawing.Point(270, 332);
             this.cbRemoteRelays.Name = "cbRemoteRelays";
             this.cbRemoteRelays.Size = new System.Drawing.Size(192, 32);
             this.cbRemoteRelays.TabIndex = 220;
             this.cbRemoteRelays.TabStop = false;
             this.cbRemoteRelays.SelectedIndexChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.rbCAN);
-            this.groupBox1.Controls.Add(this.rbEthernet);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(101, 42);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(324, 146);
-            this.groupBox1.TabIndex = 222;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Communication Mode";
-            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
-            // 
-            // rbEthernet
-            // 
-            this.rbEthernet.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbEthernet.Checked = true;
-            this.rbEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbEthernet.Location = new System.Drawing.Point(71, 38);
-            this.rbEthernet.Name = "rbEthernet";
-            this.rbEthernet.Size = new System.Drawing.Size(187, 36);
-            this.rbEthernet.TabIndex = 344;
-            this.rbEthernet.Text = "Ethernet";
-            this.rbEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbEthernet.UseVisualStyleBackColor = true;
-            this.rbEthernet.CheckedChanged += new System.EventHandler(this.tbModuleID_TextChanged);
-            // 
-            // rbCAN
-            // 
-            this.rbCAN.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbCAN.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbCAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbCAN.Location = new System.Drawing.Point(71, 92);
-            this.rbCAN.Name = "rbCAN";
-            this.rbCAN.Size = new System.Drawing.Size(187, 36);
-            this.rbCAN.TabIndex = 345;
-            this.rbCAN.Text = "CAN";
-            this.rbCAN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbCAN.UseVisualStyleBackColor = true;
-            this.rbCAN.CheckedChanged += new System.EventHandler(this.tbModuleID_TextChanged);
-            // 
             // frmMenuConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lbRemoteRelay);
             this.Controls.Add(this.cbRemoteRelays);
             this.Controls.Add(this.btnRescan);
@@ -319,7 +272,6 @@
             this.Text = "frmMenuConfig";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuConfig_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuConfig_Load);
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -341,8 +293,5 @@
         private System.Windows.Forms.Button btnRescan;
         private System.Windows.Forms.Label lbRemoteRelay;
         private System.Windows.Forms.ComboBox cbRemoteRelays;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton rbCAN;
-        private System.Windows.Forms.RadioButton rbEthernet;
     }
 }

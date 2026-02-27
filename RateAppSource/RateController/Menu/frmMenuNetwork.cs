@@ -35,12 +35,25 @@ namespace RateController.Menu
         {
             try
             {
+                if (rbEthernet.Checked)
+                {
+                    Core.UseCanComm(false);
+                    if (!Props.CanEnabled) Props.ShowMessage("Send changes to module.", "Help", 10000);
+                }
+                else
+                {
+                    Core.UseCanComm(true);
+                    if (Props.CanEnabled) Props.ShowMessage("Send changes to module. Check CAN settings at Menu > Options > CAN.", "Help", 10000);
+                }
+                Core.ModuleConfig.Save();
+
                 if (ckDefaultModule.Checked) SetDefaults();
                 Core.UDPmodules.NetworkEP = cbEthernet.Text;
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
                 Props.SetProp("BoardType", BoardType.ToString());
+
             }
             catch (Exception ex)
             {
@@ -370,7 +383,22 @@ namespace RateController.Menu
             }
 
             ckDefaultModule.Checked = false;
+
+            if (Props.CanEnabled)
+            {
+                rbCAN.Checked = true;
+            }
+            else
+            {
+                rbEthernet.Checked = true;
+            }
+
             Initializing = false;
+        }
+
+        private void rbEthernet_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

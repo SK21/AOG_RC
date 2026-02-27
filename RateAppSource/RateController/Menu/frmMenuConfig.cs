@@ -38,17 +38,6 @@ namespace RateController.Menu
                 Core.ModuleConfig.OnboardRelayType = (byte)cbOnboardRelays.SelectedIndex;
                 Core.ModuleConfig.RemoteRelayType = (byte)cbRemoteRelays.SelectedIndex;
 
-                if (rbEthernet.Checked)
-                {
-                    Core.UseCanComm(false);
-                    if (!Props.CanEnabled) Props.ShowMessage("Send changes to module.", "Help", 10000);
-                }
-                else
-                {
-                    Core.UseCanComm(true);
-                    if (Props.CanEnabled) Props.ShowMessage("Send changes to module. Check CAN settings at Menu > Options > CAN.", "Help", 10000);
-                }
-
                 Core.ModuleConfig.Save();
 
                 SetButtons(false);
@@ -172,15 +161,6 @@ namespace RateController.Menu
             ckRelayOn.Checked = Core.ModuleConfig.InvertRelay;
             ckFlowOn.Checked = Core.ModuleConfig.InvertFlow;
             ckADS1115enabled.Checked = Core.ModuleConfig.ADS1115enabled;
-
-            if (Props.CanEnabled)
-            {
-                rbCAN.Checked = true;
-            }
-            else
-            {
-                rbEthernet.Checked = true;
-            }
 
             Initializing = false;
         }

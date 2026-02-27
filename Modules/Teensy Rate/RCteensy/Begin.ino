@@ -247,12 +247,6 @@ void DoSetup()
 	case 2:
 		Serial.println(F("UDP + CAN/ISOBUS Proprietary"));
 		break;
-	case 3:
-		Serial.println(F("TC Client only"));
-		break;
-	case 4:
-		Serial.println(F("UDP + TC Client"));
-		break;
 	default:
 		Serial.println(F("Unknown"));
 		break;
@@ -475,7 +469,7 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
-	MDL.CommMode = 1;
+	MDL.CommMode = 0;
 }
 
 bool ValidData()
