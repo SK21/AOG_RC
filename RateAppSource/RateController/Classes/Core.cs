@@ -1,4 +1,5 @@
-﻿using RateController.Forms;
+﻿using RateController.Classes.Can;
+using RateController.Forms;
 using RateController.PGNs;
 using RateController.RateMap;
 using System;
@@ -12,7 +13,8 @@ namespace RateController.Classes
         public static PGN229 AOGsections;
         public static PGN254 AutoSteerPGN;
         public static PGN208 GPS;
-        public static IsobusComm IsobusComm;
+        public static CanBridgeComm CanBridgeComm;
+        public static IsobusComm IsobusComm;  // kept for any remaining references; not used in CAN mode
         public static PGN238 MachineConfig;
         public static PGN239 MachineData;
         public static frmMain MainForm;
@@ -70,6 +72,7 @@ namespace RateController.Classes
                 SafeTry(() => UDPaog.Stop());
                 SafeTry(() => UDPmodules.Stop());
 
+                SafeTry(() => CanBridgeComm?.Stop());
                 SafeTry(() => IsobusComm?.StopUDP());
                 SafeTry(() => IsobusComm?.Dispose());
 
@@ -157,7 +160,7 @@ namespace RateController.Classes
 
                 UDPaog = new UDPComm(MainForm, 17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
                 UDPmodules = new UDPComm(MainForm, 29999, 28888, 1480, "UDPmodules");                   // arduino
-                IsobusComm = new IsobusComm();                                                      // ISOBUS gateway
+                CanBridgeComm = new CanBridgeComm();
 
                 UDPmodules.Start();
                 if (!UDPmodules.IsRunning)
@@ -171,11 +174,10 @@ namespace RateController.Classes
                     Props.ShowMessage("UDPagio failed to start.", "", 3000, true, true);
                 }
 
-                // ISOBUS Gateway
-                if (Props.IsobusEnabled)
+                // CAN Bridge (replaces ISOBUS Gateway)
+                if (Props.CanEnabled)
                 {
-                    IsobusComm.StartUDP();
-                    IsobusComm.StartGateway();
+                    CanBridgeComm.Start(Props.CurrentCanDriver, Props.CanPort);
                 }
 
                 Props.DisplayPressure();
@@ -212,45 +214,36 @@ namespace RateController.Classes
             SafeEvent.Raise(RestoreMain);
         }
 
-        public static void UseIsobusComm(bool UseIsobus)
+        public static void UseCanComm(bool enable)
         {
-            if (UseIsobus && !Props.IsobusEnabled)
+            if (enable && !Props.CanEnabled)
             {
-                // Start ISOBUS gateway - first ensure clean state
-                Core.IsobusComm?.StopGateway();
-                Core.IsobusComm?.StopUDP();
-                System.Threading.Thread.Sleep(300);
+                // Start CAN bridge — ensure clean state first
+                Core.CanBridgeComm?.Stop();
 
-                bool udpStarted = Core.IsobusComm?.StartUDP() ?? false;
-                bool gatewayStarted = Core.IsobusComm?.StartGateway() ?? false;
-
-                if (gatewayStarted && udpStarted)
+                bool started = Core.CanBridgeComm?.Start(Props.CurrentCanDriver, Props.CanPort) ?? false;
+                if (started)
                 {
-                    Props.IsobusEnabled = true;
-                    Props.ShowMessage("ISOBUS Gateway started.","Help",10000);
-                }
-                else if (!gatewayStarted)
-                {
-                    Props.ShowMessage("Failed to start ISOBUS Gateway. Check that IsobusGateway.exe exists.");
-                    Core.IsobusComm?.StopUDP();
+                    Props.CanEnabled = true;
+                    Props.ShowMessage("CAN Bridge started.", "Help", 10000);
                 }
                 else
                 {
-                    Props.IsobusEnabled = true;
-                    Props.ShowMessage("ISOBUS Gateway started but UDP failed.");
+                    Props.ShowMessage("Failed to start CAN Bridge. Check adapter and COM port.");
                 }
             }
-            else if (Props.IsobusEnabled)
+            else if (Props.CanEnabled)
             {
-                // Stop ISOBUS gateway
-                Core.IsobusComm?.StopGateway();
-                Core.IsobusComm?.StopUDP();
-                Props.IsobusEnabled = false;
-                Props.ShowMessage("ISOBUS Gateway stopped.","Help",10000);
+                Core.CanBridgeComm?.Stop();
+                Props.CanEnabled = false;
+                Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
 
                 if (Props.SpeedMode == SpeedType.ISOBUS) Props.SpeedMode = SpeedType.GPS;
             }
         }
+
+        // Backwards-compatible alias
+        public static void UseIsobusComm(bool enable) => UseCanComm(enable);
 
         public static void RequestRestart()
         {

@@ -134,6 +134,12 @@
     <Compile Include="Classes\clsVirtualSwitchBox.cs" />
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
+    <Compile Include="Classes\Can\CanBridgeComm.cs" />
+    <Compile Include="Classes\Can\CanFrameTranslator.cs" />
+    <Compile Include="Classes\Can\ICanInterface.cs" />
+    <Compile Include="Classes\Can\InnoMakerInterface.cs" />
+    <Compile Include="Classes\Can\PcanInterface.cs" />
+    <Compile Include="Classes\Can\SlcanInterface.cs" />
     <Compile Include="Classes\Core.cs" />
     <Compile Include="Classes\FileNameValidator.cs" />
     <Compile Include="Classes\IsoBusComm.cs" />
@@ -626,9 +632,6 @@
     <EmbeddedResource Include="RateMap\frmMap.resx">
       <DependentUpon>frmMap.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="gateway.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Help\frmMap.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -692,9 +695,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IsobusGateway.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="RateControlOff.ico" />
   </ItemGroup>
   <ItemGroup>

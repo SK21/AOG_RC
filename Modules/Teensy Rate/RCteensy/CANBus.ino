@@ -26,9 +26,6 @@ struct IsobusIdentity {
 
 IsobusIdentity ISOBUSid;
 
-// CAN message statistics (struct defined in TCDefs.h)
-CANStats canStats = {0, 0, 0, 0};
-
 //-----------------------------------------------------------------------------
 // Build 64-bit NAME from identity fields
 //-----------------------------------------------------------------------------
@@ -110,27 +107,10 @@ void CANBus_SendAddressClaim() {
     if (ISOBUS.write(msg)) {
         ISOBUSid.lastClaimTime = millis();
         ISOBUSid.addressClaimed = true;
-        canStats.txCount++;
         Serial.print("Address claim sent: 0x");
         Serial.println(ISOBUSid.address, HEX);
     } else {
-        canStats.errorCount++;
         Serial.println("Address claim FAILED");
-    }
-}
-
-//-----------------------------------------------------------------------------
-// Maintain address claim (for TC Client mode - no proprietary data)
-//-----------------------------------------------------------------------------
-void CANBus_MaintainAddress() {
-    static uint32_t lastClaimCheck = 0;
-
-    // Address claiming - send initially and check every 5 seconds
-    if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000)) {
-        lastClaimCheck = millis();
-        if (!ISOBUSid.addressClaimed) {
-            CANBus_SendAddressClaim();
-        }
     }
 }
 
@@ -151,11 +131,9 @@ bool CANBus_SendProprietaryB(uint8_t pgnLow, const uint8_t* data, uint8_t len) {
     memcpy(msg.buf, data, msg.len);
 
     if (ISOBUS.write(msg)) {
-        canStats.txCount++;
         return true;
     }
 
-    canStats.errorCount++;
     return false;
 }
 
@@ -167,9 +145,6 @@ void CANBus_Receive() {
 
     while (ISOBUS.read(msg)) {
         if (!msg.flags.extended) continue;  // Only process extended frames
-
-        canStats.rxCount++;
-        canStats.lastRxTime = millis();
 
         // Extract PGN from 29-bit ID
         // ID format: Priority(3) | R(1) | DP(1) | PF(8) | PS(8) | SA(8)
@@ -239,89 +214,6 @@ void CANBus_Receive() {
                 CANBus_HandlePidSettings3(msg);
                 break;
 
-            case 0xFEF1:  // Machine Selected Speed
-                CANBus_HandleSpeed(msg, 0xFEF1);
-                break;
-
-            case 0xFE48:  // Wheel Based Speed
-                CANBus_HandleSpeed(msg, 0xFE48);
-                break;
-
-            case 0xFE49:  // Ground Based Speed
-                CANBus_HandleSpeed(msg, 0xFE49);
-                break;
-
-            case 0xFEF8:  // Task Controller Status (PGN 65272)
-                // Route to TC Client if in TC mode
-                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                    TCClient_HandleTCStatus(msg);
-                }
-                break;
-
-            case 0xE800:  // Acknowledgment (ACKM) PGN 59392
-                {
-                    uint8_t ctrl = msg.buf[0];
-                    uint32_t ackedPgn = msg.buf[5] | (msg.buf[6] << 8) | ((uint32_t)msg.buf[7] << 16);
-                    Serial.print("  ACKM: ");
-                    if (ctrl == 0) Serial.print("ACK");
-                    else if (ctrl == 1) Serial.print("NACK");
-                    else if (ctrl == 2) Serial.print("ACCESS_DENIED");
-                    else if (ctrl == 3) Serial.print("CANNOT_RESPOND");
-                    else Serial.print(ctrl);
-                    Serial.print(" for PGN 0x");
-                    Serial.println(ackedPgn, HEX);
-
-                    // If TC Server NACKs our process data command, fast-fail to retry
-                    if (ctrl == 1 && ackedPgn == 0xCB00 && (MDL.CommMode == 3 || MDL.CommMode == 4)) {
-                        uint8_t tcState = TCClient_GetState();
-                        if (tcState >= 4 && tcState <= 9) {  // Any waiting state after structure label
-                            Serial.println("TC Server NACK - not registered, retrying");
-                            TCClient_SetState(TC_ERROR);
-                        }
-                    }
-                }
-                break;
-
-            case 0xEC00:  // Transport Protocol - Connection Management
-                // Route to TP handler
-                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                    TP_HandleCM(msg);
-                }
-                break;
-
-            case 0xEB00:  // Transport Protocol - Data Transfer
-                // Route to TP handler
-                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                    TP_HandleDT(msg);
-                }
-                break;
-
-            case 0xC700:  // Extended Transport Protocol - Connection Management
-                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                    TP_HandleETPCM(msg);
-                }
-                break;
-
-            case 0xC600:  // Extended Transport Protocol - Data Transfer
-                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                    TP_HandleETPDT(msg);
-                }
-                break;
-
-            default:
-                // Check for Process Data PGNs (0xCB00 range) - destination specific
-                if (pf == 0xCB) {
-                    // Check if this is addressed to us or broadcast
-                    // PS is destination for PDU1 (pf < 240)
-                    if (ps == ISOBUSid.address || ps == 0xFF || ps == 0x00) {
-                        if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                            Serial.print("  -> ProcessData cmd=0x");
-                            Serial.println(msg.buf[0], HEX);
-                            TCClient_HandleProcessData(msg, pf, ps);
-                        }
-                    }
-                }
-                break;
         }
     }
 }
@@ -503,21 +395,6 @@ void CANBus_HandleFlowCal(const CAN_message_t& msg) {
     Sensor[senId].MeterCal = calRaw / 1000.0;
 }
 
-void CANBus_HandleSpeed(const CAN_message_t& msg, uint32_t pgn) {
-    // Speed messages from tractor ECU
-    // Bytes 0-1: Speed in 0.001 m/s (mm/s)
-    uint16_t speed_mmps = msg.buf[0] | (msg.buf[1] << 8);
-
-    if (speed_mmps != 0xFFFF) {
-        // Convert to km/h: (mm/s) * 3600 / 1000000 = (mm/s) * 0.0036
-        float speed_kmh = speed_mmps * 0.0036;
-
-        // Store as ISOBUS speed source (could be used instead of wheel sensor)
-        // IsobusSpeed = speed_kmh;
-        // IsobusSpeedTime = millis();
-    }
-}
-
 //-----------------------------------------------------------------------------
 // Send sensor data to Gateway (PGN 0xFF00 - Rate/Quantity)
 //-----------------------------------------------------------------------------
@@ -679,37 +556,4 @@ void CANBus_Update() {
     }
 }
 
-//-----------------------------------------------------------------------------
-// Send proprietary status messages for TC Client mode
-// Sends PWM/Hz (0xFF01), module status (0xFF02), and module ident (0xFF08)
-// so Gateway can forward complete status to RC
-// Rate/qty is handled by TC Client process data (DDI 2, DDI 48)
-//-----------------------------------------------------------------------------
-void CANBus_SendProprietaryStatus() {
-    static uint32_t lastPwmHzSend = 0;
-    static uint32_t lastStatusSend = 0;
-    static uint32_t lastIdentSend = 0;
-
-    if (!ISOBUSid.addressClaimed) return;
-
-    // Send PWM/Hz at same rate as sensor data (SendTime = 200ms)
-    if (millis() - lastPwmHzSend >= SendTime) {
-        lastPwmHzSend = millis();
-        for (int i = 0; i < MDL.SensorCount; i++) {
-            CANBus_SendSensorPwmHz(i);
-        }
-    }
-
-    // Send module status at same rate (triggers Gateway to send PGN 32401 with full data)
-    if (millis() - lastStatusSend >= SendTime) {
-        lastStatusSend = millis();
-        CANBus_SendModuleStatus();
-    }
-
-    // Send module identification every 500ms
-    if (millis() - lastIdentSend >= 500) {
-        lastIdentSend = millis();
-        CANBus_SendModuleIdent();
-    }
-}
 

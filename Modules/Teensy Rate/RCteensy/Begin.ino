@@ -162,18 +162,10 @@ void DoSetup()
 	pinMode(LED_BUILTIN, OUTPUT);
 
 	// CAN/ISOBUS initialization
-	if (MDL.CommMode == 1 || MDL.CommMode == 2 || MDL.CommMode == 3 || MDL.CommMode == 4)
+	if (MDL.CommMode == 1 || MDL.CommMode == 2 )
 	{
 		Serial.println("");
 		CANBus_Begin();
-	}
-
-	// TC Client initialization (CommMode 3 or 4)
-	if (MDL.CommMode == 3 || MDL.CommMode == 4)
-	{
-		Serial.println("");
-		TP_Begin();
-		TCClient_Begin();
 	}
 
 	Serial.println("");
@@ -483,7 +475,7 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
-	MDL.CommMode = 3;  // Default to CAN Proprietary (working), change to 3 for TC Client
+	MDL.CommMode = 1;
 }
 
 bool ValidData()

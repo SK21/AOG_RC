@@ -78,10 +78,10 @@ namespace RateController.PGNs
 
                 Data[23] = Core.Tls.CRC(Data, cByteCount - 1);
 
-                // send - route through gateway if ISOBUS enabled
-                if (Props.IsobusEnabled && Core.IsobusComm != null)
+                // send - route through CAN bridge or Ethernet
+                if (Props.CanEnabled && Core.CanBridgeComm != null)
                 {
-                    Core.IsobusComm.SendModuleCommand(Data);
+                    Core.CanBridgeComm.SendModuleCommand(Data);
                 }
                 else
                 {

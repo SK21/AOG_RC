@@ -7,7 +7,6 @@
 #include <fnet.h>  // hint for VM�s library resolver. Speed up compile with Deep Search off.
 #include <NativeEthernetUdp.h>
 #include <FlexCAN_T4.h>
-#include "TCDefs.h"  // TC Client shared definitions (must be after FlexCAN_T4.h)
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 #include "FXUtil.h"		// read_ascii_line(), hex file support
@@ -16,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 13026;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 27026;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -68,7 +67,7 @@ struct ModuleConfig
 	bool ADS1115Enabled = false;
 	uint8_t WheelSpeedPin = NC;
 	float WheelCal = 0;
-	uint8_t CommMode = 3;			// 0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary, 3 - TC Client, 4 - UDP + TC Client
+	uint8_t CommMode = 1;			// 0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary
 };
 
 ModuleConfig MDL;
@@ -191,23 +190,6 @@ void loop()
 		//ReceiveUDP();
 		CANBus_Update();
 		break;
-	case 3:
-		// TC Client only - STANDARD ISOBUS
-		CANBus_MaintainAddress();  // Handle address claiming
-		CANBus_Receive();          // Handle incoming CAN (address claim, TP, etc.)
-		TP_Update();               // Transport Protocol state machine
-		TCClient_Update();         // TC Client state machine
-		// NO proprietary status - standard ISOBUS only
-		break;
-	case 4:
-		// UDP + TC Client
-		//ReceiveUDP();
-		CANBus_MaintainAddress();  // Handle address claiming
-		CANBus_Receive();          // Handle incoming CAN
-		TP_Update();
-		TCClient_Update();
-		CANBus_SendProprietaryStatus();  // Send PWM/Hz and module ident for RC display
-		break;
 	}
 
 	ReceiveUDP();
@@ -234,10 +216,7 @@ void loop()
 	case 2:
 		SendComm();
 		break;
-	case 4:
-		SendComm();
-		break;
-	// CommMode 1, 3 don't need SendComm() - data sent via CANBus_Update() or TCClient_Update()
+	// CommMode 1 doesn't need SendComm() - data sent via CANBus_Update()
 	}
 
 	Blink();
@@ -370,24 +349,11 @@ void Blink()
 	static bool State = false;
 	static elapsedMillis BlinkTmr;
 	static elapsedMicros LoopTmr;
-	static uint32_t lastRxCount = 0;
 
 	if (BlinkTmr > 1000)
 	{
 		BlinkTmr = 0;
 		State = !State;
 		digitalWrite(LED_BUILTIN, State);
-
-		// Debug output for TC Client mode
-		if (MDL.CommMode == 3 || MDL.CommMode == 4)
-		{
-			Serial.print("CAN RX: ");
-			Serial.print(canStats.rxCount - lastRxCount);
-			Serial.print("/s, TC State: ");
-			Serial.print(TCClient_GetState());
-			Serial.print(", TC Addr: 0x");
-			Serial.println(TCClient_GetTCAddress(), HEX);
-			lastRxCount = canStats.rxCount;
-		}
 	}
 }

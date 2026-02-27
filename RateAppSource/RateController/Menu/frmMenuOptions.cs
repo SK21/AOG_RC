@@ -126,18 +126,9 @@ namespace RateController.Menu
                 bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
                 Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-                Core.UseIsobusComm(ckIsoBus.Checked);
+                Core.UseCanComm(ckIsoBus.Checked);
                 Core.ModuleConfig.Send();
                 Props.ShowMessage("Settings sent to module", "Config", 10000);
-
-                // Restart gateway if diagnostics changed and ISOBUS is enabled (to apply console visibility)
-                if (diagnosticsChanged && Props.IsobusEnabled && Core.IsobusComm != null)
-                {
-                    Core.IsobusComm.StopGateway();
-                    System.Threading.Thread.Sleep(500);
-                    Core.IsobusComm.StartGateway();
-                    Props.ShowMessage(ckDiagnostics.Checked ? "Gateway diagnostics enabled." : "Gateway diagnostics disabled.");
-                }
 
                 SetButtons(false);
                 UpdateForm();
@@ -292,8 +283,8 @@ namespace RateController.Menu
             lbPulses.Enabled = rbWheel.Checked;
             btnCal.Enabled = rbWheel.Checked;
 
-            // ISOBUS speed option only available when ISOBUS is enabled
-            rbIsoBusSpeed.Enabled = ckIsoBus.Checked;
+            // ISOBUS speed source removed — disable this option
+            rbIsoBusSpeed.Enabled = false;
         }
 
         private void SetButtons(bool Edited)
@@ -423,32 +414,20 @@ namespace RateController.Menu
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // Check if ISOBUS is enabled and comm object exists
-            if (Core.IsobusComm != null && Props.IsobusEnabled)
+            if (Core.CanBridgeComm != null && Props.CanEnabled)
             {
-                // lbConnected = Actual ISOBUS module data being received (PGN 32400/32401)
-                if (Core.IsobusComm.ModuleDataReceiving)
-                {
-                    lbConnected.Image = Properties.Resources.On;
-                }
-                else
-                {
-                    lbConnected.Image = Properties.Resources.Off;
-                }
+                // lbConnected = module data (PGN 32400/32401) received within 2s
+                lbConnected.Image = Core.CanBridgeComm.ModuleDataReceiving
+                    ? Properties.Resources.On
+                    : Properties.Resources.Off;
 
-                // lbDriverFound = Gateway process responding via UDP
-                if (Core.IsobusComm.GatewayConnected)
-                {
-                    lbDriverFound.Image = Properties.Resources.On;
-                }
-                else
-                {
-                    lbDriverFound.Image = Properties.Resources.Off;
-                }
+                // lbDriverFound = CAN adapter open and frames flowing within 4s
+                lbDriverFound.Image = Core.CanBridgeComm.CanAdapterConnected
+                    ? Properties.Resources.On
+                    : Properties.Resources.Off;
             }
             else
             {
-                // ISOBUS not enabled - show off for both
                 lbConnected.Image = Properties.Resources.Off;
                 lbDriverFound.Image = Properties.Resources.Off;
             }
@@ -505,7 +484,7 @@ namespace RateController.Menu
 
             ckMetric.Checked = Props.UseMetric;
             ckRateDisplay.Checked = Props.UseRateDisplay;
-            ckIsoBus.Checked = Props.IsobusEnabled;
+            ckIsoBus.Checked = Props.CanEnabled;
 
             switch (Props.CurrentCanDriver)
             {

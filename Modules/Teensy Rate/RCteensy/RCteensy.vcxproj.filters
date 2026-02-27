@@ -19,7 +19,6 @@
     <ClCompile Include="Analog.ino" />
     <ClCompile Include="Begin.ino" />
     <ClCompile Include="CANBus.ino" />
-    <ClCompile Include="DDOP.ino" />
     <ClCompile Include="EthernetUpdate.ino" />
     <ClCompile Include="FlashTxx.c">
       <Filter>Source Files</Filter>
@@ -42,11 +41,6 @@
     <ClCompile Include="Receive.ino" />
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
-    <ClCompile Include="TCClient.ino" />
-    <ClCompile Include="TCDefs.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TP.ino" />
     <ClCompile Include="WheelSpeed.ino" />
   </ItemGroup>
   <ItemGroup>

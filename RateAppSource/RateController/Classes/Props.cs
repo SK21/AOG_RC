@@ -86,7 +86,7 @@ namespace RateController.Classes
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
-        private static bool cIsobusEnabled = false;
+        private static bool cIsobusEnabled = false;  // backing field for CanEnabled
         private static bool cMapPreview = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static int cPrimeDelay = 3;
@@ -223,7 +223,8 @@ namespace RateController.Classes
         public static string FieldNamesPath
         { get { return cFieldNames; } }
 
-        public static bool IsobusEnabled
+        /// <summary>True when CAN bus communication is enabled (replaces IsobusEnabled).</summary>
+        public static bool CanEnabled
         {
             get { return cIsobusEnabled; }
             set
@@ -231,6 +232,13 @@ namespace RateController.Classes
                 cIsobusEnabled = value;
                 SetAppProp("IsobusEnabled", cIsobusEnabled.ToString());
             }
+        }
+
+        /// <summary>Backwards-compatible alias for CanEnabled.</summary>
+        public static bool IsobusEnabled
+        {
+            get { return cIsobusEnabled; }
+            set { CanEnabled = value; }
         }
 
         public static clsJobDataCollector JobCollector
@@ -415,15 +423,8 @@ namespace RateController.Classes
                             break;
 
                         case SpeedType.ISOBUS:
-                            if (Core.IsobusComm != null && Core.IsobusComm.SpeedValid)
-                            {
-                                Result = Core.IsobusComm.Speed_KMH;
-                            }
-                            else
-                            {
-                                // Fallback to GPS if ISOBUS speed not available
-                                Result = Core.GPS.Speed_KMH;
-                            }
+                            // ISOBUS speed source removed — fall through to GPS
+                            Result = Core.GPS.Speed_KMH;
                             break;
 
                         default:
