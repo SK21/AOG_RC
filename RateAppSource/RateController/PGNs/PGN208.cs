@@ -117,7 +117,7 @@ namespace RateController.PGNs
                         cLongitude = BitConverter.ToDouble(Data, 5);
                         cLatitude = BitConverter.ToDouble(Data, 13);
                         cKMH = (BitConverter.ToDouble(Data, 21) * 0.1) + (cKMH * 0.9);
-                        cElevationMeters = BitConverter.ToDouble(Data, 29);
+                        if (Data.Length > 30) cElevationMeters = BitConverter.ToDouble(Data, 29);
                         ReceiveTime = DateTime.Now;
                     }
                 }
