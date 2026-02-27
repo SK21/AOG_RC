@@ -8,7 +8,6 @@
 #include <NativeEthernetUdp.h>
 #include <FlexCAN_T4.h>
 #include "TCDefs.h"  // TC Client shared definitions (must be after FlexCAN_T4.h)
-#include "VTDefs.h"  // VT Client shared definitions
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 #include "FXUtil.h"		// read_ascii_line(), hex file support
@@ -198,7 +197,6 @@ void loop()
 		CANBus_Receive();          // Handle incoming CAN (address claim, TP, etc.)
 		TP_Update();               // Transport Protocol state machine
 		TCClient_Update();         // TC Client state machine
-		VTClient_Update();         // VT Client state machine
 		// NO proprietary status - standard ISOBUS only
 		break;
 	case 4:
@@ -208,7 +206,6 @@ void loop()
 		CANBus_Receive();          // Handle incoming CAN
 		TP_Update();
 		TCClient_Update();
-		VTClient_Update();         // VT Client state machine
 		CANBus_SendProprietaryStatus();  // Send PWM/Hz and module ident for RC display
 		break;
 	}
@@ -389,9 +386,7 @@ void Blink()
 			Serial.print("/s, TC State: ");
 			Serial.print(TCClient_GetState());
 			Serial.print(", TC Addr: 0x");
-			Serial.print(TCClient_GetTCAddress(), HEX);
-			Serial.print(", VT State: ");
-			Serial.println(VTClient_GetState());
+			Serial.println(TCClient_GetTCAddress(), HEX);
 			lastRxCount = canStats.rxCount;
 		}
 	}

@@ -251,12 +251,6 @@ void CANBus_Receive() {
                 CANBus_HandleSpeed(msg, 0xFE49);
                 break;
 
-            case 0xFE6E:  // VT Status (PGN 65134) - broadcast
-                if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                    VTClient_HandleVTStatus(msg);
-                }
-                break;
-
             case 0xFEF8:  // Task Controller Status (PGN 65272)
                 // Route to TC Client if in TC mode
                 if (MDL.CommMode == 3 || MDL.CommMode == 4) {
@@ -324,25 +318,6 @@ void CANBus_Receive() {
                             Serial.print("  -> ProcessData cmd=0x");
                             Serial.println(msg.buf[0], HEX);
                             TCClient_HandleProcessData(msg, pf, ps);
-                        }
-                    }
-                }
-                // Check for VT to ECU (PGN 0xE600, PDU1, pf=0xE6)
-                if (pf == 0xE6) {
-                    if (MDL.CommMode == 3 || MDL.CommMode == 4) {
-                        // Debug: show func code of all 0xE600 messages
-                        Serial.print("  VT msg func=0x");
-                        Serial.print(msg.buf[0], HEX);
-                        Serial.print(" to=0x");
-                        Serial.println(ps, HEX);
-
-                        if (ps == ISOBUSid.address || ps == 0xFF) {
-                            // Route to VT handler (AgIsoStack++ VT Server sends responses to 0xFF)
-                            VTClient_HandleVTtoECU(msg);
-                        }
-                        if (ps == 0xFF && msg.buf[0] == VT_FUNC_VT_STATUS) {
-                            // VT Status broadcast (AgIsoStack++ sends on 0xE600, not 0xFE6E)
-                            VTClient_HandleVTStatus(msg);
                         }
                     }
                 }

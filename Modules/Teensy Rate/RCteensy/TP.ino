@@ -73,11 +73,11 @@ struct TPSession {
     // ETP-specific: Data Packet Offset
     uint32_t etpDPO = 0;           // Current data packet offset for ETP
 
-    // Send buffer (points to DDOP buffer, VT pool, or other source)
+    // Send buffer
     const uint8_t* sendBuffer = nullptr;
     uint32_t sendOffset = 0;
     bool hasCmdByte = false;       // True if command byte needs to be prepended
-    uint8_t cmdByte = 0;           // Command byte to prepend (e.g. 0x61 for DDOP, 0x11 for VT pool)
+    uint8_t cmdByte = 0;           // Command byte to prepend (e.g. 0x61 for DDOP)
 
     // Receive buffer (only for standard TP)
     uint8_t receiveBuffer[TP_MAX_RECEIVE_SIZE];
@@ -197,10 +197,6 @@ bool TP_SendDDOP(uint8_t destAddr, const uint8_t* data, uint16_t size) {
     return TP_SendLargeMessage(destAddr, 0xCB00, DDOP_TRANSFER_CMD, data, size);
 }
 
-bool TP_SendVTPool(uint8_t destAddr, const uint8_t* data, uint16_t size) {
-    // VT Object Pool transfer: PGN 0xE700, command byte 0x11
-    return TP_SendLargeMessage(destAddr, 0xE700, VT_POOL_TRANSFER_CMD, data, size);
-}
 
 //=============================================================================
 // Standard TP Send Functions

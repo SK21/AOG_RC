@@ -86,7 +86,6 @@ void TP_HandleETPCM(const CAN_message_t& msg);
 void TP_HandleETPDT(const CAN_message_t& msg);
 bool TP_SendLargeMessage(uint8_t destAddr, uint32_t pgn, uint8_t cmdByteVal, const uint8_t* data, uint16_t size);
 bool TP_SendDDOP(uint8_t destAddr, const uint8_t* data, uint16_t size);
-bool TP_SendVTPool(uint8_t destAddr, const uint8_t* data, uint16_t size);
 bool TP_IsBusy();
 bool TP_IsComplete();
 bool TP_IsError();
