@@ -45,7 +45,7 @@
             this.cbRemoteRelays = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbEthernet = new System.Windows.Forms.RadioButton();
-            this.rbIsobus = new System.Windows.Forms.RadioButton();
+            this.rbCAN = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -253,7 +253,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.rbIsobus);
+            this.groupBox1.Controls.Add(this.rbCAN);
             this.groupBox1.Controls.Add(this.rbEthernet);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(101, 42);
@@ -279,19 +279,19 @@
             this.rbEthernet.UseVisualStyleBackColor = true;
             this.rbEthernet.CheckedChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             // 
-            // rbIsobus
+            // rbCAN
             // 
-            this.rbIsobus.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbIsobus.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbIsobus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbIsobus.Location = new System.Drawing.Point(71, 92);
-            this.rbIsobus.Name = "rbIsobus";
-            this.rbIsobus.Size = new System.Drawing.Size(187, 36);
-            this.rbIsobus.TabIndex = 345;
-            this.rbIsobus.Text = "ISOBUS";
-            this.rbIsobus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbIsobus.UseVisualStyleBackColor = true;
-            this.rbIsobus.CheckedChanged += new System.EventHandler(this.tbModuleID_TextChanged);
+            this.rbCAN.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbCAN.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbCAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbCAN.Location = new System.Drawing.Point(71, 92);
+            this.rbCAN.Name = "rbCAN";
+            this.rbCAN.Size = new System.Drawing.Size(187, 36);
+            this.rbCAN.TabIndex = 345;
+            this.rbCAN.Text = "CAN";
+            this.rbCAN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbCAN.UseVisualStyleBackColor = true;
+            this.rbCAN.CheckedChanged += new System.EventHandler(this.tbModuleID_TextChanged);
             // 
             // frmMenuConfig
             // 
@@ -342,7 +342,7 @@
         private System.Windows.Forms.Label lbRemoteRelay;
         private System.Windows.Forms.ComboBox cbRemoteRelays;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton rbIsobus;
+        private System.Windows.Forms.RadioButton rbCAN;
         private System.Windows.Forms.RadioButton rbEthernet;
     }
 }

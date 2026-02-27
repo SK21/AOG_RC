@@ -14,7 +14,6 @@ namespace RateController.Classes
         public static PGN254 AutoSteerPGN;
         public static PGN208 GPS;
         public static CanBridgeComm CanBridgeComm;
-        public static IsobusComm IsobusComm;  // kept for any remaining references; not used in CAN mode
         public static PGN238 MachineConfig;
         public static PGN239 MachineData;
         public static frmMain MainForm;
@@ -73,8 +72,6 @@ namespace RateController.Classes
                 SafeTry(() => UDPmodules.Stop());
 
                 SafeTry(() => CanBridgeComm?.Stop());
-                SafeTry(() => IsobusComm?.StopUDP());
-                SafeTry(() => IsobusComm?.Dispose());
 
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => Sections.Save());
@@ -174,7 +171,6 @@ namespace RateController.Classes
                     Props.ShowMessage("UDPagio failed to start.", "", 3000, true, true);
                 }
 
-                // CAN Bridge (replaces ISOBUS Gateway)
                 if (Props.CanEnabled)
                 {
                     CanBridgeComm.Start(Props.CurrentCanDriver, Props.CanPort);
@@ -241,9 +237,6 @@ namespace RateController.Classes
                 if (Props.SpeedMode == SpeedType.ISOBUS) Props.SpeedMode = SpeedType.GPS;
             }
         }
-
-        // Backwards-compatible alias
-        public static void UseIsobusComm(bool enable) => UseCanComm(enable);
 
         public static void RequestRestart()
         {

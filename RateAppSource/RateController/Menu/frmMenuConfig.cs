@@ -40,14 +40,13 @@ namespace RateController.Menu
 
                 if (rbEthernet.Checked)
                 {
-                    Core.UseIsobusComm(false);
-                    if (!Props.IsobusEnabled) Props.ShowMessage("Send changes to module.","Help",10000);
+                    Core.UseCanComm(false);
+                    if (!Props.CanEnabled) Props.ShowMessage("Send changes to module.", "Help", 10000);
                 }
                 else
                 {
-                    // Isobus only for most pgns
-                    Core.UseIsobusComm(true);
-                    if (Props.IsobusEnabled) Props.ShowMessage("Send changes to module. Check Isobus settings at Menu> Options> Isobus.", "Help", 10000);
+                    Core.UseCanComm(true);
+                    if (Props.CanEnabled) Props.ShowMessage("Send changes to module. Check CAN settings at Menu > Options > CAN.", "Help", 10000);
                 }
 
                 Core.ModuleConfig.Save();
@@ -174,9 +173,9 @@ namespace RateController.Menu
             ckFlowOn.Checked = Core.ModuleConfig.InvertFlow;
             ckADS1115enabled.Checked = Core.ModuleConfig.ADS1115enabled;
 
-            if (Props.IsobusEnabled)
+            if (Props.CanEnabled)
             {
-                rbIsobus.Checked = true;
+                rbCAN.Checked = true;
             }
             else
             {

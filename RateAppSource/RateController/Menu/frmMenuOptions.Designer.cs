@@ -35,8 +35,6 @@
             this.ckMetric = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSpeed = new System.Windows.Forms.TabPage();
-            this.rbIsoBusSpeed = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rbAOG = new System.Windows.Forms.RadioButton();
             this.btnCal = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -160,8 +158,6 @@
             // tabSpeed
             // 
             this.tabSpeed.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabSpeed.Controls.Add(this.rbIsoBusSpeed);
-            this.tabSpeed.Controls.Add(this.groupBox2);
             this.tabSpeed.Controls.Add(this.rbAOG);
             this.tabSpeed.Controls.Add(this.btnCal);
             this.tabSpeed.Controls.Add(this.groupBox1);
@@ -186,35 +182,13 @@
             this.tabSpeed.Text = "Speed Source";
             this.tabSpeed.UseVisualStyleBackColor = true;
             // 
-            // rbIsoBusSpeed
-            // 
-            this.rbIsoBusSpeed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbIsoBusSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbIsoBusSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbIsoBusSpeed.Location = new System.Drawing.Point(162, 61);
-            this.rbIsoBusSpeed.Name = "rbIsoBusSpeed";
-            this.rbIsoBusSpeed.Size = new System.Drawing.Size(187, 36);
-            this.rbIsoBusSpeed.TabIndex = 348;
-            this.rbIsoBusSpeed.Text = "ISOBUS";
-            this.rbIsoBusSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbIsoBusSpeed.UseVisualStyleBackColor = true;
-            this.rbIsoBusSpeed.CheckedChanged += new System.EventHandler(this.rbAOG_CheckedChanged);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Location = new System.Drawing.Point(15, 108);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(480, 3);
-            this.groupBox2.TabIndex = 347;
-            this.groupBox2.TabStop = false;
-            // 
             // rbAOG
             // 
             this.rbAOG.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbAOG.Checked = true;
             this.rbAOG.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbAOG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbAOG.Location = new System.Drawing.Point(162, 8);
+            this.rbAOG.Location = new System.Drawing.Point(162, 27);
             this.rbAOG.Name = "rbAOG";
             this.rbAOG.Size = new System.Drawing.Size(187, 36);
             this.rbAOG.TabIndex = 244;
@@ -244,7 +218,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(18, 51);
+            this.groupBox1.Location = new System.Drawing.Point(18, 70);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(480, 3);
             this.groupBox1.TabIndex = 342;
@@ -274,7 +248,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Location = new System.Drawing.Point(15, 210);
+            this.groupBox3.Location = new System.Drawing.Point(15, 190);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(480, 3);
             this.groupBox3.TabIndex = 344;
@@ -327,7 +301,7 @@
             this.rbSimulated.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbSimulated.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbSimulated.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbSimulated.Location = new System.Drawing.Point(162, 121);
+            this.rbSimulated.Location = new System.Drawing.Point(162, 101);
             this.rbSimulated.Name = "rbSimulated";
             this.rbSimulated.Size = new System.Drawing.Size(187, 36);
             this.rbSimulated.TabIndex = 246;
@@ -353,7 +327,7 @@
             // 
             this.tbSimSpeed.Enabled = false;
             this.tbSimSpeed.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSimSpeed.Location = new System.Drawing.Point(200, 170);
+            this.tbSimSpeed.Location = new System.Drawing.Point(200, 150);
             this.tbSimSpeed.Margin = new System.Windows.Forms.Padding(6);
             this.tbSimSpeed.MaxLength = 8;
             this.tbSimSpeed.Name = "tbSimSpeed";
@@ -407,7 +381,7 @@
             this.lbSimUnits.AutoSize = true;
             this.lbSimUnits.Enabled = false;
             this.lbSimUnits.ForeColor = System.Drawing.Color.DarkGreen;
-            this.lbSimUnits.Location = new System.Drawing.Point(290, 173);
+            this.lbSimUnits.Location = new System.Drawing.Point(290, 153);
             this.lbSimUnits.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbSimUnits.Name = "lbSimUnits";
             this.lbSimUnits.Size = new System.Drawing.Size(48, 24);
@@ -431,7 +405,7 @@
             this.tabIsoBus.Padding = new System.Windows.Forms.Padding(3);
             this.tabIsoBus.Size = new System.Drawing.Size(508, 411);
             this.tabIsoBus.TabIndex = 1;
-            this.tabIsoBus.Text = "ISOBUS";
+            this.tabIsoBus.Text = "CanBus";
             this.tabIsoBus.UseVisualStyleBackColor = true;
             // 
             // gbxPort
@@ -530,9 +504,9 @@
             this.label13.Location = new System.Drawing.Point(221, 374);
             this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(227, 23);
+            this.label13.Size = new System.Drawing.Size(234, 23);
             this.label13.TabIndex = 348;
-            this.label13.Text = "IsoBus Module Connected";
+            this.label13.Text = "CanBus Module Connected";
             // 
             // gbxDrivers
             // 
@@ -605,7 +579,7 @@
             this.ckIsoBus.Text = "Enabled";
             this.ckIsoBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckIsoBus.UseVisualStyleBackColor = true;
-            this.ckIsoBus.CheckedChanged += new System.EventHandler(this.ckIsobusEnabled_CheckedChanged);
+            this.ckIsoBus.CheckedChanged += new System.EventHandler(this.ckCAN_CheckedChanged);
             // 
             // timer1
             // 
@@ -649,8 +623,6 @@
         private System.Windows.Forms.CheckBox ckRateDisplay;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabSpeed;
-        private System.Windows.Forms.RadioButton rbIsoBusSpeed;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rbAOG;
         private System.Windows.Forms.Button btnCal;
         private System.Windows.Forms.GroupBox groupBox1;

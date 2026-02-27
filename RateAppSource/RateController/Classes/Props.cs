@@ -86,7 +86,7 @@ namespace RateController.Classes
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
-        private static bool cIsobusEnabled = false;  // backing field for CanEnabled
+        private static bool cCanEnabled = false;
         private static bool cMapPreview = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static int cPrimeDelay = 3;
@@ -223,22 +223,14 @@ namespace RateController.Classes
         public static string FieldNamesPath
         { get { return cFieldNames; } }
 
-        /// <summary>True when CAN bus communication is enabled (replaces IsobusEnabled).</summary>
         public static bool CanEnabled
         {
-            get { return cIsobusEnabled; }
+            get { return cCanEnabled; }
             set
             {
-                cIsobusEnabled = value;
-                SetAppProp("IsobusEnabled", cIsobusEnabled.ToString());
+                cCanEnabled = value;
+                SetAppProp("CanEnabled", cCanEnabled.ToString());
             }
-        }
-
-        /// <summary>Backwards-compatible alias for CanEnabled.</summary>
-        public static bool IsobusEnabled
-        {
-            get { return cIsobusEnabled; }
-            set { CanEnabled = value; }
         }
 
         public static clsJobDataCollector JobCollector
@@ -971,7 +963,8 @@ namespace RateController.Classes
             // application properties
             cSimSpeed = double.TryParse(GetAppProp("SimSpeed"), out double spd) ? spd : 8;
             cSpeedMode = Enum.TryParse(GetAppProp("SpeedMode"), out SpeedType spt) ? spt : SpeedType.GPS;
-            cIsobusEnabled = bool.TryParse(GetAppProp("IsobusEnabled"), out bool ibe) ? ibe : false;
+            cCanEnabled = bool.TryParse(GetAppProp("CanEnabled"), out bool ibe) ? ibe : false;
+            if (!ibe) cCanEnabled = bool.TryParse(GetAppProp("IsobusEnabled"), out bool ibe2) ? ibe2 : false; // migrate old key
             cUseMetric = bool.TryParse(GetAppProp("UseMetric"), out bool mt) ? mt : false;
             cShowPressure = bool.TryParse(GetAppProp("ShowPressure"), out bool sp) ? sp : false;
             cShowSwitches = bool.TryParse(GetAppProp("ShowSwitches"), out bool ss) ? ss : false;

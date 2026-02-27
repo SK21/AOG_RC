@@ -5,18 +5,16 @@ using System.Windows.Forms;
 namespace RateController.Classes.Can
 {
     /// <summary>
-    /// Replaces IsobusComm. Provides direct CAN bus communication with Teensy modules
-    /// using proprietary frames 0xFF00-0xFF0B. No ISOBUS stack, no subprocess, no loopback UDP.
+    /// Provides direct CAN bus communication with Teensy modules using proprietary
+    /// frames 0xFF00-0xFF0B at 250 kbps. No subprocess required.
     ///
     /// Threading:
     ///   CAN receive runs on the driver's background thread (SerialPort.DataReceived or poll loop).
-    ///   All RC handler calls (ForwardSensorData, etc.) are marshalled to the UI thread via
-    ///   MainForm.BeginInvoke, matching the pattern used by UDPComm.
+    ///   All RC handler calls are marshalled to the UI thread via MainForm.BeginInvoke.
     ///
     /// Module discovery:
     ///   Modules are considered connected when 0xFF08 (ident) is first received.
     ///   Modules are considered disconnected when 0xFF08 is absent for > 2 seconds.
-    ///   No DDOP, no address claiming, no TC handshake required.
     /// </summary>
     public class CanBridgeComm : IDisposable
     {
@@ -48,7 +46,7 @@ namespace RateController.Classes.Can
 
         public DateTime LastModuleDataTime => _lastModuleDataTime;
 
-        /// <summary>Returns PGN traffic log for diagnostics display (same format as IsobusComm).</summary>
+        /// <summary>Returns PGN traffic log for diagnostics display.</summary>
         public string Log() => _cLog;
 
         public bool Start(CanDriver driver, string port)

@@ -217,10 +217,9 @@ namespace RateController.Menu
 
             if (!FreezeUpdate)
             {
-                // Show ISOBUS log if enabled, otherwise Ethernet log
-                if (Props.IsobusEnabled && Core.IsobusComm != null)
+                if (Props.CanEnabled && Core.CanBridgeComm != null)
                 {
-                    tbEthernet.Text = Core.IsobusComm.Log();
+                    tbEthernet.Text = Core.CanBridgeComm.Log();
                 }
                 else
                 {

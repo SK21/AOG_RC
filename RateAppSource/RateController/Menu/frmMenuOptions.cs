@@ -54,10 +54,6 @@ namespace RateController.Menu
                 {
                     Props.SpeedMode = SpeedType.GPS;
                 }
-                else if (rbIsoBusSpeed.Checked)
-                {
-                    Props.SpeedMode = SpeedType.ISOBUS;
-                }
                 else if (rbWheel.Checked)
                 {
                     Props.SpeedMode = SpeedType.Wheel;
@@ -102,8 +98,7 @@ namespace RateController.Menu
                     butUpdateModules.Enabled = rbWheel.Checked;
                 }
 
-                // ISOBUS settings
-                // Save CAN driver and COM port BEFORE starting gateway (so UpdateGatewayConfig uses new values)
+                // CAN settings
                 if (rbAdapter2.Checked)
                 {
                     Props.CurrentCanDriver = CanDriver.InnoMaker;
@@ -159,7 +154,7 @@ namespace RateController.Menu
             if (!Initializing) SetButtons(true);
         }
 
-        private void ckIsobusEnabled_CheckedChanged(object sender, EventArgs e)
+        private void ckCAN_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
@@ -282,9 +277,6 @@ namespace RateController.Menu
             butUpdateModules.Enabled = rbWheel.Checked;
             lbPulses.Enabled = rbWheel.Checked;
             btnCal.Enabled = rbWheel.Checked;
-
-            // ISOBUS speed source removed — disable this option
-            rbIsoBusSpeed.Enabled = false;
         }
 
         private void SetButtons(bool Edited)
@@ -445,10 +437,6 @@ namespace RateController.Menu
 
                 case SpeedType.Simulated:
                     rbSimulated.Checked = true;
-                    break;
-
-                case SpeedType.ISOBUS:
-                    rbIsoBusSpeed.Checked = true;
                     break;
 
                 default:

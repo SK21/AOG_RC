@@ -243,14 +243,7 @@ namespace RateController.PGNs
 
         public void Save()
         {
-            if (Props.IsobusEnabled)
-            {
-                cData[31] = 3;
-            }
-            else
-            {
-                cData[31] = 0;
-            }
+            cData[31] = Props.CanEnabled ? (byte)1 : (byte)0;
 
             String Name;
             for (int i = 2; i < cByteCount; i++)
@@ -262,24 +255,18 @@ namespace RateController.PGNs
 
         public void Send()
         {
-            if (Props.IsobusEnabled)
-            {
-                cData[31] = 3;
-            }
-            else
-            {
-                cData[31] = 0;
-            }
+            cData[31] = Props.CanEnabled ? (byte)1 : (byte)0;
 
             // CRC
             cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);
 
-            Core.UDPmodules.Send(cData);
-
-            // send - route through gateway if ISOBUS enabled
-            if (Props.IsobusEnabled && Core.IsobusComm != null)
+            if (Props.CanEnabled && Core.CanBridgeComm != null)
             {
-                Core.IsobusComm.SendModuleCommand(cData);
+                Core.CanBridgeComm.SendModuleCommand(cData);
+            }
+            else
+            {
+                Core.UDPmodules.Send(cData);
             }
         }
     }
