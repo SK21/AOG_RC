@@ -26,6 +26,13 @@ struct IsobusIdentity {
 
 IsobusIdentity ISOBUSid;
 
+// Accumulation buffer for PGN 32700 module config received over CAN (4 × 8-byte frames)
+// cfgBuf[0..29] maps to PGN32700 bytes [2..31]: ModID, SensorCount, commands, relay types,
+//   sensor pins, relay pins [0-15], WorkPin, PressurePin, CommMode
+// No ModID identity check — mirrors the UDP handler which also applies unconditionally.
+uint8_t cfgBuf[30];
+uint8_t cfgFrames = 0;  // bitmask: bit0=0xFF0C, bit1=0xFF0D, bit2=0xFF0E, bit3=0xFF0F
+
 //-----------------------------------------------------------------------------
 // Build 64-bit NAME from identity fields
 //-----------------------------------------------------------------------------
@@ -214,6 +221,22 @@ void CANBus_Receive() {
                 CANBus_HandlePidSettings3(msg);
                 break;
 
+            case 0xFF0C:  // Module config part 1 (from PGN 32700)
+                CANBus_HandleModuleConfig1(msg);
+                break;
+
+            case 0xFF0D:  // Module config part 2 (from PGN 32700)
+                CANBus_HandleModuleConfig2(msg);
+                break;
+
+            case 0xFF0E:  // Module config part 3 (from PGN 32700)
+                CANBus_HandleModuleConfig3(msg);
+                break;
+
+            case 0xFF0F:  // Module config part 4 / commit (from PGN 32700)
+                CANBus_HandleModuleConfig4(msg);
+                break;
+
         }
     }
 }
@@ -393,6 +416,71 @@ void CANBus_HandleFlowCal(const CAN_message_t& msg) {
 
     uint32_t calRaw = msg.buf[1] | (msg.buf[2] << 8) | ((uint32_t)msg.buf[3] << 16);
     Sensor[senId].MeterCal = calRaw / 1000.0;
+}
+
+//-----------------------------------------------------------------------------
+// Module config over CAN — 4-frame accumulation of PGN 32700
+// Frame layout (cfgBuf offset = PGN32700 byte - 2):
+//   0xFF0C → cfgBuf[0..7]  = pgnData[2..9]  (ModID, SensorCount, commands, relay types, Sensor0 pins)
+//   0xFF0D → cfgBuf[8..15] = pgnData[10..17] (Sensor1 pins, RelayPins[0-4])
+//   0xFF0E → cfgBuf[16..23]= pgnData[18..25] (RelayPins[5-12])
+//   0xFF0F → cfgBuf[24..29]= pgnData[26..31] (RelayPins[13-15], WorkPin, PressurePin, CommMode)
+//            buf[6] = ModID (identity check), buf[7] = 0
+//-----------------------------------------------------------------------------
+
+void CANBus_HandleModuleConfig1(const CAN_message_t& msg) {
+    cfgFrames = 0;  // restart sequence — discard any partial previous collection
+    memcpy(cfgBuf, msg.buf, 8);
+    cfgFrames = 0x01;
+}
+
+void CANBus_HandleModuleConfig2(const CAN_message_t& msg) {
+    memcpy(cfgBuf + 8, msg.buf, 8);
+    cfgFrames |= 0x02;
+}
+
+void CANBus_HandleModuleConfig3(const CAN_message_t& msg) {
+    memcpy(cfgBuf + 16, msg.buf, 8);
+    cfgFrames |= 0x04;
+}
+
+void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
+    memcpy(cfgBuf + 24, msg.buf, 6);  // only 6 config bytes; buf[6]=ModID, buf[7]=0
+    cfgFrames |= 0x08;
+
+    // All 4 frames must have arrived (no ModID identity check — mirrors UDP handler behaviour)
+    if (cfgFrames != 0x0F) { cfgFrames = 0; return; }
+    cfgFrames = 0;
+
+    // Apply config (mirrors UDP PGN 32700 handler in Receive.ino case 32700)
+    MDL.ID            = cfgBuf[0];
+    MDL.SensorCount   = cfgBuf[1];
+
+    uint8_t tmp       = cfgBuf[2];
+    MDL.InvertRelay         = ((tmp & 1)  == 1);
+    MDL.InvertFlow          = ((tmp & 2)  == 2);
+    MDL.WorkPinIsMomentary  = ((tmp & 8)  == 8);
+    MDL.Is3Wire             = ((tmp & 16) == 16);
+    MDL.ADS1115Enabled      = ((tmp & 32) == 32);
+
+    MDL.OnboardRelayControl = cfgBuf[3];
+    MDL.RemoteRelayControl  = cfgBuf[4];
+
+    Sensor[0].FlowPin = cfgBuf[5];
+    Sensor[0].DirPin  = cfgBuf[6];
+    Sensor[0].PWMPin  = cfgBuf[7];
+    Sensor[1].FlowPin = cfgBuf[8];
+    Sensor[1].DirPin  = cfgBuf[9];
+    Sensor[1].PWMPin  = cfgBuf[10];
+
+    for (int i = 0; i < 16; i++) MDL.RelayControlPins[i] = cfgBuf[11 + i];
+
+    MDL.WorkPin     = cfgBuf[27];
+    MDL.PressurePin = cfgBuf[28];
+    MDL.CommMode    = cfgBuf[29];
+
+    SaveData();
+    SCB_AIRCR = 0x05FA0004;  // restart Teensy to apply new config
 }
 
 //-----------------------------------------------------------------------------

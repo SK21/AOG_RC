@@ -22,6 +22,10 @@ namespace RateController.Classes.Can
     ///   0xFF07: Wheel config     (from PGN 32504)
     ///   0xFF0A: Flow calibration (from PGN 32500, bytes 6-8)
     ///   0xFF0B: PID settings 3   (from PGN 32502, bytes 13, 19-22)
+    ///   0xFF0C: Module config 1  (from PGN 32700, bytes 2-9)
+    ///   0xFF0D: Module config 2  (from PGN 32700, bytes 10-17)
+    ///   0xFF0E: Module config 3  (from PGN 32700, bytes 18-25)
+    ///   0xFF0F: Module config 4  (from PGN 32700, bytes 26-31, commit)
     /// </summary>
     public class CanFrameTranslator
     {
@@ -353,6 +357,34 @@ namespace RateController.Classes.Can
                             pgnData[6],  // Cal hi
                             pgnData[7],  // commands (bit0=eraseCounts)
                             0, 0
+                        }));
+                    }
+                    break;
+
+                case 32700:
+                    // → 0xFF0C (config part 1) + 0xFF0D (part 2) + 0xFF0E (part 3) + 0xFF0F (part 4/commit)
+                    // PGN32700 layout: [2]=ModID, [3]=SensorCount, [4]=commands,
+                    //   [5]=OnboardRelayType, [6]=RemoteRelayType,
+                    //   [7-9]=Sensor0 pins (Flow/Dir/PWM), [10-12]=Sensor1 pins,
+                    //   [13-28]=RelayPins[0-15], [29]=WorkPin, [30]=PressurePin, [31]=CommMode
+                    // 0xFF0F buf[6] = ModID (commit trigger / identity check on Teensy)
+                    if (pgnData.Length >= 32)
+                    {
+                        frames.Add(BuildFrame(0x0C, new byte[] {
+                            pgnData[2], pgnData[3], pgnData[4], pgnData[5],
+                            pgnData[6], pgnData[7], pgnData[8], pgnData[9]
+                        }));
+                        frames.Add(BuildFrame(0x0D, new byte[] {
+                            pgnData[10], pgnData[11], pgnData[12], pgnData[13],
+                            pgnData[14], pgnData[15], pgnData[16], pgnData[17]
+                        }));
+                        frames.Add(BuildFrame(0x0E, new byte[] {
+                            pgnData[18], pgnData[19], pgnData[20], pgnData[21],
+                            pgnData[22], pgnData[23], pgnData[24], pgnData[25]
+                        }));
+                        frames.Add(BuildFrame(0x0F, new byte[] {
+                            pgnData[26], pgnData[27], pgnData[28], pgnData[29],
+                            pgnData[30], pgnData[31], pgnData[2], 0  // buf[6]=ModID (commit trigger)
                         }));
                     }
                     break;
