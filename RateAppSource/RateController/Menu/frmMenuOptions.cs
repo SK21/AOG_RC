@@ -121,12 +121,8 @@ namespace RateController.Menu
                 bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
                 Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-                // Pre-send new CommMode via current (still-active) transport so the Teensy
-                // receives the mode change before UseCanComm() starts or stops the adapter.
-                byte newCommMode = ckIsoBus.Checked ? (byte)1 : (byte)0;
-                Core.ModuleConfig.Send(newCommMode);
-
                 Core.UseCanComm(ckIsoBus.Checked);
+
                 Core.ModuleConfig.Send();
                 Props.ShowMessage("Settings sent to module", "Config", 10000);
 

@@ -40,12 +40,10 @@ namespace RateController.Menu
 
                 if (rbEthernet.Checked)
                 {
-                    Core.ModuleConfig.Send(0);
                     Core.UseCanComm(false);
                 }
                 else
                 {
-                    Core.ModuleConfig.Send(1);
                     Core.UseCanComm(true);
                 }
                 Core.ModuleConfig.Save();

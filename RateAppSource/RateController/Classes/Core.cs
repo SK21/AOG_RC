@@ -214,12 +214,14 @@ namespace RateController.Classes
         {
             if (enable && !Props.CanEnabled)
             {
+                // use CAN
                 // Start CAN bridge — ensure clean state first
                 Core.CanBridgeComm?.Stop();
 
                 bool started = Core.CanBridgeComm?.Start(Props.CurrentCanDriver, Props.CanPort) ?? false;
                 if (started)
                 {
+                    ModuleConfig.Send(1);
                     Props.CanEnabled = true;
                     Props.ShowMessage("CAN Bridge started.", "Help", 10000);
                 }
@@ -230,6 +232,8 @@ namespace RateController.Classes
             }
             else if (Props.CanEnabled)
             {
+                // use ethernet
+                ModuleConfig.Send(0);
                 Core.CanBridgeComm?.Stop();
                 Props.CanEnabled = false;
                 Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
