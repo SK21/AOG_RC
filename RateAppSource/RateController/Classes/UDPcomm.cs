@@ -165,14 +165,17 @@ namespace RateController
                     switch (PGN)
                     {
                         case 32400:
-                            foreach (clsProduct Prod in Core.Products.Items)
+                            if (!Props.CanEnabled)
                             {
-                                Prod.UDPcommFromArduino(Data, PGN);
+                                foreach (clsProduct Prod in Core.Products.Items)
+                                {
+                                    Prod.UDPcommFromArduino(Data, PGN);
+                                }
                             }
                             break;
 
                         case 32401:
-                            Core.ModulesStatus.ParseByteData(Data);
+                            if (!Props.CanEnabled) Core.ModulesStatus.ParseByteData(Data);
                             break;
 
                         case 32618:

@@ -264,10 +264,8 @@ namespace RateController.PGNs
             {
                 Core.CanBridgeComm.SendModuleCommand(cData);
             }
-            else
-            {
-                Core.UDPmodules.Send(cData);
-            }
+
+            Core.UDPmodules.Send(cData);
         }
     }
 }
