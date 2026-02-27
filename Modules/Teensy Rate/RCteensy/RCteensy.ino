@@ -178,8 +178,8 @@ void loop()
 	switch (MDL.CommMode)
 	{
 	case 0:
-		// UDP only
-		//ReceiveUDP();
+		// UDP only — receive CAN so PGN 32700 can switch CommMode from CAN
+		CANBus_Receive();
 		break;
 	case 1:
 		// CAN Proprietary only
@@ -187,7 +187,6 @@ void loop()
 		break;
 	case 2:
 		// UDP + CAN Proprietary
-		//ReceiveUDP();
 		CANBus_Update();
 		break;
 	}

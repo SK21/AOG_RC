@@ -262,8 +262,7 @@ namespace RateController.PGNs
             // Callers that need to pre-send a CommMode change before switching transports
             // must do so explicitly while the old transport is still active (see frmMenuOptions,
             // frmMenuNetwork btnOK_Click).
-            if (Props.CanEnabled)
-                Core.CanBridgeComm?.SendModuleCommand(cData);
+            if (Props.CanEnabled) Core.CanBridgeComm?.SendModuleCommand(cData);
             Core.UDPmodules.Send(cData);
         }
     }

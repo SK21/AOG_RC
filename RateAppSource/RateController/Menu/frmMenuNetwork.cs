@@ -35,23 +35,25 @@ namespace RateController.Menu
         {
             try
             {
+                if (ckDefaultModule.Checked) SetDefaults();
+                Core.UDPmodules.NetworkEP = cbEthernet.Text;
+
                 if (rbEthernet.Checked)
                 {
+                    Core.ModuleConfig.Send(0);
                     Core.UseCanComm(false);
-                    if (!Props.CanEnabled) Props.ShowMessage("Send changes to module.", "Help", 10000);
                 }
                 else
                 {
+                    Core.ModuleConfig.Send(1);
                     Core.UseCanComm(true);
-                    if (Props.CanEnabled) Props.ShowMessage("Send changes to module. Check CAN settings at Menu > Options > CAN.", "Help", 10000);
                 }
                 Core.ModuleConfig.Save();
+                Core.ModuleConfig.Send();
+                Props.ShowMessage("Settings sent to module.", "Help", 10000);
 
-                if (ckDefaultModule.Checked) SetDefaults();
-                Core.UDPmodules.NetworkEP = cbEthernet.Text;
                 SetButtons(false);
                 UpdateForm();
-                MainMenu.HighlightUpdateButton();
                 Props.SetProp("BoardType", BoardType.ToString());
 
             }

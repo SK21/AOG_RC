@@ -42,6 +42,8 @@ namespace RateController.Classes.Can
         {
             _running = false;
             _open = false;
+            // Wait for any pending TX frames to be transmitted before uninitializing.
+            // TODO: Thread.Sleep(50);
             // TODO: PCANBasic.Uninitialize(channel);
             _receiveThread?.Join(1000);
         }

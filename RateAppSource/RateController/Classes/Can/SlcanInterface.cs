@@ -62,6 +62,11 @@ namespace RateController.Classes.Can
             {
                 if (_port?.IsOpen == true)
                 {
+                    // Wait for any pending CAN TX frames to be physically transmitted
+                    // before sending C\r. At 250kbps, 4 frames take ~2ms; 50ms is
+                    // conservative and prevents the adapter buffering unsent frames
+                    // that would flush on the next Open().
+                    System.Threading.Thread.Sleep(50);
                     _port.Write("C\r");  // Close CAN channel
                     System.Threading.Thread.Sleep(100);
                     _port.Close();

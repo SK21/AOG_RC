@@ -161,12 +161,10 @@ void DoSetup()
 
 	pinMode(LED_BUILTIN, OUTPUT);
 
-	// CAN/ISOBUS initialization
-	if (MDL.CommMode == 1 || MDL.CommMode == 2 )
-	{
-		Serial.println("");
-		CANBus_Begin();
-	}
+	// CAN/ISOBUS initialization — always started so PGN 32700 can be received
+	// in any CommMode (allows switching from Ethernet to CAN without Ethernet)
+	Serial.println("");
+	CANBus_Begin();
 
 	Serial.println("");
 	Serial.print("Sensors enabled: ");

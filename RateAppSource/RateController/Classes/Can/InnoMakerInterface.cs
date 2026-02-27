@@ -77,6 +77,10 @@ namespace RateController.Classes.Can
             _open = false;
             try
             {
+                // Wait for any pending CAN TX frames to be physically transmitted
+                // before closing the device (same issue as SLCAN — driver TX queue
+                // may not be flushed before CloseDevice tears down the channel).
+                Thread.Sleep(50);
                 _receiveThread?.Join(1000);
                 if (_dllAvailable)
                     InnoMaker_CloseDevice(DEV_INDEX, CAN_INDEX);
