@@ -12,9 +12,12 @@ namespace RateController.Classes
         public PGN32500 ModuleRateSettings;
         public PGN32400 RateSensorData;
         private double AccumulatedLast = 0;
+        private bool AccumulatedSeeded = false;
         private ApplicationMode cAppMode = ApplicationMode.ControlledUPM;
+        private clsCalibrate cCalibrateOjbect = null;
         private ControlTypeEnum cControlType = 0;
         private int cCountsRev;
+        private double cCurrentTankAmount = 0;
         private bool cEnabled = false;
         private bool cEnableProdDensity = false;
         private bool cFanOn;
@@ -50,9 +53,6 @@ namespace RateController.Classes
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
-        private clsCalibrate cCalibrateOjbect = null;
-        private double cCurrentTankAmount = 0;
-        private bool AccumulatedSeeded = false;
 
         public clsProduct(int ProdID)
         {
@@ -219,23 +219,6 @@ namespace RateController.Classes
             { cAppMode = value; }
         }
 
-        public double CurrentTankAmount
-        {
-            get { return cCurrentTankAmount; }
-            set
-            {
-                if (value > 0)
-                {
-                    cCurrentTankAmount = value;
-                    if (cCurrentTankAmount > TankSize) cCurrentTankAmount = TankSize;
-                }
-                else
-                {
-                    cCurrentTankAmount = 0;
-                }
-            }
-        }
-
         public clsCalibrate CalibrateOjbect
         {
             get { return cCalibrateOjbect; }
@@ -276,6 +259,23 @@ namespace RateController.Classes
                 if (value >= 0 && value < 10000)
                 {
                     cCountsRev = value;
+                }
+            }
+        }
+
+        public double CurrentTankAmount
+        {
+            get { return cCurrentTankAmount; }
+            set
+            {
+                if (value > 0)
+                {
+                    cCurrentTankAmount = value;
+                    if (cCurrentTankAmount > TankSize) cCurrentTankAmount = TankSize;
+                }
+                else
+                {
+                    cCurrentTankAmount = 0;
                 }
             }
         }

@@ -78,6 +78,7 @@ namespace RateController.Classes
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
         private static string cAppVersion = "4.3.0";
+        private static bool cCanEnabled = false;
         private static string cCanPort = "COM7";
         private static CanDriver cCurrentCanDriver = CanDriver.SLCAN;
         private static string cCurrentMenuName = "";
@@ -86,7 +87,6 @@ namespace RateController.Classes
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static string cFieldNames;
-        private static bool cCanEnabled = false;
         private static bool cMapPreview = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
         private static int cPrimeDelay = 3;
@@ -156,6 +156,16 @@ namespace RateController.Classes
         public static string ApplicationFolder
         { get { return cApplicationFolder; } }
 
+        public static bool CanEnabled
+        {
+            get { return cCanEnabled; }
+            set
+            {
+                cCanEnabled = value;
+                SetAppProp("CanEnabled", cCanEnabled.ToString());
+            }
+        }
+
         public static string CanPort
         {
             get { return cCanPort; }
@@ -222,16 +232,6 @@ namespace RateController.Classes
 
         public static string FieldNamesPath
         { get { return cFieldNames; } }
-
-        public static bool CanEnabled
-        {
-            get { return cCanEnabled; }
-            set
-            {
-                cCanEnabled = value;
-                SetAppProp("CanEnabled", cCanEnabled.ToString());
-            }
-        }
 
         public static clsJobDataCollector JobCollector
         {
@@ -971,7 +971,7 @@ namespace RateController.Classes
             cUseRateDisplay = bool.TryParse(GetAppProp("UseRateDisplay"), out bool rtd) ? rtd : false;
             cMapPreview = bool.TryParse(GetAppProp("MapPreview"), out bool mp) ? mp : false;
             cCurrentCanDriver = Enum.TryParse(GetAppProp("CanDriver"), out CanDriver dr) ? dr : CanDriver.SLCAN;
-            cShowCanDiagnostics = bool.TryParse(GetAppProp("CanDiagnostics"), out bool di) ? di : true;
+            cShowCanDiagnostics = bool.TryParse(GetAppProp("CanDiagnostics"), out bool di) ? di : false;
             string port = GetAppProp("CanPort");
             cCanPort = string.IsNullOrEmpty(port) ? "COM7" : port;
 

@@ -40,6 +40,12 @@ namespace RateController
             }
         }
 
+        private void ckFillTank_CheckedChanged(object sender, EventArgs e)
+        {
+            tbQuantity.Text = Prd.TankSize.ToString();
+            SetButtons(true);
+        }
+
         private void ckReset_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -58,8 +64,6 @@ namespace RateController
 
             Prd = Core.Products.Item(Props.CurrentProduct);
             tbQuantity.Text = Prd.CurrentTankAmount.ToString();
-            ckReset.Checked = false;
-            ckFillTank.Checked = false;
             SetButtons(false);
         }
 
@@ -102,12 +106,6 @@ namespace RateController
 
         private void tbQuantity_TextChanged(object sender, EventArgs e)
         {
-            SetButtons(true);
-        }
-
-        private void ckFillTank_CheckedChanged(object sender, EventArgs e)
-        {
-            tbQuantity.Text = Prd.TankSize.ToString();
             SetButtons(true);
         }
     }
