@@ -134,7 +134,9 @@ namespace RateController.Classes.Can
                             state.WasConnected = true;
                             ModuleConnected?.Invoke(this, moduleId);
                         }
-                        TryAssemble32401(state);
+                        // Do NOT call TryAssemble32401 here — 0xFF08 is a 500ms heartbeat
+                        // and would cause spurious short elapsed times when it interleaves
+                        // with the 200ms 0xFF02 cycle. Assembly is driven by 0xFF02 only.
                     }
                     break;
 
