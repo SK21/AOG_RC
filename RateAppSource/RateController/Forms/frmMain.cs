@@ -246,9 +246,14 @@ namespace RateController.Forms
             UpdateSwitches();
             UpdateForm();
 
-            // Touchscreen: clear focus after every button tap so buttons don't stay highlighted
+            // Touchscreen: clear focus and hover state after every button tap.
+            // Moving the cursor off the button triggers WM_MOUSELEAVE, clearing the hot/hover highlight.
             foreach (Control c in Controls)
-                c.Click += (s, ea) => { ActiveControl = null; };
+                c.Click += (s, ea) =>
+                {
+                    ActiveControl = null;
+                    Cursor.Position = PointToScreen(new Point(0, 0));
+                };
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
