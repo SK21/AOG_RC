@@ -2,11 +2,7 @@
 using RateController.PGNs;
 using RateController.RateMap;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -46,7 +42,6 @@ namespace RateController.Classes
         private int cSerialPort;
         private double cSessionTotalHectares = 0;
         private double cTankSize = 0;
-        private double cTankStart = 0;
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
         private double CurrentWorkedArea_Hc = 0;
@@ -55,7 +50,9 @@ namespace RateController.Classes
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
-        private clsCalibrate cCalibrateOjbect=null;
+        private clsCalibrate cCalibrateOjbect = null;
+        private double cCurrentTankAmount = 0;
+        private bool AccumulatedSeeded = false;
 
         public clsProduct(int ProdID)
         {
@@ -222,6 +219,22 @@ namespace RateController.Classes
             { cAppMode = value; }
         }
 
+        public double CurrentTankAmount
+        {
+            get { return cCurrentTankAmount; }
+            set
+            {
+                if (value > 0)
+                {
+                    cCurrentTankAmount = value;
+                    if (cCurrentTankAmount > TankSize) cCurrentTankAmount = TankSize;
+                }
+                else
+                {
+                    cCurrentTankAmount = 0;
+                }
+            }
+        }
 
         public clsCalibrate CalibrateOjbect
         {
@@ -484,18 +497,6 @@ namespace RateController.Classes
             set { cTankSize = value; }
         }
 
-        public double TankStart
-        {
-            get { return cTankStart; }
-            set
-            {
-                if (value > 0 && value < 100000)
-                {
-                    cTankStart = value;
-                }
-            }
-        }
-
         public bool UseAltRate
         { get { return cUseAltRate; } set { cUseAltRate = value; } }
 
@@ -574,11 +575,14 @@ namespace RateController.Classes
             double.TryParse(Props.GetProp(IDname + "Coverage2"), out Coverage2);
             byte.TryParse(Props.GetProp(IDname + "CoverageUnits"), out CoverageUnits);
 
-            double.TryParse(Props.GetProp(IDname + "TankStart"), out cTankStart);
             double.TryParse(Props.GetProp(IDname + "QuantityApplied"), out cUnitsApplied);
             double.TryParse(Props.GetProp(IDname + "QuantityApplied2"), out cUnitsApplied2);
 
-            if (double.TryParse(Props.GetProp(IDname + "AccumulatedLast"), out double oa)) AccumulatedLast = oa;
+            if (double.TryParse(Props.GetProp(IDname + "AccumulatedLast"), out double oa))
+            {
+                AccumulatedLast = oa;
+                AccumulatedSeeded = true;
+            }
 
             cQuantityDescription = Props.GetProp(IDname + "QuantityDescription");
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
@@ -640,6 +644,8 @@ namespace RateController.Classes
 
             if (int.TryParse(Props.GetProp(IDname + "ModuleID"), out int mi)) ModuleID = mi;
             if (int.TryParse(Props.GetProp(IDname + "SensorID"), out int si)) SensorID = (byte)si;
+
+            CurrentTankAmount = double.TryParse(Props.GetProp(IDname + "CurrentTankAmount"), out double ta) ? ta : 0;
 
             LoadSensorSettings();
         }
@@ -803,11 +809,6 @@ namespace RateController.Classes
             cHours2 = 0;
         }
 
-        public void ResetTank()
-        {
-            cTankStart = TankSize;
-        }
-
         public void Save()
         {
             Props.SetProp(IDname + "IsNew", "false");
@@ -815,7 +816,6 @@ namespace RateController.Classes
             Props.SetProp(IDname + "Coverage2", Coverage2.ToString());
             Props.SetProp(IDname + "CoverageUnits", CoverageUnits.ToString());
 
-            Props.SetProp(IDname + "TankStart", cTankStart.ToString());
             Props.SetProp(IDname + "QuantityDescription", cQuantityDescription);
 
             Props.SetProp(IDname + "QuantityApplied", cUnitsApplied.ToString());
@@ -857,6 +857,8 @@ namespace RateController.Classes
 
             Props.SetProp(IDname + "ModuleID", cModuleID.ToString());
             Props.SetProp(IDname + "SensorID", cSensorID.ToString());
+
+            Props.SetProp(IDname + "CurrentTankAmount", cCurrentTankAmount.ToString());
 
             cSensorSettings.Save();
         }
@@ -1100,19 +1102,31 @@ namespace RateController.Classes
         private void UpdateUnitsApplied()
         {
             double AccumulatedUnits = RateSensorData.AccumulatedQuantity;
-            double Diff = AccumulatedUnits - AccumulatedLast;
-            if (Diff < 0 || Diff > 1000) Diff = 0;
-            AccumulatedLast = AccumulatedUnits;
 
-            cUnitsApplied += Diff;
-            cUnitsApplied2 += Diff;
-
-            if (cAppMode == ApplicationMode.ConstantUPM && Core.Sections.TotalWidth() > 0 && !Props.RateCalibrationOn)
+            if (AccumulatedSeeded)
             {
-                // constant upm, subtract amount for sections that are off
-                double Offset = (1.0 - (Core.Sections.WorkingWidth() / Core.Sections.TotalWidth())) * Diff;
-                cUnitsApplied -= Offset;
-                cUnitsApplied2 -= Offset;
+                double Diff = AccumulatedUnits - AccumulatedLast;
+                if (Diff < 0 || Diff > 1000) Diff = 0;
+                AccumulatedLast = AccumulatedUnits;
+
+                double NewApplied = Diff;
+
+                if (cAppMode == ApplicationMode.ConstantUPM && Core.Sections.TotalWidth() > 0 && !Props.RateCalibrationOn)
+                {
+                    // constant upm, subtract amount for sections that are off
+                    double Offset = (1.0 - (Core.Sections.WorkingWidth() / Core.Sections.TotalWidth())) * Diff;
+                    NewApplied -= Offset;
+                }
+
+                cUnitsApplied += NewApplied;
+                cUnitsApplied2 += NewApplied;
+
+                CurrentTankAmount = CurrentTankAmount - NewApplied;
+            }
+            else
+            {
+                AccumulatedLast = AccumulatedUnits;
+                AccumulatedSeeded = true;
             }
         }
     }

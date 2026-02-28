@@ -33,6 +33,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.ckFillTank = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // ckReset
@@ -41,7 +42,7 @@
             this.ckReset.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckReset.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckReset.Location = new System.Drawing.Point(12, 63);
+            this.ckReset.Location = new System.Drawing.Point(11, 116);
             this.ckReset.Name = "ckReset";
             this.ckReset.Size = new System.Drawing.Size(229, 34);
             this.ckReset.TabIndex = 124;
@@ -73,7 +74,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(12, 106);
+            this.btnCancel.Location = new System.Drawing.Point(11, 169);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
@@ -91,7 +92,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(169, 106);
+            this.btnOK.Location = new System.Drawing.Point(168, 169);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
             this.btnOK.TabIndex = 154;
@@ -108,11 +109,27 @@
             this.label1.TabIndex = 156;
             this.label1.Text = "Tank Quantity";
             // 
+            // ckFillTank
+            // 
+            this.ckFillTank.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckFillTank.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckFillTank.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckFillTank.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckFillTank.Location = new System.Drawing.Point(12, 63);
+            this.ckFillTank.Name = "ckFillTank";
+            this.ckFillTank.Size = new System.Drawing.Size(229, 34);
+            this.ckFillTank.TabIndex = 157;
+            this.ckFillTank.Text = "Fill Tank";
+            this.ckFillTank.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckFillTank.UseVisualStyleBackColor = true;
+            this.ckFillTank.CheckedChanged += new System.EventHandler(this.ckFillTank_CheckedChanged);
+            // 
             // frmResetQuantity
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(252, 181);
+            this.ClientSize = new System.Drawing.Size(252, 243);
+            this.Controls.Add(this.ckFillTank);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -140,5 +157,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox ckFillTank;
     }
 }

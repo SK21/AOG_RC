@@ -93,7 +93,7 @@ namespace RateController.Classes
                     Prd.RateSet = 1;
                     Prd.RateAlt = 100;
                     Prd.TankSize = 1000;
-                    Prd.TankStart = 1000;
+                    Prd.CurrentTankAmount = 1000;
                     Prd.LoadSensorSettings();
                     Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;

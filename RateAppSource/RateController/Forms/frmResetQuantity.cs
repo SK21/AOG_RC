@@ -10,8 +10,7 @@ namespace RateController
     {
         private bool FormEdited = false;
         private bool Initializing = false;
-        private double TankRemain = 0;
-        private double TankSize = 0;
+        private clsProduct Prd;
 
         public frmResetQuantity()
         {
@@ -20,7 +19,7 @@ namespace RateController
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            ResetTankRemain();
+            tbQuantity.Text = Prd.CurrentTankAmount.ToString();
             SetButtons(false);
         }
 
@@ -28,20 +27,9 @@ namespace RateController
         {
             try
             {
-                clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
-                double Tnk = Prd.TankStart - Prd.UnitsApplied();
-                if (ckReset.Checked)
-                {
-                    Prd.ResetApplied();
-                }
+                if (ckReset.Checked) Prd.ResetApplied();
 
-                double NewValue = double.TryParse(tbQuantity.Text, out double nv) ? nv : TankSize;
-
-                // adjust for what has been taken out
-                NewValue += Prd.UnitsApplied();
-
-                if (NewValue > TankSize) NewValue = TankSize;
-                Prd.TankStart = NewValue;
+                Prd.CurrentTankAmount = double.TryParse(tbQuantity.Text, out double nv) ? nv : Prd.TankSize;
 
                 SetButtons(false);
                 this.Close();
@@ -65,25 +53,14 @@ namespace RateController
         private void frmResetQuantity_Load(object sender, EventArgs e)
         {
             Props.LoadFormLocation(this);
-
-            clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
-            TankSize = Prd.TankSize;
-            TankRemain = Prd.TankStart;
-
             this.BackColor = Properties.Settings.Default.MainBackColour;
             SetLanguage();
 
-            ckReset.Checked = true;
-            SetButtons(true);
-            SetTankAmt(TankSize);
-        }
-
-        private void ResetTankRemain()
-        {
-            Initializing = true;
-            SetTankAmt(TankRemain);
+            Prd = Core.Products.Item(Props.CurrentProduct);
+            tbQuantity.Text = Prd.CurrentTankAmount.ToString();
             ckReset.Checked = false;
-            Initializing = false;
+            ckFillTank.Checked = false;
+            SetButtons(false);
         }
 
         private void SetButtons(bool Edited = false)
@@ -109,18 +86,6 @@ namespace RateController
             ckReset.Text = Lang.lgResetApplied;
         }
 
-        private void SetTankAmt(double amt)
-        {
-            if (amt > 9999)
-            {
-                tbQuantity.Text = amt.ToString("N0");
-            }
-            else
-            {
-                tbQuantity.Text = amt.ToString("N1");
-            }
-        }
-
         private void tbQuantity_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -137,6 +102,12 @@ namespace RateController
 
         private void tbQuantity_TextChanged(object sender, EventArgs e)
         {
+            SetButtons(true);
+        }
+
+        private void ckFillTank_CheckedChanged(object sender, EventArgs e)
+        {
+            tbQuantity.Text = Prd.TankSize.ToString();
             SetButtons(true);
         }
     }

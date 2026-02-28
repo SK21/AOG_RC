@@ -8,9 +8,9 @@ namespace RateController
     public partial class frmHelp : Form
     {
         // Easy-to-change cascading offset
-        private static int OffsetX = 50;
+        private static int OffsetX = 0;
 
-        private static int OffsetY = 50;
+        private static int OffsetY = 160;
 
         // Track how many help windows are open
         private static int OpenHelpCount = 0;

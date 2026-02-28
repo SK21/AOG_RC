@@ -121,26 +121,29 @@ namespace RateController.Menu
                 bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
                 Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-                int Result = Core.UseCanComm(ckIsoBus.Checked);
-
-                string Mes = "";
-                switch (Result)
+                if (Props.CanEnabled != ckIsoBus.Checked)
                 {
-                    case 1:
-                        Mes = "CanBus enabled.";
-                        break;
+                    int Result = Core.UseCanComm(ckIsoBus.Checked);
 
-                    case 3:
-                        Mes = "CanBus failed to start. Ethernet enabled.";
-                        break;
+                    string Mes = "";
+                    switch (Result)
+                    {
+                        case 1:
+                            Mes = "CanBus enabled.";
+                            break;
 
-                    default:
-                        Mes = "Ethernet enabled.";
-                        break;
+                        case 3:
+                            Mes = "CanBus failed to start. Ethernet enabled.";
+                            break;
+
+                        default:
+                            Mes = "Ethernet enabled.";
+                            break;
+                    }
+
+                    Core.ModuleConfig.Save();
+                    Props.ShowMessage("Settings sent to module. " + Mes, "Config", 10000);
                 }
-
-                Core.ModuleConfig.Save();
-                Props.ShowMessage("Settings sent to module. " + Mes, "Config", 10000);
 
                 SetButtons(false);
                 UpdateForm();
@@ -219,7 +222,6 @@ namespace RateController.Menu
             Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
-
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
@@ -248,7 +250,6 @@ namespace RateController.Menu
                 SetBoxes();
             }
         }
-
 
         private void rbWheel_CheckedChanged(object sender, EventArgs e)
         {
@@ -324,7 +325,6 @@ namespace RateController.Menu
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void tbSimSpeed_Validating(object sender, CancelEventArgs e)

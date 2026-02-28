@@ -512,7 +512,7 @@ namespace RateController.Forms
                 {
                     // calculate remaining
                     lbQuantity.Text = Core.Tls.ClipText(Lang.lgTank_Remaining, 14);
-                    Tnk = Prd.TankStart - Prd.UnitsApplied();
+                    Tnk = Prd.CurrentTankAmount;
                 }
                 else
                 {
@@ -536,9 +536,9 @@ namespace RateController.Forms
                     lbCoverage.Text = Core.Tls.ClipText(Lang.lgAreaRemain, 14);
                     double RT = Prd.TargetRate();
 
-                    if ((RT > 0) && (Prd.TankStart > 0))
+                    if (RT > 0)
                     {
-                        lbCoverageAmount.Text = ((Prd.TankStart - Prd.UnitsApplied()) / RT).ToString("N1");
+                        lbCoverageAmount.Text = (Prd.CurrentTankAmount / RT).ToString("N1");
                     }
                     else
                     {
@@ -566,7 +566,7 @@ namespace RateController.Forms
                 }
 
                 // graph
-                double Rem = Prd.TankStart - Prd.UnitsApplied();
+                double Rem = Prd.CurrentTankAmount;
                 double Size = Prd.TankSize;
                 if (Size < 0.01 || Size < Rem) Size = Rem * 2;
                 if (Size < 0.01) Size = 100;
