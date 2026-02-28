@@ -35,7 +35,6 @@ namespace RateController.Classes.Can
         private Thread _receiveThread;
         private volatile bool _running = false;
         private bool _open = false;
-        private bool _dllAvailable = false;
 
         public event EventHandler<CanFrameEventArgs> FrameReceived;
 
@@ -73,6 +72,7 @@ namespace RateController.Classes.Can
 
         public void Close()
         {
+            bool wasOpen = _open;
             _running = false;
             _open = false;
             try
@@ -82,7 +82,7 @@ namespace RateController.Classes.Can
                 // may not be flushed before CloseDevice tears down the channel).
                 Thread.Sleep(50);
                 _receiveThread?.Join(1000);
-                if (_dllAvailable)
+                if (wasOpen)
                     InnoMaker_CloseDevice(DEV_INDEX, CAN_INDEX);
             }
             catch { }
