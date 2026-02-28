@@ -157,7 +157,7 @@ namespace RateController.Classes.Can
             byte[] f01 = state.Last0xFF01;
 
             // PGN 32400 (15 bytes): header 0x90 0x7E
-            //  [2]    ModSenId         ← f00[0]
+            //  [2]    ModSenId         ← f00[0] nibble-swapped (CAN: low=ModID,high=SenID → UDP: high=ModID,low=SenID)
             //  [3-5]  rateApplied      ← f00[1-3]
             //  [6-8]  accumulatedQty   ← f00[4-6]
             //  [9-10] pwmSetting       ← f01[1-2]
@@ -167,7 +167,7 @@ namespace RateController.Classes.Can
             var pgn = new byte[15];
             pgn[0] = 0x90;
             pgn[1] = 0x7E;
-            pgn[2] = f00[0];
+            pgn[2] = SwapModSenNibbles(f00[0]); // CAN packs ModID in low nibble; UDP expects ModID in high nibble
             pgn[3] = f00[1];
             pgn[4] = f00[2];
             pgn[5] = f00[3];
@@ -262,12 +262,13 @@ namespace RateController.Classes.Can
             {
                 case 32500:
                     // → 0xFF03 (rate command) + 0xFF0A (flow calibration)
-                    // PGN32500 layout: [2]=ModSenId, [3-5]=rateSet, [6-8]=flowCal, [9]=cmd, [10-11]=manualPwm
-                    // 0xFF03 Teensy reads: buf[0]=ModSenId, buf[1-3]=rate, buf[4-5]=manualPwm, buf[6]=cmd
+                    // PGN32500 layout: [2]=ModSenId (UDP: high=ModID,low=SenID), [3-5]=rateSet, [6-8]=flowCal, [9]=cmd, [10-11]=manualPwm
+                    // 0xFF03 Teensy reads: buf[0]=ModSenId (CAN: low=ModID,high=SenID), buf[1-3]=rate, buf[4-5]=manualPwm, buf[6]=cmd
                     if (pgnData.Length >= 12)
                     {
+                        byte canModSenId = SwapModSenNibbles(pgnData[2]); // UDP high=ModID → CAN low=ModID
                         frames.Add(BuildFrame(0x03, new byte[] {
-                            pgnData[2],   // ModSenId
+                            canModSenId,  // ModSenId (CAN nibble order)
                             pgnData[3],   // rateSetpoint lo
                             pgnData[4],   // rateSetpoint mid
                             pgnData[5],   // rateSetpoint hi
@@ -277,7 +278,7 @@ namespace RateController.Classes.Can
                             0             // reserved
                         }));
                         frames.Add(BuildFrame(0x0A, new byte[] {
-                            pgnData[2],   // ModSenId
+                            canModSenId,  // ModSenId (CAN nibble order)
                             pgnData[6],   // flowCal lo
                             pgnData[7],   // flowCal mid
                             pgnData[8],   // flowCal hi
@@ -307,15 +308,16 @@ namespace RateController.Classes.Can
 
                 case 32502:
                     // → 0xFF05 (PID part 1) + 0xFF06 (PID part 2) + 0xFF0B (PID part 3)
-                    // PGN32502 layout: [2]=ModSenId, [3]=MaxPWM, [4]=MinPWM, [5]=Kp, [6]=Ki,
+                    // PGN32502 layout: [2]=ModSenId (UDP: high=ModID,low=SenID), [3]=MaxPWM, [4]=MinPWM, [5]=Kp, [6]=Ki,
                     //   [7]=Deadband, [8]=BrakePoint, [9]=PIDslowAdjust, [10]=SlewRate,
                     //   [11]=MaxIntegral, [12]=0, [13]=TimedMinStart, [14-15]=TimedAdjust,
                     //   [16-17]=TimedPause, [18]=PIDtime, [19]=PulseMinHz, [20-21]=PulseMaxHz,
                     //   [22]=PulseSampleSize
                     if (pgnData.Length >= 23)
                     {
+                        byte canModSenId = SwapModSenNibbles(pgnData[2]); // UDP high=ModID → CAN low=ModID
                         frames.Add(BuildFrame(0x05, new byte[] {
-                            pgnData[2],   // ModSenId
+                            canModSenId,  // ModSenId (CAN nibble order)
                             pgnData[3],   // MaxPWM (0-100%, Teensy applies 255*val/100)
                             pgnData[4],   // MinPWM
                             pgnData[5],   // Kp (scrollbar, Teensy: pow(1.1, val-120))
@@ -325,7 +327,7 @@ namespace RateController.Classes.Can
                             pgnData[9]    // PIDslowAdjust
                         }));
                         frames.Add(BuildFrame(0x06, new byte[] {
-                            pgnData[2],   // ModSenId
+                            canModSenId,  // ModSenId (CAN nibble order)
                             pgnData[10],  // SlewRate
                             pgnData[11],  // MaxIntegral (×10, Teensy: val/10)
                             pgnData[14],  // TimedAdjust lo
@@ -335,7 +337,7 @@ namespace RateController.Classes.Can
                             pgnData[18]   // PIDtime
                         }));
                         frames.Add(BuildFrame(0x0B, new byte[] {
-                            pgnData[2],   // ModSenId
+                            canModSenId,  // ModSenId (CAN nibble order)
                             pgnData[13],  // TimedMinStart (Teensy: val/100)
                             pgnData[19],  // PulseMinHz (Hz×10, Teensy: 10000000/val µs)
                             pgnData[20],  // PulseMaxHz lo (Hz, Teensy: 1000000/val µs)
@@ -427,6 +429,17 @@ namespace RateController.Classes.Can
             byte crc = 0;
             for (int i = 0; i < length; i++) crc += data[i];
             return crc;
+        }
+
+        /// <summary>
+        /// Swaps high and low nibbles of a ModSenID byte.
+        /// CAN frames use (ModID in low nibble, SenID in high nibble).
+        /// UDP PGNs use (ModID in high nibble, SenID in low nibble) via BuildModSenID.
+        /// This converts in either direction — the operation is its own inverse.
+        /// </summary>
+        private static byte SwapModSenNibbles(byte b)
+        {
+            return (byte)(((b & 0x0F) << 4) | ((b >> 4) & 0x0F));
         }
     }
 
