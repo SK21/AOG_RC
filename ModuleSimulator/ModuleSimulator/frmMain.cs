@@ -111,7 +111,22 @@ namespace ModuleSimulator
                 case "WheelSpeed": if (decimal.TryParse(val, out d)) nudWheelSpeed.Value = Clamp(d, nudWheelSpeed.Minimum, nudWheelSpeed.Maximum); break;
                 case "Pressure":   if (decimal.TryParse(val, out d)) nudPressure.Value   = Clamp(d, nudPressure.Minimum,   nudPressure.Maximum);   break;
                 case "WorkSwitch": ckWorkSwitch.Checked = val == "1"; break;
+                case "Left":       if (int.TryParse(val, out int lv)) Left = lv; break;
+                case "Top":        if (int.TryParse(val, out int tv)) Top  = tv; break;
             }
+        }
+
+        // Ensure title bar is reachable on at least one screen (matches RC IsOnScreen).
+        private void EnsureOnScreen()
+        {
+            foreach (Screen s in Screen.AllScreens)
+            {
+                if (s.WorkingArea.Contains(new System.Drawing.Point(Left + 20, Top + 20)))
+                    return;
+            }
+            // Not visible — fall back to primary screen top-left
+            Left = Screen.PrimaryScreen.WorkingArea.Left + 40;
+            Top  = Screen.PrimaryScreen.WorkingArea.Top  + 40;
         }
 
         private void SaveSettings()
@@ -120,7 +135,8 @@ namespace ModuleSimulator
             {
                 string dir = Path.GetDirectoryName(ConfigPath);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                File.WriteAllLines(ConfigPath, new[]
+
+                var lines = new System.Collections.Generic.List<string>
                 {
                     "Subnet="     + txtSubnet.Text.Trim(),
                     "ModuleID="   + nudModuleID.Value,
@@ -131,13 +147,22 @@ namespace ModuleSimulator
                     "WheelSpeed=" + nudWheelSpeed.Value,
                     "Pressure="   + nudPressure.Value,
                     "WorkSwitch=" + (ckWorkSwitch.Checked ? "1" : "0"),
-                });
+                };
+
+                // Only save position when not minimised/maximised (matches RC SaveFormLocation)
+                if (WindowState == FormWindowState.Normal)
+                {
+                    lines.Add("Left=" + Left);
+                    lines.Add("Top="  + Top);
+                }
+
+                File.WriteAllLines(ConfigPath, lines);
             }
             catch { }
         }
 
         // ── Constructor ──────────────────────────────────────────────────────────
-        public frmMain() { InitializeComponent(); LoadSettings(); }
+        public frmMain() { InitializeComponent(); LoadSettings(); EnsureOnScreen(); }
 
         // ── CRC (matches clsTools.CRC / Teensy CRC) ─────────────────────────────
         private static byte CalcCRC(byte[] data, int length)
