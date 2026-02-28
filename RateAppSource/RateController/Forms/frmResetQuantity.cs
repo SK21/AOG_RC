@@ -19,7 +19,9 @@ namespace RateController
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            tbQuantity.Text = Prd.CurrentTankAmount.ToString();
+            tbQuantity.Text = Prd.CurrentTankAmount.ToString("N1");
+            ckFillTank.Checked = false;
+            ckReset.Checked = false;
             SetButtons(false);
         }
 
@@ -42,7 +44,7 @@ namespace RateController
 
         private void ckFillTank_CheckedChanged(object sender, EventArgs e)
         {
-            tbQuantity.Text = Prd.TankSize.ToString();
+            if (ckFillTank.Checked) tbQuantity.Text = Prd.TankSize.ToString("N1");
             SetButtons(true);
         }
 
@@ -63,7 +65,7 @@ namespace RateController
             SetLanguage();
 
             Prd = Core.Products.Item(Props.CurrentProduct);
-            tbQuantity.Text = Prd.CurrentTankAmount.ToString();
+            tbQuantity.Text = Prd.CurrentTankAmount.ToString("N1");
             SetButtons(false);
         }
 
@@ -99,7 +101,7 @@ namespace RateController
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    tbQuantity.Text = form.ReturnValue.ToString();
+                    tbQuantity.Text = form.ReturnValue.ToString("N1");
                 }
             }
         }

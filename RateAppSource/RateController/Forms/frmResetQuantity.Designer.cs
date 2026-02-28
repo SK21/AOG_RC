@@ -44,7 +44,7 @@
             this.ckReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckReset.Location = new System.Drawing.Point(11, 116);
             this.ckReset.Name = "ckReset";
-            this.ckReset.Size = new System.Drawing.Size(229, 34);
+            this.ckReset.Size = new System.Drawing.Size(252, 34);
             this.ckReset.TabIndex = 124;
             this.ckReset.Text = "Reset Applied";
             this.ckReset.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -57,7 +57,7 @@
             this.tbQuantity.Location = new System.Drawing.Point(151, 14);
             this.tbQuantity.MaxLength = 8;
             this.tbQuantity.Name = "tbQuantity";
-            this.tbQuantity.Size = new System.Drawing.Size(90, 30);
+            this.tbQuantity.Size = new System.Drawing.Size(112, 30);
             this.tbQuantity.TabIndex = 153;
             this.tbQuantity.Text = "1250";
             this.tbQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -92,7 +92,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.OK;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(168, 169);
+            this.btnOK.Location = new System.Drawing.Point(191, 169);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
             this.btnOK.TabIndex = 154;
@@ -102,10 +102,9 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 24);
+            this.label1.Size = new System.Drawing.Size(133, 24);
             this.label1.TabIndex = 156;
             this.label1.Text = "Tank Quantity";
             // 
@@ -117,7 +116,7 @@
             this.ckFillTank.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckFillTank.Location = new System.Drawing.Point(12, 63);
             this.ckFillTank.Name = "ckFillTank";
-            this.ckFillTank.Size = new System.Drawing.Size(229, 34);
+            this.ckFillTank.Size = new System.Drawing.Size(251, 34);
             this.ckFillTank.TabIndex = 157;
             this.ckFillTank.Text = "Fill Tank";
             this.ckFillTank.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -128,7 +127,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(252, 243);
+            this.ClientSize = new System.Drawing.Size(275, 243);
             this.Controls.Add(this.ckFillTank);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
