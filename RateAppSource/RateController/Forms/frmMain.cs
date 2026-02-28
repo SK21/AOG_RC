@@ -245,6 +245,10 @@ namespace RateController.Forms
             SwitchDisplay(false);
             UpdateSwitches();
             UpdateForm();
+
+            // Touchscreen: clear focus after every button tap so buttons don't stay highlighted
+            foreach (Control c in Controls)
+                c.Click += (s, ea) => { ActiveControl = null; };
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)

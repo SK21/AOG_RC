@@ -218,7 +218,7 @@ namespace RateController.PGNs
 
         public void Load()
         {
-            // byte 31 - comm mode is loaded from Props.CanEnabled at send
+            // byte 31 - comm mode is overwritten from Props.CanEnabled at send
             String Name;
             Array.Clear(cData, 0, cByteCount);
             cData[0] = HeaderLo;

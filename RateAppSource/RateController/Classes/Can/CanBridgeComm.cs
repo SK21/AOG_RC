@@ -29,8 +29,12 @@ namespace RateController.Classes.Can
         private string _cLog = "";
 
         private readonly List<CanModule> _connectedModules = new List<CanModule>();
+        private readonly object _modulesLock = new object();
 
-        public IReadOnlyList<CanModule> ConnectedModules => _connectedModules.AsReadOnly();
+        public IReadOnlyList<CanModule> ConnectedModules
+        {
+            get { lock (_modulesLock) { return _connectedModules.ToArray(); } }
+        }
 
         /// <summary>Raised on UI thread when a module comes online (first 0xFF08 received).</summary>
         public event EventHandler<CanModule> ModuleConnected;
@@ -127,7 +131,7 @@ namespace RateController.Classes.Can
 
             _lastModuleDataTime = DateTime.MinValue;
             _lastFrameTime = DateTime.MinValue;
-            _connectedModules.Clear();
+            lock (_modulesLock) { _connectedModules.Clear(); }
             _cLog = "";
 
             Props.WriteActivityLog("CAN Bridge stopped", true, true);
@@ -194,17 +198,20 @@ namespace RateController.Classes.Can
         {
             InvokeOnMainForm(() =>
             {
-                if (_connectedModules.Find(m => m.ModuleId == moduleId) == null)
+                lock (_modulesLock)
                 {
-                    var module = new CanModule { ModuleId = (byte)moduleId, LastSeen = DateTime.Now };
-                    _connectedModules.Add(module);
-                    ModuleConnected?.Invoke(this, module);
-                    Props.WriteActivityLog("CAN Module connected: ID=" + moduleId, true, true);
-                }
-                else
-                {
-                    var m = _connectedModules.Find(x => x.ModuleId == moduleId);
-                    if (m != null) m.LastSeen = DateTime.Now;
+                    if (_connectedModules.Find(m => m.ModuleId == moduleId) == null)
+                    {
+                        var module = new CanModule { ModuleId = (byte)moduleId, LastSeen = DateTime.Now };
+                        _connectedModules.Add(module);
+                        ModuleConnected?.Invoke(this, module);
+                        Props.WriteActivityLog("CAN Module connected: ID=" + moduleId, true, true);
+                    }
+                    else
+                    {
+                        var m = _connectedModules.Find(x => x.ModuleId == moduleId);
+                        if (m != null) m.LastSeen = DateTime.Now;
+                    }
                 }
             });
         }
@@ -213,12 +220,15 @@ namespace RateController.Classes.Can
         {
             InvokeOnMainForm(() =>
             {
-                var module = _connectedModules.Find(m => m.ModuleId == moduleId);
-                if (module != null)
+                lock (_modulesLock)
                 {
-                    _connectedModules.Remove(module);
-                    ModuleDisconnected?.Invoke(this, module);
-                    Props.WriteActivityLog("CAN Module disconnected: ID=" + moduleId, true, true);
+                    var module = _connectedModules.Find(m => m.ModuleId == moduleId);
+                    if (module != null)
+                    {
+                        _connectedModules.Remove(module);
+                        ModuleDisconnected?.Invoke(this, module);
+                        Props.WriteActivityLog("CAN Module disconnected: ID=" + moduleId, true, true);
+                    }
                 }
             });
         }

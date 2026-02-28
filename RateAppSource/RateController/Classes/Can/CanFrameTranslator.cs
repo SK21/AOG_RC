@@ -108,7 +108,7 @@ namespace RateController.Classes.Can
                     break;
 
                 case 0x01:  // 0xFF01 — Sensor PWM/Hz
-                    if (frame.Dlc >= 5)
+                    if (frame.Dlc >= 8)
                     {
                         state.Last0xFF01 = CloneData(frame.Data, 8);
                         TryAssemble32400(state);

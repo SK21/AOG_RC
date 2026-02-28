@@ -1,27 +1,30 @@
 
+// Uncomment to enable verbose CAN receive logging on Serial (development only)
+// #define CANBUS_DEBUG
+
 // CANBus.ino - ISOBUS CAN communication for Teensy 4.1
 // Uses FlexCAN_T4 library (built-in for Teensy 4.x)
 // CAN1 pins: TX=22, RX=23 (connected to MCP2562-E/P transceiver)
 
 // CAN bus instance - using CAN1 at 250kbps (ISOBUS standard)
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ISOBUS;
-uint8_t StandbyPin=6;
+uint8_t StandbyPin = 6;
 
 // ISOBUS address claiming
 struct IsobusIdentity {
-    uint8_t address = 0x80;          // Preferred address (128)
-    bool addressClaimed = false;
-    uint32_t lastClaimTime = 0;
+	uint8_t address = 0x80;          // Preferred address (128)
+	bool addressClaimed = false;
+	uint32_t lastClaimTime = 0;
 
-    // ISO 11783 NAME fields (64-bit)
-    uint32_t identityNumber = 1;      // Unique serial number (21 bits)
-    uint16_t manufacturerCode = 0;    // Assigned by AEF (11 bits)
-    uint8_t deviceClass = 25;         // 25 = Sprayer/Spreader control
-    uint8_t deviceClassInstance = 0;
-    uint8_t functionCode = 130;       // 130 = Rate Control
-    uint8_t functionInstance = 0;
-    uint8_t industryGroup = 2;        // 2 = Agricultural
-    bool selfConfigurable = true;
+	// ISO 11783 NAME fields (64-bit)
+	uint32_t identityNumber = 1;      // Unique serial number (21 bits)
+	uint16_t manufacturerCode = 0;    // Assigned by AEF (11 bits)
+	uint8_t deviceClass = 25;         // 25 = Sprayer/Spreader control
+	uint8_t deviceClassInstance = 0;
+	uint8_t functionCode = 130;       // 130 = Rate Control
+	uint8_t functionInstance = 0;
+	uint8_t industryGroup = 2;        // 2 = Agricultural
+	bool selfConfigurable = true;
 };
 
 IsobusIdentity ISOBUSid;
@@ -37,234 +40,240 @@ uint8_t cfgFrames = 0;  // bitmask: bit0=0xFF0C, bit1=0xFF0D, bit2=0xFF0E, bit3=
 // Build 64-bit NAME from identity fields
 //-----------------------------------------------------------------------------
 uint64_t buildIsobusNAME() {
-    uint64_t name = 0;
+	uint64_t name = 0;
 
-    // Bits 0-20: Identity number (21 bits)
-    name |= (uint64_t)(ISOBUSid.identityNumber & 0x1FFFFF);
+	// Bits 0-20: Identity number (21 bits)
+	name |= (uint64_t)(ISOBUSid.identityNumber & 0x1FFFFF);
 
-    // Bits 21-31: Manufacturer code (11 bits)
-    name |= (uint64_t)(ISOBUSid.manufacturerCode & 0x7FF) << 21;
+	// Bits 21-31: Manufacturer code (11 bits)
+	name |= (uint64_t)(ISOBUSid.manufacturerCode & 0x7FF) << 21;
 
-    // Bits 32-34: ECU instance (3 bits) - use 0
-    // Bits 35-39: Function instance (5 bits)
-    name |= (uint64_t)(ISOBUSid.functionInstance & 0x1F) << 35;
+	// Bits 32-34: ECU instance (3 bits) - use 0
+	// Bits 35-39: Function instance (5 bits)
+	name |= (uint64_t)(ISOBUSid.functionInstance & 0x1F) << 35;
 
-    // Bits 40-47: Function code (8 bits)
-    name |= (uint64_t)(ISOBUSid.functionCode) << 40;
+	// Bits 40-47: Function code (8 bits)
+	name |= (uint64_t)(ISOBUSid.functionCode) << 40;
 
-    // Bit 48: Reserved
+	// Bit 48: Reserved
 
-    // Bits 49-55: Device class (7 bits)
-    name |= (uint64_t)(ISOBUSid.deviceClass & 0x7F) << 49;
+	// Bits 49-55: Device class (7 bits)
+	name |= (uint64_t)(ISOBUSid.deviceClass & 0x7F) << 49;
 
-    // Bits 56-59: Device class instance (4 bits)
-    name |= (uint64_t)(ISOBUSid.deviceClassInstance & 0x0F) << 56;
+	// Bits 56-59: Device class instance (4 bits)
+	name |= (uint64_t)(ISOBUSid.deviceClassInstance & 0x0F) << 56;
 
-    // Bits 60-62: Industry group (3 bits)
-    name |= (uint64_t)(ISOBUSid.industryGroup & 0x07) << 60;
+	// Bits 60-62: Industry group (3 bits)
+	name |= (uint64_t)(ISOBUSid.industryGroup & 0x07) << 60;
 
-    // Bit 63: Self-configurable address
-    if (ISOBUSid.selfConfigurable) {
-        name |= (uint64_t)1 << 63;
-    }
+	// Bit 63: Self-configurable address
+	if (ISOBUSid.selfConfigurable) {
+		name |= (uint64_t)1 << 63;
+	}
 
-    return name;
+	return name;
 }
 
 //-----------------------------------------------------------------------------
 // Initialize CAN hardware
 //-----------------------------------------------------------------------------
 bool CANBus_Begin() {
-    // Enable CAN transceiver (STBY pin LOW = active)
-    pinMode(StandbyPin, OUTPUT);
-    digitalWrite(StandbyPin, LOW);
+	// Enable CAN transceiver (STBY pin LOW = active)
+	pinMode(StandbyPin, OUTPUT);
+	digitalWrite(StandbyPin, LOW);
 
-    // Initialize FlexCAN at 250kbps (ISOBUS standard)
-    ISOBUS.begin();
-    ISOBUS.setBaudRate(250000);
+	// Initialize FlexCAN at 250kbps (ISOBUS standard)
+	ISOBUS.begin();
+	ISOBUS.setBaudRate(250000);
 
-    // Set up mailboxes for reception
-    ISOBUS.setMaxMB(16);
-    ISOBUS.setMBFilter(ACCEPT_ALL);
+	// Set up mailboxes for reception
+	ISOBUS.setMaxMB(16);
+	ISOBUS.setMBFilter(ACCEPT_ALL);
 
-    // Set identity number from module ID
-    ISOBUSid.identityNumber = MDL.ID + 1000;
+	// Set identity number from module ID
+	ISOBUSid.identityNumber = MDL.ID + 1000;
 
-    return true;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
 // Send address claim message (PGN 60928 / 0xEE00)
 //-----------------------------------------------------------------------------
 void CANBus_SendAddressClaim() {
-    CAN_message_t msg;
+	CAN_message_t msg;
 
-    // Build 29-bit CAN ID for Address Claimed
-    // Priority=6, PF=0xEE, DA=0xFF (global broadcast), SA=claimed address
-    msg.id = (6UL << 26) | (0xEEUL << 16) | (0xFFUL << 8) | ISOBUSid.address;
-    msg.flags.extended = 1;
-    msg.len = 8;
+	// Build 29-bit CAN ID for Address Claimed
+	// Priority=6, PF=0xEE, DA=0xFF (global broadcast), SA=claimed address
+	msg.id = (6UL << 26) | (0xEEUL << 16) | (0xFFUL << 8) | ISOBUSid.address;
+	msg.flags.extended = 1;
+	msg.len = 8;
 
-    // Pack 64-bit NAME into 8 bytes (little-endian)
-    uint64_t name = buildIsobusNAME();
-    for (int i = 0; i < 8; i++) {
-        msg.buf[i] = (name >> (i * 8)) & 0xFF;
-    }
+	// Pack 64-bit NAME into 8 bytes (little-endian)
+	uint64_t name = buildIsobusNAME();
+	for (int i = 0; i < 8; i++) {
+		msg.buf[i] = (name >> (i * 8)) & 0xFF;
+	}
 
-    if (ISOBUS.write(msg)) {
-        ISOBUSid.lastClaimTime = millis();
-        ISOBUSid.addressClaimed = true;
-        Serial.print("Address claim sent: 0x");
-        Serial.println(ISOBUSid.address, HEX);
-    } else {
-        Serial.println("Address claim FAILED");
-    }
+	if (ISOBUS.write(msg)) {
+		ISOBUSid.lastClaimTime = millis();
+		ISOBUSid.addressClaimed = true;
+		Serial.print("Address claim sent: 0x");
+		Serial.println(ISOBUSid.address, HEX);
+	}
+	else {
+		Serial.println("Address claim FAILED");
+	}
 }
 
 //-----------------------------------------------------------------------------
 // Send proprietary message (PGN 0xFF00-0xFFFF range)
 //-----------------------------------------------------------------------------
 bool CANBus_SendProprietaryB(uint8_t pgnLow, const uint8_t* data, uint8_t len) {
-    if (!ISOBUSid.addressClaimed) return false;
+	if (!ISOBUSid.addressClaimed) return false;
 
-    CAN_message_t msg;
+	CAN_message_t msg;
 
-    // Build 29-bit CAN ID for Proprietary B
-    // Priority=6, DP=0, PF=0xFF, PS=pgnLow, SA=our address
-    msg.id = (6UL << 26) | (0xFFUL << 16) | ((uint32_t)pgnLow << 8) | ISOBUSid.address;
-    msg.flags.extended = 1;
-    msg.len = (len > 8) ? 8 : len;
+	// Build 29-bit CAN ID for Proprietary B
+	// Priority=6, DP=0, PF=0xFF, PS=pgnLow, SA=our address
+	msg.id = (6UL << 26) | (0xFFUL << 16) | ((uint32_t)pgnLow << 8) | ISOBUSid.address;
+	msg.flags.extended = 1;
+	msg.len = (len > 8) ? 8 : len;
 
-    memcpy(msg.buf, data, msg.len);
+	memcpy(msg.buf, data, msg.len);
 
-    if (ISOBUS.write(msg)) {
-        return true;
-    }
+	if (ISOBUS.write(msg)) {
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // Process received CAN messages
 //-----------------------------------------------------------------------------
 void CANBus_Receive() {
-    CAN_message_t msg;
+	CAN_message_t msg;
 
-    while (ISOBUS.read(msg)) {
-        if (!msg.flags.extended) continue;  // Only process extended frames
+	while (ISOBUS.read(msg)) {
+		if (!msg.flags.extended) continue;  // Only process extended frames
 
-        // Extract PGN from 29-bit ID
-        // ID format: Priority(3) | R(1) | DP(1) | PF(8) | PS(8) | SA(8)
-        uint8_t pf = (msg.id >> 16) & 0xFF;  // PDU Format
-        uint8_t ps = (msg.id >> 8) & 0xFF;   // PDU Specific
-        uint8_t sa = msg.id & 0xFF;          // Source Address
+		// Extract PGN from 29-bit ID
+		// ID format: Priority(3) | R(1) | DP(1) | PF(8) | PS(8) | SA(8)
+		uint8_t pf = (msg.id >> 16) & 0xFF;  // PDU Format
+		uint8_t ps = (msg.id >> 8) & 0xFF;   // PDU Specific
+		uint8_t sa = msg.id & 0xFF;          // Source Address
 
-        uint32_t pgn;
-        if (pf >= 240) {
-            // PDU2 format: PGN = PF * 256 + PS
-            pgn = ((uint32_t)pf << 8) | ps;
-        } else {
-            // PDU1 format: PGN = PF * 256, PS is destination
-            pgn = (uint32_t)pf << 8;
-        }
+		uint32_t pgn;
+		if (pf >= 240) {
+			// PDU2 format: PGN = PF * 256 + PS
+			pgn = ((uint32_t)pf << 8) | ps;
+		}
+		else {
+			// PDU1 format: PGN = PF * 256, PS is destination
+			pgn = (uint32_t)pf << 8;
+		}
 
-        // Debug: show received PGNs
-        Serial.print("RX PGN 0x");
-        Serial.print(pgn, HEX);
-        Serial.print(" from 0x");
-        Serial.print(sa, HEX);
-        Serial.print(" to 0x");
-        Serial.println(ps, HEX);
+#ifdef CANBUS_DEBUG
+		Serial.print("RX PGN 0x");
+		Serial.print(pgn, HEX);
+		Serial.print(" from 0x");
+		Serial.print(sa, HEX);
+		Serial.print(" to 0x");
+		Serial.println(ps, HEX);
+#endif
 
-        // Handle specific PGNs
-        switch (pgn) {
-            case 0xEE00:  // Address Claimed
-                CANBus_HandleAddressClaim(msg, sa);
-                break;
+		// Handle specific PGNs
+		switch (pgn) {
+		case 0xEE00:  // Address Claimed
+			CANBus_HandleAddressClaim(msg, sa);
+			break;
 
-            case 0xEA00:  // Request PGN (ISO 11783-3)
-                {
-                    // Respond to requests for Address Claim (PGN 0xEE00)
-                    uint32_t requestedPgn = msg.buf[0] | ((uint32_t)msg.buf[1] << 8) | ((uint32_t)msg.buf[2] << 16);
-                    if (requestedPgn == 0xEE00 && ISOBUSid.addressClaimed) {
-                        Serial.println("RX Request for Address Claim - responding");
-                        CANBus_SendAddressClaim();
-                    }
-                }
-                break;
+		case 0xEA00:  // Request PGN (ISO 11783-3)
+		{
+			// Respond to requests for Address Claim (PGN 0xEE00)
+			uint32_t requestedPgn = msg.buf[0] | ((uint32_t)msg.buf[1] << 8) | ((uint32_t)msg.buf[2] << 16);
+			if (requestedPgn == 0xEE00 && ISOBUSid.addressClaimed) {
+#ifdef CANBUS_DEBUG
+				Serial.println("RX Request for Address Claim - responding");
+#endif
+				CANBus_SendAddressClaim();
+			}
+		}
+		break;
 
-            case 0xFF03:  // Rate Command (from Gateway)
-                CANBus_HandleRateCommand(msg);
-                break;
+		case 0xFF03:  // Rate Command (from Gateway)
+			CANBus_HandleRateCommand(msg);
+			break;
 
-            case 0xFF04:  // Relay Command (from Gateway)
-                CANBus_HandleRelayCommand(msg);
-                break;
+		case 0xFF04:  // Relay Command (from Gateway)
+			CANBus_HandleRelayCommand(msg);
+			break;
 
-            case 0xFF05:  // PID Settings 1 (from Gateway)
-                CANBus_HandlePidSettings1(msg);
-                break;
+		case 0xFF05:  // PID Settings 1 (from Gateway)
+			CANBus_HandlePidSettings1(msg);
+			break;
 
-            case 0xFF06:  // PID Settings 2 (from Gateway)
-                CANBus_HandlePidSettings2(msg);
-                break;
+		case 0xFF06:  // PID Settings 2 (from Gateway)
+			CANBus_HandlePidSettings2(msg);
+			break;
 
-            case 0xFF07:  // Wheel Speed Config (from Gateway)
-                CANBus_HandleWheelConfig(msg);
-                break;
+		case 0xFF07:  // Wheel Speed Config (from Gateway)
+			CANBus_HandleWheelConfig(msg);
+			break;
 
-            case 0xFF0A:  // Flow Calibration (from Gateway)
-                CANBus_HandleFlowCal(msg);
-                break;
+		case 0xFF0A:  // Flow Calibration (from Gateway)
+			CANBus_HandleFlowCal(msg);
+			break;
 
-            case 0xFF0B:  // PID Settings 3 (from Gateway)
-                CANBus_HandlePidSettings3(msg);
-                break;
+		case 0xFF0B:  // PID Settings 3 (from Gateway)
+			CANBus_HandlePidSettings3(msg);
+			break;
 
-            case 0xFF0C:  // Module config part 1 (from PGN 32700)
-                CANBus_HandleModuleConfig1(msg);
-                break;
+		case 0xFF0C:  // Module config part 1 (from PGN 32700)
+			CANBus_HandleModuleConfig1(msg);
+			break;
 
-            case 0xFF0D:  // Module config part 2 (from PGN 32700)
-                CANBus_HandleModuleConfig2(msg);
-                break;
+		case 0xFF0D:  // Module config part 2 (from PGN 32700)
+			CANBus_HandleModuleConfig2(msg);
+			break;
 
-            case 0xFF0E:  // Module config part 3 (from PGN 32700)
-                CANBus_HandleModuleConfig3(msg);
-                break;
+		case 0xFF0E:  // Module config part 3 (from PGN 32700)
+			CANBus_HandleModuleConfig3(msg);
+			break;
 
-            case 0xFF0F:  // Module config part 4 / commit (from PGN 32700)
-                CANBus_HandleModuleConfig4(msg);
-                break;
+		case 0xFF0F:  // Module config part 4 / commit (from PGN 32700)
+			CANBus_HandleModuleConfig4(msg);
+			break;
 
-        }
-    }
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
 // Handle address claim from another device
 //-----------------------------------------------------------------------------
 void CANBus_HandleAddressClaim(const CAN_message_t& msg, uint8_t sourceAddr) {
-    if (sourceAddr == ISOBUSid.address) {
-        // Address conflict! Compare NAMEs
-        uint64_t theirName = 0;
-        for (int i = 0; i < 8; i++) {
-            theirName |= (uint64_t)msg.buf[i] << (i * 8);
-        }
+	if (sourceAddr == ISOBUSid.address) {
+		// Address conflict! Compare NAMEs
+		uint64_t theirName = 0;
+		for (int i = 0; i < 8; i++) {
+			theirName |= (uint64_t)msg.buf[i] << (i * 8);
+		}
 
-        uint64_t ourName = buildIsobusNAME();
+		uint64_t ourName = buildIsobusNAME();
 
-        if (theirName < ourName) {
-            // They win, we must find new address
-            ISOBUSid.address++;
-            if (ISOBUSid.address > 247) ISOBUSid.address = 128;
-            ISOBUSid.addressClaimed = false;
-            CANBus_SendAddressClaim();
-        } else {
-            // We win, re-claim
-            CANBus_SendAddressClaim();
-        }
-    }
+		if (theirName < ourName) {
+			// They win, we must find new address
+			ISOBUSid.address++;
+			if (ISOBUSid.address > 247) ISOBUSid.address = 128;
+			ISOBUSid.addressClaimed = false;
+			CANBus_SendAddressClaim();
+		}
+		else {
+			// We win, re-claim
+			CANBus_SendAddressClaim();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -273,149 +282,151 @@ void CANBus_HandleAddressClaim(const CAN_message_t& msg, uint8_t sourceAddr) {
 //-----------------------------------------------------------------------------
 
 void CANBus_HandleRateCommand(const CAN_message_t& msg) {
-    // PGN 0xFF03 - Rate Command from Gateway
-    // Byte 0: ModuleId(0-3) | SensorId(4-7)
-    // Bytes 1-2: Rate setpoint (0.001 UPM per bit)
-    // Bytes 3-4: Manual adjust (signed)
-    // Byte 5: Command byte
-    // Bytes 6-7: Reserved
+	// PGN 0xFF03 - Rate Command from Gateway
+	// Byte 0: ModuleId(0-3) | SensorId(4-7)
+	// Bytes 1-2: Rate setpoint (0.001 UPM per bit)
+	// Bytes 3-4: Manual adjust (signed)
+	// Byte 5: Command byte
+	// Bytes 6-7: Reserved
 
-    uint8_t modId = msg.buf[0] & 0x0F;
-    uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
+	uint8_t modId = msg.buf[0] & 0x0F;
+	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
-    if (modId != MDL.ID) return;  // Not for us
-    if (senId >= MaxProductCount) return;
+	if (modId != MDL.ID) return;  // Not for us
+	if (senId >= MaxProductCount) return;
 
-    // Parse rate setpoint (matches UDP PGN 32500 format: 1000 X actual)
-    uint32_t rateRaw = msg.buf[1] | ((uint32_t)msg.buf[2] << 8) | ((uint32_t)msg.buf[3] << 16);
-    Sensor[senId].TargetUPM = rateRaw * 0.001;
+	// Parse rate setpoint (matches UDP PGN 32500 format: 1000 X actual)
+	uint32_t rateRaw = msg.buf[1] | ((uint32_t)msg.buf[2] << 8) | ((uint32_t)msg.buf[3] << 16);
+	Sensor[senId].TargetUPM = rateRaw * 0.001;
 
-    // Parse manual adjust
-    int16_t manualAdj = msg.buf[4] | (msg.buf[5] << 8);
-    Sensor[senId].ManualAdjust = manualAdj;
+	// Parse manual adjust
+	int16_t manualAdj = msg.buf[4] | (msg.buf[5] << 8);
+	Sensor[senId].ManualAdjust = manualAdj;
 
-    // Parse command byte
-    uint8_t cmd = msg.buf[6];
-    if (cmd & 0x01) Sensor[senId].TotalPulses = 0;  // Reset quantity
-    Sensor[senId].ControlType = (cmd >> 1) & 0x07;
-    MasterOn = ((cmd & 0x10) == 0x10);
-    Sensor[senId].AutoOn = ((cmd & 0x40) == 0x40);
-    CalibrationOn[senId] = ((cmd & 0x80) == 0x80);
+	// Parse command byte
+	uint8_t cmd = msg.buf[6];
+	if (cmd & 0x01) Sensor[senId].TotalPulses = 0;  // Reset quantity
+	Sensor[senId].ControlType = (cmd >> 1) & 0x07;
+	MasterOn = ((cmd & 0x10) == 0x10);
+	Sensor[senId].AutoOn = ((cmd & 0x40) == 0x40);
+	CalibrationOn[senId] = ((cmd & 0x80) == 0x80);
 
-    // Update timeout
-    Sensor[senId].CommTime = millis();
+	// Update timeout
+	Sensor[senId].CommTime = millis();
 }
 
 void CANBus_HandleRelayCommand(const CAN_message_t& msg) {
-    // PGN 0xFF04 - Relay Command from Gateway
-    // Matches UDP PGN 32501 format
-    uint8_t modId = msg.buf[0] & 0x0F;
-    if (modId != MDL.ID) return;
+	// PGN 0xFF04 - Relay Command from Gateway
+	// Matches UDP PGN 32501 format
+	uint8_t modId = msg.buf[0] & 0x0F;
+	if (modId != MDL.ID) return;
 
-    RelayLo = msg.buf[1];
-    RelayHi = msg.buf[2];
-    PowerRelayLo = msg.buf[3];
-    PowerRelayHi = msg.buf[4];
-    InvertedLo = msg.buf[5];
-    InvertedHi = msg.buf[6];
+	RelayLo = msg.buf[1];
+	RelayHi = msg.buf[2];
+	PowerRelayLo = msg.buf[3];
+	PowerRelayHi = msg.buf[4];
+	InvertedLo = msg.buf[5];
+	InvertedHi = msg.buf[6];
 }
 
 void CANBus_HandlePidSettings1(const CAN_message_t& msg) {
-    // PGN 0xFF05 - PID Settings Part 1
-    // Matches UDP PGN 32502 format (bytes 3-9)
-    uint8_t modId = msg.buf[0] & 0x0F;
-    uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
+	// PGN 0xFF05 - PID Settings Part 1
+	// Matches UDP PGN 32502 format (bytes 3-9)
+	uint8_t modId = msg.buf[0] & 0x0F;
+	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
-    if (modId != MDL.ID) return;
-    if (senId >= MaxProductCount) return;
+	if (modId != MDL.ID) return;
+	if (senId >= MaxProductCount) return;
 
-    // MaxPWM/MinPWM sent as percentage, convert to 0-255 range
-    Sensor[senId].MaxPWM = (255.0 * msg.buf[1] / 100.0);
-    Sensor[senId].MinPWM = (255.0 * msg.buf[2] / 100.0);
+	// MaxPWM/MinPWM sent as percentage, convert to 0-255 range
+	Sensor[senId].MaxPWM = (255.0 * msg.buf[1] / 100.0);
+	Sensor[senId].MinPWM = (255.0 * msg.buf[2] / 100.0);
 
-    // Kp/Ki use exponential scaling: 1.1^(value-120)
-    if (msg.buf[3] > 0) {
-        Sensor[senId].Kp = pow(1.1, msg.buf[3] - 120);
-    } else {
-        Sensor[senId].Kp = 0;
-    }
-    if (msg.buf[4] > 0) {
-        Sensor[senId].Ki = pow(1.1, msg.buf[4] - 120);
-    } else {
-        Sensor[senId].Ki = 0;
-    }
+	// Kp/Ki use exponential scaling: 1.1^(value-120)
+	if (msg.buf[3] > 0) {
+		Sensor[senId].Kp = pow(1.1, msg.buf[3] - 120);
+	}
+	else {
+		Sensor[senId].Kp = 0;
+	}
+	if (msg.buf[4] > 0) {
+		Sensor[senId].Ki = pow(1.1, msg.buf[4] - 120);
+	}
+	else {
+		Sensor[senId].Ki = 0;
+	}
 
-    Sensor[senId].Deadband = msg.buf[5] / 1000.0;  // Actual X 10, convert to fraction
-    Sensor[senId].BrakePoint = msg.buf[6];
-    Sensor[senId].PIDslowAdjust = msg.buf[7];
+	Sensor[senId].Deadband = msg.buf[5] / 1000.0;  // Actual X 10, convert to fraction
+	Sensor[senId].BrakePoint = msg.buf[6];
+	Sensor[senId].PIDslowAdjust = msg.buf[7];
 }
 
 void CANBus_HandlePidSettings2(const CAN_message_t& msg) {
-    // PGN 0xFF06 - PID Settings Part 2
-    // Matches UDP PGN 32502 format (bytes 10-18)
-    uint8_t modId = msg.buf[0] & 0x0F;
-    uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
+	// PGN 0xFF06 - PID Settings Part 2
+	// Matches UDP PGN 32502 format (bytes 10-18)
+	uint8_t modId = msg.buf[0] & 0x0F;
+	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
-    if (modId != MDL.ID) return;
-    if (senId >= MaxProductCount) return;
+	if (modId != MDL.ID) return;
+	if (senId >= MaxProductCount) return;
 
-    Sensor[senId].SlewRate = msg.buf[1];
-    Sensor[senId].MaxIntegral = msg.buf[2] / 10.0;  // Actual X 10
-    Sensor[senId].TimedAdjust = msg.buf[3] | (msg.buf[4] << 8);
-    Sensor[senId].TimedPause = msg.buf[5] | (msg.buf[6] << 8);
-    Sensor[senId].PIDtime = msg.buf[7];
+	Sensor[senId].SlewRate = msg.buf[1];
+	Sensor[senId].MaxIntegral = msg.buf[2] / 10.0;  // Actual X 10
+	Sensor[senId].TimedAdjust = msg.buf[3] | (msg.buf[4] << 8);
+	Sensor[senId].TimedPause = msg.buf[5] | (msg.buf[6] << 8);
+	Sensor[senId].PIDtime = msg.buf[7];
 }
 
 void CANBus_HandlePidSettings3(const CAN_message_t& msg) {
-    // PGN 0xFF0B - PID Settings Part 3
-    // Matches UDP PGN 32502 format (bytes 13, 19-22)
-    uint8_t modId = msg.buf[0] & 0x0F;
-    uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
+	// PGN 0xFF0B - PID Settings Part 3
+	// Matches UDP PGN 32502 format (bytes 13, 19-22)
+	uint8_t modId = msg.buf[0] & 0x0F;
+	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
-    if (modId != MDL.ID) return;
-    if (senId >= MaxProductCount) return;
+	if (modId != MDL.ID) return;
+	if (senId >= MaxProductCount) return;
 
-    Sensor[senId].TimedMinStart = msg.buf[1] / 100.0;
-    // PulseMinHz sent as Hz*10, convert to microseconds (max pulse time)
-    if (msg.buf[2] > 0) {
-        Sensor[senId].PulseMax = 10000000 / msg.buf[2];  // Hz*10 to micros
-    }
-    // PulseMaxHz sent as Hz, convert to microseconds (min pulse time)
-    uint16_t pulseMaxHz = msg.buf[3] | (msg.buf[4] << 8);
-    if (pulseMaxHz > 0) {
-        Sensor[senId].PulseMin = 1000000 / pulseMaxHz;  // Hz to micros
-    }
-    Sensor[senId].PulseSampleSize = msg.buf[5];
-    if (Sensor[senId].PulseSampleSize > MaxSampleSize) {
-        Sensor[senId].PulseSampleSize = MaxSampleSize;
-    }
+	Sensor[senId].TimedMinStart = msg.buf[1] / 100.0;
+	// PulseMinHz sent as Hz*10, convert to microseconds (max pulse time)
+	if (msg.buf[2] > 0) {
+		Sensor[senId].PulseMax = 10000000 / msg.buf[2];  // Hz*10 to micros
+	}
+	// PulseMaxHz sent as Hz, convert to microseconds (min pulse time)
+	uint16_t pulseMaxHz = msg.buf[3] | (msg.buf[4] << 8);
+	if (pulseMaxHz > 0) {
+		Sensor[senId].PulseMin = 1000000 / pulseMaxHz;  // Hz to micros
+	}
+	Sensor[senId].PulseSampleSize = msg.buf[5];
+	if (Sensor[senId].PulseSampleSize > MaxSampleSize) {
+		Sensor[senId].PulseSampleSize = MaxSampleSize;
+	}
 }
 
 void CANBus_HandleWheelConfig(const CAN_message_t& msg) {
-    // PGN 0xFF07 - Wheel Speed Config
-    // Matches UDP PGN 32504 format
-    uint8_t modId = msg.buf[0] & 0x0F;
-    if (modId != MDL.ID) return;
+	// PGN 0xFF07 - Wheel Speed Config
+	// Matches UDP PGN 32504 format
+	uint8_t modId = msg.buf[0] & 0x0F;
+	if (modId != MDL.ID) return;
 
-    MDL.WheelSpeedPin = msg.buf[1];
-    uint32_t cal = msg.buf[2] | ((uint32_t)msg.buf[3] << 8) | ((uint32_t)msg.buf[4] << 16);
-    MDL.WheelCal = (float)cal;
+	MDL.WheelSpeedPin = msg.buf[1];
+	uint32_t cal = msg.buf[2] | ((uint32_t)msg.buf[3] << 8) | ((uint32_t)msg.buf[4] << 16);
+	MDL.WheelCal = (float)cal;
 
-    if (msg.buf[5] & 0x01) {
-        WheelCounts = 0;  // Erase counts
-    }
+	if (msg.buf[5] & 0x01) {
+		WheelCounts = 0;  // Erase counts
+	}
 }
 
 void CANBus_HandleFlowCal(const CAN_message_t& msg) {
-    // PGN 0xFF0A - Flow Calibration
-    uint8_t modId = msg.buf[0] & 0x0F;
-    uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
+	// PGN 0xFF0A - Flow Calibration
+	uint8_t modId = msg.buf[0] & 0x0F;
+	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
-    if (modId != MDL.ID) return;
-    if (senId >= MaxProductCount) return;
+	if (modId != MDL.ID) return;
+	if (senId >= MaxProductCount) return;
 
-    uint32_t calRaw = msg.buf[1] | (msg.buf[2] << 8) | ((uint32_t)msg.buf[3] << 16);
-    Sensor[senId].MeterCal = calRaw / 1000.0;
+	uint32_t calRaw = msg.buf[1] | (msg.buf[2] << 8) | ((uint32_t)msg.buf[3] << 16);
+	Sensor[senId].MeterCal = calRaw / 1000.0;
 }
 
 //-----------------------------------------------------------------------------
@@ -429,219 +440,219 @@ void CANBus_HandleFlowCal(const CAN_message_t& msg) {
 //-----------------------------------------------------------------------------
 
 void CANBus_HandleModuleConfig1(const CAN_message_t& msg) {
-    cfgFrames = 0;  // restart sequence — discard any partial previous collection
-    memcpy(cfgBuf, msg.buf, 8);
-    cfgFrames = 0x01;
+	cfgFrames = 0;  // restart sequence — discard any partial previous collection
+	memcpy(cfgBuf, msg.buf, 8);
+	cfgFrames = 0x01;
 }
 
 void CANBus_HandleModuleConfig2(const CAN_message_t& msg) {
-    memcpy(cfgBuf + 8, msg.buf, 8);
-    cfgFrames |= 0x02;
+	memcpy(cfgBuf + 8, msg.buf, 8);
+	cfgFrames |= 0x02;
 }
 
 void CANBus_HandleModuleConfig3(const CAN_message_t& msg) {
-    memcpy(cfgBuf + 16, msg.buf, 8);
-    cfgFrames |= 0x04;
+	memcpy(cfgBuf + 16, msg.buf, 8);
+	cfgFrames |= 0x04;
 }
 
 void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
-    memcpy(cfgBuf + 24, msg.buf, 6);  // only 6 config bytes; buf[6]=ModID, buf[7]=0
-    cfgFrames |= 0x08;
+	memcpy(cfgBuf + 24, msg.buf, 6);  // only 6 config bytes; buf[6]=ModID, buf[7]=0
+	cfgFrames |= 0x08;
 
-    // All 4 frames must have arrived (no ModID identity check — mirrors UDP handler behaviour)
-    if (cfgFrames != 0x0F) { cfgFrames = 0; return; }
-    cfgFrames = 0;
+	// All 4 frames must have arrived (no ModID identity check — mirrors UDP handler behaviour)
+	if (cfgFrames != 0x0F) { cfgFrames = 0; return; }
+	cfgFrames = 0;
 
-    // Apply config (mirrors UDP PGN 32700 handler in Receive.ino case 32700)
-    MDL.ID            = cfgBuf[0];
-    MDL.SensorCount   = cfgBuf[1];
+	// Apply config (mirrors UDP PGN 32700 handler in Receive.ino case 32700)
+	MDL.ID = cfgBuf[0];
+	MDL.SensorCount = cfgBuf[1];
 
-    uint8_t tmp       = cfgBuf[2];
-    MDL.InvertRelay         = ((tmp & 1)  == 1);
-    MDL.InvertFlow          = ((tmp & 2)  == 2);
-    MDL.WorkPinIsMomentary  = ((tmp & 8)  == 8);
-    MDL.Is3Wire             = ((tmp & 16) == 16);
-    MDL.ADS1115Enabled      = ((tmp & 32) == 32);
+	uint8_t tmp = cfgBuf[2];
+	MDL.InvertRelay = ((tmp & 1) == 1);
+	MDL.InvertFlow = ((tmp & 2) == 2);
+	MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
+	MDL.Is3Wire = ((tmp & 16) == 16);
+	MDL.ADS1115Enabled = ((tmp & 32) == 32);
 
-    MDL.OnboardRelayControl = cfgBuf[3];
-    MDL.RemoteRelayControl  = cfgBuf[4];
+	MDL.OnboardRelayControl = cfgBuf[3];
+	MDL.RemoteRelayControl = cfgBuf[4];
 
-    Sensor[0].FlowPin = cfgBuf[5];
-    Sensor[0].DirPin  = cfgBuf[6];
-    Sensor[0].PWMPin  = cfgBuf[7];
-    Sensor[1].FlowPin = cfgBuf[8];
-    Sensor[1].DirPin  = cfgBuf[9];
-    Sensor[1].PWMPin  = cfgBuf[10];
+	Sensor[0].FlowPin = cfgBuf[5];
+	Sensor[0].DirPin = cfgBuf[6];
+	Sensor[0].PWMPin = cfgBuf[7];
+	Sensor[1].FlowPin = cfgBuf[8];
+	Sensor[1].DirPin = cfgBuf[9];
+	Sensor[1].PWMPin = cfgBuf[10];
 
-    for (int i = 0; i < 16; i++) MDL.RelayControlPins[i] = cfgBuf[11 + i];
+	for (int i = 0; i < 16; i++) MDL.RelayControlPins[i] = cfgBuf[11 + i];
 
-    MDL.WorkPin     = cfgBuf[27];
-    MDL.PressurePin = cfgBuf[28];
-    MDL.CommMode    = cfgBuf[29];
+	MDL.WorkPin = cfgBuf[27];
+	MDL.PressurePin = cfgBuf[28];
+	MDL.CommMode = cfgBuf[29];
 
-    SaveData();
-    SCB_AIRCR = 0x05FA0004;  // restart Teensy to apply new config
+	SaveData();
+	SCB_AIRCR = 0x05FA0004;  // restart Teensy to apply new config
 }
 
 //-----------------------------------------------------------------------------
 // Send sensor data to Gateway (PGN 0xFF00 - Rate/Quantity)
 //-----------------------------------------------------------------------------
 void CANBus_SendSensorRateQty(uint8_t sensorId) {
-    if (sensorId >= MaxProductCount) return;
+	if (sensorId >= MaxProductCount) return;
 
-    uint8_t data[8];
+	uint8_t data[8];
 
-    // Byte 0: ModuleId | SensorId
-    data[0] = (MDL.ID & 0x0F) | ((sensorId & 0x0F) << 4);
+	// Byte 0: ModuleId | SensorId
+	data[0] = (MDL.ID & 0x0F) | ((sensorId & 0x0F) << 4);
 
-    // Bytes 1-3: Rate applied (0.001 UPM per bit, matches UDP format)
-    uint32_t rateRaw = (uint32_t)(Sensor[sensorId].UPM * 1000.0);
-    data[1] = rateRaw & 0xFF;
-    data[2] = (rateRaw >> 8) & 0xFF;
-    data[3] = (rateRaw >> 16) & 0xFF;
+	// Bytes 1-3: Rate applied (0.001 UPM per bit, matches UDP format)
+	uint32_t rateRaw = (uint32_t)(Sensor[sensorId].UPM * 1000.0);
+	data[1] = rateRaw & 0xFF;
+	data[2] = (rateRaw >> 8) & 0xFF;
+	data[3] = (rateRaw >> 16) & 0xFF;
 
-    // Bytes 4-6: Accumulated quantity (calculated from TotalPulses/MeterCal)
-    // MeterCal = pulses per unit, so quantity = TotalPulses / MeterCal
-    float quantity = 0;
-    if (Sensor[sensorId].MeterCal > 0) {
-        quantity = Sensor[sensorId].TotalPulses / Sensor[sensorId].MeterCal;
-    }
-    uint32_t qtyRaw = (uint32_t)(quantity * 10.0);  // 0.1 units per bit
-    data[4] = qtyRaw & 0xFF;
-    data[5] = (qtyRaw >> 8) & 0xFF;
-    data[6] = (qtyRaw >> 16) & 0xFF;
+	// Bytes 4-6: Accumulated quantity (calculated from TotalPulses/MeterCal)
+	// MeterCal = pulses per unit, so quantity = TotalPulses / MeterCal
+	float quantity = 0;
+	if (Sensor[sensorId].MeterCal > 0) {
+		quantity = Sensor[sensorId].TotalPulses / Sensor[sensorId].MeterCal;
+	}
+	uint32_t qtyRaw = (uint32_t)(quantity * 10.0);  // 0.1 units per bit
+	data[4] = qtyRaw & 0xFF;
+	data[5] = (qtyRaw >> 8) & 0xFF;
+	data[6] = (qtyRaw >> 16) & 0xFF;
 
-    // Byte 7: Status (bit 0 = sensor connected)
-    data[7]=(millis()- Sensor[sensorId].CommTime<4000)?0x01:0x00;
+	// Byte 7: Status (bit 0 = sensor connected)
+	data[7] = (millis() - Sensor[sensorId].CommTime < 4000) ? 0x01 : 0x00;
 
-    CANBus_SendProprietaryB(0x00, data, 8);
+	CANBus_SendProprietaryB(0x00, data, 8);
 }
 
 //-----------------------------------------------------------------------------
 // Send sensor PWM/Hz data to Gateway (PGN 0xFF01)
 //-----------------------------------------------------------------------------
 void CANBus_SendSensorPwmHz(uint8_t sensorId) {
-    if (sensorId >= MaxProductCount) return;
+	if (sensorId >= MaxProductCount) return;
 
-    uint8_t data[8];
+	uint8_t data[8];
 
-    // Byte 0: ModuleId | SensorId
-    data[0] = (MDL.ID & 0x0F) | ((sensorId & 0x0F) << 4);
+	// Byte 0: ModuleId | SensorId
+	data[0] = (MDL.ID & 0x0F) | ((sensorId & 0x0F) << 4);
 
-    // Bytes 1-2: PWM setting (float stored, send as signed int)
-    int16_t pwm = (int16_t)Sensor[sensorId].PWM;
-    data[1] = pwm & 0xFF;
-    data[2] = (pwm >> 8) & 0xFF;
+	// Bytes 1-2: PWM setting (float stored, send as signed int)
+	int16_t pwm = (int16_t)Sensor[sensorId].PWM;
+	data[1] = pwm & 0xFF;
+	data[2] = (pwm >> 8) & 0xFF;
 
-    // Bytes 3-4: Pulse Hz (0.1 Hz per bit)
-    uint16_t hzRaw = (uint16_t)(Sensor[sensorId].Hz * 10.0);
-    data[3] = hzRaw & 0xFF;
-    data[4] = (hzRaw >> 8) & 0xFF;
+	// Bytes 3-4: Pulse Hz (0.1 Hz per bit)
+	uint16_t hzRaw = (uint16_t)(Sensor[sensorId].Hz * 10.0);
+	data[3] = hzRaw & 0xFF;
+	data[4] = (hzRaw >> 8) & 0xFF;
 
-    // Bytes 5-7: Reserved
-    data[5] = 0;
-    data[6] = 0;
-    data[7] = 0;
+	// Bytes 5-7: Reserved
+	data[5] = 0;
+	data[6] = 0;
+	data[7] = 0;
 
-    CANBus_SendProprietaryB(0x01, data, 8);
+	CANBus_SendProprietaryB(0x01, data, 8);
 }
 
 //-----------------------------------------------------------------------------
 // Send module status to Gateway (PGN 0xFF02)
 //-----------------------------------------------------------------------------
 void CANBus_SendModuleStatus() {
-    uint8_t data[8];
+	uint8_t data[8];
 
-    // Byte 0: ModuleId | Status bits
-    data[0] = (MDL.ID & 0x0F);
-    if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin) == LOW) data[0] |= 0x10;  // Work switch
-    if (Ethernet.linkStatus() == LinkON) data[0] |= 0x20;  // Ethernet connected
-    if (GoodPins) data[0] |= 0x40;  // Good pin config
+	// Byte 0: ModuleId | Status bits
+	data[0] = (MDL.ID & 0x0F);
+	if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin) == LOW) data[0] |= 0x10;  // Work switch
+	if (Ethernet.linkStatus() == LinkON) data[0] |= 0x20;  // Ethernet connected
+	if (GoodPins) data[0] |= 0x40;  // Good pin config
 
-    // Byte 1: WiFi strength (N/A for Teensy - use 0)
-    data[1] = 0;
+	// Byte 1: WiFi strength (N/A for Teensy - use 0)
+	data[1] = 0;
 
-    // Bytes 2-3: Pressure reading
-    data[2] = PressureReading & 0xFF;
-    data[3] = (PressureReading >> 8) & 0xFF;
+	// Bytes 2-3: Pressure reading
+	data[2] = PressureReading & 0xFF;
+	data[3] = (PressureReading >> 8) & 0xFF;
 
-    // Bytes 4-5: Wheel speed (0.1 km/h per bit)
-    uint16_t wsRaw = (uint16_t)(WheelSpeed * 10.0);
-    data[4] = wsRaw & 0xFF;
-    data[5] = (wsRaw >> 8) & 0xFF;
+	// Bytes 4-5: Wheel speed (0.1 km/h per bit)
+	uint16_t wsRaw = (uint16_t)(WheelSpeed * 10.0);
+	data[4] = wsRaw & 0xFF;
+	data[5] = (wsRaw >> 8) & 0xFF;
 
-    // Bytes 6-7: Wheel counts
-    data[6] = WheelCounts & 0xFF;
-    data[7] = (WheelCounts >> 8) & 0xFF;
+	// Bytes 6-7: Wheel counts
+	data[6] = WheelCounts & 0xFF;
+	data[7] = (WheelCounts >> 8) & 0xFF;
 
-    CANBus_SendProprietaryB(0x02, data, 8);
+	CANBus_SendProprietaryB(0x02, data, 8);
 }
 
 //-----------------------------------------------------------------------------
 // Send module identification (PGN 0xFF08)
 //-----------------------------------------------------------------------------
 void CANBus_SendModuleIdent() {
-    uint8_t data[8];
+	uint8_t data[8];
 
-    // Byte 0: ModuleId | SensorCount
-    data[0] = (MDL.ID & 0x0F) | ((MDL.SensorCount & 0x0F) << 4);
+	// Byte 0: ModuleId | SensorCount
+	data[0] = (MDL.ID & 0x0F) | ((MDL.SensorCount & 0x0F) << 4);
 
-    // Byte 1: Module type
-    data[1] = InoType;
+	// Byte 1: Module type
+	data[1] = InoType;
 
-    // Bytes 2-3: Firmware version
-    data[2] = InoID & 0xFF;
-    data[3] = (InoID >> 8) & 0xFF;
+	// Bytes 2-3: Firmware version
+	data[2] = InoID & 0xFF;
+	data[3] = (InoID >> 8) & 0xFF;
 
-    // Bytes 4-7: Reserved
-    data[4] = 0;
-    data[5] = 0;
-    data[6] = 0;
-    data[7] = 0;
+	// Bytes 4-7: Reserved
+	data[4] = 0;
+	data[5] = 0;
+	data[6] = 0;
+	data[7] = 0;
 
-    CANBus_SendProprietaryB(0x08, data, 8);
+	CANBus_SendProprietaryB(0x08, data, 8);
 }
 
 //-----------------------------------------------------------------------------
 // Periodic CAN communication (call from main loop)
 //-----------------------------------------------------------------------------
 void CANBus_Update() {
-    static uint32_t lastSensorSend = 0;
-    static uint32_t lastStatusSend = 0;
-    static uint32_t lastClaimCheck = 0;
-    static uint32_t lastIdentSend = 0;
+	static uint32_t lastSensorSend = 0;
+	static uint32_t lastStatusSend = 0;
+	static uint32_t lastClaimCheck = 0;
+	static uint32_t lastIdentSend = 0;
 
-    // Receive any pending messages
-    CANBus_Receive();
+	// Receive any pending messages
+	CANBus_Receive();
 
-    // Address claiming - check every 5 seconds
-    if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000)) {
-        lastClaimCheck = millis();
-        if (!ISOBUSid.addressClaimed) {
-            CANBus_SendAddressClaim();
-        }
-    }
+	// Address claiming - check every 5 seconds
+	if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000)) {
+		lastClaimCheck = millis();
+		if (!ISOBUSid.addressClaimed) {
+			CANBus_SendAddressClaim();
+		}
+	}
 
-    // Send sensor data at same rate as UDP (SendTime = 200ms)
-    if (millis() - lastSensorSend >= SendTime) {
-        lastSensorSend = millis();
-        for (int i = 0; i < MDL.SensorCount; i++) {
-            CANBus_SendSensorRateQty(i);
-            CANBus_SendSensorPwmHz(i);
-        }
-    }
+	// Send sensor data at same rate as UDP (SendTime = 200ms)
+	if (millis() - lastSensorSend >= SendTime) {
+		lastSensorSend = millis();
+		for (int i = 0; i < MDL.SensorCount; i++) {
+			CANBus_SendSensorRateQty(i);
+			CANBus_SendSensorPwmHz(i);
+		}
+	}
 
-    // Send status at same rate as sensor data (SendTime = 200ms)
-    if (millis() - lastStatusSend >= SendTime) {
-        lastStatusSend = millis();
-        CANBus_SendModuleStatus();
-    }
+	// Send status at same rate as sensor data (SendTime = 200ms)
+	if (millis() - lastStatusSend >= SendTime) {
+		lastStatusSend = millis();
+		CANBus_SendModuleStatus();
+	}
 
-    // Send module identification every 500ms
-    if (millis() - lastIdentSend >= 500) {
-        lastIdentSend = millis();
-        CANBus_SendModuleIdent();
-    }
+	// Send module identification every 500ms
+	if (millis() - lastIdentSend >= 500) {
+		lastIdentSend = millis();
+		CANBus_SendModuleIdent();
+	}
 }
 
 
