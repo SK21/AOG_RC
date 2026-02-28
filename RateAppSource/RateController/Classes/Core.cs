@@ -210,11 +210,12 @@ namespace RateController.Classes
             SafeEvent.Raise(RestoreMain);
         }
 
-        public static void UseCanComm(bool enable)
+        public static int UseCanComm(bool enable)
         {
-            if (enable && !Props.CanEnabled)
+            int Result = -1;
+            if (enable)
             {
-                // use CAN
+                // use CanBus
                 // Start CAN bridge — ensure clean state first
                 Core.CanBridgeComm?.Stop();
 
@@ -224,22 +225,29 @@ namespace RateController.Classes
                     ModuleConfig.Send(1);
                     Props.CanEnabled = true;
                     Props.ShowMessage("CAN Bridge started.", "Help", 10000);
+                    Result = 1;
                 }
                 else
                 {
                     Props.ShowMessage("Failed to start CAN Bridge. Check adapter and COM port.");
+                    Result = 2;
                 }
-            }
-            else if (Props.CanEnabled)
-            {
-                // use ethernet
-                ModuleConfig.Send(0);
-                Core.CanBridgeComm?.Stop();
-                Props.CanEnabled = false;
-                Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
 
-                if (Props.SpeedMode == SpeedType.ISOBUS) Props.SpeedMode = SpeedType.GPS;
             }
+
+            if (Result != 1)
+            {
+                // use Ethernet
+                ModuleConfig.Send(0);
+                if (Props.CanEnabled)
+                {
+                    CanBridgeComm?.Stop();
+                    Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
+                    Props.CanEnabled = false;
+                }
+                Result += 1;
+            }
+            return Result;
         }
 
         public static void RequestRestart()

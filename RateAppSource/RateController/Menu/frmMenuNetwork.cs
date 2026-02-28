@@ -38,22 +38,30 @@ namespace RateController.Menu
                 if (ckDefaultModule.Checked) SetDefaults();
                 Core.UDPmodules.NetworkEP = cbEthernet.Text;
 
-                if (rbEthernet.Checked)
+                int Result = Core.UseCanComm(rbCAN.Checked);
+
+                string Mes = "";
+                switch (Result)
                 {
-                    Core.UseCanComm(false);
+                    case 1:
+                        Mes = "CanBus enabled.";
+                        break;
+
+                    case 3:
+                        Mes = "CanBus failed to start. Ethernet enabled.";
+                        break;
+
+                    default:
+                        Mes = "Ethernet enabled.";
+                        break;
                 }
-                else
-                {
-                    Core.UseCanComm(true);
-                }
+
                 Core.ModuleConfig.Save();
-                Core.ModuleConfig.Send();
-                Props.ShowMessage("Settings sent to module.", "Help", 10000);
+                Props.ShowMessage("Settings sent to module. " + Mes, "Config", 10000);
 
                 SetButtons(false);
                 UpdateForm();
                 Props.SetProp("BoardType", BoardType.ToString());
-
             }
             catch (Exception ex)
             {

@@ -121,10 +121,26 @@ namespace RateController.Menu
                 bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
                 Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-                Core.UseCanComm(ckIsoBus.Checked);
+                int Result = Core.UseCanComm(ckIsoBus.Checked);
 
-                Core.ModuleConfig.Send();
-                Props.ShowMessage("Settings sent to module", "Config", 10000);
+                string Mes = "";
+                switch (Result)
+                {
+                    case 1:
+                        Mes = "CanBus enabled.";
+                        break;
+
+                    case 3:
+                        Mes = "CanBus failed to start. Ethernet enabled.";
+                        break;
+
+                    default:
+                        Mes = "Ethernet enabled.";
+                        break;
+                }
+
+                Core.ModuleConfig.Save();
+                Props.ShowMessage("Settings sent to module. " + Mes, "Config", 10000);
 
                 SetButtons(false);
                 UpdateForm();

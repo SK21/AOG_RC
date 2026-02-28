@@ -30,7 +30,7 @@ namespace RateController.PGNs
         //13    Relay pins 0-15, bytes 13-28
         //29    work pin
         //30    pressure pin
-        //31    CommMode             0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary, 3 - TC Client, 4 - UDP + TC Client
+        //31    CommMode             0 - UDP only, 1 - CAN Proprietary
         //32    CRC
 
         private const byte cByteCount = 33;
@@ -218,6 +218,7 @@ namespace RateController.PGNs
 
         public void Load()
         {
+            // byte 31 - comm mode is loaded from Props.CanEnabled at send
             String Name;
             Array.Clear(cData, 0, cByteCount);
             cData[0] = HeaderLo;

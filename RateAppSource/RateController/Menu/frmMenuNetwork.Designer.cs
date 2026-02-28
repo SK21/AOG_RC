@@ -273,7 +273,7 @@
             this.rbCAN.Name = "rbCAN";
             this.rbCAN.Size = new System.Drawing.Size(187, 36);
             this.rbCAN.TabIndex = 345;
-            this.rbCAN.Text = "CAN";
+            this.rbCAN.Text = "CanBus";
             this.rbCAN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbCAN.UseVisualStyleBackColor = true;
             this.rbCAN.CheckedChanged += new System.EventHandler(this.rbEthernet_CheckedChanged);
