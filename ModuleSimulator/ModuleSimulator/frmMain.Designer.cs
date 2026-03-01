@@ -71,6 +71,7 @@ namespace ModuleSimulator
             this.btn4 = new System.Windows.Forms.Button();
             this.btn5 = new System.Windows.Forms.Button();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.ckEnabled = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ModuleID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SensorID)).BeginInit();
@@ -118,7 +119,7 @@ namespace ModuleSimulator
             // 
             this.txtSubnet.Location = new System.Drawing.Point(70, 10);
             this.txtSubnet.Name = "txtSubnet";
-            this.txtSubnet.Size = new System.Drawing.Size(130, 23);
+            this.txtSubnet.Size = new System.Drawing.Size(87, 23);
             this.txtSubnet.TabIndex = 1;
             this.txtSubnet.Text = "192.168.1";
             // 
@@ -153,6 +154,7 @@ namespace ModuleSimulator
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.ckEnabled);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.SensorID);
             this.groupBox1.Controls.Add(this.label1);
@@ -167,7 +169,7 @@ namespace ModuleSimulator
             // 
             // ModuleID
             // 
-            this.ModuleID.Location = new System.Drawing.Point(77, 24);
+            this.ModuleID.Location = new System.Drawing.Point(215, 26);
             this.ModuleID.Name = "ModuleID";
             this.ModuleID.Size = new System.Drawing.Size(60, 23);
             this.ModuleID.TabIndex = 0;
@@ -175,7 +177,7 @@ namespace ModuleSimulator
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 28);
+            this.label1.Location = new System.Drawing.Point(144, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 15);
             this.label1.TabIndex = 1;
@@ -184,7 +186,7 @@ namespace ModuleSimulator
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(209, 28);
+            this.label2.Location = new System.Drawing.Point(322, 28);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 15);
             this.label2.TabIndex = 3;
@@ -192,7 +194,7 @@ namespace ModuleSimulator
             // 
             // SensorID
             // 
-            this.SensorID.Location = new System.Drawing.Point(280, 24);
+            this.SensorID.Location = new System.Drawing.Point(393, 24);
             this.SensorID.Name = "SensorID";
             this.SensorID.Size = new System.Drawing.Size(60, 23);
             this.SensorID.TabIndex = 2;
@@ -262,6 +264,7 @@ namespace ModuleSimulator
             this.btnReset.TabIndex = 6;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnResetQty_Click);
             // 
             // lbHz
             // 
@@ -570,6 +573,7 @@ namespace ModuleSimulator
             this.btn1.TabIndex = 7;
             this.btn1.Text = "1";
             this.btn1.UseVisualStyleBackColor = true;
+            this.btn1.Click += new System.EventHandler(this.btn1_Click);
             // 
             // btn2
             // 
@@ -579,6 +583,7 @@ namespace ModuleSimulator
             this.btn2.TabIndex = 8;
             this.btn2.Text = "2";
             this.btn2.UseVisualStyleBackColor = true;
+            this.btn2.Click += new System.EventHandler(this.btn2_Click);
             // 
             // btn3
             // 
@@ -588,6 +593,7 @@ namespace ModuleSimulator
             this.btn3.TabIndex = 9;
             this.btn3.Text = "3";
             this.btn3.UseVisualStyleBackColor = true;
+            this.btn3.Click += new System.EventHandler(this.btn3_Click);
             // 
             // btn4
             // 
@@ -597,6 +603,7 @@ namespace ModuleSimulator
             this.btn4.TabIndex = 10;
             this.btn4.Text = "4";
             this.btn4.UseVisualStyleBackColor = true;
+            this.btn4.Click += new System.EventHandler(this.btn4_Click);
             // 
             // btn5
             // 
@@ -606,6 +613,7 @@ namespace ModuleSimulator
             this.btn5.TabIndex = 11;
             this.btn5.Text = "5";
             this.btn5.UseVisualStyleBackColor = true;
+            this.btn5.Click += new System.EventHandler(this.btn5_Click);
             // 
             // pnlMain
             // 
@@ -618,6 +626,16 @@ namespace ModuleSimulator
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(472, 474);
             this.pnlMain.TabIndex = 13;
+            // 
+            // ckEnabled
+            // 
+            this.ckEnabled.AutoSize = true;
+            this.ckEnabled.Location = new System.Drawing.Point(31, 27);
+            this.ckEnabled.Name = "ckEnabled";
+            this.ckEnabled.Size = new System.Drawing.Size(68, 19);
+            this.ckEnabled.TabIndex = 7;
+            this.ckEnabled.Text = "Enabled";
+            this.ckEnabled.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
@@ -743,5 +761,6 @@ namespace ModuleSimulator
         private System.Windows.Forms.Button btn4;
         private System.Windows.Forms.Button btn5;
         private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.CheckBox ckEnabled;
     }
 }

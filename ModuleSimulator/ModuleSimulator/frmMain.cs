@@ -29,12 +29,12 @@ namespace ModuleSimulator
         private Socket _recvSocket;
         private volatile bool _running;
         private Socket _sendSocket;
+        private int ActiveProduct;
 
         // ── Constructor ──────────────────────────────────────────────────────────
         public frmMain()
         {
             InitializeComponent();
-            BuildModuleTabs();
             LoadSettings();
             EnsureOnScreen();
         }
@@ -98,39 +98,6 @@ namespace ModuleSimulator
 
         private static decimal Clamp(decimal v, decimal mn, decimal mx) => Math.Max(mn, Math.Min(mx, v));
 
-        private static GroupBox Grp(string text, int x, int y, int w, int h)
-        {
-            return new GroupBox { Text = text, Location = new Point(x, y), Size = new Size(w, h) };
-        }
-
-        private static void Lbl(Control parent, string text, int x, int y)
-        {
-            parent.Controls.Add(new Label { Text = text, Location = new Point(x, y), AutoSize = true });
-        }
-
-        private static NumericUpDown Nud(Control parent, int x, int y,
-                    decimal min, decimal max, decimal val, decimal inc, int w = 72)
-        {
-            var n = new NumericUpDown
-            {
-                Minimum = min,
-                Maximum = max,
-                Value = val,
-                Increment = inc,
-                Location = new Point(x, y),
-                Size = new Size(w, 22)
-            };
-            parent.Controls.Add(n);
-            return n;
-        }
-
-        private static Label Val(Control parent, string text, int x, int y, int w = 70)
-        {
-            var l = new Label { Text = text, Location = new Point(x, y), Size = new Size(w, 18) };
-            parent.Controls.Add(l);
-            return l;
-        }
-
         private void ApplySetting(int mod, string key, string val)
         {
             decimal d;
@@ -160,6 +127,36 @@ namespace ModuleSimulator
                 SocketFlags.None, ref ep, OnReceive, null);
         }
 
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            ActiveProduct = 0;
+            // update
+        }
+
+        private void btn2_Click(object sender, EventArgs e)
+        {
+            ActiveProduct = 1;
+            // update
+        }
+
+        private void btn3_Click(object sender, EventArgs e)
+        {
+            ActiveProduct = 2;
+            //update
+        }
+
+        private void btn4_Click(object sender, EventArgs e)
+        {
+            ActiveProduct = 3;
+            //update
+        }
+
+        private void btn5_Click(object sender, EventArgs e)
+        {
+            ActiveProduct = 4;
+            //update
+        }
+
         private void btnResetQty_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < 2; i++)
@@ -170,107 +167,6 @@ namespace ModuleSimulator
         private void btnStart_Click(object sender, EventArgs e) => Start();
 
         private void btnStop_Click(object sender, EventArgs e) => Stop();
-
-        // ── BuildModuleTabs ───────────────────────────────────────────────────────
-        private void BuildModuleTabs()
-        {
-            const int N = 2;
-            nudModuleID = new NumericUpDown[N];
-            nudSensorID = new NumericUpDown[N];
-            nudMaxHz = new NumericUpDown[N];
-            nudNoise = new NumericUpDown[N];
-            nudValveLag = new NumericUpDown[N];
-            nudWheelSpeed = new NumericUpDown[N];
-            nudPressure = new NumericUpDown[N];
-            ckWorkSwitch = new CheckBox[N];
-            btnResetQty = new Button[N];
-            lblSimRate = new Label[N];
-            lblHz = new Label[N];
-            lblPWM = new Label[N];
-            lblValvePos = new Label[N];
-            lblAccQty = new Label[N];
-            lblCmdSetRate = new Label[N];
-            lblCmdFlowCal = new Label[N];
-            lblCmdMasterOn = new Label[N];
-            lblCmdAutoOn = new Label[N];
-            lblCmdRelays = new Label[N];
-            lblCmdConfig = new Label[N];
-
-            int[] defModId = { 0, 1 };
-
-            for (int i = 0; i < N; i++)
-            {
-                var page = new TabPage("Module " + (i + 1));
-
-                // ── Config ────────────────────────────────────────────────────────
-                var grpConfig = Grp("Config", 4, 6, 460, 66);
-                Lbl(grpConfig, "Module ID:", 8, 24);
-                nudModuleID[i] = Nud(grpConfig, 80, 20, 0, 127, defModId[i], 1, 60);
-                Lbl(grpConfig, "Sensor ID:", 160, 24);
-                nudSensorID[i] = Nud(grpConfig, 232, 20, 0, 15, 0, 1, 55);
-                if (i == 1) { ckEnable.Location = new Point(322, 21); grpConfig.Controls.Add(ckEnable); }
-                page.Controls.Add(grpConfig);
-
-                // ── Sensor output ─────────────────────────────────────────────────
-                var grpSensor = Grp("Sensor Output", 4, 78, 460, 88);
-                Lbl(grpSensor, "Rate (UPM):", 8, 22);
-                lblSimRate[i] = Val(grpSensor, "0.0", 90, 20, 65);
-                lblSimRate[i].Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-                Lbl(grpSensor, "Hz:", 168, 22);
-                lblHz[i] = Val(grpSensor, "0.0", 188, 20, 58);
-                Lbl(grpSensor, "PWM:", 256, 22);
-                lblPWM[i] = Val(grpSensor, "0", 294, 20, 55);
-                Lbl(grpSensor, "Acc Qty:", 8, 52);
-                lblAccQty[i] = Val(grpSensor, "0.0", 66, 50, 65);
-                btnResetQty[i] = new Button { Text = "Reset", Location = new Point(148, 46), Size = new Size(58, 24) };
-                btnResetQty[i].Click += btnResetQty_Click;
-                grpSensor.Controls.Add(btnResetQty[i]);
-                Lbl(grpSensor, "Valve:", 230, 52);
-                lblValvePos[i] = Val(grpSensor, "0", 274, 50, 55);
-                page.Controls.Add(grpSensor);
-
-                // ── Simulation params ─────────────────────────────────────────────
-                var grpSim = Grp("Simulation", 4, 172, 460, 90);
-                Lbl(grpSim, "Max Hz:", 8, 22);
-                nudMaxHz[i] = Nud(grpSim, 68, 20, 1, 500, 100, 1, 72);
-                Lbl(grpSim, "Noise %:", 160, 22);
-                nudNoise[i] = Nud(grpSim, 224, 20, 0, 100, 5, 1, 60);
-                Lbl(grpSim, "Valve ms:", 8, 54);
-                nudValveLag[i] = Nud(grpSim, 76, 52, 500, 30000, 5000, 500, 82);
-                page.Controls.Add(grpSim);
-
-                // ── Sensor inputs ─────────────────────────────────────────────────
-                var grpStatus = Grp("Sensor Inputs", 4, 268, 460, 62);
-                Lbl(grpStatus, "Speed:", 8, 22);
-                nudWheelSpeed[i] = Nud(grpStatus, 58, 20, 0, 100, 10, 1, 68);
-                Lbl(grpStatus, "Pressure:", 148, 22);
-                nudPressure[i] = Nud(grpStatus, 214, 20, 0, 500, 100, 1, 68);
-                ckWorkSwitch[i] = new CheckBox { Text = "Work Switch", Location = new Point(306, 21), AutoSize = true };
-                grpStatus.Controls.Add(ckWorkSwitch[i]);
-                page.Controls.Add(grpStatus);
-
-                // ── Commands from RC ──────────────────────────────────────────────
-                var grpCmds = Grp("Commands from RC", 4, 336, 460, 130);
-                Lbl(grpCmds, "Set Rate:", 8, 22);
-                lblCmdSetRate[i] = Val(grpCmds, "—", 72, 20, 90);
-                Lbl(grpCmds, "Flow Cal:", 180, 22);
-                lblCmdFlowCal[i] = Val(grpCmds, "—", 248, 20, 90);
-                Lbl(grpCmds, "Master:", 8, 48);
-                lblCmdMasterOn[i] = Val(grpCmds, "off", 58, 46, 48);
-                lblCmdMasterOn[i].ForeColor = Color.Gray;
-                Lbl(grpCmds, "Auto:", 118, 48);
-                lblCmdAutoOn[i] = Val(grpCmds, "off", 152, 46, 48);
-                lblCmdAutoOn[i].ForeColor = Color.Gray;
-                Lbl(grpCmds, "Relays:", 8, 74);
-                lblCmdRelays[i] = Val(grpCmds, "0000000000000000", 62, 72, 360);
-                lblCmdRelays[i].Font = new Font("Courier New", 8F);
-                Lbl(grpCmds, "Config:", 8, 100);
-                lblCmdConfig[i] = Val(grpCmds, "—", 62, 98, 120);
-                page.Controls.Add(grpCmds);
-
-                tabModules.TabPages.Add(page);
-            }
-        }
 
         private void CleanupSockets()
         {
