@@ -16,7 +16,6 @@ namespace ModuleSimulator
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.sendTimer = new System.Windows.Forms.Timer(this.components);
             this.loopTimer = new System.Windows.Forms.Timer(this.components);
-            this.ckEnable = new System.Windows.Forms.CheckBox();
             this.lblSubnet = new System.Windows.Forms.Label();
             this.txtSubnet = new System.Windows.Forms.TextBox();
             this.btnStart = new System.Windows.Forms.Button();
@@ -96,16 +95,7 @@ namespace ModuleSimulator
             // 
             this.loopTimer.Interval = 50;
             this.loopTimer.Tick += new System.EventHandler(this.loopTimer_Tick);
-            // 
-            // ckEnable
-            // 
-            this.ckEnable.AutoSize = true;
-            this.ckEnable.Location = new System.Drawing.Point(330, 24);
-            this.ckEnable.Name = "ckEnable";
-            this.ckEnable.Size = new System.Drawing.Size(104, 24);
-            this.ckEnable.TabIndex = 0;
-            this.ckEnable.Text = "Enabled";
-            // 
+            //
             // lblSubnet
             // 
             this.lblSubnet.AutoSize = true;
@@ -535,7 +525,7 @@ namespace ModuleSimulator
             // 
             this.lbRelays.Location = new System.Drawing.Point(64, 87);
             this.lbRelays.Name = "lbRelays";
-            this.lbRelays.Size = new System.Drawing.Size(121, 15);
+            this.lbRelays.Size = new System.Drawing.Size(160, 15);
             this.lbRelays.TabIndex = 12;
             this.lbRelays.Text = "0000 0000 0000 0000";
             // 
@@ -684,34 +674,11 @@ namespace ModuleSimulator
         // ── Control declarations ──────────────────────────────────────────────────
         private System.Windows.Forms.Timer        sendTimer;
         private System.Windows.Forms.Timer        loopTimer;
-        private System.Windows.Forms.CheckBox     ckEnable;
         private System.Windows.Forms.Label        lblSubnet;
         private System.Windows.Forms.TextBox      txtSubnet;
         private System.Windows.Forms.Button       btnStart;
         private System.Windows.Forms.Button       btnStop;
         private System.Windows.Forms.Label        lblStatus;
-
-        // Per-module arrays — initialised by BuildModuleTabs()
-        private System.Windows.Forms.NumericUpDown[] nudModuleID;
-        private System.Windows.Forms.NumericUpDown[] nudSensorID;
-        private System.Windows.Forms.NumericUpDown[] nudMaxHz;
-        private System.Windows.Forms.NumericUpDown[] nudNoise;
-        private System.Windows.Forms.NumericUpDown[] nudValveLag;
-        private System.Windows.Forms.NumericUpDown[] nudWheelSpeed;
-        private System.Windows.Forms.NumericUpDown[] nudPressure;
-        private System.Windows.Forms.CheckBox[]      ckWorkSwitch;
-        private System.Windows.Forms.Button[]        btnResetQty;
-        private System.Windows.Forms.Label[]         lblSimRate;
-        private System.Windows.Forms.Label[]         lblHz;
-        private System.Windows.Forms.Label[]         lblPWM;
-        private System.Windows.Forms.Label[]         lblValvePos;
-        private System.Windows.Forms.Label[]         lblAccQty;
-        private System.Windows.Forms.Label[]         lblCmdSetRate;
-        private System.Windows.Forms.Label[]         lblCmdFlowCal;
-        private System.Windows.Forms.Label[]         lblCmdMasterOn;
-        private System.Windows.Forms.Label[]         lblCmdAutoOn;
-        private System.Windows.Forms.Label[]         lblCmdRelays;
-        private System.Windows.Forms.Label[]         lblCmdConfig;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown SensorID;

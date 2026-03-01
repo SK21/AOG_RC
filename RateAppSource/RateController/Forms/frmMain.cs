@@ -2,6 +2,7 @@
 using RateController.Language;
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
 
@@ -9,6 +10,10 @@ namespace RateController.Forms
 {
     public partial class frmMain : Form
     {
+        [DllImport("user32.dll")]
+        private static extern int GetSystemMetrics(int nIndex);
+        private static bool IsTabletPC() => GetSystemMetrics(86) != 0; // SM_TABLETPC
+
         #region Images
 
         private Image[] ImagesError = new Image[]
@@ -246,14 +251,15 @@ namespace RateController.Forms
             UpdateSwitches();
             UpdateForm();
 
-            // Touchscreen: clear focus and hover state after every button tap.
+            // Touchscreen only: clear focus and hover state after every button tap.
             // Moving the cursor off the button triggers WM_MOUSELEAVE, clearing the hot/hover highlight.
-            foreach (Control c in Controls)
-                c.Click += (s, ea) =>
-                {
-                    ActiveControl = null;
-                    Cursor.Position = PointToScreen(new Point(0, 0));
-                };
+            if (IsTabletPC())
+                foreach (Control c in Controls)
+                    c.Click += (s, ea) =>
+                    {
+                        ActiveControl = null;
+                        Cursor.Position = PointToScreen(new Point(0, 0));
+                    };
         }
 
         private void lbCoverage_Click(object sender, EventArgs e)
