@@ -30,6 +30,7 @@ namespace ModuleSimulator
         private volatile bool _running;
         private Socket _sendSocket;
         private int ActiveProduct;
+        private Product[] Products;
 
         // ── Constructor ──────────────────────────────────────────────────────────
         public frmMain()
@@ -37,6 +38,7 @@ namespace ModuleSimulator
             InitializeComponent();
             LoadSettings();
             EnsureOnScreen();
+            Products = new Product[5];
         }
 
         public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor, float borderWidth = 1)
@@ -669,6 +671,24 @@ namespace ModuleSimulator
             public float MaxPWM = 200f, MinPWM = 10f;
             public float PWM, LastPWM, IntegralSum;
             public float TargetUPM, MeterCal;
+        }
+
+        private class Product
+        {
+            public bool Enabled;
+            public int ModuleID;
+            public int SensorID;
+            public double UPM;
+            public double CurrentHz;
+            public double PWM;
+            public double Quantity;
+            public double Valve;
+            public int MaxHz;
+            public double Noise;
+            public int ValveMS;
+            public double Speed;
+            public double Pressure;
+            public bool WorkSwitch;
         }
     }
 }
