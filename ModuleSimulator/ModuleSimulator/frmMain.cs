@@ -9,20 +9,20 @@ namespace ModuleSimulator
 {
     public partial class frmMain : Form
     {
-        private const int RC_LISTEN_PORT  = 29999;
+        private const int RC_LISTEN_PORT = 29999;
         private const int MOD_LISTEN_PORT = 28888;
 
         private const byte HDR32400_LO = 144, HDR32400_HI = 126;
         private const byte HDR32401_LO = 145, HDR32401_HI = 126;
 
-        private const ushort INO_ID   = 27026;
-        private const byte   INO_TYPE = 1;
-        private const float  FastAdjustValve = 40.0f;
+        private const ushort INO_ID = 27026;
+        private const byte INO_TYPE = 1;
+        private const float FastAdjustValve = 40.0f;
 
-        private Socket    _sendSocket;
-        private Socket    _recvSocket;
+        private Socket _sendSocket;
+        private Socket _recvSocket;
         private readonly byte[] _recvBuffer = new byte[256];
-        private volatile bool   _running;
+        private volatile bool _running;
 
         private readonly ModState[] _mod = { new ModState(), new ModState() };
         private DateTime _lastLoopTime = DateTime.MinValue;
@@ -31,33 +31,33 @@ namespace ModuleSimulator
         // ── Per-module simulation state ───────────────────────────────────────────
         private class SensorState
         {
-            public float    TargetUPM, MeterCal;
-            public bool     MasterOn, AutoOn;
-            public int      ControlType;
-            public short    ManualAdjust;
+            public float TargetUPM, MeterCal;
+            public bool MasterOn, AutoOn;
+            public int ControlType;
+            public short ManualAdjust;
             public DateTime CommTime = DateTime.MinValue;
 
             public float MaxPWM = 200f, MinPWM = 10f;
-            public float Kp     = (float)Math.Pow(1.1, 100 - 120);
-            public float Ki     = 0f;
+            public float Kp = (float)Math.Pow(1.1, 100 - 120);
+            public float Ki = 0f;
             public float Deadband = 0.05f;
-            public int   BrakePoint = 20, PIDslowAdjust = 50, SlewRate = 20, PIDtime = 100;
+            public int BrakePoint = 20, PIDslowAdjust = 50, SlewRate = 20, PIDtime = 100;
             public float MaxIntegral = 2.0f;
 
-            public float    PWM, LastPWM, IntegralSum;
-            public bool     ErrorIsPositive = true;
-            public DateTime LastPIDCheck    = DateTime.MinValue;
+            public float PWM, LastPWM, IntegralSum;
+            public bool ErrorIsPositive = true;
+            public DateTime LastPIDCheck = DateTime.MinValue;
 
             public float Hz, UPM;
-            public bool  FlowEnabled;
+            public bool FlowEnabled;
         }
 
         private class ModState
         {
             public readonly SensorState Sensor = new SensorState();
-            public double  ValvePos;
-            public double  AccQty;
-            public ushort  CmdRelays;
+            public double ValvePos;
+            public double AccQty;
+            public ushort CmdRelays;
         }
 
         // ── Settings persistence ─────────────────────────────────────────────────
@@ -98,18 +98,18 @@ namespace ModuleSimulator
             decimal d;
             switch (key)
             {
-                case "Subnet":     if (mod == 0) txtSubnet.Text = val; break;
-                case "Left":       if (mod == 0 && int.TryParse(val, out int lv)) Left = lv; break;
-                case "Top":        if (mod == 0 && int.TryParse(val, out int tv)) Top  = tv; break;
-                case "ModuleID":   if (decimal.TryParse(val, out d)) nudModuleID[mod].Value   = Clamp(d, nudModuleID[mod].Minimum,   nudModuleID[mod].Maximum);   break;
-                case "SensorID":   if (decimal.TryParse(val, out d)) nudSensorID[mod].Value   = Clamp(d, nudSensorID[mod].Minimum,   nudSensorID[mod].Maximum);   break;
-                case "MaxHz":      if (decimal.TryParse(val, out d)) nudMaxHz[mod].Value      = Clamp(d, nudMaxHz[mod].Minimum,      nudMaxHz[mod].Maximum);      break;
-                case "Noise":      if (decimal.TryParse(val, out d)) nudNoise[mod].Value      = Clamp(d, nudNoise[mod].Minimum,      nudNoise[mod].Maximum);      break;
-                case "ValveLag":   if (decimal.TryParse(val, out d)) nudValveLag[mod].Value   = Clamp(d, nudValveLag[mod].Minimum,   nudValveLag[mod].Maximum);   break;
+                case "Subnet": if (mod == 0) txtSubnet.Text = val; break;
+                case "Left": if (mod == 0 && int.TryParse(val, out int lv)) Left = lv; break;
+                case "Top": if (mod == 0 && int.TryParse(val, out int tv)) Top = tv; break;
+                case "ModuleID": if (decimal.TryParse(val, out d)) nudModuleID[mod].Value = Clamp(d, nudModuleID[mod].Minimum, nudModuleID[mod].Maximum); break;
+                case "SensorID": if (decimal.TryParse(val, out d)) nudSensorID[mod].Value = Clamp(d, nudSensorID[mod].Minimum, nudSensorID[mod].Maximum); break;
+                case "MaxHz": if (decimal.TryParse(val, out d)) nudMaxHz[mod].Value = Clamp(d, nudMaxHz[mod].Minimum, nudMaxHz[mod].Maximum); break;
+                case "Noise": if (decimal.TryParse(val, out d)) nudNoise[mod].Value = Clamp(d, nudNoise[mod].Minimum, nudNoise[mod].Maximum); break;
+                case "ValveLag": if (decimal.TryParse(val, out d)) nudValveLag[mod].Value = Clamp(d, nudValveLag[mod].Minimum, nudValveLag[mod].Maximum); break;
                 case "WheelSpeed": if (decimal.TryParse(val, out d)) nudWheelSpeed[mod].Value = Clamp(d, nudWheelSpeed[mod].Minimum, nudWheelSpeed[mod].Maximum); break;
-                case "Pressure":   if (decimal.TryParse(val, out d)) nudPressure[mod].Value   = Clamp(d, nudPressure[mod].Minimum,   nudPressure[mod].Maximum);   break;
+                case "Pressure": if (decimal.TryParse(val, out d)) nudPressure[mod].Value = Clamp(d, nudPressure[mod].Minimum, nudPressure[mod].Maximum); break;
                 case "WorkSwitch": ckWorkSwitch[mod].Checked = val == "1"; break;
-                case "Enabled":    if (mod == 1) ckEnable.Checked = val == "1"; break;
+                case "Enabled": if (mod == 1) ckEnable.Checked = val == "1"; break;
             }
         }
 
@@ -127,18 +127,18 @@ namespace ModuleSimulator
                 if (WindowState == FormWindowState.Normal)
                 {
                     lines.Add("Left=" + Left);
-                    lines.Add("Top="  + Top);
+                    lines.Add("Top=" + Top);
                 }
                 for (int i = 0; i < 2; i++)
                 {
                     string p = i + ".";
-                    lines.Add(p + "ModuleID="   + nudModuleID[i].Value);
-                    lines.Add(p + "SensorID="   + nudSensorID[i].Value);
-                    lines.Add(p + "MaxHz="      + nudMaxHz[i].Value);
-                    lines.Add(p + "Noise="      + nudNoise[i].Value);
-                    lines.Add(p + "ValveLag="   + nudValveLag[i].Value);
+                    lines.Add(p + "ModuleID=" + nudModuleID[i].Value);
+                    lines.Add(p + "SensorID=" + nudSensorID[i].Value);
+                    lines.Add(p + "MaxHz=" + nudMaxHz[i].Value);
+                    lines.Add(p + "Noise=" + nudNoise[i].Value);
+                    lines.Add(p + "ValveLag=" + nudValveLag[i].Value);
                     lines.Add(p + "WheelSpeed=" + nudWheelSpeed[i].Value);
-                    lines.Add(p + "Pressure="   + nudPressure[i].Value);
+                    lines.Add(p + "Pressure=" + nudPressure[i].Value);
                     lines.Add(p + "WorkSwitch=" + (ckWorkSwitch[i].Checked ? "1" : "0"));
                 }
                 lines.Add("1.Enabled=" + (ckEnable.Checked ? "1" : "0"));
@@ -154,26 +154,26 @@ namespace ModuleSimulator
         private void BuildModuleTabs()
         {
             const int N = 2;
-            nudModuleID    = new NumericUpDown[N];
-            nudSensorID    = new NumericUpDown[N];
-            nudMaxHz       = new NumericUpDown[N];
-            nudNoise       = new NumericUpDown[N];
-            nudValveLag    = new NumericUpDown[N];
-            nudWheelSpeed  = new NumericUpDown[N];
-            nudPressure    = new NumericUpDown[N];
-            ckWorkSwitch   = new CheckBox[N];
-            btnResetQty    = new Button[N];
-            lblSimRate     = new Label[N];
-            lblHz          = new Label[N];
-            lblPWM         = new Label[N];
-            lblValvePos    = new Label[N];
-            lblAccQty      = new Label[N];
-            lblCmdSetRate  = new Label[N];
-            lblCmdFlowCal  = new Label[N];
+            nudModuleID = new NumericUpDown[N];
+            nudSensorID = new NumericUpDown[N];
+            nudMaxHz = new NumericUpDown[N];
+            nudNoise = new NumericUpDown[N];
+            nudValveLag = new NumericUpDown[N];
+            nudWheelSpeed = new NumericUpDown[N];
+            nudPressure = new NumericUpDown[N];
+            ckWorkSwitch = new CheckBox[N];
+            btnResetQty = new Button[N];
+            lblSimRate = new Label[N];
+            lblHz = new Label[N];
+            lblPWM = new Label[N];
+            lblValvePos = new Label[N];
+            lblAccQty = new Label[N];
+            lblCmdSetRate = new Label[N];
+            lblCmdFlowCal = new Label[N];
             lblCmdMasterOn = new Label[N];
-            lblCmdAutoOn   = new Label[N];
-            lblCmdRelays   = new Label[N];
-            lblCmdConfig   = new Label[N];
+            lblCmdAutoOn = new Label[N];
+            lblCmdRelays = new Label[N];
+            lblCmdConfig = new Label[N];
 
             int[] defModId = { 0, 1 };
 
@@ -231,20 +231,20 @@ namespace ModuleSimulator
                 // ── Commands from RC ──────────────────────────────────────────────
                 var grpCmds = Grp("Commands from RC", 4, 336, 460, 130);
                 Lbl(grpCmds, "Set Rate:", 8, 22);
-                lblCmdSetRate[i]  = Val(grpCmds, "—", 72, 20, 90);
+                lblCmdSetRate[i] = Val(grpCmds, "—", 72, 20, 90);
                 Lbl(grpCmds, "Flow Cal:", 180, 22);
-                lblCmdFlowCal[i]  = Val(grpCmds, "—", 248, 20, 90);
+                lblCmdFlowCal[i] = Val(grpCmds, "—", 248, 20, 90);
                 Lbl(grpCmds, "Master:", 8, 48);
                 lblCmdMasterOn[i] = Val(grpCmds, "off", 58, 46, 48);
                 lblCmdMasterOn[i].ForeColor = Color.Gray;
                 Lbl(grpCmds, "Auto:", 118, 48);
-                lblCmdAutoOn[i]   = Val(grpCmds, "off", 152, 46, 48);
+                lblCmdAutoOn[i] = Val(grpCmds, "off", 152, 46, 48);
                 lblCmdAutoOn[i].ForeColor = Color.Gray;
                 Lbl(grpCmds, "Relays:", 8, 74);
-                lblCmdRelays[i]   = Val(grpCmds, "0000000000000000", 62, 72, 360);
+                lblCmdRelays[i] = Val(grpCmds, "0000000000000000", 62, 72, 360);
                 lblCmdRelays[i].Font = new Font("Courier New", 8F);
                 Lbl(grpCmds, "Config:", 8, 100);
-                lblCmdConfig[i]   = Val(grpCmds, "—", 62, 98, 120);
+                lblCmdConfig[i] = Val(grpCmds, "—", 62, 98, 120);
                 page.Controls.Add(grpCmds);
 
                 tabModules.TabPages.Add(page);
@@ -273,8 +273,12 @@ namespace ModuleSimulator
         {
             var n = new NumericUpDown
             {
-                Minimum = min, Maximum = max, Value = val, Increment = inc,
-                Location = new Point(x, y), Size = new Size(w, 22)
+                Minimum = min,
+                Maximum = max,
+                Value = val,
+                Increment = inc,
+                Location = new Point(x, y),
+                Size = new Size(w, 22)
             };
             parent.Controls.Add(n);
             return n;
@@ -289,7 +293,7 @@ namespace ModuleSimulator
 
         // ── Start / Stop ─────────────────────────────────────────────────────────
         private void btnStart_Click(object sender, EventArgs e) => Start();
-        private void btnStop_Click(object sender, EventArgs e)  => Stop();
+        private void btnStop_Click(object sender, EventArgs e) => Stop();
 
         private void Start()
         {
@@ -394,7 +398,7 @@ namespace ModuleSimulator
             if (s.CommTime != DateTime.MinValue && (now - s.CommTime).TotalSeconds < 5.0)
             {
                 if (s.TargetUPM > 0 && s.MasterOn) result = true;
-                else if (s.MasterOn && !s.AutoOn)   result = true;
+                else if (s.MasterOn && !s.AutoOn) result = true;
             }
             s.FlowEnabled = result;
         }
@@ -422,7 +426,7 @@ namespace ModuleSimulator
                 {
                     s.LastPIDCheck = now;
                     float rateError = s.TargetUPM - s.UPM;
-                    bool  isPositive = rateError > 0;
+                    bool isPositive = rateError > 0;
                     if (isPositive != s.ErrorIsPositive)
                     { s.ErrorIsPositive = isPositive; s.IntegralSum = 0; }
 
@@ -442,7 +446,7 @@ namespace ModuleSimulator
                             result = 0f;
                         else
                         {
-                            result  = Clamp(Math.Abs(changeAmount) + s.MinPWM, s.MinPWM, s.MaxPWM);
+                            result = Clamp(Math.Abs(changeAmount) + s.MinPWM, s.MinPWM, s.MaxPWM);
                             result *= changeAmount >= 0f ? 1f : -1f;
                         }
                     }
@@ -468,14 +472,14 @@ namespace ModuleSimulator
             else
             {
                 double travelTime = Math.Max(0.1, (double)nudValveLag[i].Value / 1000.0);
-                double maxRate    = 255.0 / travelTime;
-                double speed      = s.MaxPWM > 0 ? (s.PWM / s.MaxPWM) * maxRate * dt : 0;
-                _mod[i].ValvePos  = Math.Max(0.0, Math.Min(255.0, _mod[i].ValvePos + speed));
+                double maxRate = 255.0 / travelTime;
+                double speed = s.MaxPWM > 0 ? (s.PWM / s.MaxPWM) * maxRate * dt : 0;
+                _mod[i].ValvePos = Math.Max(0.0, Math.Min(255.0, _mod[i].ValvePos + speed));
 
-                double maxHz   = (double)nudMaxHz[i].Value;
+                double maxHz = (double)nudMaxHz[i].Value;
                 double idealHz = (_mod[i].ValvePos / 255.0) * maxHz;
-                double u       = _rng.NextDouble() + _rng.NextDouble() - 1.0;
-                double noise   = (double)nudNoise[i].Value / 100.0;
+                double u = _rng.NextDouble() + _rng.NextDouble() - 1.0;
+                double noise = (double)nudNoise[i].Value / 100.0;
                 s.Hz = (float)(Math.Max(0.0, idealHz + idealHz * noise * u) * 0.8 + s.Hz * 0.2);
             }
             s.UPM = s.MeterCal > 0 ? (float)(60.0 * s.Hz / s.MeterCal) : 0f;
@@ -549,8 +553,8 @@ namespace ModuleSimulator
             if (!_running) return;
             try
             {
-                EndPoint ep  = new IPEndPoint(IPAddress.Any, 0);
-                int      len = _recvSocket.EndReceiveFrom(ar, ref ep);
+                EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
+                int len = _recvSocket.EndReceiveFrom(ar, ref ep);
                 if (len > 1)
                 {
                     byte[] copy = new byte[len];
@@ -566,7 +570,7 @@ namespace ModuleSimulator
         private void ParseCommand(byte[] data)
         {
             if (data.Length < 3) return;
-            int pgn      = data[0] | (data[1] << 8);
+            int pgn = data[0] | (data[1] << 8);
             int moduleId = data[2] >> 4;   // high nibble = module ID
 
             switch (pgn)
@@ -577,14 +581,14 @@ namespace ModuleSimulator
                     if (m500 < 0) break;
                     {
                         var s = _mod[m500].Sensor;
-                        s.TargetUPM    = (data[3] | (data[4] << 8) | (data[5] << 16)) / 1000.0f;
-                        s.MeterCal     = (data[6] | (data[7] << 8) | (data[8] << 16)) / 1000.0f;
-                        byte cmd       = data[9];
+                        s.TargetUPM = (data[3] | (data[4] << 8) | (data[5] << 16)) / 1000.0f;
+                        s.MeterCal = (data[6] | (data[7] << 8) | (data[8] << 16)) / 1000.0f;
+                        byte cmd = data[9];
                         if ((cmd & 1) != 0) _mod[m500].AccQty = 0;
-                        s.MasterOn     = (cmd & 0x10) != 0;
-                        s.AutoOn       = (cmd & 0x40) != 0;
+                        s.MasterOn = (cmd & 0x10) != 0;
+                        s.AutoOn = (cmd & 0x40) != 0;
                         s.ManualAdjust = (short)(data[10] | (data[11] << 8));
-                        s.CommTime     = DateTime.Now;
+                        s.CommTime = DateTime.Now;
                         UpdateCommandLabels(m500);
                     }
                     break;
@@ -593,7 +597,7 @@ namespace ModuleSimulator
                     if (data.Length < 10) break;
                     {
                         ushort relays = (ushort)(data[3] | (data[4] << 8));
-                        int    m501   = FindModule(moduleId);
+                        int m501 = FindModule(moduleId);
                         if (m501 >= 0)
                         {
                             _mod[m501].CmdRelays = relays;
@@ -613,16 +617,16 @@ namespace ModuleSimulator
                     if (m502 < 0) break;
                     {
                         var s = _mod[m502].Sensor;
-                        s.MaxPWM        = 255.0f * data[3] / 100.0f;
-                        s.MinPWM        = 255.0f * data[4] / 100.0f;
-                        s.Kp            = data[5] > 0 ? (float)Math.Pow(1.1, data[5] - 120) : 0f;
-                        s.Ki            = data[6] > 0 ? (float)Math.Pow(1.1, data[6] - 120) : 0f;
-                        s.Deadband      = data[7] / 1000.0f;
-                        s.BrakePoint    = data[8];
+                        s.MaxPWM = 255.0f * data[3] / 100.0f;
+                        s.MinPWM = 255.0f * data[4] / 100.0f;
+                        s.Kp = data[5] > 0 ? (float)Math.Pow(1.1, data[5] - 120) : 0f;
+                        s.Ki = data[6] > 0 ? (float)Math.Pow(1.1, data[6] - 120) : 0f;
+                        s.Deadband = data[7] / 1000.0f;
+                        s.BrakePoint = data[8];
                         s.PIDslowAdjust = data[9];
-                        s.SlewRate      = data[10];
-                        s.MaxIntegral   = data[11] / 10.0f;
-                        s.PIDtime       = data[18];
+                        s.SlewRate = data[10];
+                        s.MaxIntegral = data[11] / 10.0f;
+                        s.PIDtime = data[18];
                         UpdateCommandLabels(m502);
                     }
                     break;
@@ -630,7 +634,7 @@ namespace ModuleSimulator
                 case 32700:
                     for (int ii = 0; ii < 2; ii++)
                     {
-                        lblCmdConfig[ii].Text      = "Received";
+                        lblCmdConfig[ii].Text = "Received";
                         lblCmdConfig[ii].ForeColor = Color.Green;
                     }
                     break;
@@ -649,12 +653,12 @@ namespace ModuleSimulator
         private void UpdateCommandLabels(int i)
         {
             var s = _mod[i].Sensor;
-            lblCmdSetRate[i].Text  = s.TargetUPM.ToString("F1");
-            lblCmdFlowCal[i].Text  = s.MeterCal.ToString("F3");
+            lblCmdSetRate[i].Text = s.TargetUPM.ToString("F1");
+            lblCmdFlowCal[i].Text = s.MeterCal.ToString("F3");
             lblCmdMasterOn[i].Text = s.MasterOn ? "ON" : "off";
-            lblCmdAutoOn[i].Text   = s.AutoOn   ? "ON" : "off";
+            lblCmdAutoOn[i].Text = s.AutoOn ? "ON" : "off";
             lblCmdMasterOn[i].ForeColor = s.MasterOn ? Color.Green : Color.Gray;
-            lblCmdAutoOn[i].ForeColor   = s.AutoOn   ? Color.Green : Color.Gray;
+            lblCmdAutoOn[i].ForeColor = s.AutoOn ? Color.Green : Color.Gray;
             char[] bits = Convert.ToString(_mod[i].CmdRelays, 2).PadLeft(16, '0').ToCharArray();
             Array.Reverse(bits);
             lblCmdRelays[i].Text = new string(bits);
@@ -666,19 +670,19 @@ namespace ModuleSimulator
             {
                 if (!ModuleActive(i)) continue;
                 var s = _mod[i].Sensor;
-                lblSimRate[i].Text  = s.UPM.ToString("F1");
-                lblHz[i].Text       = s.Hz.ToString("F1");
-                lblPWM[i].Text      = ((int)s.PWM).ToString();
+                lblSimRate[i].Text = s.UPM.ToString("F1");
+                lblHz[i].Text = s.Hz.ToString("F1");
+                lblPWM[i].Text = ((int)s.PWM).ToString();
                 lblValvePos[i].Text = ((int)_mod[i].ValvePos).ToString();
-                lblAccQty[i].Text   = _mod[i].AccQty.ToString("F1");
+                lblAccQty[i].Text = _mod[i].AccQty.ToString("F1");
             }
         }
 
         private void UpdateUI()
         {
             bool r = _running;
-            btnStart.Enabled  = !r;
-            btnStop.Enabled   = r;
+            btnStart.Enabled = !r;
+            btnStop.Enabled = r;
             txtSubnet.Enabled = !r;
             for (int i = 0; i < 2; i++)
             {
@@ -689,7 +693,7 @@ namespace ModuleSimulator
 
         private void SetStatus(string text, Color color)
         {
-            lblStatus.Text      = text;
+            lblStatus.Text = text;
             lblStatus.ForeColor = color;
         }
 
@@ -711,10 +715,10 @@ namespace ModuleSimulator
             foreach (Screen s in Screen.AllScreens)
                 if (s.WorkingArea.Contains(new System.Drawing.Point(Left + 20, Top + 20))) return;
             Left = Screen.PrimaryScreen.WorkingArea.Left + 40;
-            Top  = Screen.PrimaryScreen.WorkingArea.Top  + 40;
+            Top = Screen.PrimaryScreen.WorkingArea.Top + 40;
         }
 
-        private static float   Clamp(float   v, float   mn, float   mx) => Math.Max(mn, Math.Min(mx, v));
+        private static float Clamp(float v, float mn, float mx) => Math.Max(mn, Math.Min(mx, v));
         private static decimal Clamp(decimal v, decimal mn, decimal mx) => Math.Max(mn, Math.Min(mx, v));
     }
 }
