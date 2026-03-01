@@ -9,88 +9,126 @@ namespace ModuleSimulator
 {
     public partial class frmMain : Form
     {
-        private const int RC_LISTEN_PORT = 29999;
-        private const int MOD_LISTEN_PORT = 28888;
-
+        private const float FastAdjustValve = 40.0f;
         private const byte HDR32400_LO = 144, HDR32400_HI = 126;
         private const byte HDR32401_LO = 145, HDR32401_HI = 126;
-
         private const ushort INO_ID = 27026;
         private const byte INO_TYPE = 1;
-        private const float FastAdjustValve = 40.0f;
-
-        private Socket _sendSocket;
-        private Socket _recvSocket;
-        private readonly byte[] _recvBuffer = new byte[256];
-        private volatile bool _running;
-
-        private readonly ModState[] _mod = { new ModState(), new ModState() };
-        private DateTime _lastLoopTime = DateTime.MinValue;
-        private readonly Random _rng = new Random();
-
-        // ── Per-module simulation state ───────────────────────────────────────────
-        private class SensorState
-        {
-            public float TargetUPM, MeterCal;
-            public bool MasterOn, AutoOn;
-            public int ControlType;
-            public short ManualAdjust;
-            public DateTime CommTime = DateTime.MinValue;
-
-            public float MaxPWM = 200f, MinPWM = 10f;
-            public float Kp = (float)Math.Pow(1.1, 100 - 120);
-            public float Ki = 0f;
-            public float Deadband = 0.05f;
-            public int BrakePoint = 20, PIDslowAdjust = 50, SlewRate = 20, PIDtime = 100;
-            public float MaxIntegral = 2.0f;
-
-            public float PWM, LastPWM, IntegralSum;
-            public bool ErrorIsPositive = true;
-            public DateTime LastPIDCheck = DateTime.MinValue;
-
-            public float Hz, UPM;
-            public bool FlowEnabled;
-        }
-
-        private class ModState
-        {
-            public readonly SensorState Sensor = new SensorState();
-            public double ValvePos;
-            public double AccQty;
-            public ushort CmdRelays;
-        }
+        private const int MOD_LISTEN_PORT = 28888;
+        private const int RC_LISTEN_PORT = 29999;
 
         // ── Settings persistence ─────────────────────────────────────────────────
         private static readonly string ConfigPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "ModuleSimulator", "settings.ini");
 
-        private void LoadSettings()
-        {
-            try
-            {
-                if (!File.Exists(ConfigPath)) return;
-                foreach (string line in File.ReadAllLines(ConfigPath))
-                {
-                    int eq = line.IndexOf('=');
-                    if (eq < 0) continue;
-                    string key = line.Substring(0, eq).Trim();
-                    string val = line.Substring(eq + 1).Trim();
+        private readonly ModState[] _mod = { new ModState(), new ModState() };
+        private readonly byte[] _recvBuffer = new byte[256];
+        private readonly Random _rng = new Random();
+        private DateTime _lastLoopTime = DateTime.MinValue;
+        private Socket _recvSocket;
+        private volatile bool _running;
+        private Socket _sendSocket;
 
-                    // Key format: "Subnet"/"Left"/"Top" (shared) or "0.ModuleID"/"1.ModuleID" (per-module)
-                    // Backwards compat: bare key (no digit prefix) applies to module 0
-                    int mod = 0;
-                    string bare = key;
-                    if (key.Length > 2 && key[1] == '.')
-                    {
-                        mod = key[0] - '0';
-                        bare = key.Substring(2);
-                        if (mod < 0 || mod > 1) continue;
-                    }
-                    ApplySetting(mod, bare, val);
+        // ── Constructor ──────────────────────────────────────────────────────────
+        public frmMain()
+        {
+            InitializeComponent();
+            BuildModuleTabs();
+            LoadSettings();
+            EnsureOnScreen();
+        }
+
+        public void DrawGroupBox(GroupBox box, Graphics g, Color BackColor, Color textColor, Color borderColor, float borderWidth = 1)
+        {
+            // useage:
+            // point the Groupbox paint event to this sub:
+            // private void groupBox1_Paint(object sender, PaintEventArgs e)
+            //{
+            //    GroupBox box = sender as GroupBox;
+            // mf.Tls.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Red, 3); // Red border with thickness 3
+            //}
+            if (box != null)
+            {
+                using (Brush textBrush = new SolidBrush(textColor))
+                using (Pen borderPen = new Pen(borderColor, borderWidth))
+                {
+                    SizeF strSize = g.MeasureString(box.Text, box.Font);
+                    Rectangle rect = new Rectangle(box.ClientRectangle.X,
+                                                   box.ClientRectangle.Y + (int)(strSize.Height / 2),
+                                                   box.ClientRectangle.Width - 1,
+                                                   box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
+
+                    // Clear text and border
+                    g.Clear(BackColor);
+
+                    // Draw text
+                    g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left, 0);
+
+                    // Drawing Border
+                    // Left
+                    g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+                    // Right
+                    g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                    // Bottom
+                    g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                    // Top1
+                    g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
+                    // Top2
+                    g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
                 }
             }
-            catch { }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            SaveSettings();
+            Stop();
+            base.OnFormClosing(e);
+        }
+
+        private static byte CalcCRC(byte[] data, int length)
+        {
+            int sum = 0;
+            for (int i = 0; i < length; i++) sum += data[i];
+            return (byte)sum;
+        }
+
+        private static float Clamp(float v, float mn, float mx) => Math.Max(mn, Math.Min(mx, v));
+
+        private static decimal Clamp(decimal v, decimal mn, decimal mx) => Math.Max(mn, Math.Min(mx, v));
+
+        private static GroupBox Grp(string text, int x, int y, int w, int h)
+        {
+            return new GroupBox { Text = text, Location = new Point(x, y), Size = new Size(w, h) };
+        }
+
+        private static void Lbl(Control parent, string text, int x, int y)
+        {
+            parent.Controls.Add(new Label { Text = text, Location = new Point(x, y), AutoSize = true });
+        }
+
+        private static NumericUpDown Nud(Control parent, int x, int y,
+                    decimal min, decimal max, decimal val, decimal inc, int w = 72)
+        {
+            var n = new NumericUpDown
+            {
+                Minimum = min,
+                Maximum = max,
+                Value = val,
+                Increment = inc,
+                Location = new Point(x, y),
+                Size = new Size(w, 22)
+            };
+            parent.Controls.Add(n);
+            return n;
+        }
+
+        private static Label Val(Control parent, string text, int x, int y, int w = 70)
+        {
+            var l = new Label { Text = text, Location = new Point(x, y), Size = new Size(w, 18) };
+            parent.Controls.Add(l);
+            return l;
         }
 
         private void ApplySetting(int mod, string key, string val)
@@ -113,42 +151,25 @@ namespace ModuleSimulator
             }
         }
 
-        private void SaveSettings()
+        // ── Receive ──────────────────────────────────────────────────────────────
+        private void BeginReceive()
         {
-            try
-            {
-                string dir = Path.GetDirectoryName(ConfigPath);
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-
-                var lines = new System.Collections.Generic.List<string>
-                {
-                    "Subnet=" + txtSubnet.Text.Trim(),
-                };
-                if (WindowState == FormWindowState.Normal)
-                {
-                    lines.Add("Left=" + Left);
-                    lines.Add("Top=" + Top);
-                }
-                for (int i = 0; i < 2; i++)
-                {
-                    string p = i + ".";
-                    lines.Add(p + "ModuleID=" + nudModuleID[i].Value);
-                    lines.Add(p + "SensorID=" + nudSensorID[i].Value);
-                    lines.Add(p + "MaxHz=" + nudMaxHz[i].Value);
-                    lines.Add(p + "Noise=" + nudNoise[i].Value);
-                    lines.Add(p + "ValveLag=" + nudValveLag[i].Value);
-                    lines.Add(p + "WheelSpeed=" + nudWheelSpeed[i].Value);
-                    lines.Add(p + "Pressure=" + nudPressure[i].Value);
-                    lines.Add(p + "WorkSwitch=" + (ckWorkSwitch[i].Checked ? "1" : "0"));
-                }
-                lines.Add("1.Enabled=" + (ckEnable.Checked ? "1" : "0"));
-                File.WriteAllLines(ConfigPath, lines);
-            }
-            catch { }
+            if (_recvSocket == null) return;
+            EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
+            _recvSocket.BeginReceiveFrom(_recvBuffer, 0, _recvBuffer.Length,
+                SocketFlags.None, ref ep, OnReceive, null);
         }
 
-        // ── Constructor ──────────────────────────────────────────────────────────
-        public frmMain() { InitializeComponent(); BuildModuleTabs(); LoadSettings(); EnsureOnScreen(); }
+        private void btnResetQty_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 2; i++)
+                if (sender == btnResetQty[i]) { _mod[i].AccQty = 0; return; }
+        }
+
+        // ── Start / Stop ─────────────────────────────────────────────────────────
+        private void btnStart_Click(object sender, EventArgs e) => Start();
+
+        private void btnStop_Click(object sender, EventArgs e) => Stop();
 
         // ── BuildModuleTabs ───────────────────────────────────────────────────────
         private void BuildModuleTabs()
@@ -251,104 +272,6 @@ namespace ModuleSimulator
             }
         }
 
-        private static GroupBox Grp(string text, int x, int y, int w, int h)
-        {
-            return new GroupBox { Text = text, Location = new Point(x, y), Size = new Size(w, h) };
-        }
-
-        private static void Lbl(Control parent, string text, int x, int y)
-        {
-            parent.Controls.Add(new Label { Text = text, Location = new Point(x, y), AutoSize = true });
-        }
-
-        private static Label Val(Control parent, string text, int x, int y, int w = 70)
-        {
-            var l = new Label { Text = text, Location = new Point(x, y), Size = new Size(w, 18) };
-            parent.Controls.Add(l);
-            return l;
-        }
-
-        private static NumericUpDown Nud(Control parent, int x, int y,
-            decimal min, decimal max, decimal val, decimal inc, int w = 72)
-        {
-            var n = new NumericUpDown
-            {
-                Minimum = min,
-                Maximum = max,
-                Value = val,
-                Increment = inc,
-                Location = new Point(x, y),
-                Size = new Size(w, 22)
-            };
-            parent.Controls.Add(n);
-            return n;
-        }
-
-        private static byte CalcCRC(byte[] data, int length)
-        {
-            int sum = 0;
-            for (int i = 0; i < length; i++) sum += data[i];
-            return (byte)sum;
-        }
-
-        // ── Start / Stop ─────────────────────────────────────────────────────────
-        private void btnStart_Click(object sender, EventArgs e) => Start();
-        private void btnStop_Click(object sender, EventArgs e) => Stop();
-
-        private void Start()
-        {
-            if (_running) return;
-            try
-            {
-                _lastLoopTime = DateTime.MinValue;
-                for (int i = 0; i < 2; i++) ResetMod(i);
-                UpdateCommandLabels(0);
-                UpdateCommandLabels(1);
-
-                _sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                _sendSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-                _sendSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
-
-                _recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                _recvSocket.Bind(new IPEndPoint(IPAddress.Any, MOD_LISTEN_PORT));
-                BeginReceive();
-
-                _running = true;
-                loopTimer.Start();
-                sendTimer.Start();
-                SetStatus("Running", Color.Green);
-                UpdateUI();
-            }
-            catch (Exception ex)
-            {
-                SetStatus("Error: " + ex.Message, Color.Red);
-                CleanupSockets();
-            }
-        }
-
-        private void ResetMod(int i)
-        {
-            var m = _mod[i]; var s = m.Sensor;
-            m.ValvePos = 0; m.AccQty = 0; m.CmdRelays = 0;
-            s.TargetUPM = 0; s.MeterCal = 0; s.MasterOn = false; s.AutoOn = false;
-            s.CommTime = DateTime.MinValue;
-            s.PWM = 0; s.LastPWM = 0; s.IntegralSum = 0;
-            s.Hz = 0; s.UPM = 0;
-            s.ErrorIsPositive = true;
-            s.LastPIDCheck = DateTime.MinValue;
-        }
-
-        private void Stop()
-        {
-            if (!_running) return;
-            _running = false;
-            loopTimer.Stop();
-            sendTimer.Stop();
-            CleanupSockets();
-            SetStatus("Stopped", Color.Gray);
-            UpdateUI();
-        }
-
         private void CleanupSockets()
         {
             try { _recvSocket?.Close(); } catch { }
@@ -357,7 +280,60 @@ namespace ModuleSimulator
             _sendSocket = null;
         }
 
-        private bool ModuleActive(int i) => i == 0 || ckEnable.Checked;
+        private void EnsureOnScreen()
+        {
+            foreach (Screen s in Screen.AllScreens)
+                if (s.WorkingArea.Contains(new System.Drawing.Point(Left + 20, Top + 20))) return;
+            Left = Screen.PrimaryScreen.WorkingArea.Left + 40;
+            Top = Screen.PrimaryScreen.WorkingArea.Top + 40;
+        }
+
+        private int FindModule(int moduleId)
+        {
+            for (int i = 0; i < 2; i++)
+                if (ModuleActive(i) && (int)nudModuleID[i].Value == moduleId)
+                    return i;
+            return -1;
+        }
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            if (box != null)
+            {
+                Color borderColor = Color.Blue;
+                float borderWidth = 1;
+                DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, borderColor, borderWidth);
+            }
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                if (!File.Exists(ConfigPath)) return;
+                foreach (string line in File.ReadAllLines(ConfigPath))
+                {
+                    int eq = line.IndexOf('=');
+                    if (eq < 0) continue;
+                    string key = line.Substring(0, eq).Trim();
+                    string val = line.Substring(eq + 1).Trim();
+
+                    // Key format: "Subnet"/"Left"/"Top" (shared) or "0.ModuleID"/"1.ModuleID" (per-module)
+                    // Backwards compat: bare key (no digit prefix) applies to module 0
+                    int mod = 0;
+                    string bare = key;
+                    if (key.Length > 2 && key[1] == '.')
+                    {
+                        mod = key[0] - '0';
+                        bare = key.Substring(2);
+                        if (mod < 0 || mod > 1) continue;
+                    }
+                    ApplySetting(mod, bare, val);
+                }
+            }
+            catch { }
+        }
 
         // ── Loop tick (50 ms) ─────────────────────────────────────────────────────
         private void loopTimer_Tick(object sender, EventArgs e)
@@ -378,175 +354,7 @@ namespace ModuleSimulator
             UpdateSimDisplay();
         }
 
-        // ── Send tick (200 ms) ────────────────────────────────────────────────────
-        private void sendTimer_Tick(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                if (!ModuleActive(i)) continue;
-                _mod[i].AccQty += _mod[i].Sensor.UPM * (200.0 / 60000.0);
-                SendPGN32401(i, (byte)nudModuleID[i].Value);
-                SendPGN32400(i, (byte)nudModuleID[i].Value, (byte)nudSensorID[i].Value);
-            }
-        }
-
-        // ── SetSensorsEnabled ─────────────────────────────────────────────────────
-        private void SetSensorsEnabled(int i, DateTime now)
-        {
-            var s = _mod[i].Sensor;
-            bool result = false;
-            if (s.CommTime != DateTime.MinValue && (now - s.CommTime).TotalSeconds < 5.0)
-            {
-                if (s.TargetUPM > 0 && s.MasterOn) result = true;
-                else if (s.MasterOn && !s.AutoOn) result = true;
-            }
-            s.FlowEnabled = result;
-        }
-
-        // ── UpdatePWM ─────────────────────────────────────────────────────────────
-        private void UpdatePWM(int i, DateTime now)
-        {
-            var s = _mod[i].Sensor;
-            if (s.AutoOn)
-                s.PWM = PIDvalve(s, now);
-            else if (s.FlowEnabled)
-                s.PWM = Math.Sign(s.ManualAdjust)
-                        * Math.Min(Math.Abs((float)s.ManualAdjust), s.MaxPWM);
-            else
-                s.PWM = 0;
-        }
-
-        // ── PIDvalve (port of Teensy PID.ino:PIDvalve) ───────────────────────────
-        private float PIDvalve(SensorState s, DateTime now)
-        {
-            float result = s.LastPWM;
-            if (s.FlowEnabled && s.TargetUPM > 0)
-            {
-                if ((now - s.LastPIDCheck).TotalMilliseconds >= s.PIDtime)
-                {
-                    s.LastPIDCheck = now;
-                    float rateError = s.TargetUPM - s.UPM;
-                    bool isPositive = rateError > 0;
-                    if (isPositive != s.ErrorIsPositive)
-                    { s.ErrorIsPositive = isPositive; s.IntegralSum = 0; }
-
-                    if (Math.Abs(rateError) > s.Deadband * s.TargetUPM)
-                    {
-                        rateError = Clamp(rateError, -s.TargetUPM, s.TargetUPM);
-                        s.IntegralSum += rateError * s.Ki;
-                        if (s.Ki <= 0) s.IntegralSum = 0;
-                        s.IntegralSum = Clamp(s.IntegralSum, -s.MaxIntegral, s.MaxIntegral);
-
-                        float brakeFactor = Math.Abs(rateError) > s.TargetUPM * s.BrakePoint / 100.0f
-                            ? FastAdjustValve
-                            : s.PIDslowAdjust / 100.0f * FastAdjustValve;
-
-                        float changeAmount = rateError * s.Kp * brakeFactor * 100.0f + s.IntegralSum;
-                        if (Math.Abs(changeAmount) < 0.1f)
-                            result = 0f;
-                        else
-                        {
-                            result = Clamp(Math.Abs(changeAmount) + s.MinPWM, s.MinPWM, s.MaxPWM);
-                            result *= changeAmount >= 0f ? 1f : -1f;
-                        }
-                    }
-                    else { result = 0f; s.IntegralSum = 0f; }
-                }
-            }
-            else { s.IntegralSum = 0; result = 0; }
-            s.LastPWM = result;
-            return result;
-        }
-
-        // ── SimulateFlow ──────────────────────────────────────────────────────────
-        private void SimulateFlow(int i, double dt)
-        {
-            var s = _mod[i].Sensor;
-            bool relaysActive = _mod[i].CmdRelays > 0;
-
-            if (!s.FlowEnabled || !relaysActive)
-            {
-                _mod[i].ValvePos = 0;
-                s.Hz = 0;
-            }
-            else
-            {
-                double travelTime = Math.Max(0.1, (double)nudValveLag[i].Value / 1000.0);
-                double maxRate = 255.0 / travelTime;
-                double speed = s.MaxPWM > 0 ? (s.PWM / s.MaxPWM) * maxRate * dt : 0;
-                _mod[i].ValvePos = Math.Max(0.0, Math.Min(255.0, _mod[i].ValvePos + speed));
-
-                double maxHz = (double)nudMaxHz[i].Value;
-                double idealHz = (_mod[i].ValvePos / 255.0) * maxHz;
-                double u = _rng.NextDouble() + _rng.NextDouble() - 1.0;
-                double noise = (double)nudNoise[i].Value / 100.0;
-                s.Hz = (float)(Math.Max(0.0, idealHz + idealHz * noise * u) * 0.8 + s.Hz * 0.2);
-            }
-            s.UPM = s.MeterCal > 0 ? (float)(60.0 * s.Hz / s.MeterCal) : 0f;
-        }
-
-        // ── PGN senders ──────────────────────────────────────────────────────────
-        private void SendPGN32401(int i, byte modId)
-        {
-            byte[] d = new byte[15];
-            d[0] = HDR32401_LO; d[1] = HDR32401_HI;
-            d[2] = modId;
-            ushort pressure = (ushort)nudPressure[i].Value;
-            d[3] = (byte)pressure; d[4] = (byte)(pressure >> 8);
-            ushort ws = (ushort)((double)nudWheelSpeed[i].Value * 10.0);
-            d[5] = (byte)ws; d[6] = (byte)(ws >> 8);
-            d[7] = d[8] = d[9] = 0;
-            d[10] = INO_TYPE;
-            d[11] = (byte)(INO_ID & 0xFF);
-            d[12] = (byte)(INO_ID >> 8);
-            d[13] = 0b0011_0000;
-            if (ckWorkSwitch[i].Checked) d[13] |= 0x01;
-            d[14] = CalcCRC(d, 14);
-            UdpSend(d);
-        }
-
-        private void SendPGN32400(int i, byte modId, byte senId)
-        {
-            var s = _mod[i].Sensor;
-            byte[] d = new byte[15];
-            d[0] = HDR32400_LO; d[1] = HDR32400_HI;
-            d[2] = (byte)((modId << 4) | (senId & 0x0F));
-            int r = (int)(s.UPM * 1000.0);
-            d[3] = (byte)r; d[4] = (byte)(r >> 8); d[5] = (byte)(r >> 16);
-            int q = (int)(_mod[i].AccQty * 10.0);
-            d[6] = (byte)q; d[7] = (byte)(q >> 8); d[8] = (byte)(q >> 16);
-            int pwm = (int)s.PWM;
-            d[9] = (byte)pwm; d[10] = (byte)(pwm >> 8);
-            d[11] = 0x01;
-            int hz = (int)(s.Hz * 10.0);
-            d[12] = (byte)hz; d[13] = (byte)(hz >> 8);
-            d[14] = CalcCRC(d, 14);
-            UdpSend(d);
-        }
-
-        private void UdpSend(byte[] data)
-        {
-            if (_sendSocket == null) return;
-            try
-            {
-                string subnet = txtSubnet.Text.Trim().TrimEnd('.');
-                string[] parts = subnet.Split('.');
-                string bc = parts.Length >= 3
-                    ? $"{parts[0]}.{parts[1]}.{parts[2]}.255"
-                    : "255.255.255.255";
-                _sendSocket.SendTo(data, new IPEndPoint(IPAddress.Parse(bc), RC_LISTEN_PORT));
-            }
-            catch { }
-        }
-
-        // ── Receive ──────────────────────────────────────────────────────────────
-        private void BeginReceive()
-        {
-            if (_recvSocket == null) return;
-            EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
-            _recvSocket.BeginReceiveFrom(_recvBuffer, 0, _recvBuffer.Length,
-                SocketFlags.None, ref ep, OnReceive, null);
-        }
+        private bool ModuleActive(int i) => i == 0 || ckEnable.Checked;
 
         private void OnReceive(IAsyncResult ar)
         {
@@ -641,12 +449,246 @@ namespace ModuleSimulator
             }
         }
 
-        private int FindModule(int moduleId)
+        // ── PIDvalve (port of Teensy PID.ino:PIDvalve) ───────────────────────────
+        private float PIDvalve(SensorState s, DateTime now)
+        {
+            float result = s.LastPWM;
+            if (s.FlowEnabled && s.TargetUPM > 0)
+            {
+                if ((now - s.LastPIDCheck).TotalMilliseconds >= s.PIDtime)
+                {
+                    s.LastPIDCheck = now;
+                    float rateError = s.TargetUPM - s.UPM;
+                    bool isPositive = rateError > 0;
+                    if (isPositive != s.ErrorIsPositive)
+                    { s.ErrorIsPositive = isPositive; s.IntegralSum = 0; }
+
+                    if (Math.Abs(rateError) > s.Deadband * s.TargetUPM)
+                    {
+                        rateError = Clamp(rateError, -s.TargetUPM, s.TargetUPM);
+                        s.IntegralSum += rateError * s.Ki;
+                        if (s.Ki <= 0) s.IntegralSum = 0;
+                        s.IntegralSum = Clamp(s.IntegralSum, -s.MaxIntegral, s.MaxIntegral);
+
+                        float brakeFactor = Math.Abs(rateError) > s.TargetUPM * s.BrakePoint / 100.0f
+                            ? FastAdjustValve
+                            : s.PIDslowAdjust / 100.0f * FastAdjustValve;
+
+                        float changeAmount = rateError * s.Kp * brakeFactor * 100.0f + s.IntegralSum;
+                        if (Math.Abs(changeAmount) < 0.1f)
+                            result = 0f;
+                        else
+                        {
+                            result = Clamp(Math.Abs(changeAmount) + s.MinPWM, s.MinPWM, s.MaxPWM);
+                            result *= changeAmount >= 0f ? 1f : -1f;
+                        }
+                    }
+                    else { result = 0f; s.IntegralSum = 0f; }
+                }
+            }
+            else { s.IntegralSum = 0; result = 0; }
+            s.LastPWM = result;
+            return result;
+        }
+
+        private void ResetMod(int i)
+        {
+            var m = _mod[i]; var s = m.Sensor;
+            m.ValvePos = 0; m.AccQty = 0; m.CmdRelays = 0;
+            s.TargetUPM = 0; s.MeterCal = 0; s.MasterOn = false; s.AutoOn = false;
+            s.CommTime = DateTime.MinValue;
+            s.PWM = 0; s.LastPWM = 0; s.IntegralSum = 0;
+            s.Hz = 0; s.UPM = 0;
+            s.ErrorIsPositive = true;
+            s.LastPIDCheck = DateTime.MinValue;
+        }
+
+        private void SaveSettings()
+        {
+            try
+            {
+                string dir = Path.GetDirectoryName(ConfigPath);
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+                var lines = new System.Collections.Generic.List<string>
+                {
+                    "Subnet=" + txtSubnet.Text.Trim(),
+                };
+                if (WindowState == FormWindowState.Normal)
+                {
+                    lines.Add("Left=" + Left);
+                    lines.Add("Top=" + Top);
+                }
+                for (int i = 0; i < 2; i++)
+                {
+                    string p = i + ".";
+                    lines.Add(p + "ModuleID=" + nudModuleID[i].Value);
+                    lines.Add(p + "SensorID=" + nudSensorID[i].Value);
+                    lines.Add(p + "MaxHz=" + nudMaxHz[i].Value);
+                    lines.Add(p + "Noise=" + nudNoise[i].Value);
+                    lines.Add(p + "ValveLag=" + nudValveLag[i].Value);
+                    lines.Add(p + "WheelSpeed=" + nudWheelSpeed[i].Value);
+                    lines.Add(p + "Pressure=" + nudPressure[i].Value);
+                    lines.Add(p + "WorkSwitch=" + (ckWorkSwitch[i].Checked ? "1" : "0"));
+                }
+                lines.Add("1.Enabled=" + (ckEnable.Checked ? "1" : "0"));
+                File.WriteAllLines(ConfigPath, lines);
+            }
+            catch { }
+        }
+
+        private void SendPGN32400(int i, byte modId, byte senId)
+        {
+            var s = _mod[i].Sensor;
+            byte[] d = new byte[15];
+            d[0] = HDR32400_LO; d[1] = HDR32400_HI;
+            d[2] = (byte)((modId << 4) | (senId & 0x0F));
+            int r = (int)(s.UPM * 1000.0);
+            d[3] = (byte)r; d[4] = (byte)(r >> 8); d[5] = (byte)(r >> 16);
+            int q = (int)(_mod[i].AccQty * 10.0);
+            d[6] = (byte)q; d[7] = (byte)(q >> 8); d[8] = (byte)(q >> 16);
+            int pwm = (int)s.PWM;
+            d[9] = (byte)pwm; d[10] = (byte)(pwm >> 8);
+            d[11] = 0x01;
+            int hz = (int)(s.Hz * 10.0);
+            d[12] = (byte)hz; d[13] = (byte)(hz >> 8);
+            d[14] = CalcCRC(d, 14);
+            UdpSend(d);
+        }
+
+        // ── PGN senders ──────────────────────────────────────────────────────────
+        private void SendPGN32401(int i, byte modId)
+        {
+            byte[] d = new byte[15];
+            d[0] = HDR32401_LO; d[1] = HDR32401_HI;
+            d[2] = modId;
+            ushort pressure = (ushort)nudPressure[i].Value;
+            d[3] = (byte)pressure; d[4] = (byte)(pressure >> 8);
+            ushort ws = (ushort)((double)nudWheelSpeed[i].Value * 10.0);
+            d[5] = (byte)ws; d[6] = (byte)(ws >> 8);
+            d[7] = d[8] = d[9] = 0;
+            d[10] = INO_TYPE;
+            d[11] = (byte)(INO_ID & 0xFF);
+            d[12] = (byte)(INO_ID >> 8);
+            d[13] = 0b0011_0000;
+            if (ckWorkSwitch[i].Checked) d[13] |= 0x01;
+            d[14] = CalcCRC(d, 14);
+            UdpSend(d);
+        }
+
+        // ── Send tick (200 ms) ────────────────────────────────────────────────────
+        private void sendTimer_Tick(object sender, EventArgs e)
         {
             for (int i = 0; i < 2; i++)
-                if (ModuleActive(i) && (int)nudModuleID[i].Value == moduleId)
-                    return i;
-            return -1;
+            {
+                if (!ModuleActive(i)) continue;
+                _mod[i].AccQty += _mod[i].Sensor.UPM * (200.0 / 60000.0);
+                SendPGN32401(i, (byte)nudModuleID[i].Value);
+                SendPGN32400(i, (byte)nudModuleID[i].Value, (byte)nudSensorID[i].Value);
+            }
+        }
+
+        // ── SetSensorsEnabled ─────────────────────────────────────────────────────
+        private void SetSensorsEnabled(int i, DateTime now)
+        {
+            var s = _mod[i].Sensor;
+            bool result = false;
+            if (s.CommTime != DateTime.MinValue && (now - s.CommTime).TotalSeconds < 5.0)
+            {
+                if (s.TargetUPM > 0 && s.MasterOn) result = true;
+                else if (s.MasterOn && !s.AutoOn) result = true;
+            }
+            s.FlowEnabled = result;
+        }
+
+        private void SetStatus(string text, Color color)
+        {
+            lblStatus.Text = text;
+            lblStatus.ForeColor = color;
+        }
+
+        // ── SimulateFlow ──────────────────────────────────────────────────────────
+        private void SimulateFlow(int i, double dt)
+        {
+            var s = _mod[i].Sensor;
+            bool relaysActive = _mod[i].CmdRelays > 0;
+
+            if (!s.FlowEnabled || !relaysActive)
+            {
+                _mod[i].ValvePos = 0;
+                s.Hz = 0;
+            }
+            else
+            {
+                double travelTime = Math.Max(0.1, (double)nudValveLag[i].Value / 1000.0);
+                double maxRate = 255.0 / travelTime;
+                double speed = s.MaxPWM > 0 ? (s.PWM / s.MaxPWM) * maxRate * dt : 0;
+                _mod[i].ValvePos = Math.Max(0.0, Math.Min(255.0, _mod[i].ValvePos + speed));
+
+                double maxHz = (double)nudMaxHz[i].Value;
+                double idealHz = (_mod[i].ValvePos / 255.0) * maxHz;
+                double u = _rng.NextDouble() + _rng.NextDouble() - 1.0;
+                double noise = (double)nudNoise[i].Value / 100.0;
+                s.Hz = (float)(Math.Max(0.0, idealHz + idealHz * noise * u) * 0.8 + s.Hz * 0.2);
+            }
+            s.UPM = s.MeterCal > 0 ? (float)(60.0 * s.Hz / s.MeterCal) : 0f;
+        }
+
+        private void Start()
+        {
+            if (_running) return;
+            try
+            {
+                _lastLoopTime = DateTime.MinValue;
+                for (int i = 0; i < 2; i++) ResetMod(i);
+                UpdateCommandLabels(0);
+                UpdateCommandLabels(1);
+
+                _sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                _sendSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+                _sendSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
+
+                _recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                _recvSocket.Bind(new IPEndPoint(IPAddress.Any, MOD_LISTEN_PORT));
+                BeginReceive();
+
+                _running = true;
+                loopTimer.Start();
+                sendTimer.Start();
+                SetStatus("Running", Color.Green);
+                UpdateUI();
+            }
+            catch (Exception ex)
+            {
+                SetStatus("Error: " + ex.Message, Color.Red);
+                CleanupSockets();
+            }
+        }
+
+        private void Stop()
+        {
+            if (!_running) return;
+            _running = false;
+            loopTimer.Stop();
+            sendTimer.Stop();
+            CleanupSockets();
+            SetStatus("Stopped", Color.Gray);
+            UpdateUI();
+        }
+
+        private void UdpSend(byte[] data)
+        {
+            if (_sendSocket == null) return;
+            try
+            {
+                string subnet = txtSubnet.Text.Trim().TrimEnd('.');
+                string[] parts = subnet.Split('.');
+                string bc = parts.Length >= 3
+                    ? $"{parts[0]}.{parts[1]}.{parts[2]}.255"
+                    : "255.255.255.255";
+                _sendSocket.SendTo(data, new IPEndPoint(IPAddress.Parse(bc), RC_LISTEN_PORT));
+            }
+            catch { }
         }
 
         // ── UI helpers ────────────────────────────────────────────────────────────
@@ -662,6 +704,19 @@ namespace ModuleSimulator
             char[] bits = Convert.ToString(_mod[i].CmdRelays, 2).PadLeft(16, '0').ToCharArray();
             Array.Reverse(bits);
             lblCmdRelays[i].Text = new string(bits);
+        }
+
+        // ── UpdatePWM ─────────────────────────────────────────────────────────────
+        private void UpdatePWM(int i, DateTime now)
+        {
+            var s = _mod[i].Sensor;
+            if (s.AutoOn)
+                s.PWM = PIDvalve(s, now);
+            else if (s.FlowEnabled)
+                s.PWM = Math.Sign(s.ManualAdjust)
+                        * Math.Min(Math.Abs((float)s.ManualAdjust), s.MaxPWM);
+            else
+                s.PWM = 0;
         }
 
         private void UpdateSimDisplay()
@@ -691,34 +746,33 @@ namespace ModuleSimulator
             }
         }
 
-        private void SetStatus(string text, Color color)
+        private class ModState
         {
-            lblStatus.Text = text;
-            lblStatus.ForeColor = color;
+            public readonly SensorState Sensor = new SensorState();
+            public double AccQty;
+            public ushort CmdRelays;
+            public double ValvePos;
         }
 
-        private void btnResetQty_Click(object sender, EventArgs e)
+        // ── Per-module simulation state ───────────────────────────────────────────
+        private class SensorState
         {
-            for (int i = 0; i < 2; i++)
-                if (sender == btnResetQty[i]) { _mod[i].AccQty = 0; return; }
+            public int BrakePoint = 20, PIDslowAdjust = 50, SlewRate = 20, PIDtime = 100;
+            public DateTime CommTime = DateTime.MinValue;
+            public int ControlType;
+            public float Deadband = 0.05f;
+            public bool ErrorIsPositive = true;
+            public bool FlowEnabled;
+            public float Hz, UPM;
+            public float Ki = 0f;
+            public float Kp = (float)Math.Pow(1.1, 100 - 120);
+            public DateTime LastPIDCheck = DateTime.MinValue;
+            public short ManualAdjust;
+            public bool MasterOn, AutoOn;
+            public float MaxIntegral = 2.0f;
+            public float MaxPWM = 200f, MinPWM = 10f;
+            public float PWM, LastPWM, IntegralSum;
+            public float TargetUPM, MeterCal;
         }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            SaveSettings();
-            Stop();
-            base.OnFormClosing(e);
-        }
-
-        private void EnsureOnScreen()
-        {
-            foreach (Screen s in Screen.AllScreens)
-                if (s.WorkingArea.Contains(new System.Drawing.Point(Left + 20, Top + 20))) return;
-            Left = Screen.PrimaryScreen.WorkingArea.Left + 40;
-            Top = Screen.PrimaryScreen.WorkingArea.Top + 40;
-        }
-
-        private static float Clamp(float v, float mn, float mx) => Math.Max(mn, Math.Min(mx, v));
-        private static decimal Clamp(decimal v, decimal mn, decimal mx) => Math.Max(mn, Math.Min(mx, v));
     }
 }
