@@ -20,10 +20,10 @@ IRAM_ATTR void PulseISR(uint8_t ID,uint32_t ReadTime)
 
 		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)			
 		{
-			PulseCount[ID]++;
+			PulseCount[ID]=PulseCount[ID]+1;
 			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
 			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
-			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
+			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]=SamplesCount[ID]+1;
 		}
 	}
 }

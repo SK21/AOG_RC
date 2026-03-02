@@ -200,8 +200,8 @@ bool ADSfound = false;
 bool GoodPins;	// pin configuration correct
 
 float TimedCombo(byte, bool);	// function prototype
-void IRAM_ATTR ISR0();		// function prototype
-void IRAM_ATTR ISR1();
+void  ISR0();		// function prototype
+void  ISR1();
 
 uint8_t DisconnectCount = 0;
 

@@ -21,10 +21,10 @@ IRAM_ATTR void ISR_Speed()
 	if (PulseTimeWhl > PulseMinWhl && PulseTimeWhl < PulseMaxWhl)
 	{
 		// valid pulses
-		PulseCountWhl++;
+		PulseCountWhl = PulseCountWhl + 1;
 		SamplesWhl[SamplesIndexWhl] = PulseTimeWhl;
 		SamplesIndexWhl = (SamplesIndexWhl + 1) % PulseSampleSizeWhl;
-		if (SamplesCountWhl < PulseSampleSizeWhl) SamplesCountWhl++;
+		if (SamplesCountWhl < PulseSampleSizeWhl) SamplesCountWhl = SamplesCountWhl + 1;
 	}
 }
 
