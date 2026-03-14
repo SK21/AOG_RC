@@ -51,7 +51,21 @@
       "Bash(.build_gateway.bat)",
       "Bash(powershell.exe -Command \"Get-ChildItem ''C:\\\\Program Files\\\\Microsoft Visual Studio\\\\'' -ErrorAction SilentlyContinue\")",
       "Bash(powershell.exe -Command \"Set-Location ''F:\\\\Documents\\\\GitHub\\\\RateControl\\\\Gateway\\\\IsobusGateway''; & .\\\\build_gateway.bat 2>&1\")",
-      "Bash(powershell.exe:*)"
+      "Bash(powershell.exe:*)",
+      "Bash(for file:*)",
+      "Bash(do echo:*)",
+      "Read(//f/Documents/GitHub/RateControl/AOG_RC/**)",
+      "Bash(hexdump:*)",
+      "Bash(grep -v '^$')",
+      "Bash(iconv -f UTF-16LE -t UTF-8)",
+      "Bash(grep -E '[a-zA-Z]{2,}')",
+      "Bash(cd:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(perl:*)",
+      "Bash(where pandoc:*)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/CoxDa/AppData/Local/**)"
     ]
   }
 }
