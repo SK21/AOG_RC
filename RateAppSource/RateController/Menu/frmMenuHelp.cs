@@ -70,7 +70,7 @@ namespace RateController.Menu
 
         private void butActivity_Click(object sender, EventArgs e)
         {
-            if (!Props.ShowLog("Activity Log.txt"))
+            if (!Props.ShowFile("Activity Log.txt"))
             {
                 Props.ShowMessage("File not found.");
             }
@@ -78,7 +78,7 @@ namespace RateController.Menu
 
         private void butErrors_Click(object sender, EventArgs e)
         {
-            if (!Props.ShowLog("Error Log.txt"))
+            if (!Props.ShowFile("Error Log.txt"))
             {
                 Props.ShowMessage("File not found.");
             }
@@ -102,7 +102,7 @@ namespace RateController.Menu
         private void butNet_Click(object sender, EventArgs e)
         {
             Core.UDPmodules.UpdateLog();
-            if (!Props.ShowLog("Ethernet Log.txt"))
+            if (!Props.ShowFile("Ethernet Log.txt"))
             {
                 Props.ShowMessage("File not found.");
             }
@@ -248,6 +248,14 @@ namespace RateController.Menu
         private void VisitLink(string Link)
         {
             System.Diagnostics.Process.Start(Link);
+        }
+
+        private void btnUserManual_Click(object sender, EventArgs e)
+        {
+            if (!Props.ShowFile("RateController User Manual.pdf", AppDomain.CurrentDomain.BaseDirectory))
+            {
+                Props.ShowMessage("File not found.");
+            }
         }
     }
 }

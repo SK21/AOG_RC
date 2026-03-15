@@ -72,12 +72,12 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "27-Feb-2026";
+        private static string cAppDate = "17-Mar-2026";
         private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.3.0";
+        private static string cAppVersion = "4.3.1";
         private static bool cCanEnabled = false;
         private static string cCanPort = "COM7";
         private static CanDriver cCurrentCanDriver = CanDriver.SLCAN;
@@ -1124,12 +1124,21 @@ namespace RateController.Classes
             }
         }
 
-        public static bool ShowLog(string FileName)
+        public static bool ShowFile(string FileName, string Location = null)
         {
             bool Result = false;
             try
             {
-                string Name = cApplicationFolder + "\\" + FileName;
+                string Name = "";
+                if (Location == null)
+                {
+                    Name = cApplicationFolder + "\\" + FileName;
+                }
+                else
+                {
+                    Name = Location + "\\" + FileName;
+                }
+
                 if (File.Exists(Name))
                 {
                     Process.Start(new ProcessStartInfo(Name) { UseShellExecute = true });
@@ -1138,7 +1147,7 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                WriteErrorLog("Tools: OpenTextFile: " + ex.Message);
+                WriteErrorLog("Tools: OpenFile: " + ex.Message);
             }
             return Result;
         }

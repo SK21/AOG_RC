@@ -37,12 +37,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tbEthernet = new System.Windows.Forms.TextBox();
-            this.btnStart = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.PCBsLink = new System.Windows.Forms.LinkLabel();
-            this.butActivity = new System.Windows.Forms.Button();
-            this.butErrors = new System.Windows.Forms.Button();
-            this.butGraph = new System.Windows.Forms.Button();
             this.lbTime = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lbModID = new System.Windows.Forms.Label();
@@ -57,18 +53,23 @@
             this.lbDate = new System.Windows.Forms.Label();
             this.lbVersion = new System.Windows.Forms.Label();
             this.lbAppVersion = new System.Windows.Forms.Label();
-            this.butNet = new System.Windows.Forms.Button();
-            this.ModuleIndicator = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.butVersion = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.lbLon = new System.Windows.Forms.Label();
             this.lbLat = new System.Windows.Forms.Label();
-            this.btnRight = new System.Windows.Forms.Button();
-            this.btnLeft = new System.Windows.Forms.Button();
             this.PCBsetupLink = new System.Windows.Forms.LinkLabel();
             this.AppLink = new System.Windows.Forms.LinkLabel();
+            this.btnUserManual = new System.Windows.Forms.Button();
+            this.btnRight = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.butVersion = new System.Windows.Forms.Button();
+            this.ModuleIndicator = new System.Windows.Forms.Label();
+            this.butNet = new System.Windows.Forms.Button();
+            this.butGraph = new System.Windows.Forms.Button();
+            this.butErrors = new System.Windows.Forms.Button();
+            this.butActivity = new System.Windows.Forms.Button();
+            this.btnStart = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label12
@@ -158,24 +159,6 @@
             this.tbEthernet.Size = new System.Drawing.Size(307, 265);
             this.tbEthernet.TabIndex = 253;
             // 
-            // btnStart
-            // 
-            this.btnStart.BackColor = System.Drawing.Color.Transparent;
-            this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnStart.FlatAppearance.BorderSize = 0;
-            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnStart.Image = global::RateController.Properties.Resources.Pause;
-            this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(452, 600);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(6);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(70, 63);
-            this.btnStart.TabIndex = 0;
-            this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnStart.UseVisualStyleBackColor = false;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -184,70 +167,13 @@
             // PCBsLink
             // 
             this.PCBsLink.AutoSize = true;
-            this.PCBsLink.Location = new System.Drawing.Point(384, 533);
+            this.PCBsLink.Location = new System.Drawing.Point(380, 471);
             this.PCBsLink.Name = "PCBsLink";
             this.PCBsLink.Size = new System.Drawing.Size(125, 24);
             this.PCBsLink.TabIndex = 262;
             this.PCBsLink.TabStop = true;
             this.PCBsLink.Text = "Module PCBs";
             this.PCBsLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PCBsLink_Clicked);
-            // 
-            // butActivity
-            // 
-            this.butActivity.BackColor = System.Drawing.Color.Transparent;
-            this.butActivity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butActivity.FlatAppearance.BorderSize = 0;
-            this.butActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butActivity.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butActivity.Image = global::RateController.Properties.Resources.file_text;
-            this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butActivity.Location = new System.Drawing.Point(181, 595);
-            this.butActivity.Margin = new System.Windows.Forms.Padding(6);
-            this.butActivity.Name = "butActivity";
-            this.butActivity.Size = new System.Drawing.Size(81, 72);
-            this.butActivity.TabIndex = 264;
-            this.butActivity.Text = "Activity";
-            this.butActivity.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.butActivity.UseVisualStyleBackColor = false;
-            this.butActivity.Click += new System.EventHandler(this.butActivity_Click);
-            // 
-            // butErrors
-            // 
-            this.butErrors.BackColor = System.Drawing.Color.Transparent;
-            this.butErrors.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butErrors.FlatAppearance.BorderSize = 0;
-            this.butErrors.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butErrors.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butErrors.Image = global::RateController.Properties.Resources.file_text;
-            this.butErrors.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.butErrors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butErrors.Location = new System.Drawing.Point(267, 595);
-            this.butErrors.Margin = new System.Windows.Forms.Padding(6);
-            this.butErrors.Name = "butErrors";
-            this.butErrors.Size = new System.Drawing.Size(81, 72);
-            this.butErrors.TabIndex = 265;
-            this.butErrors.Text = "Errors";
-            this.butErrors.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.butErrors.UseVisualStyleBackColor = false;
-            this.butErrors.Click += new System.EventHandler(this.butErrors_Click);
-            // 
-            // butGraph
-            // 
-            this.butGraph.BackColor = System.Drawing.Color.Transparent;
-            this.butGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butGraph.FlatAppearance.BorderSize = 0;
-            this.butGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butGraph.Image = global::RateController.Properties.Resources.Chart;
-            this.butGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butGraph.Location = new System.Drawing.Point(9, 595);
-            this.butGraph.Margin = new System.Windows.Forms.Padding(6);
-            this.butGraph.Name = "butGraph";
-            this.butGraph.Size = new System.Drawing.Size(81, 72);
-            this.butGraph.TabIndex = 266;
-            this.butGraph.UseVisualStyleBackColor = false;
-            this.butGraph.Click += new System.EventHandler(this.butGraph_Click);
             // 
             // lbTime
             // 
@@ -397,37 +323,6 @@
             this.lbAppVersion.Text = "3.9.0-beta.1";
             this.lbAppVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // butNet
-            // 
-            this.butNet.BackColor = System.Drawing.Color.Transparent;
-            this.butNet.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butNet.FlatAppearance.BorderSize = 0;
-            this.butNet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butNet.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butNet.Image = global::RateController.Properties.Resources.file_text;
-            this.butNet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.butNet.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butNet.Location = new System.Drawing.Point(353, 595);
-            this.butNet.Margin = new System.Windows.Forms.Padding(6);
-            this.butNet.Name = "butNet";
-            this.butNet.Size = new System.Drawing.Size(94, 72);
-            this.butNet.TabIndex = 281;
-            this.butNet.Text = "Network";
-            this.butNet.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.butNet.UseVisualStyleBackColor = false;
-            this.butNet.Click += new System.EventHandler(this.butNet_Click);
-            // 
-            // ModuleIndicator
-            // 
-            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
-            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(275, 558);
-            this.ModuleIndicator.Name = "ModuleIndicator";
-            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
-            this.ModuleIndicator.TabIndex = 283;
-            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // label13
             // 
             this.label13.AutoSize = true;
@@ -438,25 +333,6 @@
             this.label13.Size = new System.Drawing.Size(95, 23);
             this.label13.TabIndex = 282;
             this.label13.Text = "SwitchBox";
-            // 
-            // butVersion
-            // 
-            this.butVersion.BackColor = System.Drawing.Color.Transparent;
-            this.butVersion.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.butVersion.FlatAppearance.BorderSize = 0;
-            this.butVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.butVersion.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.butVersion.Image = global::RateController.Properties.Resources.file_cloud;
-            this.butVersion.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.butVersion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butVersion.Location = new System.Drawing.Point(95, 595);
-            this.butVersion.Margin = new System.Windows.Forms.Padding(6);
-            this.butVersion.Name = "butVersion";
-            this.butVersion.Size = new System.Drawing.Size(81, 72);
-            this.butVersion.TabIndex = 285;
-            this.butVersion.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.butVersion.UseVisualStyleBackColor = false;
-            this.butVersion.Click += new System.EventHandler(this.butVersion_Click);
             // 
             // label14
             // 
@@ -502,6 +378,48 @@
             this.lbLat.Text = "0";
             this.lbLat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // PCBsetupLink
+            // 
+            this.PCBsetupLink.AutoSize = true;
+            this.PCBsetupLink.Location = new System.Drawing.Point(380, 440);
+            this.PCBsetupLink.Name = "PCBsetupLink";
+            this.PCBsetupLink.Size = new System.Drawing.Size(93, 24);
+            this.PCBsetupLink.TabIndex = 292;
+            this.PCBsetupLink.TabStop = true;
+            this.PCBsetupLink.Text = "PCBsetup";
+            this.PCBsetupLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PCBsetupLink_LinkClicked);
+            // 
+            // AppLink
+            // 
+            this.AppLink.AutoSize = true;
+            this.AppLink.Location = new System.Drawing.Point(380, 409);
+            this.AppLink.Name = "AppLink";
+            this.AppLink.Size = new System.Drawing.Size(88, 24);
+            this.AppLink.TabIndex = 294;
+            this.AppLink.TabStop = true;
+            this.AppLink.Text = "AOG_RC";
+            this.AppLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AppLink_LinkClicked);
+            // 
+            // btnUserManual
+            // 
+            this.btnUserManual.BackColor = System.Drawing.Color.Transparent;
+            this.btnUserManual.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnUserManual.FlatAppearance.BorderSize = 0;
+            this.btnUserManual.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUserManual.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnUserManual.Image = global::RateController.Properties.Resources.book_open_text;
+            this.btnUserManual.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnUserManual.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnUserManual.Location = new System.Drawing.Point(8, 595);
+            this.btnUserManual.Margin = new System.Windows.Forms.Padding(6);
+            this.btnUserManual.Name = "btnUserManual";
+            this.btnUserManual.Size = new System.Drawing.Size(94, 72);
+            this.btnUserManual.TabIndex = 295;
+            this.btnUserManual.Text = "Manual";
+            this.btnUserManual.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnUserManual.UseVisualStyleBackColor = false;
+            this.btnUserManual.Click += new System.EventHandler(this.btnUserManual_Click);
+            // 
             // btnRight
             // 
             this.btnRight.BackColor = System.Drawing.Color.Transparent;
@@ -532,33 +450,137 @@
             this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
-            // PCBsetupLink
+            // butVersion
             // 
-            this.PCBsetupLink.AutoSize = true;
-            this.PCBsetupLink.Location = new System.Drawing.Point(384, 502);
-            this.PCBsetupLink.Name = "PCBsetupLink";
-            this.PCBsetupLink.Size = new System.Drawing.Size(93, 24);
-            this.PCBsetupLink.TabIndex = 292;
-            this.PCBsetupLink.TabStop = true;
-            this.PCBsetupLink.Text = "PCBsetup";
-            this.PCBsetupLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PCBsetupLink_LinkClicked);
+            this.butVersion.BackColor = System.Drawing.Color.Transparent;
+            this.butVersion.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butVersion.FlatAppearance.BorderSize = 0;
+            this.butVersion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butVersion.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butVersion.Image = global::RateController.Properties.Resources.file_cloud;
+            this.butVersion.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.butVersion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butVersion.Location = new System.Drawing.Point(366, 595);
+            this.butVersion.Margin = new System.Windows.Forms.Padding(6);
+            this.butVersion.Name = "butVersion";
+            this.butVersion.Size = new System.Drawing.Size(81, 72);
+            this.butVersion.TabIndex = 285;
+            this.butVersion.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.butVersion.UseVisualStyleBackColor = false;
+            this.butVersion.Click += new System.EventHandler(this.butVersion_Click);
             // 
-            // AppLink
+            // ModuleIndicator
             // 
-            this.AppLink.AutoSize = true;
-            this.AppLink.Location = new System.Drawing.Point(384, 471);
-            this.AppLink.Name = "AppLink";
-            this.AppLink.Size = new System.Drawing.Size(88, 24);
-            this.AppLink.TabIndex = 294;
-            this.AppLink.TabStop = true;
-            this.AppLink.Text = "AOG_RC";
-            this.AppLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AppLink_LinkClicked);
+            this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
+            this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
+            this.ModuleIndicator.Location = new System.Drawing.Point(275, 558);
+            this.ModuleIndicator.Name = "ModuleIndicator";
+            this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
+            this.ModuleIndicator.TabIndex = 283;
+            this.ModuleIndicator.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // butNet
+            // 
+            this.butNet.BackColor = System.Drawing.Color.Transparent;
+            this.butNet.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butNet.FlatAppearance.BorderSize = 0;
+            this.butNet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butNet.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butNet.Image = global::RateController.Properties.Resources.file_text;
+            this.butNet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.butNet.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butNet.Location = new System.Drawing.Point(270, 595);
+            this.butNet.Margin = new System.Windows.Forms.Padding(6);
+            this.butNet.Name = "butNet";
+            this.butNet.Size = new System.Drawing.Size(94, 72);
+            this.butNet.TabIndex = 281;
+            this.butNet.Text = "Network";
+            this.butNet.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.butNet.UseVisualStyleBackColor = false;
+            this.butNet.Click += new System.EventHandler(this.butNet_Click);
+            // 
+            // butGraph
+            // 
+            this.butGraph.BackColor = System.Drawing.Color.Transparent;
+            this.butGraph.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butGraph.FlatAppearance.BorderSize = 0;
+            this.butGraph.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butGraph.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butGraph.Image = global::RateController.Properties.Resources.Chart;
+            this.butGraph.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butGraph.Location = new System.Drawing.Point(366, 511);
+            this.butGraph.Margin = new System.Windows.Forms.Padding(6);
+            this.butGraph.Name = "butGraph";
+            this.butGraph.Size = new System.Drawing.Size(81, 72);
+            this.butGraph.TabIndex = 266;
+            this.butGraph.UseVisualStyleBackColor = false;
+            this.butGraph.Click += new System.EventHandler(this.butGraph_Click);
+            // 
+            // butErrors
+            // 
+            this.butErrors.BackColor = System.Drawing.Color.Transparent;
+            this.butErrors.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butErrors.FlatAppearance.BorderSize = 0;
+            this.butErrors.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butErrors.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butErrors.Image = global::RateController.Properties.Resources.file_text;
+            this.butErrors.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.butErrors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butErrors.Location = new System.Drawing.Point(104, 595);
+            this.butErrors.Margin = new System.Windows.Forms.Padding(6);
+            this.butErrors.Name = "butErrors";
+            this.butErrors.Size = new System.Drawing.Size(81, 72);
+            this.butErrors.TabIndex = 265;
+            this.butErrors.Text = "Errors";
+            this.butErrors.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.butErrors.UseVisualStyleBackColor = false;
+            this.butErrors.Click += new System.EventHandler(this.butErrors_Click);
+            // 
+            // butActivity
+            // 
+            this.butActivity.BackColor = System.Drawing.Color.Transparent;
+            this.butActivity.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.butActivity.FlatAppearance.BorderSize = 0;
+            this.butActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butActivity.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.butActivity.Image = global::RateController.Properties.Resources.file_text;
+            this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.butActivity.Location = new System.Drawing.Point(187, 595);
+            this.butActivity.Margin = new System.Windows.Forms.Padding(6);
+            this.butActivity.Name = "butActivity";
+            this.butActivity.Size = new System.Drawing.Size(81, 72);
+            this.butActivity.TabIndex = 264;
+            this.butActivity.Text = "Activity";
+            this.butActivity.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.butActivity.UseVisualStyleBackColor = false;
+            this.butActivity.Click += new System.EventHandler(this.butActivity_Click);
+            // 
+            // btnStart
+            // 
+            this.btnStart.BackColor = System.Drawing.Color.Transparent;
+            this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnStart.FlatAppearance.BorderSize = 0;
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnStart.Image = global::RateController.Properties.Resources.Pause;
+            this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnStart.Location = new System.Drawing.Point(449, 600);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(6);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(70, 63);
+            this.btnStart.TabIndex = 0;
+            this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnStart.UseVisualStyleBackColor = false;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // frmMenuHelp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnUserManual);
             this.Controls.Add(this.AppLink);
             this.Controls.Add(this.PCBsetupLink);
             this.Controls.Add(this.btnRight);
@@ -652,5 +674,6 @@
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.LinkLabel PCBsetupLink;
         private System.Windows.Forms.LinkLabel AppLink;
+        private System.Windows.Forms.Button btnUserManual;
     }
 }
