@@ -99,10 +99,12 @@ namespace RateController
 
                 // initialize the receive socket
                 recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                recvSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 recvSocket.Bind(new IPEndPoint(IPAddress.Any, cReceivePort));
 
                 // initialize the send socket
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                sendSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
                 // Initialise the IPEndPoint for the server to send on port
                 IPEndPoint server = new IPEndPoint(IPAddress.Any, cSendFromPort);

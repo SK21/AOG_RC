@@ -65,7 +65,8 @@
       "Bash(perl:*)",
       "Bash(where pandoc:*)",
       "Read(//c/Program Files/**)",
-      "Read(//c/Users/CoxDa/AppData/Local/**)"
+      "Read(//c/Users/CoxDa/AppData/Local/**)",
+      "Bash(xargs head:*)"
     ]
   }
 }
