@@ -317,36 +317,29 @@ namespace RateController.RateMap
         {
             try
             {
-                var jobDir = System.IO.Directory.Exists(JobManager.CurrentMapPath)
-                    ? JobManager.CurrentMapPath
-                    : System.IO.Path.GetDirectoryName(JobManager.CurrentMapPath);
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
 
-                var fileNameOnly = System.IO.Path.GetFileName(filePath);
-                var jobFull = string.IsNullOrWhiteSpace(jobDir) ? null : System.IO.Path.Combine(jobDir, fileNameOnly);
+                string kmlFolder = ParcelManager.KmlFolder(job.FieldID);
+                string fileNameOnly = System.IO.Path.GetFileName(filePath);
+                string fieldFull = System.IO.Path.Combine(kmlFolder, fileNameOnly);
 
-                var overlay = kmlLayerManager.GetOverlay(jobFull ?? filePath);
+                var overlay = kmlLayerManager.GetOverlay(fieldFull);
                 if (overlay == null) return;
 
                 RemoveOverlay(overlay);
-                kmlLayerManager.Remove(jobFull ?? filePath);
+                kmlLayerManager.Remove(fieldFull);
 
-                var current = Props.GetProp("KmlJobFiles");
-                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
-                list.RemoveAll(p => string.Equals(p, fileNameOnly, StringComparison.OrdinalIgnoreCase));
-                Props.SetProp("KmlJobFiles", string.Join("|", list));
-
-                // Delete the physical KML in the job folder (safe delete)
-                if (!string.IsNullOrWhiteSpace(jobFull) &&
-                    System.IO.File.Exists(jobFull) &&
-                    Props.IsPathSafe(jobFull))
+                // Delete the physical KML in the field folder (safe delete)
+                if (System.IO.File.Exists(fieldFull) && Props.IsPathSafe(fieldFull))
                 {
                     try
                     {
-                        System.IO.File.Delete(jobFull);
+                        System.IO.File.Delete(fieldFull);
                     }
                     catch (Exception delEx)
                     {
-                        Props.WriteErrorLog("MapController/RemoveKmlLayer delete: " + delEx.Message);
+                        Props.WriteErrorLog("MapController/DeleteKmlLayer delete: " + delEx.Message);
                     }
                 }
 
@@ -355,7 +348,7 @@ namespace RateController.RateMap
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("MapController/RemoveKmlLayer: " + ex.Message);
+                Props.WriteErrorLog("MapController/DeleteKmlLayer: " + ex.Message);
             }
         }
 
@@ -420,6 +413,7 @@ namespace RateController.RateMap
 
             cRateCollector = new DataCollector();
             JobManager.JobChanged += JobManager_JobChanged;
+            FieldDataManager.Initialize();
             cState = MapState.Tracking;
 
             legendManager = new LegendManager(gmap);
@@ -465,6 +459,9 @@ namespace RateController.RateMap
                 ReloadJobKmls();
 
                 // elevation
+                string elevPath = FieldDataManager.SelectedElevationPath;
+                if (elevPath != null)
+                    ElevationCreator.LoadElevationFile(elevPath);
                 ElevationCreator.Build();
 
                 gmap.Refresh();
@@ -502,6 +499,25 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("MapController/RemoveLayer: " + ex.Message);
+            }
+        }
+
+        public static void SavePrescription(string filePath)
+        {
+            try
+            {
+                SaveMap(filePath);
+                Job job = JobManager.CurrentJob;
+                if (job != null && job.FieldID >= 0)
+                {
+                    string filename = System.IO.Path.GetFileName(filePath);
+                    ParcelManager.SetActivePrescription(job.FieldID, filename);
+                }
+                MapChanged?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/SavePrescription: " + ex.Message);
             }
         }
 
@@ -795,29 +811,16 @@ namespace RateController.RateMap
         {
             try
             {
-                var jobDir = JobManager.CurrentMapPath;
-                if (string.IsNullOrWhiteSpace(jobDir))
-                    return null;
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return null;
 
-                // If CurrentMapPath is a file, use its directory
-                if (!System.IO.Directory.Exists(jobDir))
-                    jobDir = System.IO.Path.GetDirectoryName(jobDir);
+                string kmlFolder = ParcelManager.KmlFolder(job.FieldID);
+                if (!System.IO.Directory.Exists(kmlFolder)) return null;
 
-                if (string.IsNullOrWhiteSpace(jobDir) || !System.IO.Directory.Exists(jobDir))
-                    return null;
-
-                var fileName = System.IO.Path.GetFileName(sourcePath);
-                var destPath = System.IO.Path.Combine(jobDir, fileName);
+                string fileName = System.IO.Path.GetFileName(sourcePath);
+                string destPath = System.IO.Path.Combine(kmlFolder, fileName);
 
                 System.IO.File.Copy(sourcePath, destPath, true);
-
-                var current = Props.GetProp("KmlJobFiles");
-                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
-                if (!list.Any(p => string.Equals(p, fileName, StringComparison.OrdinalIgnoreCase)))
-                {
-                    list.Add(fileName);
-                    Props.SetProp("KmlJobFiles", string.Join("|", list));
-                }
                 return destPath;
             }
             catch (Exception ex)
@@ -831,19 +834,14 @@ namespace RateController.RateMap
         {
             try
             {
-                var jobDir = JobManager.CurrentMapPath;
-                if (!System.IO.Directory.Exists(jobDir))
-                    jobDir = System.IO.Path.GetDirectoryName(jobDir);
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
 
-                var current = Props.GetProp("KmlJobFiles");
-                var list = new List<string>(string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
+                string kmlFolder = ParcelManager.KmlFolder(job.FieldID);
+                if (!System.IO.Directory.Exists(kmlFolder)) return;
 
-                foreach (var fname in list)
+                foreach (string full in System.IO.Directory.GetFiles(kmlFolder, "*.kml"))
                 {
-                    if (string.IsNullOrWhiteSpace(fname) || string.IsNullOrWhiteSpace(jobDir)) continue;
-                    var full = System.IO.Path.Combine(jobDir, fname);
-                    if (!System.IO.File.Exists(full)) continue;
-
                     var overlay = kmlLayerManager.LoadKml(full);
                     if (overlay != null) AddOverlay(overlay);
                 }
