@@ -12,6 +12,97 @@ namespace RateController.Classes
     {
         private static readonly string FilePath = Props.FieldNamesPath;
 
+        // ── Folder path helpers ───────────────────────────────────────────────
+
+        public static string FieldFolder(int id) =>
+            Path.Combine(Props.DefaultDir, "Fields", $"Field_{id}");
+
+        public static string MapsFolder(int id) =>
+            Path.Combine(FieldFolder(id), "Maps");
+
+        public static string YieldFolder(int id) =>
+            Path.Combine(FieldFolder(id), "Yield");
+
+        public static string ElevationFolder(int id) =>
+            Path.Combine(FieldFolder(id), "Elevation");
+
+        public static string KmlFolder(int id) =>
+            Path.Combine(FieldFolder(id), "Kml");
+
+        // ── Active dataset paths ──────────────────────────────────────────────
+
+        public static string ActiveMapPath(int id)
+        {
+            Parcel p = SearchParcel(id);
+            if (p == null || string.IsNullOrWhiteSpace(p.ActivePrescription)) return null;
+            string path = Path.Combine(MapsFolder(id), p.ActivePrescription);
+            return File.Exists(path) ? path : null;
+        }
+
+        public static string ActiveElevationPath(int id)
+        {
+            Parcel p = SearchParcel(id);
+            if (p == null || string.IsNullOrWhiteSpace(p.ActiveElevation)) return null;
+            string path = Path.Combine(ElevationFolder(id), p.ActiveElevation);
+            return File.Exists(path) ? path : null;
+        }
+
+        // ── Dataset file lists (filenames only, sorted descending) ────────────
+
+        public static List<string> GetPrescriptionFiles(int id) =>
+            GetFilenames(MapsFolder(id), "*.shp");
+
+        public static List<string> GetYieldFiles(int id) =>
+            GetFilenames(YieldFolder(id), "*.csv");
+
+        public static List<string> GetElevationFiles(int id) =>
+            GetFilenames(ElevationFolder(id), "*.csv");
+
+        // ── Folder creation ───────────────────────────────────────────────────
+
+        public static void EnsureFieldFolders(int id)
+        {
+            foreach (string dir in new[]
+            {
+                FieldFolder(id), MapsFolder(id), YieldFolder(id),
+                ElevationFolder(id), KmlFolder(id)
+            })
+            {
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            }
+        }
+
+        // ── Active dataset setters ────────────────────────────────────────────
+
+        public static void SetActivePrescription(int id, string filename)
+        {
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(x => x.ID == id);
+            if (p == null) return;
+            p.ActivePrescription = filename;
+            SaveParcels(parcels);
+        }
+
+        public static void SetActiveElevation(int id, string filename)
+        {
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(x => x.ID == id);
+            if (p == null) return;
+            p.ActiveElevation = filename;
+            SaveParcels(parcels);
+        }
+
+        // ── Private helpers ───────────────────────────────────────────────────
+
+        private static List<string> GetFilenames(string folder, string pattern)
+        {
+            if (!Directory.Exists(folder)) return new List<string>();
+            return Directory.GetFiles(folder, pattern)
+                .Select(Path.GetFileName)
+                .OrderByDescending(f => f)
+                .ToList();
+        }
+
         public static void AddParcel(Parcel NewParcel)
         {
             var mappings = GetParcels();
@@ -108,5 +199,7 @@ namespace RateController.Classes
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public string ActivePrescription { get; set; }
+        public string ActiveElevation { get; set; }
     }
 }
