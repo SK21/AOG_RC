@@ -41,9 +41,7 @@ namespace RateController.Classes
             {
                 if (!IsJobValid(SearchJob(Properties.Settings.Default.CurrentJob)))
                 {
-                    // select default job
                     CheckDefaultJob();
-                    Properties.Settings.Default.CurrentJob = 0;
                     Properties.Settings.Default.Save();
                 }
                 return Properties.Settings.Default.CurrentJob;
@@ -119,22 +117,12 @@ namespace RateController.Classes
 
         public static void CheckDefaultJob()
         {
-            lock (SyncLock)
+            // No auto-creation of a fieldless default job.
+            // Select the first valid job instead.
+            Job first = GetJobsList().FirstOrDefault(j => IsJobValid(j));
+            if (first != null)
             {
-                Job defaultJob = SearchJob(0);
-                if (defaultJob == null)
-                {
-                    defaultJob = new Job
-                    {
-                        ID = 0,
-                        Date = DateTime.Now,
-                        FieldID = -1,
-                        Name = "Default Job",
-                        Notes = ""
-                    };
-                    JobsList.Add(defaultJob);
-                    SaveJob(defaultJob);
-                }
+                Properties.Settings.Default.CurrentJob = first.ID;
             }
         }
 
@@ -337,6 +325,11 @@ namespace RateController.Classes
             cJobFilter = bool.TryParse(Props.GetAppProp("StickyJobFilter"), out bool jf) ? jf : true;
         }
 
+        public static bool HasFieldlessJobs
+        {
+            get { return GetJobsList().Any(j => j.FieldID < 0); }
+        }
+
         public static bool IsFieldIDUsed(int fieldID)
         {
             lock (SyncLock)
@@ -405,10 +398,11 @@ namespace RateController.Classes
 
         public static string MapPath(int JobID)
         {
-            string Result = null;
             Job JB = SearchJob(JobID);
-            if (JB != null) Result = Path.Combine(JB.JobFolder, "Map\\Job.shp");
-            return Result;
+            if (JB == null) return null;
+            string active = ParcelManager.ActiveMapPath(JB.FieldID);
+            if (active != null) return active;
+            return Path.Combine(ParcelManager.MapsFolder(JB.FieldID), "Zones.shp");
         }
 
         public static string RateDataPath(int JobID)
@@ -462,36 +456,30 @@ namespace RateController.Classes
                 string baseDir = cJobsFolder;
                 if (!string.IsNullOrEmpty(baseDir))
                 {
-                    string jobFolderName = $"Job_{job.ID}";
-                    string jobFolderPath = Path.Combine(baseDir, jobFolderName);
-                    if (!Directory.Exists(jobFolderPath))
-                    {
-                        Directory.CreateDirectory(jobFolderPath);
-                    }
-                    // Create a default rate data file.
+                    // Job folder
+                    string jobFolderPath = Path.Combine(baseDir, $"Job_{job.ID}");
+                    if (!Directory.Exists(jobFolderPath)) Directory.CreateDirectory(jobFolderPath);
+
+                    // RateData.csv
                     string rateDataFilePath = Path.Combine(jobFolderPath, "RateData.csv");
-                    if (!File.Exists(rateDataFilePath))
+                    if (!File.Exists(rateDataFilePath)) File.WriteAllText(rateDataFilePath, string.Empty);
+
+                    // JobData.txt
+                    string jobData = Path.Combine(jobFolderPath, JobDataName);
+                    if (!File.Exists(jobData)) File.WriteAllText(jobData, string.Empty);
+
+                    // Field folder structure + Zones.shp placeholder
+                    if (job.FieldID >= 0)
                     {
-                        File.WriteAllText(rateDataFilePath, string.Empty);
-                    }
-                    // Create Map folder and placeholder files.
-                    string mapFolderPath = Path.Combine(jobFolderPath, "Map");
-                    if (!Directory.Exists(mapFolderPath))
-                    {
-                        Directory.CreateDirectory(mapFolderPath);
-                    }
-                    string[] mapFiles = new string[] { ZoneShapeFileName + ".cpg", ZoneShapeFileName + ".dbf", ZoneShapeFileName + ".shp" };
-                    foreach (string fileName in mapFiles)
-                    {
-                        string filePath = Path.Combine(mapFolderPath, fileName);
-                        if (!File.Exists(filePath))
+                        ParcelManager.EnsureFieldFolders(job.FieldID);
+                        string mapsFolder = ParcelManager.MapsFolder(job.FieldID);
+                        string[] zoneFiles = { "Zones.cpg", "Zones.dbf", "Zones.shp" };
+                        foreach (string fileName in zoneFiles)
                         {
-                            File.WriteAllText(filePath, string.Empty);
+                            string filePath = Path.Combine(mapsFolder, fileName);
+                            if (!File.Exists(filePath)) File.WriteAllText(filePath, string.Empty);
                         }
                     }
-
-                    string JobData = Path.Combine(jobFolderPath, JobDataName);
-                    if (!File.Exists(JobData)) File.WriteAllText(JobData, string.Empty);
                 }
                 else
                 {
@@ -542,39 +530,14 @@ namespace RateController.Classes
             bool IsValid = false;
             try
             {
-                if (JobToCheck != null)
+                if (JobToCheck != null && JobToCheck.FieldID >= 0)
                 {
-                    // check file structure
-
-                    // job folder
-                    string jobFolderName = $"Job_{JobToCheck.ID}";
-                    string jobFolderPath = Path.Combine(cJobsFolder, jobFolderName);
+                    string jobFolderPath = Path.Combine(cJobsFolder, $"Job_{JobToCheck.ID}");
                     if (Directory.Exists(jobFolderPath))
                     {
-                        // rate data file
                         string rateDataFilePath = Path.Combine(jobFolderPath, "RateData.csv");
-                        if (File.Exists(rateDataFilePath))
-                        {
-                            // job data file
-                            string JobData = Path.Combine(jobFolderPath, JobDataName);
-                            if (File.Exists(JobData))
-                            {
-                                // map folder
-                                string mapFolderPath = Path.Combine(jobFolderPath, "Map");
-                                if (Directory.Exists(mapFolderPath))
-                                {
-                                    // map files
-                                    int Found = 0;
-                                    string[] mapFiles = new string[] { ZoneShapeFileName + ".cpg", ZoneShapeFileName + ".dbf", ZoneShapeFileName + ".shp" };
-                                    foreach (string fileName in mapFiles)
-                                    {
-                                        string filePath = Path.Combine(mapFolderPath, fileName);
-                                        if (File.Exists(filePath)) Found++;
-                                    }
-                                    IsValid = (Found == 3);
-                                }
-                            }
-                        }
+                        string jobDataPath = Path.Combine(jobFolderPath, JobDataName);
+                        IsValid = File.Exists(rateDataFilePath) && File.Exists(jobDataPath);
                     }
                 }
             }
