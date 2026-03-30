@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.RateMap
 {
@@ -126,7 +124,7 @@ namespace RateController.RateMap
                         }
 
                         List<double> AveYield = new List<double>();
-                        //Trail.DrawTrail(YieldOverlay, MinYield, MaxYield, out AveYield, true,true);
+                        Trail.DrawTrail(YieldOverlay, out AveYield, true, true);
 
                         MapController.AddOverlay(YieldOverlay);
                         gmap.Refresh();

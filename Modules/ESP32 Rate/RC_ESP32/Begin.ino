@@ -388,10 +388,10 @@ void DoSetup()
 	server.on("/hotspot-detect.html", HTTP_GET, []() { server.send(200, "text/html", "<html><body>Portal</body></html>"); });
 	server.on("/ncsi.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft NCSI"); });
 
-	// OTA
-	server.on("/myurl", HTTP_GET, []() {
+	// Register custom update page BEFORE ESP2SOTA so it takes priority (first registration wins)
+	server.on("/update", HTTP_GET, []() {
 		server.sendHeader("Connection", "close");
-		server.send(200, "text/plain", "Hello there!");
+		server.send(200, "text/html", GetPageUpdate());
 	});
 
 	server.begin();

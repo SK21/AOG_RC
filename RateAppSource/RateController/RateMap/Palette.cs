@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace RateController.RateMap
 {
@@ -23,11 +18,17 @@ namespace RateController.RateMap
 
         private static readonly Color[] YieldColors = new Color[]
         {
-            Color.FromArgb(215, 25, 28),    // Red - low yield
-            Color.FromArgb(253, 174, 97),   // Orange
-            Color.FromArgb(255, 255, 191),  // Yellow
-            Color.FromArgb(166, 217, 106),  // Light green
-            Color.FromArgb(26, 150, 65)     // Dark green - high yield
+            Color.Blue,     // lowest rate
+            Color.Green,    // low–moderate
+            Color.Yellow,   // moderate
+            Color.Orange,   // high
+            Color.Red       // highest rate
+
+            //Color.FromArgb(215, 25, 28),    // Red - low yield
+            //Color.FromArgb(253, 174, 97),   // Orange
+            //Color.FromArgb(255, 255, 191),  // Yellow
+            //Color.FromArgb(166, 217, 106),  // Light green
+            //Color.FromArgb(26, 150, 65)     // Dark green - high yield
         };
 
         public static Color GetColor(int index, bool IsYieldData = false, byte trns = ZoneTransparency)

@@ -164,6 +164,12 @@
       <DeploymentContent>true</DeploymentContent>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PgUpdate.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
