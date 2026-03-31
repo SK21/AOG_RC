@@ -1395,9 +1395,6 @@ namespace RateController.Forms
                         if (TractorIsMoving()) UpdatePosition();
                         break;
 
-                    case "tabField":
-                        UpdateFieldDataPanel();
-                        break;
                 }
                 tbLong.Enabled = !TractorIsMoving();
                 tbLat.Enabled = !TractorIsMoving();
@@ -1432,6 +1429,9 @@ namespace RateController.Forms
 
         private void UpdateFieldDataPanel()
         {
+            Initializing = true;
+            try
+            {
             Job job = JobManager.CurrentJob;
             Parcel parcel = job != null && job.FieldID >= 0 ? ParcelManager.SearchParcel(job.FieldID) : null;
 
@@ -1476,6 +1476,11 @@ namespace RateController.Forms
             string bakPath = parcel != null
                 ? Path.Combine(ParcelManager.ElevationFolder(job.FieldID), "Elevation.bak") : null;
             btnRestoreElevation.Visible = bakPath != null && File.Exists(bakPath);
+            }
+            finally
+            {
+                Initializing = false;
+            }
         }
 
         private void UpdateForm()

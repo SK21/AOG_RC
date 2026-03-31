@@ -112,5 +112,10 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
 Implementation branch: `FieldBased`
 
 ## Status
-Steps 1–5 complete. Steps 6–8 in progress (reordering: Step 7 before Step 6).
+All steps complete (2026-03-31).
+- Steps 1–5: completed in prior session.
+- Step 7 (frmMap Field tab): completed before Step 6; tab order Zones → Field → Data → Files → VR.
+- Step 6 (ElevationOverlayCreator): `LoadElevationFile()` added; `Build()` uses Readings only — no yield fallback. `UseSimulatedData` retained for testing.
+- Step 8 (frmMenuJobs): field required on save; first-run new-job mode; migration warning for fieldless jobs.
+- Step 26 dropped: `UseSimulatedData` kept as-is (false in production).
 Plan updated 2026-03-31: single elevation file (`Elevation.csv`), no ActiveElevation on Parcel, elevation extracted optionally from yield import.
