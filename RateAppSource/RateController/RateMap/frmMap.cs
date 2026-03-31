@@ -74,26 +74,205 @@ namespace RateController.Forms
 
         private void btnSaveAsNew_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                ParcelManager.EnsureFieldFolders(job.FieldID);
+                using (var dlg = new SaveFileDialog
+                {
+                    Title = "Save Prescription As",
+                    Filter = "Shapefile (*.shp)|*.shp",
+                    InitialDirectory = ParcelManager.MapsFolder(job.FieldID)
+                })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+                    MapController.SavePrescription(dlg.FileName);
+                    UpdateFieldDataPanel();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnSaveAsNew_Click: " + ex.Message);
+                Props.ShowMessage("Error saving prescription: " + ex.Message, "Save Prescription", 8000, true);
+            }
         }
 
         private void btnImportYield_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+
+                using (var dlg = new OpenFileDialog
+                {
+                    Title = "Import Yield File",
+                    Filter = "CSV files (*.csv)|*.csv",
+                    CheckFileExists = true
+                })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                    string destFolder = ParcelManager.YieldFolder(job.FieldID);
+                    ParcelManager.EnsureFieldFolders(job.FieldID);
+                    string destPath = Path.Combine(destFolder, Path.GetFileName(dlg.FileName));
+
+                    if (File.Exists(destPath))
+                    {
+                        using (var confirm = new frmMsgBox($"'{Path.GetFileName(destPath)}' already exists. Overwrite?", "Import Yield", true))
+                        {
+                            confirm.TopMost = true;
+                            confirm.ShowDialog();
+                            if (!confirm.Result) return;
+                        }
+                    }
+
+                    File.Copy(dlg.FileName, destPath, true);
+
+                    // Check for non-zero elevation data in the yield file
+                    bool hasElevation = false;
+                    string[] lines = File.ReadAllLines(dlg.FileName);
+                    for (int i = 1; i < lines.Length && !hasElevation; i++)
+                    {
+                        string[] parts = lines[i].Split(',');
+                        if (parts.Length >= 6 &&
+                            double.TryParse(parts[5], System.Globalization.NumberStyles.Number,
+                                System.Globalization.CultureInfo.InvariantCulture, out double el) &&
+                            Math.Abs(el) > 0.01)
+                        {
+                            hasElevation = true;
+                        }
+                    }
+
+                    if (hasElevation)
+                    {
+                        using (var ask = new frmMsgBox("Yield file contains elevation data. Extract to Elevation.csv?", "Import Yield", true))
+                        {
+                            ask.TopMost = true;
+                            ask.ShowDialog();
+                            if (ask.Result)
+                            {
+                                string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
+                                string elevPath = Path.Combine(elevFolder, "Elevation.csv");
+                                string bakPath = Path.Combine(elevFolder, "Elevation.bak");
+
+                                if (File.Exists(elevPath))
+                                    File.Copy(elevPath, bakPath, true);
+
+                                var sb = new System.Text.StringBuilder();
+                                sb.AppendLine("Lat,Lon,Elevation");
+                                for (int i = 1; i < lines.Length; i++)
+                                {
+                                    string[] parts = lines[i].Split(',');
+                                    if (parts.Length < 6) continue;
+                                    if (!double.TryParse(parts[1], System.Globalization.NumberStyles.Float,
+                                            System.Globalization.CultureInfo.InvariantCulture, out double lat)) continue;
+                                    if (!double.TryParse(parts[2], System.Globalization.NumberStyles.Float,
+                                            System.Globalization.CultureInfo.InvariantCulture, out double lon)) continue;
+                                    if (!double.TryParse(parts[5], System.Globalization.NumberStyles.Number,
+                                            System.Globalization.CultureInfo.InvariantCulture, out double el)) continue;
+                                    sb.AppendLine($"{lat.ToString(System.Globalization.CultureInfo.InvariantCulture)},{lon.ToString(System.Globalization.CultureInfo.InvariantCulture)},{el.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+                                }
+                                File.WriteAllText(elevPath, sb.ToString());
+                            }
+                        }
+                    }
+
+                    FieldDataManager.SetYieldPath(destPath);
+                    MapController.YieldCreator.LoadData(destPath);
+                    if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
+                    UpdateFieldDataPanel();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnImportYield_Click: " + ex.Message);
+                Props.ShowMessage("Error importing yield: " + ex.Message, "Import Yield", 8000, true);
+            }
         }
 
         private void btnImportElevation_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                using (var dlg = new OpenFileDialog
+                {
+                    Title = "Import Elevation File",
+                    Filter = "CSV files (*.csv)|*.csv",
+                    CheckFileExists = true
+                })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+                    ParcelManager.EnsureFieldFolders(job.FieldID);
+                    string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
+                    string elevPath = Path.Combine(elevFolder, "Elevation.csv");
+                    string bakPath = Path.Combine(elevFolder, "Elevation.bak");
+                    if (File.Exists(elevPath))
+                        File.Copy(elevPath, bakPath, true);
+                    File.Copy(dlg.FileName, elevPath, true);
+                    string ep = FieldDataManager.ElevationPath;
+                    if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
+                    if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                    UpdateFieldDataPanel();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnImportElevation_Click: " + ex.Message);
+                Props.ShowMessage("Error importing elevation: " + ex.Message, "Import Elevation", 8000, true);
+            }
         }
 
         private void btnRestoreElevation_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
+                string elevPath = Path.Combine(elevFolder, "Elevation.csv");
+                string bakPath = Path.Combine(elevFolder, "Elevation.bak");
+                if (!File.Exists(bakPath)) return;
+                if (File.Exists(elevPath))
+                    File.Delete(elevPath);
+                File.Move(bakPath, elevPath);
+                string ep = FieldDataManager.ElevationPath;
+                if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
+                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                UpdateFieldDataPanel();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnRestoreElevation_Click: " + ex.Message);
+                Props.ShowMessage("Error restoring elevation: " + ex.Message, "Restore Elevation", 8000, true);
+            }
         }
 
         private void cbPrescription_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (Initializing) return;
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbPrescription.SelectedItem as string;
+            ParcelManager.SetActivePrescription(job.FieldID, sel == "(none)" ? "" : sel);
+            MapController.LoadMap();
         }
 
         private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (Initializing) return;
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbYield.SelectedItem as string;
+            if (sel == null || sel == "(none)")
+                FieldDataManager.SetYieldPath(null);
+            else
+                FieldDataManager.SetYieldPath(Path.Combine(ParcelManager.YieldFolder(job.FieldID), sel));
+            MapController.YieldCreator.LoadData();
+            if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -240,64 +419,37 @@ namespace RateController.Forms
         {
             try
             {
-                // Resolve current job folder
-                var jobDir = System.IO.Directory.Exists(JobManager.CurrentMapPath)
-                    ? JobManager.CurrentMapPath
-                    : System.IO.Path.GetDirectoryName(JobManager.CurrentMapPath);
-
-                if (string.IsNullOrWhiteSpace(jobDir) || !System.IO.Directory.Exists(jobDir))
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0)
                 {
-                    Props.ShowMessage("Job folder not found.", "Delete KML", 6000, true);
+                    Props.ShowMessage("No field assigned to current job.", "Delete KML", 6000, true);
                     return;
                 }
 
-                // Load per-job KML list
-                var current = Props.GetProp("KmlJobFiles");
-                var list = new System.Collections.Generic.List<string>(
-                    string.IsNullOrWhiteSpace(current) ? Array.Empty<string>() : current.Split('|'));
-
-                if (list.Count == 0)
+                string kmlFolder = ParcelManager.KmlFolder(job.FieldID);
+                if (!Directory.Exists(kmlFolder) || Directory.GetFiles(kmlFolder, "*.kml").Length == 0)
                 {
-                    Props.ShowMessage("No KML files recorded for this job.", "Delete KML", 6000);
+                    Props.ShowMessage("No KML files found for this field.", "Delete KML", 6000);
                     return;
                 }
 
-                // Let user pick one of the job KMLs to delete
                 using (var dlg = new OpenFileDialog
                 {
-                    Title = "Select KML to delete (current job)",
+                    Title = "Select KML to delete",
                     Filter = "KML files (*.kml)|*.kml",
-                    InitialDirectory = jobDir,
+                    InitialDirectory = kmlFolder,
                     CheckFileExists = true
                 })
                 {
-                    // Pre-populate with first known KML to keep scope in job folder
-                    var first = list[0];
-                    var candidate = System.IO.Path.Combine(jobDir, first);
-                    if (System.IO.File.Exists(candidate))
-                    {
-                        dlg.FileName = candidate;
-                    }
-
                     if (dlg.ShowDialog() != DialogResult.OK) return;
 
-                    // Confirm
-                    using (var prompt = new frmMsgBox("Delete KML file from current job?", "Delete KML", true))
+                    using (var prompt = new frmMsgBox("Delete KML file from this field?", "Delete KML", true))
                     {
                         prompt.TopMost = true;
                         prompt.ShowDialog();
                         if (!prompt.Result) return;
                     }
 
-                    // Ensure the selected file belongs to the current job list
-                    var selectedName = System.IO.Path.GetFileName(dlg.FileName);
-                    if (!list.Exists(n => string.Equals(n, selectedName, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        Props.ShowMessage("Selected file is not registered to this job.", "Delete KML", 6000, true);
-                        return;
-                    }
-
-                    // Remove overlay and delete disk file (MapController handles both)
                     MapController.DeleteKmlLayer(dlg.FileName);
                     Props.ShowMessage("KML deleted.", "Delete KML", 4000);
                 }
@@ -1241,6 +1393,10 @@ namespace RateController.Forms
                             Initializing = false;
                         }
                         if (TractorIsMoving()) UpdatePosition();
+                        break;
+
+                    case "tabField":
+                        UpdateFieldDataPanel();
                         break;
                 }
                 tbLong.Enabled = !TractorIsMoving();
