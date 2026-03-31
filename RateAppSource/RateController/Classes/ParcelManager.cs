@@ -39,11 +39,9 @@ namespace RateController.Classes
             return File.Exists(path) ? path : null;
         }
 
-        public static string ActiveElevationPath(int id)
+        public static string ElevationPath(int id)
         {
-            Parcel p = SearchParcel(id);
-            if (p == null || string.IsNullOrWhiteSpace(p.ActiveElevation)) return null;
-            string path = Path.Combine(ElevationFolder(id), p.ActiveElevation);
+            string path = Path.Combine(ElevationFolder(id), "Elevation.csv");
             return File.Exists(path) ? path : null;
         }
 
@@ -54,9 +52,6 @@ namespace RateController.Classes
 
         public static List<string> GetYieldFiles(int id) =>
             GetFilenames(YieldFolder(id), "*.csv");
-
-        public static List<string> GetElevationFiles(int id) =>
-            GetFilenames(ElevationFolder(id), "*.csv");
 
         // ── Folder creation ───────────────────────────────────────────────────
 
@@ -80,15 +75,6 @@ namespace RateController.Classes
             var p = parcels.FirstOrDefault(x => x.ID == id);
             if (p == null) return;
             p.ActivePrescription = filename;
-            SaveParcels(parcels);
-        }
-
-        public static void SetActiveElevation(int id, string filename)
-        {
-            var parcels = GetParcels();
-            var p = parcels.FirstOrDefault(x => x.ID == id);
-            if (p == null) return;
-            p.ActiveElevation = filename;
             SaveParcels(parcels);
         }
 
@@ -200,6 +186,5 @@ namespace RateController.Classes
         public int ID { get; set; }
         public string Name { get; set; }
         public string ActivePrescription { get; set; }
-        public string ActiveElevation { get; set; }
     }
 }

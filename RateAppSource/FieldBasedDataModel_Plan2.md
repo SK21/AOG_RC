@@ -14,14 +14,14 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
 │   └── Field_{id}/
 │       ├── Maps/          ← named prescription shapefiles
 │       ├── Yield/         ← one CSV per harvest/year
-│       ├── Elevation/     ← one CSV per survey
+│       ├── Elevation/     ← single file: Elevation.csv
 │       └── Kml/           ← field boundary KML files
 ├── Jobs/
 │   └── Job_{id}/
 │       ├── JobData.txt    ← FieldID required (>= 0)
 │       └── RateData.csv   ← per-job, unchanged
 └── Application/
-    └── FieldNames.txt     ← Parcel list, gains ActivePrescription + ActiveElevation fields
+    └── FieldNames.txt     ← Parcel list, gains ActivePrescription field (ActiveElevation removed — single fixed file)
 ```
 
 ---
@@ -38,23 +38,22 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
 
 5. **Prescription save-as-new.** Saving zones prompts for a name → saves to `{FieldFolder}/Maps/{name}.shp` → optionally sets as active. The active prescription is what `JobManager.MapPath()` returns.
 
-6. **Yield and elevation are independent files.** Multiple yield CSVs per field (one per harvest year/machine). One active elevation CSV per field. Selected via dropdowns in `frmMap` tabFiles panel.
+6. **Yield and elevation are independent files.** Multiple yield CSVs per field (one per harvest year/machine). One elevation CSV per field (`Elevation.csv`) — no selection needed, it either exists or it doesn't. Elevation data is extracted from a yield import if the user opts in.
 
 ---
 
 ## File-by-File Changes
 
 ### Step 1 — `ParcelManager.cs`
-- Add to `Parcel` class: `ActivePrescription` (string), `ActiveElevation` (string)
+- Add to `Parcel` class: `ActivePrescription` (string)
 - Add static methods:
   - `FieldFolder(int id)` — `{DefaultDir}/Fields/Field_{id}`
   - `MapsFolder(int id)`, `YieldFolder(int id)`, `ElevationFolder(int id)`, `KmlFolder(int id)`
   - `ActiveMapPath(int id)` — full path to active prescription shp, or null
-  - `ActiveElevationPath(int id)` — full path to active elevation csv, or null
-  - `GetPrescriptionFiles(int id)`, `GetYieldFiles(int id)`, `GetElevationFiles(int id)`
+  - `ElevationPath(int id)` — `{ElevationFolder}/Elevation.csv` if exists, else null
+  - `GetPrescriptionFiles(int id)`, `GetYieldFiles(int id)`
   - `EnsureFieldFolders(int id)` — creates all four subfolders
   - `SetActivePrescription(int id, string filename)`
-  - `SetActiveElevation(int id, string filename)`
 
 ### Step 2 — `JobManager.cs`
 - `MapPath(int jobId)` → returns `ParcelManager.ActiveMapPath(job.FieldID)` (or fallback shp if no active set yet)
@@ -65,17 +64,15 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
 
 ### Step 3 — `FieldDataManager.cs` (new static class in Classes/)
 - `SelectedYieldPath` — currently selected yield file full path
-- `SelectedElevationPath` — currently selected elevation file full path (null = use yield sample elevations)
+- `ElevationPath` — `ParcelManager.ElevationPath(job.FieldID)` (fixed filename, no user selection)
 - `SelectionChanged` event — fired when selections change or job changes
 - `Initialize()` — wire to `JobManager.JobChanged`
-- `LoadForCurrentJob()` — sets defaults from field folder (first yield file, active elevation)
-- `SetYieldPath(string)`, `SetElevationPath(string)`
+- `LoadForCurrentJob()` — sets defaults from field folder (first yield file; elevation path derived from fixed filename)
+- `SetYieldPath(string)`
 
 ### Step 4 — `MapController.cs`
 - `Initialize()` → call `FieldDataManager.Initialize()` after wiring events
-- `LoadMap()` → set elevation data source before `ElevationCreator.Build()`:
-  - If `FieldDataManager.SelectedElevationPath` set → `ElevationCreator.LoadElevationFile(path)`
-  - Else → `ElevationCreator.SetDataFromYieldSamples(YieldCreator.FieldData)`
+- `LoadMap()` → call `ElevationCreator.LoadElevationFile(FieldDataManager.ElevationPath)` before `ElevationCreator.Build()` (path may be null — LoadElevationFile handles that gracefully)
 - `AddKmlLayer()` / `PersistKmlToJob()` → copy to `KmlFolder(fieldID)` instead of job Map dir
 - `ReloadJobKmls()` → scan `KmlFolder(fieldID)` for `*.kml` files; no prop list needed
 - `DeleteKmlLayer()` → delete from `KmlFolder(fieldID)`
@@ -86,9 +83,9 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
 - `JobManager_JobChanged` and `Core_ProfileChanged` call `LoadData()` with no argument
 
 ### Step 6 — `ElevationOverlayCreator.cs`
-- Remove direct reference to `MapController.YieldCreator` inside `Build()`
-- Add `SetDataFromYieldSamples(List<FieldSample> samples)` — sets Readings, sets UseSimulatedData = (count == 0)
-- Add `LoadElevationFile(string filePath)` — parses simple Lat,Lon,Elevation CSV into FieldSample list
+- Remove direct reference to `MapController.YieldCreator` inside `Build()`; fall back to `YieldCreator.FieldData` until Step 7 provides a real elevation file
+- Remove `UseSimulatedData` field and `ApplySimulatedElevations()` call from `Build()` (keep method for future testing use)
+- Add `LoadElevationFile(string filePath)` — parses `Lat,Lon,Elevation` CSV into FieldSample list; sets Readings; null/missing path → clears Readings and falls back to YieldCreator in Build()
 
 ### Step 7 — `frmMap.Designer.cs` + `frmMap.cs`
 - Add a new **Field** tab as the first tab in the tab control
@@ -96,10 +93,13 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
   - Field name label
   - Prescription: dropdown + Save As New button
   - Yield record: dropdown + Import button
-  - Elevation record: dropdown + Import button
+  - Elevation record: label (filename or "None") + Import button + Delete button
 - Add `UpdateFieldDataPanel()` called from `UpdateForm()` and `FieldDataManager.SelectionChanged`
-- Yield import: confirm overwrite if filename exists in YieldFolder; copy to `YieldFolder`; refresh dropdown
-- Elevation import: confirm overwrite; copy to `ElevationFolder`; refresh dropdown
+- Yield import: confirm overwrite if filename exists in YieldFolder; copy to `YieldFolder`; refresh dropdown; if yield CSV contains non-zero ElevationMeters values, ask user if they want to extract elevation data to `Elevation.csv`; if yes, back up existing `Elevation.csv` → `Elevation.bak` before writing
+- Elevation import: copy a standalone `Lat,Lon,Elevation` CSV to `ElevationFolder/Elevation.csv`; if `Elevation.csv` already exists, back it up to `Elevation.bak` first; refresh label
+- Elevation delete: delete `Elevation.csv`; refresh label
+- Elevation restore: if `Elevation.bak` exists, rename it to `Elevation.csv`; refresh label; Restore button only visible when `Elevation.bak` exists
+- Backup rule: any operation that overwrites `Elevation.csv` (import or yield extraction) first renames existing `Elevation.csv` → `Elevation.bak`; previous `Elevation.bak` is overwritten (one level deep)
 
 ### Step 8 — `frmMenuJobs.cs`
 - `btnOK_Click` → reject save if `cbField.Text.Trim()` is empty (show message)
@@ -112,4 +112,5 @@ Every job must be assigned to a field (Parcel). No job without a field. This sim
 Implementation branch: `FieldBased`
 
 ## Status
-Design complete 2026-03-30. Ready to implement — awaiting step-by-step approval.
+Steps 1–5 complete. Steps 6–8 in progress (reordering: Step 7 before Step 6).
+Plan updated 2026-03-31: single elevation file (`Elevation.csv`), no ActiveElevation on Parcel, elevation extracted optionally from yield import.
