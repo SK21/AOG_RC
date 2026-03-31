@@ -646,6 +646,7 @@ namespace RateController.Forms
                 JobManager.JobChanged += JobManager_JobChanged;
                 Core.AppExit += Core_AppExit;
                 Core.ProfileChanged += Core_ProfileChanged;
+                FieldDataManager.SelectionChanged += FieldDataManager_SelectionChanged;
 
                 this.BackColor = Properties.Settings.Default.MainBackColour;
                 tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
@@ -908,6 +909,7 @@ namespace RateController.Forms
                     MapController.MapLeftClicked -= MapController_MapLeftClicked;
                     Core.ProfileChanged -= Core_ProfileChanged;
                     Core.AppExit -= Core_AppExit;
+                    FieldDataManager.SelectionChanged -= FieldDataManager_SelectionChanged;
 
                     SaveFormLocation();
                 }
@@ -1266,6 +1268,60 @@ namespace RateController.Forms
             lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
         }
 
+        private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
+        {
+            if (InvokeRequired) { Invoke(new Action(UpdateFieldDataPanel)); return; }
+            UpdateFieldDataPanel();
+        }
+
+        private void UpdateFieldDataPanel()
+        {
+            Job job = JobManager.CurrentJob;
+            Parcel parcel = job != null && job.FieldID >= 0 ? ParcelManager.SearchParcel(job.FieldID) : null;
+
+            lbFieldName.Text = parcel?.Name ?? "(no field)";
+
+            // Prescription dropdown
+            cbPrescription.Items.Clear();
+            cbPrescription.Items.Add("(none)");
+            if (parcel != null)
+            {
+                foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
+                    cbPrescription.Items.Add(f);
+                string active = parcel.ActivePrescription;
+                cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
+            }
+            else
+            {
+                cbPrescription.SelectedIndex = 0;
+            }
+
+            // Yield dropdown
+            cbYield.Items.Clear();
+            cbYield.Items.Add("(none)");
+            if (parcel != null)
+            {
+                foreach (string f in ParcelManager.GetYieldFiles(job.FieldID))
+                    cbYield.Items.Add(f);
+                string sel = FieldDataManager.SelectedYieldPath != null
+                    ? Path.GetFileName(FieldDataManager.SelectedYieldPath) : null;
+                cbYield.SelectedItem = sel ?? "(none)";
+            }
+            else
+            {
+                cbYield.SelectedIndex = 0;
+            }
+
+            // Elevation label
+            string elevPath = FieldDataManager.ElevationPath;
+            lbElevationFile.Text = elevPath != null ? Path.GetFileName(elevPath) : "None";
+
+            // Restore button visibility
+            string bakPath = parcel != null
+                ? Path.Combine(ParcelManager.ElevationFolder(job.FieldID), "Elevation.bak") : null;
+            btnRestoreElevation.Visible = bakPath != null && File.Exists(bakPath);
+        }
+
         private void UpdateForm()
         {
             try
@@ -1308,6 +1364,8 @@ namespace RateController.Forms
 
                 LoadTimes();
                 ckAutoTune.Checked = MapController.ZnOverlays.AutoTune;
+
+                UpdateFieldDataPanel();
 
                 Initializing = false;
             }
