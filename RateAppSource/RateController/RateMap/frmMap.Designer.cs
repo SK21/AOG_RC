@@ -73,6 +73,18 @@
             this.tbP5 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lbAreaName = new System.Windows.Forms.Label();
+            this.tabField = new System.Windows.Forms.TabPage();
+            this.lbFieldName = new System.Windows.Forms.Label();
+            this.lbPrescriptionLabel = new System.Windows.Forms.Label();
+            this.cbPrescription = new System.Windows.Forms.ComboBox();
+            this.btnSaveAsNew = new System.Windows.Forms.Button();
+            this.lbYieldLabel = new System.Windows.Forms.Label();
+            this.cbYield = new System.Windows.Forms.ComboBox();
+            this.btnImportYield = new System.Windows.Forms.Button();
+            this.lbElevationLabel = new System.Windows.Forms.Label();
+            this.lbElevationFile = new System.Windows.Forms.Label();
+            this.btnImportElevation = new System.Windows.Forms.Button();
+            this.btnRestoreElevation = new System.Windows.Forms.Button();
             this.tabData = new System.Windows.Forms.TabPage();
             this.rbProductE = new System.Windows.Forms.RadioButton();
             this.rbProductA = new System.Windows.Forms.RadioButton();
@@ -80,7 +92,6 @@
             this.rbProductC = new System.Windows.Forms.RadioButton();
             this.rbProductB = new System.Windows.Forms.RadioButton();
             this.tabFiles = new System.Windows.Forms.TabPage();
-            this.btnImportYieldData = new System.Windows.Forms.Button();
             this.btnKMLdelete = new System.Windows.Forms.Button();
             this.btnImportKML = new System.Windows.Forms.Button();
             this.btnImportZones = new System.Windows.Forms.Button();
@@ -118,6 +129,7 @@
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabZones.SuspendLayout();
+            this.tabField.SuspendLayout();
             this.tabData.SuspendLayout();
             this.tabFiles.SuspendLayout();
             this.tabVR.SuspendLayout();
@@ -586,6 +598,7 @@
             // 
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl1.Controls.Add(this.tabZones);
+            this.tabControl1.Controls.Add(this.tabField);
             this.tabControl1.Controls.Add(this.tabData);
             this.tabControl1.Controls.Add(this.tabFiles);
             this.tabControl1.Controls.Add(this.tabVR);
@@ -663,6 +676,155 @@
             this.lbAreaName.Size = new System.Drawing.Size(68, 24);
             this.lbAreaName.TabIndex = 346;
             this.lbAreaName.Text = "Acres";
+            // 
+            // tabField
+            // 
+            this.tabField.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabField.Controls.Add(this.lbFieldName);
+            this.tabField.Controls.Add(this.lbPrescriptionLabel);
+            this.tabField.Controls.Add(this.cbPrescription);
+            this.tabField.Controls.Add(this.btnSaveAsNew);
+            this.tabField.Controls.Add(this.lbYieldLabel);
+            this.tabField.Controls.Add(this.cbYield);
+            this.tabField.Controls.Add(this.btnImportYield);
+            this.tabField.Controls.Add(this.lbElevationLabel);
+            this.tabField.Controls.Add(this.lbElevationFile);
+            this.tabField.Controls.Add(this.btnImportElevation);
+            this.tabField.Controls.Add(this.btnRestoreElevation);
+            this.tabField.Location = new System.Drawing.Point(4, 54);
+            this.tabField.Name = "tabField";
+            this.tabField.Padding = new System.Windows.Forms.Padding(3);
+            this.tabField.Size = new System.Drawing.Size(423, 377);
+            this.tabField.TabIndex = 4;
+            this.tabField.Text = "Field";
+            this.tabField.UseVisualStyleBackColor = true;
+            // 
+            // lbFieldName
+            // 
+            this.lbFieldName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFieldName.Location = new System.Drawing.Point(6, 12);
+            this.lbFieldName.Name = "lbFieldName";
+            this.lbFieldName.Size = new System.Drawing.Size(409, 30);
+            this.lbFieldName.TabIndex = 410;
+            this.lbFieldName.Text = "Field:";
+            this.lbFieldName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbPrescriptionLabel
+            // 
+            this.lbPrescriptionLabel.Location = new System.Drawing.Point(6, 65);
+            this.lbPrescriptionLabel.Name = "lbPrescriptionLabel";
+            this.lbPrescriptionLabel.Size = new System.Drawing.Size(150, 24);
+            this.lbPrescriptionLabel.TabIndex = 411;
+            this.lbPrescriptionLabel.Text = "Prescription:";
+            this.lbPrescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbPrescription
+            // 
+            this.cbPrescription.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPrescription.FormattingEnabled = true;
+            this.cbPrescription.Location = new System.Drawing.Point(6, 92);
+            this.cbPrescription.Name = "cbPrescription";
+            this.cbPrescription.Size = new System.Drawing.Size(287, 32);
+            this.cbPrescription.TabIndex = 412;
+            this.cbPrescription.SelectedIndexChanged += new System.EventHandler(this.cbPrescription_SelectedIndexChanged);
+            // 
+            // btnSaveAsNew
+            // 
+            this.btnSaveAsNew.FlatAppearance.BorderSize = 0;
+            this.btnSaveAsNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSaveAsNew.Image = global::RateController.Properties.Resources.Save;
+            this.btnSaveAsNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSaveAsNew.Location = new System.Drawing.Point(299, 76);
+            this.btnSaveAsNew.Name = "btnSaveAsNew";
+            this.btnSaveAsNew.Size = new System.Drawing.Size(70, 63);
+            this.btnSaveAsNew.TabIndex = 413;
+            this.btnSaveAsNew.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSaveAsNew.UseVisualStyleBackColor = true;
+            this.btnSaveAsNew.Click += new System.EventHandler(this.btnSaveAsNew_Click);
+            // 
+            // lbYieldLabel
+            // 
+            this.lbYieldLabel.Location = new System.Drawing.Point(6, 160);
+            this.lbYieldLabel.Name = "lbYieldLabel";
+            this.lbYieldLabel.Size = new System.Drawing.Size(100, 24);
+            this.lbYieldLabel.TabIndex = 414;
+            this.lbYieldLabel.Text = "Yield:";
+            this.lbYieldLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbYield
+            // 
+            this.cbYield.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbYield.FormattingEnabled = true;
+            this.cbYield.Location = new System.Drawing.Point(6, 187);
+            this.cbYield.Name = "cbYield";
+            this.cbYield.Size = new System.Drawing.Size(287, 32);
+            this.cbYield.TabIndex = 415;
+            this.cbYield.SelectedIndexChanged += new System.EventHandler(this.cbYield_SelectedIndexChanged);
+            // 
+            // btnImportYield
+            // 
+            this.btnImportYield.FlatAppearance.BorderSize = 0;
+            this.btnImportYield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportYield.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImportYield.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImportYield.Location = new System.Drawing.Point(299, 182);
+            this.btnImportYield.Name = "btnImportYield";
+            this.btnImportYield.Size = new System.Drawing.Size(114, 45);
+            this.btnImportYield.TabIndex = 416;
+            this.btnImportYield.Text = "Import";
+            this.btnImportYield.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnImportYield.UseVisualStyleBackColor = true;
+            this.btnImportYield.Click += new System.EventHandler(this.btnImportYield_Click);
+            // 
+            // lbElevationLabel
+            // 
+            this.lbElevationLabel.Location = new System.Drawing.Point(6, 255);
+            this.lbElevationLabel.Name = "lbElevationLabel";
+            this.lbElevationLabel.Size = new System.Drawing.Size(100, 24);
+            this.lbElevationLabel.TabIndex = 417;
+            this.lbElevationLabel.Text = "Elevation:";
+            this.lbElevationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbElevationFile
+            // 
+            this.lbElevationFile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbElevationFile.Location = new System.Drawing.Point(6, 279);
+            this.lbElevationFile.Name = "lbElevationFile";
+            this.lbElevationFile.Size = new System.Drawing.Size(287, 30);
+            this.lbElevationFile.TabIndex = 418;
+            this.lbElevationFile.Text = "None";
+            this.lbElevationFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnImportElevation
+            // 
+            this.btnImportElevation.FlatAppearance.BorderSize = 0;
+            this.btnImportElevation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportElevation.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImportElevation.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImportElevation.Location = new System.Drawing.Point(299, 272);
+            this.btnImportElevation.Name = "btnImportElevation";
+            this.btnImportElevation.Size = new System.Drawing.Size(114, 45);
+            this.btnImportElevation.TabIndex = 419;
+            this.btnImportElevation.Text = "Import";
+            this.btnImportElevation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnImportElevation.UseVisualStyleBackColor = true;
+            this.btnImportElevation.Click += new System.EventHandler(this.btnImportElevation_Click);
+            // 
+            // btnRestoreElevation
+            // 
+            this.btnRestoreElevation.FlatAppearance.BorderSize = 0;
+            this.btnRestoreElevation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRestoreElevation.Image = global::RateController.Properties.Resources.refresh;
+            this.btnRestoreElevation.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRestoreElevation.Location = new System.Drawing.Point(10, 317);
+            this.btnRestoreElevation.Name = "btnRestoreElevation";
+            this.btnRestoreElevation.Size = new System.Drawing.Size(227, 45);
+            this.btnRestoreElevation.TabIndex = 421;
+            this.btnRestoreElevation.Text = "Restore Elevation file";
+            this.btnRestoreElevation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRestoreElevation.UseVisualStyleBackColor = true;
+            this.btnRestoreElevation.Visible = false;
+            this.btnRestoreElevation.Click += new System.EventHandler(this.btnRestoreElevation_Click);
             // 
             // tabData
             // 
@@ -758,7 +920,6 @@
             // 
             // tabFiles
             // 
-            this.tabFiles.Controls.Add(this.btnImportYieldData);
             this.tabFiles.Controls.Add(this.btnKMLdelete);
             this.tabFiles.Controls.Add(this.btnImportKML);
             this.tabFiles.Controls.Add(this.btnImportZones);
@@ -771,22 +932,6 @@
             this.tabFiles.Text = "Files";
             this.tabFiles.UseVisualStyleBackColor = true;
             // 
-            // btnImportYieldData
-            // 
-            this.btnImportYieldData.BackColor = System.Drawing.Color.Transparent;
-            this.btnImportYieldData.FlatAppearance.BorderSize = 0;
-            this.btnImportYieldData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportYieldData.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnImportYieldData.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportYieldData.Location = new System.Drawing.Point(104, 303);
-            this.btnImportYieldData.Name = "btnImportYieldData";
-            this.btnImportYieldData.Size = new System.Drawing.Size(213, 64);
-            this.btnImportYieldData.TabIndex = 373;
-            this.btnImportYieldData.Text = "Import Yield Data";
-            this.btnImportYieldData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnImportYieldData.UseVisualStyleBackColor = false;
-            this.btnImportYieldData.Click += new System.EventHandler(this.btnImportYieldData_Click);
-            // 
             // btnKMLdelete
             // 
             this.btnKMLdelete.BackColor = System.Drawing.Color.Transparent;
@@ -794,7 +939,7 @@
             this.btnKMLdelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnKMLdelete.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnKMLdelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnKMLdelete.Location = new System.Drawing.Point(104, 229);
+            this.btnKMLdelete.Location = new System.Drawing.Point(108, 193);
             this.btnKMLdelete.Name = "btnKMLdelete";
             this.btnKMLdelete.Size = new System.Drawing.Size(213, 64);
             this.btnKMLdelete.TabIndex = 372;
@@ -810,7 +955,7 @@
             this.btnImportKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImportKML.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnImportKML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportKML.Location = new System.Drawing.Point(104, 155);
+            this.btnImportKML.Location = new System.Drawing.Point(108, 123);
             this.btnImportKML.Name = "btnImportKML";
             this.btnImportKML.Size = new System.Drawing.Size(213, 64);
             this.btnImportKML.TabIndex = 370;
@@ -826,7 +971,7 @@
             this.btnImportZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImportZones.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnImportZones.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportZones.Location = new System.Drawing.Point(104, 7);
+            this.btnImportZones.Location = new System.Drawing.Point(108, 53);
             this.btnImportZones.Name = "btnImportZones";
             this.btnImportZones.Size = new System.Drawing.Size(213, 64);
             this.btnImportZones.TabIndex = 369;
@@ -842,7 +987,7 @@
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Image = global::RateController.Properties.Resources.folder_open_small;
             this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExport.Location = new System.Drawing.Point(104, 81);
+            this.btnExport.Location = new System.Drawing.Point(108, 263);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(213, 64);
             this.btnExport.TabIndex = 368;
@@ -1235,6 +1380,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabZones.ResumeLayout(false);
             this.tabZones.PerformLayout();
+            this.tabField.ResumeLayout(false);
             this.tabData.ResumeLayout(false);
             this.tabFiles.ResumeLayout(false);
             this.tabVR.ResumeLayout(false);
@@ -1326,11 +1472,23 @@
         private System.Windows.Forms.CheckBox ckElevation;
         private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.CheckBox ckYield;
-        private System.Windows.Forms.Button btnImportYieldData;
         private System.Windows.Forms.RadioButton rbProductE;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox tbTime5;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox tbP5;
+        private System.Windows.Forms.TabPage tabField;
+        private System.Windows.Forms.Label lbFieldName;
+        private System.Windows.Forms.Label lbPrescriptionLabel;
+        private System.Windows.Forms.ComboBox cbPrescription;
+        private System.Windows.Forms.Button btnSaveAsNew;
+        private System.Windows.Forms.Label lbYieldLabel;
+        private System.Windows.Forms.ComboBox cbYield;
+        private System.Windows.Forms.Button btnImportYield;
+        private System.Windows.Forms.Label lbElevationLabel;
+        private System.Windows.Forms.Label lbElevationFile;
+        private System.Windows.Forms.Button btnImportElevation;
+        private System.Windows.Forms.Button btnDeleteElevation;
+        private System.Windows.Forms.Button btnRestoreElevation;
     }
 }

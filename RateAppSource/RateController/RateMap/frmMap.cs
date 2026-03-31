@@ -1,6 +1,5 @@
 ﻿using AgOpenGPS;
 using GMap.NET;
-using GMap.NET.MapProviders;
 using RateController.Classes;
 using RateController.RateMap;
 using System;
@@ -71,6 +70,30 @@ namespace RateController.Forms
             base.OnResize(e);
             // Ensure border repaints correctly after layout or size changes
             this.Invalidate();
+        }
+
+        private void btnSaveAsNew_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void btnImportYield_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void btnImportElevation_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void btnRestoreElevation_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void cbPrescription_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -198,55 +221,6 @@ namespace RateController.Forms
             }
         }
 
-        private void btnImportYieldData_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (var ofd = new OpenFileDialog
-                {
-                    Title = "Select yield data file",
-                    Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
-                    CheckFileExists = true,
-                    Multiselect = false
-                })
-                {
-                    if (ofd.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-
-                    string destinationPath = JobManager.CurrentYieldDataPath;
-                    if (string.IsNullOrEmpty(destinationPath))
-                    {
-                        Props.ShowMessage("Current job folder is not available.", "Import Yield", 8000, true);
-                        return;
-                    }
-
-                    try
-                    {
-                        File.Copy(ofd.FileName, destinationPath, true);
-
-                        Props.ShowMessage("Yield data imported.", "Import Yield", 5000);
-
-                        // Reload yield overlay for the current job if enabled
-                        MapController.YieldCreator.LoadData();
-                        if (MapController.YieldCreator.Enabled)
-                        {
-                            MapController.YieldCreator.Build();
-                        }
-                    }
-                    catch (Exception exCopy)
-                    {
-                        Props.WriteErrorLog("frmMap/btnImportYieldData_Click copy: " + exCopy.Message);
-                        Props.ShowMessage("Error importing yield data file.", "Import Yield", 8000, true);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnImportYieldData_Click: " + ex.Message);
-            }
-        }
 
         private void btnImportZones_Click(object sender, EventArgs e)
         {
@@ -510,7 +484,7 @@ namespace RateController.Forms
                     Core.MainForm.Top = MainTop;
                 }
 
-                if(UseMaxView)
+                if (UseMaxView)
                 {
                     MapController.legendManager.Show();
                 }
@@ -518,7 +492,7 @@ namespace RateController.Forms
                 {
                     MapController.legendManager.Hide();
                 }
-                    MapController.DisplaySizeUpdate(!UseMaxView);
+                MapController.DisplaySizeUpdate(!UseMaxView);
             }
             catch (Exception ex)
             {

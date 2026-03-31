@@ -459,7 +459,7 @@ namespace RateController.RateMap
                 ReloadJobKmls();
 
                 // elevation
-                string elevPath = FieldDataManager.SelectedElevationPath;
+                string elevPath = FieldDataManager.ElevationPath;
                 if (elevPath != null)
                     ElevationCreator.LoadElevationFile(elevPath);
                 ElevationCreator.Build();
