@@ -176,15 +176,16 @@ namespace RateController.RateMap
             }
         }
 
-        public void LoadData()
+        public void LoadData(string filePath = null)
         {
             try
             {
                 FieldData.Clear();
 
-                if (FileValid(JobManager.CurrentYieldDataPath))
+                string path = filePath ?? FieldDataManager.SelectedYieldPath ?? JobManager.CurrentYieldDataPath;
+                if (FileValid(path))
                 {
-                    string[] allLines = File.ReadAllLines(JobManager.CurrentYieldDataPath);
+                    string[] allLines = File.ReadAllLines(path);
 
                     // parse the lines (skip header)
                     for (int i = 1; i < allLines.Length; i++)
