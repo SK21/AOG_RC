@@ -8,7 +8,6 @@ namespace RateController.Classes
     public static class FieldDataManager
     {
         private static string cSelectedYieldPath;
-        private static string cSelectedElevationPath;
 
         public static event EventHandler SelectionChanged;
 
@@ -17,9 +16,14 @@ namespace RateController.Classes
             get { return cSelectedYieldPath; }
         }
 
-        public static string SelectedElevationPath
+        public static string ElevationPath
         {
-            get { return cSelectedElevationPath; }
+            get
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return null;
+                return ParcelManager.ElevationPath(job.FieldID);
+            }
         }
 
         public static void Initialize()
@@ -34,7 +38,6 @@ namespace RateController.Classes
             if (job == null || job.FieldID < 0)
             {
                 cSelectedYieldPath = null;
-                cSelectedElevationPath = null;
             }
             else
             {
@@ -44,9 +47,6 @@ namespace RateController.Classes
                     cSelectedYieldPath = Path.Combine(ParcelManager.YieldFolder(job.FieldID), yieldFiles[0]);
                 else
                     cSelectedYieldPath = null;
-
-                // Default elevation: active elevation for the field
-                cSelectedElevationPath = ParcelManager.ActiveElevationPath(job.FieldID);
             }
 
             SelectionChanged?.Invoke(null, EventArgs.Empty);
@@ -55,12 +55,6 @@ namespace RateController.Classes
         public static void SetYieldPath(string path)
         {
             cSelectedYieldPath = path;
-            SelectionChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        public static void SetElevationPath(string path)
-        {
-            cSelectedElevationPath = path;
             SelectionChanged?.Invoke(null, EventArgs.Empty);
         }
 
