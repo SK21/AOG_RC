@@ -256,14 +256,20 @@ void ReadPGNs(byte data[], uint16_t len)
         {
             if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
             {
-                bool NewPin = (data[3] != MDL.WheelSpeedPin);
+                uint8_t newPin = data[3];
+                bool pinChanged = false;
+                if (IsValidPin(newPin)) {
+                    pinChanged = (newPin != MDL.WheelSpeedPin);
+                    MDL.WheelSpeedPin = newPin;
+                } else {
+                    Serial.printf("WARNING: Invalid WheelSpeedPin %d - keeping %d\n", newPin, MDL.WheelSpeedPin);
+                }
 
-                MDL.WheelSpeedPin = data[3];
                 MDL.WheelCal = (float)(data[4] | (uint32_t)data[5] << 8 | (uint32_t)data[6] << 16);
                 if ((data[7] & 1) == 1) WheelCounts = 0;
 
                 SaveData();
-                if (NewPin) ESP.restart();
+                if (pinChanged) ESP.restart();
             }
         }
         break;
@@ -312,20 +318,22 @@ void ReadPGNs(byte data[], uint16_t len)
                 MDL.ADS1115Enabled = ((tmp & 32) == 32);
 
                 MDL.RelayControl = data[5];
-                Sensor[0].FlowPin = data[7];
-                Sensor[0].IN1 = data[8];
-                Sensor[0].IN2 = data[9];
-                Sensor[1].FlowPin = data[10];
-                Sensor[1].IN1 = data[11];
-                Sensor[1].IN2 = data[12];
+                AssignPin("S0 FlowPin", Sensor[0].FlowPin, data[7]);
+                AssignPin("S0 IN1", Sensor[0].IN1, data[8]);
+                AssignPin("S0 IN2", Sensor[0].IN2, data[9]);
+                AssignPin("S1 FlowPin", Sensor[1].FlowPin, data[10]);
+                AssignPin("S1 IN1", Sensor[1].IN1, data[11]);
+                AssignPin("S1 IN2", Sensor[1].IN2, data[12]);
 
                 for (int i = 0; i < 16; i++)
                 {
-                    MDL.RelayControlPins[i] = data[13 + i];
+                    char relayName[16];
+                    sprintf(relayName, "Relay %d", i);
+                    AssignPin(relayName, MDL.RelayControlPins[i], data[13 + i]);
                 }
 
-                MDL.WorkPin = data[29];
-                MDL.PressurePin = data[30];
+                AssignPin("WorkPin", MDL.WorkPin, data[29]);
+                AssignPin("PressurePin", MDL.PressurePin, data[30]);
 
                 SaveData(); 
                 ESP.restart();
@@ -336,3 +344,35 @@ void ReadPGNs(byte data[], uint16_t len)
 }
 
 
+// Validate if a pin number is in the allowed pins list
+bool IsValidPin(uint8_t pin)
+{
+    if (pin >= NC) return true;  // NC or higher means not used, always valid
+    
+    Serial.printf("Checking pin %d against valid list... ", pin);
+    for (int i = 0; i < sizeof(ValidPins0); i++)
+    {
+        if (pin == ValidPins0[i]) {
+            Serial.println("FOUND");
+            return true;
+        }
+    }
+    Serial.println("NOT FOUND");
+    return false;
+}
+
+// Assign pin only if valid, returns the value (either new or keeps old)
+uint8_t AssignPin(const char* name, uint8_t& current, uint8_t newValue)
+{
+    if (IsValidPin(newValue)) {
+        if (current != newValue) {
+            current = newValue;
+            Serial.printf("%s: %d OK (changed)\n", name, newValue);
+            return newValue;
+        }
+        Serial.printf("%s: %d OK (same)\n", name, newValue);
+        return newValue;
+    }
+    Serial.printf("WARNING: Invalid pin %d for %s - keeping %d\n", newValue, name, current);
+    return current;
+}
