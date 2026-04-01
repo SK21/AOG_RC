@@ -1,4 +1,5 @@
 ﻿using GMap.NET.WindowsForms;
+using Newtonsoft.Json;
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace RateController.RateMap
 {
@@ -473,14 +470,17 @@ namespace RateController.RateMap
         private string LegendPath()
         {
             string Result = "";
-            var basePath = Path.ChangeExtension(JobManager.CurrentMapPath, null); // strip .shp
-            if (cIsYieldData)
+            Job job = JobManager.CurrentJob;
+            if (job != null)
             {
-                Result = basePath + "_YieldLegend.json";
-            }
-            else
-            {
-                Result = basePath + "_AppliedLegend.json";
+                if (cIsYieldData)
+                {
+                    Result = Path.Combine(job.JobFolder, "YieldLegend.json");
+                }
+                else
+                {
+                    Result = Path.Combine(job.JobFolder, "AppliedLegend.json");
+                }
             }
             return Result;
         }
@@ -543,7 +543,7 @@ namespace RateController.RateMap
                     }
                     else
                     {
-                        LegendBaseValue = Core.Products.Item(MapController.ProductFilter).TargetRate(true);
+                        LegendBaseValue = GetBaseValue();
                         string Title = Core.Products.Item(MapController.ProductFilter).ProductName;
                         CreateLegend(LegendBaseValue, Title);
                     }
@@ -634,6 +634,24 @@ namespace RateController.RateMap
             {
                 Props.WriteErrorLog("LegendManager/Save: " + ex.Message);
             }
+        }
+
+        private double GetBaseValue()
+        {
+            // Try to get base value from actual applied rate data
+            var readings = MapController.RateCollector.GetReadings();
+            double detectedBase = 0;
+            if (readings != null && readings.Count > 0)
+            {
+                int pf = MapController.ProductFilter;
+                var nonZero = readings
+                    .Where(r => r.AppliedRates != null && r.AppliedRates.Length > pf && r.AppliedRates[pf] > 0)
+                    .Select(r => r.AppliedRates[pf])
+                    .ToList();
+                if (nonZero.Count > 0)
+                    detectedBase = nonZero.Average();
+            }
+            return detectedBase > 0 ? detectedBase : Core.Products.Item(MapController.ProductFilter).TargetRate(true);
         }
     }
 

@@ -91,7 +91,7 @@ namespace RateController.Menu
                 if (lvJobs.SelectedItems.Count > 0)
                 {
                     Job SelectedJob = lvJobs.SelectedItems[0].Tag as Job;
-                    if (SelectedJob != null && SelectedJob.ID != 0)    // keep 0, default job
+                    if (SelectedJob != null && SelectedJob.ID >= 0)    // keep 0, default job
                     {
                         var Hlp = new frmMsgBox("Confirm Delete [" + SelectedJob.Name + "] and all job data?", "Delete File", true);
                         Hlp.TopMost = true;

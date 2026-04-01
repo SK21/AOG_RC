@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace RateController.Classes
 {
@@ -187,7 +187,6 @@ namespace RateController.Classes
                             {
                                 // select default job
                                 CheckDefaultJob();
-                                Properties.Settings.Default.CurrentJob = 0;
                                 Properties.Settings.Default.Save();
                                 JobChanged?.Invoke(null, EventArgs.Empty);
                             }
