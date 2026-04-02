@@ -69,7 +69,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabZones = new System.Windows.Forms.TabPage();
-            this.label12 = new System.Windows.Forms.Label();
+            this.lbP5 = new System.Windows.Forms.Label();
             this.tbP5 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lbAreaName = new System.Windows.Forms.Label();
@@ -478,10 +478,9 @@
             // 
             // lbP4
             // 
-            this.lbP4.AutoSize = true;
-            this.lbP4.Location = new System.Drawing.Point(209, 239);
+            this.lbP4.Location = new System.Drawing.Point(110, 239);
             this.lbP4.Name = "lbP4";
-            this.lbP4.Size = new System.Drawing.Size(20, 24);
+            this.lbP4.Size = new System.Drawing.Size(119, 24);
             this.lbP4.TabIndex = 11;
             this.lbP4.Text = "4";
             // 
@@ -497,10 +496,9 @@
             // 
             // lbP3
             // 
-            this.lbP3.AutoSize = true;
-            this.lbP3.Location = new System.Drawing.Point(209, 197);
+            this.lbP3.Location = new System.Drawing.Point(110, 197);
             this.lbP3.Name = "lbP3";
-            this.lbP3.Size = new System.Drawing.Size(20, 24);
+            this.lbP3.Size = new System.Drawing.Size(119, 24);
             this.lbP3.TabIndex = 9;
             this.lbP3.Text = "3";
             // 
@@ -531,10 +529,9 @@
             // 
             // lbP2
             // 
-            this.lbP2.AutoSize = true;
-            this.lbP2.Location = new System.Drawing.Point(209, 155);
+            this.lbP2.Location = new System.Drawing.Point(110, 155);
             this.lbP2.Name = "lbP2";
-            this.lbP2.Size = new System.Drawing.Size(20, 24);
+            this.lbP2.Size = new System.Drawing.Size(119, 24);
             this.lbP2.TabIndex = 7;
             this.lbP2.Text = "2";
             // 
@@ -550,10 +547,9 @@
             // 
             // lbP1
             // 
-            this.lbP1.AutoSize = true;
-            this.lbP1.Location = new System.Drawing.Point(209, 113);
+            this.lbP1.Location = new System.Drawing.Point(110, 113);
             this.lbP1.Name = "lbP1";
-            this.lbP1.Size = new System.Drawing.Size(20, 24);
+            this.lbP1.Size = new System.Drawing.Size(119, 24);
             this.lbP1.TabIndex = 5;
             this.lbP1.Text = "1";
             // 
@@ -613,7 +609,7 @@
             // tabZones
             // 
             this.tabZones.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabZones.Controls.Add(this.label12);
+            this.tabZones.Controls.Add(this.lbP5);
             this.tabZones.Controls.Add(this.tbP5);
             this.tabZones.Controls.Add(this.label3);
             this.tabZones.Controls.Add(this.lbAreaName);
@@ -642,14 +638,13 @@
             this.tabZones.Text = "Zones";
             this.tabZones.UseVisualStyleBackColor = true;
             // 
-            // label12
+            // lbP5
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(209, 281);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(20, 24);
-            this.label12.TabIndex = 349;
-            this.label12.Text = "5";
+            this.lbP5.Location = new System.Drawing.Point(110, 281);
+            this.lbP5.Name = "lbP5";
+            this.lbP5.Size = new System.Drawing.Size(119, 24);
+            this.lbP5.TabIndex = 349;
+            this.lbP5.Text = "5";
             // 
             // tbP5
             // 
@@ -1475,7 +1470,7 @@
         private System.Windows.Forms.RadioButton rbProductE;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox tbTime5;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lbP5;
         private System.Windows.Forms.TextBox tbP5;
         private System.Windows.Forms.TabPage tabField;
         private System.Windows.Forms.Label lbFieldName;

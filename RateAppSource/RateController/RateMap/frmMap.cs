@@ -764,6 +764,7 @@ namespace RateController.Forms
         private void Core_ProfileChanged(object sender, EventArgs e)
         {
             UpdateForm();
+            LoadProductNames();
         }
 
         private void EnterDefaultZoneValues()
@@ -844,11 +845,21 @@ namespace RateController.Forms
                 SetTitle();
                 timer1.Enabled = true;
                 SetEditMode(false, true);
+                LoadProductNames();
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMap/Load: " + ex.Message);
             }
+        }
+
+        private void LoadProductNames()
+        {
+            lbP1.Text = Core.Products.Item(0).ProductName;
+            lbP2.Text = Core.Products.Item(1).ProductName;
+            lbP3.Text = Core.Products.Item(2).ProductName;
+            lbP4.Text = Core.Products.Item(3).ProductName;
+            lbP5.Text = Core.Products.Item(4).ProductName;
         }
 
         private void HSB_Scroll(object sender, ScrollEventArgs e)
@@ -874,6 +885,7 @@ namespace RateController.Forms
         private void JobManager_JobChanged(object sender, EventArgs e)
         {
             SetTitle();
+            LoadProductNames();
         }
 
         private void LoadFormLocation()
@@ -1432,50 +1444,50 @@ namespace RateController.Forms
             Initializing = true;
             try
             {
-            Job job = JobManager.CurrentJob;
-            Parcel parcel = job != null && job.FieldID >= 0 ? ParcelManager.SearchParcel(job.FieldID) : null;
+                Job job = JobManager.CurrentJob;
+                Parcel parcel = job != null && job.FieldID >= 0 ? ParcelManager.SearchParcel(job.FieldID) : null;
 
-            lbFieldName.Text = parcel?.Name ?? "(no field)";
+                lbFieldName.Text = parcel?.Name ?? "(no field)";
 
-            // Prescription dropdown
-            cbPrescription.Items.Clear();
-            cbPrescription.Items.Add("(none)");
-            if (parcel != null)
-            {
-                foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
-                    cbPrescription.Items.Add(f);
-                string active = parcel.ActivePrescription;
-                cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
-            }
-            else
-            {
-                cbPrescription.SelectedIndex = 0;
-            }
+                // Prescription dropdown
+                cbPrescription.Items.Clear();
+                cbPrescription.Items.Add("(none)");
+                if (parcel != null)
+                {
+                    foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
+                        cbPrescription.Items.Add(f);
+                    string active = parcel.ActivePrescription;
+                    cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
+                }
+                else
+                {
+                    cbPrescription.SelectedIndex = 0;
+                }
 
-            // Yield dropdown
-            cbYield.Items.Clear();
-            cbYield.Items.Add("(none)");
-            if (parcel != null)
-            {
-                foreach (string f in ParcelManager.GetYieldFiles(job.FieldID))
-                    cbYield.Items.Add(f);
-                string sel = FieldDataManager.SelectedYieldPath != null
-                    ? Path.GetFileName(FieldDataManager.SelectedYieldPath) : null;
-                cbYield.SelectedItem = sel ?? "(none)";
-            }
-            else
-            {
-                cbYield.SelectedIndex = 0;
-            }
+                // Yield dropdown
+                cbYield.Items.Clear();
+                cbYield.Items.Add("(none)");
+                if (parcel != null)
+                {
+                    foreach (string f in ParcelManager.GetYieldFiles(job.FieldID))
+                        cbYield.Items.Add(f);
+                    string sel = FieldDataManager.SelectedYieldPath != null
+                        ? Path.GetFileName(FieldDataManager.SelectedYieldPath) : null;
+                    cbYield.SelectedItem = sel ?? "(none)";
+                }
+                else
+                {
+                    cbYield.SelectedIndex = 0;
+                }
 
-            // Elevation label
-            string elevPath = FieldDataManager.ElevationPath;
-            lbElevationFile.Text = elevPath != null ? Path.GetFileName(elevPath) : "None";
+                // Elevation label
+                string elevPath = FieldDataManager.ElevationPath;
+                lbElevationFile.Text = elevPath != null ? Path.GetFileName(elevPath) : "None";
 
-            // Restore button visibility
-            string bakPath = parcel != null
-                ? Path.Combine(ParcelManager.ElevationFolder(job.FieldID), "Elevation.bak") : null;
-            btnRestoreElevation.Visible = bakPath != null && File.Exists(bakPath);
+                // Restore button visibility
+                string bakPath = parcel != null
+                    ? Path.Combine(ParcelManager.ElevationFolder(job.FieldID), "Elevation.bak") : null;
+                btnRestoreElevation.Visible = bakPath != null && File.Exists(bakPath);
             }
             finally
             {

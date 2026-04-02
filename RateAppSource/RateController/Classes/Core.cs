@@ -12,8 +12,8 @@ namespace RateController.Classes
     {
         public static PGN229 AOGsections;
         public static PGN254 AutoSteerPGN;
-        public static PGN208 GPS;
         public static CanBridgeComm CanBridgeComm;
+        public static PGN208 GPS;
         public static PGN238 MachineConfig;
         public static PGN239 MachineData;
         public static frmMain MainForm;
@@ -82,28 +82,21 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static void ChangeProfile(string NewProfile = null)
+        public static void ChangeProfile(string NewProfile)
         {
-            if (NewProfile == null) NewProfile = Properties.Settings.Default.CurrentFile;
-            if (Props.OpenFile(NewProfile))
+            bool FileOpened = false;
+            FileOpened = OpenFile(NewProfile);
+            if (!FileOpened) FileOpened = OpenFile(Props.ProfilesFolder + "\\Default\\Default.rcs");
+
+            if (FileOpened)
             {
-                Sections.Load();
-                Sections.CheckSwitchDefinitions();
-                RelayObjects.Load();
-                Zones.Load();
-                Props.DisplaySwitches();
-                Products.UpdateSensorSettings();
-                Props.ShowScales();
                 SafeEvent.Raise(ProfileChanged);
             }
             else
             {
-                if (!Props.OpenFile(Properties.Settings.Default.CurrentFile))
-                {
-                    MessageBox.Show("The application must shut down due to an unexpected error.",
-                        "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Application.Exit();
-                }
+                MessageBox.Show("The application must shut down due to an unexpected error.",
+                    "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
             }
         }
 
@@ -149,7 +142,7 @@ namespace RateController.Classes
                 GPS = new PGN208();
                 WheelSpeed = new PGN32504();
 
-                ChangeProfile();
+                ChangeProfile(Properties.Settings.Default.CurrentFile);
 
                 JobManager.Initialize();
                 MapController.Initialize();
@@ -200,54 +193,9 @@ namespace RateController.Classes
             SafeEvent.Raise(ColorChanged);
         }
 
-        public static void RaiseProfileChanged()
-        {
-            SafeEvent.Raise(ProfileChanged);
-        }
-
         public static void RaiseRestoreMain()
         {
             SafeEvent.Raise(RestoreMain);
-        }
-
-        public static int UseCanComm(bool enable)
-        {
-            int Result = -1;
-            if (enable)
-            {
-                // use CanBus
-                // Start CAN bridge — ensure clean state first
-                Core.CanBridgeComm?.Stop();
-
-                bool started = Core.CanBridgeComm?.Start(Props.CurrentCanDriver, Props.CanPort) ?? false;
-                if (started)
-                {
-                    ModuleConfig.Send(1);
-                    Props.CanEnabled = true;
-                    Props.ShowMessage("CAN Bridge started.", "Help", 10000);
-                    Result = 1;
-                }
-                else
-                {
-                    Props.ShowMessage("Failed to start CAN Bridge. Check adapter and COM port.");
-                    Result = 2;
-                }
-
-            }
-
-            if (Result != 1)
-            {
-                // use Ethernet
-                ModuleConfig.Send(0);
-                if (Props.CanEnabled)
-                {
-                    CanBridgeComm?.Stop();
-                    Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
-                    Props.CanEnabled = false;
-                }
-                Result += 1;
-            }
-            return Result;
         }
 
         public static void RequestRestart()
@@ -289,6 +237,45 @@ namespace RateController.Classes
             }
         }
 
+        public static int UseCanComm(bool enable)
+        {
+            int Result = -1;
+            if (enable)
+            {
+                // use CanBus
+                // Start CAN bridge — ensure clean state first
+                Core.CanBridgeComm?.Stop();
+
+                bool started = Core.CanBridgeComm?.Start(Props.CurrentCanDriver, Props.CanPort) ?? false;
+                if (started)
+                {
+                    ModuleConfig.Send(1);
+                    Props.CanEnabled = true;
+                    Props.ShowMessage("CAN Bridge started.", "Help", 10000);
+                    Result = 1;
+                }
+                else
+                {
+                    Props.ShowMessage("Failed to start CAN Bridge. Check adapter and COM port.");
+                    Result = 2;
+                }
+            }
+
+            if (Result != 1)
+            {
+                // use Ethernet
+                ModuleConfig.Send(0);
+                if (Props.CanEnabled)
+                {
+                    CanBridgeComm?.Stop();
+                    Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
+                    Props.CanEnabled = false;
+                }
+                Result += 1;
+            }
+            return Result;
+        }
+
         private static void LogRunTime()
         {
             Props.WriteActivityLog("Stopped");
@@ -302,6 +289,25 @@ namespace RateController.Classes
             SectionControl.ReadRateSwitches();
             SendRelays();
             RCalarm.CheckAlarms();
+        }
+
+        private static Boolean OpenFile(string NewProfile)
+        {
+            bool Result = false;
+            if (Props.OpenFile(NewProfile))
+            {
+                Sections.Load();
+                Sections.CheckSwitchDefinitions();
+                RelayObjects.Load();
+                Zones.Load();
+                Props.DisplaySwitches();
+                Products.Load();
+                Products.UpdateSensorSettings();
+                Props.ShowScales();
+                Result = true;
+            }
+
+            return Result;
         }
 
         private static void SafeTry(Action action)

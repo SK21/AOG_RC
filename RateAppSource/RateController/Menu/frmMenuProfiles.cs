@@ -10,7 +10,7 @@ namespace RateController.Menu
     {
         private frmMenu MainMenu;
 
-        public frmMenuProfiles( frmMenu menu)
+        public frmMenuProfiles(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
@@ -38,12 +38,9 @@ namespace RateController.Menu
                         string OldFilePressureName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + "PressureData.csv";
                         File.Copy(OldFilePressureName, NewFilePressureName);
 
-                        Props.OpenFile(NewFilePath + "\\" + tbName.Text + ".rcs");
+                        Core.ChangeProfile(NewFilePath + "\\" + tbName.Text + ".rcs");
                         tbName.Text = "";
                         UpdateForm();
-                        MainMenu.ChangeProduct(0);
-                        MainMenu.ShowProfile();
-                        Core.RaiseProfileChanged();
                     }
                     else
                     {
@@ -86,12 +83,8 @@ namespace RateController.Menu
                                 // load default if current is deleted
                                 if (Properties.Settings.Default.CurrentFile == FilePath + "\\" + FileToDelete + ".rcs")
                                 {
-                                    string name = Props.ProfilesFolder + "\\default\\default.rcs";
-                                    Props.OpenFile(name);
+                                    Core.ChangeProfile(FilePath + "\\Default.rcs");
                                     tbName.Text = "";
-                                    MainMenu.ChangeProduct(0);
-                                    MainMenu.ShowProfile();
-                                    Core.RaiseProfileChanged();
                                 }
                                 UpdateForm();
                             }
@@ -125,11 +118,8 @@ namespace RateController.Menu
                 {
                     string NewName = lstProfiles.SelectedItem.ToString();
                     string name = Props.ProfilesFolder + "\\" + NewName + "\\" + NewName + ".rcs";
-                    Props.OpenFile(name);
+                    Core.ChangeProfile(name);
                     UpdateForm();
-                    MainMenu.ChangeProduct(0);
-                    MainMenu.ShowProfile();
-                    Core.RaiseProfileChanged();
                 }
                 else
                 {
@@ -155,19 +145,9 @@ namespace RateController.Menu
                     File.WriteAllText(NewFolder + "\\" + tbName.Text + ".rcs", string.Empty);
                     File.WriteAllText(NewFolder + "\\" + tbName.Text + "PressureData.csv", string.Empty);
 
-
-
-
                     Core.ChangeProfile(NewFolder + "\\" + tbName.Text + ".rcs");
-
-
-
-                    Props.OpenFile(NewFolder + "\\" + tbName.Text + ".rcs");
                     tbName.Text = "";
                     UpdateForm();
-                    MainMenu.ChangeProduct(0);
-                    MainMenu.ShowProfile();
-                    Core.RaiseProfileChanged();
                 }
                 else
                 {

@@ -114,6 +114,7 @@ void CANBus_SendAddressClaim() {
 		msg.buf[i] = (name >> (i * 8)) & 0xFF;
 	}
 
+#ifdef CANBUS_DEBUG
 	if (ISOBUS.write(msg)) {
 		ISOBUSid.lastClaimTime = millis();
 		ISOBUSid.addressClaimed = true;
@@ -123,6 +124,7 @@ void CANBus_SendAddressClaim() {
 	else {
 		Serial.println("Address claim FAILED");
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -39,6 +39,13 @@ namespace RateController
             ChangeProduct(Props.CurrentProduct);
             LoadLast = LoadLst;
             JobManager.JobChanged += Props_JobChanged;
+            Core.ProfileChanged += Core_ProfileChanged;
+        }
+
+        private void Core_ProfileChanged(object sender, EventArgs e)
+        {
+            ChangeProduct(0);
+            ShowProfile();
         }
 
         public event EventHandler MenuMoved;
@@ -933,7 +940,7 @@ namespace RateController
 
             if (fs == null)
             {
-                Form frm = new frmMenuValves( this);
+                Form frm = new frmMenuValves(this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -1210,7 +1217,7 @@ namespace RateController
 
                         case "frmMenuColor":
                             butFile.PerformClick();
-                            fs = new frmMenuColor(  this);
+                            fs = new frmMenuColor(this);
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butColor);

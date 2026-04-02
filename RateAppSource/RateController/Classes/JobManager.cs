@@ -10,7 +10,6 @@ namespace RateController.Classes
     {
         private static readonly string JobDataName = "JobData.txt";
         private static readonly object SyncLock = new object();
-        private static readonly string ZoneShapeFileName = "Job";
         private static bool cJobFilter = true;
         private static string cJobsFolder;
         private static bool cShowJobs;
