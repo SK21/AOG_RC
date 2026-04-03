@@ -396,6 +396,7 @@ namespace RateController.Forms
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
             foreach (Control c in this.Controls)
             {
+                if (c == pbQuantity) continue;
                 c.ForeColor = Properties.Settings.Default.DisplayForeColour;
             }
         }
@@ -462,7 +463,7 @@ namespace RateController.Forms
                 lbQuantityAmount.Visible = !ShowFans;
                 lbQuantityType.Visible = !ShowFans;
                 lbProductName.Visible = !ShowFans;
-                pnlQuantity.Visible = !ShowFans;
+                pbQuantity.Visible = !ShowFans;
 
                 if (ShowFans)
                 {

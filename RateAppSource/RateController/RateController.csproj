@@ -121,6 +121,9 @@
     <Compile Include="Classes\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\VerticalProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Classes\clsAlarm.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />

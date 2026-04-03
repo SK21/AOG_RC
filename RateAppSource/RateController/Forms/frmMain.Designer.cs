@@ -32,7 +32,6 @@
             this.Fans = new System.Windows.Forms.PictureBox();
             this.prod5 = new System.Windows.Forms.PictureBox();
             this.lbQuantityAmount = new System.Windows.Forms.Label();
-            this.pnlQuantity = new System.Windows.Forms.Panel();
             this.pbQuantity = new RateController.VerticalProgressBar();
             this.lbCoverageAmount = new System.Windows.Forms.Label();
             this.lbTargetAmount = new System.Windows.Forms.Label();
@@ -62,7 +61,6 @@
             this.btnResetQuantity = new RateController.Classes.RoundedButton();
             ((System.ComponentModel.ISupportInitialize)(this.Fans)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod5)).BeginInit();
-            this.pnlQuantity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.prod1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod3)).BeginInit();
@@ -109,24 +107,14 @@
             this.lbQuantityAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbQuantityAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
-            // pnlQuantity
-            // 
-            this.pnlQuantity.BackColor = System.Drawing.Color.Transparent;
-            this.pnlQuantity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlQuantity.Controls.Add(this.pbQuantity);
-            this.pnlQuantity.Location = new System.Drawing.Point(340, 73);
-            this.pnlQuantity.Name = "pnlQuantity";
-            this.pnlQuantity.Size = new System.Drawing.Size(38, 203);
-            this.pnlQuantity.TabIndex = 431;
-            // 
             // pbQuantity
             // 
             this.pbQuantity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.pbQuantity.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity.Location = new System.Drawing.Point(0, 0);
+            this.pbQuantity.Location = new System.Drawing.Point(332, 79);
             this.pbQuantity.Name = "pbQuantity";
-            this.pbQuantity.Size = new System.Drawing.Size(38, 203);
-            this.pbQuantity.TabIndex = 0;
+            this.pbQuantity.Size = new System.Drawing.Size(48, 203);
+            this.pbQuantity.TabIndex = 431;
             this.pbQuantity.Tag = "0";
             this.pbQuantity.Value = 95;
             this.pbQuantity.Click += new System.EventHandler(this.pbQuantity_Click);
@@ -402,7 +390,7 @@
             this.btnResetAcres.FlatAppearance.BorderSize = 0;
             this.btnResetAcres.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetAcres.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetAcres.Location = new System.Drawing.Point(289, 238);
+            this.btnResetAcres.Location = new System.Drawing.Point(285, 238);
             this.btnResetAcres.Name = "btnResetAcres";
             this.btnResetAcres.Size = new System.Drawing.Size(41, 40);
             this.btnResetAcres.TabIndex = 442;
@@ -473,7 +461,7 @@
             this.btnResetQuantity.FlatAppearance.BorderSize = 0;
             this.btnResetQuantity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetQuantity.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetQuantity.Location = new System.Drawing.Point(289, 195);
+            this.btnResetQuantity.Location = new System.Drawing.Point(285, 195);
             this.btnResetQuantity.Name = "btnResetQuantity";
             this.btnResetQuantity.Size = new System.Drawing.Size(41, 40);
             this.btnResetQuantity.TabIndex = 443;
@@ -494,7 +482,7 @@
             this.Controls.Add(this.btnQuantity);
             this.Controls.Add(this.btnTarget);
             this.Controls.Add(this.pbAOGstatus);
-            this.Controls.Add(this.pnlQuantity);
+            this.Controls.Add(this.pbQuantity);
             this.Controls.Add(this.lbQuantityAmount);
             this.Controls.Add(this.butPowerOff);
             this.Controls.Add(this.lbCoverageAmount);
@@ -530,7 +518,6 @@
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.Fans)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod5)).EndInit();
-            this.pnlQuantity.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.prod1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod3)).EndInit();
@@ -562,7 +549,6 @@
         private System.Windows.Forms.Button btnMenu;
         private VerticalProgressBar pbQuantity;
         private System.Windows.Forms.Button btnVR;
-        private System.Windows.Forms.Panel pnlQuantity;
         private System.Windows.Forms.Label lbProductName;
         private System.Windows.Forms.Button butPowerOff;
         private System.Windows.Forms.Button btAlarm;
