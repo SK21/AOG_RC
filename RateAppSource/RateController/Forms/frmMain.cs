@@ -581,7 +581,7 @@ namespace RateController.Forms
 
                 if (Props.VariableRateEnabled)
                 {
-                    btnTarget.Text = "VR Target";
+                    btnTarget.Text = "Rx Target";
                 }
                 else if (Prd.UseAltRate)
                 {

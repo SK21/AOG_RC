@@ -276,7 +276,7 @@
             this.btnMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMaster.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMaster.Image = global::RateController.Properties.Resources.SprayOff;
-            this.btnMaster.Location = new System.Drawing.Point(326, 284);
+            this.btnMaster.Location = new System.Drawing.Point(326, 288);
             this.btnMaster.Name = "btnMaster";
             this.btnMaster.Size = new System.Drawing.Size(60, 60);
             this.btnMaster.TabIndex = 419;
