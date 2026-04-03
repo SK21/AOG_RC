@@ -640,7 +640,7 @@
     <value>Tank Size</value>
   </data>
   <data name="lgTank_Remaining" xml:space="preserve">
-    <value>Qty Remain.</value>
+    <value>Qty Remain</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
     <value>Target Rate</value>
@@ -733,7 +733,7 @@
     <value>Area Applied</value>
   </data>
   <data name="lgAreaRemain" xml:space="preserve">
-    <value>Area Remain.</value>
+    <value>Area Remain</value>
   </data>
   <data name="lgConnect" xml:space="preserve">
     <value />

@@ -4,14 +4,56 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace RateController.Forms
 {
     public partial class frmMain : Form
     {
+        private int AlarmButtonCountDown = 5;
+
+        private bool FlashState;
+
+        private int LastAlarm;
+
+        private bool LastAogConnected;
+
+        private ProductState[] LastState = new ProductState[Props.MaxProducts];
+
+        private bool LastUseLight;
+
+        private bool LastVRenabled;
+
+        private Point MouseDownLocation;
+
+        private PictureBox[] ProductIcons = new PictureBox[6];
+
+        private bool ShowFans;
+
+        public frmMain()
+        {
+            InitializeComponent();
+        }
+
+        public event EventHandler Minimize;
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            // Define the border color and thickness
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
+            int borderWidth = 2;
+
+            // Draw the border
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
+        }
+
         [DllImport("user32.dll")]
         private static extern int GetSystemMetrics(int nIndex);
+
         private static bool IsTabletPC() => GetSystemMetrics(86) != 0; // SM_TABLETPC
 
         #region Images
@@ -98,39 +140,6 @@ namespace RateController.Forms
 
         #endregion Images
 
-        private int AlarmButtonCountDown = 5;
-        private bool FlashState;
-        private int LastAlarm;
-        private bool LastAogConnected;
-        private ProductState[] LastState = new ProductState[Props.MaxProducts];
-        private bool LastUseLight;
-        private bool LastVRenabled;
-        private Point MouseDownLocation;
-        private PictureBox[] ProductIcons = new PictureBox[6];
-        private bool ShowFans;
-
-        public frmMain()
-        {
-            InitializeComponent();
-        }
-
-        public event EventHandler Minimize;
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            // Define the border color and thickness
-            Color borderColor = Properties.Settings.Default.DisplayForeColour;
-            int borderWidth = 2;
-
-            // Draw the border
-            using (Pen pen = new Pen(borderColor, borderWidth))
-            {
-                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
-            }
-        }
-
         private void btAlarm_Click(object sender, EventArgs e)
         {
             Core.RCalarm.Silence();
@@ -141,6 +150,12 @@ namespace RateController.Forms
             Core.vSwitchBox.PressSwitch(SwIDs.AutoRate, true);
             if (Core.vSwitchBox.AutoRateOn != Core.vSwitchBox.AutoSectionOn) Core.vSwitchBox.PressSwitch(SwIDs.AutoSection, true);
             UpdateSwitches();
+        }
+
+        private void btnCoverage_Click(object sender, EventArgs e)
+        {
+            Props.ShowCoverageRemaining = !Props.ShowCoverageRemaining;
+            UpdateForm();
         }
 
         private void btnMaster_Click(object sender, EventArgs e)
@@ -169,6 +184,50 @@ namespace RateController.Forms
             Minimize?.Invoke(this, EventArgs.Empty);
             Form restoreform = new RCRestore();
             restoreform.Show();
+        }
+
+        private void btnQuantity_Click(object sender, EventArgs e)
+        {
+            Props.ShowQuantityRemaining = !Props.ShowQuantityRemaining;
+            UpdateForm();
+        }
+
+        private void btnResetAcres_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox("Reset area?", "Reset", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
+                Prd.ResetCoverage();
+                UpdateForm();
+            }
+        }
+
+        private void btnTarget_Click(object sender, EventArgs e)
+        {
+            if (!ShowFans)
+            {
+                if (!Props.VariableRateEnabled)
+                {
+                    clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
+                    if (Prd.UseAltRate)
+                    {
+                        btnTarget.Text = Core.Tls.ClipText(Lang.lgTargetRate, 14);
+                        Prd.UseAltRate = false;
+                    }
+                    else
+                    {
+                        btnTarget.Text = Core.Tls.ClipText(Lang.lgTargetRateAlt, 14);
+                        Prd.UseAltRate = true;
+                    }
+                }
+                UpdateForm();
+            }
         }
 
         private void btnVR_Click(object sender, EventArgs e)
@@ -262,35 +321,17 @@ namespace RateController.Forms
                     };
         }
 
-        private void lbCoverage_Click(object sender, EventArgs e)
+        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            Props.ShowCoverageRemaining = !Props.ShowCoverageRemaining;
-            UpdateForm();
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
         }
 
-        private void lbCoverageAmount_Click(object sender, EventArgs e)
+        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            var Hlp = new frmMsgBox("Reset area?", "Reset", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
-            {
-                clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
-                Prd.ResetCoverage();
-                UpdateForm();
-            }
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
-        private void lbQuantity_Click(object sender, EventArgs e)
-        {
-            Props.ShowQuantityRemaining = !Props.ShowQuantityRemaining;
-            UpdateForm();
-        }
-
-        private void lbQuantityAmount_Click(object sender, EventArgs e)
+        private void pbQuantity_Click(object sender, EventArgs e)
         {
             Form fs = Props.IsFormOpen("frmResetQuantity");
 
@@ -303,35 +344,6 @@ namespace RateController.Forms
             Form frm = new frmResetQuantity();
             frm.Show();
             UpdateForm();
-        }
-
-        private void lbTarget_Click(object sender, EventArgs e)
-        {
-            if (!Props.VariableRateEnabled)
-            {
-                clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
-                if (Prd.UseAltRate)
-                {
-                    lbTarget.Text = Core.Tls.ClipText(Lang.lgTargetRate, 14);
-                    Prd.UseAltRate = false;
-                }
-                else
-                {
-                    lbTarget.Text = Core.Tls.ClipText(Lang.lgTargetRateAlt, 14);
-                    Prd.UseAltRate = true;
-                }
-            }
-            UpdateForm();
-        }
-
-        private void mouseMove_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
-        }
-
-        private void mouseMove_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private void pictureBox3_MouseDown(object sender, MouseEventArgs e)
@@ -443,8 +455,8 @@ namespace RateController.Forms
             {
                 ShowFans = DisplayFans;
 
-                lbQuantity.Visible = !ShowFans;
-                lbCoverage.Visible = !ShowFans;
+                btnQuantity.Visible = !ShowFans;
+                btnCoverage.Visible = !ShowFans;
                 lbCoverageAmount.Visible = !ShowFans;
                 lbCoverageType.Visible = !ShowFans;
                 lbQuantityAmount.Visible = !ShowFans;
@@ -454,14 +466,14 @@ namespace RateController.Forms
 
                 if (ShowFans)
                 {
-                    lbUnits.Text = "Fan 1";
-                    lbTarget.Text = "Fan 2";
+                    btnUnits.Text = "Fan 1";
+                    btnTarget.Text = "Fan 2";
                     lbRateType.Text = "RPM";
                     lbTargetType.Text = "RPM";
                 }
                 else
                 {
-                    lbUnits.Text = Core.Tls.ClipText(Lang.lgCurrentRate, 14);
+                    btnUnits.Text = Core.Tls.ClipText(Lang.lgCurrentRate, 14);
                 }
             }
         }
@@ -521,18 +533,18 @@ namespace RateController.Forms
                 }
 
                 // quantity
-                lbQuantityType.Text = Core.Tls.ClipText(Prd.QuantityDescription, 8);
+                lbQuantityType.Text = Core.Tls.ClipText(Prd.QuantityDescription, 3);
                 double Tnk = 0;
                 if (Props.ShowQuantityRemaining)
                 {
                     // calculate remaining
-                    lbQuantity.Text = Core.Tls.ClipText(Lang.lgTank_Remaining, 14);
+                    btnQuantity.Text = Core.Tls.ClipText(Lang.lgTank_Remaining, 14);
                     Tnk = Prd.CurrentTankAmount;
                 }
                 else
                 {
                     // show amount done
-                    lbQuantity.Text = Core.Tls.ClipText(Lang.lgQuantityApplied, 14);
+                    btnQuantity.Text = Core.Tls.ClipText(Lang.lgQuantityApplied, 14);
                     Tnk = Prd.UnitsApplied();
                 }
                 if (Math.Abs(Tnk) > 9999)
@@ -545,10 +557,10 @@ namespace RateController.Forms
                 }
 
                 // area
-                lbCoverageType.Text = Core.Tls.ClipText(Prd.CoverageDescription(), 8);
+                lbCoverageType.Text = Core.Tls.ClipText(Prd.UnitsAbbr(), 2);
                 if (Props.ShowCoverageRemaining)
                 {
-                    lbCoverage.Text = Core.Tls.ClipText(Lang.lgAreaRemain, 14);
+                    btnCoverage.Text = Core.Tls.ClipText(Lang.lgAreaRemain, 14);
                     double RT = Prd.TargetRate();
 
                     if (RT > 0)
@@ -564,20 +576,20 @@ namespace RateController.Forms
                 {
                     // show amount done
                     lbCoverageAmount.Text = Prd.CurrentCoverage().ToString("N1");
-                    lbCoverage.Text = Core.Tls.ClipText(Lang.lgAreaApplied, 14);
+                    btnCoverage.Text = Core.Tls.ClipText(Lang.lgAreaApplied, 14);
                 }
 
                 if (Props.VariableRateEnabled)
                 {
-                    lbTarget.Text = "VR Target";
+                    btnTarget.Text = "VR Target";
                 }
                 else if (Prd.UseAltRate)
                 {
-                    lbTarget.Text = Core.Tls.ClipText(Lang.lgTargetRateAlt, 14);
+                    btnTarget.Text = Core.Tls.ClipText(Lang.lgTargetRateAlt, 14);
                 }
                 else
                 {
-                    lbTarget.Text = Core.Tls.ClipText(Lang.lgTargetRate, 14);
+                    btnTarget.Text = Core.Tls.ClipText(Lang.lgTargetRate, 14);
                 }
 
                 // graph
@@ -699,6 +711,22 @@ namespace RateController.Forms
             else
             {
                 btnMaster.Image = Properties.Resources.SprayOff2;
+            }
+        }
+
+        private void btnUnits_Click(object sender, EventArgs e)
+        {
+            if (!ShowFans)
+            {
+                Props.CurrentMenuName = "frmMenuRate";
+
+                frmMenu fs = (frmMenu)Props.IsFormOpen("frmMenu");
+                if (fs == null)
+                {
+                    fs = new frmMenu();
+                    fs.Show();
+                }
+                fs.Focus();
             }
         }
     }

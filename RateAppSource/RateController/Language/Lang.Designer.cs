@@ -151,7 +151,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Area Remain..
+        ///   Looks up a localized string similar to Area Remain.
         /// </summary>
         internal static string lgAreaRemain {
             get {
@@ -1825,7 +1825,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Qty Remain..
+        ///   Looks up a localized string similar to Qty Remain.
         /// </summary>
         internal static string lgTank_Remaining {
             get {

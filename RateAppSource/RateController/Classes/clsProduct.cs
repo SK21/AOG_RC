@@ -1003,6 +1003,11 @@ namespace RateController.Classes
             return s;
         }
 
+        public string UnitsAbbr()
+        {
+            return Props.CoverageAbbr[CoverageUnits];
+        }
+
         public double UnitsApplied()
         {
             double Result = cUnitsApplied;
