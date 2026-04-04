@@ -399,6 +399,7 @@ namespace RateController.Forms
                 if (c == barQuantity) continue;
                 c.ForeColor = Properties.Settings.Default.DisplayForeColour;
             }
+            barQuantity.BackColor = Properties.Settings.Default.MainBackColour;
             barQuantity.BorderColor = Properties.Settings.Default.DisplayForeColour;
         }
 

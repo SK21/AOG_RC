@@ -111,10 +111,10 @@
             // 
             this.barQuantity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
             this.barQuantity.BorderColor = System.Drawing.Color.Gray;
-            this.barQuantity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(184)))), ((int)(((byte)(56)))));
+            this.barQuantity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(203)))), ((int)(((byte)(48)))));
             this.barQuantity.Location = new System.Drawing.Point(332, 75);
             this.barQuantity.Name = "barQuantity";
-            this.barQuantity.Size = new System.Drawing.Size(48, 203);
+            this.barQuantity.Size = new System.Drawing.Size(50, 203);
             this.barQuantity.TabIndex = 431;
             this.barQuantity.Tag = "0";
             this.barQuantity.Value = 95;
