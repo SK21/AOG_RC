@@ -396,9 +396,10 @@ namespace RateController.Forms
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
             foreach (Control c in this.Controls)
             {
-                if (c == pbQuantity) continue;
+                if (c == barQuantity) continue;
                 c.ForeColor = Properties.Settings.Default.DisplayForeColour;
             }
+            barQuantity.BorderColor = Properties.Settings.Default.DisplayForeColour;
         }
 
         private void ShowAlarmButton()
@@ -463,7 +464,7 @@ namespace RateController.Forms
                 lbQuantityAmount.Visible = !ShowFans;
                 lbQuantityType.Visible = !ShowFans;
                 lbProductName.Visible = !ShowFans;
-                pbQuantity.Visible = !ShowFans;
+                barQuantity.Visible = !ShowFans;
 
                 if (ShowFans)
                 {
@@ -601,7 +602,7 @@ namespace RateController.Forms
                 int Level = (int)(Rem / Size * 100);
                 if (Level > 100) Level = 100;
                 if (Level < 0) Level = 0;
-                pbQuantity.Value = Level;
+                barQuantity.Value = Level;
             }
             catch (Exception ex)
             {

@@ -32,7 +32,7 @@
             this.Fans = new System.Windows.Forms.PictureBox();
             this.prod5 = new System.Windows.Forms.PictureBox();
             this.lbQuantityAmount = new System.Windows.Forms.Label();
-            this.pbQuantity = new RateController.VerticalProgressBar();
+            this.barQuantity = new RateController.VerticalProgressBar();
             this.lbCoverageAmount = new System.Windows.Forms.Label();
             this.lbTargetAmount = new System.Windows.Forms.Label();
             this.lbRateAmount = new System.Windows.Forms.Label();
@@ -107,19 +107,20 @@
             this.lbQuantityAmount.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
             this.lbQuantityAmount.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
-            // pbQuantity
+            // barQuantity
             // 
-            this.pbQuantity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
-            this.pbQuantity.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbQuantity.Location = new System.Drawing.Point(332, 79);
-            this.pbQuantity.Name = "pbQuantity";
-            this.pbQuantity.Size = new System.Drawing.Size(48, 203);
-            this.pbQuantity.TabIndex = 431;
-            this.pbQuantity.Tag = "0";
-            this.pbQuantity.Value = 95;
-            this.pbQuantity.Click += new System.EventHandler(this.pbQuantity_Click);
-            this.pbQuantity.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
-            this.pbQuantity.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
+            this.barQuantity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(220)))), ((int)(((byte)(230)))));
+            this.barQuantity.BorderColor = System.Drawing.Color.Gray;
+            this.barQuantity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(184)))), ((int)(((byte)(56)))));
+            this.barQuantity.Location = new System.Drawing.Point(332, 75);
+            this.barQuantity.Name = "barQuantity";
+            this.barQuantity.Size = new System.Drawing.Size(48, 203);
+            this.barQuantity.TabIndex = 431;
+            this.barQuantity.Tag = "0";
+            this.barQuantity.Value = 95;
+            this.barQuantity.Click += new System.EventHandler(this.pbQuantity_Click);
+            this.barQuantity.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
+            this.barQuantity.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbCoverageAmount
             // 
@@ -482,7 +483,7 @@
             this.Controls.Add(this.btnQuantity);
             this.Controls.Add(this.btnTarget);
             this.Controls.Add(this.pbAOGstatus);
-            this.Controls.Add(this.pbQuantity);
+            this.Controls.Add(this.barQuantity);
             this.Controls.Add(this.lbQuantityAmount);
             this.Controls.Add(this.butPowerOff);
             this.Controls.Add(this.lbCoverageAmount);
@@ -547,7 +548,7 @@
         private System.Windows.Forms.Button btnAuto;
         private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.Button btnMenu;
-        private VerticalProgressBar pbQuantity;
+        private VerticalProgressBar barQuantity;
         private System.Windows.Forms.Button btnVR;
         private System.Windows.Forms.Label lbProductName;
         private System.Windows.Forms.Button butPowerOff;
