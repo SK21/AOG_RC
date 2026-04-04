@@ -1,16 +1,20 @@
 
-bool RelayStatus[16];
-uint8_t Relays8[] = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW
-uint8_t Relays16[] = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW
+// If both onboard relays and remote relays are enabled, onboard relays will do 0-7, remote will do 8-15.
+// If only one or the other are enabled it will do 0-15.
+
+bool RelayStatusPCA9555[16];
+bool RelayStatusPCA9685[16];
+uint8_t Relays8[] = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW on RelayDriver PCB
+uint8_t Relays16[] = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW on RelayDriver PCB
+
+uint8_t NewLo = 0;
+uint8_t NewHi = 0;
 
 void CheckRelays()
 {
 	uint8_t Rlys;
 	bool BitState;
 	uint8_t IOpin;
-
-	uint8_t NewLo = 0;
-	uint8_t NewHi = 0;
 
 	if (WifiMasterOn)
 	{
@@ -44,7 +48,25 @@ void CheckRelays()
 		NewHi = PowerRelayHi | InvertedHi;
 	}
 
-	switch (MDL.RelayControl)
+	// onboard relays
+	byte End = 15;
+	if (MDL.RemoteRelayControl > 0) End = 7; // remote does last 8
+	ControlSwitch(0, End, MDL.OnboardRelayControl);
+
+
+	// remote relays
+	byte Start = 0;
+	if (MDL.OnboardRelayControl > 0) Start = 8; // onboard does first 8
+	ControlSwitch(Start, 15, MDL.RemoteRelayControl);
+}
+
+void ControlSwitch(byte Start, byte End, byte Control)
+{
+	uint8_t Rlys;
+	bool BitState;
+	uint8_t IOpin;
+
+	switch (Control)
 	{
 	case 1:
 		// GPIOs
@@ -53,7 +75,8 @@ void CheckRelays()
 			if (j < 1) Rlys = NewLo; else Rlys = NewHi;
 			for (int i = 0; i < 8; i++)
 			{
-				if (MDL.RelayControlPins[i + j * 8] < NC) // check if relay is enabled
+				int Pin = i + j * 8;
+				if (MDL.RelayControlPins[Pin] < NC && Pin >= Start && Pin <= End) // check if relay is enabled
 				{
 					if (bitRead(Rlys, i)) digitalWrite(MDL.RelayControlPins[i + j * 8], MDL.InvertRelay); else digitalWrite(MDL.RelayControlPins[i + j * 8], !MDL.InvertRelay);
 				}
@@ -65,11 +88,21 @@ void CheckRelays()
 		// PCA9555 8 relays
 		if (PCA9555PW_found)
 		{
+			uint8_t RelayByte;
+			if (Start == 0)
+			{
+				RelayByte = NewLo;
+			}
+			else
+			{
+				RelayByte = NewHi;
+			}
+
 			for (int i = 0; i < 8; i++)
 			{
-				BitState = bitRead(NewLo, i);
+				BitState = bitRead(RelayByte, i);
 
-				if (RelayStatus[i] != BitState)
+				if (RelayStatusPCA9555[i] != BitState)
 				{
 					IOpin = Relays8[i];
 
@@ -83,7 +116,7 @@ void CheckRelays()
 						// off
 						PCA.write(IOpin, PCA95x5::Level::H);
 					}
-					RelayStatus[i] = BitState;
+					RelayStatusPCA9555[i] = BitState;
 				}
 			}
 		}
@@ -104,21 +137,24 @@ void CheckRelays()
 					BitState = bitRead(NewHi, i - 8);
 				}
 
-				if (RelayStatus[i] != BitState)
+				if (i >= Start && i <= End)
 				{
-					IOpin = Relays16[i];
+					if (RelayStatusPCA9555[i] != BitState)
+					{
+						IOpin = Relays16[i];
 
-					if (BitState)
-					{
-						// on
-						PCA.write(IOpin, PCA95x5::Level::L);
+						if (BitState)
+						{
+							// on
+							PCA.write(IOpin, PCA95x5::Level::L);
+						}
+						else
+						{
+							// off
+							PCA.write(IOpin, PCA95x5::Level::H);
+						}
+						RelayStatusPCA9555[i] = BitState;
 					}
-					else
-					{
-						// off
-						PCA.write(IOpin, PCA95x5::Level::H);
-					}
-					RelayStatus[i] = BitState;
 				}
 			}
 		}
@@ -139,15 +175,18 @@ void CheckRelays()
 				for (int bank = 0; bank < 2; bank++)
 				{
 					Relay = bit + bank * 8;
-					if ((RelayBanks[bank] & (1 << bit)) == (1 << bit))
+					if (Relay >= Start && Relay <= End)
 					{
-						if (MDL.RelayControlPins[Relay] < 8)
+						if ((RelayBanks[bank] & (1 << bit)) == (1 << bit))
 						{
-							mcpOutA |= (1 << MDL.RelayControlPins[Relay]);
-						}
-						else
-						{
-							mcpOutB |= (1 << (MDL.RelayControlPins[Relay] - 8));
+							if (MDL.RelayControlPins[Relay] < 8)
+							{
+								mcpOutA |= (1 << MDL.RelayControlPins[Relay]);
+							}
+							else
+							{
+								mcpOutB |= (1 << (MDL.RelayControlPins[Relay] - 8));
+							}
 						}
 					}
 				}
@@ -180,7 +219,7 @@ void CheckRelays()
 				{
 					BitState = bitRead(NewLo, i);
 
-					if (RelayStatus[i] != BitState)
+					if (RelayStatusPCA9685[i] != BitState)
 					{
 						IOpin = (1 + i) * 2 - 1;
 						if (BitState)
@@ -203,7 +242,7 @@ void CheckRelays()
 								analogWrite(26, 255);
 							}
 						}
-						RelayStatus[i] = BitState;
+						RelayStatusPCA9685[i] = BitState;
 					}
 				}
 			}
@@ -214,7 +253,7 @@ void CheckRelays()
 				{
 					BitState = bitRead(NewLo, i);
 
-					if (RelayStatus[i] != BitState)
+					if (RelayStatusPCA9685[i] != BitState)
 					{
 						IOpin = i * 2;
 						if (BitState)
@@ -239,7 +278,7 @@ void CheckRelays()
 								analogWrite(26, 255);
 							}
 						}
-						RelayStatus[i] = BitState;
+						RelayStatusPCA9685[i] = BitState;
 					}
 				}
 			}
@@ -258,3 +297,11 @@ void CheckRelays()
 		break;
 	}
 }
+
+
+
+
+
+
+
+

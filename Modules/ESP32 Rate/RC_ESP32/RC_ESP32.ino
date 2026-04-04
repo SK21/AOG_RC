@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 29036;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 4046;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -79,9 +79,10 @@ struct ModuleConfig	// about 130 bytes
 	uint8_t ID = 0;
 	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
-	bool InvertFlow = true;		// sets on value for flow valve or sets motor direction
+	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
-	uint8_t RelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
+	uint8_t OnboardRelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
+	uint8_t RemoteRelayControl = 0;			// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	char APname[ModStringLengths] = "RateModule";
 	char APpassword[ModStringLengths] = "";
 	uint8_t WorkPin = NC;
@@ -395,8 +396,9 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //uint32_t LastLoop;
 //byte ReadReset;
 //uint32_t MaxLoopTime;
-//double debug1;
+//int debug1;
 //double debug2;
+//double debug3;
 //
 //// max loop about 2500, 18/Sep/2025
 //void Blink()
@@ -409,16 +411,19 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //		Serial.print(MaxLoopTime);
 //
 //		Serial.print(", ");
-//		Serial.print(debug1);
+//		Serial.print(MDL.OnboardRelayControl);
+//
+//		Serial.print(", ");
+//		Serial.print(MDL.RemoteRelayControl);
+//
+//		Serial.print(", ");
+//		Serial.print(debug1,BIN);
 //
 //		Serial.print(", ");
 //		Serial.print(debug2);
 //
-//		//Serial.print(", ");
-//		//Serial.print(WifiMasterOn);
-//
 //		Serial.print(", ");
-//		Serial.print(Sensor[0].TotalPulses);
+//		Serial.print(debug3);
 //
 //		Serial.println("");
 //

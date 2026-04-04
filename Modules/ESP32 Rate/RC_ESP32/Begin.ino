@@ -94,9 +94,9 @@ void DoSetup()
 	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDLnetwork.IP3 };
 
 	Ethernet.init(W5500_SS);   // SS pin
-	IPAddress Gateway(MDLnetwork.IP0,MDLnetwork.IP1,MDLnetwork.IP2,1);
-	IPAddress Mask(255,255,255,0);
-	Ethernet.begin(LocalMac,LocalIP,Gateway,Gateway,Mask);
+	IPAddress Gateway(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 1);
+	IPAddress Mask(255, 255, 255, 0);
+	Ethernet.begin(LocalMac, LocalIP, Gateway, Gateway, Mask);
 
 	delay(1500);
 	ChipFound = (Ethernet.hardwareStatus() != EthernetNoHardware);
@@ -170,166 +170,8 @@ void DoSetup()
 	}
 
 	// Relays
-	switch (MDL.RelayControl)
-	{
-	case 1:
-		// Relay GPIO Pins
-		Serial.println("");
-		Serial.println("Using GPIO pins for relays.");
-		for (int i = 0; i < 16; i++)
-		{
-			if (MDL.RelayControlPins[i] < NC)
-			{
-				pinMode(MDL.RelayControlPins[i], OUTPUT);
-			}
-		}
-		break;
-
-	case 2:
-	case 3:
-		// PCA9555 I/O expander on default address 0x20
-		Serial.println("");
-		Serial.println("Starting PCA9555 I/O Expander ...");
-		ErrorCount = 0;
-		while (!PCA9555PW_found)
-		{
-			Serial.print(".");
-			Wire.beginTransmission(0x20);
-			PCA9555PW_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5) break;
-		}
-
-		Serial.println("");
-		if (PCA9555PW_found)
-		{
-			Serial.println("PCA9555 found.");
-
-			PCA.attach(Wire);
-			PCA.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
-			PCA.direction(PCA95x5::Direction::OUT_ALL);
-			PCA.write(PCA95x5::Level::H_ALL);
-		}
-		else
-		{
-			Serial.println("PCA9555 not found.");
-		}
-		break;
-
-	case 4:
-		// MCP23017 I/O expander on 0x20, 0x21
-
-		Serial.println("");
-		Serial.println("Starting MCP23017 ...");
-
-		ErrorCount = 0;
-		MCP23017address = 0x21;
-		while (!MCP23017_found)
-		{
-			// RC12-3
-			Serial.print(".");
-			Wire.beginTransmission(0x21);
-			MCP23017_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5) break;
-		}
-
-		if (!MCP23017_found)
-		{
-			ErrorCount = 0;
-			MCP23017address = 0x20;
-			while (!MCP23017_found)
-			{
-				Serial.print(".");
-				Wire.beginTransmission(MCP23017address);
-				MCP23017_found = (Wire.endTransmission() == 0);
-				ErrorCount++;
-				delay(500);
-				if (ErrorCount > 5) break;
-			}
-		}
-
-		Serial.println("");
-		if (MCP23017_found)
-		{
-			Wire.beginTransmission(MCP23017address);
-			Wire.write(0x00); // IODIRA register
-			Wire.write(0x00); // set all of port A to outputs
-			Wire.endTransmission();
-
-			Wire.beginTransmission(MCP23017address);
-			Wire.write(0x01); // IODIRB register
-			Wire.write(0x00); // set all of port B to outputs
-			Wire.endTransmission();
-
-			Serial.println("MCP23017 found.");
-		}
-		else
-		{
-			Serial.println("MCP23017 not found.");
-		}
-		break;
-
-	case 5:
-		// PCA9685
-		Serial.println("");
-		Serial.println("Starting PCA9685 I/O Expander ...");
-		ErrorCount = 0;
-		while (!PCA9685_found)
-		{
-			Serial.print(".");
-			Wire.beginTransmission(PCA9685Address);
-			PCA9685_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5)break;
-		}
-
-		Serial.println("");
-		if (PCA9685_found)
-		{
-			Serial.println("PCA9685 expander found.");
-			PWMServoDriver.begin();
-			PWMServoDriver.setPWMFreq(200);
-
-			pinMode(OutputEnablePin, OUTPUT);
-			digitalWrite(OutputEnablePin, LOW);	//enable
-		}
-		else
-		{
-			Serial.println("PCA9685 expander not found.");
-		}
-		break;
-
-	case 6:
-		// PCF8574
-		Serial.println("");
-		Serial.println("Starting PCF8574 I/O Expander ...");
-		ErrorCount = 0;
-		while (!PCF_found)
-		{
-			Serial.print(".");
-			Wire.beginTransmission(PCF8574address);
-			PCF_found = (Wire.endTransmission() == 0);
-			ErrorCount++;
-			delay(500);
-			if (ErrorCount > 5) break;
-		}
-
-		Serial.println("");
-		if (PCF_found)
-		{
-			Serial.println("PCF8574 found.");
-			PCF.begin();
-		}
-		else
-		{
-			Serial.println("PCF8574 not found.");
-		}
-		break;
-	}
+	if (MDL.OnboardRelayControl > 0) InitializeRelays(MDL.OnboardRelayControl, 7);	// 0-7
+	if (MDL.RemoteRelayControl > 0) InitializeRelays(MDL.RemoteRelayControl, -1);	// remaining
 
 	// Wifi
 	WiFi.mode(WIFI_MODE_APSTA);
@@ -352,7 +194,7 @@ void DoSetup()
 	AP += suffix;
 
 	WiFi.softAPConfig(AP_LocalIP, AP_GateWay, AP_Subnet);
-	if (strlen(MDL.APpassword) >= 8) 
+	if (strlen(MDL.APpassword) >= 8)
 	{
 		// WPA2-PSK
 		WiFi.softAP(AP.c_str(), MDL.APpassword, 6, false, 4);
@@ -383,8 +225,8 @@ void DoSetup()
 	server.on("/ButtonPressed", ButtonPressed);
 	server.onNotFound(HandleRoot);
 
-	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});	
-	server.on("/fwlink", []() { server.send(200, "text/plain", "OK"); });	
+	server.on("/generate_204", []() {server.send(204, "text/plain", "");	});
+	server.on("/fwlink", []() { server.send(200, "text/plain", "OK"); });
 	server.on("/hotspot-detect.html", HTTP_GET, []() { server.send(200, "text/html", "<html><body>Portal</body></html>"); });
 	server.on("/ncsi.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft NCSI"); });
 
@@ -487,6 +329,172 @@ void DoSetup()
 	Serial.println("");
 }
 
+void InitializeRelays(uint8_t Control, int8_t End)
+{
+	uint8_t ErrorCount;
+	switch (Control)
+	{
+	case 1:
+		// Relay GPIO Pins
+		Serial.println("");
+		Serial.println("Using GPIO pins for relays.");
+		for (int i = 0; i <= End; i++)
+		{
+			if (MDL.RelayControlPins[i] < NC)
+			{
+				pinMode(MDL.RelayControlPins[i], OUTPUT);
+			}
+		}
+		break;
+
+	case 2:
+	case 3:
+		// PCA9555 I/O expander on default address 0x20
+		Serial.println("");
+		Serial.println("Starting PCA9555 I/O Expander for relays ...");
+		ErrorCount = 0;
+		while (!PCA9555PW_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(0x20);
+			PCA9555PW_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (PCA9555PW_found)
+		{
+			Serial.println("PCA9555 expander found.");
+
+			PCA.attach(Wire);
+			PCA.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
+			PCA.direction(PCA95x5::Direction::OUT_ALL);
+			PCA.write(PCA95x5::Level::H_ALL);
+		}
+		else
+		{
+			Serial.println("PCA9555 expander not found.");
+		}
+		Serial.println("");
+		break;
+
+	case 4:
+		// MCP23017 I/O expander on 0x20, 0x21
+
+		Serial.println("");
+		Serial.println("Starting MCP23017 for relays ...");
+
+		ErrorCount = 0;
+		MCP23017address = 0x21;
+		while (!MCP23017_found)
+		{
+			// RC12-3
+			Serial.print(".");
+			Wire.beginTransmission(0x21);
+			MCP23017_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		if (!MCP23017_found)
+		{
+			ErrorCount = 0;
+			MCP23017address = 0x20;
+			while (!MCP23017_found)
+			{
+				Serial.print(".");
+				Wire.beginTransmission(MCP23017address);
+				MCP23017_found = (Wire.endTransmission() == 0);
+				ErrorCount++;
+				delay(500);
+				if (ErrorCount > 5) break;
+			}
+		}
+
+		Serial.println("");
+		if (MCP23017_found)
+		{
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x00); // IODIRA register
+			Wire.write(0x00); // set all of port A to outputs
+			Wire.endTransmission();
+
+			Wire.beginTransmission(MCP23017address);
+			Wire.write(0x01); // IODIRB register
+			Wire.write(0x00); // set all of port B to outputs
+			Wire.endTransmission();
+
+			Serial.println("MCP23017 found.");
+		}
+		else
+		{
+			Serial.println("MCP23017 not found.");
+		}
+		break;
+
+	case 5:
+		// PCA9685
+		Serial.println("");
+		Serial.println("Starting PCA9685 I/O Expander for relays ...");
+		ErrorCount = 0;
+		while (!PCA9685_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(PCA9685Address);
+			PCA9685_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5)break;
+		}
+
+		Serial.println("");
+		if (PCA9685_found)
+		{
+			Serial.println("PCA9685 expander found.");
+			PWMServoDriver.begin();
+			PWMServoDriver.setPWMFreq(200);
+
+			pinMode(OutputEnablePin, OUTPUT);
+			digitalWrite(OutputEnablePin, LOW);	//enable
+		}
+		else
+		{
+			Serial.println("PCA9685 expander not found.");
+		}
+		break;
+
+	case 6:
+		// PCF8574
+		Serial.println("");
+		Serial.println("Starting PCF8574 I/O Expander for relays ...");
+		ErrorCount = 0;
+		while (!PCF_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(PCF8574address);
+			PCF_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (PCF_found)
+		{
+			Serial.println("PCF8574 found.");
+			PCF.begin();
+		}
+		else
+		{
+			Serial.println("PCF8574 not found.");
+		}
+		break;
+	}
+}
+
 // eeprom map:
 // ID			0-1
 // module type	2
@@ -584,7 +592,8 @@ void LoadDefaults()
 	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;
-	MDL.RelayControl = 5;
+	MDL.OnboardRelayControl = 5;
+	MDL.RemoteRelayControl = 0;
 	MDL.WorkPin = NC;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
@@ -687,7 +696,7 @@ bool ValidData()
 			}
 		}
 
-		if (Result && MDL.RelayControl == 1)
+		if (Result && MDL.OnboardRelayControl == 1)
 		{
 			// check GPIOs for relays
 			for (int k = 0; k < 16; k++)
