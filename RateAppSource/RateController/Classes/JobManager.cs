@@ -72,14 +72,6 @@ namespace RateController.Classes
             }
         }
 
-        public static string CurrentYieldDataPath
-        {
-            get
-            {
-                return YieldDataPath(Properties.Settings.Default.CurrentJob);
-            }
-        }
-
         public static bool JobFilter
         {
             get { return cJobFilter; }

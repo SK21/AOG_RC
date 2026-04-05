@@ -49,6 +49,7 @@ namespace RateController.RateMap
             YieldLegend = new LegendManager(map, true);
             JobManager.JobChanged += JobManager_JobChanged;
             Core.ProfileChanged += Core_ProfileChanged;
+            FieldDataManager.SelectionChanged += FieldDataManager_SelectionChanged;
             LoadData();
         }
 
@@ -159,6 +160,7 @@ namespace RateController.RateMap
             {
                 JobManager.JobChanged -= JobManager_JobChanged;
                 Core.ProfileChanged -= Core_ProfileChanged;
+                FieldDataManager.SelectionChanged -= FieldDataManager_SelectionChanged;
 
                 Reset();
 
@@ -182,7 +184,7 @@ namespace RateController.RateMap
             {
                 FieldData.Clear();
 
-                string path = filePath ?? FieldDataManager.SelectedYieldPath ?? JobManager.CurrentYieldDataPath;
+                string path = FieldDataManager.SelectedYieldPath;
                 if (FileValid(path))
                 {
                     string[] allLines = File.ReadAllLines(path);
@@ -252,10 +254,7 @@ namespace RateController.RateMap
         private void Core_ProfileChanged(object sender, EventArgs e)
         {
             LoadData();
-            if (Enabled)
-            {
-                Build();
-            }
+            if (cEnabled) Build();
         }
 
         private double DistanceMeters(PointLatLng a, double bLat, double bLng)
@@ -267,6 +266,12 @@ namespace RateController.RateMap
             double dx = (bLng - a.Lng) * metersPerDegLng;
             double dy = (bLat - a.Lat) * metersPerDegLat;
             return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
+        {
+            LoadData();
+            if (cEnabled) Build();
         }
 
         private bool FileValid(string DataFilePath = null)
@@ -296,10 +301,7 @@ namespace RateController.RateMap
         private void JobManager_JobChanged(object sender, EventArgs e)
         {
             LoadData();
-            if (Enabled)
-            {
-                Build();
-            }
+            if (cEnabled) Build();
         }
     }
 }
