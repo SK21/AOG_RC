@@ -257,7 +257,7 @@ namespace RateController.Forms
             Job job = JobManager.CurrentJob;
             if (job == null || job.FieldID < 0) return;
             string sel = cbPrescription.SelectedItem as string;
-            JobManager.SetActivePrescription(job.FieldID, sel == "(none)" ? "" : sel);
+            JobManager.SetActivePrescription(job.ID, sel == "(none)" ? "" : sel);
             MapController.LoadMap();
         }
 

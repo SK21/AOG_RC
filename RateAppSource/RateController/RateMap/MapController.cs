@@ -510,7 +510,7 @@ namespace RateController.RateMap
                 if (job != null && job.FieldID >= 0)
                 {
                     string filename = System.IO.Path.GetFileName(filePath);
-                    JobManager.SetActivePrescription(job.FieldID, filename);
+                    JobManager.SetActivePrescription(job.ID, filename);
                 }
                 MapChanged?.Invoke(null, EventArgs.Empty);
             }

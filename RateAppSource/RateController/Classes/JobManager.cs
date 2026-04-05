@@ -405,7 +405,8 @@ namespace RateController.Classes
             {
                 if (JB.ActivePrescription == null)
                 {
-                    Result = "Zones.shp";
+                    //Result = "Zones.shp";
+                    Result = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), "Zones.shp");
                 }
                 else
                 {
