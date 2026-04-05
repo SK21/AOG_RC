@@ -257,7 +257,7 @@ namespace RateController.Forms
             Job job = JobManager.CurrentJob;
             if (job == null || job.FieldID < 0) return;
             string sel = cbPrescription.SelectedItem as string;
-            ParcelManager.SetActivePrescription(job.FieldID, sel == "(none)" ? "" : sel);
+            JobManager.SetActivePrescription(job.FieldID, sel == "(none)" ? "" : sel);
             MapController.LoadMap();
         }
 
@@ -1455,8 +1455,10 @@ namespace RateController.Forms
                 if (parcel != null)
                 {
                     foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
+                    {
                         cbPrescription.Items.Add(f);
-                    string active = parcel.ActivePrescription;
+                    }
+                    string active = job.ActivePrescription;
                     cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
                 }
                 else

@@ -149,6 +149,9 @@ namespace RateController.Classes
                                     File.WriteAllText(rateDataFilePath, string.Empty);
                                 }
 
+                                toJob.ActivePrescription = fromJob.ActivePrescription;
+                                SaveJob(toJob);
+
                                 Result = true;
                             }
                         }
@@ -396,11 +399,21 @@ namespace RateController.Classes
 
         public static string MapPath(int JobID)
         {
+            string Result = null;
             Job JB = SearchJob(JobID);
-            if (JB == null) return null;
-            string active = ParcelManager.ActiveMapPath(JB.FieldID);
-            if (active != null) return active;
-            return Path.Combine(ParcelManager.MapsFolder(JB.FieldID), "Zones.shp");
+            if (JB != null)
+            {
+                if (JB.ActivePrescription == null)
+                {
+                    Result = "Zones.shp";
+                }
+                else
+                {
+                    string MP = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
+                    if (File.Exists(MP)) Result = MP;
+                }
+            }
+            return Result;
         }
 
         public static string RateDataPath(int JobID)
@@ -523,6 +536,16 @@ namespace RateController.Classes
             return Result;
         }
 
+        public static void SetActivePrescription(int id, string filename)
+        {
+            Job JB = SearchJob(id);
+            if (JB != null)
+            {
+                JB.ActivePrescription = filename;
+                SaveJob(JB);
+            }
+        }
+
         private static bool IsJobValid(Job JobToCheck)
         {
             bool IsValid = false;
@@ -556,5 +579,6 @@ namespace RateController.Classes
         public string JobFolder => Path.Combine(JobManager.JobsFolder, $"Job_{ID}");
         public string Name { get; set; }
         public string Notes { get; set; }
+        public string ActivePrescription { get; set; }
     }
 }

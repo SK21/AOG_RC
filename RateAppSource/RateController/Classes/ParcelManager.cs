@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace RateController.Classes
 {
@@ -28,16 +26,6 @@ namespace RateController.Classes
 
         public static string KmlFolder(int id) =>
             Path.Combine(FieldFolder(id), "Kml");
-
-        // ── Active dataset paths ──────────────────────────────────────────────
-
-        public static string ActiveMapPath(int id)
-        {
-            Parcel p = SearchParcel(id);
-            if (p == null || string.IsNullOrWhiteSpace(p.ActivePrescription)) return null;
-            string path = Path.Combine(MapsFolder(id), p.ActivePrescription);
-            return File.Exists(path) ? path : null;
-        }
 
         public static string ElevationPath(int id)
         {
@@ -65,17 +53,6 @@ namespace RateController.Classes
             {
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
             }
-        }
-
-        // ── Active dataset setters ────────────────────────────────────────────
-
-        public static void SetActivePrescription(int id, string filename)
-        {
-            var parcels = GetParcels();
-            var p = parcels.FirstOrDefault(x => x.ID == id);
-            if (p == null) return;
-            p.ActivePrescription = filename;
-            SaveParcels(parcels);
         }
 
         // ── Private helpers ───────────────────────────────────────────────────
@@ -185,6 +162,5 @@ namespace RateController.Classes
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string ActivePrescription { get; set; }
     }
 }

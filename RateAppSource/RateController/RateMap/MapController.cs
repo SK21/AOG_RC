@@ -460,8 +460,7 @@ namespace RateController.RateMap
 
                 // elevation
                 string elevPath = FieldDataManager.ElevationPath;
-                if (elevPath != null)
-                    ElevationCreator.LoadElevationFile(elevPath);
+                if (elevPath != null) ElevationCreator.LoadElevationFile(elevPath);
                 ElevationCreator.Build();
 
                 gmap.Refresh();
@@ -511,7 +510,7 @@ namespace RateController.RateMap
                 if (job != null && job.FieldID >= 0)
                 {
                     string filename = System.IO.Path.GetFileName(filePath);
-                    ParcelManager.SetActivePrescription(job.FieldID, filename);
+                    JobManager.SetActivePrescription(job.FieldID, filename);
                 }
                 MapChanged?.Invoke(null, EventArgs.Empty);
             }

@@ -727,7 +727,7 @@
             // 
             this.btnSaveAsNew.FlatAppearance.BorderSize = 0;
             this.btnSaveAsNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveAsNew.Image = global::RateController.Properties.Resources.Save;
+            this.btnSaveAsNew.Image = global::RateController.Properties.Resources.copy1;
             this.btnSaveAsNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSaveAsNew.Location = new System.Drawing.Point(299, 76);
             this.btnSaveAsNew.Name = "btnSaveAsNew";
@@ -1483,7 +1483,6 @@
         private System.Windows.Forms.Label lbElevationLabel;
         private System.Windows.Forms.Label lbElevationFile;
         private System.Windows.Forms.Button btnImportElevation;
-        private System.Windows.Forms.Button btnDeleteElevation;
         private System.Windows.Forms.Button btnRestoreElevation;
     }
 }
