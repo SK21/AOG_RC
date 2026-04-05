@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -30,7 +26,7 @@ namespace RateController.Classes
         public bool CheckAlarms()
         {
             double AlarmSetPoint;
-            cAlarmIsOn = false;
+            bool CurrentState = false;
             cAlarms = new bool[Props.MaxProducts];
 
             if (Core.Sections.WorkRatePerHour() > 0)
@@ -43,7 +39,7 @@ namespace RateController.Classes
                         AlarmSetPoint = (100 - Prd.OffRateSetting) / 100.0;
                         if (Prd.SmoothRate() < (Prd.TargetRate() * AlarmSetPoint))
                         {
-                            cAlarmIsOn = true;
+                            CurrentState = true;
                             cAlarms[Prd.ID] = true;
                         }
                         if (!cAlarms[Prd.ID])
@@ -52,14 +48,14 @@ namespace RateController.Classes
                             AlarmSetPoint = (100 + Prd.OffRateSetting) / 100.0;
                             if (Prd.SmoothRate() > (Prd.TargetRate() * AlarmSetPoint))
                             {
-                                cAlarmIsOn = true;
+                                CurrentState = true;
                                 cAlarms[Prd.ID] = true;
                             }
                         }
                     }
                 }
             }
-
+            cAlarmIsOn = CurrentState;
             UpdateSound(cAlarmIsOn);
 
             return cAlarmIsOn;
