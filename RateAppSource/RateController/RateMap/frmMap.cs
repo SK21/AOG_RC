@@ -213,38 +213,6 @@ namespace RateController.Forms
             }
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
-
-            using (var saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.Title = "Save Shapefile As";
-                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
-                saveFileDialog.DefaultExt = "shp";
-                saveFileDialog.FileName = Name + ".shp";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        MapController.SaveMap(saveFileDialog.FileName);
-
-                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
-                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
-
-                        // Capture including legend
-                        MapController.SaveMapImage(imageName);
-
-                        Props.ShowMessage("File saved successfully", "Save", 5000);
-                    }
-                    catch (Exception ex)
-                    {
-                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
-                    }
-                }
-            }
-        }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
@@ -314,6 +282,21 @@ namespace RateController.Forms
                     }
                 }
             }
+        }
+
+        private void btnImportRx_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmImport");
+            if (fs == null)
+            {
+                fs = new frmImport();
+                fs.ShowDialog();
+            }
+            else
+            {
+                fs.Focus();
+            }
+            UpdateForm();
         }
 
         private void btnImportYield_Click(object sender, EventArgs e)
@@ -621,7 +604,6 @@ namespace RateController.Forms
         {
             MapController.Map.Zoom -= 1;
         }
-
 
         private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1756,19 +1738,38 @@ namespace RateController.Forms
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
         }
 
-        private void btnImportRx_Click(object sender, EventArgs e)
+        private void btnExportRx_Click(object sender, EventArgs e)
         {
-            Form fs = Props.IsFormOpen("frmImport");
-            if (fs == null)
+            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+
+            using (var saveFileDialog = new SaveFileDialog())
             {
-                fs = new frmImport();
-                fs.ShowDialog();
+                saveFileDialog.Title = "Save Shapefile As";
+                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "shp";
+                saveFileDialog.FileName = Name + ".shp";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        MapController.SaveMap(saveFileDialog.FileName);
+
+                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
+                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
+
+                        // Capture including legend
+                        MapController.SaveMapImage(imageName);
+
+                        Props.ShowMessage("File saved successfully", "Save", 5000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
+                    }
+                }
             }
-            else
-            {
-                fs.Focus();
-            }
-            UpdateForm();
+
         }
     }
 }

@@ -535,6 +535,7 @@
             this.btnExportRx.Text = "Export";
             this.btnExportRx.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnExportRx.UseVisualStyleBackColor = false;
+            this.btnExportRx.Click += new System.EventHandler(this.btnExportRx_Click);
             // 
             // btnDeleteRx
             // 
