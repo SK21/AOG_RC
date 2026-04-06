@@ -41,6 +41,8 @@
             this.ckElevation = new System.Windows.Forms.CheckBox();
             this.ckKML = new System.Windows.Forms.CheckBox();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnZoomIn = new System.Windows.Forms.Button();
+            this.btnZoomOut = new System.Windows.Forms.Button();
             this.VSB = new System.Windows.Forms.VScrollBar();
             this.HSB = new System.Windows.Forms.HScrollBar();
             this.pnlMap = new System.Windows.Forms.Panel();
@@ -57,22 +59,33 @@
             this.tbP1 = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPrescriptions = new System.Windows.Forms.TabPage();
+            this.lbRx = new System.Windows.Forms.ListBox();
+            this.btnImportRx = new System.Windows.Forms.Button();
+            this.btnExportRx = new System.Windows.Forms.Button();
+            this.btnDeleteRx = new System.Windows.Forms.Button();
+            this.btnNew = new System.Windows.Forms.Button();
+            this.lbPrescriptionLabel = new System.Windows.Forms.Label();
+            this.btnCopy = new System.Windows.Forms.Button();
+            this.lbFieldName = new System.Windows.Forms.Label();
             this.tabZones = new System.Windows.Forms.TabPage();
             this.lbP5 = new System.Windows.Forms.Label();
             this.tbP5 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.lbAreaName = new System.Windows.Forms.Label();
-            this.tabFiles = new System.Windows.Forms.TabPage();
-            this.lbYieldLabel = new System.Windows.Forms.Label();
-            this.cbYield = new System.Windows.Forms.ComboBox();
-            this.lbElevationLabel = new System.Windows.Forms.Label();
-            this.lbElevationFile = new System.Windows.Forms.Label();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.ckEdit = new System.Windows.Forms.CheckBox();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.ckNew = new System.Windows.Forms.CheckBox();
             this.tabData = new System.Windows.Forms.TabPage();
             this.rbProductE = new System.Windows.Forms.RadioButton();
             this.rbProductA = new System.Windows.Forms.RadioButton();
             this.rbProductD = new System.Windows.Forms.RadioButton();
             this.rbProductC = new System.Windows.Forms.RadioButton();
             this.rbProductB = new System.Windows.Forms.RadioButton();
+            this.ckRecord = new System.Windows.Forms.CheckBox();
+            this.btnDeleteData = new System.Windows.Forms.Button();
             this.tabVR = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
             this.tbTime5 = new System.Windows.Forms.TextBox();
@@ -86,63 +99,50 @@
             this.tbTime4 = new System.Windows.Forms.TextBox();
             this.tbTime3 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.pnlTabs = new System.Windows.Forms.Panel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.tlpTitle = new System.Windows.Forms.TableLayoutPanel();
-            this.lbTitle = new System.Windows.Forms.Label();
-            this.pnlControls2 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbLong = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbLat = new System.Windows.Forms.TextBox();
-            this.tabPrescriptions = new System.Windows.Forms.TabPage();
-            this.lbFieldName = new System.Windows.Forms.Label();
-            this.lbPrescriptionLabel = new System.Windows.Forms.Label();
-            this.cbPrescription = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.lbKMLfile = new System.Windows.Forms.Label();
-            this.btnMinimize = new System.Windows.Forms.Button();
-            this.btnCentre = new System.Windows.Forms.Button();
-            this.btnHelp = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.btnTitleClose = new System.Windows.Forms.Button();
-            this.btnTitleZoomIn = new System.Windows.Forms.Button();
-            this.btnTitleZoomOut = new System.Windows.Forms.Button();
-            this.btnImportRx = new System.Windows.Forms.Button();
-            this.btnExportRx = new System.Windows.Forms.Button();
-            this.btnDeleteRx = new System.Windows.Forms.Button();
-            this.btnNew = new System.Windows.Forms.Button();
-            this.btnCopy = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.ckEdit = new System.Windows.Forms.CheckBox();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.ckNew = new System.Windows.Forms.CheckBox();
-            this.ckRecord = new System.Windows.Forms.CheckBox();
-            this.btnDeleteData = new System.Windows.Forms.Button();
             this.btnTimeOK = new System.Windows.Forms.Button();
             this.btnTimeCancel = new System.Windows.Forms.Button();
+            this.tabFiles = new System.Windows.Forms.TabPage();
             this.btnDeleteElevation = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lbKMLfile = new System.Windows.Forms.Label();
             this.btnDeleteKML = new System.Windows.Forms.Button();
             this.btnImportKML = new System.Windows.Forms.Button();
             this.btnDeleteYield = new System.Windows.Forms.Button();
+            this.lbYieldLabel = new System.Windows.Forms.Label();
+            this.cbYield = new System.Windows.Forms.ComboBox();
             this.btnImportYield = new System.Windows.Forms.Button();
+            this.lbElevationLabel = new System.Windows.Forms.Label();
+            this.lbElevationFile = new System.Windows.Forms.Label();
             this.btnImportElevation = new System.Windows.Forms.Button();
             this.btnRestoreElevation = new System.Windows.Forms.Button();
-            this.btnZoomIn = new System.Windows.Forms.Button();
-            this.btnZoomOut = new System.Windows.Forms.Button();
-            this.lbRx = new System.Windows.Forms.ListBox();
+            this.pnlTabs = new System.Windows.Forms.Panel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tlpTitle = new System.Windows.Forms.TableLayoutPanel();
+            this.btnTitleClose = new System.Windows.Forms.Button();
+            this.btnTitleZoomIn = new System.Windows.Forms.Button();
+            this.lbTitle = new System.Windows.Forms.Label();
+            this.btnTitleZoomOut = new System.Windows.Forms.Button();
+            this.pnlControls2 = new System.Windows.Forms.Panel();
+            this.btnMinimize = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbLong = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnCentre = new System.Windows.Forms.Button();
+            this.btnHelp = new System.Windows.Forms.Button();
+            this.tbLat = new System.Windows.Forms.TextBox();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.cbPrescription = new System.Windows.Forms.ComboBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPrescriptions.SuspendLayout();
             this.tabZones.SuspendLayout();
-            this.tabFiles.SuspendLayout();
             this.tabData.SuspendLayout();
             this.tabVR.SuspendLayout();
+            this.tabFiles.SuspendLayout();
             this.pnlTabs.SuspendLayout();
             this.tlpTitle.SuspendLayout();
             this.pnlControls2.SuspendLayout();
-            this.tabPrescriptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckRateData
@@ -294,6 +294,34 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(403, 407);
             this.pnlMain.TabIndex = 387;
+            // 
+            // btnZoomIn
+            // 
+            this.btnZoomIn.BackColor = System.Drawing.Color.Transparent;
+            this.btnZoomIn.FlatAppearance.BorderSize = 0;
+            this.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomIn.Image = global::RateController.Properties.Resources.plus_square;
+            this.btnZoomIn.Location = new System.Drawing.Point(347, 353);
+            this.btnZoomIn.Name = "btnZoomIn";
+            this.btnZoomIn.Size = new System.Drawing.Size(50, 50);
+            this.btnZoomIn.TabIndex = 358;
+            this.btnZoomIn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnZoomIn.UseVisualStyleBackColor = false;
+            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            // 
+            // btnZoomOut
+            // 
+            this.btnZoomOut.BackColor = System.Drawing.Color.Transparent;
+            this.btnZoomOut.FlatAppearance.BorderSize = 0;
+            this.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomOut.Image = global::RateController.Properties.Resources.minus_square;
+            this.btnZoomOut.Location = new System.Drawing.Point(291, 353);
+            this.btnZoomOut.Name = "btnZoomOut";
+            this.btnZoomOut.Size = new System.Drawing.Size(50, 50);
+            this.btnZoomOut.TabIndex = 357;
+            this.btnZoomOut.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnZoomOut.UseVisualStyleBackColor = false;
+            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
             // VSB
             // 
@@ -449,6 +477,122 @@
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 389;
             // 
+            // tabPrescriptions
+            // 
+            this.tabPrescriptions.Controls.Add(this.lbRx);
+            this.tabPrescriptions.Controls.Add(this.btnImportRx);
+            this.tabPrescriptions.Controls.Add(this.btnExportRx);
+            this.tabPrescriptions.Controls.Add(this.btnDeleteRx);
+            this.tabPrescriptions.Controls.Add(this.btnNew);
+            this.tabPrescriptions.Controls.Add(this.lbPrescriptionLabel);
+            this.tabPrescriptions.Controls.Add(this.btnCopy);
+            this.tabPrescriptions.Controls.Add(this.lbFieldName);
+            this.tabPrescriptions.Location = new System.Drawing.Point(4, 54);
+            this.tabPrescriptions.Name = "tabPrescriptions";
+            this.tabPrescriptions.Size = new System.Drawing.Size(423, 377);
+            this.tabPrescriptions.TabIndex = 5;
+            this.tabPrescriptions.Text = "Rx";
+            this.tabPrescriptions.UseVisualStyleBackColor = true;
+            // 
+            // lbRx
+            // 
+            this.lbRx.FormattingEnabled = true;
+            this.lbRx.ItemHeight = 24;
+            this.lbRx.Location = new System.Drawing.Point(38, 93);
+            this.lbRx.Name = "lbRx";
+            this.lbRx.ScrollAlwaysVisible = true;
+            this.lbRx.Size = new System.Drawing.Size(344, 196);
+            this.lbRx.Sorted = true;
+            this.lbRx.TabIndex = 434;
+            this.lbRx.SelectedIndexChanged += new System.EventHandler(this.lbRx_SelectedIndexChanged);
+            // 
+            // btnImportRx
+            // 
+            this.btnImportRx.BackColor = System.Drawing.Color.Transparent;
+            this.btnImportRx.FlatAppearance.BorderSize = 0;
+            this.btnImportRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImportRx.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnImportRx.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnImportRx.Location = new System.Drawing.Point(253, 297);
+            this.btnImportRx.Name = "btnImportRx";
+            this.btnImportRx.Size = new System.Drawing.Size(82, 64);
+            this.btnImportRx.TabIndex = 431;
+            this.btnImportRx.Text = "Import";
+            this.btnImportRx.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnImportRx.UseVisualStyleBackColor = false;
+            // 
+            // btnExportRx
+            // 
+            this.btnExportRx.BackColor = System.Drawing.Color.Transparent;
+            this.btnExportRx.FlatAppearance.BorderSize = 0;
+            this.btnExportRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportRx.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnExportRx.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnExportRx.Location = new System.Drawing.Point(335, 297);
+            this.btnExportRx.Name = "btnExportRx";
+            this.btnExportRx.Size = new System.Drawing.Size(82, 64);
+            this.btnExportRx.TabIndex = 430;
+            this.btnExportRx.Text = "Export";
+            this.btnExportRx.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnExportRx.UseVisualStyleBackColor = false;
+            // 
+            // btnDeleteRx
+            // 
+            this.btnDeleteRx.FlatAppearance.BorderSize = 0;
+            this.btnDeleteRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteRx.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDeleteRx.Location = new System.Drawing.Point(171, 297);
+            this.btnDeleteRx.Name = "btnDeleteRx";
+            this.btnDeleteRx.Size = new System.Drawing.Size(82, 64);
+            this.btnDeleteRx.TabIndex = 429;
+            this.btnDeleteRx.UseVisualStyleBackColor = true;
+            this.btnDeleteRx.Click += new System.EventHandler(this.btnDeleteRx_Click);
+            // 
+            // btnNew
+            // 
+            this.btnNew.FlatAppearance.BorderSize = 0;
+            this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
+            this.btnNew.Location = new System.Drawing.Point(7, 297);
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(82, 64);
+            this.btnNew.TabIndex = 428;
+            this.btnNew.UseVisualStyleBackColor = true;
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // lbPrescriptionLabel
+            // 
+            this.lbPrescriptionLabel.Location = new System.Drawing.Point(38, 65);
+            this.lbPrescriptionLabel.Name = "lbPrescriptionLabel";
+            this.lbPrescriptionLabel.Size = new System.Drawing.Size(114, 24);
+            this.lbPrescriptionLabel.TabIndex = 425;
+            this.lbPrescriptionLabel.Text = "Prescription:";
+            this.lbPrescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.FlatAppearance.BorderSize = 0;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopy.Image = global::RateController.Properties.Resources.copy1;
+            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCopy.Location = new System.Drawing.Point(89, 297);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(82, 64);
+            this.btnCopy.TabIndex = 427;
+            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // lbFieldName
+            // 
+            this.lbFieldName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFieldName.Location = new System.Drawing.Point(38, 12);
+            this.lbFieldName.Name = "lbFieldName";
+            this.lbFieldName.Size = new System.Drawing.Size(370, 30);
+            this.lbFieldName.TabIndex = 424;
+            this.lbFieldName.Text = "Field:";
+            this.lbFieldName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // tabZones
             // 
             this.tabZones.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -515,67 +659,84 @@
             this.lbAreaName.TabIndex = 346;
             this.lbAreaName.Text = "Acres";
             // 
-            // tabFiles
+            // btnOK
             // 
-            this.tabFiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tabFiles.Controls.Add(this.btnDeleteElevation);
-            this.tabFiles.Controls.Add(this.label12);
-            this.tabFiles.Controls.Add(this.lbKMLfile);
-            this.tabFiles.Controls.Add(this.btnDeleteKML);
-            this.tabFiles.Controls.Add(this.btnImportKML);
-            this.tabFiles.Controls.Add(this.btnDeleteYield);
-            this.tabFiles.Controls.Add(this.lbYieldLabel);
-            this.tabFiles.Controls.Add(this.cbYield);
-            this.tabFiles.Controls.Add(this.btnImportYield);
-            this.tabFiles.Controls.Add(this.lbElevationLabel);
-            this.tabFiles.Controls.Add(this.lbElevationFile);
-            this.tabFiles.Controls.Add(this.btnImportElevation);
-            this.tabFiles.Controls.Add(this.btnRestoreElevation);
-            this.tabFiles.Location = new System.Drawing.Point(4, 54);
-            this.tabFiles.Name = "tabFiles";
-            this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFiles.Size = new System.Drawing.Size(423, 377);
-            this.tabFiles.TabIndex = 4;
-            this.tabFiles.Text = "Files";
-            this.tabFiles.UseVisualStyleBackColor = true;
+            this.btnOK.BackColor = System.Drawing.Color.Transparent;
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.Enabled = false;
+            this.btnOK.FlatAppearance.BorderSize = 0;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.Save;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(12, 301);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
+            this.btnOK.TabIndex = 344;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // lbYieldLabel
+            // ckEdit
             // 
-            this.lbYieldLabel.Location = new System.Drawing.Point(6, 22);
-            this.lbYieldLabel.Name = "lbYieldLabel";
-            this.lbYieldLabel.Size = new System.Drawing.Size(100, 24);
-            this.lbYieldLabel.TabIndex = 414;
-            this.lbYieldLabel.Text = "Yield:";
-            this.lbYieldLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ckEdit.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEdit.FlatAppearance.BorderSize = 0;
+            this.ckEdit.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEdit.Image = global::RateController.Properties.Resources.FileEditName;
+            this.ckEdit.Location = new System.Drawing.Point(6, 76);
+            this.ckEdit.Name = "ckEdit";
+            this.ckEdit.Size = new System.Drawing.Size(82, 64);
+            this.ckEdit.TabIndex = 343;
+            this.ckEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEdit.UseVisualStyleBackColor = true;
+            this.ckEdit.CheckedChanged += new System.EventHandler(this.ckEdit_CheckedChanged);
             // 
-            // cbYield
+            // btnCancel
             // 
-            this.cbYield.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbYield.FormattingEnabled = true;
-            this.cbYield.Location = new System.Drawing.Point(126, 19);
-            this.cbYield.Name = "cbYield";
-            this.cbYield.Size = new System.Drawing.Size(287, 32);
-            this.cbYield.TabIndex = 415;
-            this.cbYield.SelectedIndexChanged += new System.EventHandler(this.cbYield_SelectedIndexChanged);
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(12, 228);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
+            this.btnCancel.TabIndex = 345;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // lbElevationLabel
+            // btnDelete
             // 
-            this.lbElevationLabel.Location = new System.Drawing.Point(6, 147);
-            this.lbElevationLabel.Name = "lbElevationLabel";
-            this.lbElevationLabel.Size = new System.Drawing.Size(100, 24);
-            this.lbElevationLabel.TabIndex = 417;
-            this.lbElevationLabel.Text = "Elevation:";
-            this.lbElevationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDelete.Enabled = false;
+            this.btnDelete.FlatAppearance.BorderSize = 0;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDelete.Location = new System.Drawing.Point(6, 154);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(82, 64);
+            this.btnDelete.TabIndex = 12;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // lbElevationFile
+            // ckNew
             // 
-            this.lbElevationFile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbElevationFile.Location = new System.Drawing.Point(126, 144);
-            this.lbElevationFile.Name = "lbElevationFile";
-            this.lbElevationFile.Size = new System.Drawing.Size(287, 30);
-            this.lbElevationFile.TabIndex = 418;
-            this.lbElevationFile.Text = "None";
-            this.lbElevationFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ckNew.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckNew.FlatAppearance.BorderSize = 0;
+            this.ckNew.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckNew.Image = global::RateController.Properties.Resources.polygon;
+            this.ckNew.Location = new System.Drawing.Point(6, 6);
+            this.ckNew.Name = "ckNew";
+            this.ckNew.Size = new System.Drawing.Size(82, 64);
+            this.ckNew.TabIndex = 339;
+            this.ckNew.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckNew.UseVisualStyleBackColor = true;
+            this.ckNew.CheckedChanged += new System.EventHandler(this.ckNew_CheckedChanged);
             // 
             // tabData
             // 
@@ -668,6 +829,32 @@
             this.rbProductB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbProductB.UseVisualStyleBackColor = true;
             this.rbProductB.CheckedChanged += new System.EventHandler(this.rbProductA_CheckedChanged);
+            // 
+            // ckRecord
+            // 
+            this.ckRecord.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckRecord.Image = global::RateController.Properties.Resources.record;
+            this.ckRecord.Location = new System.Drawing.Point(105, 250);
+            this.ckRecord.Name = "ckRecord";
+            this.ckRecord.Size = new System.Drawing.Size(89, 64);
+            this.ckRecord.TabIndex = 382;
+            this.ckRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRecord.UseVisualStyleBackColor = true;
+            this.ckRecord.CheckedChanged += new System.EventHandler(this.ckRecord_CheckedChanged);
+            // 
+            // btnDeleteData
+            // 
+            this.btnDeleteData.FlatAppearance.BorderSize = 0;
+            this.btnDeleteData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteData.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDeleteData.Location = new System.Drawing.Point(231, 250);
+            this.btnDeleteData.Name = "btnDeleteData";
+            this.btnDeleteData.Size = new System.Drawing.Size(89, 64);
+            this.btnDeleteData.TabIndex = 397;
+            this.btnDeleteData.UseVisualStyleBackColor = true;
+            this.btnDeleteData.Click += new System.EventHandler(this.btnDeleteData_Click);
             // 
             // tabVR
             // 
@@ -813,450 +1000,6 @@
             this.label9.TabIndex = 369;
             this.label9.Text = "Product 3";
             // 
-            // pnlTabs
-            // 
-            this.pnlTabs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlTabs.Controls.Add(this.tabControl1);
-            this.pnlTabs.Location = new System.Drawing.Point(2, 2);
-            this.pnlTabs.Name = "pnlTabs";
-            this.pnlTabs.Size = new System.Drawing.Size(433, 438);
-            this.pnlTabs.TabIndex = 390;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // tlpTitle
-            // 
-            this.tlpTitle.ColumnCount = 4;
-            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
-            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.tlpTitle.Controls.Add(this.btnTitleClose, 3, 0);
-            this.tlpTitle.Controls.Add(this.btnTitleZoomIn, 2, 0);
-            this.tlpTitle.Controls.Add(this.lbTitle, 0, 0);
-            this.tlpTitle.Controls.Add(this.btnTitleZoomOut, 1, 0);
-            this.tlpTitle.Location = new System.Drawing.Point(628, 491);
-            this.tlpTitle.Name = "tlpTitle";
-            this.tlpTitle.RowCount = 1;
-            this.tlpTitle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpTitle.Size = new System.Drawing.Size(300, 45);
-            this.tlpTitle.TabIndex = 391;
-            this.tlpTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
-            this.tlpTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
-            // 
-            // lbTitle
-            // 
-            this.lbTitle.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lbTitle.Location = new System.Drawing.Point(3, 0);
-            this.lbTitle.Name = "lbTitle";
-            this.lbTitle.Size = new System.Drawing.Size(159, 45);
-            this.lbTitle.TabIndex = 0;
-            this.lbTitle.Text = "Map";
-            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
-            this.lbTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
-            // 
-            // pnlControls2
-            // 
-            this.pnlControls2.Controls.Add(this.btnMinimize);
-            this.pnlControls2.Controls.Add(this.label5);
-            this.pnlControls2.Controls.Add(this.tbLong);
-            this.pnlControls2.Controls.Add(this.label4);
-            this.pnlControls2.Controls.Add(this.btnCentre);
-            this.pnlControls2.Controls.Add(this.btnHelp);
-            this.pnlControls2.Controls.Add(this.tbLat);
-            this.pnlControls2.Controls.Add(this.btnClose);
-            this.pnlControls2.Location = new System.Drawing.Point(2, 446);
-            this.pnlControls2.Name = "pnlControls2";
-            this.pnlControls2.Size = new System.Drawing.Size(534, 76);
-            this.pnlControls2.TabIndex = 393;
-            // 
-            // label5
-            // 
-            this.label5.Location = new System.Drawing.Point(3, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 24);
-            this.label5.TabIndex = 397;
-            this.label5.Text = "Longitude";
-            // 
-            // tbLong
-            // 
-            this.tbLong.Location = new System.Drawing.Point(106, 6);
-            this.tbLong.Name = "tbLong";
-            this.tbLong.Size = new System.Drawing.Size(121, 29);
-            this.tbLong.TabIndex = 396;
-            this.tbLong.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbLong.Enter += new System.EventHandler(this.tbLong_Enter);
-            this.tbLong.Validating += new System.ComponentModel.CancelEventHandler(this.tbLong_Validating);
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(3, 43);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 24);
-            this.label4.TabIndex = 395;
-            this.label4.Text = "Latitude";
-            // 
-            // tbLat
-            // 
-            this.tbLat.Location = new System.Drawing.Point(106, 38);
-            this.tbLat.Name = "tbLat";
-            this.tbLat.Size = new System.Drawing.Size(121, 29);
-            this.tbLat.TabIndex = 394;
-            this.tbLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbLat.Enter += new System.EventHandler(this.tbLat_Enter);
-            this.tbLat.Validating += new System.ComponentModel.CancelEventHandler(this.tbLat_Validating);
-            // 
-            // tabPrescriptions
-            // 
-            this.tabPrescriptions.Controls.Add(this.lbRx);
-            this.tabPrescriptions.Controls.Add(this.btnImportRx);
-            this.tabPrescriptions.Controls.Add(this.btnExportRx);
-            this.tabPrescriptions.Controls.Add(this.btnDeleteRx);
-            this.tabPrescriptions.Controls.Add(this.btnNew);
-            this.tabPrescriptions.Controls.Add(this.lbPrescriptionLabel);
-            this.tabPrescriptions.Controls.Add(this.btnCopy);
-            this.tabPrescriptions.Controls.Add(this.lbFieldName);
-            this.tabPrescriptions.Location = new System.Drawing.Point(4, 54);
-            this.tabPrescriptions.Name = "tabPrescriptions";
-            this.tabPrescriptions.Size = new System.Drawing.Size(423, 377);
-            this.tabPrescriptions.TabIndex = 5;
-            this.tabPrescriptions.Text = "Rx";
-            this.tabPrescriptions.UseVisualStyleBackColor = true;
-            // 
-            // lbFieldName
-            // 
-            this.lbFieldName.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbFieldName.Location = new System.Drawing.Point(38, 12);
-            this.lbFieldName.Name = "lbFieldName";
-            this.lbFieldName.Size = new System.Drawing.Size(370, 30);
-            this.lbFieldName.TabIndex = 424;
-            this.lbFieldName.Text = "Field:";
-            this.lbFieldName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lbPrescriptionLabel
-            // 
-            this.lbPrescriptionLabel.Location = new System.Drawing.Point(38, 65);
-            this.lbPrescriptionLabel.Name = "lbPrescriptionLabel";
-            this.lbPrescriptionLabel.Size = new System.Drawing.Size(114, 24);
-            this.lbPrescriptionLabel.TabIndex = 425;
-            this.lbPrescriptionLabel.Text = "Prescription:";
-            this.lbPrescriptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cbPrescription
-            // 
-            this.cbPrescription.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPrescription.FormattingEnabled = true;
-            this.cbPrescription.Location = new System.Drawing.Point(234, 554);
-            this.cbPrescription.Name = "cbPrescription";
-            this.cbPrescription.Size = new System.Drawing.Size(287, 32);
-            this.cbPrescription.TabIndex = 426;
-            // 
-            // label12
-            // 
-            this.label12.Location = new System.Drawing.Point(6, 272);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(100, 24);
-            this.label12.TabIndex = 427;
-            this.label12.Text = "KML:";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lbKMLfile
-            // 
-            this.lbKMLfile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbKMLfile.Location = new System.Drawing.Point(123, 269);
-            this.lbKMLfile.Name = "lbKMLfile";
-            this.lbKMLfile.Size = new System.Drawing.Size(287, 30);
-            this.lbKMLfile.TabIndex = 428;
-            this.lbKMLfile.Text = "None";
-            this.lbKMLfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMinimize.Image = global::RateController.Properties.Resources.arrow_circle_down_right;
-            this.btnMinimize.Location = new System.Drawing.Point(232, 4);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(70, 63);
-            this.btnMinimize.TabIndex = 398;
-            this.btnMinimize.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnMinimize.UseVisualStyleBackColor = false;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
-            // btnCentre
-            // 
-            this.btnCentre.BackColor = System.Drawing.Color.Transparent;
-            this.btnCentre.FlatAppearance.BorderSize = 0;
-            this.btnCentre.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnCentre.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCentre.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCentre.Image = global::RateController.Properties.Resources.arrows_in_cardinal;
-            this.btnCentre.Location = new System.Drawing.Point(307, 4);
-            this.btnCentre.Name = "btnCentre";
-            this.btnCentre.Size = new System.Drawing.Size(70, 63);
-            this.btnCentre.TabIndex = 393;
-            this.btnCentre.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnCentre.UseVisualStyleBackColor = false;
-            this.btnCentre.Click += new System.EventHandler(this.btnCentre_Click);
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
-            this.btnHelp.FlatAppearance.BorderSize = 0;
-            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
-            this.btnHelp.Location = new System.Drawing.Point(382, 4);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(70, 63);
-            this.btnHelp.TabIndex = 392;
-            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnHelp.UseVisualStyleBackColor = false;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-            this.btnClose.Location = new System.Drawing.Point(457, 4);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(70, 63);
-            this.btnClose.TabIndex = 386;
-            this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // btnTitleClose
-            // 
-            this.btnTitleClose.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTitleClose.FlatAppearance.BorderSize = 0;
-            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTitleClose.Image = global::RateController.Properties.Resources.x_square48;
-            this.btnTitleClose.Location = new System.Drawing.Point(258, 3);
-            this.btnTitleClose.Name = "btnTitleClose";
-            this.btnTitleClose.Size = new System.Drawing.Size(39, 39);
-            this.btnTitleClose.TabIndex = 3;
-            this.btnTitleClose.UseVisualStyleBackColor = true;
-            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
-            // 
-            // btnTitleZoomIn
-            // 
-            this.btnTitleZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTitleZoomIn.FlatAppearance.BorderSize = 0;
-            this.btnTitleZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTitleZoomIn.Image = global::RateController.Properties.Resources.plus_square48;
-            this.btnTitleZoomIn.Location = new System.Drawing.Point(213, 3);
-            this.btnTitleZoomIn.Name = "btnTitleZoomIn";
-            this.btnTitleZoomIn.Size = new System.Drawing.Size(39, 39);
-            this.btnTitleZoomIn.TabIndex = 2;
-            this.btnTitleZoomIn.UseVisualStyleBackColor = true;
-            this.btnTitleZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
-            // 
-            // btnTitleZoomOut
-            // 
-            this.btnTitleZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTitleZoomOut.FlatAppearance.BorderSize = 0;
-            this.btnTitleZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTitleZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTitleZoomOut.Image = global::RateController.Properties.Resources.minus_square48;
-            this.btnTitleZoomOut.Location = new System.Drawing.Point(168, 3);
-            this.btnTitleZoomOut.Name = "btnTitleZoomOut";
-            this.btnTitleZoomOut.Size = new System.Drawing.Size(39, 39);
-            this.btnTitleZoomOut.TabIndex = 1;
-            this.btnTitleZoomOut.UseVisualStyleBackColor = true;
-            this.btnTitleZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
-            // 
-            // btnImportRx
-            // 
-            this.btnImportRx.BackColor = System.Drawing.Color.Transparent;
-            this.btnImportRx.FlatAppearance.BorderSize = 0;
-            this.btnImportRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportRx.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnImportRx.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnImportRx.Location = new System.Drawing.Point(253, 297);
-            this.btnImportRx.Name = "btnImportRx";
-            this.btnImportRx.Size = new System.Drawing.Size(82, 64);
-            this.btnImportRx.TabIndex = 431;
-            this.btnImportRx.Text = "Import";
-            this.btnImportRx.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnImportRx.UseVisualStyleBackColor = false;
-            // 
-            // btnExportRx
-            // 
-            this.btnExportRx.BackColor = System.Drawing.Color.Transparent;
-            this.btnExportRx.FlatAppearance.BorderSize = 0;
-            this.btnExportRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportRx.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnExportRx.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnExportRx.Location = new System.Drawing.Point(335, 297);
-            this.btnExportRx.Name = "btnExportRx";
-            this.btnExportRx.Size = new System.Drawing.Size(82, 64);
-            this.btnExportRx.TabIndex = 430;
-            this.btnExportRx.Text = "Export";
-            this.btnExportRx.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnExportRx.UseVisualStyleBackColor = false;
-            // 
-            // btnDeleteRx
-            // 
-            this.btnDeleteRx.FlatAppearance.BorderSize = 0;
-            this.btnDeleteRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteRx.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteRx.Location = new System.Drawing.Point(171, 297);
-            this.btnDeleteRx.Name = "btnDeleteRx";
-            this.btnDeleteRx.Size = new System.Drawing.Size(82, 64);
-            this.btnDeleteRx.TabIndex = 429;
-            this.btnDeleteRx.UseVisualStyleBackColor = true;
-            // 
-            // btnNew
-            // 
-            this.btnNew.FlatAppearance.BorderSize = 0;
-            this.btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNew.Image = global::RateController.Properties.Resources.NewFile;
-            this.btnNew.Location = new System.Drawing.Point(7, 297);
-            this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(82, 64);
-            this.btnNew.TabIndex = 428;
-            this.btnNew.UseVisualStyleBackColor = true;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
-            // 
-            // btnCopy
-            // 
-            this.btnCopy.FlatAppearance.BorderSize = 0;
-            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCopy.Image = global::RateController.Properties.Resources.copy1;
-            this.btnCopy.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCopy.Location = new System.Drawing.Point(89, 297);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(82, 64);
-            this.btnCopy.TabIndex = 427;
-            this.btnCopy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnCopy.UseVisualStyleBackColor = true;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
-            // btnOK
-            // 
-            this.btnOK.BackColor = System.Drawing.Color.Transparent;
-            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOK.Enabled = false;
-            this.btnOK.FlatAppearance.BorderSize = 0;
-            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.Save;
-            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(12, 301);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(70, 63);
-            this.btnOK.TabIndex = 344;
-            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnOK.UseVisualStyleBackColor = false;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // ckEdit
-            // 
-            this.ckEdit.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckEdit.FlatAppearance.BorderSize = 0;
-            this.ckEdit.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEdit.Image = global::RateController.Properties.Resources.FileEditName;
-            this.ckEdit.Location = new System.Drawing.Point(6, 76);
-            this.ckEdit.Name = "ckEdit";
-            this.ckEdit.Size = new System.Drawing.Size(82, 64);
-            this.ckEdit.TabIndex = 343;
-            this.ckEdit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEdit.UseVisualStyleBackColor = true;
-            this.ckEdit.CheckedChanged += new System.EventHandler(this.ckEdit_CheckedChanged);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(12, 228);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(70, 63);
-            this.btnCancel.TabIndex = 345;
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Enabled = false;
-            this.btnDelete.FlatAppearance.BorderSize = 0;
-            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(6, 154);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(82, 64);
-            this.btnDelete.TabIndex = 12;
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // ckNew
-            // 
-            this.ckNew.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckNew.FlatAppearance.BorderSize = 0;
-            this.ckNew.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckNew.Image = global::RateController.Properties.Resources.polygon;
-            this.ckNew.Location = new System.Drawing.Point(6, 6);
-            this.ckNew.Name = "ckNew";
-            this.ckNew.Size = new System.Drawing.Size(82, 64);
-            this.ckNew.TabIndex = 339;
-            this.ckNew.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckNew.UseVisualStyleBackColor = true;
-            this.ckNew.CheckedChanged += new System.EventHandler(this.ckNew_CheckedChanged);
-            // 
-            // ckRecord
-            // 
-            this.ckRecord.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckRecord.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRecord.Image = global::RateController.Properties.Resources.record;
-            this.ckRecord.Location = new System.Drawing.Point(105, 250);
-            this.ckRecord.Name = "ckRecord";
-            this.ckRecord.Size = new System.Drawing.Size(89, 64);
-            this.ckRecord.TabIndex = 382;
-            this.ckRecord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRecord.UseVisualStyleBackColor = true;
-            this.ckRecord.CheckedChanged += new System.EventHandler(this.ckRecord_CheckedChanged);
-            // 
-            // btnDeleteData
-            // 
-            this.btnDeleteData.FlatAppearance.BorderSize = 0;
-            this.btnDeleteData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteData.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteData.Location = new System.Drawing.Point(231, 250);
-            this.btnDeleteData.Name = "btnDeleteData";
-            this.btnDeleteData.Size = new System.Drawing.Size(89, 64);
-            this.btnDeleteData.TabIndex = 397;
-            this.btnDeleteData.UseVisualStyleBackColor = true;
-            this.btnDeleteData.Click += new System.EventHandler(this.btnDeleteData_Click);
-            // 
             // btnTimeOK
             // 
             this.btnTimeOK.BackColor = System.Drawing.Color.Transparent;
@@ -1293,6 +1036,30 @@
             this.btnTimeCancel.UseVisualStyleBackColor = false;
             this.btnTimeCancel.Click += new System.EventHandler(this.btnTimeCancel_Click);
             // 
+            // tabFiles
+            // 
+            this.tabFiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabFiles.Controls.Add(this.btnDeleteElevation);
+            this.tabFiles.Controls.Add(this.label12);
+            this.tabFiles.Controls.Add(this.lbKMLfile);
+            this.tabFiles.Controls.Add(this.btnDeleteKML);
+            this.tabFiles.Controls.Add(this.btnImportKML);
+            this.tabFiles.Controls.Add(this.btnDeleteYield);
+            this.tabFiles.Controls.Add(this.lbYieldLabel);
+            this.tabFiles.Controls.Add(this.cbYield);
+            this.tabFiles.Controls.Add(this.btnImportYield);
+            this.tabFiles.Controls.Add(this.lbElevationLabel);
+            this.tabFiles.Controls.Add(this.lbElevationFile);
+            this.tabFiles.Controls.Add(this.btnImportElevation);
+            this.tabFiles.Controls.Add(this.btnRestoreElevation);
+            this.tabFiles.Location = new System.Drawing.Point(4, 54);
+            this.tabFiles.Name = "tabFiles";
+            this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFiles.Size = new System.Drawing.Size(423, 377);
+            this.tabFiles.TabIndex = 4;
+            this.tabFiles.Text = "Files";
+            this.tabFiles.UseVisualStyleBackColor = true;
+            // 
             // btnDeleteElevation
             // 
             this.btnDeleteElevation.FlatAppearance.BorderSize = 0;
@@ -1303,6 +1070,25 @@
             this.btnDeleteElevation.Size = new System.Drawing.Size(82, 45);
             this.btnDeleteElevation.TabIndex = 429;
             this.btnDeleteElevation.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(6, 272);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(100, 24);
+            this.label12.TabIndex = 427;
+            this.label12.Text = "KML:";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbKMLfile
+            // 
+            this.lbKMLfile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbKMLfile.Location = new System.Drawing.Point(123, 269);
+            this.lbKMLfile.Name = "lbKMLfile";
+            this.lbKMLfile.Size = new System.Drawing.Size(287, 30);
+            this.lbKMLfile.TabIndex = 428;
+            this.lbKMLfile.Text = "None";
+            this.lbKMLfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnDeleteKML
             // 
@@ -1343,6 +1129,25 @@
             this.btnDeleteYield.TabIndex = 424;
             this.btnDeleteYield.UseVisualStyleBackColor = true;
             // 
+            // lbYieldLabel
+            // 
+            this.lbYieldLabel.Location = new System.Drawing.Point(6, 22);
+            this.lbYieldLabel.Name = "lbYieldLabel";
+            this.lbYieldLabel.Size = new System.Drawing.Size(100, 24);
+            this.lbYieldLabel.TabIndex = 414;
+            this.lbYieldLabel.Text = "Yield:";
+            this.lbYieldLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbYield
+            // 
+            this.cbYield.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbYield.FormattingEnabled = true;
+            this.cbYield.Location = new System.Drawing.Point(126, 19);
+            this.cbYield.Name = "cbYield";
+            this.cbYield.Size = new System.Drawing.Size(287, 32);
+            this.cbYield.TabIndex = 415;
+            this.cbYield.SelectedIndexChanged += new System.EventHandler(this.cbYield_SelectedIndexChanged);
+            // 
             // btnImportYield
             // 
             this.btnImportYield.FlatAppearance.BorderSize = 0;
@@ -1357,6 +1162,25 @@
             this.btnImportYield.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnImportYield.UseVisualStyleBackColor = true;
             this.btnImportYield.Click += new System.EventHandler(this.btnImportYield_Click);
+            // 
+            // lbElevationLabel
+            // 
+            this.lbElevationLabel.Location = new System.Drawing.Point(6, 147);
+            this.lbElevationLabel.Name = "lbElevationLabel";
+            this.lbElevationLabel.Size = new System.Drawing.Size(100, 24);
+            this.lbElevationLabel.TabIndex = 417;
+            this.lbElevationLabel.Text = "Elevation:";
+            this.lbElevationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbElevationFile
+            // 
+            this.lbElevationFile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbElevationFile.Location = new System.Drawing.Point(126, 144);
+            this.lbElevationFile.Name = "lbElevationFile";
+            this.lbElevationFile.Size = new System.Drawing.Size(287, 30);
+            this.lbElevationFile.TabIndex = 418;
+            this.lbElevationFile.Text = "None";
+            this.lbElevationFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnImportElevation
             // 
@@ -1388,45 +1212,222 @@
             this.btnRestoreElevation.Visible = false;
             this.btnRestoreElevation.Click += new System.EventHandler(this.btnRestoreElevation_Click);
             // 
-            // btnZoomIn
+            // pnlTabs
             // 
-            this.btnZoomIn.BackColor = System.Drawing.Color.Transparent;
-            this.btnZoomIn.FlatAppearance.BorderSize = 0;
-            this.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnZoomIn.Image = global::RateController.Properties.Resources.plus_square;
-            this.btnZoomIn.Location = new System.Drawing.Point(347, 353);
-            this.btnZoomIn.Name = "btnZoomIn";
-            this.btnZoomIn.Size = new System.Drawing.Size(50, 50);
-            this.btnZoomIn.TabIndex = 358;
-            this.btnZoomIn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnZoomIn.UseVisualStyleBackColor = false;
-            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            this.pnlTabs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTabs.Controls.Add(this.tabControl1);
+            this.pnlTabs.Location = new System.Drawing.Point(2, 2);
+            this.pnlTabs.Name = "pnlTabs";
+            this.pnlTabs.Size = new System.Drawing.Size(433, 438);
+            this.pnlTabs.TabIndex = 390;
             // 
-            // btnZoomOut
+            // timer1
             // 
-            this.btnZoomOut.BackColor = System.Drawing.Color.Transparent;
-            this.btnZoomOut.FlatAppearance.BorderSize = 0;
-            this.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnZoomOut.Image = global::RateController.Properties.Resources.minus_square;
-            this.btnZoomOut.Location = new System.Drawing.Point(291, 353);
-            this.btnZoomOut.Name = "btnZoomOut";
-            this.btnZoomOut.Size = new System.Drawing.Size(50, 50);
-            this.btnZoomOut.TabIndex = 357;
-            this.btnZoomOut.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnZoomOut.UseVisualStyleBackColor = false;
-            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // lbRx
+            // tlpTitle
             // 
-            this.lbRx.FormattingEnabled = true;
-            this.lbRx.ItemHeight = 24;
-            this.lbRx.Location = new System.Drawing.Point(38, 93);
-            this.lbRx.Name = "lbRx";
-            this.lbRx.ScrollAlwaysVisible = true;
-            this.lbRx.Size = new System.Drawing.Size(344, 196);
-            this.lbRx.Sorted = true;
-            this.lbRx.TabIndex = 434;
-            this.lbRx.SelectedIndexChanged += new System.EventHandler(this.lbRx_SelectedIndexChanged);
+            this.tlpTitle.ColumnCount = 4;
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tlpTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tlpTitle.Controls.Add(this.btnTitleClose, 3, 0);
+            this.tlpTitle.Controls.Add(this.btnTitleZoomIn, 2, 0);
+            this.tlpTitle.Controls.Add(this.lbTitle, 0, 0);
+            this.tlpTitle.Controls.Add(this.btnTitleZoomOut, 1, 0);
+            this.tlpTitle.Location = new System.Drawing.Point(628, 491);
+            this.tlpTitle.Name = "tlpTitle";
+            this.tlpTitle.RowCount = 1;
+            this.tlpTitle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpTitle.Size = new System.Drawing.Size(300, 45);
+            this.tlpTitle.TabIndex = 391;
+            this.tlpTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
+            this.tlpTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
+            // 
+            // btnTitleClose
+            // 
+            this.btnTitleClose.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleClose.FlatAppearance.BorderSize = 0;
+            this.btnTitleClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTitleClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleClose.Image = global::RateController.Properties.Resources.x_square48;
+            this.btnTitleClose.Location = new System.Drawing.Point(258, 3);
+            this.btnTitleClose.Name = "btnTitleClose";
+            this.btnTitleClose.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleClose.TabIndex = 3;
+            this.btnTitleClose.UseVisualStyleBackColor = true;
+            this.btnTitleClose.Click += new System.EventHandler(this.btnTitleClose_Click);
+            // 
+            // btnTitleZoomIn
+            // 
+            this.btnTitleZoomIn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleZoomIn.FlatAppearance.BorderSize = 0;
+            this.btnTitleZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTitleZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleZoomIn.Image = global::RateController.Properties.Resources.plus_square48;
+            this.btnTitleZoomIn.Location = new System.Drawing.Point(213, 3);
+            this.btnTitleZoomIn.Name = "btnTitleZoomIn";
+            this.btnTitleZoomIn.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleZoomIn.TabIndex = 2;
+            this.btnTitleZoomIn.UseVisualStyleBackColor = true;
+            this.btnTitleZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            // 
+            // lbTitle
+            // 
+            this.lbTitle.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbTitle.Location = new System.Drawing.Point(3, 0);
+            this.lbTitle.Name = "lbTitle";
+            this.lbTitle.Size = new System.Drawing.Size(159, 45);
+            this.lbTitle.TabIndex = 0;
+            this.lbTitle.Text = "Map";
+            this.lbTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseDown);
+            this.lbTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tlpTitle_MouseMove);
+            // 
+            // btnTitleZoomOut
+            // 
+            this.btnTitleZoomOut.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTitleZoomOut.FlatAppearance.BorderSize = 0;
+            this.btnTitleZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTitleZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTitleZoomOut.Image = global::RateController.Properties.Resources.minus_square48;
+            this.btnTitleZoomOut.Location = new System.Drawing.Point(168, 3);
+            this.btnTitleZoomOut.Name = "btnTitleZoomOut";
+            this.btnTitleZoomOut.Size = new System.Drawing.Size(39, 39);
+            this.btnTitleZoomOut.TabIndex = 1;
+            this.btnTitleZoomOut.UseVisualStyleBackColor = true;
+            this.btnTitleZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+            // 
+            // pnlControls2
+            // 
+            this.pnlControls2.Controls.Add(this.btnMinimize);
+            this.pnlControls2.Controls.Add(this.label5);
+            this.pnlControls2.Controls.Add(this.tbLong);
+            this.pnlControls2.Controls.Add(this.label4);
+            this.pnlControls2.Controls.Add(this.btnCentre);
+            this.pnlControls2.Controls.Add(this.btnHelp);
+            this.pnlControls2.Controls.Add(this.tbLat);
+            this.pnlControls2.Controls.Add(this.btnClose);
+            this.pnlControls2.Location = new System.Drawing.Point(2, 446);
+            this.pnlControls2.Name = "pnlControls2";
+            this.pnlControls2.Size = new System.Drawing.Size(534, 76);
+            this.pnlControls2.TabIndex = 393;
+            // 
+            // btnMinimize
+            // 
+            this.btnMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.btnMinimize.FlatAppearance.BorderSize = 0;
+            this.btnMinimize.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMinimize.Image = global::RateController.Properties.Resources.arrow_circle_down_right;
+            this.btnMinimize.Location = new System.Drawing.Point(232, 4);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(70, 63);
+            this.btnMinimize.TabIndex = 398;
+            this.btnMinimize.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnMinimize.UseVisualStyleBackColor = false;
+            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
+            // 
+            // label5
+            // 
+            this.label5.Location = new System.Drawing.Point(3, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(98, 24);
+            this.label5.TabIndex = 397;
+            this.label5.Text = "Longitude";
+            // 
+            // tbLong
+            // 
+            this.tbLong.Location = new System.Drawing.Point(106, 6);
+            this.tbLong.Name = "tbLong";
+            this.tbLong.Size = new System.Drawing.Size(121, 29);
+            this.tbLong.TabIndex = 396;
+            this.tbLong.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbLong.Enter += new System.EventHandler(this.tbLong_Enter);
+            this.tbLong.Validating += new System.ComponentModel.CancelEventHandler(this.tbLong_Validating);
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(3, 43);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 24);
+            this.label4.TabIndex = 395;
+            this.label4.Text = "Latitude";
+            // 
+            // btnCentre
+            // 
+            this.btnCentre.BackColor = System.Drawing.Color.Transparent;
+            this.btnCentre.FlatAppearance.BorderSize = 0;
+            this.btnCentre.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnCentre.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCentre.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCentre.Image = global::RateController.Properties.Resources.arrows_in_cardinal;
+            this.btnCentre.Location = new System.Drawing.Point(307, 4);
+            this.btnCentre.Name = "btnCentre";
+            this.btnCentre.Size = new System.Drawing.Size(70, 63);
+            this.btnCentre.TabIndex = 393;
+            this.btnCentre.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCentre.UseVisualStyleBackColor = false;
+            this.btnCentre.Click += new System.EventHandler(this.btnCentre_Click);
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.BackColor = System.Drawing.Color.Transparent;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.Image = global::RateController.Properties.Resources.Help;
+            this.btnHelp.Location = new System.Drawing.Point(382, 4);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(70, 63);
+            this.btnHelp.TabIndex = 392;
+            this.btnHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // tbLat
+            // 
+            this.tbLat.Location = new System.Drawing.Point(106, 38);
+            this.tbLat.Name = "tbLat";
+            this.tbLat.Size = new System.Drawing.Size(121, 29);
+            this.tbLat.TabIndex = 394;
+            this.tbLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbLat.Enter += new System.EventHandler(this.tbLat_Enter);
+            this.tbLat.Validating += new System.ComponentModel.CancelEventHandler(this.tbLat_Validating);
+            // 
+            // btnClose
+            // 
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.FlatAppearance.BorderSize = 0;
+            this.btnClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.Location = new System.Drawing.Point(457, 4);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(70, 63);
+            this.btnClose.TabIndex = 386;
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // cbPrescription
+            // 
+            this.cbPrescription.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPrescription.FormattingEnabled = true;
+            this.cbPrescription.Location = new System.Drawing.Point(234, 554);
+            this.cbPrescription.Name = "cbPrescription";
+            this.cbPrescription.Size = new System.Drawing.Size(287, 32);
+            this.cbPrescription.TabIndex = 426;
             // 
             // frmMap
             // 
@@ -1454,17 +1455,17 @@
             this.pnlControls.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPrescriptions.ResumeLayout(false);
             this.tabZones.ResumeLayout(false);
             this.tabZones.PerformLayout();
-            this.tabFiles.ResumeLayout(false);
             this.tabData.ResumeLayout(false);
             this.tabVR.ResumeLayout(false);
             this.tabVR.PerformLayout();
+            this.tabFiles.ResumeLayout(false);
             this.pnlTabs.ResumeLayout(false);
             this.tlpTitle.ResumeLayout(false);
             this.pnlControls2.ResumeLayout(false);
             this.pnlControls2.PerformLayout();
-            this.tabPrescriptions.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

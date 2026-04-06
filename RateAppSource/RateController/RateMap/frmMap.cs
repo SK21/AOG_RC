@@ -169,6 +169,50 @@ namespace RateController.Forms
             }
         }
 
+        private void btnDeleteRx_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lbRx.SelectedItem.ToString() == "Zones.shp")
+                {
+                    Props.ShowMessage("Can not delete.", "Help", 10000);
+                }
+                else
+                {
+                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
+                    MB.ShowDialog();
+                    bool Result = MB.Result;
+                    MB.Close();
+                    if (Result)
+                    {
+                        Job JB = JobManager.CurrentJob;
+                        if (JB != null && JB.FieldID >= 0)
+                        {
+                            ParcelManager.EnsureFieldFolders(JB.FieldID);
+                            string Folder = ParcelManager.MapsFolder(JB.FieldID);
+                            string OldName = Path.GetFileNameWithoutExtension(lbRx.SelectedItem?.ToString());
+                            if (Props.IsPathSafe(Folder))
+                            {
+                                foreach (var file in Directory.GetFiles(Folder))
+                                {
+                                    if (Path.GetFileNameWithoutExtension(file).Equals(OldName, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        File.Delete(file);
+                                    }
+                                }
+                            }
+                        }
+                        lbRx.SelectedItem = "Zones.shp";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnDeleteRx_Click: " + ex.Message);
+                Props.ShowMessage("Error deleting prescription: " + ex.Message, "Delete Prescription", 8000, true);
+            }
+        }
+
         private void btnExport_Click(object sender, EventArgs e)
         {
             string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
@@ -841,7 +885,7 @@ namespace RateController.Forms
                 lbFieldName.Text = "Field: " + parcel?.Name ?? "(no field)";
 
                 lbRx.Items.Clear();
-                lbRx.Items.Add("Default.shp");
+                lbRx.Items.Add("Zones.shp");
                 if (parcel == null)
                 {
                     lbRx.SelectedIndex = 0;
@@ -850,10 +894,10 @@ namespace RateController.Forms
                 {
                     foreach (string rx in ParcelManager.GetPrescriptionFiles(job.FieldID))
                     {
-                        lbRx.Items.Add(rx);
+                        if (rx != "Zones.shp") lbRx.Items.Add(rx);
                     }
-                    string active = job.ActivePrescription;
-                    lbRx.SelectedItem = !string.IsNullOrEmpty(active) ? active : "Default.shp";
+                    string active = Path.GetFileName(job.ActivePrescription);
+                    lbRx.SelectedItem = !string.IsNullOrEmpty(active) ? active : "Zones.shp";
                 }
             }
             catch (Exception ex)
