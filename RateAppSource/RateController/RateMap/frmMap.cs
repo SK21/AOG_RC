@@ -23,7 +23,7 @@ namespace RateController.Forms
         private int MinViewLeft = 0;
         private int MinViewTop = 0;
         private int MinZoom = 10;
-        private Point MouseDownLocation;
+        private System.Drawing.Point MouseDownLocation;
         private bool UseMaxView = false;
 
         public frmMap()
@@ -93,19 +93,34 @@ namespace RateController.Forms
         {
             try
             {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                ParcelManager.EnsureFieldFolders(job.FieldID);
-                using (var dlg = new SaveFileDialog
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
                 {
-                    Title = "Save Prescription As",
-                    Filter = "Shapefile (*.shp)|*.shp",
-                    InitialDirectory = ParcelManager.MapsFolder(job.FieldID)
-                })
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK) return;
-                    MapController.SavePrescription(dlg.FileName);
-                    UpdateForm();
+                    var GetInput = new frmInput("File Name?", "Copy Prescription", true);
+                    GetInput.ShowDialog();
+                    bool Result = GetInput.Result;
+                    string Fname = GetInput.InputValue;
+                    GetInput.Close();
+
+                    if (Result)
+                    {
+                        ParcelManager.EnsureFieldFolders(JB.FieldID);
+                        string Folder = ParcelManager.MapsFolder(JB.FieldID);
+                        string OldName = Path.GetFileNameWithoutExtension(lbRx.SelectedItem?.ToString());
+                        string NewName = Path.GetFileName(Fname);
+
+                        foreach (string file in Directory.GetFiles(Folder, OldName + ".*"))
+                        {
+                            string ext = Path.GetExtension(file); // keeps .txt, .pdf, etc.
+                            string dest = Path.Combine(Folder, NewName + ext);
+
+                            File.Copy(file, dest, overwrite: true);
+                        }
+
+                        Fname = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), Fname + ".shp");
+                        JobManager.SetActivePrescription(JB.ID, Fname);
+                        UpdateForm();
+                    }
                 }
             }
             catch (Exception ex)
@@ -613,7 +628,7 @@ namespace RateController.Forms
 
                     this.Bounds = Screen.GetWorkingArea(this);
                     pnlMain.Size = new Size(this.ClientSize.Width - 565, this.ClientSize.Height - 28);
-                    pnlMain.Location = new Point(550, 14);
+                    pnlMain.Location = new System.Drawing.Point(550, 14);
 
                     pnlMap.Width = pnlMain.Width - VSB.Width;
                     pnlMap.Height = pnlMain.Height - HSB.Height;
@@ -657,7 +672,7 @@ namespace RateController.Forms
                     tlpTitle.Top = this.Padding.Top;
                     tlpTitle.Width = this.ClientSize.Width - this.Padding.Horizontal;
 
-                    pnlMain.Location = new Point(this.Padding.Left, tlpTitle.Bottom);
+                    pnlMain.Location = new System.Drawing.Point(this.Padding.Left, tlpTitle.Bottom);
                     pnlMain.Size = new Size(this.ClientSize.Width - this.Padding.Horizontal, this.ClientSize.Height - tlpTitle.Height - this.Padding.Vertical);
                     pnlMap.Size = pnlMain.Size;
 
@@ -1499,7 +1514,7 @@ namespace RateController.Forms
 
         private void tlpTitle_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new System.Drawing.Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
         private bool TractorIsMoving()
