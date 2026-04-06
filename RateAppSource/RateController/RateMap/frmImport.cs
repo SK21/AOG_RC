@@ -3,7 +3,6 @@ using RateController.Language;
 using RateController.RateMap;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -29,23 +28,37 @@ namespace RateController.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var Hlp = new frmMsgBox("Confirm replace current map with imported map?", "Import File", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
+            try
             {
-                if (SaveCrossReferencedShapefile())
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
                 {
-                    Props.ShowMessage("Cross-referenced shapefile saved successfully.");
-                    this.Close();
+                    string Fname = tbName.Text;
+                    Fname = Path.GetFileName(Fname);
+                    if (FileNameValidator.IsValidFileName(Name))
+                    {
+                        ParcelManager.EnsureFieldFolders(JB.FieldID);
+                        JobManager.SetActivePrescription(JB.ID, Fname);
+                        if (SaveCrossReferencedShapefile())
+                        {
+                            Props.ShowMessage("Cross-referenced shapefile saved successfully.");
+                            this.Close();
+                        }
+                        else
+                        {
+                            Props.ShowMessage("Failed to map attributes. File not saved.");
+                        }
+                    }
+                    else
+                    {
+                        Props.ShowMessage("Invalid file name.", "Help", 10000);
+                    }
                 }
-                else
-                {
-                    Props.ShowMessage("Failed to map attributes. File not saved.");
-                }
+            }
+            catch (Exception ex)
+            {
+
+                Props.WriteErrorLog("frmImport/btnSave_Click: " + ex.Message);
             }
         }
 
@@ -108,15 +121,16 @@ namespace RateController.Forms
                         }
                     }
 
-                    string MapPath = JobManager.MapPath(JobManager.CurrentJobID);
-
+                    Job JB = JobManager.CurrentJob;
+                    string MP = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
                     var shapefileHelper = new ShapefileHelper();
                     var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
 
-                    if (shapefileHelper.SaveMapZones(MapPath, mapZones))
+                    if (shapefileHelper.SaveMapZones(MP, mapZones))
                     {
                         MapController.LoadMap();
                         Result = true;
+                        JobManager.SetActivePrescription(JB.ID, Path.GetFileName(MP));
                     }
                 }
                 else

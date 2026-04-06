@@ -520,6 +520,7 @@
             this.btnImportRx.Text = "Import";
             this.btnImportRx.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnImportRx.UseVisualStyleBackColor = false;
+            this.btnImportRx.Click += new System.EventHandler(this.btnImportRx_Click);
             // 
             // btnExportRx
             // 

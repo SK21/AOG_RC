@@ -1764,5 +1764,20 @@ namespace RateController.Forms
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
         }
+
+        private void btnImportRx_Click(object sender, EventArgs e)
+        {
+            Form fs = Props.IsFormOpen("frmImport");
+            if (fs == null)
+            {
+                fs = new frmImport();
+                fs.Show();
+            }
+            else
+            {
+                fs.Focus();
+            }
+            UpdateForm();
+        }
     }
 }
