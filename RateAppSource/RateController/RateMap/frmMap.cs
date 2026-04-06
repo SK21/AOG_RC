@@ -1740,36 +1740,45 @@ namespace RateController.Forms
 
         private void btnExportRx_Click(object sender, EventArgs e)
         {
-            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
-
-            using (var saveFileDialog = new SaveFileDialog())
+            try
             {
-                saveFileDialog.Title = "Save Shapefile As";
-                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
-                saveFileDialog.DefaultExt = "shp";
-                saveFileDialog.FileName = Name + ".shp";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
                 {
-                    try
+                    string Folder = ParcelManager.MapsFolder(JB.FieldID);
+                    string OldName = Path.GetFileNameWithoutExtension(lbRx.SelectedItem?.ToString());
+                    using (var saveFileDialog = new SaveFileDialog())
                     {
-                        MapController.SaveMap(saveFileDialog.FileName);
+                        saveFileDialog.Title = "Save Shapefile As";
+                        saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                        saveFileDialog.DefaultExt = "shp";
+                        saveFileDialog.FileName = OldName + ".shp";
 
-                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
-                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            string NewFolder = Path.GetDirectoryName(saveFileDialog.FileName);
+                            string NewName = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
 
-                        // Capture including legend
-                        MapController.SaveMapImage(imageName);
+                            foreach (string file in Directory.GetFiles(Folder, OldName + ".*"))
+                            {
+                                string ext = Path.GetExtension(file); // keeps .txt, .pdf, etc.
+                                string dest = Path.Combine(NewFolder, NewName + ext);
 
-                        Props.ShowMessage("File saved successfully", "Save", 5000);
-                    }
-                    catch (Exception ex)
-                    {
-                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
+                                File.Copy(file, dest, overwrite: true);
+                            }
+
+                            string ImageName = Path.Combine(NewFolder, NewName + ".png");
+                            MapController.SaveMapImage(ImageName);
+                            Props.ShowMessage("File saved successfully", "Save", 5000);
+                        }
                     }
                 }
             }
-
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnExportRx_Click: " + ex.Message);
+                Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
+            }
         }
     }
 }

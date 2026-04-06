@@ -552,7 +552,14 @@ namespace RateController.RateMap
             bool CurrentIsVisible = legendManager.IsVisible;
             try
             {
-                if (!CurrentIsVisible) legendManager.Show();
+                if (MapController.ZnOverlays.AppliedOverlayVisible)
+                {
+                    legendManager.Show();
+                }
+                else
+                {
+                    legendManager.Hide();
+                }
                 gmap.Refresh();
                 gmap.Update();
 
