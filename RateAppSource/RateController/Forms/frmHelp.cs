@@ -78,5 +78,20 @@ namespace RateController
             timer1.Enabled = false;
             Close();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void panel1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void frmHelp_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

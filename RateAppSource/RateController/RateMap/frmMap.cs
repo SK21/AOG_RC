@@ -423,20 +423,19 @@ namespace RateController.Forms
                 Job JB = JobManager.CurrentJob;
                 if (JB != null && JB.FieldID >= 0)
                 {
-                    ParcelManager.EnsureFieldFolders(JB.FieldID);
-                    using (var dlg = new SaveFileDialog
+                    var GetInput = new frmInput("File Name?", "New Prescription", true);
+                    GetInput.ShowDialog();
+                    bool Result = GetInput.Result;
+                    string Fname = GetInput.InputValue;
+                    GetInput.Close();
+
+                    if (Result)
                     {
-                        Title = "Save Prescription As",
-                        Filter = "Shapefile (*.shp)|*.shp",
-                        InitialDirectory = ParcelManager.MapsFolder(JB.FieldID)
-                    })
-                    {
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                        {
-                            MapController.ClearZones();
-                            MapController.SavePrescription(dlg.FileName);
-                            UpdateForm();
-                        }
+                        ParcelManager.EnsureFieldFolders(JB.FieldID);
+                        MapController.ClearZones();
+                        Fname = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), Fname + ".shp");
+                        MapController.SavePrescription(Fname);
+                        UpdateForm();
                     }
                 }
             }
@@ -953,7 +952,7 @@ namespace RateController.Forms
                 Job JB = JobManager.CurrentJob;
                 if (JB != null && JB.FieldID >= 0)
                 {
-                    string sel = cbPrescription.SelectedItem as string;
+                    string sel = lbRx.SelectedItem as string;
                     JobManager.SetActivePrescription(JB.ID, sel);
                     MapController.LoadMap();
                 }

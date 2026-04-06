@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMsgBox));
             this.btnCancel = new System.Windows.Forms.Button();
-            this.bntOK = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
@@ -53,22 +53,22 @@
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // bntOK
+            // btnOK
             // 
-            this.bntOK.BackColor = System.Drawing.Color.Transparent;
-            this.bntOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bntOK.FlatAppearance.BorderSize = 0;
-            this.bntOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bntOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.bntOK.Image = global::RateController.Properties.Resources.OK;
-            this.bntOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.bntOK.Location = new System.Drawing.Point(400, 321);
-            this.bntOK.Name = "bntOK";
-            this.bntOK.Size = new System.Drawing.Size(72, 72);
-            this.bntOK.TabIndex = 137;
-            this.bntOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.bntOK.UseVisualStyleBackColor = false;
-            this.bntOK.Click += new System.EventHandler(this.bntOK_Click);
+            this.btnOK.BackColor = System.Drawing.Color.Transparent;
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.FlatAppearance.BorderSize = 0;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.OK;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(400, 321);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(72, 72);
+            this.btnOK.TabIndex = 137;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.bntOK_Click);
             // 
             // panel1
             // 
@@ -96,7 +96,7 @@
             this.ClientSize = new System.Drawing.Size(488, 402);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.bntOK);
+            this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -114,7 +114,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button bntOK;
+        private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
     }

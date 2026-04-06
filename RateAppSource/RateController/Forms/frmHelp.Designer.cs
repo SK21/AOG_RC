@@ -46,6 +46,7 @@ namespace RateController
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(460, 184);
             this.panel1.TabIndex = 4;
+            this.panel1.Click += new System.EventHandler(this.panel1_Click);
             // 
             // label1
             // 
@@ -55,6 +56,7 @@ namespace RateController
             this.label1.Size = new System.Drawing.Size(60, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "label1";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // timer1
             // 
@@ -76,6 +78,7 @@ namespace RateController
             this.Text = "Help";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHelp_FormClosing);
             this.Load += new System.EventHandler(this.frmHelp_Load);
+            this.Click += new System.EventHandler(this.frmHelp_Click);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
