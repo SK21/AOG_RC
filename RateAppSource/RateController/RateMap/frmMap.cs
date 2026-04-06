@@ -622,15 +622,6 @@ namespace RateController.Forms
             MapController.Map.Zoom -= 1;
         }
 
-        private void cbPrescription_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Initializing) return;
-            Job job = JobManager.CurrentJob;
-            if (job == null || job.FieldID < 0) return;
-            string sel = cbPrescription.SelectedItem as string;
-            JobManager.SetActivePrescription(job.ID, sel == "(none)" ? "" : sel);
-            MapController.LoadMap();
-        }
 
         private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1576,22 +1567,22 @@ namespace RateController.Forms
 
                 lbFieldName.Text = parcel?.Name ?? "(no field)";
 
-                // Prescription dropdown
-                cbPrescription.Items.Clear();
-                cbPrescription.Items.Add("(none)");
-                if (parcel != null)
-                {
-                    foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
-                    {
-                        cbPrescription.Items.Add(f);
-                    }
-                    string active = job.ActivePrescription;
-                    cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
-                }
-                else
-                {
-                    cbPrescription.SelectedIndex = 0;
-                }
+                //// Prescription dropdown
+                //cbPrescription.Items.Clear();
+                //cbPrescription.Items.Add("(none)");
+                //if (parcel != null)
+                //{
+                //    foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
+                //    {
+                //        cbPrescription.Items.Add(f);
+                //    }
+                //    string active = job.ActivePrescription;
+                //    cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
+                //}
+                //else
+                //{
+                //    cbPrescription.SelectedIndex = 0;
+                //}
 
                 // Yield dropdown
                 cbYield.Items.Clear();
@@ -1771,7 +1762,7 @@ namespace RateController.Forms
             if (fs == null)
             {
                 fs = new frmImport();
-                fs.Show();
+                fs.ShowDialog();
             }
             else
             {

@@ -35,10 +35,10 @@ namespace RateController.Forms
                 {
                     string Fname = tbName.Text;
                     Fname = Path.GetFileName(Fname);
-                    if (FileNameValidator.IsValidFileName(Name))
+                    if (FileNameValidator.IsValidFileName(Fname))
                     {
                         ParcelManager.EnsureFieldFolders(JB.FieldID);
-                        JobManager.SetActivePrescription(JB.ID, Fname);
+                        JobManager.SetActivePrescription(JB.ID, Fname + ".shp");
                         if (SaveCrossReferencedShapefile())
                         {
                             Props.ShowMessage("Cross-referenced shapefile saved successfully.");
@@ -152,6 +152,7 @@ namespace RateController.Forms
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     selectedShapefilePath = ofd.FileName;
+                    tbName.Text = Path.GetFileNameWithoutExtension(selectedShapefilePath);
                     LoadShapefileAttributes(DGV);
                 }
                 else

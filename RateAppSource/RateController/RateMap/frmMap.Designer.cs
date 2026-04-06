@@ -131,7 +131,6 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.tbLat = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
-            this.cbPrescription = new System.Windows.Forms.ComboBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -1421,15 +1420,6 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // cbPrescription
-            // 
-            this.cbPrescription.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPrescription.FormattingEnabled = true;
-            this.cbPrescription.Location = new System.Drawing.Point(234, 554);
-            this.cbPrescription.Name = "cbPrescription";
-            this.cbPrescription.Size = new System.Drawing.Size(287, 32);
-            this.cbPrescription.TabIndex = 426;
-            // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1440,7 +1430,6 @@
             this.Controls.Add(this.pnlTabs);
             this.Controls.Add(this.pnlControls);
             this.Controls.Add(this.pnlMain);
-            this.Controls.Add(this.cbPrescription);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1564,7 +1553,6 @@
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.Label lbFieldName;
         private System.Windows.Forms.Label lbPrescriptionLabel;
-        private System.Windows.Forms.ComboBox cbPrescription;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnExportRx;
         private System.Windows.Forms.Button btnImportRx;
