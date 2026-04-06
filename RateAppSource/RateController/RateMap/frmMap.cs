@@ -393,19 +393,6 @@ namespace RateController.Forms
             }
         }
 
-        private void btnImportZones_Click(object sender, EventArgs e)
-        {
-            Form fs = Props.IsFormOpen("frmImport");
-            if (fs == null)
-            {
-                fs = new frmImport();
-                fs.Show();
-            }
-            else
-            {
-                fs.Focus();
-            }
-        }
 
         private void btnKMLdelete_Click(object sender, EventArgs e)
         {
@@ -1743,7 +1730,7 @@ namespace RateController.Forms
             try
             {
                 Job JB = JobManager.CurrentJob;
-                if (JB != null && JB.FieldID >= 0)
+                if (JB != null && JB.FieldID >= 0 && lbRx.SelectedIndex >= 0)
                 {
                     string Folder = ParcelManager.MapsFolder(JB.FieldID);
                     string OldName = Path.GetFileNameWithoutExtension(lbRx.SelectedItem?.ToString());
