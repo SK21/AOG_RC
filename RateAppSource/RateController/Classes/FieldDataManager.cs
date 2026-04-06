@@ -10,11 +10,6 @@ namespace RateController.Classes
 
         public static event EventHandler SelectionChanged;
 
-        public static string SelectedYieldPath
-        {
-            get { return cSelectedYieldPath; }
-        }
-
         public static string ElevationPath
         {
             get
@@ -23,6 +18,11 @@ namespace RateController.Classes
                 if (job == null || job.FieldID < 0) return null;
                 return ParcelManager.ElevationPath(job.FieldID);
             }
+        }
+
+        public static string SelectedYieldPath
+        {
+            get { return cSelectedYieldPath; }
         }
 
         public static void Initialize()

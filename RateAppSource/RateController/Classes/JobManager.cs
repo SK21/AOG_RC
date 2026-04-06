@@ -26,11 +26,16 @@ namespace RateController.Classes
         {
             get
             {
+                string Result = "";
                 Job current = SearchJob(CurrentJobID);
-                string fld = "";
-                Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
-                if (currentParcel != null && currentParcel.Name.Trim() != "") fld = " - " + currentParcel.Name;
-                return current.Name + fld;
+                if (current != null)
+                {
+                    string fld = "";
+                    Parcel currentParcel = ParcelManager.SearchParcel(current.FieldID);
+                    if (currentParcel != null && currentParcel.Name.Trim() != "") fld = " - " + currentParcel.Name;
+                    Result = current.Name + fld;
+                }
+                return Result;
             }
         }
 
@@ -38,11 +43,7 @@ namespace RateController.Classes
         {
             get
             {
-                if (!IsJobValid(SearchJob(Properties.Settings.Default.CurrentJob)))
-                {
-                    CheckDefaultJob();
-                    Properties.Settings.Default.Save();
-                }
+                GetJob();
                 return Properties.Settings.Default.CurrentJob;
             }
             set
@@ -70,6 +71,11 @@ namespace RateController.Classes
             {
                 return RateDataPath(Properties.Settings.Default.CurrentJob);
             }
+        }
+
+        public static bool HasFieldlessJobs
+        {
+            get { return GetJobsList().Any(j => j.FieldID < 0); }
         }
 
         public static bool JobFilter
@@ -103,17 +109,6 @@ namespace RateController.Classes
                 newJob.ID = jobs.Any() ? jobs.Max(j => j.ID) + 1 : 0;
                 JobsList.Add(newJob);
                 SaveJob(newJob);
-            }
-        }
-
-        public static void CheckDefaultJob()
-        {
-            // No auto-creation of a fieldless default job.
-            // Select the first valid job instead.
-            Job first = GetJobsList().FirstOrDefault(j => IsJobValid(j));
-            if (first != null)
-            {
-                Properties.Settings.Default.CurrentJob = first.ID;
             }
         }
 
@@ -177,10 +172,8 @@ namespace RateController.Classes
                             }
                             JobsList = null;
                             result = true;
-                            if (!IsJobValid(SearchJob(Properties.Settings.Default.CurrentJob)))
+                            if (GetJob())
                             {
-                                // select default job
-                                CheckDefaultJob();
                                 Properties.Settings.Default.Save();
                                 JobChanged?.Invoke(null, EventArgs.Empty);
                             }
@@ -238,6 +231,32 @@ namespace RateController.Classes
 
                 return filteredJobs.ToList();
             }
+        }
+
+        public static bool GetJob()
+        {
+            bool Result = false;
+
+            if (!IsJobValid(SearchJob(Properties.Settings.Default.CurrentJob)))
+            {
+                // Select the first valid job instead.
+                Job first = GetJobsList().FirstOrDefault(j => IsJobValid(j));
+                if (first == null)
+                {
+                    CheckDefault();
+                    Properties.Settings.Default.CurrentJob = 0;
+                    Properties.Settings.Default.Save();
+                    Result = true;
+                }
+                else
+                {
+                    Properties.Settings.Default.CurrentJob = first.ID;
+                    Properties.Settings.Default.Save();
+                    Result = true;
+                }
+            }
+
+            return Result;
         }
 
         public static List<Job> GetJobsList()
@@ -304,7 +323,9 @@ namespace RateController.Classes
             cJobsFolder = name;
 
             // check for default job
-            CheckDefaultJob();
+            CheckDefault();
+
+            GetJob();
 
             // check job folder structure
             List<Job> jobs = GetJobsList();
@@ -316,11 +337,6 @@ namespace RateController.Classes
             // settings
             cShowJobs = bool.TryParse(Props.GetAppProp("ShowJobs"), out bool ja) ? ja : false;
             cJobFilter = bool.TryParse(Props.GetAppProp("StickyJobFilter"), out bool jf) ? jf : true;
-        }
-
-        public static bool HasFieldlessJobs
-        {
-            get { return GetJobsList().Any(j => j.FieldID < 0); }
         }
 
         public static bool IsFieldIDUsed(int fieldID)
@@ -397,7 +413,7 @@ namespace RateController.Classes
             {
                 if (JB.ActivePrescription == null)
                 {
-                    //Result = "Zones.shp";
+                    if (JB.FieldID < 0) JB.FieldID = 0;
                     Result = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), "Zones.shp");
                 }
                 else
@@ -445,12 +461,41 @@ namespace RateController.Classes
             }
         }
 
+        public static void SetActivePrescription(int id, string filename)
+        {
+            Job JB = SearchJob(id);
+            if (JB != null)
+            {
+                JB.ActivePrescription = filename;
+                SaveJob(JB);
+            }
+        }
+
         public static string YieldDataPath(int JobID)
         {
             string Result = null;
             Job JB = SearchJob(JobID);
             if (JB != null) Result = Path.Combine(JB.JobFolder, "YieldData.csv");
             return Result;
+        }
+
+        private static void CheckDefault()
+        {
+            // create default Job
+            var Jbs = GetJobsList();
+            if (Jbs.FirstOrDefault(m => m.ID == 0) == null)
+            {
+                // create default job
+                Job DefaultJob = new Job();
+                DefaultJob.Name = "Default";
+                DefaultJob.Date = DateTime.Now;
+                DefaultJob.FieldID = 0;
+                DefaultJob.Notes = "";
+                DefaultJob.ID = 0;
+
+                Jbs.Add(DefaultJob);
+                SaveJob(DefaultJob);
+            }
         }
 
         private static void CheckFolderStructure(Job job)
@@ -529,16 +574,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static void SetActivePrescription(int id, string filename)
-        {
-            Job JB = SearchJob(id);
-            if (JB != null)
-            {
-                JB.ActivePrescription = filename;
-                SaveJob(JB);
-            }
-        }
-
         private static bool IsJobValid(Job JobToCheck)
         {
             bool IsValid = false;
@@ -565,6 +600,7 @@ namespace RateController.Classes
 
     public class Job
     {
+        public string ActivePrescription { get; set; }
         public DateTime Date { get; set; }
         public string DisplayName => $"{Name.PadRight(15)} {Date:dd-MMM}";
         public int FieldID { get; set; }
@@ -572,6 +608,5 @@ namespace RateController.Classes
         public string JobFolder => Path.Combine(JobManager.JobsFolder, $"Job_{ID}");
         public string Name { get; set; }
         public string Notes { get; set; }
-        public string ActivePrescription { get; set; }
     }
 }

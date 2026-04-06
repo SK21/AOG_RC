@@ -144,6 +144,7 @@ namespace RateController.Classes
 
                 ChangeProfile(Properties.Settings.Default.CurrentFile);
 
+                ParcelManager.Initialize();
                 JobManager.Initialize();
                 MapController.Initialize();
                 Props.JobCollector.Enabled = true;
