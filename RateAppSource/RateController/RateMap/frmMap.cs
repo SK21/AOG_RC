@@ -72,7 +72,24 @@ namespace RateController.Forms
             this.Invalidate();
         }
 
-        private void btnSaveAsNew_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            SetEditMode(false, true);
+            MapController.ZnOverlays.ResetMarkers();
+            UpdateForm();
+        }
+
+        private void btnCentre_Click(object sender, EventArgs e)
+        {
+            MapController.CenterMap();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
         {
             try
             {
@@ -88,13 +105,155 @@ namespace RateController.Forms
                 {
                     if (dlg.ShowDialog() != DialogResult.OK) return;
                     MapController.SavePrescription(dlg.FileName);
+                    UpdateForm();
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnCopy_Click: " + ex.Message);
+                Props.ShowMessage("Error saving prescription: " + ex.Message, "Save Prescription", 8000, true);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            switch (MapController.State)
+            {
+                case MapState.EditZones:
+                    MapController.ZnOverlays.DeleteLastVertex();
+                    break;
+
+                case MapState.Positioning:
+                    if (MapController.ZnOverlays.DeleteZone(tbName.Text))
+                    {
+                        SetEditMode(false, true);
+                        UpdateForm();
+                    }
+                    else
+                    {
+                        Props.ShowMessage("Zone could not be deleted.");
+                    }
+                    break;
+            }
+        }
+
+        private void btnDeleteData_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox("Confirm Delete all job data?", "Delete File", true);
+            Hlp.TopMost = true;
+
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result)
+            {
+                MapController.RateCollector.ClearReadings();
+
+                // Immediately clear coverage overlay and legend from the map
+                MapController.ClearAppliedRatesOverlay();
+            }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
+
+            using (var saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Title = "Save Shapefile As";
+                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "shp";
+                saveFileDialog.FileName = Name + ".shp";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        MapController.SaveMap(saveFileDialog.FileName);
+
+                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
+                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
+
+                        // Capture including legend
+                        MapController.SaveMapImage(imageName);
+
+                        Props.ShowMessage("File saved successfully", "Save", 5000);
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
+                    }
+                }
+            }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string FileName = exeDirectory + "Help\\frmMap.pdf";
+
+            try
+            {
+                if (File.Exists(FileName))
+                {
+                    Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
+                }
+                else
+                {
+                    Props.ShowMessage("No help available.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/bthHelp_Click: " + ex.Message);
+            }
+        }
+
+        private void btnImportElevation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                using (var dlg = new OpenFileDialog
+                {
+                    Title = "Import Elevation File",
+                    Filter = "CSV files (*.csv)|*.csv",
+                    CheckFileExists = true
+                })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+                    ParcelManager.EnsureFieldFolders(job.FieldID);
+                    string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
+                    string elevPath = Path.Combine(elevFolder, "Elevation.csv");
+                    string bakPath = Path.Combine(elevFolder, "Elevation.bak");
+                    if (File.Exists(elevPath))
+                        File.Copy(elevPath, bakPath, true);
+                    File.Copy(dlg.FileName, elevPath, true);
+                    string ep = FieldDataManager.ElevationPath;
+                    if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
+                    if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
                     UpdateFieldDataPanel();
                 }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("frmMap/btnSaveAsNew_Click: " + ex.Message);
-                Props.ShowMessage("Error saving prescription: " + ex.Message, "Save Prescription", 8000, true);
+                Props.WriteErrorLog("frmMap/btnImportElevation_Click: " + ex.Message);
+                Props.ShowMessage("Error importing elevation: " + ex.Message, "Import Elevation", 8000, true);
+            }
+        }
+
+        private void btnImportKML_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog { Title = "Open KML file.", Filter = "Shapefiles (*.kml)|*.kml" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    if (MapController.AddKmlLayer(ofd.FileName))
+                    {
+                        ckKML.Checked = true; // reflect visible state
+                    }
+                }
             }
         }
 
@@ -192,215 +351,6 @@ namespace RateController.Forms
             }
         }
 
-        private void btnImportElevation_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                using (var dlg = new OpenFileDialog
-                {
-                    Title = "Import Elevation File",
-                    Filter = "CSV files (*.csv)|*.csv",
-                    CheckFileExists = true
-                })
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK) return;
-                    ParcelManager.EnsureFieldFolders(job.FieldID);
-                    string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
-                    string elevPath = Path.Combine(elevFolder, "Elevation.csv");
-                    string bakPath = Path.Combine(elevFolder, "Elevation.bak");
-                    if (File.Exists(elevPath))
-                        File.Copy(elevPath, bakPath, true);
-                    File.Copy(dlg.FileName, elevPath, true);
-                    string ep = FieldDataManager.ElevationPath;
-                    if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
-                    if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                    UpdateFieldDataPanel();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnImportElevation_Click: " + ex.Message);
-                Props.ShowMessage("Error importing elevation: " + ex.Message, "Import Elevation", 8000, true);
-            }
-        }
-
-        private void btnRestoreElevation_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
-                string elevPath = Path.Combine(elevFolder, "Elevation.csv");
-                string bakPath = Path.Combine(elevFolder, "Elevation.bak");
-                if (!File.Exists(bakPath)) return;
-                if (File.Exists(elevPath))
-                    File.Delete(elevPath);
-                File.Move(bakPath, elevPath);
-                string ep = FieldDataManager.ElevationPath;
-                if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
-                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                UpdateFieldDataPanel();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnRestoreElevation_Click: " + ex.Message);
-                Props.ShowMessage("Error restoring elevation: " + ex.Message, "Restore Elevation", 8000, true);
-            }
-        }
-
-        private void cbPrescription_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Initializing) return;
-            Job job = JobManager.CurrentJob;
-            if (job == null || job.FieldID < 0) return;
-            string sel = cbPrescription.SelectedItem as string;
-            JobManager.SetActivePrescription(job.ID, sel == "(none)" ? "" : sel);
-            MapController.LoadMap();
-        }
-
-        private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Initializing) return;
-            Job job = JobManager.CurrentJob;
-            if (job == null || job.FieldID < 0) return;
-            string sel = cbYield.SelectedItem as string;
-            if (sel == null || sel == "(none)")
-                FieldDataManager.SetYieldPath(null);
-            else
-                FieldDataManager.SetYieldPath(Path.Combine(ParcelManager.YieldFolder(job.FieldID), sel));
-            MapController.YieldCreator.LoadData();
-            if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            SetEditMode(false, true);
-            MapController.ZnOverlays.ResetMarkers();
-            UpdateForm();
-        }
-
-        private void btnCentre_Click(object sender, EventArgs e)
-        {
-            MapController.CenterMap();
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            switch (MapController.State)
-            {
-                case MapState.EditZones:
-                    MapController.ZnOverlays.DeleteLastVertex();
-                    break;
-
-                case MapState.Positioning:
-                    if (MapController.ZnOverlays.DeleteZone(tbName.Text))
-                    {
-                        SetEditMode(false, true);
-                        UpdateForm();
-                    }
-                    else
-                    {
-                        Props.ShowMessage("Zone could not be deleted.");
-                    }
-                    break;
-            }
-        }
-
-        private void btnDeleteData_Click(object sender, EventArgs e)
-        {
-            var Hlp = new frmMsgBox("Confirm Delete all job data?", "Delete File", true);
-            Hlp.TopMost = true;
-
-            Hlp.ShowDialog();
-            bool Result = Hlp.Result;
-            Hlp.Close();
-            if (Result)
-            {
-                MapController.RateCollector.ClearReadings();
-
-                // Immediately clear coverage overlay and legend from the map
-                MapController.ClearAppliedRatesOverlay();
-            }
-        }
-
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            string Name = Props.CurrentFileName() + "_RateData_" + DateTime.Now.ToString("dd-MMM-yy");
-
-            using (var saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.Title = "Save Shapefile As";
-                saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
-                saveFileDialog.DefaultExt = "shp";
-                saveFileDialog.FileName = Name + ".shp";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        MapController.SaveMap(saveFileDialog.FileName);
-
-                        string imageName = Path.GetDirectoryName(saveFileDialog.FileName);
-                        imageName = Path.Combine(imageName, Path.GetFileNameWithoutExtension(saveFileDialog.FileName)) + ".png";
-
-                        // Capture including legend
-                        MapController.SaveMapImage(imageName);
-
-                        Props.ShowMessage("File saved successfully", "Save", 5000);
-                    }
-                    catch (Exception ex)
-                    {
-                        Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
-                    }
-                }
-            }
-        }
-
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string FileName = exeDirectory + "Help\\frmMap.pdf";
-
-            try
-            {
-                if (File.Exists(FileName))
-                {
-                    Process.Start(new ProcessStartInfo { FileName = FileName, UseShellExecute = true });
-                }
-                else
-                {
-                    Props.ShowMessage("No help available.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/bthHelp_Click: " + ex.Message);
-            }
-        }
-
-        private void btnImportKML_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new OpenFileDialog { Title = "Open KML file.", Filter = "Shapefiles (*.kml)|*.kml" })
-            {
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    if (MapController.AddKmlLayer(ofd.FileName))
-                    {
-                        ckKML.Checked = true; // reflect visible state
-                    }
-                }
-            }
-        }
-
-
         private void btnImportZones_Click(object sender, EventArgs e)
         {
             Form fs = Props.IsFormOpen("frmImport");
@@ -466,6 +416,37 @@ namespace RateController.Forms
             SetMaxView(false);
         }
 
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
+                {
+                    ParcelManager.EnsureFieldFolders(JB.FieldID);
+                    using (var dlg = new SaveFileDialog
+                    {
+                        Title = "Save Prescription As",
+                        Filter = "Shapefile (*.shp)|*.shp",
+                        InitialDirectory = ParcelManager.MapsFolder(JB.FieldID)
+                    })
+                    {
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                        {
+                            MapController.ClearZones();
+                            MapController.SavePrescription(dlg.FileName);
+                            UpdateForm();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnNew_Click: " + ex.Message);
+                Props.ShowMessage("Error creating prescription: " + ex.Message, "New Prescription", 8000, true);
+            }
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             double RateA = double.TryParse(tbP1.Text, out double p1) ? p1 : 0;
@@ -517,6 +498,31 @@ namespace RateController.Forms
             }
         }
 
+        private void btnRestoreElevation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
+                string elevPath = Path.Combine(elevFolder, "Elevation.csv");
+                string bakPath = Path.Combine(elevFolder, "Elevation.bak");
+                if (!File.Exists(bakPath)) return;
+                if (File.Exists(elevPath))
+                    File.Delete(elevPath);
+                File.Move(bakPath, elevPath);
+                string ep = FieldDataManager.ElevationPath;
+                if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
+                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                UpdateFieldDataPanel();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnRestoreElevation_Click: " + ex.Message);
+                Props.ShowMessage("Error restoring elevation: " + ex.Message, "Restore Elevation", 8000, true);
+            }
+        }
+
         private void btnTimeCancel_Click(object sender, EventArgs e)
         {
             Initializing = true;
@@ -556,6 +562,30 @@ namespace RateController.Forms
         private void btnZoomOut_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom -= 1;
+        }
+
+        private void cbPrescription_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbPrescription.SelectedItem as string;
+            JobManager.SetActivePrescription(job.ID, sel == "(none)" ? "" : sel);
+            MapController.LoadMap();
+        }
+
+        private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbYield.SelectedItem as string;
+            if (sel == null || sel == "(none)")
+                FieldDataManager.SetYieldPath(null);
+            else
+                FieldDataManager.SetYieldPath(Path.Combine(ParcelManager.YieldFolder(job.FieldID), sel));
+            MapController.YieldCreator.LoadData();
+            if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
         }
 
         private void ChangeMapSize()
@@ -781,6 +811,43 @@ namespace RateController.Forms
             }
         }
 
+        private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
+        {
+            if (InvokeRequired) { Invoke(new Action(UpdateFieldDataPanel)); return; }
+            UpdateFieldDataPanel();
+        }
+
+        private void FillPrescriptionsList()
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                Parcel parcel = job != null && job.FieldID >= 0 ? ParcelManager.SearchParcel(job.FieldID) : null;
+
+                lbFieldName.Text = "Field: " + parcel?.Name ?? "(no field)";
+
+                lbRx.Items.Clear();
+                lbRx.Items.Add("Default.shp");
+                if (parcel == null)
+                {
+                    lbRx.SelectedIndex = 0;
+                }
+                else
+                {
+                    foreach (string rx in ParcelManager.GetPrescriptionFiles(job.FieldID))
+                    {
+                        lbRx.Items.Add(rx);
+                    }
+                    string active = job.ActivePrescription;
+                    lbRx.SelectedItem = !string.IsNullOrEmpty(active) ? active : "Default.shp";
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMaps/FillPrescriptionsList: " + ex.Message);
+            }
+        }
+
         private void frmMap_FormClosing(object sender, FormClosingEventArgs e)
         {
             ShutDown();
@@ -853,15 +920,6 @@ namespace RateController.Forms
             }
         }
 
-        private void LoadProductNames()
-        {
-            lbP1.Text = Core.Products.Item(0).ProductName;
-            lbP2.Text = Core.Products.Item(1).ProductName;
-            lbP3.Text = Core.Products.Item(2).ProductName;
-            lbP4.Text = Core.Products.Item(3).ProductName;
-            lbP5.Text = Core.Products.Item(4).ProductName;
-        }
-
         private void HSB_Scroll(object sender, ScrollEventArgs e)
         {
             double newLng = e.NewValue / 1000.0;
@@ -888,6 +946,20 @@ namespace RateController.Forms
             LoadProductNames();
         }
 
+        private void lbRx_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
+                {
+                    string sel = cbPrescription.SelectedItem as string;
+                    JobManager.SetActivePrescription(JB.ID, sel);
+                    MapController.LoadMap();
+                }
+            }
+        }
+
         private void LoadFormLocation()
         {
             try
@@ -904,6 +976,15 @@ namespace RateController.Forms
             {
                 Props.WriteErrorLog("frmMap/LoadFormLocation: " + ex.Message);
             }
+        }
+
+        private void LoadProductNames()
+        {
+            lbP1.Text = Core.Products.Item(0).ProductName;
+            lbP2.Text = Core.Products.Item(1).ProductName;
+            lbP3.Text = Core.Products.Item(2).ProductName;
+            lbP4.Text = Core.Products.Item(3).ProductName;
+            lbP5.Text = Core.Products.Item(4).ProductName;
         }
 
         private void LoadTimes()
@@ -1406,7 +1487,6 @@ namespace RateController.Forms
                         }
                         if (TractorIsMoving()) UpdatePosition();
                         break;
-
                 }
                 tbLong.Enabled = !TractorIsMoving();
                 tbLat.Enabled = !TractorIsMoving();
@@ -1426,17 +1506,6 @@ namespace RateController.Forms
         private bool TractorIsMoving()
         {
             return Props.Speed_KMH > 0.5;
-        }
-
-        private void UpdateFileCount()
-        {
-            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
-        }
-
-        private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
-        {
-            if (InvokeRequired) { Invoke(new Action(UpdateFieldDataPanel)); return; }
-            UpdateFieldDataPanel();
         }
 
         private void UpdateFieldDataPanel()
@@ -1497,6 +1566,11 @@ namespace RateController.Forms
             }
         }
 
+        private void UpdateFileCount()
+        {
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
+        }
+
         private void UpdateForm()
         {
             try
@@ -1540,7 +1614,9 @@ namespace RateController.Forms
                 LoadTimes();
                 ckAutoTune.Checked = MapController.ZnOverlays.AutoTune;
 
-                UpdateFieldDataPanel();
+                //UpdateFieldDataPanel();
+
+                if (tabControl1.SelectedIndex == 0) FillPrescriptionsList();
 
                 Initializing = false;
             }

@@ -67,34 +67,6 @@ namespace RateController.RateMap
 
         public double GridResolutionMeters { get; set; } = 10.0;
 
-        public void LoadElevationFile(string filePath)
-        {
-            Readings = new List<FieldSample>();
-            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath)) return;
-            try
-            {
-                string[] lines = System.IO.File.ReadAllLines(filePath);
-                for (int i = 1; i < lines.Length; i++)
-                {
-                    if (string.IsNullOrWhiteSpace(lines[i])) continue;
-                    string[] parts = lines[i].Split(',');
-                    if (parts.Length < 3) continue;
-                    if (!double.TryParse(parts[0], System.Globalization.NumberStyles.Float,
-                            System.Globalization.CultureInfo.InvariantCulture, out double lat)) continue;
-                    if (!double.TryParse(parts[1], System.Globalization.NumberStyles.Float,
-                            System.Globalization.CultureInfo.InvariantCulture, out double lon)) continue;
-                    if (!double.TryParse(parts[2], System.Globalization.NumberStyles.Float,
-                            System.Globalization.CultureInfo.InvariantCulture, out double el)) continue;
-                    Readings.Add(new FieldSample(DateTime.MinValue, lat, lon, 0, 0, el));
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("ElevationOverlayCreator/LoadElevationFile: " + ex.Message);
-                Readings = new List<FieldSample>();
-            }
-        }
-
         public void Build()
         {
             if (!cEnabled || _disposed)
@@ -164,6 +136,34 @@ namespace RateController.RateMap
             }
 
             _disposed = true;
+        }
+
+        public void LoadElevationFile(string filePath)
+        {
+            Readings = new List<FieldSample>();
+            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath)) return;
+            try
+            {
+                string[] lines = System.IO.File.ReadAllLines(filePath);
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(lines[i])) continue;
+                    string[] parts = lines[i].Split(',');
+                    if (parts.Length < 3) continue;
+                    if (!double.TryParse(parts[0], System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out double lat)) continue;
+                    if (!double.TryParse(parts[1], System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out double lon)) continue;
+                    if (!double.TryParse(parts[2], System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out double el)) continue;
+                    Readings.Add(new FieldSample(DateTime.MinValue, lat, lon, 0, 0, el));
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ElevationOverlayCreator/LoadElevationFile: " + ex.Message);
+                Readings = new List<FieldSample>();
+            }
         }
 
         public void Reset()

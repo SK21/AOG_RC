@@ -246,6 +246,12 @@ namespace RateController.RateMap
             }
         }
 
+        public static void ClearZones()
+        {
+            ZnOverlays.TargetOverlay.Polygons.Clear();
+            ClearAppliedRatesOverlay();
+        }
+
         public static void ClearAppliedRatesOverlay()
         {
             try
