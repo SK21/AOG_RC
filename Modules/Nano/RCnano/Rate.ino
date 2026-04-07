@@ -32,7 +32,7 @@ void PulseISR(uint8_t ID)
 
 void GetUPM()
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < MDL.SensorCount; i++)
 	{
 		if (PulseCount[i])
 		{
@@ -61,7 +61,7 @@ void GetUPM()
 		else
 		{
 			// No flow check
-			if ((millis() - LastPulse[i]) > FlowTimeout || (!Sensor[i].FlowEnabled))
+			if (millis() - LastPulse[i] > FlowTimeout || (RelayLo == 0 && RelayHi == 0))
 			{
 				Sensor[i].UPM = 0.0f;
 				Sensor[i].Hz = 0.0f;

@@ -14,6 +14,7 @@
 
 const float FastAdjustMotor = 1.0;
 const float FastAdjustValve = 40.0;
+const float KpMultiplier = 100.0;
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
@@ -96,7 +97,7 @@ float PIDvalve(byte ID)
 
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
+				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
 
 				if (fabsf(ChangeAmount) < 0.1)
 				{
@@ -155,7 +156,7 @@ float PIDmotor(byte ID)
 
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustMotor;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
+				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
 				ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
 
 				Result += ChangeAmount;

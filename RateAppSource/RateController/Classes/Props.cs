@@ -112,6 +112,7 @@ namespace RateController.Classes
         private static string[] LanguageIDs = new string[] { "en", "de", "hu", "nl", "pl", "ru", "fr", "lt" };
         private static string lastMessage = "";
         private static DateTime lastMessageTime = DateTime.MinValue;
+        private static bool cMasterMaintained = false;
 
         #region pressure calibration
 
@@ -383,6 +384,17 @@ namespace RateController.Classes
                     cSimSpeed = value;
                     SetAppProp("SimSpeed", cSimSpeed.ToString());
                 }
+            }
+        }
+
+        public static bool MasterMaintained
+        {
+            // whether the master switch is momentary or maintained
+            get { return cMasterMaintained; }
+            set
+            {
+                cMasterMaintained = value;
+                SetAppProp("MasterMaintained", cMasterMaintained.ToString());
             }
         }
 
@@ -974,6 +986,7 @@ namespace RateController.Classes
             cShowCanDiagnostics = bool.TryParse(GetAppProp("CanDiagnostics"), out bool di) ? di : false;
             string port = GetAppProp("CanPort");
             cCanPort = string.IsNullOrEmpty(port) ? "COM7" : port;
+            cMasterMaintained = bool.TryParse(GetAppProp("MasterMaintained"), out bool mm) ? mm : false;
 
             for (int i = 0; i < 40; i++)
             {

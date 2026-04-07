@@ -10,13 +10,13 @@ void AdjustFlow()
         case StandardValve_ct:
         case Motor_ct:
         case Fan_ct:
-            SetPWM(i, Sensor[i].FlowEnabled ? clamped : 0.0f);
+            SetPWM(i, Sensor[i].AdjustmentEnabled ? clamped : 0.0f);
             break;
 
         case ComboClose_ct:
         case TimedCombo_ct:
             // fast close valve or combo close timed, used for flow control and on/off
-            SetPWM(i, Sensor[i].FlowEnabled ? clamped : -255.0f);
+            SetPWM(i, Sensor[i].AdjustmentEnabled ? clamped : -255.0f);
             break;
 
         default:

@@ -1,9 +1,5 @@
 ﻿using RateController.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -166,7 +162,8 @@ namespace RateController.PGNs
                         // auto on
                         cData[9] |= (byte)CommandPGN32500.AutoOn;
 
-                        if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose)
+                        if (Prod.ControlType != ControlTypeEnum.Valve && Prod.ControlType != ControlTypeEnum.ComboClose
+                            && Core.SectionControl.MasterOn)
                         {
                             // keep manual motor setting the same as auto when not in use
                             // for smooth transition from auto to manual control
@@ -175,9 +172,7 @@ namespace RateController.PGNs
                     }
 
                     // manual
-                    if ((Core.SectionControl.MasterOn
-                        || Props.MasterSwitchMode == MasterSwitchMode.Override
-                        || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) && Prod.Enabled)
+                    if (Prod.Enabled)
                     {
                         cData[10] = (byte)Prod.ManualPWM;
                         cData[11] = (byte)(Prod.ManualPWM >> 8);

@@ -1,9 +1,5 @@
 ﻿using RateController.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -194,8 +190,17 @@ namespace RateController.PGNs
                 SW[1] = Core.Tls.BitRead(Data[2], 1);     // master on
                 SW[2] = Core.Tls.BitRead(Data[2], 2);     // master off
 
-                if (SW[1]) cMasterOn = true;
-                else if (SW[2]) cMasterOn = false;
+                if (Props.MasterMaintained)
+                {
+                    // work around for a maintained master switch
+                    cMasterOn = SW[1];
+                    SW[2] = !SW[1];
+                }
+                else
+                {
+                    if (SW[1]) cMasterOn = true;
+                    else if (SW[2]) cMasterOn = false;
+                }
 
                 SW[3] = Core.Tls.BitRead(Data[2], 3);     // rate up
                 SW[4] = Core.Tls.BitRead(Data[2], 4);     // rate down

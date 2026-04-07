@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -234,9 +230,9 @@ namespace RateController.Classes
         {
             if (!Core.SwitchBox.RealConnected())
             {
-                Core.SwitchBox.ParseByteData(PGNdata, false);
                 if (RateDownIsPressed) PressSwitch(SwIDs.RateDown);
                 if (RateUpIsPressed) PressSwitch(SwIDs.RateUp);
+                Core.SwitchBox.ParseByteData(PGNdata, false);
             }
         }
 

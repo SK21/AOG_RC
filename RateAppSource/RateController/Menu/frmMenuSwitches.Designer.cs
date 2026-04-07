@@ -41,6 +41,8 @@
             this.rbMasterOverride = new System.Windows.Forms.RadioButton();
             this.rbMasterRelayOnly = new System.Windows.Forms.RadioButton();
             this.rbMasterAll = new System.Windows.Forms.RadioButton();
+            this.ckMaintained = new System.Windows.Forms.CheckBox();
+            this.gbSpacer1 = new System.Windows.Forms.GroupBox();
             this.gbAutoSwitch.SuspendLayout();
             this.gbOnScreen.SuspendLayout();
             this.gbMasterSwitch.SuspendLayout();
@@ -118,7 +120,7 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(53, 396);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(53, 449);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
             this.ckWorkSwitch.Size = new System.Drawing.Size(170, 37);
             this.ckWorkSwitch.TabIndex = 338;
@@ -177,7 +179,7 @@
             // 
             this.gbOnScreen.Controls.Add(this.ckScreenSwitches);
             this.gbOnScreen.Controls.Add(this.ckDualAuto);
-            this.gbOnScreen.Location = new System.Drawing.Point(300, 299);
+            this.gbOnScreen.Location = new System.Drawing.Point(300, 335);
             this.gbOnScreen.Name = "gbOnScreen";
             this.gbOnScreen.Size = new System.Drawing.Size(200, 151);
             this.gbOnScreen.TabIndex = 341;
@@ -187,12 +189,14 @@
             // 
             // gbMasterSwitch
             // 
+            this.gbMasterSwitch.Controls.Add(this.gbSpacer1);
+            this.gbMasterSwitch.Controls.Add(this.ckMaintained);
             this.gbMasterSwitch.Controls.Add(this.rbMasterOverride);
             this.gbMasterSwitch.Controls.Add(this.rbMasterRelayOnly);
             this.gbMasterSwitch.Controls.Add(this.rbMasterAll);
             this.gbMasterSwitch.Location = new System.Drawing.Point(37, 119);
             this.gbMasterSwitch.Name = "gbMasterSwitch";
-            this.gbMasterSwitch.Size = new System.Drawing.Size(200, 222);
+            this.gbMasterSwitch.Size = new System.Drawing.Size(200, 295);
             this.gbMasterSwitch.TabIndex = 342;
             this.gbMasterSwitch.TabStop = false;
             this.gbMasterSwitch.Text = "Master Switch";
@@ -242,6 +246,31 @@
             this.rbMasterAll.UseVisualStyleBackColor = true;
             this.rbMasterAll.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
+            // ckMaintained
+            // 
+            this.ckMaintained.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMaintained.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMaintained.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMaintained.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMaintained.Location = new System.Drawing.Point(16, 236);
+            this.ckMaintained.Name = "ckMaintained";
+            this.ckMaintained.Size = new System.Drawing.Size(170, 37);
+            this.ckMaintained.TabIndex = 166;
+            this.ckMaintained.Text = "Maintained";
+            this.ckMaintained.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMaintained.UseVisualStyleBackColor = true;
+            this.ckMaintained.CheckedChanged += new System.EventHandler(this.ckMaintained_CheckedChanged);
+            // 
+            // gbSpacer1
+            // 
+            this.gbSpacer1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbSpacer1.ForeColor = System.Drawing.Color.Yellow;
+            this.gbSpacer1.Location = new System.Drawing.Point(22, 218);
+            this.gbSpacer1.Name = "gbSpacer1";
+            this.gbSpacer1.Size = new System.Drawing.Size(158, 3);
+            this.gbSpacer1.TabIndex = 172;
+            this.gbSpacer1.TabStop = false;
+            // 
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -283,5 +312,7 @@
         private System.Windows.Forms.RadioButton rbMasterOverride;
         private System.Windows.Forms.CheckBox ckRate;
         private System.Windows.Forms.CheckBox ckSections;
+        private System.Windows.Forms.CheckBox ckMaintained;
+        private System.Windows.Forms.GroupBox gbSpacer1;
     }
 }

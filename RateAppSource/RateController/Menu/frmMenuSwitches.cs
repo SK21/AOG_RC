@@ -30,6 +30,7 @@ namespace RateController.Menu
         {
             try
             {
+                Props.MasterMaintained = ckMaintained.Checked;
                 Props.ShowSwitches = ckScreenSwitches.Checked;
                 Props.UseDualAuto = ckDualAuto.Checked;
                 Core.SwitchBox.WorkSwitchEnabled = ckWorkSwitch.Checked;
@@ -138,6 +139,7 @@ namespace RateController.Menu
         {
             Initializing = true;
 
+            ckMaintained.Checked = Props.MasterMaintained;
             ckScreenSwitches.Checked = Props.ShowSwitches;
             ckDualAuto.Checked = Props.UseDualAuto;
             ckWorkSwitch.Checked = Core.SwitchBox.WorkSwitchEnabled;
@@ -160,6 +162,11 @@ namespace RateController.Menu
             }
 
             Initializing = false;
+        }
+
+        private void ckMaintained_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
     }
 }

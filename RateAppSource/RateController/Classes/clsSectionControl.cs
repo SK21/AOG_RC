@@ -6,13 +6,14 @@ namespace RateController.Classes
     public class clsSectionControl
     {
         private const int AdjustDelay = 250;
-        private const byte MaxSteps = 5;
+        private const byte MaxSteps = 6;
         private const int StepDelay = 2000;
-        private const double StepMultiplier = 0.025;   // rate change amount for each step
+        private const double AutoStepMultiplier = 0.025;   // rate change amount for each step
+        private const double ManualStepMultiplier = 10;
         private DateTime AdjustTime;
         private bool AutoSectionLast;
         private bool AutoSectionsChanged;
-        private bool Changed;
+        private bool StateChanged;
         private bool cPrimeOn;
         private bool ForceOff;
         private bool LastState;
@@ -31,6 +32,7 @@ namespace RateController.Classes
         private DateTime StepTime;
         private int TimerCount = 0;
         private bool WorkSWOnLast;
+        private DateTime RatePressedTime;
 
         public clsSectionControl()
         {
@@ -68,9 +70,10 @@ namespace RateController.Classes
                 else
                 {
                     Pressed = false;
-                    RateStep = 1;
+                    RateStep = 0;
                 }
-                Changed = (LastState != Pressed);
+
+                StateChanged = (LastState != Pressed);
                 LastState = Pressed;
 
                 if (Pressed)
@@ -87,67 +90,65 @@ namespace RateController.Classes
                     if ((DateTime.Now - AdjustTime).TotalMilliseconds > AdjustDelay)
                     {
                         AdjustTime = DateTime.Now;
+                        clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
 
-                        int ID = Props.CurrentProduct;
-                        if (ID < 0) ID = 0;
-                        clsProduct Prd = Core.Products.Item(ID);
-
-                        if (Core.SwitchBox.AutoRateOn)
+                        if (!Core.SwitchBox.MasterOn || !Core.SwitchBox.AutoRateOn)
                         {
-                            // auto rate
+                            // adjust PWM
+                            bool IsValve = Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed;
+                            if (IsValve)
+                            {
+                                int minPWM = 10;
+                                if (minPWM < Prd.MinPWMadjust) minPWM = Prd.MinPWMadjust;
+                                int DriveSpeed = (int)(minPWM + ManualStepMultiplier * (RateStep - 1));
+                                Prd.ManualPWM = (int)(DriveSpeed * RateDir);
+                            }
+                            else
+                            {
+                                // adjust motor
+                                Prd.ManualPWM += (int)(RateStep * 2 * RateDir);
+                            }
+                        }
+                        else
+                        {
+                            // adjust target/acre - auto mode
                             double CurrentRate = Prd.RateSet;
                             if (CurrentRate == 0) CurrentRate = 1;
 
                             if (RateDir == 1)
                             {
-                                CurrentRate = CurrentRate * (1 + (StepMultiplier * RateStep));
+                                CurrentRate = CurrentRate * (1 + (AutoStepMultiplier * RateStep));
                             }
                             else
                             {
-                                CurrentRate = CurrentRate / (1 + (StepMultiplier * RateStep));
+                                CurrentRate = CurrentRate / (1 + (AutoStepMultiplier * RateStep));
                             }
                             Prd.RateSet = CurrentRate;
-                        }
-                        else
-                        {
-                            // manual rate
-                            if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose
-                                || Prd.ControlType == ControlTypeEnum.ComboCloseTimed)
-                            {
-                                // adjust flow valve
-                                byte ADJ = (byte)(255.0 * Prd.MinPWMadjust / 100.0);
-                                Prd.ManualPWM = (int)((ADJ + ADJ * StepMultiplier * RateStep) * RateDir);
-                            }
-                            else
-                            {
-                                // adjust motor
-                                Prd.ManualPWM += (int)(5 * RateDir);
-                            }
                         }
                     }
                 }
                 else
                 {
-                    if (Changed)
+                    if (StateChanged)
                     {
                         // stop manual adjusting flow valve when rate adjust buttons are not pushed
-                        int ID = Props.CurrentProduct;
-                        if (ID < 0) ID = 0;
-                        clsProduct Prd = Core.Products.Item(ID);
+                        clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
 
-                        if (!Core.SwitchBox.AutoRateOn &&
-                            (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed))
+                        if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed)
                         {
                             Prd.ManualPWM = 0;
                         }
+                        AdjustTime = DateTime.MinValue;
+                        StepTime = DateTime.MinValue;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("clsSectionControl/ " + ex.Message);
+                Props.WriteErrorLog("clsSectionControl/ReadRateSwitches: " + ex.Message);
             }
         }
+
 
         public void UpdateSectionStatusNoZones()
         {
@@ -554,23 +555,31 @@ namespace RateController.Classes
         private void SetPriming()
         {
             // turn sections on if master held in on position for a defined time
-            if (PrimeInitialized)
+            if (Props.MasterMaintained)
             {
-                if (((DateTime.Now - OnFirstPressed).TotalSeconds > Props.PrimeDelay) && Core.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
-                {
-                    // priming mode
-                    cPrimeOn = true;
-                    PrimeTimer.Enabled = true;
-                }
+                // priming disabled with a maintained master switch
+                cPrimeOn = false;
             }
             else
             {
-                if (Props.Speed_KMH < 0.1)
+                if (PrimeInitialized)
                 {
-                    PrimeInitialized = true;
-                    OnFirstPressed = DateTime.Now;
-                    cPrimeOn = false;
-                    PrimeTimer.Enabled = false;
+                    if (((DateTime.Now - OnFirstPressed).TotalSeconds > Props.PrimeDelay) && Core.SwitchBox.SwitchIsOn(SwIDs.MasterOn))
+                    {
+                        // priming mode
+                        cPrimeOn = true;
+                        PrimeTimer.Enabled = true;
+                    }
+                }
+                else
+                {
+                    if (Props.Speed_KMH < 0.1)
+                    {
+                        PrimeInitialized = true;
+                        OnFirstPressed = DateTime.Now;
+                        cPrimeOn = false;
+                        PrimeTimer.Enabled = false;
+                    }
                 }
             }
         }

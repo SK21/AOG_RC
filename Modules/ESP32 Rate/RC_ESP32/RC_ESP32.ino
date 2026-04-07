@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 4046;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 7046;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -115,7 +115,7 @@ struct SensorConfig	// about 104 bytes
 	uint8_t FlowPin;
 	uint8_t IN1;
 	uint8_t IN2;
-	bool FlowEnabled;
+	bool AdjustmentEnabled;
 	float UPM;				// sent as upm X 1000
 	float PWM;
 	uint32_t CommTime;
@@ -276,21 +276,20 @@ void SetSensorsEnabled()
 		bool Result = false;
 		if (millis() - Sensor[i].CommTime < 5000)
 		{
-			if (Sensor[i].TargetUPM > 0 && MasterOn)
+			if (!MasterOn)
 			{
 				Result = true;
 			}
-			else if (MasterOn && !Sensor[i].AutoOn)
+			else if (Sensor[i].TargetUPM > 0)
 			{
 				Result = true;
 			}
-			else if ((Sensor[i].ControlType == Fan_ct) && (Sensor[i].TargetUPM > 0))
+			else if (!Sensor[i].AutoOn)
 			{
-				// fan
 				Result = true;
 			}
 		}
-		Sensor[i].FlowEnabled = Result;
+		Sensor[i].AdjustmentEnabled = Result;
 	}
 }
 

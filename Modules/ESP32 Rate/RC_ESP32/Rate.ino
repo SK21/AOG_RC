@@ -11,19 +11,19 @@ volatile uint16_t PulseCount[MaxProductCount];
 volatile uint8_t SamplesCount[MaxProductCount];
 volatile uint8_t SamplesIndex[MaxProductCount];
 
-IRAM_ATTR void PulseISR(uint8_t ID,uint32_t ReadTime)
+IRAM_ATTR void PulseISR(uint8_t ID, uint32_t ReadTime)
 {
 	if (RelayLo > 0 || RelayHi > 0)
 	{
 		PulseTime[ID] = ReadTime - ReadLast[ID];
 		ReadLast[ID] = ReadTime;
 
-		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)			
+		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)
 		{
-			PulseCount[ID]=PulseCount[ID]+1;
+			PulseCount[ID] = PulseCount[ID] + 1;
 			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
 			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
-			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]=SamplesCount[ID]+1;
+			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID] = SamplesCount[ID] + 1;
 		}
 	}
 }
@@ -59,7 +59,7 @@ void GetUPM()
 		else
 		{
 			// No flow check
-			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
+			if (millis() - LastPulse[i] > FlowTimeout || (RelayLo == 0 && RelayHi == 0))
 			{
 				Sensor[i].UPM = 0;
 				Sensor[i].Hz = 0;
@@ -75,7 +75,7 @@ void GetUPM()
 
 IRAM_ATTR void ISR0()
 {
-	PulseISR(0,micros());
+	PulseISR(0, micros());
 }
 
 IRAM_ATTR void ISR1()

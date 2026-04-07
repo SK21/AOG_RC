@@ -14,6 +14,7 @@
 
 const float FastAdjustMotor = 1.0;
 const float FastAdjustValve = 40.0;
+const float KpMultiplier = 100.0;
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
@@ -25,7 +26,23 @@ void SetPWM()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		if (Sensor[i].AutoOn)
+		if (!Sensor[i].AutoOn || !MasterOn)
+		{
+			// manual control
+			switch (Sensor[i].ControlType)
+			{
+			case TimedCombo_ct:
+				// combo close timed adjustment
+				Sensor[i].PWM = TimedCombo(i, true);
+				break;
+
+			default:
+				Sensor[i].PWM = Sensor[i].ManualAdjust;
+				if (fabsf(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * ((Sensor[i].PWM >= 0.0) ? 1.0 : -1.0);
+				break;
+			}
+		}
+		else
 		{
 			// auto control
 			switch (Sensor[i].ControlType)
@@ -46,22 +63,6 @@ void SetPWM()
 				break;
 			}
 		}
-		else
-		{
-			// manual control
-			switch (Sensor[i].ControlType)
-			{
-			case TimedCombo_ct:
-				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(i, true);
-				break;
-
-			default:
-				Sensor[i].PWM = Sensor[i].ManualAdjust;
-				if (fabsf(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * ((Sensor[i].PWM >= 0.0) ? 1.0 : -1.0);
-				break;
-			}
-		}
 	}
 }
 
@@ -69,7 +70,7 @@ float PIDvalve(byte ID)
 {
 	float Result = 0;
 
-	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
+	if (Sensor[ID].AdjustmentEnabled && Sensor[ID].TargetUPM > 0)
 	{
 		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
@@ -96,8 +97,8 @@ float PIDvalve(byte ID)
 
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
-			
+				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
+
 				if (fabsf(ChangeAmount) < 0.1)
 				{
 					Result = 0.0f;
@@ -128,7 +129,7 @@ float PIDmotor(byte ID)
 {
 	float Result = 0;
 
-	if (Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0)
+	if (Sensor[ID].AdjustmentEnabled && Sensor[ID].TargetUPM > 0)
 	{
 		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
@@ -155,7 +156,7 @@ float PIDmotor(byte ID)
 
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustMotor;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * BrakeFactor * 100.0 + IntegralSum[ID];
+				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
 				ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
 
 				Result += ChangeAmount;
@@ -179,7 +180,7 @@ float PIDmotor(byte ID)
 float TimedCombo(byte ID, bool ManualAdjust = false)
 {
 	float Result = 0;
-	if ((Sensor[ID].FlowEnabled && Sensor[ID].TargetUPM > 0) || ManualAdjust)
+	if ((Sensor[ID].AdjustmentEnabled && Sensor[ID].TargetUPM > 0) || ManualAdjust)
 	{
 		if (Sensor[ID].UPM < (Sensor[ID].TimedMinStart * Sensor[ID].TargetUPM))
 		{

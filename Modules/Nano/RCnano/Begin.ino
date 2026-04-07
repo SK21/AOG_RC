@@ -3,8 +3,8 @@ void DoSetup()
 	uint8_t ErrorCount = 0;
 	bool WheelMatch = false;
 
-	Sensor[0].FlowEnabled = false;
-	Sensor[1].FlowEnabled = false;
+	Sensor[0].AdjustmentEnabled = false;
+	Sensor[1].AdjustmentEnabled = false;
 
 	Serial.begin(38400);
 	delay(3000);
