@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 2046;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 7046;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -27,7 +27,7 @@ const uint32_t FlowTimeout = 4000;
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
 const uint8_t PCF8574address = 0x20;
-uint8_t DefaultRelayPins[] = {8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC};		// pin numbers when GPIOs are used for relay control (1), default RC11
+uint8_t DefaultRelayPins[] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 
 #if defined(ESP32)
 const int PWM_BITS = 12;
@@ -91,7 +91,7 @@ struct SensorConfig	// about 104 bytes
 	uint8_t FlowPin;
 	uint8_t DirPin;
 	uint8_t PWMPin;
-	bool FlowEnabled;
+	bool AdjustmentEnabled;
 	float UPM;				// sent as upm X 1000
 	float PWM;
 	uint32_t CommTime;
@@ -215,7 +215,7 @@ void loop()
 	case 2:
 		SendComm();
 		break;
-	// CommMode 1 doesn't need SendComm() - data sent via CANBus_Update()
+		// CommMode 1 doesn't need SendComm() - data sent via CANBus_Update()
 	}
 
 	Blink();
@@ -228,21 +228,20 @@ void SetSensorsEnabled()
 		bool Result = false;
 		if (millis() - Sensor[i].CommTime < 5000)
 		{
-			if (Sensor[i].TargetUPM > 0 && MasterOn)
+			if (!MasterOn)
 			{
 				Result = true;
 			}
-			else if (MasterOn && !Sensor[i].AutoOn)
+			else if (Sensor[i].TargetUPM > 0)
 			{
 				Result = true;
 			}
-			else if ((Sensor[i].ControlType == Fan_ct) && (Sensor[i].TargetUPM > 0))
+			else if (!Sensor[i].AutoOn)
 			{
-				// fan
 				Result = true;
 			}
 		}
-		Sensor[i].FlowEnabled = Result;
+		Sensor[i].AdjustmentEnabled = Result;
 	}
 }
 

@@ -61,7 +61,7 @@ void GetUPM()
 		else
 		{
 			// No flow check
-			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].FlowEnabled))
+			if (millis() - LastPulse[i] > FlowTimeout || (!Sensor[i].AdjustmentEnabled))
 			{
 				Sensor[i].UPM = 0;
 				Sensor[i].Hz = 0;
