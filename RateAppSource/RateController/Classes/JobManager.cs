@@ -471,13 +471,16 @@ namespace RateController.Classes
             }
         }
 
-        public static string YieldDataPath(int JobID)
+        public static void SetActiveYieldFile(int ID, string FileName)
         {
-            string Result = null;
-            Job JB = SearchJob(JobID);
-            if (JB != null) Result = Path.Combine(JB.JobFolder, "YieldData.csv");
-            return Result;
+            Job JB = SearchJob(ID);
+            if (JB != null)
+            {
+                JB.ActiveYieldFile = FileName;
+                SaveJob(JB);
+            }
         }
+
 
         private static void CheckDefault()
         {
@@ -601,6 +604,8 @@ namespace RateController.Classes
     public class Job
     {
         public string ActivePrescription { get; set; }
+        public string ActiveKMLfile { get; set; }
+        public string ActiveYieldFile { get; set; }
         public DateTime Date { get; set; }
         public string DisplayName => $"{Name.PadRight(15)} {Date:dd-MMM}";
         public int FieldID { get; set; }

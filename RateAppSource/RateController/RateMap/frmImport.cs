@@ -153,6 +153,9 @@ namespace RateController.Forms
                 {
                     selectedShapefilePath = ofd.FileName;
                     tbName.Text = Path.GetFileNameWithoutExtension(selectedShapefilePath);
+                    tbName.SelectionStart = tbName.Text.Length;
+                    tbName.SelectionLength = 0;
+                    tbName.ScrollToCaret();
                     LoadShapefileAttributes(DGV);
                 }
                 else

@@ -1071,6 +1071,7 @@
             this.btnDeleteElevation.Size = new System.Drawing.Size(82, 45);
             this.btnDeleteElevation.TabIndex = 429;
             this.btnDeleteElevation.UseVisualStyleBackColor = true;
+            this.btnDeleteElevation.Click += new System.EventHandler(this.btnDeleteElevation_Click);
             // 
             // label12
             // 
@@ -1103,6 +1104,7 @@
             this.btnDeleteKML.TabIndex = 426;
             this.btnDeleteKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnDeleteKML.UseVisualStyleBackColor = false;
+            this.btnDeleteKML.Click += new System.EventHandler(this.btnDeleteKML_Click);
             // 
             // btnImportKML
             // 
@@ -1118,6 +1120,7 @@
             this.btnImportKML.Text = "Import";
             this.btnImportKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnImportKML.UseVisualStyleBackColor = false;
+            this.btnImportKML.Click += new System.EventHandler(this.btnImportKML_Click);
             // 
             // btnDeleteYield
             // 
@@ -1129,6 +1132,7 @@
             this.btnDeleteYield.Size = new System.Drawing.Size(82, 45);
             this.btnDeleteYield.TabIndex = 424;
             this.btnDeleteYield.UseVisualStyleBackColor = true;
+            this.btnDeleteYield.Click += new System.EventHandler(this.btnDeleteYield_Click);
             // 
             // lbYieldLabel
             // 

@@ -260,7 +260,7 @@ namespace RateController.Forms
                     string ep = FieldDataManager.ElevationPath;
                     if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
                     if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                    UpdateFieldDataPanel();
+                    UpdateFilesPanel();
                 }
             }
             catch (Exception ex)
@@ -383,7 +383,7 @@ namespace RateController.Forms
                     FieldDataManager.SetYieldPath(destPath);
                     MapController.YieldCreator.LoadData(destPath);
                     if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
-                    UpdateFieldDataPanel();
+                    UpdateFilesPanel();
                 }
             }
             catch (Exception ex)
@@ -542,7 +542,7 @@ namespace RateController.Forms
                 string ep = FieldDataManager.ElevationPath;
                 if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
                 if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                UpdateFieldDataPanel();
+                UpdateFilesPanel();
             }
             catch (Exception ex)
             {
@@ -599,9 +599,13 @@ namespace RateController.Forms
             if (job == null || job.FieldID < 0) return;
             string sel = cbYield.SelectedItem as string;
             if (sel == null || sel == "(none)")
+            {
                 FieldDataManager.SetYieldPath(null);
+            }
             else
+            {
                 FieldDataManager.SetYieldPath(Path.Combine(ParcelManager.YieldFolder(job.FieldID), sel));
+            }
             MapController.YieldCreator.LoadData();
             if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
         }
@@ -831,8 +835,8 @@ namespace RateController.Forms
 
         private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
         {
-            if (InvokeRequired) { Invoke(new Action(UpdateFieldDataPanel)); return; }
-            UpdateFieldDataPanel();
+            if (InvokeRequired) { Invoke(new Action(UpdateFilesPanel)); return; }
+            UpdateFilesPanel();
         }
 
         private void FillPrescriptionsList()
@@ -931,6 +935,7 @@ namespace RateController.Forms
                 timer1.Enabled = true;
                 SetEditMode(false, true);
                 LoadProductNames();
+                UpdateFilesPanel();
             }
             catch (Exception ex)
             {
@@ -1526,7 +1531,7 @@ namespace RateController.Forms
             return Props.Speed_KMH > 0.5;
         }
 
-        private void UpdateFieldDataPanel()
+        private void UpdateFilesPanel()
         {
             Initializing = true;
             try
@@ -1536,30 +1541,19 @@ namespace RateController.Forms
 
                 lbFieldName.Text = parcel?.Name ?? "(no field)";
 
-                //// Prescription dropdown
-                //cbPrescription.Items.Clear();
-                //cbPrescription.Items.Add("(none)");
-                //if (parcel != null)
-                //{
-                //    foreach (string f in ParcelManager.GetPrescriptionFiles(job.FieldID))
-                //    {
-                //        cbPrescription.Items.Add(f);
-                //    }
-                //    string active = job.ActivePrescription;
-                //    cbPrescription.SelectedItem = !string.IsNullOrEmpty(active) ? active : "(none)";
-                //}
-                //else
-                //{
-                //    cbPrescription.SelectedIndex = 0;
-                //}
-
                 // Yield dropdown
                 cbYield.Items.Clear();
                 cbYield.Items.Add("(none)");
                 if (parcel != null)
                 {
                     foreach (string f in ParcelManager.GetYieldFiles(job.FieldID))
+                    {
                         cbYield.Items.Add(f);
+                    }
+
+
+
+
                     string sel = FieldDataManager.SelectedYieldPath != null
                         ? Path.GetFileName(FieldDataManager.SelectedYieldPath) : null;
                     cbYield.SelectedItem = sel ?? "(none)";
@@ -1766,6 +1760,45 @@ namespace RateController.Forms
                 Props.WriteErrorLog("frmMap/btnExportRx_Click: " + ex.Message);
                 Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
             }
+        }
+
+        private void btnDeleteYield_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
+                string YD = cbYield.SelectedItem.ToString();
+                if (parcel != null && YD != null)
+                {
+                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
+                    MB.ShowDialog();
+                    bool Result = MB.Result;
+                    MB.Close();
+                    if (Result)
+                    {
+                        YD += ".csv";
+                        string Folder = ParcelManager.YieldFolder(JB.ID);
+                        YD = Path.Combine(Folder, YD);
+                        if (Props.IsPathSafe(YD)) File.Delete(YD);
+                        UpdateFilesPanel();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnDeleteYield_Click: " + ex.Message);
+            }
+        }
+
+        private void btnDeleteElevation_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDeleteKML_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
