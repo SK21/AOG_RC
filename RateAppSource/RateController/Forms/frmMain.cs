@@ -450,7 +450,7 @@ namespace RateController.Forms
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             UpdateSwitches();
-            UpdateForm();
+            //UpdateForm();
         }
 
         private void SwitchDisplay(bool DisplayFans)
@@ -636,14 +636,7 @@ namespace RateController.Forms
                             break;
 
                         case ProductState.Error:
-                            if (FlashState)
-                            {
-                                img = UseLight ? ImagesErrorLight[i] : ImagesError[i];
-                            }
-                            else
-                            {
-                                img = UseLight ? ImagesOnLight[i] : ImagesOn[i];
-                            }
+                            img = UseLight ? ImagesErrorLight[i] : ImagesError[i];
                             break;
 
                         default:

@@ -410,13 +410,7 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //		Serial.print(MaxLoopTime);
 //
 //		Serial.print(", ");
-//		Serial.print(MDL.OnboardRelayControl);
-//
-//		Serial.print(", ");
-//		Serial.print(MDL.RemoteRelayControl);
-//
-//		Serial.print(", ");
-//		Serial.print(debug1,BIN);
+//		Serial.print(debug1);
 //
 //		Serial.print(", ");
 //		Serial.print(debug2);

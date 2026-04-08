@@ -193,6 +193,7 @@ namespace RateController.PGNs
                 if (Props.MasterMaintained)
                 {
                     // work around for a maintained master switch
+                    //SW[1] = Core.Tls.BitRead(Data[3], 0);   // use section 1 to test
                     cMasterOn = SW[1];
                     SW[2] = !SW[1];
                 }
