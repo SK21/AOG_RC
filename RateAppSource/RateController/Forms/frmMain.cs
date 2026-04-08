@@ -28,7 +28,6 @@ namespace RateController.Forms
         private PictureBox[] ProductIcons = new PictureBox[6];
 
         private bool ShowFans;
-
         public frmMain()
         {
             InitializeComponent();
@@ -259,7 +258,7 @@ namespace RateController.Forms
         private void Core_UpdateStatus(object sender, EventArgs e)
         {
             UpdateForm();
-            ShowAlarmButton();
+            //ShowAlarmButton();
         }
 
         private void Fans_Click(object sender, EventArgs e)
@@ -276,6 +275,7 @@ namespace RateController.Forms
                 Core.ColorChanged -= Core_ColorChanged;
                 Core.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
                 Props.SaveFormLocation(this);
+                FlashTimer.Stop();
             }
             else
             {
@@ -313,12 +313,17 @@ namespace RateController.Forms
             // Touchscreen only: clear focus and hover state after every button tap.
             // Moving the cursor off the button triggers WM_MOUSELEAVE, clearing the hot/hover highlight.
             if (IsTabletPC())
+            {
                 foreach (Control c in Controls)
+                {
                     c.Click += (s, ea) =>
                     {
                         ActiveControl = null;
                         Cursor.Position = PointToScreen(new Point(0, 0));
                     };
+                }
+            }
+            FlashTimer.Start();
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
@@ -725,6 +730,11 @@ namespace RateController.Forms
                 }
                 fs.Focus();
             }
+        }
+
+        private void FlashTimer_Tick(object sender, EventArgs e)
+        {
+            ShowAlarmButton();
         }
     }
 }

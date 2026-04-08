@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.Fans = new System.Windows.Forms.PictureBox();
             this.prod5 = new System.Windows.Forms.PictureBox();
@@ -59,6 +60,7 @@
             this.btnQuantity = new RateController.Classes.RoundedButton();
             this.btnTarget = new RateController.Classes.RoundedButton();
             this.btnResetQuantity = new RateController.Classes.RoundedButton();
+            this.FlashTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Fans)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod1)).BeginInit();
@@ -470,6 +472,11 @@
             this.btnResetQuantity.UseVisualStyleBackColor = true;
             this.btnResetQuantity.Click += new System.EventHandler(this.pbQuantity_Click);
             // 
+            // FlashTimer
+            // 
+            this.FlashTimer.Interval = 500;
+            this.FlashTimer.Tick += new System.EventHandler(this.FlashTimer_Tick);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -560,5 +567,6 @@
         private Classes.RoundedButton btnUnits;
         private Classes.RoundedButton btnResetAcres;
         private Classes.RoundedButton btnResetQuantity;
+        private System.Windows.Forms.Timer FlashTimer;
     }
 }
