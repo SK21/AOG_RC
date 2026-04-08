@@ -48,8 +48,6 @@ namespace RateController
             this.btRestore.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btRestore.UseVisualStyleBackColor = false;
             this.btRestore.Click += new System.EventHandler(this.RestoreLC_Click);
-            this.btRestore.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);
-            this.btRestore.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseMove);
             // 
             // lbRate
             // 
