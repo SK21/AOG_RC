@@ -8,9 +8,12 @@ void AdjustFlow()
         switch (Sensor[i].ControlType)
         {
         case StandardValve_ct:
+            SetPWM(i, Sensor[i].AdjustmentEnabled ? clamped : 0.0f);
+            break;
+
         case Motor_ct:
         case Fan_ct:
-            SetPWM(i, Sensor[i].AdjustmentEnabled ? clamped : 0.0f);
+            SetPWM(i, (Sensor[i].AdjustmentEnabled && MasterOn) ? clamped : 0.0f);
             break;
 
         case ComboClose_ct:

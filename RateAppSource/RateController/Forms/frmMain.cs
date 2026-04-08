@@ -258,7 +258,6 @@ namespace RateController.Forms
         private void Core_UpdateStatus(object sender, EventArgs e)
         {
             UpdateForm();
-            //ShowAlarmButton();
         }
 
         private void Fans_Click(object sender, EventArgs e)
@@ -454,7 +453,7 @@ namespace RateController.Forms
 
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
-            UpdateSwitches();
+            BeginInvoke((Action)UpdateSwitches);
             //UpdateForm();
         }
 
