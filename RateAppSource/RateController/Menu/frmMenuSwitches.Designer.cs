@@ -227,6 +227,7 @@
             this.rbMomentary.Text = "Momentary";
             this.rbMomentary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbMomentary.UseVisualStyleBackColor = true;
+            this.rbMomentary.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // rbMaintained
             // 
@@ -240,6 +241,7 @@
             this.rbMaintained.Text = "Maintained";
             this.rbMaintained.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbMaintained.UseVisualStyleBackColor = true;
+            this.rbMaintained.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // ckOnScreen
             // 
@@ -254,6 +256,7 @@
             this.ckOnScreen.Text = "On-Screen Switches";
             this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOnScreen.UseVisualStyleBackColor = true;
+            this.ckOnScreen.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
             // frmMenuSwitches
             // 

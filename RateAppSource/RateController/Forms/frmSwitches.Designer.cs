@@ -35,7 +35,7 @@
             this.btn2 = new System.Windows.Forms.Button();
             this.btn3 = new System.Windows.Forms.Button();
             this.btn4 = new System.Windows.Forms.Button();
-            this.btAuto = new System.Windows.Forms.Button();
+            this.btnPrime = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
@@ -99,15 +99,15 @@
             this.btn4.UseVisualStyleBackColor = true;
             this.btn4.Click += new System.EventHandler(this.btn4_Click);
             // 
-            // btAuto
+            // btnPrime
             // 
-            this.btAuto.Location = new System.Drawing.Point(90, 12);
-            this.btAuto.Name = "btAuto";
-            this.btAuto.Size = new System.Drawing.Size(64, 46);
-            this.btAuto.TabIndex = 164;
-            this.btAuto.Text = "Auto";
-            this.btAuto.UseVisualStyleBackColor = true;
-            this.btAuto.Click += new System.EventHandler(this.btAuto_Click);
+            this.btnPrime.Location = new System.Drawing.Point(90, 12);
+            this.btnPrime.Name = "btnPrime";
+            this.btnPrime.Size = new System.Drawing.Size(64, 46);
+            this.btnPrime.TabIndex = 164;
+            this.btnPrime.Text = "PRM";
+            this.btnPrime.UseVisualStyleBackColor = true;
+            this.btnPrime.Click += new System.EventHandler(this.btnPrime_Click);
             // 
             // timer1
             // 
@@ -220,7 +220,7 @@
             this.Controls.Add(this.btnMaster);
             this.Controls.Add(this.btnUp);
             this.Controls.Add(this.btn2);
-            this.Controls.Add(this.btAuto);
+            this.Controls.Add(this.btnPrime);
             this.Controls.Add(this.btn4);
             this.Controls.Add(this.btn3);
             this.Controls.Add(this.btn1);
@@ -249,7 +249,7 @@
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btn3;
         private System.Windows.Forms.Button btn4;
-        private System.Windows.Forms.Button btAuto;
+        private System.Windows.Forms.Button btnPrime;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnMaster;
         private System.Windows.Forms.Button btnAutoRate;

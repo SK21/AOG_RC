@@ -30,9 +30,8 @@ namespace RateController.Menu
         {
             try
             {
-                Props.MasterMaintained = ckMaintained.Checked;
-                Props.ShowSwitches = ckScreenSwitches.Checked;
-                Props.UseDualAuto = ckDualAuto.Checked;
+                Props.MasterMaintained = rbMaintained.Checked;
+                Props.ShowSwitches = ckOnScreen.Checked;
                 Core.SwitchBox.WorkSwitchEnabled = ckWorkSwitch.Checked;
                 Core.SwitchBox.AutoRateEnabled = ckRate.Checked;
                 Core.SwitchBox.AutoSectionEnabled = ckSections.Checked;
@@ -64,6 +63,7 @@ namespace RateController.Menu
         {
             SetButtons(true);
         }
+
 
         private void frmMenuSwitches_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -123,11 +123,9 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            ckScreenSwitches.Text = Lang.lgSwitches;
+            ckOnScreen.Text = Lang.lgOnScreen;
             ckWorkSwitch.Text = Lang.lgWorkSwitch;
-            gbOnScreen.Text = Lang.lgOnScreen;
             gbAutoSwitch.Text = Lang.lgAutoSwitch;
-            ckDualAuto.Text = Lang.lgDualAuto;
             ckSections.Text = Lang.lgSections;
             ckRate.Text = Lang.lgRate;
             rbMasterAll.Text = Lang.lgMasterAll;
@@ -139,9 +137,16 @@ namespace RateController.Menu
         {
             Initializing = true;
 
-            ckMaintained.Checked = Props.MasterMaintained;
-            ckScreenSwitches.Checked = Props.ShowSwitches;
-            ckDualAuto.Checked = Props.UseDualAuto;
+            if (Props.MasterMaintained)
+            {
+                rbMaintained.Checked = true;
+            }
+            else
+            {
+                rbMomentary.Checked = true;
+            }
+
+            ckOnScreen.Checked = Props.ShowSwitches;
             ckWorkSwitch.Checked = Core.SwitchBox.WorkSwitchEnabled;
             ckRate.Checked = Core.SwitchBox.AutoRateEnabled;
             ckSections.Checked = Core.SwitchBox.AutoSectionEnabled;
@@ -162,11 +167,6 @@ namespace RateController.Menu
             }
 
             Initializing = false;
-        }
-
-        private void ckMaintained_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
     }
 }

@@ -152,6 +152,16 @@ namespace RateController.Classes
             }
         }
 
+        public void StartPrime()
+        {
+            if (!Props.MasterMaintained && Props.Speed_KMH < 0.1)
+            {
+                cPrimeOn = true;
+                TimerCount = 0;
+                PrimeTimer.Enabled = true;
+            }
+        }
+
         public void UpdateSectionStatusNoZones()
         {
             // only runs when switchbox is connected

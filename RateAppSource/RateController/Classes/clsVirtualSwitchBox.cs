@@ -180,6 +180,13 @@ namespace RateController.Classes
             PGNdata[5] = Core.Tls.CRC(PGNdata, 5);
         }
 
+        public void PrimePressed()
+        {
+            PressSwitch(SwIDs.MasterOn);
+            ReleaseTimer.Enabled = true;
+            Core.SectionControl.StartPrime();
+        }
+
         public void RateDownPressed()
         {
             RateDownIsPressed = true;

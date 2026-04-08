@@ -104,7 +104,6 @@ namespace RateController.Classes
         private static bool cShowSwitches;
         private static double cSimSpeed = 0;
         private static SpeedType cSpeedMode = SpeedType.GPS;
-        private static bool cUseDualAuto;
         private static bool cUseMetric;
         private static bool cUseRateDisplay = false;
         private static bool cUseVariableRate = false;
@@ -451,15 +450,6 @@ namespace RateController.Classes
             }
         }
 
-        public static bool UseDualAuto
-        {
-            get { return cUseDualAuto; }
-            set
-            {
-                cUseDualAuto = value;
-                SetAppProp("UseDualAuto", cUseDualAuto.ToString());
-            }
-        }
 
         public static bool UseMapPreview
         {
@@ -979,7 +969,6 @@ namespace RateController.Classes
             cUseMetric = bool.TryParse(GetAppProp("UseMetric"), out bool mt) ? mt : false;
             cShowPressure = bool.TryParse(GetAppProp("ShowPressure"), out bool sp) ? sp : false;
             cShowSwitches = bool.TryParse(GetAppProp("ShowSwitches"), out bool ss) ? ss : false;
-            cUseDualAuto = bool.TryParse(GetAppProp("UseDualAuto"), out bool da) ? da : false;
             cUseRateDisplay = bool.TryParse(GetAppProp("UseRateDisplay"), out bool rtd) ? rtd : false;
             cMapPreview = bool.TryParse(GetAppProp("MapPreview"), out bool mp) ? mp : false;
             cCurrentCanDriver = Enum.TryParse(GetAppProp("CanDriver"), out CanDriver dr) ? dr : CanDriver.SLCAN;

@@ -1114,7 +1114,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to On Screen.
+        ///   Looks up a localized string similar to On-Screen Switches.
         /// </summary>
         internal static string lgOnScreen {
             get {

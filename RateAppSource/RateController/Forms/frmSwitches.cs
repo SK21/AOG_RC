@@ -1,7 +1,6 @@
 ﻿using RateController.Classes;
 using RateController.Language;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,6 +8,9 @@ namespace RateController
 {
     public partial class frmSwitches : Form
     {
+        private Color ColorOff1 = Color.Silver;
+        private Color ColorOff2 = Color.Silver;
+        //private Color ColorOff2 = Color.LightCoral;
         private int mouseX = 0;
         private int mouseY = 0;
         private int windowLeft = 0;
@@ -29,12 +31,6 @@ namespace RateController
             btn6.Text = "6";
             btn7.Text = "7";
             btn8.Text = "8";
-        }
-
-        private void btAuto_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.AutoRate);
-            Core.vSwitchBox.PressSwitch(SwIDs.AutoSection);
         }
 
         private void btn1_Click(object sender, EventArgs e)
@@ -105,6 +101,11 @@ namespace RateController
         private void btnMaster_MouseUp(object sender, MouseEventArgs e)
         {
             Core.vSwitchBox.MasterReleased();
+        }
+
+        private void btnPrime_Click(object sender, EventArgs e)
+        {
+            Core.vSwitchBox.PrimePressed();
         }
 
         private void btnUp_MouseDown(object sender, MouseEventArgs e)
@@ -182,7 +183,6 @@ namespace RateController
         {
             btnAutoRate.Text = Lang.lgAutoRate;
             btnAutoSection.Text = Lang.lgAutoSection;
-            btAuto.Text = Lang.lgAuto;
         }
 
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
@@ -197,148 +197,25 @@ namespace RateController
 
         private void UpdateForm()
         {
-            if (Core.SwitchBox.AutoRateOn || Core.SwitchBox.AutoSectionOn)
-            {
-                btAuto.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btAuto.BackColor = Color.Red;
-            }
+            btnPrime.Enabled = !Props.MasterMaintained && Props.Speed_KMH < 0.1;
 
-            if (Core.SwitchBox.MasterOn)
-            {
-                btnMaster.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btnMaster.BackColor = Color.Red;
-            }
+            btnPrime.BackColor = Core.SectionControl.PrimeOn ? Color.LightGreen : ColorOff2;
+            btnMaster.BackColor = Core.SwitchBox.MasterOn ? Color.LightGreen : ColorOff2;
 
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.RateUp))
-            {
-                btnUp.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btnUp.BackColor = this.TransparencyKey;
-            }
+            btnUp.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateUp) ? Color.LightGreen : this.TransparencyKey;
+            btnDown.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateDown) ? Color.LightGreen : this.TransparencyKey;
 
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.RateDown))
-            {
-                btnDown.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btnDown.BackColor = this.TransparencyKey;
-            }
+            btn1.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw0) ? Color.LightGreen : ColorOff1;
+            btn2.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw1) ? Color.LightGreen : ColorOff1;
+            btn3.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw2) ? Color.LightGreen : ColorOff1;
+            btn4.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw3) ? Color.LightGreen : ColorOff1;
+            btn5.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw4) ? Color.LightGreen : ColorOff1;
+            btn6.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw5) ? Color.LightGreen : ColorOff1;
+            btn7.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw6) ? Color.LightGreen : ColorOff1;
+            btn8.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw7) ? Color.LightGreen : ColorOff1;
 
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw0))
-            {
-                btn1.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn1.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw1))
-            {
-                btn2.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn2.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw2))
-            {
-                btn3.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn3.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw3))
-            {
-                btn4.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn4.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw4))
-            {
-                btn5.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn5.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw5))
-            {
-                btn6.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn6.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw6))
-            {
-                btn7.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn7.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.SwitchIsOn(SwIDs.sw7))
-            {
-                btn8.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btn8.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.AutoSectionOn)
-            {
-                btnAutoSection.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btnAutoSection.BackColor = Color.Red;
-            }
-
-            if (Core.SwitchBox.AutoRateOn)
-            {
-                btnAutoRate.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                btnAutoRate.BackColor = Color.Red;
-            }
-
-            if (Props.UseDualAuto)
-            {
-                btAuto.Visible = false;
-                btnMaster.Width = 142;
-                btnAutoRate.Visible = true;
-                btnAutoSection.Visible = true;
-                this.Height = 272;
-            }
-            else
-            {
-                btAuto.Visible = true;
-                btnMaster.Width = 64;
-                btnAutoRate.Visible = false;
-                btnAutoSection.Visible = false;
-                this.Height = 221;
-            }
+            btnAutoSection.BackColor = Core.SwitchBox.AutoSectionOn ? Color.LightGreen : ColorOff1;
+            btnAutoRate.BackColor = Core.SwitchBox.AutoRateOn ? Color.LightGreen : ColorOff1;
         }
     }
 }
