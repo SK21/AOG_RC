@@ -450,6 +450,7 @@ namespace RateController.Forms
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             UpdateSwitches();
+            UpdateForm();
         }
 
         private void SwitchDisplay(bool DisplayFans)

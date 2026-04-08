@@ -78,6 +78,7 @@ namespace RateController.Menu
             MainMenu.MenuMoved -= MainMenu_MenuMoved;
             MainMenu.ProductChanged -= MainMenu_ProductChanged;
             MainMenu.ProductEnabled -= MainMenu_ProductEnabled;
+            Core.ModuleDataReceived -= Core_ModuleDataReceived;
         }
 
         private void frmMenuMonitoring_Load(object sender, EventArgs e)
@@ -101,7 +102,14 @@ namespace RateController.Menu
             PositionForm();
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             UpdateForm();
+
+            Core.ModuleDataReceived += Core_ModuleDataReceived;
             timer1.Enabled = true;
+        }
+
+        private void Core_ModuleDataReceived(object sender, EventArgs e)
+        {
+            UpdateDisplay();
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)

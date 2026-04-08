@@ -6,14 +6,16 @@ namespace RateController.Classes
     public class clsSectionControl
     {
         private const int AdjustDelay = 250;
+        private const double AutoStepMultiplier = 0.025;
+
+        // rate change amount for each step
+        private const double ManualStepMultiplier = 10;
+
         private const byte MaxSteps = 6;
         private const int StepDelay = 2000;
-        private const double AutoStepMultiplier = 0.025;   // rate change amount for each step
-        private const double ManualStepMultiplier = 10;
         private DateTime AdjustTime;
         private bool AutoSectionLast;
         private bool AutoSectionsChanged;
-        private bool StateChanged;
         private bool cPrimeOn;
         private bool ForceOff;
         private bool LastState;
@@ -26,13 +28,14 @@ namespace RateController.Classes
         private bool PrimeInitialized;
         private System.Windows.Forms.Timer PrimeTimer = new System.Windows.Forms.Timer();
         private double RateDir;
+        private DateTime RatePressedTime;
         private int RateStep;
         private bool[] RCsectionOn;
         private bool[] RCzoneOn = new bool[8];
+        private bool StateChanged;
         private DateTime StepTime;
         private int TimerCount = 0;
         private bool WorkSWOnLast;
-        private DateTime RatePressedTime;
 
         public clsSectionControl()
         {
@@ -148,7 +151,6 @@ namespace RateController.Classes
                 Props.WriteErrorLog("clsSectionControl/ReadRateSwitches: " + ex.Message);
             }
         }
-
 
         public void UpdateSectionStatusNoZones()
         {
@@ -587,6 +589,7 @@ namespace RateController.Classes
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             ReadRateSwitches();
+            if (Core.SwitchBox.RateUp || Core.SwitchBox.RateDown) Core.SendRateSettings();
             if (Props.UseZones)
             {
                 UpdateSectionStatusWithZones();

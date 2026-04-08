@@ -57,6 +57,8 @@ namespace RateController.Classes
 
         public static event EventHandler UpdateStatus;
 
+        public static event EventHandler ModuleDataReceived;
+
         #endregion events
 
         public static bool AppShutDown(FormClosingEventArgs e)
@@ -189,6 +191,11 @@ namespace RateController.Classes
             }
         }
 
+        public static void RaiseModuleDataReceived()
+        {
+            SafeEvent.Raise(ModuleDataReceived);
+        }
+
         public static void RaiseColorChanged()
         {
             SafeEvent.Raise(ColorChanged);
@@ -229,7 +236,13 @@ namespace RateController.Classes
                 Application.Exit();
             }
         }
-
+        public static void SendRateSettings()
+        {
+            foreach (clsProduct Prd in Products.Items)
+            {
+                if (Prd.Enabled) Prd.ModuleRateSettings.Send();
+            }
+        }
         public static void SendRelays()
         {
             for (int i = 0; i < Props.MaxModules; i++)
@@ -286,8 +299,8 @@ namespace RateController.Classes
 
         private static void MainTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            SafeEvent.Raise(UpdateStatus);
             SectionControl.ReadRateSwitches();
+            SafeEvent.Raise(UpdateStatus);
             SendRelays();
             RCalarm.CheckAlarms();
         }
