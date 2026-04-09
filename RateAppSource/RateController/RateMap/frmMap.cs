@@ -288,7 +288,7 @@ namespace RateController.Forms
                 Job JB = JobManager.CurrentJob;
                 Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
                 string YD = cbYield.SelectedItem.ToString();
-                if (parcel != null && YD != null)
+                if (parcel != null && YD != null && YD != "(none)")
                 {
                     var MB = new frmMsgBox("Confirm Delete?", "Help", true);
                     MB.ShowDialog();
@@ -296,11 +296,19 @@ namespace RateController.Forms
                     MB.Close();
                     if (Result)
                     {
-                        YD += ".csv";
-                        string Folder = ParcelManager.YieldFolder(JB.ID);
+                        string currentPath = ParcelManager.SelectedYieldPath(JB.FieldID);
+                        if (currentPath != null && YD == Path.GetFileName(currentPath))
+                        {
+                            ParcelManager.SetSelectedYieldPath(JB.FieldID, null);
+                        }
+
+                        string Folder = ParcelManager.YieldFolder(JB.FieldID);
                         YD = Path.Combine(Folder, YD);
                         if (Props.IsPathSafe(YD)) File.Delete(YD);
                         UpdateFilesPanel();
+
+                        MapController.YieldCreator.LoadData();
+                        if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
                     }
                 }
             }
@@ -953,7 +961,7 @@ namespace RateController.Forms
                 Job job = JobManager.CurrentJob;
                 Parcel parcel = job != null && job.FieldID >= 0 ? ParcelManager.SearchParcel(job.FieldID) : null;
 
-                lbFieldName.Text = "Field: " + parcel?.Name ?? "(no field)";
+                lbFieldName.Text = "Field: " + (parcel?.Name ?? "(no field)");
 
                 lbRx.Items.Clear();
                 lbRx.Items.Add("Zones.shp");
