@@ -285,7 +285,6 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    Props.ShowMessage("Failed to start CAN Bridge. Check adapter and COM port.");
                     Result = 2;
                 }
             }

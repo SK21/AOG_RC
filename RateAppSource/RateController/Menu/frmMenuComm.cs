@@ -35,21 +35,26 @@ namespace RateController.Menu
             Core.UDPmodules.NetworkEP = cbEthernet.Text;
 
             // CAN settings
+            bool CanSettingsChanged = false;
             if (rbAdapter2.Checked)
             {
+                if (Props.CurrentCanDriver != CanDriver.InnoMaker) CanSettingsChanged = true;
                 Props.CurrentCanDriver = CanDriver.InnoMaker;
             }
             else if (rbAdapter3.Checked)
             {
+                if (Props.CurrentCanDriver != CanDriver.PCAN) CanSettingsChanged = true;
                 Props.CurrentCanDriver = CanDriver.PCAN;
             }
             else
             {
+                if (Props.CurrentCanDriver != CanDriver.SLCAN) CanSettingsChanged = true;
                 Props.CurrentCanDriver = CanDriver.SLCAN;
             }
 
             if (cbComPort.SelectedItem != null)
             {
+                if (Props.CurrentCanDriver == CanDriver.SLCAN && Props.CanPort != cbComPort.SelectedItem.ToString()) CanSettingsChanged = true;
                 Props.CanPort = cbComPort.SelectedItem.ToString();
             }
 
@@ -57,7 +62,8 @@ namespace RateController.Menu
             bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
             if (diagnosticsChanged) Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-            if (Props.CanEnabled != ckCanBus.Checked)
+            if (Props.CanEnabled != ckCanBus.Checked) CanSettingsChanged = true;
+            if (CanSettingsChanged)
             {
                 int Result = Core.UseCanComm(ckCanBus.Checked);
 
@@ -99,13 +105,12 @@ namespace RateController.Menu
         {
             try
             {
+                // set app subnet
+                Core.UDPmodules.NetworkEP = cbEthernet.Text;
                 PGN32503 SetSubnet = new PGN32503();
                 if (SetSubnet.Send(Core.UDPmodules.NetworkEP))
                 {
                     Props.ShowMessage("New Subnet address sent.", "Subnet", 10000);
-
-                    // set app subnet
-                    Core.UDPmodules.NetworkEP = cbEthernet.Text;
                 }
                 else
                 {
