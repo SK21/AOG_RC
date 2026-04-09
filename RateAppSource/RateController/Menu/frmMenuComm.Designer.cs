@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuComm));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
@@ -53,6 +54,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ckCanBus = new System.Windows.Forms.CheckBox();
             this.ckDiagnostics = new System.Windows.Forms.CheckBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gbxDrivers.SuspendLayout();
             this.gbxPort.SuspendLayout();
             this.gbEthernet.SuspendLayout();
@@ -124,6 +126,7 @@
             this.rbAdapter1.Text = "SLCAN";
             this.rbAdapter1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAdapter1.UseVisualStyleBackColor = true;
+            this.rbAdapter1.CheckedChanged += new System.EventHandler(this.rbAdapter1_CheckedChanged);
             // 
             // rbAdapter3
             // 
@@ -137,6 +140,7 @@
             this.rbAdapter3.Text = "PCAN";
             this.rbAdapter3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAdapter3.UseVisualStyleBackColor = true;
+            this.rbAdapter3.CheckedChanged += new System.EventHandler(this.rbAdapter1_CheckedChanged);
             // 
             // rbAdapter2
             // 
@@ -150,6 +154,7 @@
             this.rbAdapter2.Text = "InnoMaker";
             this.rbAdapter2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbAdapter2.UseVisualStyleBackColor = true;
+            this.rbAdapter2.CheckedChanged += new System.EventHandler(this.rbAdapter1_CheckedChanged);
             // 
             // gbxPort
             // 
@@ -179,6 +184,7 @@
             this.btnRefresh.TabIndex = 356;
             this.btnRefresh.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnRefresh.UseVisualStyleBackColor = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // cbComPort
             // 
@@ -189,6 +195,7 @@
             this.cbComPort.Name = "cbComPort";
             this.cbComPort.Size = new System.Drawing.Size(100, 31);
             this.cbComPort.TabIndex = 353;
+            this.cbComPort.SelectedIndexChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
             // 
             // lbDriverFound
             // 
@@ -268,6 +275,7 @@
             this.ckEthernet.Text = "Enabled";
             this.ckEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEthernet.UseVisualStyleBackColor = true;
+            this.ckEthernet.CheckedChanged += new System.EventHandler(this.ckEthernet_CheckedChanged);
             // 
             // cbEthernet
             // 
@@ -278,6 +286,7 @@
             this.cbEthernet.Name = "cbEthernet";
             this.cbEthernet.Size = new System.Drawing.Size(157, 32);
             this.cbEthernet.TabIndex = 349;
+            this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
             // 
             // lbSubnet
             // 
@@ -300,6 +309,7 @@
             this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
             this.btnSendSubnet.TabIndex = 348;
             this.btnSendSubnet.UseVisualStyleBackColor = false;
+            this.btnSendSubnet.Click += new System.EventHandler(this.btnSendSubnet_Click);
             // 
             // btnRescan
             // 
@@ -316,6 +326,7 @@
             this.btnRescan.TabIndex = 347;
             this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnRescan.UseVisualStyleBackColor = false;
+            this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
             // lbIP
             // 
@@ -369,6 +380,7 @@
             this.ckCanBus.Text = "Enabled";
             this.ckCanBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckCanBus.UseVisualStyleBackColor = true;
+            this.ckCanBus.CheckedChanged += new System.EventHandler(this.ckCanBus_CheckedChanged);
             // 
             // ckDiagnostics
             // 
@@ -383,6 +395,12 @@
             this.ckDiagnostics.Text = "Diagnostics";
             this.ckDiagnostics.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckDiagnostics.UseVisualStyleBackColor = true;
+            this.ckDiagnostics.CheckedChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // frmMenuComm
             // 
@@ -436,5 +454,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox ckCanBus;
         private System.Windows.Forms.CheckBox ckDiagnostics;
+        private System.Windows.Forms.Timer timer1;
     }
 }
