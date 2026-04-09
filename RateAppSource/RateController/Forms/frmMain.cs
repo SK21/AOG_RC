@@ -9,6 +9,7 @@ namespace RateController.Forms
 {
     public partial class frmMain : Form
     {
+        public RCRestore MainMini;
         private int AlarmButtonCountDown = 5;
 
         private bool FlashState;
@@ -181,8 +182,7 @@ namespace RateController.Forms
         private void btnMinimize_Click(object sender, EventArgs e)
         {
             Minimize?.Invoke(this, EventArgs.Empty);
-            Form restoreform = new RCRestore();
-            restoreform.Show();
+            Core.SetMainDisplay(false);
         }
 
         private void btnQuantity_Click(object sender, EventArgs e)
@@ -284,6 +284,7 @@ namespace RateController.Forms
 
         private void frmMainDisplay_Load(object sender, EventArgs e)
         {
+            MainMini = new RCRestore();
             Core.Initialize(this);
 
             Core.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;

@@ -1,5 +1,4 @@
 ﻿using RateController.Classes;
-using RateController.Forms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,7 +8,6 @@ namespace RateController
     public partial class RCRestore : Form
     {
         private bool IsShutDown = false;
-        private MouseButtons MouseButtonClicked;
         private Point MouseDownLocation;
 
         public RCRestore()
@@ -45,7 +43,6 @@ namespace RateController
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
             // Log the current window location and the mouse location.
-            MouseButtonClicked = e.Button;
             if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
         }
 
@@ -67,9 +64,6 @@ namespace RateController
 
             Props.LoadFormLocation(this);
 
-            frmMain FormToHide = Core.MainForm;
-            FormToHide.WindowState = FormWindowState.Minimized;
-
             timer1.Enabled = true;
             SetColor();
             UpdateForm();
@@ -77,11 +71,7 @@ namespace RateController
 
         private void RestoreLC_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
-
-            Core.MainForm.WindowState = FormWindowState.Normal;
-            Core.RaiseRestoreMain();
-            this.Close();
+            Core.SetMainDisplay(true);
         }
 
         private void SetColor()
@@ -96,6 +86,7 @@ namespace RateController
             {
                 Core.ColorChanged -= Core_ColorChanged;
                 Core.AppExit -= Core_AppExit;
+                timer1.Enabled = false;
 
                 IsShutDown = true;
             }

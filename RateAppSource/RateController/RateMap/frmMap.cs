@@ -655,8 +655,9 @@ namespace RateController.Forms
                     btnZoomIn.Top = VSB.Height;
                     btnZoomIn.Left = VSB.Left;
 
-                    Core.MainForm.Left = this.Left + 25;
-                    Core.MainForm.Top = this.Top + pnlTabs.Top + pnlTabs.Height + pnlControls2.Height + 40;
+                    Core.SetMainDisplay(false);
+                    Core.MainForm.MainMini.Left = this.Left + 25;
+                    Core.MainForm.MainMini.Top = this.Top + pnlTabs.Top + pnlTabs.Height + pnlControls2.Height + 40;
                 }
                 else
                 {
@@ -684,8 +685,9 @@ namespace RateController.Forms
                     pnlMain.Size = new Size(this.ClientSize.Width - this.Padding.Horizontal, this.ClientSize.Height - tlpTitle.Height - this.Padding.Vertical);
                     pnlMap.Size = pnlMain.Size;
 
-                    Core.MainForm.Left = MainLeft;
-                    Core.MainForm.Top = MainTop;
+                    Core.SetMainDisplay(true);
+                    Core.MainForm.MainMini.Left = MainLeft;
+                    Core.MainForm.MainMini.Top = MainTop;
                 }
 
                 if (UseMaxView)
@@ -881,8 +883,8 @@ namespace RateController.Forms
             {
                 InitializeColorComboBox();
 
-                MainLeft = Core.MainForm.Left;
-                MainTop = Core.MainForm.Top;
+                MainLeft = Core.MainForm.MainMini.Left;
+                MainTop = Core.MainForm.MainMini.Top;
 
                 MapController.MapChanged += MapController_MapChanged;
                 JobManager.JobChanged += JobManager_JobChanged;
@@ -1133,8 +1135,8 @@ namespace RateController.Forms
                     MinZoom = (int)MapController.Map.Zoom;
                 }
 
-                MainLeft = Core.MainForm.Left;
-                MainTop = Core.MainForm.Top;
+                MainLeft = Core.MainForm.MainMini.Left;
+                MainTop = Core.MainForm.MainMini.Top;
             }
 
             UseMaxView = UseMax;
@@ -1157,8 +1159,9 @@ namespace RateController.Forms
                     IsShutDown = true;
                     if (UseMaxView)
                     {
-                        Core.MainForm.Left = MainLeft;
-                        Core.MainForm.Top = MainTop;
+                        Core.SetMainDisplay(true);
+                        Core.MainForm.MainMini.Left = MainLeft;
+                        Core.MainForm.MainMini.Top = MainTop;
                     }
                     else
                     {

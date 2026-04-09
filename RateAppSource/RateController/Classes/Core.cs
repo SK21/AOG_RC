@@ -201,9 +201,24 @@ namespace RateController.Classes
             SafeEvent.Raise(ColorChanged);
         }
 
-        public static void RaiseRestoreMain()
+        //public static void RaiseRestoreMain()
+        //{
+        //    SafeEvent.Raise(RestoreMain);
+        //}
+
+        public static void SetMainDisplay(bool ShowNormal)
         {
-            SafeEvent.Raise(RestoreMain);
+            if (ShowNormal)
+            {
+                MainForm.MainMini.Hide();
+                MainForm.WindowState = FormWindowState.Normal;
+                SafeEvent.Raise(RestoreMain);
+            }
+            else
+            {
+                MainForm.MainMini.Show();
+                MainForm.WindowState = FormWindowState.Minimized;
+            }
         }
 
         public static void RequestRestart()
