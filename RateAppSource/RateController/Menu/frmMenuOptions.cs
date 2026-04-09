@@ -169,14 +169,14 @@ namespace RateController.Menu
             if (!Initializing) SetButtons(true);
         }
 
-        private void ckDiagnostics_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) SetButtons(true);
-        }
-
         private void ckCAN_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+        }
+
+        private void ckDiagnostics_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) SetButtons(true);
         }
 
         private void ckLargeScreen_CheckedChanged(object sender, EventArgs e)

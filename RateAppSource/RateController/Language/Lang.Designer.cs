@@ -331,7 +331,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Comm.
         /// </summary>
         internal static string lgComm {
             get {
@@ -345,6 +345,15 @@ namespace RateController.Language {
         internal static string lgCommDiagnostics {
             get {
                 return ResourceManager.GetString("lgCommDiagnostics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comm.
+        /// </summary>
+        internal static string lgCommMenu {
+            get {
+                return ResourceManager.GetString("lgCommMenu", resourceCulture);
             }
         }
         

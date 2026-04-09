@@ -42,25 +42,19 @@ namespace RateController
             Core.ProfileChanged += Core_ProfileChanged;
         }
 
-        private void Core_ProfileChanged(object sender, EventArgs e)
-        {
-            ChangeProduct(0);
-            ShowProfile();
-        }
-
         public event EventHandler MenuMoved;
+
         public event EventHandler ModuleDefaultsSet;
+
         public event EventHandler ProductChanged;
+
         public event EventHandler ProductEnabled;
+
         public event EventHandler SelectionChanged;
 
         public clsProduct CurrentProduct
         {
             get { return cCurrentProduct; }
-        }
-        public void RaiseEventProductEnabled()
-        {
-            ProductEnabled?.Invoke(this, EventArgs.Empty);
         }
 
         public string LastScreen
@@ -95,6 +89,7 @@ namespace RateController
                         butJobs.Visible = !Expanded;
                         butMap.Visible = !Expanded;
                         butDisplay.Visible = !Expanded;
+                        butComm.Visible = !Expanded;
                         butLanguage.Visible = !Expanded;
                         butColor.Visible = !Expanded;
                         if (Expanded)
@@ -133,6 +128,10 @@ namespace RateController
                             butDisplay.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing + 5;
                             butDisplay.Top = Pos;
+
+                            butComm.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing + 5;
+                            butComm.Top = Pos;
 
                             butLanguage.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing;
@@ -196,6 +195,11 @@ namespace RateController
             {
                 butUpdateModules.FlatAppearance.BorderSize = 0;
             }
+        }
+
+        public void RaiseEventProductEnabled()
+        {
+            ProductEnabled?.Invoke(this, EventArgs.Empty);
         }
 
         public void ShowProfile()
@@ -368,6 +372,20 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuColor(this);
+                frm.Owner = this;
+                frm.Show();
+            }
+        }
+
+        private void butComm_Click(object sender, EventArgs e)
+        {
+            SaveLastScreen("frmMenuComm");
+            if (sender is Button button) HighlightButton(button);
+            Form fs = Props.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuComm(this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -695,7 +713,6 @@ namespace RateController
             }
         }
 
-
         private void butPrimed_Click(object sender, EventArgs e)
         {
             SaveLastScreen("frmMenuPrimed");
@@ -988,6 +1005,12 @@ namespace RateController
             return !Convert.ToBoolean(OwnedForms.Length);    // check if all closed, could be unsaved data
         }
 
+        private void Core_ProfileChanged(object sender, EventArgs e)
+        {
+            ChangeProduct(0);
+            ShowProfile();
+        }
+
         private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
@@ -1206,6 +1229,15 @@ namespace RateController
                             fs.Show();
                             break;
 
+                        case "frmMenuComm":
+                            butFile.PerformClick();
+                            fs = new frmMenuComm(this);
+                            fs.Owner = this;
+                            SaveLastScreen(Last);
+                            HighlightButton(butComm);
+                            fs.Show();
+                            break;
+
                         case "frmMenuPressure":
                             butMachine.PerformClick();
                             fs = new frmMenuPressure(this);
@@ -1299,6 +1331,7 @@ namespace RateController
             butValves.Text = Lang.lgValves;
             butUpdateModules.Text = Lang.lgSend;
             butDisplay.Text = Lang.lgOptions;
+            butComm.Text = Lang.lgCommMenu;
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
             btnPressure.Text = Lang.lgPressure;

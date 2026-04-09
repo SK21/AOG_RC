@@ -754,7 +754,7 @@
     <value />
   </data>
   <data name="lgComm" xml:space="preserve">
-    <value />
+    <value>Comm</value>
   </data>
   <data name="lgCommDiagnostics" xml:space="preserve">
     <value />
@@ -803,5 +803,8 @@
   </data>
   <data name="lgPWM" xml:space="preserve">
     <value>PWM</value>
+  </data>
+  <data name="lgCommMenu" xml:space="preserve">
+    <value>Comm</value>
   </data>
 </root>

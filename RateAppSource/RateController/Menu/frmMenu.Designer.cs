@@ -65,6 +65,7 @@
             this.butJobs = new System.Windows.Forms.Button();
             this.gbSpacer1 = new System.Windows.Forms.GroupBox();
             this.gbSpacer2 = new System.Windows.Forms.GroupBox();
+            this.butComm = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // butClose
@@ -356,7 +357,7 @@
             this.butLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLanguage.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butLanguage.Location = new System.Drawing.Point(281, 270);
+            this.butLanguage.Location = new System.Drawing.Point(281, 333);
             this.butLanguage.Name = "butLanguage";
             this.butLanguage.Size = new System.Drawing.Size(158, 49);
             this.butLanguage.TabIndex = 31;
@@ -569,7 +570,7 @@
             this.butColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butColor.Location = new System.Drawing.Point(281, 325);
+            this.butColor.Location = new System.Drawing.Point(281, 388);
             this.butColor.Name = "butColor";
             this.butColor.Size = new System.Drawing.Size(158, 49);
             this.butColor.TabIndex = 163;
@@ -702,11 +703,31 @@
             this.gbSpacer2.TabStop = false;
             this.gbSpacer2.Visible = false;
             // 
+            // butComm
+            // 
+            this.butComm.BackColor = System.Drawing.Color.Transparent;
+            this.butComm.FlatAppearance.BorderSize = 0;
+            this.butComm.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butComm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butComm.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butComm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butComm.Location = new System.Drawing.Point(281, 283);
+            this.butComm.Name = "butComm";
+            this.butComm.Size = new System.Drawing.Size(173, 49);
+            this.butComm.TabIndex = 173;
+            this.butComm.Text = "Communication";
+            this.butComm.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butComm.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butComm.UseVisualStyleBackColor = false;
+            this.butComm.Visible = false;
+            this.butComm.Click += new System.EventHandler(this.butComm_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 680);
+            this.Controls.Add(this.butComm);
             this.Controls.Add(this.gbSpacer2);
             this.Controls.Add(this.gbSpacer1);
             this.Controls.Add(this.butJobs);
@@ -794,5 +815,6 @@
         private System.Windows.Forms.Button butJobs;
         private System.Windows.Forms.GroupBox gbSpacer1;
         private System.Windows.Forms.GroupBox gbSpacer2;
+        private System.Windows.Forms.Button butComm;
     }
 }
