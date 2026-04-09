@@ -202,16 +202,15 @@ namespace RateController.Menu
 
         private void UpdateForm()
         {
+            lbModID.Text = cModuleID.ToString();
             if (!Core.ModulesStatus.Connected(cModuleID))
             {
                 lbInoID.Text = "--";
-                lbModID.Text = "--";
                 lbTime.Text = "--";
             }
             else
             {
                 lbInoID.Text = Core.ModulesStatus.ModuleVersion(cModuleID);
-                lbModID.Text = cModuleID.ToString();
                 lbTime.Text = (Core.ModulesStatus.ElapsedTime(cModuleID) / 1000.0).ToString("N3");
             }
 

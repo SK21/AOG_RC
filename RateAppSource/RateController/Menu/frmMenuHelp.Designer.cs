@@ -244,12 +244,12 @@
             // lbIP
             // 
             this.lbIP.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(189, 441);
+            this.lbIP.Location = new System.Drawing.Point(166, 441);
             this.lbIP.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lbIP.Name = "lbIP";
-            this.lbIP.Size = new System.Drawing.Size(127, 23);
+            this.lbIP.Size = new System.Drawing.Size(150, 23);
             this.lbIP.TabIndex = 268;
-            this.lbIP.Text = "-.-.-.-";
+            this.lbIP.Text = "---.---.---";
             this.lbIP.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label27
