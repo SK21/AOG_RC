@@ -1328,7 +1328,7 @@ namespace RateController
             butSwitches.Text = Lang.lgSwitches;
             butPrimed.Text = Lang.lgPrimedStart;
             butCalibrate.Text = Lang.lgCalibrate;
-            butNetwork.Text = Lang.lgNetwork;
+            butNetwork.Text = Lang.lgBoards;
             butConfig.Text = Lang.lgConfig;
             butPins.Text = Lang.lgPins;
             butRelayPins.Text = Lang.lgRelayPins;

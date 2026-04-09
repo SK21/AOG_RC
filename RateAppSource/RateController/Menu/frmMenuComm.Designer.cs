@@ -52,6 +52,7 @@
             this.lbModuleIP = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ckCanBus = new System.Windows.Forms.CheckBox();
+            this.ckDiagnostics = new System.Windows.Forms.CheckBox();
             this.gbxDrivers.SuspendLayout();
             this.gbxPort.SuspendLayout();
             this.gbEthernet.SuspendLayout();
@@ -106,7 +107,7 @@
             this.gbxDrivers.Size = new System.Drawing.Size(250, 223);
             this.gbxDrivers.TabIndex = 348;
             this.gbxDrivers.TabStop = false;
-            this.gbxDrivers.Text = "Can Driver";
+            this.gbxDrivers.Text = "Driver";
             this.gbxDrivers.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
             // 
             // rbAdapter1
@@ -338,6 +339,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.ckDiagnostics);
             this.groupBox1.Controls.Add(this.lbConnected);
             this.groupBox1.Controls.Add(this.lbDriverFound);
             this.groupBox1.Controls.Add(this.label13);
@@ -359,7 +361,7 @@
             this.ckCanBus.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckCanBus.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckCanBus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckCanBus.Location = new System.Drawing.Point(140, 31);
+            this.ckCanBus.Location = new System.Drawing.Point(34, 31);
             this.ckCanBus.Margin = new System.Windows.Forms.Padding(6);
             this.ckCanBus.Name = "ckCanBus";
             this.ckCanBus.Size = new System.Drawing.Size(192, 36);
@@ -367,6 +369,20 @@
             this.ckCanBus.Text = "Enabled";
             this.ckCanBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckCanBus.UseVisualStyleBackColor = true;
+            // 
+            // ckDiagnostics
+            // 
+            this.ckDiagnostics.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDiagnostics.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDiagnostics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDiagnostics.Location = new System.Drawing.Point(254, 31);
+            this.ckDiagnostics.Margin = new System.Windows.Forms.Padding(6);
+            this.ckDiagnostics.Name = "ckDiagnostics";
+            this.ckDiagnostics.Size = new System.Drawing.Size(192, 36);
+            this.ckDiagnostics.TabIndex = 363;
+            this.ckDiagnostics.Text = "Diagnostics";
+            this.ckDiagnostics.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDiagnostics.UseVisualStyleBackColor = true;
             // 
             // frmMenuComm
             // 
@@ -419,5 +435,6 @@
         private System.Windows.Forms.Label lbModuleIP;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox ckCanBus;
+        private System.Windows.Forms.CheckBox ckDiagnostics;
     }
 }
