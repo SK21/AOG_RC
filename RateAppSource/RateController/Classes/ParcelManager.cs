@@ -10,6 +10,8 @@ namespace RateController.Classes
     {
         private static readonly string FilePath = Props.FieldNamesPath;
 
+        public static event EventHandler YieldSelectionChanged;
+
         public static void AddParcel(Parcel NewParcel)
         {
             var mappings = GetParcels();
@@ -139,6 +141,28 @@ namespace RateController.Classes
             return GetParcels().FirstOrDefault(p => p.ID == ID);
         }
 
+        public static string SelectedYieldPath(int fieldID)
+        {
+            Parcel p = SearchParcel(fieldID);
+            string file = p?.SelectedYieldFile;
+            if (file == null) return null;
+            string full = Path.Combine(YieldFolder(fieldID), file);
+            return File.Exists(full) ? full : null;
+        }
+
+        public static void SetSelectedYieldPath(int fieldID, string path)
+        {
+            string file = path != null ? Path.GetFileName(path) : null;
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
+            if (p != null)
+            {
+                p.SelectedYieldFile = file;
+                SaveParcels(parcels);
+            }
+            YieldSelectionChanged?.Invoke(null, EventArgs.Empty);
+        }
+
         public static string YieldFolder(int id) => Path.Combine(FieldFolder(id), "Yield");
 
         private static bool GetDefaultParcel()
@@ -173,5 +197,6 @@ namespace RateController.Classes
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public string SelectedYieldFile { get; set; }
     }
 }

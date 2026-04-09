@@ -147,7 +147,6 @@
     <Compile Include="Classes\Core.cs" />
     <Compile Include="Classes\FileNameValidator.cs" />
     <Compile Include="Classes\JobManager.cs" />
-    <Compile Include="Classes\FieldDataManager.cs" />
     <Compile Include="Classes\ParcelManager.cs" />
     <Compile Include="Classes\Props.cs" />
     <Compile Include="Classes\UDPcomm.cs" />

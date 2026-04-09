@@ -49,7 +49,7 @@ namespace RateController.RateMap
             YieldLegend = new LegendManager(map, true);
             JobManager.JobChanged += JobManager_JobChanged;
             Core.ProfileChanged += Core_ProfileChanged;
-            FieldDataManager.SelectionChanged += FieldDataManager_SelectionChanged;
+            ParcelManager.YieldSelectionChanged += ParcelManager_YieldSelectionChanged;
             LoadData();
         }
 
@@ -160,7 +160,7 @@ namespace RateController.RateMap
             {
                 JobManager.JobChanged -= JobManager_JobChanged;
                 Core.ProfileChanged -= Core_ProfileChanged;
-                FieldDataManager.SelectionChanged -= FieldDataManager_SelectionChanged;
+                ParcelManager.YieldSelectionChanged -= ParcelManager_YieldSelectionChanged;
 
                 Reset();
 
@@ -178,13 +178,13 @@ namespace RateController.RateMap
             }
         }
 
-        public void LoadData(string filePath = null)
+        public void LoadData()
         {
             try
             {
                 FieldData.Clear();
 
-                string path = FieldDataManager.SelectedYieldPath;
+                string path = ParcelManager.SelectedYieldPath(JobManager.CurrentJob?.FieldID ?? -1);
                 if (FileValid(path))
                 {
                     string[] allLines = File.ReadAllLines(path);
@@ -268,12 +268,6 @@ namespace RateController.RateMap
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
-        private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
-        {
-            LoadData();
-            if (cEnabled) Build();
-        }
-
         private bool FileValid(string DataFilePath = null)
         {
             bool Result = false;
@@ -299,6 +293,12 @@ namespace RateController.RateMap
         }
 
         private void JobManager_JobChanged(object sender, EventArgs e)
+        {
+            LoadData();
+            if (cEnabled) Build();
+        }
+
+        private void ParcelManager_YieldSelectionChanged(object sender, EventArgs e)
         {
             LoadData();
             if (cEnabled) Build();

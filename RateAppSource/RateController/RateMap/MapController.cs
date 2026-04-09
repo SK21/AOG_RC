@@ -419,7 +419,6 @@ namespace RateController.RateMap
 
             cRateCollector = new DataCollector();
             JobManager.JobChanged += JobManager_JobChanged;
-            FieldDataManager.Initialize();
             cState = MapState.Tracking;
 
             legendManager = new LegendManager(gmap);
@@ -465,7 +464,7 @@ namespace RateController.RateMap
                 ReloadJobKmls();
 
                 // elevation
-                string elevPath = FieldDataManager.ElevationPath;
+                string elevPath = ParcelManager.ElevationPath(JobManager.CurrentJob?.FieldID ?? -1);
                 if (elevPath != null) ElevationCreator.LoadElevationFile(elevPath);
                 ElevationCreator.Build();
 

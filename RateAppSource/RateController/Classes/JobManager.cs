@@ -471,17 +471,6 @@ namespace RateController.Classes
             }
         }
 
-        public static void SetActiveYieldFile(int ID, string FileName)
-        {
-            Job JB = SearchJob(ID);
-            if (JB != null)
-            {
-                JB.ActiveYieldFile = FileName;
-                SaveJob(JB);
-            }
-        }
-
-
         private static void CheckDefault()
         {
             // create default Job
@@ -603,9 +592,8 @@ namespace RateController.Classes
 
     public class Job
     {
-        public string ActivePrescription { get; set; }
         public string ActiveKMLfile { get; set; }
-        public string ActiveYieldFile { get; set; }
+        public string ActivePrescription { get; set; }
         public DateTime Date { get; set; }
         public string DisplayName => $"{Name.PadRight(15)} {Date:dd-MMM}";
         public int FieldID { get; set; }

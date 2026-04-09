@@ -169,6 +169,45 @@ namespace RateController.Forms
             }
         }
 
+        private void btnDeleteElevation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
+                {
+                    string ElevPath = Path.Combine(ParcelManager.ElevationFolder(JB.FieldID), "Elevation.csv");
+                    if (File.Exists(ElevPath))
+                    {
+                        var MB = new frmMsgBox("Confirm Delete?", "Delete Elevation", true);
+                        MB.ShowDialog();
+                        bool Result = MB.Result;
+                        MB.Close();
+                        if (Result)
+                        {
+                            if (Props.IsPathSafe(ElevPath))
+                            {
+                                File.Delete(ElevPath);
+                                string EP = ParcelManager.ElevationPath(JB.FieldID);
+                                if (EP != null) MapController.ElevationCreator.LoadElevationFile(EP);
+                                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                                UpdateFilesPanel();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnDeleteElevation_Click: " + ex.Message);
+                Props.ShowMessage("Error deleting elevation: " + ex.Message);
+            }
+        }
+
+        private void btnDeleteKML_Click(object sender, EventArgs e)
+        {
+        }
+
         private void btnDeleteRx_Click(object sender, EventArgs e)
         {
             try
@@ -213,6 +252,77 @@ namespace RateController.Forms
             }
         }
 
+        private void btnDeleteYield_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
+                string YD = cbYield.SelectedItem.ToString();
+                if (parcel != null && YD != null)
+                {
+                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
+                    MB.ShowDialog();
+                    bool Result = MB.Result;
+                    MB.Close();
+                    if (Result)
+                    {
+                        YD += ".csv";
+                        string Folder = ParcelManager.YieldFolder(JB.ID);
+                        YD = Path.Combine(Folder, YD);
+                        if (Props.IsPathSafe(YD)) File.Delete(YD);
+                        UpdateFilesPanel();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnDeleteYield_Click: " + ex.Message);
+            }
+        }
+
+        private void btnExportRx_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0 && lbRx.SelectedIndex >= 0)
+                {
+                    string Folder = ParcelManager.MapsFolder(JB.FieldID);
+                    string OldName = Path.GetFileNameWithoutExtension(lbRx.SelectedItem?.ToString());
+                    using (var saveFileDialog = new SaveFileDialog())
+                    {
+                        saveFileDialog.Title = "Save Shapefile As";
+                        saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
+                        saveFileDialog.DefaultExt = "shp";
+                        saveFileDialog.FileName = OldName + ".shp";
+
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            string NewFolder = Path.GetDirectoryName(saveFileDialog.FileName);
+                            string NewName = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+
+                            foreach (string file in Directory.GetFiles(Folder, OldName + ".*"))
+                            {
+                                string ext = Path.GetExtension(file); // keeps .txt, .pdf, etc.
+                                string dest = Path.Combine(NewFolder, NewName + ext);
+
+                                File.Copy(file, dest, overwrite: true);
+                            }
+
+                            string ImageName = Path.Combine(NewFolder, NewName + ".png");
+                            MapController.SaveMapImage(ImageName);
+                            Props.ShowMessage("File saved successfully", "Save", 5000);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnExportRx_Click: " + ex.Message);
+                Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
+            }
+        }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
@@ -254,10 +364,9 @@ namespace RateController.Forms
                     string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
                     string elevPath = Path.Combine(elevFolder, "Elevation.csv");
                     string bakPath = Path.Combine(elevFolder, "Elevation.bak");
-                    if (File.Exists(elevPath))
-                        File.Copy(elevPath, bakPath, true);
+                    if (File.Exists(elevPath)) File.Copy(elevPath, bakPath, true);
                     File.Copy(dlg.FileName, elevPath, true);
-                    string ep = FieldDataManager.ElevationPath;
+                    string ep = ParcelManager.ElevationPath(job.FieldID);
                     if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
                     if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
                     UpdateFilesPanel();
@@ -380,8 +489,8 @@ namespace RateController.Forms
                         }
                     }
 
-                    FieldDataManager.SetYieldPath(destPath);
-                    MapController.YieldCreator.LoadData(destPath);
+                    ParcelManager.SetSelectedYieldPath(job.FieldID, destPath);
+                    MapController.YieldCreator.LoadData();
                     if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
                     UpdateFilesPanel();
                 }
@@ -392,7 +501,6 @@ namespace RateController.Forms
                 Props.ShowMessage("Error importing yield: " + ex.Message, "Import Yield", 8000, true);
             }
         }
-
 
         private void btnKMLdelete_Click(object sender, EventArgs e)
         {
@@ -539,7 +647,7 @@ namespace RateController.Forms
                 if (File.Exists(elevPath))
                     File.Delete(elevPath);
                 File.Move(bakPath, elevPath);
-                string ep = FieldDataManager.ElevationPath;
+                string ep = ParcelManager.ElevationPath(job.FieldID);
                 if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
                 if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
                 UpdateFilesPanel();
@@ -600,14 +708,15 @@ namespace RateController.Forms
             string sel = cbYield.SelectedItem as string;
             if (sel == null || sel == "(none)")
             {
-                FieldDataManager.SetYieldPath(null);
+                ParcelManager.SetSelectedYieldPath(job.FieldID, null);
             }
             else
             {
-                FieldDataManager.SetYieldPath(Path.Combine(ParcelManager.YieldFolder(job.FieldID), sel));
+                ParcelManager.SetSelectedYieldPath(job.FieldID, sel);
             }
             MapController.YieldCreator.LoadData();
             if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
+            UpdateFilesPanel();
         }
 
         private void ChangeMapSize()
@@ -835,12 +944,6 @@ namespace RateController.Forms
             }
         }
 
-        private void FieldDataManager_SelectionChanged(object sender, EventArgs e)
-        {
-            if (InvokeRequired) { Invoke(new Action(UpdateFilesPanel)); return; }
-            UpdateFilesPanel();
-        }
-
         private void FillPrescriptionsList()
         {
             try
@@ -890,7 +993,6 @@ namespace RateController.Forms
                 JobManager.JobChanged += JobManager_JobChanged;
                 Core.AppExit += Core_AppExit;
                 Core.ProfileChanged += Core_ProfileChanged;
-                FieldDataManager.SelectionChanged += FieldDataManager_SelectionChanged;
 
                 this.BackColor = Properties.Settings.Default.MainBackColour;
                 tlpTitle.BackColor = Properties.Settings.Default.MainBackColour;
@@ -1180,7 +1282,6 @@ namespace RateController.Forms
                     MapController.MapLeftClicked -= MapController_MapLeftClicked;
                     Core.ProfileChanged -= Core_ProfileChanged;
                     Core.AppExit -= Core_AppExit;
-                    FieldDataManager.SelectionChanged -= FieldDataManager_SelectionChanged;
 
                     SaveFormLocation();
                 }
@@ -1534,6 +1635,11 @@ namespace RateController.Forms
             return Props.Speed_KMH > 0.5;
         }
 
+        private void UpdateFileCount()
+        {
+            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
+        }
+
         private void UpdateFilesPanel()
         {
             Initializing = true;
@@ -1553,12 +1659,8 @@ namespace RateController.Forms
                     {
                         cbYield.Items.Add(f);
                     }
-
-
-
-
-                    string sel = FieldDataManager.SelectedYieldPath != null
-                        ? Path.GetFileName(FieldDataManager.SelectedYieldPath) : null;
+                    string tmp = ParcelManager.SelectedYieldPath(job.FieldID);
+                    string sel = tmp != null ? tmp : null;
                     cbYield.SelectedItem = sel ?? "(none)";
                 }
                 else
@@ -1567,7 +1669,7 @@ namespace RateController.Forms
                 }
 
                 // Elevation label
-                string elevPath = FieldDataManager.ElevationPath;
+                string elevPath = ParcelManager.ElevationPath(job.FieldID);
                 lbElevationFile.Text = elevPath != null ? Path.GetFileName(elevPath) : "None";
 
                 // Restore button visibility
@@ -1579,11 +1681,6 @@ namespace RateController.Forms
             {
                 Initializing = false;
             }
-        }
-
-        private void UpdateFileCount()
-        {
-            lbDataPoints.Text = MapController.RateCollector.DataPoints(MapController.ProductFilter).ToString("N0");
         }
 
         private void UpdateForm()
@@ -1720,88 +1817,6 @@ namespace RateController.Forms
 
             double newLat = invertedValue / 1000.0;
             MapController.Map.Position = new PointLatLng(newLat, MapController.Map.Position.Lng);
-        }
-
-        private void btnExportRx_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Job JB = JobManager.CurrentJob;
-                if (JB != null && JB.FieldID >= 0 && lbRx.SelectedIndex >= 0)
-                {
-                    string Folder = ParcelManager.MapsFolder(JB.FieldID);
-                    string OldName = Path.GetFileNameWithoutExtension(lbRx.SelectedItem?.ToString());
-                    using (var saveFileDialog = new SaveFileDialog())
-                    {
-                        saveFileDialog.Title = "Save Shapefile As";
-                        saveFileDialog.Filter = "Shapefile (*.shp)|*.shp|All Files (*.*)|*.*";
-                        saveFileDialog.DefaultExt = "shp";
-                        saveFileDialog.FileName = OldName + ".shp";
-
-                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            string NewFolder = Path.GetDirectoryName(saveFileDialog.FileName);
-                            string NewName = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
-
-                            foreach (string file in Directory.GetFiles(Folder, OldName + ".*"))
-                            {
-                                string ext = Path.GetExtension(file); // keeps .txt, .pdf, etc.
-                                string dest = Path.Combine(NewFolder, NewName + ext);
-
-                                File.Copy(file, dest, overwrite: true);
-                            }
-
-                            string ImageName = Path.Combine(NewFolder, NewName + ".png");
-                            MapController.SaveMapImage(ImageName);
-                            Props.ShowMessage("File saved successfully", "Save", 5000);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnExportRx_Click: " + ex.Message);
-                Props.ShowMessage("Error saving shapefile: " + ex.Message, "Save", 10000, true);
-            }
-        }
-
-        private void btnDeleteYield_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Job JB = JobManager.CurrentJob;
-                Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
-                string YD = cbYield.SelectedItem.ToString();
-                if (parcel != null && YD != null)
-                {
-                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
-                    MB.ShowDialog();
-                    bool Result = MB.Result;
-                    MB.Close();
-                    if (Result)
-                    {
-                        YD += ".csv";
-                        string Folder = ParcelManager.YieldFolder(JB.ID);
-                        YD = Path.Combine(Folder, YD);
-                        if (Props.IsPathSafe(YD)) File.Delete(YD);
-                        UpdateFilesPanel();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnDeleteYield_Click: " + ex.Message);
-            }
-        }
-
-        private void btnDeleteElevation_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnDeleteKML_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
