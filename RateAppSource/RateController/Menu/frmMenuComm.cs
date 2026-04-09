@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -116,6 +117,12 @@ namespace RateController.Menu
             //ckDiagnostics.Enabled = !ckIsoBus.Checked;
 
             Initializing = false;
+        }
+
+        private void gbEthernet_Paint(object sender, PaintEventArgs e)
+        {
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+
         }
     }
 }

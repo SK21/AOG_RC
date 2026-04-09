@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuComm));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.gbxDrivers = new System.Windows.Forms.GroupBox();
@@ -41,14 +42,20 @@
             this.lbConnected = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.gbEthernet = new System.Windows.Forms.GroupBox();
+            this.ckEthernet = new System.Windows.Forms.CheckBox();
+            this.cbEthernet = new System.Windows.Forms.ComboBox();
+            this.lbSubnet = new System.Windows.Forms.Label();
+            this.btnSendSubnet = new System.Windows.Forms.Button();
+            this.btnRescan = new System.Windows.Forms.Button();
+            this.lbIP = new System.Windows.Forms.Label();
+            this.lbModuleIP = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbCAN = new System.Windows.Forms.RadioButton();
-            this.rbEthernet = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.ckCanBus = new System.Windows.Forms.CheckBox();
             this.gbxDrivers.SuspendLayout();
             this.gbxPort.SuspendLayout();
+            this.gbEthernet.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -61,7 +68,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(380, 603);
+            this.btnCancel.Location = new System.Drawing.Point(380, 611);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
@@ -80,7 +87,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(458, 603);
+            this.btnOK.Location = new System.Drawing.Point(458, 611);
             this.btnOK.Margin = new System.Windows.Forms.Padding(6);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
@@ -94,12 +101,13 @@
             this.gbxDrivers.Controls.Add(this.rbAdapter1);
             this.gbxDrivers.Controls.Add(this.rbAdapter3);
             this.gbxDrivers.Controls.Add(this.rbAdapter2);
-            this.gbxDrivers.Location = new System.Drawing.Point(19, 17);
+            this.gbxDrivers.Location = new System.Drawing.Point(34, 76);
             this.gbxDrivers.Name = "gbxDrivers";
             this.gbxDrivers.Size = new System.Drawing.Size(250, 223);
             this.gbxDrivers.TabIndex = 348;
             this.gbxDrivers.TabStop = false;
             this.gbxDrivers.Text = "Can Driver";
+            this.gbxDrivers.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
             // 
             // rbAdapter1
             // 
@@ -146,12 +154,13 @@
             // 
             this.gbxPort.Controls.Add(this.btnRefresh);
             this.gbxPort.Controls.Add(this.cbComPort);
-            this.gbxPort.Location = new System.Drawing.Point(337, 17);
+            this.gbxPort.Location = new System.Drawing.Point(327, 76);
             this.gbxPort.Name = "gbxPort";
             this.gbxPort.Size = new System.Drawing.Size(119, 149);
             this.gbxPort.TabIndex = 358;
             this.gbxPort.TabStop = false;
             this.gbxPort.Text = "Port";
+            this.gbxPort.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
             // 
             // btnRefresh
             // 
@@ -185,7 +194,7 @@
             this.lbDriverFound.BackColor = System.Drawing.SystemColors.Control;
             this.lbDriverFound.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbDriverFound.Image = global::RateController.Properties.Resources.Off;
-            this.lbDriverFound.Location = new System.Drawing.Point(333, 261);
+            this.lbDriverFound.Location = new System.Drawing.Point(405, 232);
             this.lbDriverFound.Name = "lbDriverFound";
             this.lbDriverFound.Size = new System.Drawing.Size(41, 37);
             this.lbDriverFound.TabIndex = 362;
@@ -196,7 +205,7 @@
             this.lbConnected.BackColor = System.Drawing.SystemColors.Control;
             this.lbConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbConnected.Image = global::RateController.Properties.Resources.Off;
-            this.lbConnected.Location = new System.Drawing.Point(333, 307);
+            this.lbConnected.Location = new System.Drawing.Point(405, 269);
             this.lbConnected.Name = "lbConnected";
             this.lbConnected.Size = new System.Drawing.Size(41, 37);
             this.lbConnected.TabIndex = 360;
@@ -206,84 +215,166 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(78, 268);
+            this.label2.Location = new System.Drawing.Point(327, 239);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(187, 23);
+            this.label2.Size = new System.Drawing.Size(60, 23);
             this.label2.TabIndex = 361;
-            this.label2.Text = "CanBus Driver Found";
+            this.label2.Text = "Driver";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(78, 314);
+            this.label13.Location = new System.Drawing.Point(327, 276);
             this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(234, 23);
+            this.label13.Size = new System.Drawing.Size(71, 23);
             this.label13.TabIndex = 359;
-            this.label13.Text = "CanBus Module Connected";
+            this.label13.Text = "Module";
+            // 
+            // gbEthernet
+            // 
+            this.gbEthernet.Controls.Add(this.cbEthernet);
+            this.gbEthernet.Controls.Add(this.lbSubnet);
+            this.gbEthernet.Controls.Add(this.btnSendSubnet);
+            this.gbEthernet.Controls.Add(this.btnRescan);
+            this.gbEthernet.Controls.Add(this.lbIP);
+            this.gbEthernet.Controls.Add(this.lbModuleIP);
+            this.gbEthernet.Controls.Add(this.ckEthernet);
+            this.gbEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbEthernet.Location = new System.Drawing.Point(24, 6);
+            this.gbEthernet.Name = "gbEthernet";
+            this.gbEthernet.Size = new System.Drawing.Size(487, 278);
+            this.gbEthernet.TabIndex = 363;
+            this.gbEthernet.TabStop = false;
+            this.gbEthernet.Text = "Ethernet";
+            this.gbEthernet.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
+            // 
+            // ckEthernet
+            // 
+            this.ckEthernet.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEthernet.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEthernet.Checked = true;
+            this.ckEthernet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEthernet.Location = new System.Drawing.Point(140, 31);
+            this.ckEthernet.Margin = new System.Windows.Forms.Padding(6);
+            this.ckEthernet.Name = "ckEthernet";
+            this.ckEthernet.Size = new System.Drawing.Size(192, 36);
+            this.ckEthernet.TabIndex = 346;
+            this.ckEthernet.Text = "Enabled";
+            this.ckEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEthernet.UseVisualStyleBackColor = true;
+            // 
+            // cbEthernet
+            // 
+            this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbEthernet.FormattingEnabled = true;
+            this.cbEthernet.Location = new System.Drawing.Point(233, 133);
+            this.cbEthernet.Name = "cbEthernet";
+            this.cbEthernet.Size = new System.Drawing.Size(157, 32);
+            this.cbEthernet.TabIndex = 349;
+            // 
+            // lbSubnet
+            // 
+            this.lbSubnet.AutoSize = true;
+            this.lbSubnet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSubnet.Location = new System.Drawing.Point(64, 93);
+            this.lbSubnet.Name = "lbSubnet";
+            this.lbSubnet.Size = new System.Drawing.Size(149, 24);
+            this.lbSubnet.TabIndex = 350;
+            this.lbSubnet.Text = "Selected Subnet";
+            // 
+            // btnSendSubnet
+            // 
+            this.btnSendSubnet.BackColor = System.Drawing.Color.Transparent;
+            this.btnSendSubnet.FlatAppearance.BorderSize = 0;
+            this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
+            this.btnSendSubnet.Location = new System.Drawing.Point(257, 189);
+            this.btnSendSubnet.Name = "btnSendSubnet";
+            this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
+            this.btnSendSubnet.TabIndex = 348;
+            this.btnSendSubnet.UseVisualStyleBackColor = false;
+            // 
+            // btnRescan
+            // 
+            this.btnRescan.BackColor = System.Drawing.Color.Transparent;
+            this.btnRescan.FlatAppearance.BorderSize = 0;
+            this.btnRescan.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGreen;
+            this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
+            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnRescan.Location = new System.Drawing.Point(135, 189);
+            this.btnRescan.Name = "btnRescan";
+            this.btnRescan.Size = new System.Drawing.Size(72, 72);
+            this.btnRescan.TabIndex = 347;
+            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnRescan.UseVisualStyleBackColor = false;
+            // 
+            // lbIP
+            // 
+            this.lbIP.AutoSize = true;
+            this.lbIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbIP.Location = new System.Drawing.Point(64, 136);
+            this.lbIP.Name = "lbIP";
+            this.lbIP.Size = new System.Drawing.Size(76, 24);
+            this.lbIP.TabIndex = 352;
+            this.lbIP.Text = "Local IP";
+            // 
+            // lbModuleIP
+            // 
+            this.lbModuleIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModuleIP.Location = new System.Drawing.Point(229, 93);
+            this.lbModuleIP.Name = "lbModuleIP";
+            this.lbModuleIP.Size = new System.Drawing.Size(161, 24);
+            this.lbModuleIP.TabIndex = 351;
+            this.lbModuleIP.Text = "192.168.100.100";
+            this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.rbCAN);
-            this.groupBox1.Controls.Add(this.rbEthernet);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(105, 38);
+            this.groupBox1.Controls.Add(this.lbConnected);
+            this.groupBox1.Controls.Add(this.lbDriverFound);
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.gbxPort);
+            this.groupBox1.Controls.Add(this.gbxDrivers);
+            this.groupBox1.Controls.Add(this.ckCanBus);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Location = new System.Drawing.Point(24, 290);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(324, 146);
-            this.groupBox1.TabIndex = 363;
+            this.groupBox1.Size = new System.Drawing.Size(487, 310);
+            this.groupBox1.TabIndex = 365;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Communication Mode";
+            this.groupBox1.Text = "CanBus";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
             // 
-            // rbCAN
+            // ckCanBus
             // 
-            this.rbCAN.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbCAN.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbCAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbCAN.Location = new System.Drawing.Point(71, 92);
-            this.rbCAN.Name = "rbCAN";
-            this.rbCAN.Size = new System.Drawing.Size(187, 36);
-            this.rbCAN.TabIndex = 345;
-            this.rbCAN.Text = "CanBus";
-            this.rbCAN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbCAN.UseVisualStyleBackColor = true;
-            // 
-            // rbEthernet
-            // 
-            this.rbEthernet.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbEthernet.Checked = true;
-            this.rbEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.rbEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbEthernet.Location = new System.Drawing.Point(71, 38);
-            this.rbEthernet.Name = "rbEthernet";
-            this.rbEthernet.Size = new System.Drawing.Size(187, 36);
-            this.rbEthernet.TabIndex = 344;
-            this.rbEthernet.TabStop = true;
-            this.rbEthernet.Text = "Ethernet";
-            this.rbEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbEthernet.UseVisualStyleBackColor = true;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.gbxDrivers);
-            this.panel1.Controls.Add(this.gbxPort);
-            this.panel1.Controls.Add(this.lbDriverFound);
-            this.panel1.Controls.Add(this.lbConnected);
-            this.panel1.Controls.Add(this.label13);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(24, 205);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(468, 389);
-            this.panel1.TabIndex = 364;
+            this.ckCanBus.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckCanBus.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckCanBus.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckCanBus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckCanBus.Location = new System.Drawing.Point(140, 31);
+            this.ckCanBus.Margin = new System.Windows.Forms.Padding(6);
+            this.ckCanBus.Name = "ckCanBus";
+            this.ckCanBus.Size = new System.Drawing.Size(192, 36);
+            this.ckCanBus.TabIndex = 347;
+            this.ckCanBus.Text = "Enabled";
+            this.ckCanBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckCanBus.UseVisualStyleBackColor = true;
             // 
             // frmMenuComm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbEthernet);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -295,9 +386,10 @@
             this.Load += new System.EventHandler(this.frmMenuComm_Load);
             this.gbxDrivers.ResumeLayout(false);
             this.gbxPort.ResumeLayout(false);
+            this.gbEthernet.ResumeLayout(false);
+            this.gbEthernet.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -317,9 +409,15 @@
         private System.Windows.Forms.Label lbConnected;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.GroupBox gbEthernet;
+        private System.Windows.Forms.CheckBox ckEthernet;
+        private System.Windows.Forms.ComboBox cbEthernet;
+        private System.Windows.Forms.Label lbSubnet;
+        private System.Windows.Forms.Button btnSendSubnet;
+        private System.Windows.Forms.Button btnRescan;
+        private System.Windows.Forms.Label lbIP;
+        private System.Windows.Forms.Label lbModuleIP;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton rbCAN;
-        private System.Windows.Forms.RadioButton rbEthernet;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox ckCanBus;
     }
 }

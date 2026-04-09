@@ -342,7 +342,7 @@
             this.butNetwork.Name = "butNetwork";
             this.butNetwork.Size = new System.Drawing.Size(158, 49);
             this.butNetwork.TabIndex = 21;
-            this.butNetwork.Text = "Network";
+            this.butNetwork.Text = "Boards";
             this.butNetwork.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.butNetwork.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.butNetwork.UseVisualStyleBackColor = false;
