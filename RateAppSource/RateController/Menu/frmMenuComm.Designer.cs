@@ -44,9 +44,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbCAN = new System.Windows.Forms.RadioButton();
             this.rbEthernet = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.gbxDrivers.SuspendLayout();
             this.gbxPort.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -92,7 +94,7 @@
             this.gbxDrivers.Controls.Add(this.rbAdapter1);
             this.gbxDrivers.Controls.Add(this.rbAdapter3);
             this.gbxDrivers.Controls.Add(this.rbAdapter2);
-            this.gbxDrivers.Location = new System.Drawing.Point(48, 239);
+            this.gbxDrivers.Location = new System.Drawing.Point(19, 17);
             this.gbxDrivers.Name = "gbxDrivers";
             this.gbxDrivers.Size = new System.Drawing.Size(250, 223);
             this.gbxDrivers.TabIndex = 348;
@@ -144,7 +146,7 @@
             // 
             this.gbxPort.Controls.Add(this.btnRefresh);
             this.gbxPort.Controls.Add(this.cbComPort);
-            this.gbxPort.Location = new System.Drawing.Point(366, 239);
+            this.gbxPort.Location = new System.Drawing.Point(337, 17);
             this.gbxPort.Name = "gbxPort";
             this.gbxPort.Size = new System.Drawing.Size(119, 149);
             this.gbxPort.TabIndex = 358;
@@ -183,7 +185,7 @@
             this.lbDriverFound.BackColor = System.Drawing.SystemColors.Control;
             this.lbDriverFound.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbDriverFound.Image = global::RateController.Properties.Resources.Off;
-            this.lbDriverFound.Location = new System.Drawing.Point(146, 534);
+            this.lbDriverFound.Location = new System.Drawing.Point(333, 261);
             this.lbDriverFound.Name = "lbDriverFound";
             this.lbDriverFound.Size = new System.Drawing.Size(41, 37);
             this.lbDriverFound.TabIndex = 362;
@@ -194,7 +196,7 @@
             this.lbConnected.BackColor = System.Drawing.SystemColors.Control;
             this.lbConnected.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbConnected.Image = global::RateController.Properties.Resources.Off;
-            this.lbConnected.Location = new System.Drawing.Point(466, 534);
+            this.lbConnected.Location = new System.Drawing.Point(333, 307);
             this.lbConnected.Name = "lbConnected";
             this.lbConnected.Size = new System.Drawing.Size(41, 37);
             this.lbConnected.TabIndex = 360;
@@ -204,18 +206,18 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(18, 541);
+            this.label2.Location = new System.Drawing.Point(78, 268);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(119, 23);
+            this.label2.Size = new System.Drawing.Size(187, 23);
             this.label2.TabIndex = 361;
-            this.label2.Text = "Driver Found";
+            this.label2.Text = "CanBus Driver Found";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(230, 541);
+            this.label13.Location = new System.Drawing.Point(78, 314);
             this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(234, 23);
@@ -262,18 +264,26 @@
             this.rbEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbEthernet.UseVisualStyleBackColor = true;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.gbxDrivers);
+            this.panel1.Controls.Add(this.gbxPort);
+            this.panel1.Controls.Add(this.lbDriverFound);
+            this.panel1.Controls.Add(this.lbConnected);
+            this.panel1.Controls.Add(this.label13);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Location = new System.Drawing.Point(24, 205);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(468, 389);
+            this.panel1.TabIndex = 364;
+            // 
             // frmMenuComm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.lbDriverFound);
-            this.Controls.Add(this.lbConnected);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.gbxPort);
-            this.Controls.Add(this.gbxDrivers);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -286,8 +296,9 @@
             this.gbxDrivers.ResumeLayout(false);
             this.gbxPort.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -309,5 +320,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbCAN;
         private System.Windows.Forms.RadioButton rbEthernet;
+        private System.Windows.Forms.Panel panel1;
     }
 }

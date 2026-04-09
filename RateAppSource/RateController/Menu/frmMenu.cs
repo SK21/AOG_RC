@@ -89,7 +89,6 @@ namespace RateController
                         butJobs.Visible = !Expanded;
                         butMap.Visible = !Expanded;
                         butDisplay.Visible = !Expanded;
-                        butComm.Visible = !Expanded;
                         butLanguage.Visible = !Expanded;
                         butColor.Visible = !Expanded;
                         if (Expanded)
@@ -128,10 +127,6 @@ namespace RateController
                             butDisplay.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing + 5;
                             butDisplay.Top = Pos;
-
-                            butComm.Left = butFile.Left + SubOffset;
-                            Pos += SubSpacing + 5;
-                            butComm.Top = Pos;
 
                             butLanguage.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing;
@@ -389,6 +384,10 @@ namespace RateController
                 frm.Owner = this;
                 frm.Show();
             }
+            else
+            {
+                fs.Focus();
+            }
         }
 
         private void butConfig_Click(object sender, EventArgs e)
@@ -600,6 +599,7 @@ namespace RateController
                         butRelayPins.Visible = !Expanded;
                         butValves.Visible = !Expanded;
                         butUpdateModules.Visible = !Expanded;
+                        butComm.Visible = !Expanded;
 
                         if (Expanded)
                         {
@@ -623,8 +623,12 @@ namespace RateController
                             butModules.Top = butFile.Top;
 
                             int Pos = butFile.Top;
-                            butNetwork.Left = butFile.Left + SubOffset;
+                            butComm.Left = butFile.Left + SubOffset;
                             Pos += SubFirstSpacing;
+                            butComm.Top = Pos;
+
+                            butNetwork.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
                             butNetwork.Top = Pos;
 
                             butConfig.Left = butFile.Left + SubOffset;
@@ -647,7 +651,7 @@ namespace RateController
                             Pos += SubSpacing;
                             butUpdateModules.Top = Pos;
 
-                            butNetwork.PerformClick();
+                            butComm.PerformClick();
                         }
                     }
                     finally
@@ -1179,9 +1183,18 @@ namespace RateController
                             fs.Show();
                             break;
 
+                        case "frmMenuComm":
+                            butModules.PerformClick();// frmMenuComm opened by default
+                            HighlightButton(butComm);
+                            break;
+
                         case "frmMenuNetwork":
-                            butModules.PerformClick();  // frmMenuNetwork opened by default
+                            butModules.PerformClick();
+                            fs = new frmMenuNetwork(this);
+                            fs.Owner = this;
+                            SaveLastScreen(Last);
                             HighlightButton(butNetwork);
+                            fs.Show();
                             break;
 
                         case "frmMenuConfig":
@@ -1226,15 +1239,6 @@ namespace RateController
                             fs.Owner = this;
                             SaveLastScreen(Last);
                             HighlightButton(butDisplay);
-                            fs.Show();
-                            break;
-
-                        case "frmMenuComm":
-                            butFile.PerformClick();
-                            fs = new frmMenuComm(this);
-                            fs.Owner = this;
-                            SaveLastScreen(Last);
-                            HighlightButton(butComm);
                             fs.Show();
                             break;
 

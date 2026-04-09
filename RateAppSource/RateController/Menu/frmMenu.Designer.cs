@@ -711,7 +711,7 @@
             this.butComm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.butComm.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butComm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.butComm.Location = new System.Drawing.Point(281, 283);
+            this.butComm.Location = new System.Drawing.Point(759, 36);
             this.butComm.Name = "butComm";
             this.butComm.Size = new System.Drawing.Size(173, 49);
             this.butComm.TabIndex = 173;
