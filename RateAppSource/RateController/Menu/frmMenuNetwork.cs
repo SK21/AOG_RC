@@ -1,18 +1,12 @@
 ﻿using RateController.Classes;
-using RateController.Language;
 using RateController.PGNs;
 using System;
-using System.Drawing;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Windows.Forms;
 
 namespace RateController.Menu
 {
     public partial class frmMenuNetwork : Form
     {
-        private int BoardType = 0;
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -26,7 +20,6 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if (int.TryParse(Props.GetProp("BoardType"), out int bt)) BoardType = bt;
             UpdateForm();
             SetButtons(false);
         }
@@ -35,33 +28,28 @@ namespace RateController.Menu
         {
             try
             {
-                if (ckDefaultModule.Checked) SetDefaults();
-                Core.UDPmodules.NetworkEP = cbEthernet.Text;
-
-                int Result = Core.UseCanComm(rbCAN.Checked);
-
-                string Mes = "";
-                switch (Result)
+                int NewBoard;
+                if (rbNano.Checked)
                 {
-                    case 1:
-                        Mes = "CanBus enabled.";
-                        break;
-
-                    case 3:
-                        Mes = "CanBus failed to start. Ethernet enabled.";
-                        break;
-
-                    default:
-                        Mes = "Ethernet enabled.";
-                        break;
+                    NewBoard = 0;
+                }
+                else if (rbESP32.Checked)
+                {
+                    NewBoard = 2;
+                }
+                else
+                {
+                    NewBoard = 1;
                 }
 
-                Core.ModuleConfig.Save();
-                Props.ShowMessage("Settings sent to module. " + Mes, "Config", 10000);
+                if (NewBoard != CurrentBoardType())
+                {
+                    Props.SetProp("BoardType", NewBoard.ToString());
+                    SetDefaults();
+                }
 
                 SetButtons(false);
                 UpdateForm();
-                Props.SetProp("BoardType", BoardType.ToString());
             }
             catch (Exception ex)
             {
@@ -69,45 +57,9 @@ namespace RateController.Menu
             }
         }
 
-        private void btnRescan_Click(object sender, EventArgs e)
+        private int CurrentBoardType()
         {
-            UpdateForm();
-        }
-
-        private void btnSendSubnet_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                PGN32503 SetSubnet = new PGN32503();
-                if (SetSubnet.Send(Core.UDPmodules.NetworkEP))
-                {
-                    Props.ShowMessage("New Subnet address sent.", "Subnet", 10000);
-
-                    // set app subnet
-                    Core.UDPmodules.NetworkEP = cbEthernet.Text;
-                }
-                else
-                {
-                    Props.ShowMessage("New Subnet address not sent.", "Subnet", 10000);
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.ShowMessage(ex.Message, "frmModuleConfig/btnSendSubnet", 15000, true);
-            }
-        }
-
-        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckDefaultModule_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ckDefaultModule.Checked)
-            {
-                SetButtons(true);
-            }
+            return int.TryParse(Props.GetProp("BoardType"), out int bt) ? bt : 1;
         }
 
         private void frmMenuNetwork_FormClosed(object sender, FormClosedEventArgs e)
@@ -127,56 +79,7 @@ namespace RateController.Menu
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
-            if (int.TryParse(Props.GetProp("BoardType"), out int bt)) BoardType = bt;
             UpdateForm();
-        }
-
-        private void frmMenuNetwork_Shown(object sender, EventArgs e)
-        {
-            // check for no settings
-            if (!MainMenu.MenuNetworkHasRan)
-            {
-                MainMenu.MenuNetworkHasRan = true;
-                if (Core.ModuleConfig.Sensor0Flow == 0 && Core.ModuleConfig.Sensor0Dir == 0 && Core.ModuleConfig.Sensor0PWM == 0
-                    && Core.ModuleConfig.Sensor1Dir == 0 && Core.ModuleConfig.Sensor1Flow == 0 && Core.ModuleConfig.Sensor1PWM == 0)
-                {
-                    Props.ShowMessage("Empty settings, default values selected.", "Default Values");
-                    ckDefaultModule.Checked = true;
-                    SetButtons(true);
-                }
-            }
-        }
-
-        private void groupBox2_Paint(object sender, PaintEventArgs e)
-        {
-            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
-        }
-
-        private void LoadCombo()
-        {
-            // https://stackoverflow.com/questions/6803073/get-local-ip-address
-            try
-            {
-                cbEthernet.Items.Clear();
-                foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
-                {
-                    if ((item.NetworkInterfaceType == NetworkInterfaceType.Ethernet || item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211) && item.OperationalStatus == OperationalStatus.Up)
-                    {
-                        foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                        {
-                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                            {
-                                cbEthernet.Items.Add(ip.Address.ToString());
-                            }
-                        }
-                    }
-                }
-                cbEthernet.SelectedIndex = cbEthernet.FindString(SubAddress(Core.UDPmodules.NetworkEP));
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmModuleConfig/LoadCombo " + ex.Message);
-            }
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -192,28 +95,6 @@ namespace RateController.Menu
 
         private void rbESP32_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing)
-            {
-                BoardType = 2;
-                ckDefaultModule.Checked = true;
-                SetButtons(true);
-            }
-        }
-
-        private void rbNano_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing)
-            {
-                BoardType = 0;
-                ckDefaultModule.Checked = true;
-                SetButtons(true);
-            }
-        }
-
-        private void rbTeensy_CheckedChanged(object sender, EventArgs e)
-        {
-            BoardType = 1;
-            ckDefaultModule.Checked = true;
             SetButtons(true);
         }
 
@@ -247,7 +128,7 @@ namespace RateController.Menu
                 Pins[i] = 255;
             }
 
-            switch (BoardType)
+            switch (CurrentBoardType())
             {
                 case 1:
                     // RC11-2, Teensy
@@ -348,34 +229,13 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            lbSubnet.Text = Lang.lgSelectedSubnet;
-            lbIP.Text = Lang.lgConfigIP;
-            gbNetwork.Text = Lang.lgNetwork;
-            gbBoards.Text = Lang.lgBoards;
-            ckDefaultModule.Text = Lang.lgDefaults;
-        }
-
-        private string SubAddress(string Address)
-        {
-            IPAddress IP;
-            string[] data;
-            string Result = "";
-
-            if (IPAddress.TryParse(Address, out IP))
-            {
-                data = Address.Split('.');
-                Result = data[0] + "." + data[1] + "." + data[2] + ".";
-            }
-            return Result;
         }
 
         private void UpdateForm()
         {
             Initializing = true;
-            LoadCombo();
-            lbModuleIP.Text = Core.UDPmodules.SubNet;
 
-            switch (BoardType)
+            switch (CurrentBoardType())
             {
                 case 1:
                     rbTeensy.Checked = true;
@@ -390,23 +250,7 @@ namespace RateController.Menu
                     break;
             }
 
-            ckDefaultModule.Checked = false;
-
-            if (Props.CanEnabled)
-            {
-                rbCAN.Checked = true;
-            }
-            else
-            {
-                rbEthernet.Checked = true;
-            }
-
             Initializing = false;
-        }
-
-        private void rbEthernet_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
         }
     }
 }
