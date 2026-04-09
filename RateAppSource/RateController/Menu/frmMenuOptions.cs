@@ -4,7 +4,6 @@ using RateController.Language;
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO.Ports;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -98,65 +97,13 @@ namespace RateController.Menu
                     butUpdateModules.Enabled = rbWheel.Checked;
                 }
 
-                // CAN settings
-                if (rbAdapter2.Checked)
-                {
-                    Props.CurrentCanDriver = CanDriver.InnoMaker;
-                }
-                else if (rbAdapter3.Checked)
-                {
-                    Props.CurrentCanDriver = CanDriver.PCAN;
-                }
-                else
-                {
-                    Props.CurrentCanDriver = CanDriver.SLCAN;
-                }
-
-                if (cbComPort.SelectedItem != null)
-                {
-                    Props.CanPort = cbComPort.SelectedItem.ToString();
-                }
-
-                // Check if diagnostics setting changed
-                bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
-                Props.ShowCanDiagnostics = ckDiagnostics.Checked;
-
-                if (Props.CanEnabled != ckIsoBus.Checked)
-                {
-                    int Result = Core.UseCanComm(ckIsoBus.Checked);
-
-                    string Mes = "";
-                    switch (Result)
-                    {
-                        case 1:
-                            Mes = "CanBus enabled.";
-                            break;
-
-                        case 3:
-                            Mes = "CanBus failed to start. Ethernet enabled.";
-                            break;
-
-                        default:
-                            Mes = "Ethernet enabled.";
-                            break;
-                    }
-
-                    Core.ModuleConfig.Save();
-                    Props.ShowMessage("Settings sent to module. " + Mes, "Config", 10000);
-                }
-
                 SetButtons(false);
                 UpdateForm();
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("frmMenuDisplay/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuOptions/btnOk_Click: " + ex.Message);
             }
-        }
-
-        private void btnRefreshPorts_Click(object sender, EventArgs e)
-        {
-            RefreshComPorts();
         }
 
         private void butUpdateModules_Click(object sender, EventArgs e)
@@ -164,29 +111,13 @@ namespace RateController.Menu
             Core.WheelSpeed.Send();
         }
 
-        private void cbComPort_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) SetButtons(true);
-        }
-
-        private void ckCAN_CheckedChanged(object sender, EventArgs e)
-        {
-            SetButtons(true);
-        }
-
-        private void ckDiagnostics_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing) SetButtons(true);
-        }
-
-        private void ckLargeScreen_CheckedChanged(object sender, EventArgs e)
+        private void ckMetric_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
         }
 
         private void frmMenuDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
-            timer1.Enabled = false;
             Props.SaveFormLocation(this);
         }
 
@@ -203,21 +134,12 @@ namespace RateController.Menu
             lbPulses.Font = new Font(lbPulses.Font.FontFamily, 12f, lbPulses.Font.Style,
                                 lbPulses.Font.Unit, lbPulses.Font.GdiCharSet, lbPulses.Font.GdiVerticalFont);
 
-            tabControl1.ItemSize = new Size((tabControl1.Width - 14) / tabControl1.TabCount, tabControl1.ItemSize.Height);
-
-            foreach (TabPage tb in tabControl1.TabPages)
-            {
-                tb.BackColor = Properties.Settings.Default.MainBackColour;
-            }
-
-            timer1.Enabled = true;
-
             PositionForm();
             SetBoxes();
             UpdateForm();
         }
 
-        private void gbNetwork_Paint(object sender, PaintEventArgs e)
+        private void groupBox2_Paint(object sender, PaintEventArgs e)
         {
             Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
@@ -231,15 +153,6 @@ namespace RateController.Menu
         {
             this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
-        }
-
-        private void rbAdapter1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing)
-            {
-                SetButtons(true);
-                UpdatePortVisibility();
-            }
         }
 
         private void rbAOG_CheckedChanged(object sender, EventArgs e)
@@ -258,28 +171,6 @@ namespace RateController.Menu
                 WheelSpeedChanged = true;
                 SetButtons(true);
                 SetBoxes();
-            }
-        }
-
-        private void RefreshComPorts()
-        {
-            cbComPort.Items.Clear();
-            string[] ports = SerialPort.GetPortNames();
-            Array.Sort(ports);
-            foreach (string port in ports)
-            {
-                cbComPort.Items.Add(port);
-            }
-
-            // Select current port if it exists
-            int index = cbComPort.FindStringExact(Props.CanPort);
-            if (index >= 0)
-            {
-                cbComPort.SelectedIndex = index;
-            }
-            else if (cbComPort.Items.Count > 0)
-            {
-                cbComPort.SelectedIndex = 0;
             }
         }
 
@@ -325,6 +216,16 @@ namespace RateController.Menu
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
         {
+            double tempD;
+            double.TryParse(tbSimSpeed.Text, out tempD);
+            using (var form = new FormNumeric(0, 40, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbSimSpeed.Text = form.ReturnValue.ToString("N0");
+                }
+            }
         }
 
         private void tbSimSpeed_Validating(object sender, CancelEventArgs e)
@@ -421,27 +322,6 @@ namespace RateController.Menu
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (Core.CanBridgeComm != null && Props.CanEnabled)
-            {
-                // lbConnected = module data (PGN 32400/32401) received within 2s
-                lbConnected.Image = Core.CanBridgeComm.ModuleDataReceiving
-                    ? Properties.Resources.On
-                    : Properties.Resources.Off;
-
-                // lbDriverFound = CAN adapter open and frames flowing within 4s
-                lbDriverFound.Image = Core.CanBridgeComm.CanAdapterConnected
-                    ? Properties.Resources.On
-                    : Properties.Resources.Off;
-            }
-            else
-            {
-                lbConnected.Image = Properties.Resources.Off;
-                lbDriverFound.Image = Properties.Resources.Off;
-            }
-        }
-
         private void UpdateForm()
         {
             Initializing = true;
@@ -489,42 +369,10 @@ namespace RateController.Menu
 
             ckMetric.Checked = Props.UseMetric;
             ckRateDisplay.Checked = Props.UseRateDisplay;
-            ckIsoBus.Checked = Props.CanEnabled;
-
-            switch (Props.CurrentCanDriver)
-            {
-                case CanDriver.InnoMaker:
-                    rbAdapter2.Checked = true;
-                    break;
-
-                case CanDriver.PCAN:
-                    rbAdapter3.Checked = true;
-                    break;
-
-                default:
-                    rbAdapter1.Checked = true;  // SLCAN
-                    break;
-            }
-
-            ckDiagnostics.Checked = Props.ShowCanDiagnostics;
-
-            RefreshComPorts();
-            UpdatePortVisibility();
 
             SetBoxes();
 
-            gbxDrivers.Enabled = !ckIsoBus.Checked;
-            ckDiagnostics.Enabled = !ckIsoBus.Checked;
-
             Initializing = false;
-        }
-
-        private void UpdatePortVisibility()
-        {
-            // Only SLCAN uses COM port - other drivers are native USB
-            bool showPort = rbAdapter1.Checked;  // rbAdapter1 = SLCAN
-            gbxPort.Visible = showPort;
-            gbxPort.Enabled = !ckIsoBus.Checked;
         }
 
         private bool ValidPin(int pin)

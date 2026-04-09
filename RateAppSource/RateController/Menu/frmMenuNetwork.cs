@@ -135,6 +135,7 @@ namespace RateController.Menu
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
                     Set.OnboardRelayType = 1;
+                    Set.RemoteRelayType = 0;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
@@ -165,6 +166,7 @@ namespace RateController.Menu
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
                     Set.OnboardRelayType = 5;
+                    Set.RemoteRelayType = 0;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
@@ -186,6 +188,7 @@ namespace RateController.Menu
                     Set.ModuleID = 0;
                     Set.SensorCount = 1;
                     Set.OnboardRelayType = 4;
+                    Set.RemoteRelayType = 0;
                     Set.InvertRelay = true;
                     Set.InvertFlow = true;
                     Set.Momentary = false;
