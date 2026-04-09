@@ -461,6 +461,12 @@ namespace RateController.Classes
             }
         }
 
+        public static void SetActiveKMLfile(int ID, string fileName)
+        {
+            Job JB = SearchJob(ID);
+            if (JB != null) { JB.ActiveKMLfile = fileName; SaveJob(JB); }
+        }
+
         public static void SetActivePrescription(int id, string filename)
         {
             Job JB = SearchJob(id);

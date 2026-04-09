@@ -63,7 +63,7 @@ namespace RateController.Classes
             }
             return false;
         }
-
+        public static List<string> GetKmlFiles(int id) => GetFilenames(KmlFolder(id), "*.kml");
         public static string ElevationFolder(int id) => Path.Combine(FieldFolder(id), "Elevation");
 
         public static string ElevationPath(int id)

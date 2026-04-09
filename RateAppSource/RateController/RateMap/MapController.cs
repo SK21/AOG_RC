@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -460,8 +461,7 @@ namespace RateController.RateMap
                 ZnOverlays.LoadZones();
 
                 // kml
-                kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
-                ReloadJobKmls();
+                ReloadJobKML();
 
                 // elevation
                 string elevPath = ParcelManager.ElevationPath(JobManager.CurrentJob?.FieldID ?? -1);
@@ -840,24 +840,42 @@ namespace RateController.RateMap
                 return null;
             }
         }
-
-        private static void ReloadJobKmls()
+        public static void ShowActiveKMLlayer(string filename)
+        {
+            try
+            {
+                kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
+                if (filename != null)
+                {
+                    Job JB = JobManager.CurrentJob;
+                    if (JB != null && JB.FieldID >= 0)
+                    {
+                        string kmlFolder = ParcelManager.KmlFolder(JB.FieldID);
+                        if (Directory.Exists(kmlFolder))
+                        {
+                            string Full = Path.Combine(kmlFolder, filename);
+                            if (File.Exists(Full))
+                            {
+                                var overlay = kmlLayerManager.LoadKml(Full);
+                                if (overlay != null) AddOverlay(overlay);
+                                MapChanged?.Invoke(null, EventArgs.Empty);
+                            }
+                        }
+                    }
+                }
+                gmap.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("MapController/ShowActiveKMLlayer: " + ex.Message);
+            }
+        }
+        private static void ReloadJobKML()
         {
             try
             {
                 Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-
-                string kmlFolder = ParcelManager.KmlFolder(job.FieldID);
-                if (!System.IO.Directory.Exists(kmlFolder)) return;
-
-                foreach (string full in System.IO.Directory.GetFiles(kmlFolder, "*.kml"))
-                {
-                    var overlay = kmlLayerManager.LoadKml(full);
-                    if (overlay != null) AddOverlay(overlay);
-                }
-                gmap.Refresh();
-                MapChanged?.Invoke(null, EventArgs.Empty);
+                if (job != null) ShowActiveKMLlayer(job.ActiveKMLfile);
             }
             catch (Exception ex)
             {

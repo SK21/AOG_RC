@@ -104,7 +104,6 @@
             this.tabFiles = new System.Windows.Forms.TabPage();
             this.btnDeleteElevation = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.lbKMLfile = new System.Windows.Forms.Label();
             this.btnDeleteKML = new System.Windows.Forms.Button();
             this.btnImportKML = new System.Windows.Forms.Button();
             this.btnDeleteYield = new System.Windows.Forms.Button();
@@ -131,6 +130,7 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.tbLat = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
+            this.cbKML = new System.Windows.Forms.ComboBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -1040,9 +1040,9 @@
             // tabFiles
             // 
             this.tabFiles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabFiles.Controls.Add(this.cbKML);
             this.tabFiles.Controls.Add(this.btnDeleteElevation);
             this.tabFiles.Controls.Add(this.label12);
-            this.tabFiles.Controls.Add(this.lbKMLfile);
             this.tabFiles.Controls.Add(this.btnDeleteKML);
             this.tabFiles.Controls.Add(this.btnImportKML);
             this.tabFiles.Controls.Add(this.btnDeleteYield);
@@ -1081,16 +1081,6 @@
             this.label12.TabIndex = 427;
             this.label12.Text = "KML:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lbKMLfile
-            // 
-            this.lbKMLfile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbKMLfile.Location = new System.Drawing.Point(123, 269);
-            this.lbKMLfile.Name = "lbKMLfile";
-            this.lbKMLfile.Size = new System.Drawing.Size(287, 30);
-            this.lbKMLfile.TabIndex = 428;
-            this.lbKMLfile.Text = "None";
-            this.lbKMLfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnDeleteKML
             // 
@@ -1425,6 +1415,16 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // cbKML
+            // 
+            this.cbKML.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbKML.FormattingEnabled = true;
+            this.cbKML.Location = new System.Drawing.Point(126, 264);
+            this.cbKML.Name = "cbKML";
+            this.cbKML.Size = new System.Drawing.Size(287, 32);
+            this.cbKML.TabIndex = 430;
+            this.cbKML.SelectedIndexChanged += new System.EventHandler(this.cbKML_SelectedIndexChanged);
+            // 
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1562,10 +1562,10 @@
         private System.Windows.Forms.Button btnExportRx;
         private System.Windows.Forms.Button btnImportRx;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label lbKMLfile;
         private System.Windows.Forms.Button btnDeleteKML;
         private System.Windows.Forms.Button btnImportKML;
         private System.Windows.Forms.Button btnDeleteElevation;
         private System.Windows.Forms.ListBox lbRx;
+        private System.Windows.Forms.ComboBox cbKML;
     }
 }

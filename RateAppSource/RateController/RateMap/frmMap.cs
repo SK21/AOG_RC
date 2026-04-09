@@ -206,6 +206,35 @@ namespace RateController.Forms
 
         private void btnDeleteKML_Click(object sender, EventArgs e)
         {
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
+                string sel = cbKML.SelectedItem.ToString();
+                if (parcel != null && sel != null && sel != "(none)")
+                {
+                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
+                    MB.ShowDialog();
+                    bool Result = MB.Result;
+                    MB.Close();
+                    if (Result)
+                    {
+                        if (sel == JB.ActiveKMLfile)
+                        {
+                            JobManager.SetActiveKMLfile(JB.ID, null);
+                            MapController.ShowActiveKMLlayer(null);
+                        }
+                        string Folder = ParcelManager.KmlFolder(JB.FieldID);
+                        sel = Path.Combine(Folder, sel);
+                        if (Props.IsPathSafe(sel)) File.Delete(sel);
+                        UpdateFilesPanel();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMaps/btnDeleteKML_Click: " + ex.Message);
+            }
         }
 
         private void btnDeleteRx_Click(object sender, EventArgs e)
@@ -385,8 +414,12 @@ namespace RateController.Forms
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    if (MapController.AddKmlLayer(ofd.FileName))
+                    string FileName = ofd.FileName;
+                    if (MapController.AddKmlLayer(FileName))
                     {
+                        Job JB = JobManager.CurrentJob;
+                        if (JB != null) JobManager.SetActiveKMLfile(JB.ID, Path.GetFileName(FileName));
+                        UpdateFilesPanel();
                         ckKML.Checked = true; // reflect visible state
                     }
                 }
@@ -502,51 +535,6 @@ namespace RateController.Forms
             }
         }
 
-        private void btnKMLdelete_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0)
-                {
-                    Props.ShowMessage("No field assigned to current job.", "Delete KML", 6000, true);
-                    return;
-                }
-
-                string kmlFolder = ParcelManager.KmlFolder(job.FieldID);
-                if (!Directory.Exists(kmlFolder) || Directory.GetFiles(kmlFolder, "*.kml").Length == 0)
-                {
-                    Props.ShowMessage("No KML files found for this field.", "Delete KML", 6000);
-                    return;
-                }
-
-                using (var dlg = new OpenFileDialog
-                {
-                    Title = "Select KML to delete",
-                    Filter = "KML files (*.kml)|*.kml",
-                    InitialDirectory = kmlFolder,
-                    CheckFileExists = true
-                })
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK) return;
-
-                    using (var prompt = new frmMsgBox("Delete KML file from this field?", "Delete KML", true))
-                    {
-                        prompt.TopMost = true;
-                        prompt.ShowDialog();
-                        if (!prompt.Result) return;
-                    }
-
-                    MapController.DeleteKmlLayer(dlg.FileName);
-                    Props.ShowMessage("KML deleted.", "Delete KML", 4000);
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnDeleteKml_Click: " + ex.Message);
-                Props.ShowMessage("Error deleting KML: " + ex.Message, "Delete KML", 8000, true);
-            }
-        }
 
         private void btnMinimize_Click(object sender, EventArgs e)
         {
@@ -698,6 +686,20 @@ namespace RateController.Forms
         private void btnZoomOut_Click(object sender, EventArgs e)
         {
             MapController.Map.Zoom -= 1;
+        }
+
+        private void cbKML_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                Job JB = JobManager.CurrentJob;
+                if (JB != null && JB.FieldID >= 0)
+                {
+                    string sel = cbKML.SelectedItem as string;
+                    JobManager.SetActiveKMLfile(JB.ID, sel == "(none)" ? null : sel);
+                    MapController.ShowActiveKMLlayer(sel == "(none)" ? null : sel);
+                }
+            }
         }
 
         private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
@@ -1676,6 +1678,18 @@ namespace RateController.Forms
                 string bakPath = parcel != null
                     ? Path.Combine(ParcelManager.ElevationFolder(job.FieldID), "Elevation.bak") : null;
                 btnRestoreElevation.Visible = bakPath != null && File.Exists(bakPath);
+
+                // KML
+                cbKML.Items.Clear();
+                cbKML.Items.Add("(none)");
+                if (parcel != null)
+                {
+                    foreach (string k in ParcelManager.GetKmlFiles(job.FieldID))
+                    {
+                        cbKML.Items.Add(k);
+                    }
+                    cbKML.SelectedItem = job.ActiveKMLfile ?? "(none)";
+                }
             }
             finally
             {
