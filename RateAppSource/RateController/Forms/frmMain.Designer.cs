@@ -61,6 +61,7 @@
             this.btnTarget = new RateController.Classes.RoundedButton();
             this.btnResetQuantity = new RateController.Classes.RoundedButton();
             this.FlashTimer = new System.Windows.Forms.Timer(this.components);
+            this.UL1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.Fans)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod1)).BeginInit();
@@ -477,12 +478,21 @@
             this.FlashTimer.Interval = 500;
             this.FlashTimer.Tick += new System.EventHandler(this.FlashTimer_Tick);
             // 
+            // UL1
+            // 
+            this.UL1.BackColor = System.Drawing.Color.Yellow;
+            this.UL1.Location = new System.Drawing.Point(299, 66);
+            this.UL1.Name = "UL1";
+            this.UL1.Size = new System.Drawing.Size(30, 2);
+            this.UL1.TabIndex = 444;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(197)))));
             this.ClientSize = new System.Drawing.Size(389, 356);
+            this.Controls.Add(this.UL1);
             this.Controls.Add(this.btnResetQuantity);
             this.Controls.Add(this.btnResetAcres);
             this.Controls.Add(this.btnUnits);
@@ -568,5 +578,6 @@
         private Classes.RoundedButton btnResetAcres;
         private Classes.RoundedButton btnResetQuantity;
         private System.Windows.Forms.Timer FlashTimer;
+        private System.Windows.Forms.Panel UL1;
     }
 }

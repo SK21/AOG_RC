@@ -44,16 +44,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.gbEthernet = new System.Windows.Forms.GroupBox();
-            this.ckEthernet = new System.Windows.Forms.CheckBox();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
             this.lbSubnet = new System.Windows.Forms.Label();
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
             this.lbIP = new System.Windows.Forms.Label();
             this.lbModuleIP = new System.Windows.Forms.Label();
+            this.ckEthernet = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ckCanBus = new System.Windows.Forms.CheckBox();
             this.ckDiagnostics = new System.Windows.Forms.CheckBox();
+            this.ckCanBus = new System.Windows.Forms.CheckBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gbxDrivers.SuspendLayout();
             this.gbxPort.SuspendLayout();
@@ -259,24 +259,6 @@
             this.gbEthernet.Text = "Ethernet";
             this.gbEthernet.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
             // 
-            // ckEthernet
-            // 
-            this.ckEthernet.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckEthernet.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEthernet.Checked = true;
-            this.ckEthernet.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEthernet.Location = new System.Drawing.Point(140, 31);
-            this.ckEthernet.Margin = new System.Windows.Forms.Padding(6);
-            this.ckEthernet.Name = "ckEthernet";
-            this.ckEthernet.Size = new System.Drawing.Size(192, 36);
-            this.ckEthernet.TabIndex = 346;
-            this.ckEthernet.Text = "Enabled";
-            this.ckEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckEthernet.UseVisualStyleBackColor = true;
-            this.ckEthernet.CheckedChanged += new System.EventHandler(this.ckEthernet_CheckedChanged);
-            // 
             // cbEthernet
             // 
             this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -348,6 +330,24 @@
             this.lbModuleIP.Text = "192.168.100.100";
             this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // ckEthernet
+            // 
+            this.ckEthernet.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckEthernet.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEthernet.Checked = true;
+            this.ckEthernet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckEthernet.Location = new System.Drawing.Point(140, 31);
+            this.ckEthernet.Margin = new System.Windows.Forms.Padding(6);
+            this.ckEthernet.Name = "ckEthernet";
+            this.ckEthernet.Size = new System.Drawing.Size(192, 36);
+            this.ckEthernet.TabIndex = 346;
+            this.ckEthernet.Text = "Enabled";
+            this.ckEthernet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckEthernet.UseVisualStyleBackColor = true;
+            this.ckEthernet.CheckedChanged += new System.EventHandler(this.ckEthernet_CheckedChanged);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.ckDiagnostics);
@@ -366,6 +366,21 @@
             this.groupBox1.Text = "CanBus";
             this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.gbEthernet_Paint);
             // 
+            // ckDiagnostics
+            // 
+            this.ckDiagnostics.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckDiagnostics.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckDiagnostics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckDiagnostics.Location = new System.Drawing.Point(254, 31);
+            this.ckDiagnostics.Margin = new System.Windows.Forms.Padding(6);
+            this.ckDiagnostics.Name = "ckDiagnostics";
+            this.ckDiagnostics.Size = new System.Drawing.Size(192, 36);
+            this.ckDiagnostics.TabIndex = 363;
+            this.ckDiagnostics.Text = "Diagnostics";
+            this.ckDiagnostics.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckDiagnostics.UseVisualStyleBackColor = true;
+            this.ckDiagnostics.CheckedChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
+            // 
             // ckCanBus
             // 
             this.ckCanBus.Appearance = System.Windows.Forms.Appearance.Button;
@@ -381,21 +396,6 @@
             this.ckCanBus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckCanBus.UseVisualStyleBackColor = true;
             this.ckCanBus.CheckedChanged += new System.EventHandler(this.ckCanBus_CheckedChanged);
-            // 
-            // ckDiagnostics
-            // 
-            this.ckDiagnostics.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckDiagnostics.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckDiagnostics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckDiagnostics.Location = new System.Drawing.Point(254, 31);
-            this.ckDiagnostics.Margin = new System.Windows.Forms.Padding(6);
-            this.ckDiagnostics.Name = "ckDiagnostics";
-            this.ckDiagnostics.Size = new System.Drawing.Size(192, 36);
-            this.ckDiagnostics.TabIndex = 363;
-            this.ckDiagnostics.Text = "Diagnostics";
-            this.ckDiagnostics.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckDiagnostics.UseVisualStyleBackColor = true;
-            this.ckDiagnostics.CheckedChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
             // 
             // timer1
             // 
@@ -415,6 +415,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "frmMenuComm";
+            this.ShowInTaskbar = false;
             this.Text = "frmMenuComm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuComm_FormClosing);
             this.Load += new System.EventHandler(this.frmMenuComm_Load);

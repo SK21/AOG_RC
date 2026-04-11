@@ -29,6 +29,7 @@ namespace RateController.Forms
         private PictureBox[] ProductIcons = new PictureBox[6];
 
         private bool ShowFans;
+
         public frmMain()
         {
             InitializeComponent();
@@ -209,7 +210,20 @@ namespace RateController.Forms
 
         private void btnTarget_Click(object sender, EventArgs e)
         {
-            if (!ShowFans)
+            if (ShowFans)
+            {
+                Props.CurrentMenuName = "frmMenuRate";
+
+                frmMenu fs = (frmMenu)Props.IsFormOpen("frmMenu");
+                if (fs == null)
+                {
+                    fs = new frmMenu();
+                    fs.Show();
+                }
+                fs.ChangeProduct(6);
+                fs.Focus();
+            }
+            else
             {
                 if (!Props.VariableRateEnabled)
                 {
@@ -227,6 +241,20 @@ namespace RateController.Forms
                 }
                 UpdateForm();
             }
+        }
+
+        private void btnUnits_Click(object sender, EventArgs e)
+        {
+            Props.CurrentMenuName = "frmMenuRate";
+
+            frmMenu fs = (frmMenu)Props.IsFormOpen("frmMenu");
+            if (fs == null)
+            {
+                fs = new frmMenu();
+                fs.Show();
+            }
+            if (ShowFans) fs.ChangeProduct(5);
+            fs.Focus();
         }
 
         private void btnVR_Click(object sender, EventArgs e)
@@ -264,6 +292,45 @@ namespace RateController.Forms
         {
             SwitchDisplay(true);
             UpdateForm();
+        }
+
+        private void UnderlineProduct()
+        {
+            int offset = 16;
+            if (ShowFans)
+            {
+                UL1.Left = Fans.Left + offset;
+            }
+            else
+            {
+                switch (Props.CurrentProduct)
+                {
+                    case 1:
+                        UL1.Left = prod2.Left + offset;
+                        break;
+
+                    case 2:
+                        UL1.Left = prod3.Left + offset;
+                        break;
+
+                    case 3:
+                        UL1.Left = prod4.Left + offset;
+                        break;
+
+                    case 4:
+                        UL1.Left = prod5.Left + offset;
+                        break;
+
+                    default:
+                        UL1.Left = prod1.Left + offset;
+                        break;
+                }
+            }
+        }
+
+        private void FlashTimer_Tick(object sender, EventArgs e)
+        {
+            ShowAlarmButton();
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -406,6 +473,7 @@ namespace RateController.Forms
             }
             barQuantity.BackColor = Properties.Settings.Default.MainBackColour;
             barQuantity.BorderColor = Properties.Settings.Default.DisplayForeColour;
+            UL1.BackColor = Properties.Settings.Default.DisplayForeColour;
         }
 
         private void ShowAlarmButton()
@@ -472,6 +540,8 @@ namespace RateController.Forms
                 lbQuantityType.Visible = !ShowFans;
                 lbProductName.Visible = !ShowFans;
                 barQuantity.Visible = !ShowFans;
+                btnResetAcres.Visible = !ShowFans;
+                btnResetQuantity.Visible = !ShowFans;
 
                 if (ShowFans)
                 {
@@ -505,6 +575,7 @@ namespace RateController.Forms
             }
 
             UpdateStatusIcons();
+            UnderlineProduct();
         }
 
         private void UpdateProducts()
@@ -714,27 +785,6 @@ namespace RateController.Forms
             {
                 btnMaster.Image = Properties.Resources.SprayOff2;
             }
-        }
-
-        private void btnUnits_Click(object sender, EventArgs e)
-        {
-            if (!ShowFans)
-            {
-                Props.CurrentMenuName = "frmMenuRate";
-
-                frmMenu fs = (frmMenu)Props.IsFormOpen("frmMenu");
-                if (fs == null)
-                {
-                    fs = new frmMenu();
-                    fs.Show();
-                }
-                fs.Focus();
-            }
-        }
-
-        private void FlashTimer_Tick(object sender, EventArgs e)
-        {
-            ShowAlarmButton();
         }
     }
 }
