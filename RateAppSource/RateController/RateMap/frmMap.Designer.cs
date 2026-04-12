@@ -114,6 +114,7 @@
             this.lbElevationFile = new System.Windows.Forms.Label();
             this.btnImportElevation = new System.Windows.Forms.Button();
             this.btnRestoreElevation = new System.Windows.Forms.Button();
+            this.btnGenerateTestElevation = new System.Windows.Forms.Button();
             this.pnlTabs = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tlpTitle = new System.Windows.Forms.TableLayoutPanel();
@@ -1053,6 +1054,7 @@
             this.tabFiles.Controls.Add(this.lbElevationFile);
             this.tabFiles.Controls.Add(this.btnImportElevation);
             this.tabFiles.Controls.Add(this.btnRestoreElevation);
+            this.tabFiles.Controls.Add(this.btnGenerateTestElevation);
             this.tabFiles.Location = new System.Drawing.Point(4, 54);
             this.tabFiles.Name = "tabFiles";
             this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
@@ -1206,7 +1208,19 @@
             this.btnRestoreElevation.UseVisualStyleBackColor = true;
             this.btnRestoreElevation.Visible = false;
             this.btnRestoreElevation.Click += new System.EventHandler(this.btnRestoreElevation_Click);
-            // 
+            //
+            // btnGenerateTestElevation
+            //
+            this.btnGenerateTestElevation.FlatAppearance.BorderSize = 0;
+            this.btnGenerateTestElevation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateTestElevation.Location = new System.Drawing.Point(123, 225);
+            this.btnGenerateTestElevation.Name = "btnGenerateTestElevation";
+            this.btnGenerateTestElevation.Size = new System.Drawing.Size(287, 40);
+            this.btnGenerateTestElevation.TabIndex = 430;
+            this.btnGenerateTestElevation.Text = "Generate Test Elevation";
+            this.btnGenerateTestElevation.UseVisualStyleBackColor = true;
+            this.btnGenerateTestElevation.Click += new System.EventHandler(this.btnGenerateTestElevation_Click);
+            //
             // pnlTabs
             // 
             this.pnlTabs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -1565,6 +1579,7 @@
         private System.Windows.Forms.Button btnDeleteKML;
         private System.Windows.Forms.Button btnImportKML;
         private System.Windows.Forms.Button btnDeleteElevation;
+        private System.Windows.Forms.Button btnGenerateTestElevation;
         private System.Windows.Forms.ListBox lbRx;
         private System.Windows.Forms.ComboBox cbKML;
     }

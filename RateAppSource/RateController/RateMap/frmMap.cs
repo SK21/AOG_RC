@@ -287,7 +287,7 @@ namespace RateController.Forms
             {
                 Job JB = JobManager.CurrentJob;
                 Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
-                string YD = cbYield.SelectedItem.ToString();
+                string YD = cbYield.SelectedItem?.ToString();
                 if (parcel != null && YD != null && YD != "(none)")
                 {
                     var MB = new frmMsgBox("Confirm Delete?", "Help", true);
@@ -652,6 +652,40 @@ namespace RateController.Forms
             {
                 Props.WriteErrorLog("frmMap/btnRestoreElevation_Click: " + ex.Message);
                 Props.ShowMessage("Error restoring elevation: " + ex.Message, "Restore Elevation", 8000, true);
+            }
+        }
+
+        private void btnGenerateTestElevation_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+
+                string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
+                string elevPath = Path.Combine(elevFolder, "Elevation.csv");
+                string bakPath = Path.Combine(elevFolder, "Elevation.bak");
+
+                // Back up existing file before overwriting
+                if (File.Exists(elevPath) && !File.Exists(bakPath))
+                    File.Copy(elevPath, bakPath);
+
+                // Use current map view as the geographic bounds
+                var view = MapController.Map.ViewArea;
+                ElevationOverlayCreator.GenerateTestData(
+                    elevPath,
+                    view.Bottom, view.Top,
+                    view.Left, view.Right);
+
+                string ep = ParcelManager.ElevationPath(job.FieldID);
+                MapController.ElevationCreator.LoadElevationFile(ep);
+                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                UpdateFilesPanel();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnGenerateTestElevation_Click: " + ex.Message);
+                Props.ShowMessage("Error generating test elevation: " + ex.Message, "Generate Test", 8000, true);
             }
         }
 
@@ -1081,6 +1115,7 @@ namespace RateController.Forms
         {
             SetTitle();
             LoadProductNames();
+            UpdateFilesPanel();
         }
 
         private void lbRx_SelectedIndexChanged(object sender, EventArgs e)
@@ -1670,17 +1705,26 @@ namespace RateController.Forms
                         cbYield.Items.Add(f);
                     }
                     string tmp = ParcelManager.SelectedYieldPath(job.FieldID);
-                    string sel = tmp != null ? tmp : null;
-                    cbYield.SelectedItem = sel ?? "(none)";
+                    cbYield.SelectedItem = (tmp != null ? Path.GetFileName(tmp) : null) ?? "(none)";
                 }
                 else
                 {
                     cbYield.SelectedIndex = 0;
                 }
 
-                // Elevation label
+                // Elevation label — show filename + quality summary if data is loaded
                 string elevPath = ParcelManager.ElevationPath(job.FieldID);
-                lbElevationFile.Text = elevPath != null ? Path.GetFileName(elevPath) : "None";
+                if (elevPath != null)
+                {
+                    string quality = MapController.ElevationCreator?.GetQualitySummary();
+                    lbElevationFile.Text = string.IsNullOrEmpty(quality)
+                        ? Path.GetFileName(elevPath)
+                        : quality;
+                }
+                else
+                {
+                    lbElevationFile.Text = "None";
+                }
 
                 // Restore button visibility
                 string bakPath = parcel != null

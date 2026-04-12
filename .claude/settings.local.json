@@ -71,7 +71,13 @@
       "Bash(git -C \"F:/Documents/GitHub/RateControl/AOG_RC\" show 6a85caab -- RateAppSource/RateController/Classes/Core.cs)",
       "Bash(git -C \"F:/Documents/GitHub/RateControl/AOG_RC\" show 6a85caab:RateAppSource/RateController/Classes/Core.cs)",
       "Bash(git -C \"F:/Documents/GitHub/RateControl/AOG_RC\" show 6a85caab:RateAppSource/RateController/Forms/frmMain.cs)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(wait)",
+      "Read(//tmp/**)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s https://raw.githubusercontent.com/ajayre/aggrade/master/Application/Data/MapGenerator.cs)"
     ]
   }
 }

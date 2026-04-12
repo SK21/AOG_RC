@@ -465,7 +465,7 @@ namespace RateController.RateMap
 
                 // elevation
                 string elevPath = ParcelManager.ElevationPath(JobManager.CurrentJob?.FieldID ?? -1);
-                if (elevPath != null) ElevationCreator.LoadElevationFile(elevPath);
+                ElevationCreator.LoadElevationFile(elevPath);  // null clears readings; Build() will Reset()
                 ElevationCreator.Build();
 
                 gmap.Refresh();
