@@ -80,6 +80,8 @@ namespace RateController.RateMap
 
                 if (FieldData.Count > 0 && data.Count > 0 && MapController.TryComputeScale(data, out double MinYield, out double MaxYield))
                 {
+                    YieldLegend.SetYieldScale(MinYield, MaxYield);
+
                     Trail.Reset();
 
                     int startIndex = FieldData.FindIndex(r => r.YieldKg > NearZero);
@@ -125,7 +127,7 @@ namespace RateController.RateMap
                         }
 
                         List<double> AveYield = new List<double>();
-                        Trail.DrawTrail(YieldOverlay, out AveYield, true, true);
+                        Trail.DrawTrail(YieldOverlay, out AveYield, true, true, YieldLegend);
 
                         MapController.AddOverlay(YieldOverlay);
                         gmap.Refresh();
@@ -235,6 +237,7 @@ namespace RateController.RateMap
 
         public void Reset()
         {
+            YieldLegend?.Hide();
             MapController.RemoveOverlay(YieldOverlay);
             gmap.Refresh();
         }

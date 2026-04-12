@@ -467,6 +467,12 @@
     <Compile Include="RateMap\frmImport.Designer.cs">
       <DependentUpon>frmImport.cs</DependentUpon>
     </Compile>
+    <Compile Include="RateMap\frmSelectYieldFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RateMap\frmSelectYieldFiles.Designer.cs">
+      <DependentUpon>frmSelectYieldFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="RateMap\frmMap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -480,6 +486,7 @@
     <Compile Include="RateMap\Palette.cs" />
     <Compile Include="RateMap\RateReading.cs" />
     <Compile Include="RateMap\ShapefileHelper.cs" />
+    <Compile Include="RateMap\ProductivityZoneCreator.cs" />
     <Compile Include="RateMap\YieldOverlayCreator.cs" />
     <Compile Include="RateMap\ZoneManager.cs" />
     <EmbeddedResource Include="Forms\FormNumeric.resx">

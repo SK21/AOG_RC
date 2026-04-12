@@ -108,13 +108,15 @@ namespace RateController.RateMap
             }
         }
 
-        public void DrawTrail(GMapOverlay overlay, out List<double> PolyRates, bool RebuildPolygons = false, bool IsYieldData = false)
+        public void DrawTrail(GMapOverlay overlay, out List<double> PolyRates, bool RebuildPolygons = false, bool IsYieldData = false, LegendManager legendOverride = null)
         {
             List<Segment> segmentsToDraw;
 
-            if (RebuildPolygons || MapController.legendManager.LegendChanged)
+            var legend = legendOverride ?? MapController.legendManager;
+
+            if (RebuildPolygons || legend.LegendChanged)
             {
-                MapController.legendManager.ResetLegendChanged();
+                legend.ResetLegendChanged();
                 overlay.Polygons.Clear();
                 segmentsToDraw = _segments.Where(s => s.Rate > NearZero).ToList();
                 _lastDrawnSegmentIndex = _segments.Count;
@@ -151,9 +153,9 @@ namespace RateController.RateMap
                         int count = 1;
                         int j = i + 1;
 
-                        int BandIndex = MapController.legendManager.BandIndex(segs[i].Rate);
+                        int BandIndex = legend.BandIndex(segs[i].Rate);
 
-                        while (j < segs.Count && MapController.legendManager.BandIndex(segs[j].Rate) == BandIndex)
+                        while (j < segs.Count && legend.BandIndex(segs[j].Rate) == BandIndex)
                         {
                             RateTotal += segs[j].Rate;
                             j++;

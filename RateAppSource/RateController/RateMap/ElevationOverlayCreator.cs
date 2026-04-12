@@ -32,6 +32,7 @@ namespace RateController.RateMap
         private string _elevationPath;
         private STRtree<FieldSample> _tree;
         private List<FieldSample>    _readings;
+        private List<FieldSample>    _cleanReadings;
 
         // IDW grid resolution — bitmap rendering cost is O(1) regardless of this value,
         // so it can be much higher than the polygon cap without affecting pan/zoom performance.
@@ -75,6 +76,10 @@ namespace RateController.RateMap
 
             _enabled = bool.TryParse(Props.GetProp("MapShowElevation"), out bool sh) ? sh : false;
         }
+
+        // The cleaned (non-zero, outlier-filtered) elevation readings used by the last Build().
+        // Null until Build() has run successfully at least once.
+        public IReadOnlyList<FieldSample> CleanReadings => _cleanReadings;
 
         public bool Enabled
         {
@@ -211,6 +216,8 @@ namespace RateController.RateMap
 
                 List<FieldSample> clean = FilterOutliers(nonZero);
                 if (clean.Count < 3) clean = nonZero;
+
+                _cleanReadings = clean;   // expose for ProductivityZoneCreator
 
                 double minElev = clean.Min(r => r.ElevationMeters);
                 double maxElev = clean.Max(r => r.ElevationMeters);

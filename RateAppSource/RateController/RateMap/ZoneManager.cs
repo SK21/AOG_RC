@@ -730,6 +730,26 @@ namespace RateController.RateMap
             MapController.Refresh();
         }
 
+        // Adds auto-generated zones (e.g. from ProductivityZoneCreator) to the target layer,
+        // rebuilds the spatial index, enables the target overlay, and saves the map.
+        public void AddAutoZones(List<MapZone> zones)
+        {
+            try
+            {
+                foreach (var z in zones) cTargetZonesList.Add(z);
+                BuildTargetZonesIndex();
+                cShowTarget = true;
+                Props.SetProp("MapShowTargetOverlay", "True");
+                ShowTargetOverlay();
+                ZonesChanged?.Invoke(null, EventArgs.Empty);
+                MapController.SaveMap();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ZoneManager/AddAutoZones: " + ex.Message);
+            }
+        }
+
         public int TargetZoneCount()
         {
             return cTargetZonesList.Count;

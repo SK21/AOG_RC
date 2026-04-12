@@ -39,6 +39,7 @@
             this.pnlControls = new System.Windows.Forms.Panel();
             this.ckYield = new System.Windows.Forms.CheckBox();
             this.ckElevation = new System.Windows.Forms.CheckBox();
+            this.btnCreateZones = new System.Windows.Forms.Button();
             this.ckKML = new System.Windows.Forms.CheckBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.btnZoomIn = new System.Windows.Forms.Button();
@@ -267,7 +268,18 @@
             this.ckElevation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckElevation.UseVisualStyleBackColor = true;
             this.ckElevation.CheckedChanged += new System.EventHandler(this.ckElevation_CheckedChanged);
-            // 
+            //
+            // btnCreateZones
+            //
+            this.btnCreateZones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCreateZones.Location = new System.Drawing.Point(6, 350);
+            this.btnCreateZones.Name = "btnCreateZones";
+            this.btnCreateZones.Size = new System.Drawing.Size(407, 24);
+            this.btnCreateZones.TabIndex = 394;
+            this.btnCreateZones.Text = "Create Zones from Yield + Elevation";
+            this.btnCreateZones.UseVisualStyleBackColor = true;
+            this.btnCreateZones.Click += new System.EventHandler(this.btnCreateZones_Click);
+            //
             // ckKML
             // 
             this.ckKML.Appearance = System.Windows.Forms.Appearance.Button;
@@ -1055,6 +1067,7 @@
             this.tabFiles.Controls.Add(this.btnImportElevation);
             this.tabFiles.Controls.Add(this.btnRestoreElevation);
             this.tabFiles.Controls.Add(this.btnGenerateTestElevation);
+            this.tabFiles.Controls.Add(this.btnCreateZones);
             this.tabFiles.Location = new System.Drawing.Point(4, 54);
             this.tabFiles.Name = "tabFiles";
             this.tabFiles.Padding = new System.Windows.Forms.Padding(3);
@@ -1551,6 +1564,7 @@
         private System.Windows.Forms.Button btnTimeCancel;
         private System.Windows.Forms.CheckBox ckAutoTune;
         private System.Windows.Forms.CheckBox ckElevation;
+        private System.Windows.Forms.Button btnCreateZones;
         private System.Windows.Forms.Button btnMinimize;
         private System.Windows.Forms.CheckBox ckYield;
         private System.Windows.Forms.RadioButton rbProductE;

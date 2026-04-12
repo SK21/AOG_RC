@@ -880,6 +880,31 @@ namespace RateController.Forms
             if (!Initializing) MapController.ElevationCreator.Enabled = ckElevation.Checked;
         }
 
+        private void btnCreateZones_Click(object sender, EventArgs e)
+        {
+            int fieldID = JobManager.CurrentJob?.FieldID ?? -1;
+            if (fieldID < 0) { Props.ShowMessage("No field selected.", "Create Zones", 5000, false); return; }
+
+            var files = ParcelManager.GetYieldFiles(fieldID);
+            if (files == null || files.Count == 0)
+            {
+                Props.ShowMessage("No yield files found for this field.", "Create Zones", 5000, false);
+                return;
+            }
+
+            string yieldFolder  = ParcelManager.YieldFolder(fieldID);
+            var    fullPaths    = files.Select(f => Path.Combine(yieldFolder, f)).ToList();
+            string currentPath  = ParcelManager.SelectedYieldPath(fieldID);
+
+            using (var dlg = new frmSelectYieldFiles(fullPaths, currentPath))
+            {
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+                string error = ProductivityZoneCreator.Generate(dlg.SelectedPaths);
+                if (!string.IsNullOrEmpty(error))
+                    Props.ShowMessage(error, "Create Zones", 8000, false);
+            }
+        }
+
         private void ckKML_CheckedChanged(object sender, EventArgs e)
         {
             if (!Initializing) MapController.SetKmlVisibility(ckKML.Checked);

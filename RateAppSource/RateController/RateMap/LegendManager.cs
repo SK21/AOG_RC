@@ -48,6 +48,8 @@ namespace RateController.RateMap
         private bool cLegendChanged = false;
         private int CurrentProduct = 0;
         private double LegendBaseValue = 0;
+        private double _yieldMin = 0;
+        private double _yieldMax = 1;
         private Bitmap legendBitmap;
         private Font legendFont;
         private PictureBox legendHost;
@@ -110,6 +112,14 @@ namespace RateController.RateMap
 
         public int BandIndex(double value)
         {
+            if (cIsYieldData)
+            {
+                double range = _yieldMax - _yieldMin;
+                if (range <= 0) return 0;
+                int band = (int)((value - _yieldMin) / range * 5);
+                return Math.Max(0, Math.Min(4, band));
+            }
+
             int Result = 0;
             if (LegendBaseValue > 0)
             {
@@ -127,6 +137,17 @@ namespace RateController.RateMap
                 }
             }
             return Result;
+        }
+
+        // Called by YieldOverlayCreator after computing min/max yield from the data.
+        // Sets up the yield colour bands and shows the legend.
+        public void SetYieldScale(double min, double max)
+        {
+            if (!cIsYieldData) return;
+            _yieldMin = min;
+            _yieldMax = max;
+            CreateYieldLegend(min, max);
+            Show();
         }
 
         public void Dispose()
@@ -392,6 +413,34 @@ namespace RateController.RateMap
                     CreateLegend(LegendBaseValue, title);
                     LegendUpdated?.Invoke(this, EventArgs.Empty);
                 }
+            }
+        }
+
+        private void CreateYieldLegend(double min, double max)
+        {
+            try
+            {
+                bool   metric = Props.UseMetric;
+                double scale  = metric ? 1.0 : 2.20462;   // kg → lb (simple; bushels need crop type)
+                string unit   = metric ? "kg" : "lb";
+                string title  = string.Format("Yield ({0})", unit);
+
+                double step = (max - min) / 5.0;
+                var bands = new Dictionary<string, Color>();
+                for (int i = 0; i < 5; i++)
+                {
+                    double lo  = (min + i * step) * scale;
+                    double hi  = (min + (i + 1) * step) * scale;
+                    string lbl = string.Format("{0:F0} - {1:F0}", lo, hi);
+                    bands[lbl] = Palette.GetColor(i, true, 255);
+                }
+
+                cCurrentLegend = new LegendObject { Bands = bands, Title = title };
+                cLegendChanged = true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("LegendManager/CreateYieldLegend: " + ex.Message);
             }
         }
 
