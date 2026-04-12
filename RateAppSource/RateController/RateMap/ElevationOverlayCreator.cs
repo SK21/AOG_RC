@@ -6,7 +6,10 @@ using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RateController.RateMap
@@ -14,21 +17,26 @@ namespace RateController.RateMap
     public class ElevationOverlayCreator : IDisposable
     {
         private readonly GMapControl _map;
-        private readonly GMapOverlay _fillOverlay;
 
-        // Legend hosted as a PictureBox directly on the GMapControl (same pattern as LegendManager)
+        // Legend hosted as a PictureBox on the GMapControl
         private PictureBox _legendHost;
         private Bitmap     _legendBitmap;
+
+        // Pixel map — a single Bitmap stretched over the field in the Paint handler
+        private Bitmap       _elevBitmap;
+        private PointLatLng  _topLeft;
+        private PointLatLng  _bottomRight;
 
         private bool _disposed;
         private bool _enabled;
         private string _elevationPath;
         private STRtree<FieldSample> _tree;
-        private List<FieldSample> _readings;
+        private List<FieldSample>    _readings;
 
-        // Grid resolution in metres — smaller = more detail, more polygons
-        // Maximum polygon count — resolution is computed from field size to stay at or below this
-        private const int MaxCells = 1200;
+        // IDW grid resolution — bitmap rendering cost is O(1) regardless of this value,
+        // so it can be much higher than the polygon cap without affecting pan/zoom performance.
+        // Build time scales linearly; ~20 000 takes under a second for typical field data.
+        private const int MaxCells = 20000;
 
         // Number of discrete colour bands
         public int ColorBands { get; set; } = 5;
@@ -49,7 +57,12 @@ namespace RateController.RateMap
         public ElevationOverlayCreator(GMapControl map)
         {
             _map = map;
-            _fillOverlay = new GMapOverlay("elevationFill");
+
+            // Subscribe to the map's own Paint event.
+            // GMapControl raises Paint after drawing tiles and overlays, so our bitmap
+            // lands on top. e.Graphics is the control's client-area surface — the same
+            // coordinate space that FromLatLngToLocal returns, so no offset ambiguity.
+            _map.Paint += OnMapPaint;
 
             _legendHost = new PictureBox
             {
@@ -175,7 +188,7 @@ namespace RateController.RateMap
         {
             if (!_enabled || _disposed) return;
 
-            ClearOverlays();
+            ClearBitmap();
 
             if (!string.IsNullOrEmpty(_elevationPath) && !System.IO.File.Exists(_elevationPath))
                 _readings = null;
@@ -221,47 +234,46 @@ namespace RateController.RateMap
                 bounds = (bounds.minLat - padLat, bounds.maxLat + padLat,
                           bounds.minLon - padLon, bounds.maxLon + padLon);
 
+                // Adaptive resolution — cell count capped at MaxCells regardless of field size.
                 double midLat = (bounds.minLat + bounds.maxLat) / 2.0;
                 double fieldH = Haversine(bounds.minLat, 0, bounds.maxLat, 0);
                 double fieldW = Haversine(midLat, bounds.minLon, midLat, bounds.maxLon);
-                // Resolution adapts so total cells never exceed MaxCells regardless of field size
-                double res  = Math.Max(1.0, Math.Sqrt(fieldH * fieldW / MaxCells));
-                int rows = Math.Max(2, (int)(fieldH / res));
-                int cols = Math.Max(2, (int)(fieldW / res));
+                double res    = Math.Max(1.0, Math.Sqrt(fieldH * fieldW / MaxCells));
+                int    rows   = Math.Max(2, (int)(fieldH / res));
+                int    cols   = Math.Max(2, (int)(fieldW / res));
 
+                // Build pixel array — row 0 in the grid = minLat (south) = bottom of bitmap,
+                // so flip vertically so the bitmap's top matches the map's north edge.
+                int[] pixels = new int[rows * cols];
                 for (int r = 0; r < rows; r++)
                 {
                     for (int c = 0; c < cols; c++)
                     {
-                        double lat1 = bounds.minLat + (r / (double)rows) * (bounds.maxLat - bounds.minLat);
-                        double lat2 = bounds.minLat + ((r + 1) / (double)rows) * (bounds.maxLat - bounds.minLat);
-                        double lon1 = bounds.minLon + (c / (double)cols) * (bounds.maxLon - bounds.minLon);
-                        double lon2 = bounds.minLon + ((c + 1) / (double)cols) * (bounds.maxLon - bounds.minLon);
+                        double lat = bounds.minLat + (r + 0.5) / rows * (bounds.maxLat - bounds.minLat);
+                        double lon = bounds.minLon + (c + 0.5) / cols * (bounds.maxLon - bounds.minLon);
 
-                        double elev = IDW((lat1 + lat2) / 2.0, (lon1 + lon2) / 2.0);
-
-                        double t = (elev - minElev) / (maxElev - minElev);
+                        double elev = IDW(lat, lon);
+                        double t    = (elev - minElev) / (maxElev - minElev);
                         t = Math.Max(0, Math.Min(1, t));
 
                         Color color = GetBandColor(t);
-
-                        var pts = new List<PointLatLng>
-                        {
-                            new PointLatLng(lat1, lon1),
-                            new PointLatLng(lat1, lon2),
-                            new PointLatLng(lat2, lon2),
-                            new PointLatLng(lat2, lon1)
-                        };
-
-                        _fillOverlay.Polygons.Add(new GMapPolygon(pts, "cell")
-                        {
-                            Fill   = new SolidBrush(Color.FromArgb(100, color)),
-                            Stroke = new Pen(Color.Transparent)
-                        });
+                        // Flip row: bitmap row 0 = north (maxLat) = top of screen
+                        pixels[(rows - 1 - r) * cols + c] = Color.FromArgb(100, color).ToArgb();
                     }
                 }
 
-                MapController.AddOverlay(_fillOverlay);
+                var bmp = new Bitmap(cols, rows, PixelFormat.Format32bppArgb);
+                var bmpData = bmp.LockBits(
+                    new Rectangle(0, 0, cols, rows),
+                    ImageLockMode.WriteOnly,
+                    PixelFormat.Format32bppArgb);
+                Marshal.Copy(pixels, 0, bmpData.Scan0, pixels.Length);
+                bmp.UnlockBits(bmpData);
+
+                _elevBitmap  = bmp;
+                _topLeft     = new PointLatLng(bounds.maxLat, bounds.minLon);   // NW corner
+                _bottomRight = new PointLatLng(bounds.minLat, bounds.maxLon);   // SE corner
+
                 ShowLegend(minElev, maxElev);
                 _map.Refresh();
             }
@@ -274,7 +286,7 @@ namespace RateController.RateMap
         public void Reset()
         {
             if (_disposed) return;
-            ClearOverlays();
+            ClearBitmap();
             HideLegend();
             _map.Refresh();
         }
@@ -284,7 +296,9 @@ namespace RateController.RateMap
             if (_disposed) return;
             try
             {
-                ClearOverlays();
+                _map.Paint -= OnMapPaint;
+
+                ClearBitmap();
                 HideLegend();
 
                 if (_legendHost != null)
@@ -294,14 +308,36 @@ namespace RateController.RateMap
                     _legendHost.Dispose();
                     _legendHost = null;
                 }
-
-                _fillOverlay.Dispose();
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("ElevationOverlayCreator/Dispose: " + ex.Message);
             }
             _disposed = true;
+        }
+
+        // ── Paint handler ────────────────────────────────────────────────────────
+
+        // Called by GMapControl after it has finished drawing tiles and overlays.
+        // e.Graphics is the control's client-area surface — same coordinate space
+        // as FromLatLngToLocal — so the rectangle computed here is always correct
+        // regardless of zoom or pan level.
+        private void OnMapPaint(object sender, PaintEventArgs e)
+        {
+            if (_elevBitmap == null) return;
+
+            var tl = _map.FromLatLngToLocal(_topLeft);
+            var br = _map.FromLatLngToLocal(_bottomRight);
+            int x = (int)tl.X;
+            int y = (int)tl.Y;
+            int w = (int)(br.X - tl.X);
+            int h = (int)(br.Y - tl.Y);
+            if (w <= 0 || h <= 0) return;
+
+            var oldInterp = e.Graphics.InterpolationMode;
+            e.Graphics.InterpolationMode = InterpolationMode.Bilinear;
+            e.Graphics.DrawImage(_elevBitmap, new Rectangle(x, y, w, h));
+            e.Graphics.InterpolationMode = oldInterp;
         }
 
         // ── Legend ───────────────────────────────────────────────────────────────
@@ -330,7 +366,6 @@ namespace RateController.RateMap
                 {
                     string title = string.Format("Elevation ({0})", unit);
 
-                    // Measure widths to size the bitmap
                     float maxLabelW = 0;
                     float titleW    = 0;
                     float titleH    = 0;
@@ -348,43 +383,42 @@ namespace RateController.RateMap
                         titleH = ts.Height;
                     }
 
-                    int contentW  = swatch + gap + (int)Math.Ceiling(maxLabelW);
-                    int bmpW      = Math.Max((int)Math.Ceiling(titleW) + leftMargin * 2,
-                                            leftMargin + contentW + rightMargin);
-                    int bmpH      = (int)Math.Ceiling(titleH) + titlePadding * 2
-                                    + ColorBands * itemHeight + leftMargin;
+                    int contentW = swatch + gap + (int)Math.Ceiling(maxLabelW);
+                    int bmpW     = Math.Max((int)Math.Ceiling(titleW) + leftMargin * 2,
+                                           leftMargin + contentW + rightMargin);
+                    int bmpH     = (int)Math.Ceiling(titleH) + titlePadding * 2
+                                   + ColorBands * itemHeight + leftMargin;
 
                     _legendBitmap?.Dispose();
                     _legendBitmap = new Bitmap(bmpW, bmpH);
 
                     using (var g = Graphics.FromImage(_legendBitmap))
                     {
-                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                        g.SmoothingMode = SmoothingMode.None;
                         g.FillRectangle(Brushes.Black, 0, 0, bmpW, bmpH);
 
-                        // Centred title
                         SizeF ts = g.MeasureString(title, titleFont);
                         g.DrawString(title, titleFont, Brushes.White,
                             (bmpW - ts.Width) / 2f, titlePadding);
 
-                        int itemsTop   = (int)Math.Ceiling(ts.Height) + titlePadding * 2;
-                        int anchorX    = Math.Max(leftMargin, (bmpW - contentW) / 2);
+                        int itemsTop = (int)Math.Ceiling(ts.Height) + titlePadding * 2;
+                        int anchorX  = Math.Max(leftMargin, (bmpW - contentW) / 2);
 
-                        // Bands — highest at top, lowest at bottom
+                        // Highest band at top, lowest at bottom
                         for (int i = ColorBands - 1; i >= 0; i--)
                         {
-                            int row   = ColorBands - 1 - i;
-                            int y     = itemsTop + row * itemHeight;
-                            Color c   = BandColors[i];
+                            int   row      = ColorBands - 1 - i;
+                            int   y        = itemsTop + row * itemHeight;
+                            Color c        = BandColors[i];
+                            int   swatchTop = y + (itemHeight - swatch) / 2;
 
-                            int swatchTop = y + (itemHeight - swatch) / 2;
-                            g.FillRectangle(new SolidBrush(c),  anchorX, swatchTop, swatch, swatch);
-                            g.DrawRectangle(Pens.White,          anchorX, swatchTop, swatch, swatch);
+                            g.FillRectangle(new SolidBrush(c), anchorX, swatchTop, swatch, swatch);
+                            g.DrawRectangle(Pens.White,         anchorX, swatchTop, swatch, swatch);
 
                             string lbl  = FormatBand(lo + i * step, lo + (i + 1) * step);
                             SizeF  ls   = g.MeasureString(lbl, font);
-                            float  textY = y + (itemHeight - ls.Height) / 2f;
-                            g.DrawString(lbl, font, Brushes.White, anchorX + swatch + gap, textY);
+                            g.DrawString(lbl, font, Brushes.White,
+                                anchorX + swatch + gap, y + (itemHeight - ls.Height) / 2f);
                         }
                     }
                 }
@@ -401,12 +435,6 @@ namespace RateController.RateMap
             }
         }
 
-        // Format a band range as integers (no decimal needed for elevation display)
-        private static string FormatBand(double lo, double hi)
-        {
-            return string.Format("{0} - {1}", (int)Math.Round(lo), (int)Math.Round(hi));
-        }
-
         private void HideLegend()
         {
             if (_legendHost != null) _legendHost.Visible = false;
@@ -416,10 +444,10 @@ namespace RateController.RateMap
 
         // ── Private helpers ──────────────────────────────────────────────────────
 
-        private void ClearOverlays()
+        private void ClearBitmap()
         {
-            MapController.RemoveOverlay(_fillOverlay);
-            _fillOverlay.Polygons.Clear();
+            _elevBitmap?.Dispose();
+            _elevBitmap = null;
         }
 
         private static List<FieldSample> FilterOutliers(List<FieldSample> src)
@@ -454,6 +482,11 @@ namespace RateController.RateMap
         {
             int band = (int)(t * ColorBands);
             return BandColors[Math.Min(band, BandColors.Length - 1)];
+        }
+
+        private static string FormatBand(double lo, double hi)
+        {
+            return string.Format("{0} - {1}", (int)Math.Round(lo), (int)Math.Round(hi));
         }
 
         private static (double minLat, double maxLat, double minLon, double maxLon) ComputeBounds(
