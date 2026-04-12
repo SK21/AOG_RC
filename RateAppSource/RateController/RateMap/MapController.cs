@@ -365,11 +365,13 @@ namespace RateController.RateMap
             {
                 cState = MapState.Preview;
                 legendManager.Hide();
+                ElevationCreator?.Reset();
             }
             else
             {
                 cState = MapState.Tracking;
                 legendManager.Show();
+                if (ElevationCreator?.Enabled == true) ElevationCreator.Build();
             }
         }
 

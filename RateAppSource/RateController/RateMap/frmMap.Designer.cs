@@ -102,6 +102,7 @@
             this.btnTimeOK = new System.Windows.Forms.Button();
             this.btnTimeCancel = new System.Windows.Forms.Button();
             this.tabFiles = new System.Windows.Forms.TabPage();
+            this.cbKML = new System.Windows.Forms.ComboBox();
             this.btnDeleteElevation = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.btnDeleteKML = new System.Windows.Forms.Button();
@@ -131,7 +132,6 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.tbLat = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
-            this.cbKML = new System.Windows.Forms.ComboBox();
             this.pnlControls.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -1063,6 +1063,16 @@
             this.tabFiles.Text = "Files";
             this.tabFiles.UseVisualStyleBackColor = true;
             // 
+            // cbKML
+            // 
+            this.cbKML.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbKML.FormattingEnabled = true;
+            this.cbKML.Location = new System.Drawing.Point(126, 264);
+            this.cbKML.Name = "cbKML";
+            this.cbKML.Size = new System.Drawing.Size(287, 32);
+            this.cbKML.TabIndex = 430;
+            this.cbKML.SelectedIndexChanged += new System.EventHandler(this.cbKML_SelectedIndexChanged);
+            // 
             // btnDeleteElevation
             // 
             this.btnDeleteElevation.FlatAppearance.BorderSize = 0;
@@ -1208,9 +1218,9 @@
             this.btnRestoreElevation.UseVisualStyleBackColor = true;
             this.btnRestoreElevation.Visible = false;
             this.btnRestoreElevation.Click += new System.EventHandler(this.btnRestoreElevation_Click);
-            //
+            // 
             // btnGenerateTestElevation
-            //
+            // 
             this.btnGenerateTestElevation.FlatAppearance.BorderSize = 0;
             this.btnGenerateTestElevation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGenerateTestElevation.Location = new System.Drawing.Point(123, 225);
@@ -1220,7 +1230,7 @@
             this.btnGenerateTestElevation.Text = "Generate Test Elevation";
             this.btnGenerateTestElevation.UseVisualStyleBackColor = true;
             this.btnGenerateTestElevation.Click += new System.EventHandler(this.btnGenerateTestElevation_Click);
-            //
+            // 
             // pnlTabs
             // 
             this.pnlTabs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -1428,16 +1438,6 @@
             this.btnClose.TabIndex = 386;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // cbKML
-            // 
-            this.cbKML.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbKML.FormattingEnabled = true;
-            this.cbKML.Location = new System.Drawing.Point(126, 264);
-            this.cbKML.Name = "cbKML";
-            this.cbKML.Size = new System.Drawing.Size(287, 32);
-            this.cbKML.TabIndex = 430;
-            this.cbKML.SelectedIndexChanged += new System.EventHandler(this.cbKML_SelectedIndexChanged);
             // 
             // frmMap
             // 
