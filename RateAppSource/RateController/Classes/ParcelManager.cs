@@ -11,6 +11,7 @@ namespace RateController.Classes
         private static readonly string FilePath = Props.FieldNamesPath;
 
         public static event EventHandler YieldSelectionChanged;
+        public static event EventHandler ElevationSelectionChanged;
 
         public static void AddParcel(Parcel NewParcel)
         {
@@ -63,13 +64,71 @@ namespace RateController.Classes
             }
             return false;
         }
-        public static List<string> GetKmlFiles(int id) => GetFilenames(KmlFolder(id), "*.kml");
+        public static string EcFolder(int id) => Path.Combine(FieldFolder(id), "EC");
         public static string ElevationFolder(int id) => Path.Combine(FieldFolder(id), "Elevation");
+        public static string NviFolder(int id) => Path.Combine(FieldFolder(id), "NVI");
+        public static List<string> GetKmlFiles(int id) => GetFilenames(KmlFolder(id), "*.kml");
+        public static List<string> GetElevationFiles(int id) => GetFilenames(ElevationFolder(id), "*.csv");
+        public static List<string> GetEcFiles(int id) => GetFilenames(EcFolder(id), "*.csv");
+        public static List<string> GetNviFiles(int id) => GetFilenames(NviFolder(id), "*.csv");
 
-        public static string ElevationPath(int id)
+        // Backward-compat shim — returns the currently selected elevation path.
+        public static string ElevationPath(int id) => SelectedElevationPath(id);
+
+        public static string SelectedElevationPath(int fieldID)
         {
-            string path = Path.Combine(ElevationFolder(id), "Elevation.csv");
-            return File.Exists(path) ? path : null;
+            Parcel p = SearchParcel(fieldID);
+            string file = p?.SelectedElevationFile;
+            if (file == null) return null;
+            string full = Path.Combine(ElevationFolder(fieldID), file);
+            return File.Exists(full) ? full : null;
+        }
+
+        public static void SetSelectedElevationPath(int fieldID, string path)
+        {
+            string file = path != null ? Path.GetFileName(path) : null;
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
+            if (p != null)
+            {
+                p.SelectedElevationFile = file;
+                SaveParcels(parcels);
+            }
+            ElevationSelectionChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static string SelectedEcPath(int fieldID)
+        {
+            Parcel p = SearchParcel(fieldID);
+            string file = p?.SelectedEcFile;
+            if (file == null) return null;
+            string full = Path.Combine(EcFolder(fieldID), file);
+            return File.Exists(full) ? full : null;
+        }
+
+        public static void SetSelectedEcPath(int fieldID, string path)
+        {
+            string file = path != null ? Path.GetFileName(path) : null;
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
+            if (p != null) { p.SelectedEcFile = file; SaveParcels(parcels); }
+        }
+
+        public static string SelectedNviPath(int fieldID)
+        {
+            Parcel p = SearchParcel(fieldID);
+            string file = p?.SelectedNviFile;
+            if (file == null) return null;
+            string full = Path.Combine(NviFolder(fieldID), file);
+            return File.Exists(full) ? full : null;
+        }
+
+        public static void SetSelectedNviPath(int fieldID, string path)
+        {
+            string file = path != null ? Path.GetFileName(path) : null;
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
+            if (p != null) { p.SelectedNviFile = file; SaveParcels(parcels); }
         }
 
         public static void EnsureFieldFolders(int id)
@@ -77,7 +136,7 @@ namespace RateController.Classes
             foreach (string dir in new[]
             {
                 FieldFolder(id), MapsFolder(id), YieldFolder(id),
-                ElevationFolder(id), KmlFolder(id)
+                ElevationFolder(id), KmlFolder(id), EcFolder(id), NviFolder(id)
             })
             {
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -198,5 +257,8 @@ namespace RateController.Classes
         public int ID { get; set; }
         public string Name { get; set; }
         public string SelectedYieldFile { get; set; }
+        public string SelectedElevationFile { get; set; }
+        public string SelectedEcFile { get; set; }
+        public string SelectedNviFile { get; set; }
     }
 }

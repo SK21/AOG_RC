@@ -104,8 +104,8 @@
             this.tabFiles = new System.Windows.Forms.TabPage();
             this.cbKML = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.btnDeleteKML = new System.Windows.Forms.Button();
-            this.btnImportKML = new System.Windows.Forms.Button();
+            this.btnFileDelete = new System.Windows.Forms.Button();
+            this.btnFileImport = new System.Windows.Forms.Button();
             this.lbYieldLabel = new System.Windows.Forms.Label();
             this.cbYield = new System.Windows.Forms.ComboBox();
             this.btnGenerateTestYield = new System.Windows.Forms.Button();
@@ -1051,8 +1051,8 @@
             this.tabFiles.Controls.Add(this.btnGenerateTestElevation);
             this.tabFiles.Controls.Add(this.cbKML);
             this.tabFiles.Controls.Add(this.label12);
-            this.tabFiles.Controls.Add(this.btnDeleteKML);
-            this.tabFiles.Controls.Add(this.btnImportKML);
+            this.tabFiles.Controls.Add(this.btnFileDelete);
+            this.tabFiles.Controls.Add(this.btnFileImport);
             this.tabFiles.Controls.Add(this.lbYieldLabel);
             this.tabFiles.Controls.Add(this.cbYield);
             this.tabFiles.Controls.Add(this.lbElevationLabel);
@@ -1073,6 +1073,7 @@
             this.cbKML.Name = "cbKML";
             this.cbKML.Size = new System.Drawing.Size(287, 32);
             this.cbKML.TabIndex = 430;
+            this.cbKML.Enter += new System.EventHandler(this.cbKML_Enter);
             this.cbKML.SelectedIndexChanged += new System.EventHandler(this.cbKML_SelectedIndexChanged);
             // 
             // label12
@@ -1084,35 +1085,37 @@
             this.label12.Text = "KML:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnDeleteKML
+            // btnDelete
             // 
-            this.btnDeleteKML.BackColor = System.Drawing.Color.Transparent;
-            this.btnDeleteKML.FlatAppearance.BorderSize = 0;
-            this.btnDeleteKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteKML.Image = global::RateController.Properties.Resources.trash32;
-            this.btnDeleteKML.Location = new System.Drawing.Point(130, 419);
-            this.btnDeleteKML.Name = "btnDeleteKML";
-            this.btnDeleteKML.Size = new System.Drawing.Size(82, 45);
-            this.btnDeleteKML.TabIndex = 426;
-            this.btnDeleteKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnDeleteKML.UseVisualStyleBackColor = false;
-            this.btnDeleteKML.Click += new System.EventHandler(this.btnDeleteKML_Click);
+            this.btnFileDelete.BackColor = System.Drawing.Color.Transparent;
+            this.btnFileDelete.FlatAppearance.BorderSize = 0;
+            this.btnFileDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFileDelete.Image = global::RateController.Properties.Resources.trash32;
+            this.btnFileDelete.Location = new System.Drawing.Point(130, 419);
+            this.btnFileDelete.Name = "btnFileDelete";
+            this.btnFileDelete.Size = new System.Drawing.Size(82, 45);
+            this.btnFileDelete.TabIndex = 426;
+            this.btnFileDelete.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnFileDelete.Enabled = false;
+            this.btnFileDelete.UseVisualStyleBackColor = false;
+            this.btnFileDelete.Click += new System.EventHandler(this.btnFileDelete_Click);
             // 
-            // btnImportKML
+            // btnImport
             // 
-            this.btnImportKML.BackColor = System.Drawing.Color.Transparent;
-            this.btnImportKML.FlatAppearance.BorderSize = 0;
-            this.btnImportKML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnImportKML.Image = global::RateController.Properties.Resources.folder_open_small;
-            this.btnImportKML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnImportKML.Location = new System.Drawing.Point(10, 419);
-            this.btnImportKML.Name = "btnImportKML";
-            this.btnImportKML.Size = new System.Drawing.Size(114, 45);
-            this.btnImportKML.TabIndex = 425;
-            this.btnImportKML.Text = "Import";
-            this.btnImportKML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnImportKML.UseVisualStyleBackColor = false;
-            this.btnImportKML.Click += new System.EventHandler(this.btnImportKML_Click);
+            this.btnFileImport.BackColor = System.Drawing.Color.Transparent;
+            this.btnFileImport.FlatAppearance.BorderSize = 0;
+            this.btnFileImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFileImport.Image = global::RateController.Properties.Resources.folder_open_small;
+            this.btnFileImport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFileImport.Location = new System.Drawing.Point(10, 419);
+            this.btnFileImport.Name = "btnFileImport";
+            this.btnFileImport.Size = new System.Drawing.Size(114, 45);
+            this.btnFileImport.TabIndex = 425;
+            this.btnFileImport.Text = "Import";
+            this.btnFileImport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnFileImport.Enabled = false;
+            this.btnFileImport.UseVisualStyleBackColor = false;
+            this.btnFileImport.Click += new System.EventHandler(this.btnFileImport_Click);
             // 
             // lbYieldLabel
             // 
@@ -1131,6 +1134,7 @@
             this.cbYield.Name = "cbYield";
             this.cbYield.Size = new System.Drawing.Size(287, 32);
             this.cbYield.TabIndex = 415;
+            this.cbYield.Enter += new System.EventHandler(this.cbYield_Enter);
             this.cbYield.SelectedIndexChanged += new System.EventHandler(this.cbYield_SelectedIndexChanged);
             // 
             // btnGenerateTestYield
@@ -1378,7 +1382,9 @@
             this.cbEC.Name = "cbEC";
             this.cbEC.Size = new System.Drawing.Size(287, 32);
             this.cbEC.TabIndex = 434;
-            // 
+            this.cbEC.Enter += new System.EventHandler(this.cbEC_Enter);
+            this.cbEC.SelectedIndexChanged += new System.EventHandler(this.cbEC_SelectedIndexChanged);
+            //
             // label4
             // 
             this.label4.Location = new System.Drawing.Point(6, 275);
@@ -1405,7 +1411,9 @@
             this.cbNVI.Name = "cbNVI";
             this.cbNVI.Size = new System.Drawing.Size(287, 32);
             this.cbNVI.TabIndex = 432;
-            // 
+            this.cbNVI.Enter += new System.EventHandler(this.cbNVI_Enter);
+            this.cbNVI.SelectedIndexChanged += new System.EventHandler(this.cbNVI_SelectedIndexChanged);
+            //
             // cbElevation
             // 
             this.cbElevation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1414,7 +1422,9 @@
             this.cbElevation.Name = "cbElevation";
             this.cbElevation.Size = new System.Drawing.Size(287, 32);
             this.cbElevation.TabIndex = 435;
-            // 
+            this.cbElevation.Enter += new System.EventHandler(this.cbElevation_Enter);
+            this.cbElevation.SelectedIndexChanged += new System.EventHandler(this.cbElevation_SelectedIndexChanged);
+            //
             // frmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -1543,8 +1553,8 @@
         private System.Windows.Forms.Button btnExportRx;
         private System.Windows.Forms.Button btnImportRx;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button btnDeleteKML;
-        private System.Windows.Forms.Button btnImportKML;
+        private System.Windows.Forms.Button btnFileDelete;
+        private System.Windows.Forms.Button btnFileImport;
         private System.Windows.Forms.Button btnGenerateTestElevation;
         private System.Windows.Forms.ListBox lbRx;
         private System.Windows.Forms.ComboBox cbKML;

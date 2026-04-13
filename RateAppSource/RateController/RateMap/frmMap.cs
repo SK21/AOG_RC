@@ -14,6 +14,9 @@ namespace RateController.Forms
 {
     public partial class frmMap : Form
     {
+        private enum FileTabType { None, KML, Yield, Elevation, EC, NVI }
+        private FileTabType _activeFileType = FileTabType.None;
+
         private const double BASE_PAN_DISTANCE_MILES = 2;
         private bool EditInProgress = false;
         private bool Initializing = true;
@@ -170,72 +173,175 @@ namespace RateController.Forms
             }
         }
 
-        private void btnDeleteElevation_Click(object sender, EventArgs e)
+        private void DeleteKml()
         {
             try
             {
                 Job JB = JobManager.CurrentJob;
-                if (JB != null && JB.FieldID >= 0)
+                if (JB == null || JB.FieldID < 0) return;
+                string sel = cbKML.SelectedItem as string;
+                if (sel == null || sel == "(none)") return;
+                using (var mb = new frmMsgBox("Confirm Delete?", "Delete KML", true))
                 {
-                    string ElevPath = Path.Combine(ParcelManager.ElevationFolder(JB.FieldID), "Elevation.csv");
-                    if (File.Exists(ElevPath))
+                    mb.ShowDialog();
+                    if (!mb.Result) return;
+                }
+                if (sel == JB.ActiveKMLfile)
+                {
+                    JobManager.SetActiveKMLfile(JB.ID, null);
+                    MapController.ShowActiveKMLlayer(null);
+                }
+                string path = Path.Combine(ParcelManager.KmlFolder(JB.FieldID), sel);
+                if (Props.IsPathSafe(path)) File.Delete(path);
+                UpdateFilesPanel();
+            }
+            catch (Exception ex) { Props.WriteErrorLog("frmMap/DeleteKml: " + ex.Message); }
+        }
+
+        private void ImportElevation()
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                using (var dlg = new OpenFileDialog { Title = "Import Elevation File", Filter = "CSV files (*.csv)|*.csv", CheckFileExists = true })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+                    ParcelManager.EnsureFieldFolders(job.FieldID);
+                    string destFolder = ParcelManager.ElevationFolder(job.FieldID);
+                    string destPath = Path.Combine(destFolder, Path.GetFileName(dlg.FileName));
+                    if (File.Exists(destPath))
                     {
-                        var MB = new frmMsgBox("Confirm Delete?", "Delete Elevation", true);
-                        MB.ShowDialog();
-                        bool Result = MB.Result;
-                        MB.Close();
-                        if (Result)
+                        using (var confirm = new frmMsgBox($"'{Path.GetFileName(destPath)}' already exists. Overwrite?", "Import Elevation", true))
                         {
-                            if (Props.IsPathSafe(ElevPath))
-                            {
-                                File.Delete(ElevPath);
-                                string EP = ParcelManager.ElevationPath(JB.FieldID);
-                                if (EP != null) MapController.ElevationCreator.LoadElevationFile(EP);
-                                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                                UpdateFilesPanel();
-                            }
+                            confirm.ShowDialog();
+                            if (!confirm.Result) return;
                         }
                     }
+                    File.Copy(dlg.FileName, destPath, true);
+                    ParcelManager.SetSelectedElevationPath(job.FieldID, destPath);
+                    MapController.ElevationCreator.LoadElevationFile(destPath);
+                    if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                    UpdateFilesPanel();
                 }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("frmMap/btnDeleteElevation_Click: " + ex.Message);
-                Props.ShowMessage("Error deleting elevation: " + ex.Message);
+                Props.WriteErrorLog("frmMap/ImportElevation: " + ex.Message);
+                Props.ShowMessage("Error importing elevation: " + ex.Message, "Import Elevation", 8000, true);
             }
         }
 
-        private void btnDeleteKML_Click(object sender, EventArgs e)
+        private void DeleteElevation()
         {
             try
             {
-                Job JB = JobManager.CurrentJob;
-                Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
-                string sel = cbKML.SelectedItem.ToString();
-                if (parcel != null && sel != null && sel != "(none)")
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                string sel = cbElevation.SelectedItem as string;
+                if (sel == null || sel == "(none)") return;
+                using (var mb = new frmMsgBox("Confirm Delete?", "Delete Elevation", true))
                 {
-                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
-                    MB.ShowDialog();
-                    bool Result = MB.Result;
-                    MB.Close();
-                    if (Result)
-                    {
-                        if (sel == JB.ActiveKMLfile)
-                        {
-                            JobManager.SetActiveKMLfile(JB.ID, null);
-                            MapController.ShowActiveKMLlayer(null);
-                        }
-                        string Folder = ParcelManager.KmlFolder(JB.FieldID);
-                        sel = Path.Combine(Folder, sel);
-                        if (Props.IsPathSafe(sel)) File.Delete(sel);
-                        UpdateFilesPanel();
-                    }
+                    mb.ShowDialog();
+                    if (!mb.Result) return;
                 }
+                string path = Path.Combine(ParcelManager.ElevationFolder(job.FieldID), sel);
+                if (!Props.IsPathSafe(path)) return;
+                string selected = ParcelManager.SelectedElevationPath(job.FieldID);
+                if (selected != null && string.Equals(Path.GetFileName(selected), sel, StringComparison.OrdinalIgnoreCase))
+                    ParcelManager.SetSelectedElevationPath(job.FieldID, null);
+                File.Delete(path);
+                MapController.ElevationCreator.LoadElevationFile(ParcelManager.ElevationPath(job.FieldID));
+                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+                UpdateFilesPanel();
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("frmMaps/btnDeleteKML_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMap/DeleteElevation: " + ex.Message);
+                Props.ShowMessage("Error deleting elevation: " + ex.Message, "Delete Elevation", 8000, true);
             }
+        }
+
+        private void ImportEC()
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                using (var dlg = new OpenFileDialog { Title = "Import EC File", Filter = "CSV files (*.csv)|*.csv", CheckFileExists = true })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+                    ParcelManager.EnsureFieldFolders(job.FieldID);
+                    string destPath = Path.Combine(ParcelManager.EcFolder(job.FieldID), Path.GetFileName(dlg.FileName));
+                    if (File.Exists(destPath))
+                    {
+                        using (var confirm = new frmMsgBox($"'{Path.GetFileName(destPath)}' already exists. Overwrite?", "Import EC", true))
+                        { confirm.ShowDialog(); if (!confirm.Result) return; }
+                    }
+                    File.Copy(dlg.FileName, destPath, true);
+                    ParcelManager.SetSelectedEcPath(job.FieldID, destPath);
+                    UpdateFilesPanel();
+                }
+            }
+            catch (Exception ex) { Props.WriteErrorLog("frmMap/ImportEC: " + ex.Message); }
+        }
+
+        private void DeleteEC()
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                string sel = cbEC.SelectedItem as string;
+                if (sel == null || sel == "(none)") return;
+                using (var mb = new frmMsgBox("Confirm Delete?", "Delete EC", true)) { mb.ShowDialog(); if (!mb.Result) return; }
+                string path = Path.Combine(ParcelManager.EcFolder(job.FieldID), sel);
+                if (Props.IsPathSafe(path)) File.Delete(path);
+                ParcelManager.SetSelectedEcPath(job.FieldID, null);
+                UpdateFilesPanel();
+            }
+            catch (Exception ex) { Props.WriteErrorLog("frmMap/DeleteEC: " + ex.Message); }
+        }
+
+        private void ImportNVI()
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                using (var dlg = new OpenFileDialog { Title = "Import NVI File", Filter = "CSV files (*.csv)|*.csv", CheckFileExists = true })
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK) return;
+                    ParcelManager.EnsureFieldFolders(job.FieldID);
+                    string destPath = Path.Combine(ParcelManager.NviFolder(job.FieldID), Path.GetFileName(dlg.FileName));
+                    if (File.Exists(destPath))
+                    {
+                        using (var confirm = new frmMsgBox($"'{Path.GetFileName(destPath)}' already exists. Overwrite?", "Import NVI", true))
+                        { confirm.ShowDialog(); if (!confirm.Result) return; }
+                    }
+                    File.Copy(dlg.FileName, destPath, true);
+                    ParcelManager.SetSelectedNviPath(job.FieldID, destPath);
+                    UpdateFilesPanel();
+                }
+            }
+            catch (Exception ex) { Props.WriteErrorLog("frmMap/ImportNVI: " + ex.Message); }
+        }
+
+        private void DeleteNVI()
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                string sel = cbNVI.SelectedItem as string;
+                if (sel == null || sel == "(none)") return;
+                using (var mb = new frmMsgBox("Confirm Delete?", "Delete NVI", true)) { mb.ShowDialog(); if (!mb.Result) return; }
+                string path = Path.Combine(ParcelManager.NviFolder(job.FieldID), sel);
+                if (Props.IsPathSafe(path)) File.Delete(path);
+                ParcelManager.SetSelectedNviPath(job.FieldID, null);
+                UpdateFilesPanel();
+            }
+            catch (Exception ex) { Props.WriteErrorLog("frmMap/DeleteNVI: " + ex.Message); }
         }
 
         private void btnDeleteRx_Click(object sender, EventArgs e)
@@ -282,41 +388,29 @@ namespace RateController.Forms
             }
         }
 
-        private void btnDeleteYield_Click(object sender, EventArgs e)
+        private void DeleteYield()
         {
             try
             {
-                Job JB = JobManager.CurrentJob;
-                Parcel parcel = JB != null && JB.FieldID >= 0 ? ParcelManager.SearchParcel(JB.FieldID) : null;
-                string YD = cbYield.SelectedItem?.ToString();
-                if (parcel != null && YD != null && YD != "(none)")
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+                string sel = cbYield.SelectedItem as string;
+                if (sel == null || sel == "(none)") return;
+                using (var mb = new frmMsgBox("Confirm Delete?", "Delete Yield", true))
                 {
-                    var MB = new frmMsgBox("Confirm Delete?", "Help", true);
-                    MB.ShowDialog();
-                    bool Result = MB.Result;
-                    MB.Close();
-                    if (Result)
-                    {
-                        string currentPath = ParcelManager.SelectedYieldPath(JB.FieldID);
-                        if (currentPath != null && YD == Path.GetFileName(currentPath))
-                        {
-                            ParcelManager.SetSelectedYieldPath(JB.FieldID, null);
-                        }
-
-                        string Folder = ParcelManager.YieldFolder(JB.FieldID);
-                        YD = Path.Combine(Folder, YD);
-                        if (Props.IsPathSafe(YD)) File.Delete(YD);
-                        UpdateFilesPanel();
-
-                        MapController.YieldCreator.LoadData();
-                        if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
-                    }
+                    mb.ShowDialog();
+                    if (!mb.Result) return;
                 }
+                string currentPath = ParcelManager.SelectedYieldPath(job.FieldID);
+                if (currentPath != null && string.Equals(Path.GetFileName(currentPath), sel, StringComparison.OrdinalIgnoreCase))
+                    ParcelManager.SetSelectedYieldPath(job.FieldID, null);
+                string path = Path.Combine(ParcelManager.YieldFolder(job.FieldID), sel);
+                if (Props.IsPathSafe(path)) File.Delete(path);
+                UpdateFilesPanel();
+                MapController.YieldCreator.LoadData();
+                if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
             }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnDeleteYield_Click: " + ex.Message);
-            }
+            catch (Exception ex) { Props.WriteErrorLog("frmMap/DeleteYield: " + ex.Message); }
         }
 
         private void btnExportRx_Click(object sender, EventArgs e)
@@ -384,52 +478,61 @@ namespace RateController.Forms
             }
         }
 
-        private void btnImportElevation_Click(object sender, EventArgs e)
+        // ── Shared Import / Delete buttons ───────────────────────────────────────
+
+        private void SetActiveFileType(FileTabType type)
         {
-            try
+            _activeFileType = type;
+            btnFileImport.Enabled = true;
+            btnFileDelete.Enabled = true;
+        }
+
+        private void btnFileImport_Click(object sender, EventArgs e)
+        {
+            switch (_activeFileType)
             {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                using (var dlg = new OpenFileDialog
-                {
-                    Title = "Import Elevation File",
-                    Filter = "CSV files (*.csv)|*.csv",
-                    CheckFileExists = true
-                })
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK) return;
-                    ParcelManager.EnsureFieldFolders(job.FieldID);
-                    string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
-                    string elevPath = Path.Combine(elevFolder, "Elevation.csv");
-                    string bakPath = Path.Combine(elevFolder, "Elevation.bak");
-                    if (File.Exists(elevPath)) File.Copy(elevPath, bakPath, true);
-                    File.Copy(dlg.FileName, elevPath, true);
-                    string ep = ParcelManager.ElevationPath(job.FieldID);
-                    if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
-                    if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                    UpdateFilesPanel();
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnImportElevation_Click: " + ex.Message);
-                Props.ShowMessage("Error importing elevation: " + ex.Message, "Import Elevation", 8000, true);
+                case FileTabType.KML:       ImportKml();       break;
+                case FileTabType.Yield:     ImportYield();     break;
+                case FileTabType.Elevation: ImportElevation(); break;
+                case FileTabType.EC:        ImportEC();        break;
+                case FileTabType.NVI:       ImportNVI();       break;
             }
         }
 
-        private void btnImportKML_Click(object sender, EventArgs e)
+        private void btnFileDelete_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog { Title = "Open KML file.", Filter = "Shapefiles (*.kml)|*.kml" })
+            switch (_activeFileType)
+            {
+                case FileTabType.KML:       DeleteKml();       break;
+                case FileTabType.Yield:     DeleteYield();     break;
+                case FileTabType.Elevation: DeleteElevation(); break;
+                case FileTabType.EC:        DeleteEC();        break;
+                case FileTabType.NVI:       DeleteNVI();       break;
+            }
+        }
+
+        // ── Combobox Enter handlers (activate buttons) ────────────────────────
+
+        private void cbKML_Enter(object sender, EventArgs e)       => SetActiveFileType(FileTabType.KML);
+        private void cbYield_Enter(object sender, EventArgs e)     => SetActiveFileType(FileTabType.Yield);
+        private void cbElevation_Enter(object sender, EventArgs e) => SetActiveFileType(FileTabType.Elevation);
+        private void cbEC_Enter(object sender, EventArgs e)        => SetActiveFileType(FileTabType.EC);
+        private void cbNVI_Enter(object sender, EventArgs e)       => SetActiveFileType(FileTabType.NVI);
+
+        // ── Import helpers ────────────────────────────────────────────────────
+
+        private void ImportKml()
+        {
+            using (var ofd = new OpenFileDialog { Title = "Open KML file.", Filter = "KML files (*.kml)|*.kml" })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    string FileName = ofd.FileName;
-                    if (MapController.AddKmlLayer(FileName))
+                    if (MapController.AddKmlLayer(ofd.FileName))
                     {
                         Job JB = JobManager.CurrentJob;
-                        if (JB != null) JobManager.SetActiveKMLfile(JB.ID, Path.GetFileName(FileName));
+                        if (JB != null) JobManager.SetActiveKMLfile(JB.ID, Path.GetFileName(ofd.FileName));
                         UpdateFilesPanel();
-                        ckKML.Checked = true; // reflect visible state
+                        ckKML.Checked = true;
                     }
                 }
             }
@@ -450,7 +553,7 @@ namespace RateController.Forms
             UpdateForm();
         }
 
-        private void btnImportYield_Click(object sender, EventArgs e)
+        private void ImportYield()
         {
             try
             {
@@ -539,7 +642,7 @@ namespace RateController.Forms
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("frmMap/btnImportYield_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMap/ImportYield: " + ex.Message);
                 Props.ShowMessage("Error importing yield: " + ex.Message, "Import Yield", 8000, true);
             }
         }
@@ -628,31 +731,6 @@ namespace RateController.Forms
                         break;
                 }
                 Props.ShowMessage(Message);
-            }
-        }
-
-        private void btnRestoreElevation_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                string elevFolder = ParcelManager.ElevationFolder(job.FieldID);
-                string elevPath = Path.Combine(elevFolder, "Elevation.csv");
-                string bakPath = Path.Combine(elevFolder, "Elevation.bak");
-                if (!File.Exists(bakPath)) return;
-                if (File.Exists(elevPath))
-                    File.Delete(elevPath);
-                File.Move(bakPath, elevPath);
-                string ep = ParcelManager.ElevationPath(job.FieldID);
-                if (ep != null) MapController.ElevationCreator.LoadElevationFile(ep);
-                if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
-                UpdateFilesPanel();
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("frmMap/btnRestoreElevation_Click: " + ex.Message);
-                Props.ShowMessage("Error restoring elevation: " + ex.Message, "Restore Elevation", 8000, true);
             }
         }
 
@@ -796,37 +874,69 @@ namespace RateController.Forms
             MapController.Map.Zoom -= 1;
         }
 
-        private void cbKML_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!Initializing)
-            {
-                Job JB = JobManager.CurrentJob;
-                if (JB != null && JB.FieldID >= 0)
-                {
-                    string sel = cbKML.SelectedItem as string;
-                    JobManager.SetActiveKMLfile(JB.ID, sel == "(none)" ? null : sel);
-                    MapController.ShowActiveKMLlayer(sel == "(none)" ? null : sel);
-                }
-            }
-        }
-
         private void cbYield_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Initializing) return;
+            SetActiveFileType(FileTabType.Yield);
             Job job = JobManager.CurrentJob;
             if (job == null || job.FieldID < 0) return;
             string sel = cbYield.SelectedItem as string;
-            if (sel == null || sel == "(none)")
-            {
-                ParcelManager.SetSelectedYieldPath(job.FieldID, null);
-            }
-            else
-            {
-                ParcelManager.SetSelectedYieldPath(job.FieldID, sel);
-            }
+            ParcelManager.SetSelectedYieldPath(job.FieldID, (sel == null || sel == "(none)") ? null : sel);
             MapController.YieldCreator.LoadData();
             if (MapController.YieldCreator.Enabled) MapController.YieldCreator.Build();
             UpdateFilesPanel();
+        }
+
+        private void cbElevation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            SetActiveFileType(FileTabType.Elevation);
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbElevation.SelectedItem as string;
+            string path = (sel == null || sel == "(none)")
+                ? null
+                : Path.Combine(ParcelManager.ElevationFolder(job.FieldID), sel);
+            ParcelManager.SetSelectedElevationPath(job.FieldID, path);
+            MapController.ElevationCreator.LoadElevationFile(path);
+            if (MapController.ElevationCreator.Enabled) MapController.ElevationCreator.Build();
+        }
+
+        private void cbEC_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            SetActiveFileType(FileTabType.EC);
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbEC.SelectedItem as string;
+            ParcelManager.SetSelectedEcPath(job.FieldID,
+                (sel == null || sel == "(none)") ? null
+                : Path.Combine(ParcelManager.EcFolder(job.FieldID), sel));
+        }
+
+        private void cbNVI_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            SetActiveFileType(FileTabType.NVI);
+            Job job = JobManager.CurrentJob;
+            if (job == null || job.FieldID < 0) return;
+            string sel = cbNVI.SelectedItem as string;
+            ParcelManager.SetSelectedNviPath(job.FieldID,
+                (sel == null || sel == "(none)") ? null
+                : Path.Combine(ParcelManager.NviFolder(job.FieldID), sel));
+        }
+
+        private void cbKML_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Initializing) return;
+            SetActiveFileType(FileTabType.KML);
+            Job JB = JobManager.CurrentJob;
+            if (JB != null && JB.FieldID >= 0)
+            {
+                string sel = cbKML.SelectedItem as string;
+                JobManager.SetActiveKMLfile(JB.ID, sel == "(none)" ? null : sel);
+                MapController.ShowActiveKMLlayer(sel == "(none)" ? null : sel);
+            }
         }
 
         private void ChangeMapSize()
@@ -1726,34 +1836,49 @@ namespace RateController.Forms
                     cbYield.SelectedIndex = 0;
                 }
 
-                // Elevation label — show filename + quality summary if data is loaded
-                string elevPath = ParcelManager.ElevationPath(job.FieldID);
-                if (elevPath != null)
+                // Elevation dropdown
+                cbElevation.Items.Clear();
+                cbElevation.Items.Add("(none)");
+                if (parcel != null)
                 {
-                    string quality = MapController.ElevationCreator?.GetQualitySummary();
-                    lbElevationFile.Text = string.IsNullOrEmpty(quality)
-                        ? Path.GetFileName(elevPath)
-                        : quality;
+                    foreach (string f in ParcelManager.GetElevationFiles(job.FieldID))
+                        cbElevation.Items.Add(f);
+                    string ep = ParcelManager.SelectedElevationPath(job.FieldID);
+                    cbElevation.SelectedItem = (ep != null ? Path.GetFileName(ep) : null) ?? "(none)";
                 }
-                else
+                else { cbElevation.SelectedIndex = 0; }
+
+                // EC dropdown
+                cbEC.Items.Clear();
+                cbEC.Items.Add("(none)");
+                if (parcel != null)
                 {
-                    lbElevationFile.Text = "None";
+                    foreach (string f in ParcelManager.GetEcFiles(job.FieldID))
+                        cbEC.Items.Add(f);
+                    string ep = ParcelManager.SelectedEcPath(job.FieldID);
+                    cbEC.SelectedItem = (ep != null ? Path.GetFileName(ep) : null) ?? "(none)";
                 }
+                else { cbEC.SelectedIndex = 0; }
 
-                // Restore button visibility
-                string bakPath = parcel != null
-                    ? Path.Combine(ParcelManager.ElevationFolder(job.FieldID), "Elevation.bak") : null;
-                btnRestoreElevation.Visible = bakPath != null && File.Exists(bakPath);
+                // NVI dropdown
+                cbNVI.Items.Clear();
+                cbNVI.Items.Add("(none)");
+                if (parcel != null)
+                {
+                    foreach (string f in ParcelManager.GetNviFiles(job.FieldID))
+                        cbNVI.Items.Add(f);
+                    string ep = ParcelManager.SelectedNviPath(job.FieldID);
+                    cbNVI.SelectedItem = (ep != null ? Path.GetFileName(ep) : null) ?? "(none)";
+                }
+                else { cbNVI.SelectedIndex = 0; }
 
-                // KML
+                // KML dropdown
                 cbKML.Items.Clear();
                 cbKML.Items.Add("(none)");
                 if (parcel != null)
                 {
                     foreach (string k in ParcelManager.GetKmlFiles(job.FieldID))
-                    {
                         cbKML.Items.Add(k);
-                    }
                     cbKML.SelectedItem = job.ActiveKMLfile ?? "(none)";
                 }
             }
