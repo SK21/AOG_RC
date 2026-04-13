@@ -29,11 +29,10 @@ namespace RateController
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHelp));
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer1 = new System.Windows.Forms.Timer();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,6 +75,7 @@ namespace RateController
             this.Name = "frmHelp";
             this.ShowInTaskbar = false;
             this.Text = "Help";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmHelp_FormClosing);
             this.Load += new System.EventHandler(this.frmHelp_Load);
             this.Click += new System.EventHandler(this.frmHelp_Click);

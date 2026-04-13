@@ -480,6 +480,12 @@
     <Compile Include="RateMap\frmMap.Designer.cs">
       <DependentUpon>frmMap.cs</DependentUpon>
     </Compile>
+    <Compile Include="RateMap\frmZoneList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RateMap\frmZoneList.Designer.cs">
+      <DependentUpon>frmZoneList.cs</DependentUpon>
+    </Compile>
     <Compile Include="RateMap\kmlLayerManager.cs" />
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />

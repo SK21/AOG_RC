@@ -103,6 +103,7 @@
             this.MinimizeBox = false;
             this.Name = "frmMsgBox";
             this.Text = "Message";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMsgBox_FormClosed);
             this.Load += new System.EventHandler(this.frmMsgBox_Load);
             this.panel1.ResumeLayout(false);

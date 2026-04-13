@@ -224,7 +224,7 @@ namespace RateController.RateMap
                     .ToList();
 
                 if (mapZones.Count == 0)
-                    return "Zone generation produced no polygons. Check that yield and elevation data cover the same area.";
+                    return "Zone generation produced no polygons. Try selecting more yield data files or a larger field area.";
 
                 MapController.ZnOverlays.AddAutoZones(mapZones);
                 return string.Empty;

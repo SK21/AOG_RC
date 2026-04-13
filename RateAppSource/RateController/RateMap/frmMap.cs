@@ -347,6 +347,13 @@ namespace RateController.Forms
             }
         }
 
+        private void btnFiles_Click(object sender, EventArgs e)
+        {
+            using (var frm = new frmZoneList())
+                frm.ShowDialog(this);
+            UpdateForm();
+        }
+
         private void DeleteYield()
         {
             try
@@ -1059,7 +1066,12 @@ namespace RateController.Forms
                 string error = ProductivityZoneCreator.Generate(dlg.SelectedPaths);
                 if (!string.IsNullOrEmpty(error))
                     Props.ShowMessage(error, "Create Zones", 8000, false);
+                else
+                    Props.ShowMessage(
+                        string.Format("{0} zone(s) created.", MapController.ZnOverlays.TargetZoneCount()),
+                        "Create Zones", 4000, false);
             }
+            UpdateForm();
         }
 
         private void ckKML_CheckedChanged(object sender, EventArgs e)
