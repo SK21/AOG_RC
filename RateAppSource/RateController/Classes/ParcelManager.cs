@@ -66,11 +66,9 @@ namespace RateController.Classes
         }
         public static string EcFolder(int id) => Path.Combine(FieldFolder(id), "EC");
         public static string ElevationFolder(int id) => Path.Combine(FieldFolder(id), "Elevation");
-        public static string NviFolder(int id) => Path.Combine(FieldFolder(id), "NVI");
         public static List<string> GetKmlFiles(int id) => GetFilenames(KmlFolder(id), "*.kml");
         public static List<string> GetElevationFiles(int id) => GetFilenames(ElevationFolder(id), "*.csv");
         public static List<string> GetEcFiles(int id) => GetFilenames(EcFolder(id), "*.csv");
-        public static List<string> GetNviFiles(int id) => GetFilenames(NviFolder(id), "*.csv");
 
         // Backward-compat shim — returns the currently selected elevation path.
         public static string ElevationPath(int id) => SelectedElevationPath(id);
@@ -114,29 +112,12 @@ namespace RateController.Classes
             if (p != null) { p.SelectedEcFile = file; SaveParcels(parcels); }
         }
 
-        public static string SelectedNviPath(int fieldID)
-        {
-            Parcel p = SearchParcel(fieldID);
-            string file = p?.SelectedNviFile;
-            if (file == null) return null;
-            string full = Path.Combine(NviFolder(fieldID), file);
-            return File.Exists(full) ? full : null;
-        }
-
-        public static void SetSelectedNviPath(int fieldID, string path)
-        {
-            string file = path != null ? Path.GetFileName(path) : null;
-            var parcels = GetParcels();
-            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
-            if (p != null) { p.SelectedNviFile = file; SaveParcels(parcels); }
-        }
-
         public static void EnsureFieldFolders(int id)
         {
             foreach (string dir in new[]
             {
                 FieldFolder(id), MapsFolder(id), YieldFolder(id),
-                ElevationFolder(id), KmlFolder(id), EcFolder(id), NviFolder(id)
+                ElevationFolder(id), KmlFolder(id), EcFolder(id)
             })
             {
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -259,6 +240,5 @@ namespace RateController.Classes
         public string SelectedYieldFile { get; set; }
         public string SelectedElevationFile { get; set; }
         public string SelectedEcFile { get; set; }
-        public string SelectedNviFile { get; set; }
     }
 }

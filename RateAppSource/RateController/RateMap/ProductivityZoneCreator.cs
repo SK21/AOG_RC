@@ -184,7 +184,7 @@ namespace RateController.RateMap
                     Geometry merged = CascadedPolygonUnion.Union(cellsByZone[z]);
                     if (merged == null || merged.IsEmpty) continue;
 
-                    Color  color = Palette.GetColor(z, false, 255);
+                    Color  color = Palette.GetProductivityColor(z, ZoneCount);
                     string label = z < prodLabels.Length ? prodLabels[z] : (z + 1).ToString();
                     double avgYield = zoneYieldCount[z] > 0
                         ? zoneYieldSum[z] / zoneYieldCount[z]

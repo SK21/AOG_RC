@@ -14,7 +14,7 @@ namespace RateController.Forms
 {
     public partial class frmMap : Form
     {
-        private enum FileTabType { None, KML, Yield, Elevation, EC, NVI }
+        private enum FileTabType { None, KML, Yield, Elevation, EC }
         private FileTabType _activeFileType = FileTabType.None;
 
         private const double BASE_PAN_DISTANCE_MILES = 2;
@@ -303,47 +303,6 @@ namespace RateController.Forms
             catch (Exception ex) { Props.WriteErrorLog("frmMap/DeleteEC: " + ex.Message); }
         }
 
-        private void ImportNVI()
-        {
-            try
-            {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                using (var dlg = new OpenFileDialog { Title = "Import NVI File", Filter = "CSV files (*.csv)|*.csv", CheckFileExists = true })
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK) return;
-                    ParcelManager.EnsureFieldFolders(job.FieldID);
-                    string destPath = Path.Combine(ParcelManager.NviFolder(job.FieldID), Path.GetFileName(dlg.FileName));
-                    if (File.Exists(destPath))
-                    {
-                        using (var confirm = new frmMsgBox($"'{Path.GetFileName(destPath)}' already exists. Overwrite?", "Import NVI", true))
-                        { confirm.ShowDialog(); if (!confirm.Result) return; }
-                    }
-                    File.Copy(dlg.FileName, destPath, true);
-                    ParcelManager.SetSelectedNviPath(job.FieldID, destPath);
-                    UpdateFilesPanel();
-                }
-            }
-            catch (Exception ex) { Props.WriteErrorLog("frmMap/ImportNVI: " + ex.Message); }
-        }
-
-        private void DeleteNVI()
-        {
-            try
-            {
-                Job job = JobManager.CurrentJob;
-                if (job == null || job.FieldID < 0) return;
-                string sel = cbNVI.SelectedItem as string;
-                if (sel == null || sel == "(none)") return;
-                using (var mb = new frmMsgBox("Confirm Delete?", "Delete NVI", true)) { mb.ShowDialog(); if (!mb.Result) return; }
-                string path = Path.Combine(ParcelManager.NviFolder(job.FieldID), sel);
-                if (Props.IsPathSafe(path)) File.Delete(path);
-                ParcelManager.SetSelectedNviPath(job.FieldID, null);
-                UpdateFilesPanel();
-            }
-            catch (Exception ex) { Props.WriteErrorLog("frmMap/DeleteNVI: " + ex.Message); }
-        }
-
         private void btnDeleteRx_Click(object sender, EventArgs e)
         {
             try
@@ -491,11 +450,10 @@ namespace RateController.Forms
         {
             switch (_activeFileType)
             {
-                case FileTabType.KML:       ImportKml();       break;
-                case FileTabType.Yield:     ImportYield();     break;
+                case FileTabType.KML: ImportKml(); break;
+                case FileTabType.Yield: ImportYield(); break;
                 case FileTabType.Elevation: ImportElevation(); break;
-                case FileTabType.EC:        ImportEC();        break;
-                case FileTabType.NVI:       ImportNVI();       break;
+                case FileTabType.EC: ImportEC(); break;
             }
         }
 
@@ -503,21 +461,19 @@ namespace RateController.Forms
         {
             switch (_activeFileType)
             {
-                case FileTabType.KML:       DeleteKml();       break;
-                case FileTabType.Yield:     DeleteYield();     break;
+                case FileTabType.KML: DeleteKml(); break;
+                case FileTabType.Yield: DeleteYield(); break;
                 case FileTabType.Elevation: DeleteElevation(); break;
-                case FileTabType.EC:        DeleteEC();        break;
-                case FileTabType.NVI:       DeleteNVI();       break;
+                case FileTabType.EC: DeleteEC(); break;
             }
         }
 
         // ── Combobox Enter handlers (activate buttons) ────────────────────────
 
-        private void cbKML_Enter(object sender, EventArgs e)       => SetActiveFileType(FileTabType.KML);
-        private void cbYield_Enter(object sender, EventArgs e)     => SetActiveFileType(FileTabType.Yield);
+        private void cbKML_Enter(object sender, EventArgs e) => SetActiveFileType(FileTabType.KML);
+        private void cbYield_Enter(object sender, EventArgs e) => SetActiveFileType(FileTabType.Yield);
         private void cbElevation_Enter(object sender, EventArgs e) => SetActiveFileType(FileTabType.Elevation);
-        private void cbEC_Enter(object sender, EventArgs e)        => SetActiveFileType(FileTabType.EC);
-        private void cbNVI_Enter(object sender, EventArgs e)       => SetActiveFileType(FileTabType.NVI);
+        private void cbEC_Enter(object sender, EventArgs e) => SetActiveFileType(FileTabType.EC);
 
         // ── Import helpers ────────────────────────────────────────────────────
 
@@ -914,18 +870,6 @@ namespace RateController.Forms
                 : Path.Combine(ParcelManager.EcFolder(job.FieldID), sel));
         }
 
-        private void cbNVI_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (Initializing) return;
-            SetActiveFileType(FileTabType.NVI);
-            Job job = JobManager.CurrentJob;
-            if (job == null || job.FieldID < 0) return;
-            string sel = cbNVI.SelectedItem as string;
-            ParcelManager.SetSelectedNviPath(job.FieldID,
-                (sel == null || sel == "(none)") ? null
-                : Path.Combine(ParcelManager.NviFolder(job.FieldID), sel));
-        }
-
         private void cbKML_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Initializing) return;
@@ -1116,13 +1060,6 @@ namespace RateController.Forms
             if (!Initializing) MapController.ShowTiles = ckSatView.Checked;
         }
 
-        private void ckUseVR_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!Initializing)
-            {
-                Props.VariableRateEnabled = ckUseVR.Checked;
-            }
-        }
 
         private void ckYield_CheckedChanged(object sender, EventArgs e)
         {
@@ -1860,18 +1797,6 @@ namespace RateController.Forms
                 }
                 else { cbEC.SelectedIndex = 0; }
 
-                // NVI dropdown
-                cbNVI.Items.Clear();
-                cbNVI.Items.Add("(none)");
-                if (parcel != null)
-                {
-                    foreach (string f in ParcelManager.GetNviFiles(job.FieldID))
-                        cbNVI.Items.Add(f);
-                    string ep = ParcelManager.SelectedNviPath(job.FieldID);
-                    cbNVI.SelectedItem = (ep != null ? Path.GetFileName(ep) : null) ?? "(none)";
-                }
-                else { cbNVI.SelectedIndex = 0; }
-
                 // KML dropdown
                 cbKML.Items.Clear();
                 cbKML.Items.Add("(none)");
@@ -1893,7 +1818,6 @@ namespace RateController.Forms
             try
             {
                 Initializing = true;
-                ckUseVR.Checked = Props.VariableRateEnabled;
                 ckSatView.Checked = MapController.ShowTiles;
                 ckRateData.Checked = MapController.ZnOverlays.AppliedOverlayVisible;
                 ckZones.Checked = MapController.ZnOverlays.TargetOverlayVisible;
