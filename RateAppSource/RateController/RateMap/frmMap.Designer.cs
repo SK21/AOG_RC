@@ -107,6 +107,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnGenerateTestYield = new System.Windows.Forms.Button();
             this.btnGenerateTestElevation = new System.Windows.Forms.Button();
+            this.btnGenerateTestEC = new System.Windows.Forms.Button();
             this.cbKML = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.btnFileDelete = new System.Windows.Forms.Button();
@@ -234,6 +235,7 @@
             this.ckEC.Text = "EC";
             this.ckEC.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEC.UseVisualStyleBackColor = true;
+            this.ckEC.CheckedChanged += new System.EventHandler(this.ckEC_CheckedChanged);
             // 
             // ckYield
             // 
@@ -1040,6 +1042,7 @@
             this.tabFiles.Controls.Add(this.label4);
             this.tabFiles.Controls.Add(this.btnGenerateTestYield);
             this.tabFiles.Controls.Add(this.btnGenerateTestElevation);
+            this.tabFiles.Controls.Add(this.btnGenerateTestEC);
             this.tabFiles.Controls.Add(this.cbKML);
             this.tabFiles.Controls.Add(this.label12);
             this.tabFiles.Controls.Add(this.btnFileDelete);
@@ -1110,6 +1113,18 @@
             this.btnGenerateTestElevation.Text = "TE";
             this.btnGenerateTestElevation.UseVisualStyleBackColor = true;
             this.btnGenerateTestElevation.Click += new System.EventHandler(this.btnGenerateTestElevation_Click);
+            // 
+            // btnGenerateTestEC
+            // 
+            this.btnGenerateTestEC.FlatAppearance.BorderSize = 0;
+            this.btnGenerateTestEC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateTestEC.Location = new System.Drawing.Point(7, 157);
+            this.btnGenerateTestEC.Name = "btnGenerateTestEC";
+            this.btnGenerateTestEC.Size = new System.Drawing.Size(70, 40);
+            this.btnGenerateTestEC.TabIndex = 429;
+            this.btnGenerateTestEC.Text = "TEC";
+            this.btnGenerateTestEC.UseVisualStyleBackColor = true;
+            this.btnGenerateTestEC.Click += new System.EventHandler(this.btnGenerateTestEC_Click);
             // 
             // cbKML
             // 
@@ -1500,6 +1515,7 @@
         private System.Windows.Forms.Button btnFileDelete;
         private System.Windows.Forms.Button btnFileImport;
         private System.Windows.Forms.Button btnGenerateTestElevation;
+        private System.Windows.Forms.Button btnGenerateTestEC;
         private System.Windows.Forms.ListBox lbRx;
         private System.Windows.Forms.ComboBox cbKML;
         private System.Windows.Forms.CheckBox ckEC;

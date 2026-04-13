@@ -59,6 +59,7 @@ namespace RateController.RateMap
         private static double cTravelHeading;
         private static System.Windows.Forms.Timer UpdateTimer;
         public static ElevationOverlayCreator ElevationCreator;
+        public static EcOverlayCreator EcCreator;
         public static YieldOverlayCreator YieldCreator;
 
         public static event EventHandler MapChanged;
@@ -299,6 +300,7 @@ namespace RateController.RateMap
 
                 YieldCreator.Dispose();
                 ElevationCreator.Dispose();
+                EcCreator.Dispose();
 
                 if (gmap != null)
                 {
@@ -366,12 +368,14 @@ namespace RateController.RateMap
                 cState = MapState.Preview;
                 legendManager.Hide();
                 ElevationCreator?.Reset();
+                EcCreator?.Reset();
             }
             else
             {
                 cState = MapState.Tracking;
                 legendManager.Show();
                 if (ElevationCreator?.Enabled == true) ElevationCreator.Build();
+                if (EcCreator?.Enabled == true) EcCreator.Build();
             }
         }
 
@@ -438,6 +442,7 @@ namespace RateController.RateMap
             UpdateTimer.Enabled = true;
 
             ElevationCreator = new ElevationOverlayCreator(gmap);
+            EcCreator = new EcOverlayCreator(gmap);
             YieldCreator = new YieldOverlayCreator(gmap);
 
             LoadMap();
@@ -467,8 +472,13 @@ namespace RateController.RateMap
 
                 // elevation
                 string elevPath = ParcelManager.ElevationPath(JobManager.CurrentJob?.FieldID ?? -1);
-                ElevationCreator.LoadElevationFile(elevPath);  // null clears readings; Build() will Reset()
+                ElevationCreator.LoadElevationFile(elevPath);
                 ElevationCreator.Build();
+
+                // EC
+                string ecPath = ParcelManager.SelectedEcPath(JobManager.CurrentJob?.FieldID ?? -1);
+                EcCreator.LoadEcFile(ecPath);
+                EcCreator.Build();
 
                 gmap.Refresh();
                 CenterMap();

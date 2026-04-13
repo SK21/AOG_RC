@@ -789,6 +789,35 @@ namespace RateController.Forms
             }
         }
 
+        private void btnGenerateTestEC_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+
+                ParcelManager.EnsureFieldFolders(job.FieldID);
+                string ecFolder = ParcelManager.EcFolder(job.FieldID);
+                string ecPath   = Path.Combine(ecFolder, "EC_Test.csv");
+
+                var view = MapController.Map.ViewArea;
+                EcOverlayCreator.GenerateTestData(
+                    ecPath,
+                    view.Bottom, view.Top,
+                    view.Left, view.Right);
+
+                ParcelManager.SetSelectedEcPath(job.FieldID, ecPath);
+                MapController.EcCreator.LoadEcFile(ecPath);
+                if (MapController.EcCreator.Enabled) MapController.EcCreator.Build();
+                UpdateFilesPanel();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnGenerateTestEC_Click: " + ex.Message);
+                Props.ShowMessage("Error generating test EC: " + ex.Message, "Generate Test", 8000, true);
+            }
+        }
+
         private void btnTimeCancel_Click(object sender, EventArgs e)
         {
             Initializing = true;
@@ -865,9 +894,17 @@ namespace RateController.Forms
             Job job = JobManager.CurrentJob;
             if (job == null || job.FieldID < 0) return;
             string sel = cbEC.SelectedItem as string;
-            ParcelManager.SetSelectedEcPath(job.FieldID,
-                (sel == null || sel == "(none)") ? null
-                : Path.Combine(ParcelManager.EcFolder(job.FieldID), sel));
+            string path = (sel == null || sel == "(none)")
+                ? null
+                : Path.Combine(ParcelManager.EcFolder(job.FieldID), sel);
+            ParcelManager.SetSelectedEcPath(job.FieldID, path);
+            MapController.EcCreator.LoadEcFile(path);
+            if (MapController.EcCreator.Enabled) MapController.EcCreator.Build();
+        }
+
+        private void ckEC_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing) MapController.EcCreator.Enabled = ckEC.Checked;
         }
 
         private void cbKML_SelectedIndexChanged(object sender, EventArgs e)
@@ -1822,6 +1859,7 @@ namespace RateController.Forms
                 ckRateData.Checked = MapController.ZnOverlays.AppliedOverlayVisible;
                 ckZones.Checked = MapController.ZnOverlays.TargetOverlayVisible;
                 ckElevation.Checked = MapController.ElevationCreator.Enabled;
+                ckEC.Checked = MapController.EcCreator.Enabled;
                 ckYield.Checked = MapController.YieldCreator.Enabled;
 
                 UpdateZoneDetails();

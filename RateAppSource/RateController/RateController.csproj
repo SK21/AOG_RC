@@ -460,6 +460,7 @@
     <Compile Include="RateMap\ArcGIS_World_Imagery_Provider.cs" />
     <Compile Include="RateMap\CoverageTrail.cs" />
     <Compile Include="RateMap\DataCollector.cs" />
+    <Compile Include="RateMap\EcOverlayCreator.cs" />
     <Compile Include="RateMap\ElevationOverlayCreator.cs" />
     <Compile Include="RateMap\frmImport.cs">
       <SubType>Form</SubType>

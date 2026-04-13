@@ -12,7 +12,7 @@ namespace RateController.RateMap
 {
     public class FieldSample
     {
-        public FieldSample(DateTime timestamp, double latitude, double longitude, double Yield, double widthMeters, double elevation = 0.0)
+        public FieldSample(DateTime timestamp, double latitude, double longitude, double Yield, double widthMeters, double elevation = 0.0, double ecValue = 0.0)
         {
             Timestamp = timestamp;
             Latitude = latitude;
@@ -20,8 +20,10 @@ namespace RateController.RateMap
             YieldKg = Yield;
             WidthMeters = widthMeters;
             ElevationMeters = elevation;
+            EcValue = ecValue;
         }
 
+        public double EcValue { get; }
         public double ElevationMeters { get; }
         public double Latitude { get; }
         public double Longitude { get; }
