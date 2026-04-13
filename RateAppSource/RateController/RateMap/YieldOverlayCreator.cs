@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace RateController.RateMap
 {
@@ -70,6 +71,76 @@ namespace RateController.RateMap
                     Reset();
                 }
             }
+        }
+
+        /// <summary>
+        /// Generates a synthetic yield CSV covering the given lat/lng bounding box.
+        /// Yield ranges from minYield (SW corner) to maxYield (NE corner) with small random noise.
+        /// Simulates a harvester making E-W passes at 9.144 m (30 ft) width, 6 km/h.
+        /// </summary>
+        public static void GenerateTestData(
+            string yieldPath,
+            double minLat, double maxLat,
+            double minLng, double maxLng,
+            double minYield = 1800.0, double maxYield = 2400.0)
+        {
+            const double widthM = 9.144;
+            const double speedMs = 1.667;          // 6 km/h
+            const double metersPerDegLat = 111320.0;
+
+            double midLat = (minLat + maxLat) / 2.0;
+            double metersPerDegLng = metersPerDegLat * Math.Cos(midLat * Math.PI / 180.0);
+
+            double fieldHeightM = (maxLat - minLat) * metersPerDegLat;
+            double fieldWidthM  = (maxLng - minLng) * metersPerDegLng;
+            double fieldHeightDeg = maxLat - minLat;
+            double fieldWidthDeg  = maxLng - minLng;
+
+            int passCount = Math.Max(1, (int)Math.Ceiling(fieldHeightM / widthM));
+            double lngStepDeg = speedMs / metersPerDegLng;   // lng degrees per sample
+
+            var sb = new StringBuilder();
+            sb.AppendLine(CSVheader);
+
+            var rng = new Random(42);
+            var time = new DateTime(2026, 9, 15, 8, 0, 0, DateTimeKind.Utc);
+
+            for (int pass = 0; pass < passCount; pass++)
+            {
+                double passLat = minLat + (pass + 0.5) * widthM / metersPerDegLat;
+                if (passLat > maxLat) break;
+
+                bool goingEast = (pass % 2 == 0);
+                double startLng = goingEast ? minLng : maxLng;
+                double endLng   = goingEast ? maxLng : minLng;
+                double sign     = goingEast ? 1.0 : -1.0;
+
+                double normLat = (passLat - minLat) / fieldHeightDeg;
+
+                double lng = startLng;
+                while (goingEast ? lng <= endLng : lng >= endLng)
+                {
+                    double normLng = (lng - minLng) / fieldWidthDeg;
+                    double pos = (normLat + normLng) / 2.0;   // 0=SW, 1=NE
+
+                    double noise = (rng.NextDouble() - 0.5) * 100.0;  // ±50
+                    double yield = minYield + pos * (maxYield - minYield) + noise;
+                    yield = Math.Max(minYield - 50, Math.Min(maxYield + 50, yield));
+
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                        "{0:O},{1:F7},{2:F7},{3:F3},{4:F1},0.0",
+                        time, passLat, lng, widthM, yield));
+
+                    time = time.AddSeconds(1);
+                    lng += sign * lngStepDeg;
+                }
+
+                // Turn-around gap — triggers Trail.Break() in Build()
+                time = time.AddSeconds(30);
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(yieldPath));
+            File.WriteAllText(yieldPath, sb.ToString());
         }
 
         public void Build()

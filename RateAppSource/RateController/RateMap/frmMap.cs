@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace RateController.Forms
 {
@@ -655,6 +656,71 @@ namespace RateController.Forms
             }
         }
 
+        private void btnGenerateTestYield_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Job job = JobManager.CurrentJob;
+                if (job == null || job.FieldID < 0) return;
+
+                var kmlFiles = ParcelManager.GetKmlFiles(job.FieldID);
+                if (kmlFiles.Count == 0)
+                {
+                    Props.ShowMessage("No KML file found for this field.", "Generate Test Yield", 5000, true);
+                    return;
+                }
+
+                string kmlFullPath = Path.Combine(ParcelManager.KmlFolder(job.FieldID), kmlFiles[0]);
+                if (!TryGetKmlBounds(kmlFullPath, out double minLat, out double maxLat, out double minLng, out double maxLng))
+                {
+                    Props.ShowMessage("Could not read KML polygon bounds.", "Generate Test Yield", 5000, true);
+                    return;
+                }
+
+                string yieldPath = Path.Combine(ParcelManager.YieldFolder(job.FieldID), "TestYield.csv");
+                YieldOverlayCreator.GenerateTestData(yieldPath, minLat, maxLat, minLng, maxLng);
+
+                ParcelManager.SetSelectedYieldPath(job.FieldID, yieldPath);
+                UpdateFilesPanel();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/btnGenerateTestYield_Click: " + ex.Message);
+                Props.ShowMessage("Error generating test yield: " + ex.Message, "Generate Test", 8000, true);
+            }
+        }
+
+        private bool TryGetKmlBounds(string kmlPath, out double minLat, out double maxLat, out double minLng, out double maxLng)
+        {
+            minLat = maxLat = minLng = maxLng = 0;
+            try
+            {
+                var xdoc = XDocument.Load(kmlPath);
+                var ns = XNamespace.Get("http://www.opengis.net/kml/2.2");
+                var coordEl = xdoc.Descendants(ns + "coordinates").FirstOrDefault();
+                if (coordEl == null) return false;
+
+                string[] tokens = coordEl.Value.Trim().Split(new[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                minLat = double.MaxValue; maxLat = double.MinValue;
+                minLng = double.MaxValue; maxLng = double.MinValue;
+
+                foreach (string token in tokens)
+                {
+                    string[] parts = token.Split(',');
+                    if (parts.Length < 2) continue;
+                    if (!double.TryParse(parts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double lat)) continue;
+                    if (!double.TryParse(parts[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double lng)) continue;
+                    minLat = Math.Min(minLat, lat);
+                    maxLat = Math.Max(maxLat, lat);
+                    minLng = Math.Min(minLng, lng);
+                    maxLng = Math.Max(maxLng, lng);
+                }
+
+                return minLat < maxLat && minLng < maxLng;
+            }
+            catch { return false; }
+        }
+
         private void btnGenerateTestElevation_Click(object sender, EventArgs e)
         {
             try
@@ -809,8 +875,8 @@ namespace RateController.Forms
                     btnZoomIn.Left = VSB.Left;
 
                     Core.SetMainDisplay(false);
-                    Core.MainForm.MainMini.Left = this.Left + 25;
-                    Core.MainForm.MainMini.Top = this.Top + pnlTabs.Top + pnlTabs.Height + pnlControls2.Height + 40;
+                    Core.MainForm.MainMini.Left = this.Left + 12;
+                    Core.MainForm.MainMini.Top = this.Top + pnlTabs.Top + pnlTabs.Height + 40;
                 }
                 else
                 {
@@ -843,7 +909,7 @@ namespace RateController.Forms
                     Core.MainForm.MainMini.Top = MainTop;
                 }
 
-                if (UseMaxView)
+                if (UseMaxView && MapController.ZnOverlays.AppliedOverlayVisible)
                 {
                     MapController.legendManager.Show();
                 }
@@ -892,9 +958,9 @@ namespace RateController.Forms
                 return;
             }
 
-            string yieldFolder  = ParcelManager.YieldFolder(fieldID);
-            var    fullPaths    = files.Select(f => Path.Combine(yieldFolder, f)).ToList();
-            string currentPath  = ParcelManager.SelectedYieldPath(fieldID);
+            string yieldFolder = ParcelManager.YieldFolder(fieldID);
+            var fullPaths = files.Select(f => Path.Combine(yieldFolder, f)).ToList();
+            string currentPath = ParcelManager.SelectedYieldPath(fieldID);
 
             using (var dlg = new frmSelectYieldFiles(fullPaths, currentPath))
             {
@@ -1362,79 +1428,9 @@ namespace RateController.Forms
             }
         }
 
-        private void tbLat_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbLat.Text, out tempD);
-            using (var form = new FormNumeric(-90, 90, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbLat.Text = form.ReturnValue.ToString("N7");
-                }
-            }
-        }
 
-        private void tbLat_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!Initializing)
-            {
-                double Latitude;
-                if (!double.TryParse(tbLat.Text, out Latitude) || Latitude < -90.0 || Latitude > 90.0)
-                {
-                    System.Media.SystemSounds.Exclamation.Play();
-                    Props.ShowMessage("Latitude must be a number between -90 and 90.");
-                    e.Cancel = true;
-                }
-                else
-                {
-                    double Longitude;
-                    if (double.TryParse(tbLong.Text, out Longitude) || Longitude < -180.0 || Longitude > 180.0)
-                    {
-                        PointLatLng location = new PointLatLng(Latitude, Longitude);
-                        MapController.SetTractorPosition(location, true);
-                    }
-                }
-            }
-        }
 
-        private void tbLong_Enter(object sender, EventArgs e)
-        {
-            double tempD;
-            double.TryParse(tbLong.Text, out tempD);
-            using (var form = new FormNumeric(-180, 180, tempD))
-            {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    tbLong.Text = form.ReturnValue.ToString("N7");
-                }
-            }
-        }
 
-        private void tbLong_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!Initializing)
-            {
-                double Longitude;
-                if (!double.TryParse(tbLong.Text, out Longitude) || Longitude < -180.0 || Longitude > 180.0)
-                {
-                    System.Media.SystemSounds.Exclamation.Play();
-                    Props.ShowMessage("Longitude must be a number between -180 and 180.");
-                    e.Cancel = true;
-                }
-                else
-                {
-                    double Latitude;
-                    if (double.TryParse(tbLat.Text, out Latitude) || Latitude < -90.0 || Latitude > 90.0)
-                    {
-                        PointLatLng location = new PointLatLng(Latitude, Longitude);
-                        MapController.SetTractorPosition(location, true);
-                    }
-                }
-            }
-        }
 
         private void tbName_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1682,11 +1678,8 @@ namespace RateController.Forms
                             UpdateZoneDetails();
                             Initializing = false;
                         }
-                        if (TractorIsMoving()) UpdatePosition();
                         break;
                 }
-                tbLong.Enabled = !TractorIsMoving();
-                tbLat.Enabled = !TractorIsMoving();
             }
         }
 
@@ -1700,10 +1693,6 @@ namespace RateController.Forms
             if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) this.Location = new System.Drawing.Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
-        private bool TractorIsMoving()
-        {
-            return Props.Speed_KMH > 0.5;
-        }
 
         private void UpdateFileCount()
         {
@@ -1787,7 +1776,6 @@ namespace RateController.Forms
                 ckYield.Checked = MapController.YieldCreator.Enabled;
 
                 UpdateZoneDetails();
-                UpdatePosition();
 
                 ckRecord.Checked = MapController.RateCollector.Enabled;
 
@@ -1830,11 +1818,6 @@ namespace RateController.Forms
             }
         }
 
-        private void UpdatePosition()
-        {
-            tbLong.Text = MapController.TractorPosition.Lng.ToString("N7");
-            tbLat.Text = MapController.TractorPosition.Lat.ToString("N7");
-        }
 
         private void UpdateProductToDisplay()
         {
