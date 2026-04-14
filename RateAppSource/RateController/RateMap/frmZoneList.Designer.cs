@@ -46,11 +46,9 @@
             this.dataColumn3 = new System.Data.DataColumn();
             this.dataColumn4 = new System.Data.DataColumn();
             this.dataColumn5 = new System.Data.DataColumn();
-            this.DGV = new System.Windows.Forms.DataGridView();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnDeleteRx = new System.Windows.Forms.Button();
             this.dataColumn6 = new System.Data.DataColumn();
+            this.dataColumn7 = new System.Data.DataColumn();
+            this.DGV = new System.Windows.Forms.DataGridView();
             this.cSelect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.cNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,6 +58,12 @@
             this.cDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cColorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cNameIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnSelect = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
@@ -82,7 +86,8 @@
             this.dataColumn3,
             this.dataColumn4,
             this.dataColumn5,
-            this.dataColumn6});
+            this.dataColumn6,
+            this.dataColumn7});
             this.dataTable1.TableName = "Table1";
             // 
             // dataRelay
@@ -134,6 +139,16 @@
             this.dataColumn5.ColumnName = "cColor";
             this.dataColumn5.DataType = typeof(int);
             // 
+            // dataColumn6
+            // 
+            this.dataColumn6.ColumnName = "cSelect";
+            this.dataColumn6.DataType = typeof(bool);
+            // 
+            // dataColumn7
+            // 
+            this.dataColumn7.Caption = "NameIndex";
+            this.dataColumn7.ColumnName = "cNameIndex";
+            // 
             // DGV
             // 
             this.DGV.AllowUserToAddRows = false;
@@ -150,7 +165,8 @@
             this.cCDataGridViewTextBoxColumn,
             this.cDDataGridViewTextBoxColumn,
             this.cEDataGridViewTextBoxColumn,
-            this.cColorDataGridViewTextBoxColumn});
+            this.cColorDataGridViewTextBoxColumn,
+            this.cNameIndex});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -169,62 +185,12 @@
             this.DGV.RowHeadersVisible = false;
             this.DGV.RowTemplate.Height = 40;
             this.DGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DGV.Size = new System.Drawing.Size(599, 454);
+            this.DGV.Size = new System.Drawing.Size(631, 307);
             this.DGV.TabIndex = 1;
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             this.DGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV_CellFormatting);
+            this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
             this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
-            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnCancel.Enabled = false;
-            this.btnCancel.FlatAppearance.BorderSize = 0;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(471, 488);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(70, 63);
-            this.btnCancel.TabIndex = 178;
-            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnOK
-            // 
-            this.btnOK.BackColor = System.Drawing.Color.Transparent;
-            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOK.FlatAppearance.BorderSize = 0;
-            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnOK.Image = global::RateController.Properties.Resources.Save;
-            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(549, 488);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(70, 63);
-            this.btnOK.TabIndex = 177;
-            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnOK.UseVisualStyleBackColor = false;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // btnDeleteRx
-            // 
-            this.btnDeleteRx.FlatAppearance.BorderSize = 0;
-            this.btnDeleteRx.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteRx.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDeleteRx.Location = new System.Drawing.Point(383, 488);
-            this.btnDeleteRx.Name = "btnDeleteRx";
-            this.btnDeleteRx.Size = new System.Drawing.Size(82, 64);
-            this.btnDeleteRx.TabIndex = 430;
-            this.btnDeleteRx.UseVisualStyleBackColor = true;
-            // 
-            // dataColumn6
-            // 
-            this.dataColumn6.ColumnName = "cSelect";
-            this.dataColumn6.DataType = typeof(bool);
             // 
             // cSelect
             // 
@@ -318,12 +284,89 @@
             this.cColorDataGridViewTextBoxColumn.ReadOnly = true;
             this.cColorDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
+            // cNameIndex
+            // 
+            this.cNameIndex.DataPropertyName = "cNameIndex";
+            this.cNameIndex.HeaderText = "cNameIndex";
+            this.cNameIndex.Name = "cNameIndex";
+            this.cNameIndex.Visible = false;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnCancel.Enabled = false;
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
+            this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnCancel.Location = new System.Drawing.Point(503, 341);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(70, 63);
+            this.btnCancel.TabIndex = 178;
+            this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.BackColor = System.Drawing.Color.Transparent;
+            this.btnOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnOK.FlatAppearance.BorderSize = 0;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnOK.Image = global::RateController.Properties.Resources.Save;
+            this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnOK.Location = new System.Drawing.Point(581, 341);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(70, 63);
+            this.btnOK.TabIndex = 177;
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.FlatAppearance.BorderSize = 0;
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
+            this.btnDelete.Location = new System.Drawing.Point(415, 341);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(82, 64);
+            this.btnDelete.TabIndex = 430;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnSelect
+            // 
+            this.btnSelect.FlatAppearance.BorderSize = 0;
+            this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSelect.Image = global::RateController.Properties.Resources.selection;
+            this.btnSelect.Location = new System.Drawing.Point(327, 341);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(82, 64);
+            this.btnSelect.TabIndex = 432;
+            this.btnSelect.UseVisualStyleBackColor = true;
+            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 361);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 24);
+            this.label1.TabIndex = 433;
+            this.label1.Text = "label1";
+            // 
             // frmZoneList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(638, 559);
-            this.Controls.Add(this.btnDeleteRx);
+            this.ClientSize = new System.Drawing.Size(671, 413);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnSelect);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.DGV);
@@ -342,6 +385,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -355,13 +399,14 @@
         private System.Windows.Forms.DataGridView DGV;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Button btnDeleteRx;
+        private System.Windows.Forms.Button btnDelete;
         private System.Data.DataColumn dataColumn1;
         private System.Data.DataColumn dataColumn2;
         private System.Data.DataColumn dataColumn3;
         private System.Data.DataColumn dataColumn4;
         private System.Data.DataColumn dataColumn5;
         private System.Data.DataColumn dataColumn6;
+        private System.Data.DataColumn dataColumn7;
         private System.Windows.Forms.DataGridViewCheckBoxColumn cSelect;
         private System.Windows.Forms.DataGridViewTextBoxColumn cNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cAreaDataGridViewTextBoxColumn;
@@ -371,5 +416,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cColorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cNameIndex;
+        private System.Windows.Forms.Button btnSelect;
+        private System.Windows.Forms.Label label1;
     }
 }

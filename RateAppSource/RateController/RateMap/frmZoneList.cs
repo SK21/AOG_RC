@@ -1,28 +1,185 @@
-﻿using RateController.Classes;
+﻿using AgOpenGPS;
+using RateController.Classes;
 using System;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RateController.RateMap
 {
     public partial class frmZoneList : Form
     {
+        private bool AllSelected = false;
         private bool cEdited = false;
         private bool Initializing = false;
-        private bool Reset = false;
-        private bool AllSelected = false;
 
         public frmZoneList()
         {
             InitializeComponent();
         }
 
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             UpdateForm();
             SetButtons(false);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                bool Result = false;
+                using (var Hlp = new frmMsgBox("Confirm Delete?", "Delete Zones", true))
+                {
+                    Hlp.TopMost = true;
+                    Hlp.ShowDialog();
+                    Result = Hlp.Result;
+                }
+                if (Result)
+                {
+                    bool DeleteCompleted = true;
+                    for (int i = 0; i < DGV.Rows.Count; i++)
+                    {
+                        string Name = DGV.Rows[i].Cells[9].Value.ToString();
+                        MapZone zone = MapController.ZnOverlays?.TargetZoneslist.FirstOrDefault(z => z.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
+                        if (zone != null)
+                        {
+                            bool isChecked = Convert.ToBoolean(DGV.Rows[i].Cells[0].Value);
+                            if (isChecked)
+                            {
+                                DeleteCompleted &= MapController.ZnOverlays.DeleteZone(zone.Name);
+                            }
+                        }
+                    }
+                    if (!DeleteCompleted)
+                    {
+                        Props.ShowMessage("Some zones could not be deleted.");
+                    }
+                    UpdateForm();
+                    SetButtons(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/btnDelete_Click: " + ex.Message);
+            }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            if (cEdited)
+            {
+                SaveData();
+                SetButtons(false);
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AllSelected = !AllSelected;
+                foreach (DataGridViewRow row in DGV.Rows)
+                {
+                    row.Cells[0].Value = AllSelected;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/btnSelect_Click: " + ex.Message);
+            }
+        }
+
+        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex == -1 && e.ColumnIndex == 0)
+                {
+                    AllSelected = !AllSelected;
+                    foreach (DataGridViewRow row in DGV.Rows)
+                    {
+                        row.Cells[0].Value = AllSelected;
+                    }
+                }
+                else
+                {
+                    string val = DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+                    switch (e.ColumnIndex)
+                    {
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                            double tmp = double.TryParse(val, out double v) ? v : 0;
+                            using (var form = new FormNumeric(0, 9999, tmp))
+                            {
+                                var result = form.ShowDialog();
+                                if (result == DialogResult.OK)
+                                {
+                                    DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                                }
+                            }
+
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/DGV_CellClick: " + ex.Message);
+            }
+        }
+
+        private void DGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            switch (e.ColumnIndex)
+            {
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    double val = double.TryParse(e.Value.ToString(), out double v) ? v : 0;
+                    var culture = CultureInfo.CurrentCulture;
+                    if (val >= 1000)
+                    {
+                        e.Value = val.ToString("N0", culture);
+                    }
+                    else
+                    {
+                        e.Value = val.ToString("N1", culture);
+                    }
+                    e.FormattingApplied = true;
+                    break;
+
+                case 8:
+                    if (e.Value is int argb)
+                    {
+                        e.CellStyle.BackColor = Color.FromArgb(argb);
+                        e.FormattingApplied = true;
+                    }
+                    break;
+            }
+        }
+
+        private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!Initializing && e.ColumnIndex != 0) SetButtons(true);
+        }
+
+        private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            Props.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
+    + " Exception: " + e.Exception.ToString());
         }
 
         private void frmZoneList_FormClosing(object sender, FormClosingEventArgs e)
@@ -70,6 +227,7 @@ namespace RateController.RateMap
 
                         Rw[7] = zone.ZoneColor.ToArgb();
                         Rw[8] = false;
+                        Rw[9] = zone.Name;
 
                         dataSet1.Tables[0].Rows.Add(Rw);
                     }
@@ -78,6 +236,45 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmZoneList/LoadData: " + ex.Message);
+            }
+        }
+
+        private void SaveData()
+        {
+            try
+            {
+                for (int i = 0; i < DGV.Rows.Count; i++)
+                {
+                    string Name = DGV.Rows[i].Cells[9].Value.ToString();
+                    MapZone zone = MapController.ZnOverlays?.TargetZoneslist.FirstOrDefault(z => z.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
+                    if (zone != null)
+                    {
+                        for (int j = 0; j < DGV.Columns.Count; j++)
+                        {
+                            string val = DGV.Rows[i].Cells[j].EditedFormattedValue.ToString();
+                            switch (j)
+                            {
+                                case 1:
+                                    zone.Name = val;
+                                    break;
+
+                                case 3:
+                                case 4:
+                                case 5:
+                                case 6:
+                                case 7:
+                                    double Amt = double.TryParse(val, out double v) ? v : 0;
+                                    zone.Rates[ZoneFields.Products[j - 3]] = Amt;
+                                    break;
+                            }
+                        }
+                    }
+                }
+                MapController.SaveMap();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/SaveData: " + ex.Message);
             }
         }
 
@@ -105,47 +302,8 @@ namespace RateController.RateMap
         {
             Initializing = true;
             LoadData(UpdateObject);
+            label1.Text = "Zone count: " + DGV.Rows.Count.ToString();
             Initializing = false;
-        }
-
-        private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            Props.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
-    + " Exception: " + e.Exception.ToString());
-
-        }
-
-        private void DGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.ColumnIndex == 8 && e.Value is int argb)
-            {
-                e.CellStyle.BackColor = Color.FromArgb(argb);
-                e.FormattingApplied = true;
-            }
-        }
-
-        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex == -1 && e.ColumnIndex == 0)
-            {
-                AllSelected = !AllSelected;
-                foreach (DataGridViewRow row in DGV.Rows)
-                {
-                    row.Cells[0].Value = AllSelected;
-                }
-            }
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            if (cEdited)
-            {
-
-            }
-            else
-            {
-                Close();
-            }
         }
     }
 }
