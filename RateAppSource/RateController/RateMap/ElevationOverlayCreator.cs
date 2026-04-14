@@ -93,6 +93,8 @@ namespace RateController.RateMap
             }
         }
 
+        public bool HasData => _readings != null && _readings.Count > 0;
+
         // Returns a short quality summary for display in the Files panel label.
         public string GetQualitySummary()
         {

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RateController.Classes
@@ -28,6 +25,10 @@ namespace RateController.Classes
             byte msk = (byte)(1 << pos);
             msk = (byte)~msk;
             return (byte)(b & msk);
+        }
+        public double Acres(double Ha)
+        {
+            return Ha * 2.471054;
         }
 
         public bool BitRead(byte b, int pos)

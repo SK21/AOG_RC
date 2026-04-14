@@ -29,18 +29,32 @@ namespace RateController.RateMap
     {
         private const int MaxCells = 1200;   // larger cells → more contiguous polygons
 
-        public static int ZoneCount { get; set; } = 3;
-
         /// <summary>
         /// Generate productivity zones from the supplied yield file paths.
-        /// Returns an empty string on success, or a user-readable error message.
         /// </summary>
-        public static string Generate(List<string> yieldPaths)
+        /// <param name="yieldPaths">Yield CSV files to use.</param>
+        /// <param name="yieldWeights">Per-file weights, normalised to sum=1. Null = equal weights.</param>
+        /// <param name="zoneCount">Number of productivity zones (2–5).</param>
+        /// <param name="yieldFraction">Share of productivity index from yield (0–1). yieldFraction + ecFraction should = 1.</param>
+        /// <param name="ecPath">EC CSV file path (Lat,Lon,EC format), or null to skip EC layer.</param>
+        /// <param name="ecFraction">Share of productivity index from EC (0–1).</param>
+        /// <param name="minZoneHa">Minimum polygon area in hectares; smaller fragments are discarded.</param>
+        /// <returns>Empty string on success, or a user-readable error message.</returns>
+        public static string Generate(
+            List<string> yieldPaths,
+            List<double> yieldWeights  = null,
+            double       yieldFraction = 1.0,
+            string       ecPath        = null,
+            double       ecFraction    = 0.0,
+            int          zoneCount     = 3,
+            double       minZoneHa     = 0.5)
         {
             try
             {
                 if (yieldPaths == null || yieldPaths.Count == 0)
                     return "No yield files selected.";
+
+                zoneCount = Math.Max(2, Math.Min(5, zoneCount));
 
                 // ── Parse all yield files ────────────────────────────────────────
                 var yearSets = new List<List<FieldSample>>();
@@ -53,6 +67,9 @@ namespace RateController.RateMap
                 if (yearSets.Count == 0)
                     return "No usable yield data found in the selected files (need at least 10 points per file).";
 
+                // Normalise per-year weights to sum = 1.0 (equal weights if not supplied)
+                double[] wArr = BuildWeights(yieldWeights, yearSets.Count);
+
                 // Flatten all samples for bounds computation
                 var allYield = yearSets.SelectMany(s => s).ToList();
 
@@ -63,20 +80,29 @@ namespace RateController.RateMap
                 double maxLon = allYield.Max(r => r.Longitude);
 
                 // ── Adaptive grid resolution ─────────────────────────────────────
-                double midLat = (minLat + maxLat) / 2.0;
-                double fieldH = Haversine(minLat, 0, maxLat, 0);
-                double fieldW = Haversine(midLat, minLon, midLat, maxLon);
-                double res    = Math.Max(1.0, Math.Sqrt(fieldH * fieldW / MaxCells));
-                int    rows   = Math.Max(3, (int)(fieldH / res));
-                int    cols   = Math.Max(3, (int)(fieldW / res));
+                double midLat      = (minLat + maxLat) / 2.0;
+                double fieldH      = Haversine(minLat, 0, maxLat, 0);
+                double fieldW      = Haversine(midLat, minLon, midLat, maxLon);
+                double fieldAreaHa = fieldH * fieldW / 10000.0;
+                double res         = Math.Max(1.0, Math.Sqrt(fieldH * fieldW / MaxCells));
+                int    rows        = Math.Max(3, (int)(fieldH / res));
+                int    cols        = Math.Max(3, (int)(fieldW / res));
 
-                // ── Build averaged yield grid across all years ───────────────────
-                double[,] yieldSum = new double[rows, cols];
+                // ── Enforce zone density cap ─────────────────────────────────────
+                // Cap at 20 polygons per 160-acre (~65 ha) field, scaling with area.
+                // effectiveMinHa may be larger than the user's minZoneHa but never smaller.
+                double effectiveMinHa = Math.Max(minZoneHa, fieldAreaHa / 20.0);
 
-                foreach (var yearSamples in yearSets)
+                // ── Build weighted yield grid across all years ───────────────────
+                // wArr is normalised (sum=1), so yieldSum IS already the weighted average.
+                double[,] yieldGrid = new double[rows, cols];
+
+                for (int yi = 0; yi < yearSets.Count; yi++)
                 {
-                    var tree     = BuildTree(yearSamples);
-                    double fallback = yearSamples.Average(r => r.YieldKg);
+                    var    yearSamples = yearSets[yi];
+                    var    tree        = BuildTree(yearSamples);
+                    double fallback    = yearSamples.Average(r => r.YieldKg);
+                    double w           = wArr[yi];
 
                     for (int r = 0; r < rows; r++)
                     {
@@ -84,23 +110,52 @@ namespace RateController.RateMap
                         {
                             double lat = minLat + (r + 0.5) / rows * (maxLat - minLat);
                             double lon = minLon + (c + 0.5) / cols * (maxLon - minLon);
-                            yieldSum[r, c] += IDW(tree, lat, lon, fallback, s => s.YieldKg);
+                            yieldGrid[r, c] += w * IDW(tree, lat, lon, fallback, s => s.YieldKg);
                         }
                     }
                 }
 
-                double[,] yieldGrid = new double[rows, cols];
-                for (int r = 0; r < rows; r++)
-                    for (int c = 0; c < cols; c++)
-                        yieldGrid[r, c] = yieldSum[r, c] / yearSets.Count;
+                // ── Optional EC layer blend ──────────────────────────────────────
+                // When EC data is supplied, normalise both grids to [0,1] and blend
+                // them into a combined productivity index for classification.
+                // yieldGrid is kept un-blended for per-zone average yield naming.
+                double[,] classifyGrid = yieldGrid;
 
-                // ── Quantile classification (yield-only) ─────────────────────────
-                // Collect all cell values, sort, then assign zones by rank so each
-                // zone covers roughly equal field area regardless of value distribution.
+                if (!string.IsNullOrEmpty(ecPath) && ecFraction > 0.0)
+                {
+                    var ecSamples = ParseEcFile(ecPath);
+                    if (ecSamples.Count >= 3)
+                    {
+                        var    ecTree    = BuildTree(ecSamples);
+                        double ecFallback = ecSamples.Average(s => s.EcValue);
+
+                        double[,] ecGrid = new double[rows, cols];
+                        for (int r = 0; r < rows; r++)
+                            for (int c = 0; c < cols; c++)
+                            {
+                                double lat = minLat + (r + 0.5) / rows * (maxLat - minLat);
+                                double lon = minLon + (c + 0.5) / cols * (maxLon - minLon);
+                                ecGrid[r, c] = IDW(ecTree, lat, lon, ecFallback, s => s.EcValue);
+                            }
+
+                        double[,] normYield = Normalize(yieldGrid, rows, cols);
+                        double[,] normEc    = Normalize(ecGrid,    rows, cols);
+
+                        classifyGrid = new double[rows, cols];
+                        for (int r = 0; r < rows; r++)
+                            for (int c = 0; c < cols; c++)
+                                classifyGrid[r, c] = yieldFraction * normYield[r, c]
+                                                   + ecFraction    * normEc[r, c];
+                    }
+                }
+
+                // ── Quantile classification ──────────────────────────────────────
+                // Sort all cell values, assign zones by rank so each zone covers
+                // roughly equal field area regardless of value distribution.
                 var flatValues = new List<double>(rows * cols);
                 for (int r = 0; r < rows; r++)
                     for (int c = 0; c < cols; c++)
-                        flatValues.Add(yieldGrid[r, c]);
+                        flatValues.Add(classifyGrid[r, c]);
                 flatValues.Sort();
                 int total = flatValues.Count;
 
@@ -109,22 +164,26 @@ namespace RateController.RateMap
                 {
                     for (int c = 0; c < cols; c++)
                     {
-                        double v = yieldGrid[r, c];
+                        double v = classifyGrid[r, c];
                         int rank = flatValues.BinarySearch(v);
                         if (rank < 0) rank = ~rank;
                         rank = Math.Min(rank, total - 1);
-                        zoneGrid[r, c] = Math.Min(ZoneCount - 1, rank * ZoneCount / total);
+                        zoneGrid[r, c] = Math.Min(zoneCount - 1, rank * zoneCount / total);
                     }
                 }
 
-                // ── 3×3 majority-filter smoothing ────────────────────────────────
-                int[,] smoothed = MajorityFilter(zoneGrid, rows, cols);
+                // ── 3×3 majority-filter smoothing (multiple passes) ──────────────
+                // One pass leaves zones highly fragmented; 5 passes creates large
+                // contiguous patches suitable for polygon extraction.
+                int[,] smoothed = zoneGrid;
+                for (int pass = 0; pass < 5; pass++)
+                    smoothed = MajorityFilter(smoothed, rows, cols);
 
                 // ── Union cell rectangles per zone → NTS polygons ────────────────
                 var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
-                var cellsByZone = new List<List<Geometry>>(ZoneCount);
-                for (int z = 0; z < ZoneCount; z++) cellsByZone.Add(new List<Geometry>());
+                var cellsByZone = new List<List<Geometry>>(zoneCount);
+                for (int z = 0; z < zoneCount; z++) cellsByZone.Add(new List<Geometry>());
 
                 double latStep = (maxLat - minLat) / rows;
                 double lonStep = (maxLon - minLon) / cols;
@@ -153,8 +212,8 @@ namespace RateController.RateMap
                 }
 
                 // ── Compute per-zone average yield ───────────────────────────────
-                var zoneYieldSum   = new double[ZoneCount];
-                var zoneYieldCount = new int[ZoneCount];
+                var zoneYieldSum   = new double[zoneCount];
+                var zoneYieldCount = new int[zoneCount];
                 for (int r = 0; r < rows; r++)
                     for (int c = 0; c < cols; c++)
                     {
@@ -168,23 +227,23 @@ namespace RateController.RateMap
                     ? string.Format("{0} yrs", yearSets.Count)
                     : Path.GetFileNameWithoutExtension(yieldPaths[0]);
 
-                // Productivity labels: z=0 is lowest, z=ZoneCount-1 is highest
-                string[] prodLabels = ZoneCount <= 3
+                // Productivity labels: z=0 is lowest, z=zoneCount-1 is highest
+                string[] prodLabels = zoneCount <= 3
                     ? new[] { "Low", "Med", "High" }
-                    : ZoneCount == 4
+                    : zoneCount == 4
                         ? new[] { "Low", "Med-Low", "Med-High", "High" }
                         : new[] { "Very Low", "Low", "Medium", "High", "Very High" };
 
                 var mapZones = new List<MapZone>();
 
-                for (int z = 0; z < ZoneCount; z++)
+                for (int z = 0; z < zoneCount; z++)
                 {
                     if (cellsByZone[z].Count == 0) continue;
 
                     Geometry merged = CascadedPolygonUnion.Union(cellsByZone[z]);
                     if (merged == null || merged.IsEmpty) continue;
 
-                    Color  color = Palette.GetProductivityColor(z, ZoneCount);
+                    Color  color = Palette.GetProductivityColor(z, zoneCount);
                     string label = z < prodLabels.Length ? prodLabels[z] : (z + 1).ToString();
                     double avgYield = zoneYieldCount[z] > 0
                         ? zoneYieldSum[z] / zoneYieldCount[z]
@@ -215,10 +274,9 @@ namespace RateController.RateMap
                 // ── Filter small zones and sort for correct draw order ───────────
                 // Large zones first (drawn first = underneath);
                 // small zones last (drawn last = on top, wins for rate lookup).
-                // Minimum 2 ha removes grid-artefact slivers and isolated patches.
                 mapZones = mapZones
                     .Select(z => new { Zone = z, Ha = z.Hectares() })
-                    .Where(x => x.Ha >= 2.0)
+                    .Where(x => x.Ha >= effectiveMinHa)
                     .OrderByDescending(x => x.Ha)
                     .Select(x => x.Zone)
                     .ToList();
@@ -234,6 +292,51 @@ namespace RateController.RateMap
                 Props.WriteErrorLog("ProductivityZoneCreator/Generate: " + ex.Message);
                 return "Error generating zones: " + ex.Message;
             }
+        }
+
+        // ── Grid normalisation ────────────────────────────────────────────────────
+
+        /// <summary>Scales all values in the grid to [0, 1].</summary>
+        private static double[,] Normalize(double[,] grid, int rows, int cols)
+        {
+            double min = double.MaxValue, max = double.MinValue;
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                {
+                    if (grid[r, c] < min) min = grid[r, c];
+                    if (grid[r, c] > max) max = grid[r, c];
+                }
+
+            double[,] result = new double[rows, cols];
+            double range = max - min;
+            if (range < 1e-9)
+            {
+                // Flat field — return all 0.5 so it contributes a neutral signal
+                for (int r = 0; r < rows; r++)
+                    for (int c = 0; c < cols; c++)
+                        result[r, c] = 0.5;
+            }
+            else
+            {
+                for (int r = 0; r < rows; r++)
+                    for (int c = 0; c < cols; c++)
+                        result[r, c] = (grid[r, c] - min) / range;
+            }
+            return result;
+        }
+
+        // ── Weight helper ─────────────────────────────────────────────────────────
+
+        private static double[] BuildWeights(List<double> weights, int count)
+        {
+            if (weights != null && weights.Count == count)
+            {
+                double total = weights.Sum();
+                if (total > 0)
+                    return weights.Select(w => w / total).ToArray();
+            }
+            double eq = 1.0 / count;
+            return Enumerable.Repeat(eq, count).ToArray();
         }
 
         // ── CSV parsing ───────────────────────────────────────────────────────────
@@ -276,6 +379,37 @@ namespace RateController.RateMap
             catch (Exception ex)
             {
                 Props.WriteErrorLog("ProductivityZoneCreator/ParseYieldFile: " + ex.Message);
+            }
+            return result;
+        }
+
+        // ── EC CSV parsing (Lat,Lon,EC — header line skipped) ────────────────────
+
+        private static List<FieldSample> ParseEcFile(string path)
+        {
+            var result = new List<FieldSample>();
+            try
+            {
+                if (!File.Exists(path)) return result;
+                string[] lines = File.ReadAllLines(path);
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(lines[i])) continue;
+                    string[] parts = lines[i].Split(',');
+                    if (parts.Length < 3) continue;
+                    if (!double.TryParse(parts[0], NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out double lat)) continue;
+                    if (!double.TryParse(parts[1], NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out double lon)) continue;
+                    if (!double.TryParse(parts[2], NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out double ec))  continue;
+                    if (ec <= 0.0) continue;
+                    result.Add(new FieldSample(DateTime.MinValue, lat, lon, 0, 0, 0, ec));
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ProductivityZoneCreator/ParseEcFile: " + ex.Message);
             }
             return result;
         }

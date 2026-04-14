@@ -14,7 +14,7 @@ namespace RateController.Menu
         private frmMenu MainMenu;
         private bool Reset = false;
 
-        public frmMenuRelays( frmMenu menu)
+        public frmMenuRelays(frmMenu menu)
         {
             Initializing = true;
             InitializeComponent();

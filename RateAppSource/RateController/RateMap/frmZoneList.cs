@@ -1,200 +1,125 @@
-using RateController.RateMap;
+﻿using RateController.Classes;
 using System;
+using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
-namespace RateController.Forms
+namespace RateController.RateMap
 {
-    /// <summary>
-    /// Lists all target zones with name, area, and assigned rates.
-    /// Supports multi-row selection and batch deletion.
-    /// </summary>
     public partial class frmZoneList : Form
     {
+        private bool cEdited = false;
+        private bool Initializing = false;
+        private bool Reset = false;
+
         public frmZoneList()
         {
             InitializeComponent();
-            BuildColumns();
-            LoadZones();
         }
 
-        // ── Column setup ─────────────────────────────────────────────────────────
-        // Columns are built in code because product names come from ZoneFields at runtime.
 
-        private void BuildColumns()
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            _dgv.RowTemplate.Height = 28;
-            _dgv.RowTemplate.DefaultCellStyle.SelectionBackColor = Color.SteelBlue;
-            _dgv.RowTemplate.DefaultCellStyle.SelectionForeColor = Color.White;
+            UpdateForm();
+            SetButtons(false);
+        }
 
-            // Color swatch
-            var colColor = new DataGridViewImageColumn
+        private void frmZoneList_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Props.SaveFormLocation(this);
+        }
+
+        private void frmZoneList_Load(object sender, EventArgs e)
+        {
+            Props.LoadFormLocation(this);
+            this.BackColor = Properties.Settings.Default.MainBackColour;
+            DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
+            DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            UpdateForm();
+            SetButtons(false);
+        }
+
+        private void LoadData(bool UpdateObject = false)
+        {
+            try
             {
-                HeaderText  = "",
-                Name        = "Color",
-                Width       = 30,
-                Resizable   = DataGridViewTriState.False,
-                ImageLayout = DataGridViewImageCellLayout.Zoom,
-            };
-            _dgv.Columns.Add(colColor);
-
-            // Name
-            var colName = new DataGridViewTextBoxColumn
-            {
-                HeaderText       = "Name",
-                Name             = "Name",
-                AutoSizeMode     = DataGridViewAutoSizeColumnMode.Fill,
-                MinimumWidth     = 150,
-                DefaultCellStyle = { Padding = new Padding(4, 0, 0, 0) },
-            };
-            _dgv.Columns.Add(colName);
-
-            // Area
-            var colHa = new DataGridViewTextBoxColumn
-            {
-                HeaderText       = "ha",
-                Name             = "Ha",
-                Width            = 60,
-                Resizable        = DataGridViewTriState.False,
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight,
-                                     Padding   = new Padding(0, 0, 6, 0) },
-                HeaderCell       = { Style = { Alignment = DataGridViewContentAlignment.MiddleRight } },
-            };
-            _dgv.Columns.Add(colHa);
-
-            // Rate columns — one per product; shown only if any zone uses it
-            var products = ZoneFields.Products;
-            string[] headers = { "A", "B", "C", "D", "E" };
-
-            for (int i = 0; i < products.Length; i++)
-            {
-                var col = new DataGridViewTextBoxColumn
+                dataSet1.Clear();
+                var zones = MapController.ZnOverlays?.TargetZoneslist;
+                if (zones != null && zones.Count > 0)
                 {
-                    HeaderText       = headers[i],
-                    Name             = products[i],
-                    Width            = 60,
-                    Resizable        = DataGridViewTriState.False,
-                    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight,
-                                         Padding   = new Padding(0, 0, 6, 0) },
-                    HeaderCell       = { Style = { Alignment = DataGridViewContentAlignment.MiddleRight } },
-                    Visible          = false,
-                };
-                _dgv.Columns.Add(col);
+                    foreach (var zone in zones)
+                    {
+                        DataRow Rw = dataSet1.Tables[0].NewRow();
+                        Rw[0] = zone.Name;
+
+                        if (Props.UseMetric)
+                        {
+                            Rw[1] = zone.Hectares();
+                        }
+                        else
+                        {
+                            Rw[1] = Core.Tls.Acres(zone.Hectares());
+                        }
+
+                        Rw[2] = zone.Rates.TryGetValue(ZoneFields.ProductA, out double v2) ? v2 : 0;
+                        Rw[3] = zone.Rates.TryGetValue(ZoneFields.ProductB, out double v3) ? v3 : 0;
+                        Rw[4] = zone.Rates.TryGetValue(ZoneFields.ProductC, out double v4) ? v4 : 0;
+                        Rw[5] = zone.Rates.TryGetValue(ZoneFields.ProductD, out double v5) ? v5 : 0;
+                        Rw[6] = zone.Rates.TryGetValue(ZoneFields.ProductE, out double v6) ? v6 : 0;
+
+                        Rw[7] = zone.ZoneColor.ToArgb();
+
+                        dataSet1.Tables[0].Rows.Add(Rw);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/LoadData: " + ex.Message);
             }
         }
 
-        // ── Data loading ─────────────────────────────────────────────────────────
-
-        private void LoadZones()
+        private void SetButtons(bool Edited)
         {
-            _dgv.Rows.Clear();
-
-            var zones = MapController.ZnOverlays?.TargetZoneslist;
-            if (zones == null || zones.Count == 0)
+            if (!Initializing)
             {
-                _lblCount.Text = "No zones";
-                UpdateRateColumnVisibility();
-                UpdateDeleteButton();
-                return;
-            }
-
-            // Determine which rate products are used across all zones
-            bool[] productUsed = new bool[ZoneFields.Products.Length];
-            foreach (var z in zones)
-                for (int i = 0; i < ZoneFields.Products.Length; i++)
-                    if (z.Rates.TryGetValue(ZoneFields.Products[i], out double r) && r != 0)
-                        productUsed[i] = true;
-
-            foreach (var zone in zones)
-            {
-                var row = new DataGridViewRow();
-                row.CreateCells(_dgv);
-
-                row.Cells[0].Value = MakeColorSwatch(zone.ZoneColor);
-                row.Cells[1].Value = zone.Name;
-
-                double ha = zone.Hectares();
-                row.Cells[2].Value = ha >= 0.05 ? ha.ToString("F1") : "<0.1";
-
-                for (int i = 0; i < ZoneFields.Products.Length; i++)
+                if (Edited)
                 {
-                    double r = zone.Rates.TryGetValue(ZoneFields.Products[i], out double v) ? v : 0;
-                    row.Cells[3 + i].Value = r > 0 ? r.ToString("F0") : "";
+                    btnCancel.Enabled = true;
+                    btnOK.Image = Properties.Resources.Save;
+                }
+                else
+                {
+                    btnCancel.Enabled = false;
+                    btnOK.Image = Properties.Resources.OK;
                 }
 
-                row.Tag = zone.Name;
-                _dgv.Rows.Add(row);
+                cEdited = Edited;
+                this.Tag = cEdited;
             }
-
-            for (int i = 0; i < ZoneFields.Products.Length; i++)
-                _dgv.Columns[ZoneFields.Products[i]].Visible = productUsed[i];
-
-            _lblCount.Text = string.Format("{0} zone{1}", zones.Count, zones.Count == 1 ? "" : "s");
-            UpdateDeleteButton();
         }
 
-        private void UpdateRateColumnVisibility()
+        private void UpdateForm(bool UpdateObject = false)
         {
-            foreach (string key in ZoneFields.Products)
-                _dgv.Columns[key].Visible = false;
+            Initializing = true;
+            LoadData(UpdateObject);
+            Initializing = false;
         }
 
-        private void UpdateDeleteButton()
+        private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            _btnDelete.Enabled = _dgv.SelectedRows.Count > 0;
+            Props.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
+    + " Exception: " + e.Exception.ToString());
+
         }
 
-        // ── Event handlers ────────────────────────────────────────────────────────
-
-        private void Dgv_SelectionChanged(object sender, EventArgs e)
+        private void DGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            UpdateDeleteButton();
-        }
-
-        private void BtnDelete_Click(object sender, EventArgs e)
-        {
-            var names = _dgv.SelectedRows
-                .Cast<DataGridViewRow>()
-                .Select(r => r.Tag as string)
-                .Where(n => !string.IsNullOrEmpty(n))
-                .Distinct()
-                .ToList();
-
-            if (names.Count == 0) return;
-
-            string msg = names.Count == 1
-                ? string.Format("Delete '{0}'?", names[0])
-                : string.Format("Delete {0} zones?", names.Count);
-
-            using (var confirm = new frmMsgBox(msg, "Delete Zone", true))
+            if (e.ColumnIndex == 7 && e.Value is int argb)
             {
-                confirm.ShowDialog();
-                if (!confirm.Result) return;
+                e.CellStyle.BackColor = Color.FromArgb(argb);
+                e.FormattingApplied = true;
             }
-
-            foreach (string name in names)
-                MapController.ZnOverlays.DeleteZone(name);
-
-            LoadZones();
-        }
-
-        private void BtnClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        // ── Helpers ──────────────────────────────────────────────────────────────
-
-        private static Bitmap MakeColorSwatch(Color c)
-        {
-            var bmp = new Bitmap(16, 16);
-            using (var g = Graphics.FromImage(bmp))
-            {
-                g.Clear(Color.FromArgb(220, c.R, c.G, c.B));
-                g.DrawRectangle(Pens.DarkGray, 0, 0, 15, 15);
-            }
-            return bmp;
         }
     }
 }

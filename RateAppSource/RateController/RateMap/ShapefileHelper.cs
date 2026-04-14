@@ -85,6 +85,7 @@ namespace RateController.RateMap
                             { ZoneFields.ProductB, z.Rates[ZoneFields.ProductB] },
                             { ZoneFields.ProductC, z.Rates[ZoneFields.ProductC] },
                             { ZoneFields.ProductD, z.Rates[ZoneFields.ProductD] },
+                            { ZoneFields.ProductE, z.Rates[ZoneFields.ProductE] },
                             { ZoneFields.Color, ColorTranslator.ToHtml(z.ZoneColor) },
                             { ZoneFields.ZoneType, ZoneType.Target.ToString() }
                             }));
@@ -114,6 +115,7 @@ namespace RateController.RateMap
                             { ZoneFields.ProductB, z.Rates[ZoneFields.ProductB] },
                             { ZoneFields.ProductC, z.Rates[ZoneFields.ProductC] },
                             { ZoneFields.ProductD, z.Rates[ZoneFields.ProductD] },
+                            { ZoneFields.ProductE, z.Rates[ZoneFields.ProductE] },
                             { ZoneFields.Color, ColorTranslator.ToHtml(z.ZoneColor) },
                             { ZoneFields.ZoneType, ZoneType.Applied.ToString() }
                             }));
@@ -173,7 +175,8 @@ namespace RateController.RateMap
                     { ZoneFields.ProductA, 0 },
                     { ZoneFields.ProductB, 0 },
                     { ZoneFields.ProductC, 0 },
-                    { ZoneFields.ProductD, 0 }
+                    { ZoneFields.ProductD, 0 },
+                    { ZoneFields.ProductE, 0 }
                 };
 
                 Color color = Palette.GetColor(index);

@@ -349,8 +349,15 @@ namespace RateController.Forms
 
         private void btnFiles_Click(object sender, EventArgs e)
         {
-            using (var frm = new frmZoneList())
-                frm.ShowDialog(this);
+            Form fs = Props.IsFormOpen("frmZoneList");
+
+            if (fs == null)
+            {
+                fs = new frmZoneList();
+                fs.ShowDialog();
+            }
+            fs.Focus();
+
             UpdateForm();
         }
 
@@ -805,7 +812,7 @@ namespace RateController.Forms
 
                 ParcelManager.EnsureFieldFolders(job.FieldID);
                 string ecFolder = ParcelManager.EcFolder(job.FieldID);
-                string ecPath   = Path.Combine(ecFolder, "EC_Test.csv");
+                string ecPath = Path.Combine(ecFolder, "EC_Test.csv");
 
                 var view = MapController.Map.ViewArea;
                 EcOverlayCreator.GenerateTestData(
@@ -1059,11 +1066,20 @@ namespace RateController.Forms
             string yieldFolder = ParcelManager.YieldFolder(fieldID);
             var fullPaths = files.Select(f => Path.Combine(yieldFolder, f)).ToList();
             string currentPath = ParcelManager.SelectedYieldPath(fieldID);
+            bool elevLoaded = MapController.ElevationCreator.HasData;
+            string ecPath = ParcelManager.SelectedEcPath(fieldID);
 
-            using (var dlg = new frmSelectYieldFiles(fullPaths, currentPath))
+            using (var dlg = new frmGenerateZones(fullPaths, currentPath, elevLoaded, ecPath))
             {
                 if (dlg.ShowDialog() != DialogResult.OK) return;
-                string error = ProductivityZoneCreator.Generate(dlg.SelectedPaths);
+                string error = ProductivityZoneCreator.Generate(
+                    dlg.SelectedYieldPaths,
+                    dlg.SelectedYieldWeights,
+                    dlg.YieldFraction,
+                    dlg.EcPath,
+                    dlg.EcFraction,
+                    dlg.ZoneCount,
+                    dlg.MinZoneHa);
                 if (!string.IsNullOrEmpty(error))
                     Props.ShowMessage(error, "Create Zones", 8000, false);
                 else
@@ -1166,13 +1182,17 @@ namespace RateController.Forms
             int zoneIndex = MapController.ZnOverlays.TargetZoneCount() + 1;
             tbName.Text = "Zone " + zoneIndex.ToString("N0");
             if (zoneIndex < colorComboBox.Items.Count)
-            {
                 colorComboBox.SelectedIndex = zoneIndex;
-            }
             else
-            {
                 colorComboBox.SelectedIndex = 1;
-            }
+
+            // Populate rates from each product's base rate, not the previously selected zone
+            double[] baseRates = Core.Products?.BaseRates() ?? new double[ZoneFields.Products.Length];
+            tbP1.Text = (baseRates.Length > 0 ? baseRates[0] : 0).ToString("N1");
+            tbP2.Text = (baseRates.Length > 1 ? baseRates[1] : 0).ToString("N1");
+            tbP3.Text = (baseRates.Length > 2 ? baseRates[2] : 0).ToString("N1");
+            tbP4.Text = (baseRates.Length > 3 ? baseRates[3] : 0).ToString("N1");
+            tbP5.Text = (baseRates.Length > 4 ? baseRates[4] : 0).ToString("N1");
         }
 
         private void FillPrescriptionsList()

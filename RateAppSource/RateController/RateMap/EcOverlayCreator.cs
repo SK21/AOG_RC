@@ -63,6 +63,8 @@ namespace RateController.RateMap
             _enabled = bool.TryParse(Props.GetProp("MapShowEC"), out bool sh) ? sh : false;
         }
 
+        public bool HasData => _readings != null && _readings.Count > 0;
+
         public bool Enabled
         {
             get => _enabled;
