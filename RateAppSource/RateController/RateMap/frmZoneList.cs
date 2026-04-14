@@ -11,6 +11,7 @@ namespace RateController.RateMap
         private bool cEdited = false;
         private bool Initializing = false;
         private bool Reset = false;
+        private bool AllSelected = false;
 
         public frmZoneList()
         {
@@ -68,6 +69,7 @@ namespace RateController.RateMap
                         Rw[6] = zone.Rates.TryGetValue(ZoneFields.ProductE, out double v6) ? v6 : 0;
 
                         Rw[7] = zone.ZoneColor.ToArgb();
+                        Rw[8] = false;
 
                         dataSet1.Tables[0].Rows.Add(Rw);
                     }
@@ -115,10 +117,34 @@ namespace RateController.RateMap
 
         private void DGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == 7 && e.Value is int argb)
+            if (e.ColumnIndex == 8 && e.Value is int argb)
             {
                 e.CellStyle.BackColor = Color.FromArgb(argb);
                 e.FormattingApplied = true;
+            }
+        }
+
+        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 && e.ColumnIndex == 0)
+            {
+                AllSelected = !AllSelected;
+                foreach (DataGridViewRow row in DGV.Rows)
+                {
+                    row.Cells[0].Value = AllSelected;
+                }
+            }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            if (cEdited)
+            {
+
+            }
+            else
+            {
+                Close();
             }
         }
     }

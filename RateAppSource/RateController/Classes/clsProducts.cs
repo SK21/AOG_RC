@@ -31,7 +31,7 @@ namespace RateController.Classes
             {
                 for (int i = 0; i < ProductCount; i++)
                 {
-                    Result[i] = cProducts[i].RateSet;
+                    Result[i] = cProducts[i].Enabled ? cProducts[i].RateSet : 0;
                 }
             }
             return Result;
@@ -90,7 +90,7 @@ namespace RateController.Classes
                     Prd.MeterCal = 1;
                     Prd.EnableProdDensity = false;
                     Prd.ProdDensity = 0;
-                    Prd.RateSet = 1;
+                    Prd.RateSet = 0;
                     Prd.RateAlt = 100;
                     Prd.TankSize = 1000;
                     Prd.CurrentTankAmount = 1000;
