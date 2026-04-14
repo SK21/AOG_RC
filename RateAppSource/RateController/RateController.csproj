@@ -492,12 +492,6 @@
     <Compile Include="RateMap\frmZoneList.Designer.cs">
       <DependentUpon>frmZoneList.cs</DependentUpon>
     </Compile>
-    <Compile Include="RateMap\frmZoneListOld.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RateMap\frmZoneListOld.Designer.cs">
-      <DependentUpon>frmZoneListOld.cs</DependentUpon>
-    </Compile>
     <Compile Include="RateMap\kmlLayerManager.cs" />
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />
@@ -681,9 +675,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RateMap\frmZoneList.resx">
       <DependentUpon>frmZoneList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RateMap\frmZoneListOld.resx">
-      <DependentUpon>frmZoneListOld.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Help\frmMap.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

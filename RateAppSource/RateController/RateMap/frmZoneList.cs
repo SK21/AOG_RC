@@ -72,6 +72,7 @@ namespace RateController.RateMap
             if (cEdited)
             {
                 SaveData();
+                UpdateForm();
                 SetButtons(false);
             }
             else
@@ -255,7 +256,14 @@ namespace RateController.RateMap
                             switch (j)
                             {
                                 case 1:
-                                    zone.Name = val;
+                                    if (val != zone.Name && MapController.ZnOverlays.ZoneNameFound(val, zone))
+                                    {
+                                        Props.ShowMessage("Duplicate zone name: " + val);
+                                    }
+                                    else
+                                    {
+                                        zone.Name = val;
+                                    }
                                     break;
 
                                 case 3:

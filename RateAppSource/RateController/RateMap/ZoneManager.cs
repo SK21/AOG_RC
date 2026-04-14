@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.RateMap
 {
@@ -1028,7 +1026,7 @@ namespace RateController.RateMap
             return new PointLatLng(origin.Lat + dLat, origin.Lng + dLng);
         }
 
-        private bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
+        public bool ZoneNameFound(string Name, MapZone ExcludeZone = null)
         {
             bool Result = false;
             foreach (MapZone zn in cTargetZonesList)
