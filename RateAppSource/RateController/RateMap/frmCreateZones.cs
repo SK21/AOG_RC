@@ -18,7 +18,7 @@ namespace RateController.RateMap
         private int WeightYield = 75;
         private int ZonesCreated = 0;
         private int ZonesToCreate = 5;
-        private bool HighLighting = false;
+
         public frmCreateZones()
         {
             InitializeComponent();
@@ -48,6 +48,7 @@ namespace RateController.RateMap
             {
                 SaveData();
                 SetButtons(false);
+                EnableBuild();
             }
             else
             {
@@ -57,13 +58,12 @@ namespace RateController.RateMap
 
         private void btnSelect_Click(object sender, EventArgs e)
         {
-            HighLighting = true;
             AllYields = !AllYields;
             for (int i = 0; i < ckLBYields.Items.Count; i++)
             {
                 ckLBYields.SetItemChecked(i, AllYields);
             }
-            HighLighting = false;
+            EnableWeightBoxes();
         }
 
         private void ckEC_CheckedChanged(object sender, EventArgs e)
@@ -73,12 +73,6 @@ namespace RateController.RateMap
 
         private void ckLBYields_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = ckLBYields.SelectedIndex;
-            if (index >= 0)
-            {
-                // Optional: keep checkbox in sync when clicking text
-                ckLBYields.SetItemChecked(index, !ckLBYields.GetItemChecked(index));
-            }
             EnableWeightBoxes();
         }
 
@@ -89,7 +83,7 @@ namespace RateController.RateMap
 
         private void EnableWeightBoxes()
         {
-            tbWeightYield.Enabled = ckLBYields.SelectedIndex > -1;
+            tbWeightYield.Enabled = ckLBYields.CheckedItems.Count > 0;
             tbWeightEC.Enabled = ckEC.Checked;
             tbWeightElevation.Enabled = ckElevation.Checked;
             UpdateWeightTotal();
@@ -109,6 +103,19 @@ namespace RateController.RateMap
             LoadData();
             UpdateForm();
             UpdateWeightTotal();
+        }
+
+        private void lbTotal_TextChanged(object sender, EventArgs e)
+        {
+            int total = int.TryParse(lbTotal.Text, out int ttl) ? ttl : 0;
+            if (total == 100)
+            {
+                lbTotal.ForeColor = System.Drawing.Color.Black;
+            }
+            else
+            {
+                lbTotal.ForeColor = System.Drawing.Color.Red;
+            }
         }
 
         private void LoadData()
@@ -247,7 +254,7 @@ namespace RateController.RateMap
         {
             TotalWeight = 0;
 
-            if (ckLBYields.SelectedIndex > -1) TotalWeight += int.TryParse(tbWeightYield.Text, out int yw) ? yw : 0;
+            if (ckLBYields.CheckedItems.Count > 0) TotalWeight += int.TryParse(tbWeightYield.Text, out int yw) ? yw : 0;
             if (ckEC.Checked) TotalWeight += int.TryParse(tbWeightEC.Text, out int ec) ? ec : 0;
             if (ckElevation.Checked) TotalWeight += int.TryParse(tbWeightElevation.Text, out int el) ? el : 0;
 
@@ -265,17 +272,5 @@ namespace RateController.RateMap
         }
 
         #endregion build zones
-
-        private void ckLBYields_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            if (!HighLighting)
-            {
-                // Delay selection update until after check state changes
-                this.BeginInvoke((MethodInvoker)(() =>
-                {
-                    ckLBYields.SelectedIndex = e.Index;
-                }));
-            }
-        }
     }
 }

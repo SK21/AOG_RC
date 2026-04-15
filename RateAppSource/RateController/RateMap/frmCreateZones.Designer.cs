@@ -68,7 +68,6 @@
             this.ckLBYields.ScrollAlwaysVisible = true;
             this.ckLBYields.Size = new System.Drawing.Size(282, 124);
             this.ckLBYields.TabIndex = 1;
-            this.ckLBYields.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ckLBYields_ItemCheck);
             this.ckLBYields.SelectedIndexChanged += new System.EventHandler(this.ckLBYields_SelectedIndexChanged);
             // 
             // ckEC
@@ -250,6 +249,7 @@
             this.lbTotal.TabIndex = 441;
             this.lbTotal.Text = "100";
             this.lbTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbTotal.TextChanged += new System.EventHandler(this.lbTotal_TextChanged);
             // 
             // btnBuild
             // 
