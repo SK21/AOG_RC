@@ -1053,40 +1053,49 @@ namespace RateController.Forms
 
         private void btnCreateZones_Click(object sender, EventArgs e)
         {
-            int fieldID = JobManager.CurrentJob?.FieldID ?? -1;
-            if (fieldID < 0) { Props.ShowMessage("No field selected.", "Create Zones", 5000, false); return; }
+            //int fieldID = JobManager.CurrentJob?.FieldID ?? -1;
+            //if (fieldID < 0) { Props.ShowMessage("No field selected.", "Create Zones", 5000, false); return; }
 
-            var files = ParcelManager.GetYieldFiles(fieldID);
-            if (files == null || files.Count == 0)
+            //var files = ParcelManager.GetYieldFiles(fieldID);
+            //if (files == null || files.Count == 0)
+            //{
+            //    Props.ShowMessage("No yield files found for this field.", "Create Zones", 5000, false);
+            //    return;
+            //}
+
+            //string yieldFolder = ParcelManager.YieldFolder(fieldID);
+            //var fullPaths = files.Select(f => Path.Combine(yieldFolder, f)).ToList();
+            //string currentPath = ParcelManager.SelectedYieldPath(fieldID);
+            //bool elevLoaded = MapController.ElevationCreator.HasData;
+            //string ecPath = ParcelManager.SelectedEcPath(fieldID);
+
+            //using (var dlg = new frmGenerateZones(fullPaths, currentPath, elevLoaded, ecPath))
+            //{
+            //    if (dlg.ShowDialog() != DialogResult.OK) return;
+            //    string error = ProductivityZoneCreator.Generate(
+            //        dlg.SelectedYieldPaths,
+            //        dlg.SelectedYieldWeights,
+            //        dlg.YieldFraction,
+            //        dlg.EcPath,
+            //        dlg.EcFraction,
+            //        dlg.ZoneCount,
+            //        dlg.MinZoneHa);
+            //    if (!string.IsNullOrEmpty(error))
+            //        Props.ShowMessage(error, "Create Zones", 8000, false);
+            //    else
+            //        Props.ShowMessage(
+            //            string.Format("{0} zone(s) created.", MapController.ZnOverlays.TargetZoneCount()),
+            //            "Create Zones", 4000, false);
+            //}
+
+            Form fs = Props.IsFormOpen("frmCreateZones");
+            if (fs == null)
             {
-                Props.ShowMessage("No yield files found for this field.", "Create Zones", 5000, false);
-                return;
+                fs = new frmCreateZones();
+                fs.ShowDialog();
             }
+            fs.Focus();
 
-            string yieldFolder = ParcelManager.YieldFolder(fieldID);
-            var fullPaths = files.Select(f => Path.Combine(yieldFolder, f)).ToList();
-            string currentPath = ParcelManager.SelectedYieldPath(fieldID);
-            bool elevLoaded = MapController.ElevationCreator.HasData;
-            string ecPath = ParcelManager.SelectedEcPath(fieldID);
-
-            using (var dlg = new frmGenerateZones(fullPaths, currentPath, elevLoaded, ecPath))
-            {
-                if (dlg.ShowDialog() != DialogResult.OK) return;
-                string error = ProductivityZoneCreator.Generate(
-                    dlg.SelectedYieldPaths,
-                    dlg.SelectedYieldWeights,
-                    dlg.YieldFraction,
-                    dlg.EcPath,
-                    dlg.EcFraction,
-                    dlg.ZoneCount,
-                    dlg.MinZoneHa);
-                if (!string.IsNullOrEmpty(error))
-                    Props.ShowMessage(error, "Create Zones", 8000, false);
-                else
-                    Props.ShowMessage(
-                        string.Format("{0} zone(s) created.", MapController.ZnOverlays.TargetZoneCount()),
-                        "Create Zones", 4000, false);
-            }
             UpdateForm();
         }
 

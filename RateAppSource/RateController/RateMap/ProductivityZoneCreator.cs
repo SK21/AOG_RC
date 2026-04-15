@@ -88,10 +88,11 @@ namespace RateController.RateMap
                 int    rows        = Math.Max(3, (int)(fieldH / res));
                 int    cols        = Math.Max(3, (int)(fieldW / res));
 
-                // ── Enforce zone density cap ─────────────────────────────────────
-                // Cap at 20 polygons per 160-acre (~65 ha) field, scaling with area.
-                // effectiveMinHa may be larger than the user's minZoneHa but never smaller.
-                double effectiveMinHa = Math.Max(minZoneHa, fieldAreaHa / 20.0);
+                // ── Minimum zone area ────────────────────────────────────────────
+                // Floor is the user's setting or 1/20 of expected zone size,
+                // whichever is larger.  Tying to expected zone size (fieldArea/zoneCount)
+                // rather than total field area avoids over-filtering on small fields.
+                double effectiveMinHa = Math.Max(minZoneHa, fieldAreaHa / (zoneCount * 20.0));
 
                 // ── Build weighted yield grid across all years ───────────────────
                 // wArr is normalised (sum=1), so yieldSum IS already the weighted average.
@@ -149,6 +150,15 @@ namespace RateController.RateMap
                     }
                 }
 
+                // ── Pre-classification smoothing ─────────────────────────────────
+                // Box-blur the productivity grid before quantile classification.
+                // Reduces noise so zone boundaries are spatially coherent.
+                // Without this, noisy IDW output produces hundreds of tiny fragments
+                // that the post-classification majority filter cannot fully merge.
+                classifyGrid = BoxBlur(classifyGrid, rows, cols);
+                classifyGrid = BoxBlur(classifyGrid, rows, cols);
+                classifyGrid = BoxBlur(classifyGrid, rows, cols);
+
                 // ── Quantile classification ──────────────────────────────────────
                 // Sort all cell values, assign zones by rank so each zone covers
                 // roughly equal field area regardless of value distribution.
@@ -172,12 +182,22 @@ namespace RateController.RateMap
                     }
                 }
 
-                // ── 3×3 majority-filter smoothing (multiple passes) ──────────────
-                // One pass leaves zones highly fragmented; 5 passes creates large
-                // contiguous patches suitable for polygon extraction.
+                // ── 3×3 majority-filter smoothing (convergence) ─────────────────
+                // Run until the grid stops changing (converged) or 30 passes max.
                 int[,] smoothed = zoneGrid;
-                for (int pass = 0; pass < 5; pass++)
-                    smoothed = MajorityFilter(smoothed, rows, cols);
+                for (int pass = 0; pass < 30; pass++)
+                {
+                    int[,] next = MajorityFilter(smoothed, rows, cols);
+                    if (GridsEqual(smoothed, next, rows, cols)) break;
+                    smoothed = next;
+                }
+
+                // ── Sieve: merge small fragments into neighbouring zones ──────────
+                // Any connected component smaller than 1/10 of expected zone size
+                // is absorbed by its most-common neighbour.  Guarantees full field
+                // coverage with no tiny isolated patches.
+                int minCells = Math.Max(1, (rows * cols) / (zoneCount * 10));
+                smoothed = SieveSmallRegions(smoothed, rows, cols, minCells);
 
                 // ── Union cell rectangles per zone → NTS polygons ────────────────
                 var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -441,6 +461,91 @@ namespace RateController.RateMap
                 wSum += w;
             }
             return vSum / wSum;
+        }
+
+        private static double[,] BoxBlur(double[,] grid, int rows, int cols)
+        {
+            double[,] result = new double[rows, cols];
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    double sum = 0; int count = 0;
+                    for (int dr = -1; dr <= 1; dr++)
+                        for (int dc = -1; dc <= 1; dc++)
+                        {
+                            int rr = r + dr, cc = c + dc;
+                            if (rr >= 0 && rr < rows && cc >= 0 && cc < cols)
+                            { sum += grid[rr, cc]; count++; }
+                        }
+                    result[r, c] = sum / count;
+                }
+            }
+            return result;
+        }
+
+        private static int[,] SieveSmallRegions(int[,] grid, int rows, int cols, int minCells)
+        {
+            int[,] result = (int[,])grid.Clone();
+            bool anyMerged = true;
+            while (anyMerged)
+            {
+                anyMerged = false;
+                bool[,] visited = new bool[rows, cols];
+                for (int r0 = 0; r0 < rows; r0++)
+                {
+                    for (int c0 = 0; c0 < cols; c0++)
+                    {
+                        if (visited[r0, c0]) continue;
+                        int zoneId = result[r0, c0];
+
+                        // BFS — find the full connected component
+                        var cells = new List<(int r, int c)>();
+                        var queue = new Queue<(int, int)>();
+                        queue.Enqueue((r0, c0));
+                        visited[r0, c0] = true;
+                        while (queue.Count > 0)
+                        {
+                            var (r, c) = queue.Dequeue();
+                            cells.Add((r, c));
+                            foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                            {
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols
+                                    && !visited[nr, nc] && result[nr, nc] == zoneId)
+                                { visited[nr, nc] = true; queue.Enqueue((nr, nc)); }
+                            }
+                        }
+
+                        if (cells.Count >= minCells) continue;
+
+                        // Small fragment — find the dominant neighbouring zone
+                        var neighborCounts = new Dictionary<int, int>();
+                        foreach (var (r, c) in cells)
+                            foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                            {
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && result[nr, nc] != zoneId)
+                                {
+                                    int nz = result[nr, nc];
+                                    neighborCounts[nz] = neighborCounts.ContainsKey(nz) ? neighborCounts[nz] + 1 : 1;
+                                }
+                            }
+
+                        if (neighborCounts.Count == 0) continue;
+                        int target = neighborCounts.OrderByDescending(kv => kv.Value).First().Key;
+                        foreach (var (r, c) in cells) result[r, c] = target;
+                        anyMerged = true;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static bool GridsEqual(int[,] a, int[,] b, int rows, int cols)
+        {
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                    if (a[r, c] != b[r, c]) return false;
+            return true;
         }
 
         private static int[,] MajorityFilter(int[,] grid, int rows, int cols)

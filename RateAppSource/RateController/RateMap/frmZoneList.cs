@@ -213,18 +213,18 @@ namespace RateController.RateMap
 
                         if (Props.UseMetric)
                         {
-                            Rw[1] = zone.Hectares();
+                            Rw[1] = (decimal)zone.Hectares();
                         }
                         else
                         {
-                            Rw[1] = Core.Tls.Acres(zone.Hectares());
+                            Rw[1] = (decimal)Core.Tls.Acres(zone.Hectares());
                         }
 
-                        Rw[2] = zone.Rates.TryGetValue(ZoneFields.ProductA, out double v2) ? v2 : 0;
-                        Rw[3] = zone.Rates.TryGetValue(ZoneFields.ProductB, out double v3) ? v3 : 0;
-                        Rw[4] = zone.Rates.TryGetValue(ZoneFields.ProductC, out double v4) ? v4 : 0;
-                        Rw[5] = zone.Rates.TryGetValue(ZoneFields.ProductD, out double v5) ? v5 : 0;
-                        Rw[6] = zone.Rates.TryGetValue(ZoneFields.ProductE, out double v6) ? v6 : 0;
+                        Rw[2] = (decimal)(zone.Rates.TryGetValue(ZoneFields.ProductA, out double v2) ? v2 : 0);
+                        Rw[3] = (decimal)(zone.Rates.TryGetValue(ZoneFields.ProductB, out double v3) ? v3 : 0);
+                        Rw[4] = (decimal)(zone.Rates.TryGetValue(ZoneFields.ProductC, out double v4) ? v4 : 0);
+                        Rw[5] = (decimal)(zone.Rates.TryGetValue(ZoneFields.ProductD, out double v5) ? v5 : 0);
+                        Rw[6] = (decimal)(zone.Rates.TryGetValue(ZoneFields.ProductE, out double v6) ? v6 : 0);
 
                         Rw[7] = zone.ZoneColor.ToArgb();
                         Rw[8] = false;
