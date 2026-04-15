@@ -18,7 +18,7 @@ namespace RateController.RateMap
         private int WeightYield = 75;
         private int ZonesCreated = 0;
         private int ZonesToCreate = 5;
-
+        private bool HighLighting = false;
         public frmCreateZones()
         {
             InitializeComponent();
@@ -57,19 +57,42 @@ namespace RateController.RateMap
 
         private void btnSelect_Click(object sender, EventArgs e)
         {
+            HighLighting = true;
             AllYields = !AllYields;
             for (int i = 0; i < ckLBYields.Items.Count; i++)
             {
                 ckLBYields.SetItemChecked(i, AllYields);
             }
+            HighLighting = false;
+        }
+
+        private void ckEC_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableWeightBoxes();
+        }
+
+        private void ckLBYields_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int index = ckLBYields.SelectedIndex;
+            if (index >= 0)
+            {
+                // Optional: keep checkbox in sync when clicking text
+                ckLBYields.SetItemChecked(index, !ckLBYields.GetItemChecked(index));
+            }
+            EnableWeightBoxes();
         }
 
         private void EnableBuild()
         {
-            // todo check at least one of yield, ec, or elevation is selected
-            // check at least one zone and grid size > 0
+            btnBuild.Enabled = (TotalWeight == 100 && !cEdited && ZonesToCreate > 0 && GridSize > 0);
+        }
 
-            btnBuild.Enabled = (TotalWeight == 100 && !cEdited);
+        private void EnableWeightBoxes()
+        {
+            tbWeightYield.Enabled = ckLBYields.SelectedIndex > -1;
+            tbWeightEC.Enabled = ckEC.Checked;
+            tbWeightElevation.Enabled = ckElevation.Checked;
+            UpdateWeightTotal();
         }
 
         private void frmCreateZones_FormClosing(object sender, FormClosingEventArgs e)
@@ -199,11 +222,11 @@ namespace RateController.RateMap
         {
             Initializing = true;
 
-            tbWeightYield.Text = WeightYield.ToString("N0");
+            tbWeightYield.Text = WeightYield.ToString("0");
             tbWeightEC.Text = WeightEC.ToString("N0");
-            tbWeightElevation.Text = WeightElevation.ToString("N0");
-            tbNumZones.Text = ZonesToCreate.ToString("N0");
-            tbMinZoneSize.Text = GridSize.ToString("N0");
+            tbWeightElevation.Text = WeightElevation.ToString("0");
+            tbNumZones.Text = ZonesToCreate.ToString("0");
+            tbMinZoneSize.Text = GridSize.ToString("0");
 
             if (Props.UseMetric)
             {
@@ -214,6 +237,7 @@ namespace RateController.RateMap
                 lbArea.Text = "Ac";
             }
 
+            EnableWeightBoxes();
             EnableBuild();
 
             Initializing = false;
@@ -221,9 +245,12 @@ namespace RateController.RateMap
 
         private void UpdateWeightTotal()
         {
-            TotalWeight = int.TryParse(tbWeightYield.Text, out int yw) ? yw : 0;
-            TotalWeight += int.TryParse(tbWeightEC.Text, out int ec) ? ec : 0;
-            TotalWeight += int.TryParse(tbWeightElevation.Text, out int el) ? el : 0;
+            TotalWeight = 0;
+
+            if (ckLBYields.SelectedIndex > -1) TotalWeight += int.TryParse(tbWeightYield.Text, out int yw) ? yw : 0;
+            if (ckEC.Checked) TotalWeight += int.TryParse(tbWeightEC.Text, out int ec) ? ec : 0;
+            if (ckElevation.Checked) TotalWeight += int.TryParse(tbWeightElevation.Text, out int el) ? el : 0;
+
             lbTotal.Text = TotalWeight.ToString("N0");
             EnableBuild();
         }
@@ -238,5 +265,17 @@ namespace RateController.RateMap
         }
 
         #endregion build zones
+
+        private void ckLBYields_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (!HighLighting)
+            {
+                // Delay selection update until after check state changes
+                this.BeginInvoke((MethodInvoker)(() =>
+                {
+                    ckLBYields.SelectedIndex = e.Index;
+                }));
+            }
+        }
     }
 }

@@ -61,12 +61,15 @@
             // 
             // ckLBYields
             // 
+            this.ckLBYields.CheckOnClick = true;
             this.ckLBYields.FormattingEnabled = true;
             this.ckLBYields.Location = new System.Drawing.Point(101, 37);
             this.ckLBYields.Name = "ckLBYields";
             this.ckLBYields.ScrollAlwaysVisible = true;
             this.ckLBYields.Size = new System.Drawing.Size(282, 124);
             this.ckLBYields.TabIndex = 1;
+            this.ckLBYields.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ckLBYields_ItemCheck);
+            this.ckLBYields.SelectedIndexChanged += new System.EventHandler(this.ckLBYields_SelectedIndexChanged);
             // 
             // ckEC
             // 
@@ -80,7 +83,7 @@
             this.ckEC.Text = "EC";
             this.ckEC.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEC.UseVisualStyleBackColor = true;
-            this.ckEC.CheckedChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.ckEC.CheckedChanged += new System.EventHandler(this.ckEC_CheckedChanged);
             // 
             // ckElevation
             // 
@@ -94,7 +97,7 @@
             this.ckElevation.Text = "Elevation";
             this.ckElevation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckElevation.UseVisualStyleBackColor = true;
-            this.ckElevation.CheckedChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.ckElevation.CheckedChanged += new System.EventHandler(this.ckEC_CheckedChanged);
             // 
             // tbWeightYield
             // 
