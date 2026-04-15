@@ -44,8 +44,9 @@
             this.tbNumZones = new System.Windows.Forms.TextBox();
             this.lblMinSize = new System.Windows.Forms.Label();
             this.tbMinZoneSize = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lbArea = new System.Windows.Forms.Label();
             this.lbTotal = new System.Windows.Forms.Label();
+            this.btnBuild = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -79,6 +80,7 @@
             this.ckEC.Text = "EC";
             this.ckEC.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEC.UseVisualStyleBackColor = true;
+            this.ckEC.CheckedChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // ckElevation
             // 
@@ -92,6 +94,7 @@
             this.ckElevation.Text = "Elevation";
             this.ckElevation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckElevation.UseVisualStyleBackColor = true;
+            this.ckElevation.CheckedChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // tbWeightYield
             // 
@@ -101,6 +104,7 @@
             this.tbWeightYield.TabIndex = 374;
             this.tbWeightYield.Text = "75";
             this.tbWeightYield.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWeightYield.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.tbWeightYield.Enter += new System.EventHandler(this.NumericTextBox_Enter);
             this.tbWeightYield.Validating += new System.ComponentModel.CancelEventHandler(this.NumericTextBox_Validating);
             // 
@@ -122,6 +126,7 @@
             this.tbWeightEC.TabIndex = 376;
             this.tbWeightEC.Text = "20";
             this.tbWeightEC.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWeightEC.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.tbWeightEC.Enter += new System.EventHandler(this.NumericTextBox_Enter);
             this.tbWeightEC.Validating += new System.ComponentModel.CancelEventHandler(this.NumericTextBox_Validating);
             // 
@@ -133,6 +138,7 @@
             this.tbWeightElevation.TabIndex = 377;
             this.tbWeightElevation.Text = "5";
             this.tbWeightElevation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWeightElevation.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.tbWeightElevation.Enter += new System.EventHandler(this.NumericTextBox_Enter);
             this.tbWeightElevation.Validating += new System.ComponentModel.CancelEventHandler(this.NumericTextBox_Validating);
             // 
@@ -141,10 +147,10 @@
             this.btnSelect.FlatAppearance.BorderSize = 0;
             this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelect.Image = global::RateController.Properties.Resources.selection;
-            this.btnSelect.Location = new System.Drawing.Point(151, 419);
+            this.btnSelect.Location = new System.Drawing.Point(75, 419);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(72, 72);
-            this.btnSelect.TabIndex = 433;
+            this.btnSelect.TabIndex = 3;
             this.btnSelect.UseVisualStyleBackColor = true;
             this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
@@ -160,7 +166,7 @@
             this.btnCancel.Location = new System.Drawing.Point(231, 419);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
-            this.btnCancel.TabIndex = 435;
+            this.btnCancel.TabIndex = 1;
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -177,7 +183,7 @@
             this.btnOK.Location = new System.Drawing.Point(311, 419);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(72, 72);
-            this.btnOK.TabIndex = 434;
+            this.btnOK.TabIndex = 0;
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -199,6 +205,7 @@
             this.tbNumZones.TabIndex = 437;
             this.tbNumZones.Text = "5";
             this.tbNumZones.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNumZones.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.tbNumZones.Enter += new System.EventHandler(this.NumericTextBox_Enter);
             this.tbNumZones.Validating += new System.ComponentModel.CancelEventHandler(this.NumericTextBox_Validating);
             // 
@@ -219,17 +226,18 @@
             this.tbMinZoneSize.TabIndex = 439;
             this.tbMinZoneSize.Text = "1";
             this.tbMinZoneSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMinZoneSize.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.tbMinZoneSize.Enter += new System.EventHandler(this.NumericTextBox_Enter);
             this.tbMinZoneSize.Validating += new System.ComponentModel.CancelEventHandler(this.NumericTextBox_Validating);
             // 
-            // label3
+            // lbArea
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(338, 374);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(33, 24);
-            this.label3.TabIndex = 440;
-            this.label3.Text = "Ac";
+            this.lbArea.AutoSize = true;
+            this.lbArea.Location = new System.Drawing.Point(338, 374);
+            this.lbArea.Name = "lbArea";
+            this.lbArea.Size = new System.Drawing.Size(33, 24);
+            this.lbArea.TabIndex = 440;
+            this.lbArea.Text = "Ac";
             // 
             // lbTotal
             // 
@@ -240,13 +248,26 @@
             this.lbTotal.Text = "100";
             this.lbTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnBuild
+            // 
+            this.btnBuild.FlatAppearance.BorderSize = 0;
+            this.btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBuild.Image = global::RateController.Properties.Resources.Start;
+            this.btnBuild.Location = new System.Drawing.Point(153, 419);
+            this.btnBuild.Name = "btnBuild";
+            this.btnBuild.Size = new System.Drawing.Size(72, 72);
+            this.btnBuild.TabIndex = 2;
+            this.btnBuild.UseVisualStyleBackColor = true;
+            this.btnBuild.Click += new System.EventHandler(this.btnBuild_Click);
+            // 
             // frmCreateZones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(395, 503);
+            this.Controls.Add(this.btnBuild);
             this.Controls.Add(this.lbTotal);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lbArea);
             this.Controls.Add(this.tbMinZoneSize);
             this.Controls.Add(this.lblMinSize);
             this.Controls.Add(this.tbNumZones);
@@ -295,7 +316,8 @@
         private System.Windows.Forms.TextBox tbNumZones;
         private System.Windows.Forms.Label lblMinSize;
         private System.Windows.Forms.TextBox tbMinZoneSize;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbArea;
         private System.Windows.Forms.Label lbTotal;
+        private System.Windows.Forms.Button btnBuild;
     }
 }
