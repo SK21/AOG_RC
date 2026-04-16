@@ -17,7 +17,6 @@ namespace RateController.RateMap
         private int WeightEC = 20;
         private int WeightElevation = 5;
         private int WeightYield = 75;
-        private int ZonesCreated = 0;
         private int ZonesToCreate = 5;
 
         public frmCreateZones()
@@ -29,7 +28,7 @@ namespace RateController.RateMap
         {
             if (Build())
             {
-                Props.ShowMessage(ZonesCreated.ToString("0 ") + " zones created.");
+                Props.ShowMessage("Zones created.");
             }
             else
             {
@@ -283,7 +282,7 @@ namespace RateController.RateMap
                 }
 
                 // EC and elevation paths — only if the layer checkbox is ticked
-                string ecPath        = ckEC.Checked        ? ParcelManager.SelectedEcPath(fieldID)        : null;
+                string ecPath = ckEC.Checked ? ParcelManager.SelectedEcPath(fieldID) : null;
                 string elevationPath = ckElevation.Checked ? ParcelManager.SelectedElevationPath(fieldID) : null;
 
                 // Validate that checked layers have a file assigned on this field
@@ -307,9 +306,9 @@ namespace RateController.RateMap
                 }
 
                 // Convert layer weights to fractions (weights already validated to sum to 100)
-                double yieldFraction     = ckLBYields.CheckedItems.Count > 0 ? WeightYield     / 100.0 : 0.0;
-                double ecFraction        = ckEC.Checked                      ? WeightEC        / 100.0 : 0.0;
-                double elevationFraction = ckElevation.Checked               ? WeightElevation / 100.0 : 0.0;
+                double yieldFraction = ckLBYields.CheckedItems.Count > 0 ? WeightYield / 100.0 : 0.0;
+                double ecFraction = ckEC.Checked ? WeightEC / 100.0 : 0.0;
+                double elevationFraction = ckElevation.Checked ? WeightElevation / 100.0 : 0.0;
 
                 // GridSize is stored in Ha (metric) or Ac (imperial) — Generate() expects Ha
                 double minZoneHa = Props.UseMetric ? GridSize : GridSize * 0.404686;
@@ -332,7 +331,6 @@ namespace RateController.RateMap
                     return false;
                 }
 
-                ZonesCreated = ZonesToCreate;
                 return true;
             }
             catch (Exception ex)

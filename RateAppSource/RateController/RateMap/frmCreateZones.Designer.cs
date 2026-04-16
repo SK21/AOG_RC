@@ -197,7 +197,7 @@
             this.lblZoneCount.Name = "lblZoneCount";
             this.lblZoneCount.Size = new System.Drawing.Size(155, 24);
             this.lblZoneCount.TabIndex = 436;
-            this.lblZoneCount.Text = "Number of zones";
+            this.lblZoneCount.Text = "Productivity levels";
             // 
             // tbNumZones
             // 
@@ -218,7 +218,7 @@
             this.lblMinSize.Name = "lblMinSize";
             this.lblMinSize.Size = new System.Drawing.Size(83, 24);
             this.lblMinSize.TabIndex = 438;
-            this.lblMinSize.Text = "Grid size";
+            this.lblMinSize.Text = "Min zone size";
             // 
             // tbMinZoneSize
             // 
