@@ -1113,7 +1113,7 @@
             // 
             this.btnGenerateTestYield.FlatAppearance.BorderSize = 0;
             this.btnGenerateTestYield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerateTestYield.Location = new System.Drawing.Point(10, 74);
+            this.btnGenerateTestYield.Location = new System.Drawing.Point(142, 321);
             this.btnGenerateTestYield.Name = "btnGenerateTestYield";
             this.btnGenerateTestYield.Size = new System.Drawing.Size(47, 40);
             this.btnGenerateTestYield.TabIndex = 431;
@@ -1125,7 +1125,7 @@
             // 
             this.btnGenerateTestElevation.FlatAppearance.BorderSize = 0;
             this.btnGenerateTestElevation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerateTestElevation.Location = new System.Drawing.Point(10, 232);
+            this.btnGenerateTestElevation.Location = new System.Drawing.Point(10, 321);
             this.btnGenerateTestElevation.Name = "btnGenerateTestElevation";
             this.btnGenerateTestElevation.Size = new System.Drawing.Size(50, 40);
             this.btnGenerateTestElevation.TabIndex = 430;
@@ -1137,7 +1137,7 @@
             // 
             this.btnGenerateTestEC.FlatAppearance.BorderSize = 0;
             this.btnGenerateTestEC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerateTestEC.Location = new System.Drawing.Point(7, 157);
+            this.btnGenerateTestEC.Location = new System.Drawing.Point(66, 321);
             this.btnGenerateTestEC.Name = "btnGenerateTestEC";
             this.btnGenerateTestEC.Size = new System.Drawing.Size(70, 40);
             this.btnGenerateTestEC.TabIndex = 429;
@@ -1158,11 +1158,11 @@
             // 
             // lbKML
             // 
-            this.lbKML.Location = new System.Drawing.Point(6, 18);
+            this.lbKML.Location = new System.Drawing.Point(6, 26);
             this.lbKML.Name = "lbKML";
-            this.lbKML.Size = new System.Drawing.Size(100, 64);
+            this.lbKML.Size = new System.Drawing.Size(100, 48);
             this.lbKML.TabIndex = 427;
-            this.lbKML.Text = "Boundary KML";
+            this.lbKML.Text = "Boundary KML:";
             this.lbKML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbYieldLabel
