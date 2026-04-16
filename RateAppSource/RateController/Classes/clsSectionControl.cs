@@ -11,7 +11,7 @@ namespace RateController.Classes
         // rate change amount for each step
         private const double ManualStepMultiplier = 10;
 
-        private const byte MaxSteps = 6;
+        private const byte MaxSteps = 10;
         private const int StepDelay = 2000;
         private DateTime AdjustTime;
         private bool AutoSectionLast;
@@ -101,10 +101,8 @@ namespace RateController.Classes
                             bool IsValve = Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed;
                             if (IsValve)
                             {
-                                int minPWM = 10;
-                                if (minPWM < Prd.MinPWMadjust) minPWM = Prd.MinPWMadjust;
-                                int DriveSpeed = (int)(minPWM + ManualStepMultiplier * (RateStep - 1));
-                                Prd.ManualPWM = (int)(DriveSpeed * RateDir);
+                                int minPWM = Math.Max(20, Prd.MinPWMadjust);
+                                Prd.ManualPWM = minPWM + (255 - minPWM) * (RateStep - 1) / (MaxSteps - 1);
                             }
                             else
                             {

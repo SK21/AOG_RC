@@ -1167,10 +1167,6 @@ namespace RateController.Classes
                 File.Create(file2);
                 File.Create(file3);
 
-                //if (File.Exists(file1) && IsPathSafe(file1)) File.Delete(file1);
-                //if (File.Exists(file2) && IsPathSafe(file2)) File.Delete(file2);
-                //if (File.Exists(file3) && IsPathSafe(file3)) File.Delete(file3);
-
                 Result = true;
             }
             catch (Exception ex)
