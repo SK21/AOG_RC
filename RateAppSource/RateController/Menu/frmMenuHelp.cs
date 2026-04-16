@@ -256,5 +256,14 @@ namespace RateController.Menu
                 Props.ShowMessage("File not found.");
             }
         }
+
+        private void btnResetLogs_Click(object sender, EventArgs e)
+        {
+            var Hlp = new frmMsgBox("Reset log files?", "Help", true);
+            Hlp.ShowDialog();
+            bool Result = Hlp.Result;
+            Hlp.Close();
+            if (Result) Props.DeleteLogs();
+        }
     }
 }

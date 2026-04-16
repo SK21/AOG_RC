@@ -70,6 +70,7 @@
             this.butErrors = new System.Windows.Forms.Button();
             this.butActivity = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
+            this.btnResetLogs = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label12
@@ -460,7 +461,7 @@
             this.butVersion.Image = global::RateController.Properties.Resources.file_cloud;
             this.butVersion.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butVersion.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butVersion.Location = new System.Drawing.Point(366, 595);
+            this.butVersion.Location = new System.Drawing.Point(449, 511);
             this.butVersion.Margin = new System.Windows.Forms.Padding(6);
             this.butVersion.Name = "butVersion";
             this.butVersion.Size = new System.Drawing.Size(81, 72);
@@ -490,7 +491,7 @@
             this.butNet.Image = global::RateController.Properties.Resources.file_text;
             this.butNet.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butNet.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butNet.Location = new System.Drawing.Point(270, 595);
+            this.butNet.Location = new System.Drawing.Point(267, 595);
             this.butNet.Margin = new System.Windows.Forms.Padding(6);
             this.butNet.Name = "butNet";
             this.butNet.Size = new System.Drawing.Size(94, 72);
@@ -527,7 +528,7 @@
             this.butErrors.Image = global::RateController.Properties.Resources.file_text;
             this.butErrors.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butErrors.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butErrors.Location = new System.Drawing.Point(104, 595);
+            this.butErrors.Location = new System.Drawing.Point(103, 595);
             this.butErrors.Margin = new System.Windows.Forms.Padding(6);
             this.butErrors.Name = "butErrors";
             this.butErrors.Size = new System.Drawing.Size(81, 72);
@@ -547,7 +548,7 @@
             this.butActivity.Image = global::RateController.Properties.Resources.file_text;
             this.butActivity.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.butActivity.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.butActivity.Location = new System.Drawing.Point(187, 595);
+            this.butActivity.Location = new System.Drawing.Point(185, 595);
             this.butActivity.Margin = new System.Windows.Forms.Padding(6);
             this.butActivity.Name = "butActivity";
             this.butActivity.Size = new System.Drawing.Size(81, 72);
@@ -566,7 +567,7 @@
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Pause;
             this.btnStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnStart.Location = new System.Drawing.Point(449, 600);
+            this.btnStart.Location = new System.Drawing.Point(457, 600);
             this.btnStart.Margin = new System.Windows.Forms.Padding(6);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(70, 63);
@@ -575,11 +576,32 @@
             this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
+            // btnResetLogs
+            // 
+            this.btnResetLogs.BackColor = System.Drawing.Color.Transparent;
+            this.btnResetLogs.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnResetLogs.FlatAppearance.BorderSize = 0;
+            this.btnResetLogs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetLogs.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnResetLogs.Image = global::RateController.Properties.Resources.file_text;
+            this.btnResetLogs.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnResetLogs.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnResetLogs.Location = new System.Drawing.Point(362, 595);
+            this.btnResetLogs.Margin = new System.Windows.Forms.Padding(6);
+            this.btnResetLogs.Name = "btnResetLogs";
+            this.btnResetLogs.Size = new System.Drawing.Size(94, 72);
+            this.btnResetLogs.TabIndex = 296;
+            this.btnResetLogs.Text = "Reset";
+            this.btnResetLogs.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnResetLogs.UseVisualStyleBackColor = false;
+            this.btnResetLogs.Click += new System.EventHandler(this.btnResetLogs_Click);
+            // 
             // frmMenuHelp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnResetLogs);
             this.Controls.Add(this.btnUserManual);
             this.Controls.Add(this.AppLink);
             this.Controls.Add(this.PCBsetupLink);
@@ -675,5 +697,6 @@
         private System.Windows.Forms.LinkLabel PCBsetupLink;
         private System.Windows.Forms.LinkLabel AppLink;
         private System.Windows.Forms.Button btnUserManual;
+        private System.Windows.Forms.Button btnResetLogs;
     }
 }

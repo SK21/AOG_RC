@@ -297,15 +297,6 @@ namespace RateController.RateMap
                         double lonL = minLon + c * lonStep;
                         double lonR = lonL + lonStep;
 
-                        // Skip cells whose centre falls outside the boundary polygon
-                        if (boundary != null)
-                        {
-                            double cLat = (latB + latT) / 2.0;
-                            double cLon = (lonL + lonR) / 2.0;
-                            if (!boundary.Contains(factory.CreatePoint(new Coordinate(cLon, cLat))))
-                                continue;
-                        }
-
                         var coords = new[]
                         {
                             new Coordinate(lonL, latB),

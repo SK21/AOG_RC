@@ -1,10 +1,6 @@
 ﻿using RateController.Classes;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -31,6 +27,7 @@ namespace RateController.PGNs
         //      bit 3	wifi rssi < -65
         //      bit 4   ethernet connected
         //      bit 5   good pin configuration
+        //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
         //14    CRC
 
         private const byte cByteCount = 15;
@@ -41,16 +38,15 @@ namespace RateController.PGNs
         private bool[] cGoodPins;
         private UInt16[] cInoID;
         private UInt16[] cInoType;
+        private bool[] cIs3Wire;
         private double[] cPressureReading;
         private UInt16[] cWheelCounts;
         private double[] cWheelSpeed;
         private byte[] cWifiSignal;
         private bool[] cWorkSwitch;
-        private bool[] EthernetConnectedLast;
-        private bool[] GoodPinsLast;
+        private ModuleStatus[] LastStatus;
         private Stopwatch[] PGNstopWatch;
         private DateTime[] ReceiveTime;
-        private byte[] WifiSignalLast;
 
         public PGN32401()
         {
@@ -62,10 +58,6 @@ namespace RateController.PGNs
             cEthernetConnected = new bool[Props.MaxModules];
             cGoodPins = new bool[Props.MaxModules];
 
-            EthernetConnectedLast = new bool[Props.MaxModules];
-            WifiSignalLast = new byte[Props.MaxModules];
-            GoodPinsLast = new bool[Props.MaxModules];
-
             cInoType = new ushort[Props.MaxModules];
             cWheelSpeed = new double[Props.MaxModules];
             cWheelCounts = new ushort[Props.MaxModules];
@@ -75,6 +67,14 @@ namespace RateController.PGNs
             for (int i = 0; i < Props.MaxModules; i++)
             {
                 PGNstopWatch[i] = new Stopwatch();
+            }
+
+            cIs3Wire = new bool[Props.MaxModules];
+
+            LastStatus = new ModuleStatus[Props.MaxModules];
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                LastStatus[i] = new ModuleStatus();
             }
         }
 
@@ -90,6 +90,11 @@ namespace RateController.PGNs
             double Result = 0;
             if (ValidID(ModuleID) && ModuleSending(ModuleID)) Result = cElapsedTime[ModuleID];
             return Result;
+        }
+
+        public bool Is3Wire(int Module)
+        {
+            return (ValidID(Module) && cIs3Wire[Module]);
         }
 
         public bool ModuleSending(int ModuleID)
@@ -143,6 +148,7 @@ namespace RateController.PGNs
 
                         cEthernetConnected[ModuleID] = ((Data[13] & 0b00010000) == 0b00010000);
                         cGoodPins[ModuleID] = ((Data[13] & 0b00100000) == 0b00100000);
+                        cIs3Wire[ModuleID] = ((Data[13] & 0b01000000) == 0b01000000);
 
                         ReceiveTime[ModuleID] = DateTime.Now;
                         Result = true;
@@ -169,37 +175,57 @@ namespace RateController.PGNs
             string Mes;
             for (int i = 0; i < Props.MaxModules; i++)
             {
-                if (EthernetConnectedLast[i] != cEthernetConnected[i])
+                if (Connected(i))
                 {
-                    EthernetConnectedLast[i] = cEthernetConnected[i];
-                    Mes = "Module " + i.ToString() + ", Ethernet connected: " + cEthernetConnected[i].ToString();
-                    Props.WriteActivityLog(Mes, false, true);
-                }
-
-                if (WifiSignalLast[i] != cWifiSignal[i])
-                {
-                    WifiSignalLast[i] = cWifiSignal[i];
-                    Mes = "Module " + i.ToString() + ", Wifi Strength: " + cWifiSignal[i].ToString();
-                    Props.WriteActivityLog(Mes, false, true);
-                }
-
-                if (GoodPinsLast[i] != cGoodPins[i])
-                {
-                    GoodPinsLast[i] = cGoodPins[i];
-                    if (cGoodPins[i])
+                    if (!LastStatus[i].Initialized || LastStatus[i].EthernetConnected != cEthernetConnected[i])
                     {
-                        Mes = "Module " + i.ToString() + ", Pin Configuration correct.";
+                        LastStatus[i].EthernetConnected = cEthernetConnected[i];
+                        Mes = "Module " + i.ToString() + ", Ethernet connected: " + cEthernetConnected[i].ToString();
+                        Props.WriteActivityLog(Mes, false, true);
                     }
-                    else
-                    {
-                        Mes = "Module " + i.ToString() + ", Pin Configuration not correct.";
-                    }
-                    Props.WriteActivityLog(Mes, false, true);
 
-                    PinStatusEventArgs args = new PinStatusEventArgs();
-                    args.GoodPins = cGoodPins[i];
-                    args.Module = i;
-                    PinStatusChanged?.Invoke(this, args);
+                    if (!LastStatus[i].Initialized || LastStatus[i].WifiSignal != cWifiSignal[i])
+                    {
+                        LastStatus[i].WifiSignal = cWifiSignal[i];
+                        Mes = "Module " + i.ToString() + ", Wifi Strength: " + cWifiSignal[i].ToString();
+                        Props.WriteActivityLog(Mes, false, true);
+                    }
+
+                    // valve types
+                    if (!LastStatus[i].Initialized || LastStatus[i].Is3Wire != cIs3Wire[i])
+                    {
+                        LastStatus[i].Is3Wire = cIs3Wire[i];
+                        if (cIs3Wire[i])
+                        {
+                            Mes = "Module " + i.ToString() + ", Valves are 3 Wire.";
+                        }
+                        else
+                        {
+                            Mes = "Module " + i.ToString() + ", Valves are 2 Wire.";
+                        }
+                        Props.WriteActivityLog(Mes, false, true);
+                    }
+
+                    if (!LastStatus[i].Initialized || LastStatus[i].GoodPins != cGoodPins[i])
+                    {
+                        LastStatus[i].GoodPins = cGoodPins[i];
+                        if (cGoodPins[i])
+                        {
+                            Mes = "Module " + i.ToString() + ", Pin Configuration correct.";
+                        }
+                        else
+                        {
+                            Mes = "Module " + i.ToString() + ", Pin Configuration not correct.";
+                        }
+                        Props.WriteActivityLog(Mes, false, true);
+
+                        PinStatusEventArgs args = new PinStatusEventArgs();
+                        args.GoodPins = cGoodPins[i];
+                        args.Module = i;
+                        PinStatusChanged?.Invoke(this, args);
+                    }
+
+                    LastStatus[i].Initialized = true;
                 }
             }
         }
@@ -249,6 +275,15 @@ namespace RateController.PGNs
         {
             public bool GoodPins { get; set; }
             public int Module { get; set; }
+        }
+
+        private class ModuleStatus
+        {
+            public bool EthernetConnected { get; set; }
+            public bool GoodPins { get; set; }
+            public bool Initialized { get; set; }
+            public bool Is3Wire { get; set; }
+            public byte WifiSignal { get; set; }
         }
     }
 }
