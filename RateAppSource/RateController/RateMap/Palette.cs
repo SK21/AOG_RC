@@ -31,11 +31,11 @@ namespace RateController.RateMap
         // Productivity zones: Red=low potential, Green=high potential
         private static readonly Color[] ProductivityColors = new Color[]
         {
-            Color.FromArgb(215, 25, 28),    // Red        - lowest potential
-            Color.FromArgb(253, 174, 97),   // Orange
-            Color.FromArgb(255, 255, 191),  // Yellow
-            Color.FromArgb(166, 217, 106),  // Light green
-            Color.FromArgb(26, 150, 65)     // Dark green - highest potential
+            Color.FromArgb(215,  25,  28),  // Red        - lowest potential
+            Color.FromArgb(244, 109,  67),  // Red-orange
+            Color.FromArgb(255, 200,   0),  // Amber      (replaces near-white yellow)
+            Color.FromArgb(120, 198,  67),  // Mid green
+            Color.FromArgb( 26, 150,  65),  // Dark green - highest potential
         };
 
         /// <summary>Returns a colour for a productivity zone where z=0 is lowest potential.</summary>

@@ -165,7 +165,9 @@ namespace RateController.RateMap
                 case 8:
                     if (e.Value is int argb)
                     {
-                        e.CellStyle.BackColor = Color.FromArgb(argb);
+                        Color c = Color.FromArgb(argb);
+                        e.CellStyle.BackColor = Color.FromArgb(255, c.R, c.G, c.B);
+                        e.Value = string.Empty;
                         e.FormattingApplied = true;
                     }
                     break;
@@ -206,7 +208,7 @@ namespace RateController.RateMap
                 var zones = MapController.ZnOverlays?.TargetZoneslist;
                 if (zones != null && zones.Count > 0)
                 {
-                    foreach (var zone in zones)
+                    foreach (var zone in zones.OrderBy(z => z.Name))
                     {
                         DataRow Rw = dataSet1.Tables[0].NewRow();
                         Rw[0] = zone.Name;

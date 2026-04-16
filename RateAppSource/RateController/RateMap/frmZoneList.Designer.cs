@@ -94,7 +94,7 @@
             // 
             this.dataRelay.Caption = "Name";
             this.dataRelay.ColumnName = "cName";
-            this.dataRelay.MaxLength = 15;
+            this.dataRelay.MaxLength = -1;
             // 
             // dataType
             // 

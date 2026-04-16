@@ -318,24 +318,19 @@ namespace RateController.RateMap
                     }
                 }
 
-                // ── Compute per-zone average yield ───────────────────────────────
-                var zoneYieldSum   = new double[zoneCount];
-                var zoneYieldCount = new int[zoneCount];
-                for (int r = 0; r < rows; r++)
-                    for (int c = 0; c < cols; c++)
-                    {
-                        int z = smoothed[r, c];
-                        zoneYieldSum[z]   += yieldGrid[r, c];
-                        zoneYieldCount[z] += 1;
-                    }
-
                 // ── Build MapZones ────────────────────────────────────────────────
-                string yearLabel = !hasYield
-                    ? (hasEc ? Path.GetFileNameWithoutExtension(ecPath)
-                             : Path.GetFileNameWithoutExtension(elevationPath))
-                    : (yearSets.Count > 1
-                        ? string.Format("{0} yrs", yearSets.Count)
-                        : Path.GetFileNameWithoutExtension(yieldPaths[0]));
+                // Short source label — kept brief so names fit the 20-char column limit.
+                // Single yield year: omitted (name is "Z1 Low").
+                // Multi-year yield:  "(Nyr)"   → "Z1 Low (3yr)"
+                // EC-only:           "EC"      → "Z1 Low EC"
+                // Elevation-only:    "El"      → "Z1 Low El"
+                string sourceLabel;
+                if (!hasYield)
+                    sourceLabel = hasEc ? "EC" : "El";
+                else if (yearSets.Count > 1)
+                    sourceLabel = string.Format("({0}yr)", yearSets.Count);
+                else
+                    sourceLabel = string.Empty;
 
                 // Productivity labels: z=0 is lowest, z=zoneCount-1 is highest
                 string[] prodLabels = zoneCount <= 3
@@ -362,12 +357,9 @@ namespace RateController.RateMap
 
                     Color  color = Palette.GetProductivityColor(z, zoneCount);
                     string label = z < prodLabels.Length ? prodLabels[z] : (z + 1).ToString();
-                    double avgYield = zoneYieldCount[z] > 0
-                        ? zoneYieldSum[z] / zoneYieldCount[z]
-                        : 0;
-                    string name = hasYield && zoneYieldCount[z] > 0
-                        ? string.Format("Auto {0} Z{1} {2} (avg {3:F0})", yearLabel, z + 1, label, avgYield)
-                        : string.Format("Auto {0} Z{1} {2}", yearLabel, z + 1, label);
+                    string name  = string.IsNullOrEmpty(sourceLabel)
+                        ? string.Format("Z{0} {1}", z + 1, label)
+                        : string.Format("Z{0} {1} {2}", z + 1, label, sourceLabel);
                     var    rates = new Dictionary<string, double>();
                     foreach (var key in ZoneFields.Products) rates[key] = 0.0;
 
