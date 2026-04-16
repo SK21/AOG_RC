@@ -1119,6 +1119,7 @@
             this.btnGenerateTestYield.TabIndex = 431;
             this.btnGenerateTestYield.Text = "TY";
             this.btnGenerateTestYield.UseVisualStyleBackColor = true;
+            this.btnGenerateTestYield.Visible = false;
             this.btnGenerateTestYield.Click += new System.EventHandler(this.btnGenerateTestYield_Click);
             // 
             // btnGenerateTestElevation
@@ -1131,6 +1132,7 @@
             this.btnGenerateTestElevation.TabIndex = 430;
             this.btnGenerateTestElevation.Text = "TE";
             this.btnGenerateTestElevation.UseVisualStyleBackColor = true;
+            this.btnGenerateTestElevation.Visible = false;
             this.btnGenerateTestElevation.Click += new System.EventHandler(this.btnGenerateTestElevation_Click);
             // 
             // btnGenerateTestEC
@@ -1143,6 +1145,7 @@
             this.btnGenerateTestEC.TabIndex = 429;
             this.btnGenerateTestEC.Text = "TEC";
             this.btnGenerateTestEC.UseVisualStyleBackColor = true;
+            this.btnGenerateTestEC.Visible = false;
             this.btnGenerateTestEC.Click += new System.EventHandler(this.btnGenerateTestEC_Click);
             // 
             // cbKML
