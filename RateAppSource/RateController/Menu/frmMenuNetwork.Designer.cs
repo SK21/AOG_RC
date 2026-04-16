@@ -33,6 +33,7 @@
             this.rbNano = new System.Windows.Forms.RadioButton();
             this.rbESP32 = new System.Windows.Forms.RadioButton();
             this.rbTeensy = new System.Windows.Forms.RadioButton();
+            this.btnReset = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -78,7 +79,7 @@
             this.rbNano.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNano.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbNano.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbNano.Location = new System.Drawing.Point(161, 223);
+            this.rbNano.Location = new System.Drawing.Point(162, 125);
             this.rbNano.Name = "rbNano";
             this.rbNano.Size = new System.Drawing.Size(170, 37);
             this.rbNano.TabIndex = 0;
@@ -94,7 +95,7 @@
             this.rbESP32.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbESP32.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbESP32.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbESP32.Location = new System.Drawing.Point(161, 345);
+            this.rbESP32.Location = new System.Drawing.Point(162, 247);
             this.rbESP32.Name = "rbESP32";
             this.rbESP32.Size = new System.Drawing.Size(170, 37);
             this.rbESP32.TabIndex = 46;
@@ -109,7 +110,7 @@
             this.rbTeensy.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbTeensy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbTeensy.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbTeensy.Location = new System.Drawing.Point(161, 284);
+            this.rbTeensy.Location = new System.Drawing.Point(162, 186);
             this.rbTeensy.Name = "rbTeensy";
             this.rbTeensy.Size = new System.Drawing.Size(170, 37);
             this.rbTeensy.TabIndex = 45;
@@ -118,11 +119,29 @@
             this.rbTeensy.UseVisualStyleBackColor = true;
             this.rbTeensy.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
             // 
+            // btnReset
+            // 
+            this.btnReset.Appearance = System.Windows.Forms.Appearance.Button;
+            this.btnReset.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReset.Image = global::RateController.Properties.Resources.refresh;
+            this.btnReset.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnReset.Location = new System.Drawing.Point(162, 360);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(170, 69);
+            this.btnReset.TabIndex = 170;
+            this.btnReset.Text = "Reset to defaults";
+            this.btnReset.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
+            // 
             // frmMenuNetwork
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.rbNano);
             this.Controls.Add(this.rbESP32);
             this.Controls.Add(this.btnCancel);
@@ -145,5 +164,6 @@
         private System.Windows.Forms.RadioButton rbNano;
         private System.Windows.Forms.RadioButton rbESP32;
         private System.Windows.Forms.RadioButton rbTeensy;
+        private System.Windows.Forms.CheckBox btnReset;
     }
 }

@@ -47,6 +47,11 @@ namespace RateController.Menu
                     Props.SetProp("BoardType", NewBoard.ToString());
                     SetDefaults();
                 }
+                else
+                {
+                    if (btnReset.Checked) SetDefaults();
+
+                }
 
                 SetButtons(false);
                 UpdateForm();
@@ -111,6 +116,7 @@ namespace RateController.Menu
                 {
                     btnCancel.Enabled = false;
                     btnOK.Enabled = false;
+                    btnReset.Checked = false;
                 }
 
                 cEdited = Edited;
@@ -228,6 +234,7 @@ namespace RateController.Menu
             Set.Save();
 
             MainMenu.DefaultsSet();
+            MainMenu.HighlightUpdateButton();
         }
 
         private void SetLanguage()
