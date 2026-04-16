@@ -28,7 +28,7 @@ namespace RateController.RateMap
         {
             if (Build())
             {
-                Props.ShowMessage(ZonesCreated.ToString("N0 ") + " zones created.");
+                Props.ShowMessage(ZonesCreated.ToString("0 ") + " zones created.");
             }
             else
             {
@@ -135,7 +135,7 @@ namespace RateController.RateMap
                 ckLBYields.Items.Clear();
                 string YieldFolder = ParcelManager.YieldFolder(JB.FieldID);
 
-                foreach (var file in Directory.GetFiles(YieldFolder))
+                foreach (var file in Directory.GetFiles(YieldFolder, "*.csv"))
                 {
                     ckLBYields.Items.Add
                     (
@@ -230,7 +230,7 @@ namespace RateController.RateMap
             Initializing = true;
 
             tbWeightYield.Text = WeightYield.ToString("0");
-            tbWeightEC.Text = WeightEC.ToString("N0");
+            tbWeightEC.Text = WeightEC.ToString("0");
             tbWeightElevation.Text = WeightElevation.ToString("0");
             tbNumZones.Text = ZonesToCreate.ToString("0");
             tbMinZoneSize.Text = GridSize.ToString("0");

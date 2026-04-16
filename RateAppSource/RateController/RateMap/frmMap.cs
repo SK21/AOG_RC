@@ -3,10 +3,13 @@ using GMap.NET;
 using RateController.Classes;
 using RateController.RateMap;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -493,19 +496,234 @@ namespace RateController.Forms
 
         private void ImportKml()
         {
-            using (var ofd = new OpenFileDialog { Title = "Open KML file.", Filter = "KML files (*.kml)|*.kml" })
+            Job JB = JobManager.CurrentJob;
+            if (JB == null || JB.FieldID < 0)
             {
-                if (ofd.ShowDialog() == DialogResult.OK)
+                Props.ShowMessage("No field selected.", "Import Boundary", 4000, false);
+                return;
+            }
+
+            using (var ofd = new OpenFileDialog
+            {
+                Title  = @"Import Field Boundary  —  AOG field folder: AgOpenGPS\Fields\[FieldName]",
+                Filter = "AOG Field KML (Field.kml)|Field.kml" +
+                         "|AOG Boundary (Boundary.txt)|Boundary.txt" +
+                         "|Any KML (*.kml)|*.kml"
+            })
+            {
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                bool   success;
+                string destFileName;
+
+                switch (ofd.FilterIndex)  // 1-based
                 {
-                    if (MapController.AddKmlLayer(ofd.FileName))
-                    {
-                        Job JB = JobManager.CurrentJob;
-                        if (JB != null) JobManager.SetActiveKMLfile(JB.ID, Path.GetFileName(ofd.FileName));
-                        UpdateFilesPanel();
-                        ckKML.Checked = true;
-                    }
+                    case 1:  // AOG Field.kml — extract Boundaries polygon, strip all other content
+                        destFileName = "Field.kml";
+                        success = ImportProcessedKml(ExtractAogBoundaryPolygon(ofd.FileName), destFileName);
+                        break;
+
+                    case 2:  // AOG Boundary.txt — convert easting/northing to lat/lon via Field.txt origin
+                        destFileName = "boundary.kml";
+                        success = ImportProcessedKml(ConvertAogBoundaryTxt(ofd.FileName), destFileName);
+                        break;
+
+                    default:  // Generic KML — existing path unchanged
+                        destFileName = Path.GetFileName(ofd.FileName);
+                        success = MapController.AddKmlLayer(ofd.FileName);
+                        break;
+                }
+
+                if (success)
+                {
+                    JobManager.SetActiveKMLfile(JB.ID, destFileName);
+                    UpdateFilesPanel();
+                    ckKML.Checked = true;
                 }
             }
+        }
+
+        // Writes kmlContent to a temp file, lets AddKmlLayer copy it into the field's KmlFolder,
+        // then deletes the temp file. Returns false if kmlContent is null (extraction failed).
+        private static bool ImportProcessedKml(string kmlContent, string destFileName)
+        {
+            if (string.IsNullOrEmpty(kmlContent)) return false;
+            string tempPath = Path.Combine(Path.GetTempPath(), destFileName);
+            try
+            {
+                File.WriteAllText(tempPath, kmlContent, Encoding.UTF8);
+                return MapController.AddKmlLayer(tempPath);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/ImportProcessedKml: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                try { File.Delete(tempPath); } catch { }
+            }
+        }
+
+        // Extracts the boundary polygon from an AOG Field.kml (Boundaries folder only).
+        // Returns a clean single-polygon KML string, or null on failure.
+        private static string ExtractAogBoundaryPolygon(string fieldKmlPath)
+        {
+            try
+            {
+                var doc = XDocument.Load(fieldKmlPath);
+                var ns  = XNamespace.Get("http://www.opengis.net/kml/2.2");
+
+                var folder = doc.Descendants(ns + "Folder")
+                    .FirstOrDefault(f => (string)f.Element(ns + "name") == "Boundaries");
+                if (folder == null)
+                {
+                    Props.ShowMessage("No 'Boundaries' folder found in this KML file.", "Import Boundary", 5000, false);
+                    return null;
+                }
+
+                var outerEl = folder.Descendants(ns + "outerBoundaryIs")
+                    .FirstOrDefault()
+                    ?.Descendants(ns + "coordinates")
+                    .FirstOrDefault();
+                if (outerEl == null)
+                {
+                    Props.ShowMessage("No boundary polygon found in KML file.", "Import Boundary", 5000, false);
+                    return null;
+                }
+
+                var innerCoords = folder.Descendants(ns + "innerBoundaryIs")
+                    .Select(ib => ib.Descendants(ns + "coordinates").FirstOrDefault()?.Value.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList();
+
+                return BuildBoundaryKml(outerEl.Value.Trim(), innerCoords);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/ExtractAogBoundaryPolygon: " + ex.Message);
+                Props.ShowMessage("Could not read KML file: " + ex.Message, "Import Boundary", 5000, false);
+                return null;
+            }
+        }
+
+        // Reads AOG Boundary.txt + Field.txt from the same folder,
+        // converts local easting/northing to lat/lon, returns a KML string.
+        private static string ConvertAogBoundaryTxt(string boundaryTxtPath)
+        {
+            try
+            {
+                string dir          = Path.GetDirectoryName(boundaryTxtPath);
+                string fieldTxtPath = Path.Combine(dir, "Field.txt");
+
+                if (!File.Exists(fieldTxtPath))
+                {
+                    Props.ShowMessage(
+                        "Field.txt not found in the same folder — required for coordinate conversion.",
+                        "Import Boundary", 5000, false);
+                    return null;
+                }
+
+                // Read origin (StartFix) from Field.txt
+                double lat0 = 0, lon0 = 0;
+                bool   foundOrigin = false;
+                string[] fieldLines = File.ReadAllLines(fieldTxtPath);
+                for (int i = 0; i < fieldLines.Length - 1; i++)
+                {
+                    if (fieldLines[i].Trim() != "StartFix") continue;
+                    string[] parts = fieldLines[i + 1].Split(',');
+                    if (parts.Length >= 2 &&
+                        double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out lat0) &&
+                        double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out lon0))
+                    { foundOrigin = true; break; }
+                }
+
+                if (!foundOrigin)
+                {
+                    Props.ShowMessage("StartFix not found in Field.txt.", "Import Boundary", 5000, false);
+                    return null;
+                }
+
+                // AOG GeoConverter conversion constants (same formula as AOG source)
+                double lat0Rad    = lat0 * Math.PI / 180.0;
+                double mPerDegLat = 111132.92 - 559.82 * Math.Cos(2 * lat0Rad)
+                                  + 1.175 * Math.Cos(4 * lat0Rad) - 0.0023 * Math.Cos(6 * lat0Rad);
+                double mPerDegLon = 111412.84 * Math.Cos(lat0Rad)
+                                  - 93.5 * Math.Cos(3 * lat0Rad) + 0.118 * Math.Cos(5 * lat0Rad);
+
+                // Parse Boundary.txt — skip header, skip isDriveThru flag(s)
+                string[] lines = File.ReadAllLines(boundaryTxtPath);
+                int      idx   = 0;
+                if (idx < lines.Length && lines[idx].TrimStart().StartsWith("$")) idx++;
+                while (idx < lines.Length &&
+                       (lines[idx].Trim() == "True" || lines[idx].Trim() == "False")) idx++;
+
+                if (idx >= lines.Length ||
+                    !int.TryParse(lines[idx].Trim(), NumberStyles.Integer,
+                        CultureInfo.InvariantCulture, out int count) || count < 3)
+                {
+                    Props.ShowMessage("Boundary.txt contains no usable points.", "Import Boundary", 5000, false);
+                    return null;
+                }
+                idx++;
+
+                var coords = new StringBuilder();
+                for (int i = 0; i < count && idx < lines.Length; i++, idx++)
+                {
+                    string[] p = lines[idx].Split(',');
+                    if (p.Length < 2) continue;
+                    if (!double.TryParse(p[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double easting))  continue;
+                    if (!double.TryParse(p[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double northing)) continue;
+
+                    double lat = lat0 + northing / mPerDegLat;
+                    double lon = lon0 + easting  / mPerDegLon;
+
+                    if (coords.Length > 0) coords.Append(' ');
+                    coords.Append(lon.ToString("F7", CultureInfo.InvariantCulture));
+                    coords.Append(',');
+                    coords.Append(lat.ToString("F7", CultureInfo.InvariantCulture));
+                    coords.Append(",0");
+                }
+
+                if (coords.Length == 0)
+                {
+                    Props.ShowMessage("No valid coordinates found in Boundary.txt.", "Import Boundary", 5000, false);
+                    return null;
+                }
+
+                return BuildBoundaryKml(coords.ToString(), new List<string>());
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMap/ConvertAogBoundaryTxt: " + ex.Message);
+                Props.ShowMessage("Could not read Boundary.txt: " + ex.Message, "Import Boundary", 5000, false);
+                return null;
+            }
+        }
+
+        // Builds a minimal KML string containing a single boundary polygon.
+        private static string BuildBoundaryKml(string outerCoords, IList<string> innerCoordsList)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            sb.AppendLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
+            sb.AppendLine("  <Document><Placemark><name>Boundary</name>");
+            sb.AppendLine("    <Style>");
+            sb.AppendLine("      <LineStyle><color>ffdd00dd</color><width>3</width></LineStyle>");
+            sb.AppendLine("      <PolyStyle><color>407f3f55</color></PolyStyle>");
+            sb.AppendLine("    </Style>");
+            sb.AppendLine("    <Polygon><tessellate>1</tessellate>");
+            sb.AppendLine("      <outerBoundaryIs><LinearRing><coordinates>");
+            sb.AppendLine("        " + outerCoords);
+            sb.AppendLine("      </coordinates></LinearRing></outerBoundaryIs>");
+            foreach (string inner in innerCoordsList)
+            {
+                sb.AppendLine("      <innerBoundaryIs><LinearRing><coordinates>");
+                sb.AppendLine("        " + inner);
+                sb.AppendLine("      </coordinates></LinearRing></innerBoundaryIs>");
+            }
+            sb.AppendLine("    </Polygon></Placemark></Document></kml>");
+            return sb.ToString();
         }
 
         private void btnImportRx_Click(object sender, EventArgs e)

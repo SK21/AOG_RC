@@ -79,7 +79,8 @@
       "WebFetch(domain:github.com)",
       "Bash(curl -s https://raw.githubusercontent.com/ajayre/aggrade/master/Application/Data/MapGenerator.cs)",
       "Read(//c/Users/CoxDa/Documents/RateController/**)",
-      "Read(//c/Users/CoxDa/**)"
+      "Read(//c/Users/CoxDa/**)",
+      "Bash(sort -t: -k2 -rn)"
     ]
   }
 }

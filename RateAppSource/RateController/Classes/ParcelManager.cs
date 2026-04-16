@@ -10,8 +10,9 @@ namespace RateController.Classes
     {
         private static readonly string FilePath = Props.FieldNamesPath;
 
-        public static event EventHandler YieldSelectionChanged;
         public static event EventHandler ElevationSelectionChanged;
+
+        public static event EventHandler YieldSelectionChanged;
 
         public static void AddParcel(Parcel NewParcel)
         {
@@ -52,6 +53,8 @@ namespace RateController.Classes
             return Result;
         }
 
+        public static string EcFolder(int id) => Path.Combine(FieldFolder(id), "EC");
+
         public static bool EditParcel(Parcel UpdatedParcel)
         {
             var mappings = GetParcels();
@@ -64,53 +67,11 @@ namespace RateController.Classes
             }
             return false;
         }
-        public static string EcFolder(int id) => Path.Combine(FieldFolder(id), "EC");
+
         public static string ElevationFolder(int id) => Path.Combine(FieldFolder(id), "Elevation");
-        public static List<string> GetKmlFiles(int id) => GetFilenames(KmlFolder(id), "*.kml");
-        public static List<string> GetElevationFiles(int id) => GetFilenames(ElevationFolder(id), "*.csv");
-        public static List<string> GetEcFiles(int id) => GetFilenames(EcFolder(id), "*.csv");
 
         // Backward-compat shim — returns the currently selected elevation path.
         public static string ElevationPath(int id) => SelectedElevationPath(id);
-
-        public static string SelectedElevationPath(int fieldID)
-        {
-            Parcel p = SearchParcel(fieldID);
-            string file = p?.SelectedElevationFile;
-            if (file == null) return null;
-            string full = Path.Combine(ElevationFolder(fieldID), file);
-            return File.Exists(full) ? full : null;
-        }
-
-        public static void SetSelectedElevationPath(int fieldID, string path)
-        {
-            string file = path != null ? Path.GetFileName(path) : null;
-            var parcels = GetParcels();
-            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
-            if (p != null)
-            {
-                p.SelectedElevationFile = file;
-                SaveParcels(parcels);
-            }
-            ElevationSelectionChanged?.Invoke(null, EventArgs.Empty);
-        }
-
-        public static string SelectedEcPath(int fieldID)
-        {
-            Parcel p = SearchParcel(fieldID);
-            string file = p?.SelectedEcFile;
-            if (file == null) return null;
-            string full = Path.Combine(EcFolder(fieldID), file);
-            return File.Exists(full) ? full : null;
-        }
-
-        public static void SetSelectedEcPath(int fieldID, string path)
-        {
-            string file = path != null ? Path.GetFileName(path) : null;
-            var parcels = GetParcels();
-            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
-            if (p != null) { p.SelectedEcFile = file; SaveParcels(parcels); }
-        }
 
         public static void EnsureFieldFolders(int id)
         {
@@ -125,6 +86,12 @@ namespace RateController.Classes
         }
 
         public static string FieldFolder(int id) => Path.Combine(Props.DefaultDir, "Fields", $"Field_{id}");
+
+        public static List<string> GetEcFiles(int id) => GetFilenames(EcFolder(id), "*.csv");
+
+        public static List<string> GetElevationFiles(int id) => GetFilenames(ElevationFolder(id), "*.csv");
+
+        public static List<string> GetKmlFiles(int id) => GetFilenames(KmlFolder(id), "*.kml");
 
         public static List<Parcel> GetParcels()
         {
@@ -181,6 +148,24 @@ namespace RateController.Classes
             return GetParcels().FirstOrDefault(p => p.ID == ID);
         }
 
+        public static string SelectedEcPath(int fieldID)
+        {
+            Parcel p = SearchParcel(fieldID);
+            string file = p?.SelectedEcFile;
+            if (file == null) return null;
+            string full = Path.Combine(EcFolder(fieldID), file);
+            return File.Exists(full) ? full : null;
+        }
+
+        public static string SelectedElevationPath(int fieldID)
+        {
+            Parcel p = SearchParcel(fieldID);
+            string file = p?.SelectedElevationFile;
+            if (file == null) return null;
+            string full = Path.Combine(ElevationFolder(fieldID), file);
+            return File.Exists(full) ? full : null;
+        }
+
         public static string SelectedYieldPath(int fieldID)
         {
             Parcel p = SearchParcel(fieldID);
@@ -188,6 +173,27 @@ namespace RateController.Classes
             if (file == null) return null;
             string full = Path.Combine(YieldFolder(fieldID), file);
             return File.Exists(full) ? full : null;
+        }
+
+        public static void SetSelectedEcPath(int fieldID, string path)
+        {
+            string file = path != null ? Path.GetFileName(path) : null;
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
+            if (p != null) { p.SelectedEcFile = file; SaveParcels(parcels); }
+        }
+
+        public static void SetSelectedElevationPath(int fieldID, string path)
+        {
+            string file = path != null ? Path.GetFileName(path) : null;
+            var parcels = GetParcels();
+            var p = parcels.FirstOrDefault(m => m.ID == fieldID);
+            if (p != null)
+            {
+                p.SelectedElevationFile = file;
+                SaveParcels(parcels);
+            }
+            ElevationSelectionChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static void SetSelectedYieldPath(int fieldID, string path)
@@ -237,8 +243,8 @@ namespace RateController.Classes
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string SelectedYieldFile { get; set; }
-        public string SelectedElevationFile { get; set; }
         public string SelectedEcFile { get; set; }
+        public string SelectedElevationFile { get; set; }
+        public string SelectedYieldFile { get; set; }
     }
 }

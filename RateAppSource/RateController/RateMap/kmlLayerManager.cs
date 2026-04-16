@@ -275,6 +275,5 @@ namespace RateController.RateMap
         {
             return Color.FromArgb(255, Color.Red);
         }
-
     }
 }
