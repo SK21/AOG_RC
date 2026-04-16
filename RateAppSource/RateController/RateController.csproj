@@ -498,6 +498,7 @@
     <Compile Include="RateMap\frmZoneList.Designer.cs">
       <DependentUpon>frmZoneList.cs</DependentUpon>
     </Compile>
+    <Compile Include="RateMap\BoundaryKmlExtractor.cs" />
     <Compile Include="RateMap\kmlLayerManager.cs" />
     <Compile Include="RateMap\LegendManager.cs" />
     <Compile Include="RateMap\MapController.cs" />
