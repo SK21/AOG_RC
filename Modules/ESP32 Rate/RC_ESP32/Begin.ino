@@ -324,6 +324,24 @@ void DoSetup()
 		Serial.println(F("ADS1115: Disabled "));
 	}
 
+	if (GoodPins)
+	{
+		Serial.println(F("Pin configuration correct."));
+	}
+	else
+	{
+		Serial.println(F("Pin configuration not correct."));
+	}
+
+	if (MDL.Is3Wire)
+	{
+		Serial.println(F("Valves are 3 wire."));
+	}
+	else
+	{
+		Serial.println(F("Valves are 2 wire."));
+	}
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
