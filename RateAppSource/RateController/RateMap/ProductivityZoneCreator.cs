@@ -113,6 +113,20 @@ namespace RateController.RateMap
                     minLon = elevationSamplesCache.Min(s => s.Longitude); maxLon = elevationSamplesCache.Max(s => s.Longitude);
                 }
 
+                // ── Load boundary polygon early — expand bounds to cover full boundary ──
+                // Grid must cover the entire boundary, not just the yield data extent.
+                // Without this, boundary areas beyond the yield data have no grid cells
+                // and appear as gaps in the zone coverage.
+                Polygon boundary = BoundaryKmlExtractor.LoadBoundaryPolygon(boundaryKmlPath);
+                if (boundary != null && !boundary.IsEmpty)
+                {
+                    var env = boundary.EnvelopeInternal;
+                    minLat = Math.Min(minLat, env.MinY);
+                    maxLat = Math.Max(maxLat, env.MaxY);
+                    minLon = Math.Min(minLon, env.MinX);
+                    maxLon = Math.Max(maxLon, env.MaxX);
+                }
+
                 // ── Adaptive grid resolution ─────────────────────────────────────
                 double midLat      = (minLat + maxLat) / 2.0;
                 double fieldH      = Haversine(minLat, 0, maxLat, 0);
@@ -234,9 +248,6 @@ namespace RateController.RateMap
                 classifyGrid = BoxBlur(classifyGrid, rows, cols);
                 classifyGrid = BoxBlur(classifyGrid, rows, cols);
 
-                // ── Load boundary polygon (optional) ─────────────────────────────
-                Polygon boundary = BoundaryKmlExtractor.LoadBoundaryPolygon(boundaryKmlPath);
-
                 // ── Quantile classification ──────────────────────────────────────
                 // Sort all cell values, assign zones by rank so each zone covers
                 // roughly equal field area regardless of value distribution.
@@ -332,6 +343,15 @@ namespace RateController.RateMap
 
                 var mapZones = new List<MapZone>();
 
+                // Approximate sq-degree → hectare factor at field mid-latitude.
+                // Used for zone-level area threshold checks only.
+                double sqDegToHa = 111319.0 * 111319.0 * Math.Cos(midLat * Math.PI / 180) / 10000.0;
+
+                // Close buffer: slightly more than half a grid cell.
+                // Bridges gaps between adjacent same-zone pieces that were split by
+                // the boundary clip, then shrinks back to restore original shape.
+                double closeBuffer = Math.Min(latStep, lonStep) * 0.6;
+
                 for (int z = 0; z < zoneCount; z++)
                 {
                     if (cellsByZone[z].Count == 0) continue;
@@ -345,6 +365,20 @@ namespace RateController.RateMap
                         try { merged = merged.Intersection(boundary); } catch { }
                         if (merged == null || merged.IsEmpty) continue;
                     }
+
+                    // Morphological close: merge adjacent pieces separated by narrow
+                    // gaps introduced by boundary clipping.
+                    try
+                    {
+                        Geometry closed = merged.Buffer(closeBuffer).Buffer(-closeBuffer);
+                        if (closed != null && !closed.IsEmpty) merged = closed;
+                    }
+                    catch { }
+
+                    // Area check on total zone geometry before splitting into parts.
+                    // Prevents small boundary stubs being dropped even though the
+                    // overall zone is large enough to keep.
+                    if (merged.Area * sqDegToHa < effectiveMinHa) continue;
 
                     Color  color = Palette.GetProductivityColor(z, zoneCount);
                     string label = z < prodLabels.Length ? prodLabels[z] : (z + 1).ToString();
@@ -360,26 +394,22 @@ namespace RateController.RateMap
                     }
                     else if (merged is GeometryCollection gc)
                     {
-                        int part = 1;
                         foreach (Geometry g in gc.Geometries)
                         {
                             if (g is Polygon p && !p.IsEmpty)
                                 mapZones.Add(new MapZone(
-                                    string.Format("{0} ({1})", name, part++),
+                                    name,
                                     p, new Dictionary<string, double>(rates),
                                     color, ZoneType.Target));
                         }
                     }
                 }
 
-                // ── Filter small zones and sort for correct draw order ───────────
+                // ── Sort for correct draw order ──────────────────────────────────
                 // Large zones first (drawn first = underneath);
                 // small zones last (drawn last = on top, wins for rate lookup).
                 mapZones = mapZones
-                    .Select(z => new { Zone = z, Ha = z.Hectares() })
-                    .Where(x => x.Ha >= effectiveMinHa)
-                    .OrderByDescending(x => x.Ha)
-                    .Select(x => x.Zone)
+                    .OrderByDescending(x => x.Hectares())
                     .ToList();
 
                 if (mapZones.Count == 0)
