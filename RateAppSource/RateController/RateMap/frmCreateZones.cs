@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -266,9 +267,79 @@ namespace RateController.RateMap
 
         private bool Build()
         {
-            bool Result = false;
+            try
+            {
+                Job JB = JobManager.CurrentJob;
+                if (JB == null || JB.FieldID < 0) return false;
+                int fieldID = JB.FieldID;
 
-            return Result;
+                // Collect checked yield file paths.
+                // Items are anonymous objects { Name, FullPath } — use reflection to read FullPath.
+                var yieldPaths = new List<string>();
+                foreach (object item in ckLBYields.CheckedItems)
+                {
+                    string path = item.GetType().GetProperty("FullPath")?.GetValue(item)?.ToString();
+                    if (!string.IsNullOrEmpty(path)) yieldPaths.Add(path);
+                }
+
+                // EC and elevation paths — only if the layer checkbox is ticked
+                string ecPath        = ckEC.Checked        ? ParcelManager.SelectedEcPath(fieldID)        : null;
+                string elevationPath = ckElevation.Checked ? ParcelManager.SelectedElevationPath(fieldID) : null;
+
+                // Validate that checked layers have a file assigned on this field
+                if (ckEC.Checked && ecPath == null)
+                {
+                    Props.ShowMessage("No EC file selected for this field.", "Create Zones", 5000, false);
+                    return false;
+                }
+                if (ckElevation.Checked && elevationPath == null)
+                {
+                    Props.ShowMessage("No elevation file selected for this field.", "Create Zones", 5000, false);
+                    return false;
+                }
+
+                // Boundary KML: the job's active KML file (repurposed as field boundary)
+                string boundaryKmlPath = null;
+                if (!string.IsNullOrEmpty(JB.ActiveKMLfile))
+                {
+                    string kmlFull = Path.Combine(ParcelManager.KmlFolder(fieldID), JB.ActiveKMLfile);
+                    if (File.Exists(kmlFull)) boundaryKmlPath = kmlFull;
+                }
+
+                // Convert layer weights to fractions (weights already validated to sum to 100)
+                double yieldFraction     = ckLBYields.CheckedItems.Count > 0 ? WeightYield     / 100.0 : 0.0;
+                double ecFraction        = ckEC.Checked                      ? WeightEC        / 100.0 : 0.0;
+                double elevationFraction = ckElevation.Checked               ? WeightElevation / 100.0 : 0.0;
+
+                // GridSize is stored in Ha (metric) or Ac (imperial) — Generate() expects Ha
+                double minZoneHa = Props.UseMetric ? GridSize : GridSize * 0.404686;
+
+                string error = ProductivityZoneCreator.Generate(
+                    yieldPaths.Count > 0 ? yieldPaths : null,
+                    null,              // equal weights across yield years
+                    yieldFraction,
+                    ecPath,
+                    ecFraction,
+                    elevationPath,
+                    elevationFraction,
+                    ZonesToCreate,
+                    minZoneHa,
+                    boundaryKmlPath);
+
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Props.ShowMessage(error, "Create Zones", 5000, false);
+                    return false;
+                }
+
+                ZonesCreated = ZonesToCreate;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmCreateZones/Build: " + ex.Message);
+                return false;
+            }
         }
 
         #endregion build zones
