@@ -97,6 +97,7 @@ void SendComm()
         //      bit 3	wifi rssi < -65
         //      bit 4   ethernet connected
         //      bit 5   good pin configuration
+        //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
         //14    CRC
 
         // Skip when ISOBUS active - Gateway forwards 0xFF02 as PGN 32401
@@ -130,6 +131,7 @@ void SendComm()
 
             if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
             if (GoodPins) Data[13] |= 0b00100000;
+            if (MDL.Is3Wire) Data[13] |= 0b01000000;
 
             Data[14] = CRC(Data, 14, 0);
 
