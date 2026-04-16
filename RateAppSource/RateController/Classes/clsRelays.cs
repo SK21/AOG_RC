@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -162,13 +159,13 @@ namespace RateController.Classes
                 // return int value for relayLo, relayHi
 
                 bool SectionsOn = false;        // whether at least on section is on
-                bool MasterRelayOn;
-                bool MasterFound = false;
+                bool MasterSwitchIsOn;
+                bool MasterRelayFound = false;
                 bool FlowEnabled = (Props.Speed_KMH > 0.1);
 
                 if (Props.RateCalibrationOn)
                 {
-                    MasterRelayOn = true;
+                    MasterSwitchIsOn = true;
                 }
                 else
                 {
@@ -177,18 +174,18 @@ namespace RateController.Classes
                         if (Core.SwitchBox.AutoSectionOn)
                         {
                             // auto on when master switch is on and flow enabled
-                            MasterRelayOn = Core.SwitchBox.MasterOn && FlowEnabled;
+                            MasterSwitchIsOn = Core.SwitchBox.MasterOn && FlowEnabled;
                         }
                         else
                         {
                             // manual on when master switch is on
-                            MasterRelayOn = Core.SwitchBox.MasterOn;
+                            MasterSwitchIsOn = Core.SwitchBox.MasterOn;
                         }
                     }
                     else
                     {
                         // no switchbox, set from aog
-                        MasterRelayOn = FlowEnabled;
+                        MasterSwitchIsOn = FlowEnabled;
                     }
                 }
 
@@ -199,8 +196,8 @@ namespace RateController.Classes
 
                     if (Rly.Type == RelayTypes.Master)
                     {
-                        Rly.IsON = MasterRelayOn;
-                        MasterFound = true;
+                        Rly.IsON = MasterSwitchIsOn;
+                        MasterRelayFound = true;
                     }
                 }
 
@@ -238,10 +235,9 @@ namespace RateController.Classes
                         switch (Rly.Type)
                         {
                             case RelayTypes.Section:
-                                if ((MasterFound && MasterRelayOn) || !MasterFound
-                                    || (MasterFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                if (MasterSwitchIsOn || (MasterRelayFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
-                                    // set relay by section
+                                    // set relay by section switch
                                     if (Rly.SectionID == -1)
                                     {
                                         // no section
@@ -259,14 +255,21 @@ namespace RateController.Classes
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    Rly.IsON = false;
+                                }
                                 break;
 
                             case RelayTypes.Slave:
-                                if ((MasterFound && MasterRelayOn) || !MasterFound
-                                    || (MasterFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                if (MasterSwitchIsOn || (MasterRelayFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay if at lease one section on
                                     Rly.IsON = SectionsOn;
+                                }
+                                else
+                                {
+                                    Rly.IsON = false;
                                 }
                                 break;
 
@@ -275,8 +278,7 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Invert_Section:
-                                if ((MasterFound && MasterRelayOn) || !MasterFound
-                                    || (MasterFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                if (MasterSwitchIsOn || (MasterRelayFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
                                 {
                                     // set relay by section
                                     if (Rly.SectionID == -1)
@@ -289,6 +291,10 @@ namespace RateController.Classes
                                         Rly.IsON = !Core.Sections.Items[Rly.SectionID].IsON;
                                     }
                                 }
+                                else
+                                {
+                                    Rly.IsON = false;
+                                }
                                 break;
 
                             case RelayTypes.Switch:
@@ -296,7 +302,7 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Invert_Master:
-                                Rly.IsON = (MasterFound && !MasterRelayOn) || !SectionsOn;
+                                Rly.IsON = (MasterRelayFound && !MasterSwitchIsOn) || !SectionsOn;
                                 break;
                         }
 
