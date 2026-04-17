@@ -317,8 +317,15 @@ namespace RateController.Menu
         private void UpdateForm(bool UpdateObject = false)
         {
             Initializing = true;
-            LoadData(UpdateObject);
-            SetModuleIndicator();
+            try
+            {
+                LoadData(UpdateObject);
+                SetModuleIndicator();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuRelays/UpdateForm: " + ex.Message);
+            }
             Initializing = false;
         }
     }

@@ -482,49 +482,55 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            SetCalDescription();
-
-            if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
+            try
             {
-                tbTargetRPM.Text = MainMenu.CurrentProduct.RateSet.ToString("N1");
-                tbCountsRPM.Text = MainMenu.CurrentProduct.MeterCal.ToString("N3");
-                UpdateFans();
+                SetCalDescription();
+
+                if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
+                {
+                    tbTargetRPM.Text = MainMenu.CurrentProduct.RateSet.ToString("N1");
+                    tbCountsRPM.Text = MainMenu.CurrentProduct.MeterCal.ToString("N3");
+                    UpdateFans();
+                }
+                else
+                {
+                    lbBaseRate.Text = MainMenu.CurrentProduct.RateSet.ToString("N1");
+                    FlowCal.Text = MainMenu.CurrentProduct.MeterCal.ToString("N3");
+                }
+
+                tbProduct.Text = MainMenu.CurrentProduct.ProductName;
+                tbVolumeUnits.Text = MainMenu.CurrentProduct.QuantityDescription;
+                AreaUnits.SelectedIndex = MainMenu.CurrentProduct.CoverageUnits;
+                CbUseProdDensity.Checked = MainMenu.CurrentProduct.EnableProdDensity;
+                if (!CbUseProdDensity.Checked) CbUseProdDensity_CheckedChanged(CbUseProdDensity, EventArgs.Empty);
+                ProdDensity.Text = MainMenu.CurrentProduct.ProdDensity.ToString("N1");
+                tbAltRate.Text = MainMenu.CurrentProduct.RateAlt.ToString("N0");
+                TankSize.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
+                ValveType.SelectedIndex = ConvertControlType(MainMenu.CurrentProduct.ControlType);
+
+                if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
+                {
+                    // fans
+                    pnlFan.Visible = true;
+                    pnlMain.Visible = false;
+                    lbProduct.Text = MainMenu.CurrentProduct.ProductName;
+                }
+                else
+                {
+                    pnlFan.Visible = false;
+                    pnlMain.Visible = true;
+                    lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
+                }
+
+                TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
+                btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
+
+                SetEnabled();
             }
-            else
+            catch (Exception ex)
             {
-                lbBaseRate.Text = MainMenu.CurrentProduct.RateSet.ToString("N1");
-                FlowCal.Text = MainMenu.CurrentProduct.MeterCal.ToString("N3");
+                Props.WriteErrorLog("frmMenuRate/UpdateForm: " + ex.Message);
             }
-
-            tbProduct.Text = MainMenu.CurrentProduct.ProductName;
-            tbVolumeUnits.Text = MainMenu.CurrentProduct.QuantityDescription;
-            AreaUnits.SelectedIndex = MainMenu.CurrentProduct.CoverageUnits;
-            CbUseProdDensity.Checked = MainMenu.CurrentProduct.EnableProdDensity;
-            if (!CbUseProdDensity.Checked) CbUseProdDensity_CheckedChanged(CbUseProdDensity, EventArgs.Empty);
-            ProdDensity.Text = MainMenu.CurrentProduct.ProdDensity.ToString("N1");
-            tbAltRate.Text = MainMenu.CurrentProduct.RateAlt.ToString("N0");
-            TankSize.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
-            ValveType.SelectedIndex = ConvertControlType(MainMenu.CurrentProduct.ControlType);
-
-            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
-            {
-                // fans
-                pnlFan.Visible = true;
-                pnlMain.Visible = false;
-                lbProduct.Text = MainMenu.CurrentProduct.ProductName;
-            }
-            else
-            {
-                pnlFan.Visible = false;
-                pnlMain.Visible = true;
-                lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
-            }
-
-            TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-            btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-
-            SetEnabled();
-
             Initializing = false;
         }
 

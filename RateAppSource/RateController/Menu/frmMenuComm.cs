@@ -299,39 +299,44 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-
-            LoadCombo();
-            lbModuleIP.Text = Core.UDPmodules.SubNet;
-
-            if (Props.CanEnabled)
+            try
             {
-                ckCanBus.Checked = true;
+                LoadCombo();
+                lbModuleIP.Text = Core.UDPmodules.SubNet;
+
+                if (Props.CanEnabled)
+                {
+                    ckCanBus.Checked = true;
+                }
+                else
+                {
+                    ckEthernet.Checked = true;
+                }
+
+                switch (Props.CurrentCanDriver)
+                {
+                    case CanDriver.InnoMaker:
+                        rbAdapter2.Checked = true;
+                        break;
+
+                    case CanDriver.PCAN:
+                        rbAdapter3.Checked = true;
+                        break;
+
+                    default:
+                        rbAdapter1.Checked = true;  // SLCAN
+                        break;
+                }
+
+                ckDiagnostics.Checked = Props.ShowCanDiagnostics;
+
+                RefreshComPorts();
+                gbxPort.Enabled = rbAdapter1.Checked; // enable for SLCAN
             }
-            else
+            catch (Exception ex)
             {
-                ckEthernet.Checked = true;
+                Props.WriteErrorLog("frmMenuComm/UpdateForm: " + ex.Message);
             }
-
-            switch (Props.CurrentCanDriver)
-            {
-                case CanDriver.InnoMaker:
-                    rbAdapter2.Checked = true;
-                    break;
-
-                case CanDriver.PCAN:
-                    rbAdapter3.Checked = true;
-                    break;
-
-                default:
-                    rbAdapter1.Checked = true;  // SLCAN
-                    break;
-            }
-
-            ckDiagnostics.Checked = Props.ShowCanDiagnostics;
-
-            RefreshComPorts();
-            gbxPort.Enabled = rbAdapter1.Checked; // enable for SLCAN
-
             Initializing = false;
         }
     }

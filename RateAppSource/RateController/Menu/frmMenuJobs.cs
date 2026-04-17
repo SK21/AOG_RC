@@ -651,10 +651,9 @@ namespace RateController.Menu
 
         private void UpdateForm()
         {
+            Initializing = true;
             try
             {
-                Initializing = true;
-
                 FillCombos();
                 FillJobsList();
 
@@ -713,13 +712,12 @@ namespace RateController.Menu
                 gbJobs.Refresh();
 
                 HighlightCurrentJob();
-
-                Initializing = false;
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuJobs/UpdateForm: " + ex.Message);
             }
+            Initializing = false;
         }
     }
 }

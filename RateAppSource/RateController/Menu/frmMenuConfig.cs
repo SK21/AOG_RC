@@ -50,6 +50,16 @@ namespace RateController.Menu
             }
         }
 
+        private void btnRescan_Click(object sender, EventArgs e)
+        {
+            ckRelayOn.Checked = true;
+            ckFlowOn.Checked = true;
+            ckADS1115enabled.Checked = false;
+            tbModuleID.Text = "0";
+            tbSensorCount.Text = "1";
+            cbOnboardRelays.SelectedIndex = 0;
+        }
+
         private void frmMenuConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
@@ -68,6 +78,11 @@ namespace RateController.Menu
             MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
             PositionForm();
             UpdateForm();
+        }
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -153,31 +168,22 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            byte[] data = Core.ModuleConfig.GetData();
-            tbModuleID.Text = data[2].ToString();
-            tbSensorCount.Text = data[3].ToString();
-            cbOnboardRelays.SelectedIndex = data[5];
-            cbRemoteRelays.SelectedIndex = data[6];
-            ckRelayOn.Checked = Core.ModuleConfig.InvertRelay;
-            ckFlowOn.Checked = Core.ModuleConfig.InvertFlow;
-            ckADS1115enabled.Checked = Core.ModuleConfig.ADS1115enabled;
-
+            try
+            {
+                byte[] data = Core.ModuleConfig.GetData();
+                tbModuleID.Text = data[2].ToString();
+                tbSensorCount.Text = data[3].ToString();
+                cbOnboardRelays.SelectedIndex = data[5];
+                cbRemoteRelays.SelectedIndex = data[6];
+                ckRelayOn.Checked = Core.ModuleConfig.InvertRelay;
+                ckFlowOn.Checked = Core.ModuleConfig.InvertFlow;
+                ckADS1115enabled.Checked = Core.ModuleConfig.ADS1115enabled;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuConfig/UpdateForm: " + ex.Message);
+            }
             Initializing = false;
-        }
-
-        private void btnRescan_Click(object sender, EventArgs e)
-        {
-            ckRelayOn.Checked = true;
-            ckFlowOn.Checked = true;
-            ckADS1115enabled.Checked = false;
-            tbModuleID.Text = "0";
-            tbSensorCount.Text = "1";
-            cbOnboardRelays.SelectedIndex = 0;
-        }
-
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
-        {
-            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

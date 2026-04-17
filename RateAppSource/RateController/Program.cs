@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using RateController.Classes;
 using RateController.Forms;
 using RateController.Properties;
 using System;
@@ -14,6 +15,8 @@ namespace RateController
 {
     internal static class Program
     {
+        private static bool _errorShown = false;
+
         private static void Log(Exception ex)
         {
             if (ex == null) return;
@@ -31,6 +34,28 @@ namespace RateController
             }
         }
 
+        private static void HandleException(Exception ex, string source)
+        {
+            try
+            {
+                Log(ex);
+                Props.WriteErrorLog("Unhandled (" + source + "): " + ex?.Message);
+
+                if (!_errorShown)
+                {
+                    _errorShown = true;
+                    MessageBox.Show(
+                        "An unexpected error occurred:\n\n" + ex?.Message +
+                        "\n\nDetails have been logged. Check the error log on the Help page.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch
+            {
+                // prevent recursive crash if handler itself fails
+            }
+        }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -41,12 +66,12 @@ namespace RateController
 
             Application.ThreadException += (s, e) =>
             {
-                Log(e.Exception);
+                HandleException(e.Exception, "UI Thread");
             };
 
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
-                Log(e.ExceptionObject as Exception);
+                HandleException(e.ExceptionObject as Exception, "AppDomain");
             };
 
             try

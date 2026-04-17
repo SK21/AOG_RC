@@ -214,16 +214,21 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
+            try
+            {
+                tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5).ToString("N0");
+                tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 1).ToString("N2");
+                tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 2).ToString("N0");
+                tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 3).ToString("N2");
+                tbZeroReading.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 4).ToString("N0");
 
-            tbMinVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5).ToString("N0");
-            tbMinPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 1).ToString("N2");
-            tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 2).ToString("N0");
-            tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 3).ToString("N2");
-            tbZeroReading.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 4).ToString("N0");
-
-            ckPressure.Checked = Props.ShowPressure;
-            SetModuleIndicator();
-
+                ckPressure.Checked = Props.ShowPressure;
+                SetModuleIndicator();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuPressure/UpdateForm: " + ex.Message);
+            }
             Initializing = false;
         }
 
