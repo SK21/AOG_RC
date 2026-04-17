@@ -262,14 +262,15 @@ namespace RateController.Classes
 
         private void Update(bool SaveNow = false)
         {
-            for (int i = 0; i < Props.MaxProducts; i++)
+            int Count = cProducts.Count;
+            for (int i = 0; i < Count; i++)
             {
                 cProducts[i].Update();
             }
 
             if (((DateTime.Now - LastSave).TotalSeconds > 60) || SaveNow)
             {
-                for (int i = 0; i < Props.MaxProducts; i++)
+                for (int i = 0; i < Count; i++)
                 {
                     cProducts[i].Save();
                 }
@@ -279,12 +280,12 @@ namespace RateController.Classes
 
         private void UpdateStatus()
         {
-            for (int i = 0; i < Props.MaxProducts; i++)
+            for (int i = 0; i < cProducts.Count; i++)
             {
                 clsProduct pd = Item(i);
                 ProductState NewState;
 
-                if (!pd.Enabled && pd.CalibrateOjbect?.PowerOn==false)
+                if (!pd.Enabled && pd.CalibrateOjbect?.PowerOn == false)
                 {
                     NewState = ProductState.Off;
                 }

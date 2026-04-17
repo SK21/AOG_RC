@@ -8,7 +8,6 @@ namespace RateController.Classes
         private const int AdjustDelay = 250;
         private const double AutoStepMultiplier = 0.025;
 
-        // rate change amount for each step
         private const double ManualStepMultiplier = 10;
 
         private const byte MaxSteps = 10;
@@ -36,7 +35,8 @@ namespace RateController.Classes
         private DateTime StepTime;
         private int TimerCount = 0;
         private bool WorkSWOnLast;
-
+        private const double StepMultiplier = 0.025;   // rate change amount for each step
+        private int ValveRampPerTick = 15;
         public clsSectionControl()
         {
             RCsectionOn = new bool[Props.MaxSections];
@@ -101,13 +101,35 @@ namespace RateController.Classes
                             bool IsValve = Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed;
                             if (IsValve)
                             {
-                                int minPWM = Math.Max(20, Prd.MinPWMadjust);
-                                Prd.ManualPWM = minPWM + (255 - minPWM) * (RateStep - 1) / (MaxSteps - 1);
+                                //int minPWM = (int)Math.Max(20, (Prd.MinPWMadjust / 100.0) * 255.0);
+                                //Prd.ManualPWM = (int)(RateDir * (minPWM + (255 - minPWM) * (RateStep - 1) / (MaxSteps - 1)));
+
+
+                                //byte ADJ = (byte)(255.0 * Prd.MinPWMadjust / 100.0);
+                                //Prd.ManualPWM = (int)((ADJ + ADJ * StepMultiplier * RateStep) * RateDir);
+
+
+                                int minPWM = (int)(Prd.MinPWMadjust / 100.0 * 255.0);
+                                int absPWM = Math.Abs(Prd.ManualPWM);
+                                if (absPWM < minPWM)
+                                {
+                                    // first press: jump to minimum
+                                    absPWM = minPWM;
+                                }
+                                else
+                                {
+                                    // hold: ramp up speed
+                                    absPWM = Math.Min(255, absPWM + ValveRampPerTick);
+                                }
+                                Prd.ManualPWM = (int)(absPWM * RateDir);
+
+
+
                             }
                             else
                             {
                                 // adjust motor
-                                Prd.ManualPWM += (int)(RateStep * 2 * RateDir);
+                                Prd.ManualPWM += (int)(RateDir * RateStep * 2);
                             }
                         }
                         else
