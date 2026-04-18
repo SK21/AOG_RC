@@ -603,6 +603,13 @@ namespace RateController.RateMap
             ShowAppliedOverlay();
         }
 
+        public void ClearTargetZones()
+        {
+            cTargetZonesList.Clear();
+            cTargetOverlay.Polygons.Clear();
+            BuildTargetZonesIndex();
+        }
+
         public void ResetAppliedOverlay()
         {
             ResetTrail();
@@ -734,6 +741,7 @@ namespace RateController.RateMap
         {
             try
             {
+                cTargetZonesList.Clear();
                 foreach (var z in zones) cTargetZonesList.Add(z);
                 BuildTargetZonesIndex();
                 cShowTarget = true;

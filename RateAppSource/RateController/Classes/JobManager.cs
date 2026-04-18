@@ -418,8 +418,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    string MP = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
-                    if (File.Exists(MP)) Result = MP;
+                    Result = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
                 }
             }
             return Result;

@@ -250,7 +250,7 @@ namespace RateController.RateMap
 
         public static void ClearZones()
         {
-            ZnOverlays.TargetOverlay.Polygons.Clear();
+            ZnOverlays.ClearTargetZones();
             ClearAppliedRatesOverlay();
         }
 

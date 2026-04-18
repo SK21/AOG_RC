@@ -696,7 +696,9 @@ namespace RateController.Forms
                         ParcelManager.EnsureFieldFolders(JB.FieldID);
                         MapController.ClearZones();
                         Fname = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), Fname + ".shp");
-                        MapController.SavePrescription(Fname);
+                        if (!File.Exists(Fname)) File.WriteAllText(Fname, string.Empty);
+                        JobManager.SetActivePrescription(JB.ID, Path.GetFileName(Fname));
+                        MapController.LoadMap();
                         UpdateForm();
                     }
                 }
@@ -1246,6 +1248,9 @@ namespace RateController.Forms
                         if (rx != "Zones.shp") lbRx.Items.Add(rx);
                     }
                     string active = Path.GetFileName(job.ActivePrescription);
+                    // include active prescription even if no file exists yet (e.g. newly created empty prescription)
+                    if (!string.IsNullOrEmpty(active) && active != "Zones.shp" && !lbRx.Items.Contains(active))
+                        lbRx.Items.Add(active);
                     lbRx.SelectedItem = !string.IsNullOrEmpty(active) ? active : "Zones.shp";
                 }
             }

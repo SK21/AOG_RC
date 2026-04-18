@@ -394,13 +394,18 @@ namespace RateController.RateMap
                     }
                     else if (merged is GeometryCollection gc)
                     {
+                        int partNum = 0;
                         foreach (Geometry g in gc.Geometries)
                         {
-                            if (g is Polygon p && !p.IsEmpty)
+                            if (g is Polygon p && !p.IsEmpty && p.Area * sqDegToHa >= effectiveMinHa)
+                            {
+                                partNum++;
+                                string partName = partNum == 1 ? name : string.Format("{0} ({1})", name, partNum);
                                 mapZones.Add(new MapZone(
-                                    name,
+                                    partName,
                                     p, new Dictionary<string, double>(rates),
                                     color, ZoneType.Target));
+                            }
                         }
                     }
                 }
