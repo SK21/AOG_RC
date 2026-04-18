@@ -36,6 +36,8 @@ namespace RateController.Menu
                 Props.SetPressureCal(cbModules.SelectedIndex * 5 + 3, double.Parse(tbMaxPres.Text));
                 Props.SetPressureCal(cbModules.SelectedIndex * 5 + 4, double.Parse(tbZeroReading.Text));
                 Props.ShowPressure = ckPressure.Checked;
+                Props.SetMaxPressure(cbModules.SelectedIndex, double.TryParse(tbAlarmPressure.Text, out double mp) ? mp : 0);
+
                 SetButtons(false);
                 UpdateForm();
             }
@@ -221,6 +223,7 @@ namespace RateController.Menu
                 tbMaxVol.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 2).ToString("N0");
                 tbMaxPres.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 3).ToString("N2");
                 tbZeroReading.Text = Props.GetPressureCal(cbModules.SelectedIndex * 5 + 4).ToString("N0");
+                tbAlarmPressure.Text = Props.GetMaxPressure(cbModules.SelectedIndex).ToString("N2");
 
                 ckPressure.Checked = Props.ShowPressure;
                 SetModuleIndicator();
@@ -237,6 +240,21 @@ namespace RateController.Menu
             double Reading = Core.ModulesStatus.PressureReading(cbModules.SelectedIndex);
             lbRaw.Text = Reading.ToString("N0");
             lbPressureReading.Text = Props.PressureReading(cbModules.SelectedIndex, Reading).ToString("N2");
+        }
+
+        private void tbMaxPressure_Enter(object sender, EventArgs e)
+        {
+            double temp;
+            double.TryParse(tbAlarmPressure.Text, out temp);
+            using (var form = new FormNumeric(0, 200, temp))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbAlarmPressure.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+
         }
     }
 }

@@ -8,6 +8,7 @@ namespace RateController.Classes
         private DateTime? alarmStart;
         private bool cAlarmIsOn;
         private bool[] cAlarms;
+        private bool[] cPressureAlarms;
         private bool IsPlaying;
         private bool SilenceAlarm;
 
@@ -15,6 +16,7 @@ namespace RateController.Classes
         {
             sound = new System.Media.SoundPlayer(RateController.Properties.Resources.Loud_Alarm_Clock_Buzzer_Muk1984_493547174);
             cAlarms = new bool[Props.MaxProducts];
+            cPressureAlarms = new bool[Props.MaxModules];
         }
 
         public bool AlarmIsOn
@@ -22,6 +24,9 @@ namespace RateController.Classes
 
         public bool[] Alarms
         { get { return cAlarms; } }
+
+        public bool PressureAlarmIsOn { get; private set; }
+        public bool[] PressureAlarms { get { return cPressureAlarms; } }
 
         public bool CheckAlarms()
         {
@@ -55,7 +60,24 @@ namespace RateController.Classes
                     }
                 }
             }
-            cAlarmIsOn = CurrentState;
+            cPressureAlarms = new bool[Props.MaxModules];
+            PressureAlarmIsOn = false;
+
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                double maxP = Props.GetMaxPressure(i);
+                if (maxP > 0 && Core.ModulesStatus.Connected(i))
+                {
+                    double calibrated = Props.PressureReading(i, Core.ModulesStatus.PressureReading(i));
+                    if (calibrated > maxP)
+                    {
+                        cPressureAlarms[i] = true;
+                        PressureAlarmIsOn = true;
+                    }
+                }
+            }
+
+            cAlarmIsOn = CurrentState || PressureAlarmIsOn;
             UpdateSound(cAlarmIsOn);
 
             return cAlarmIsOn;

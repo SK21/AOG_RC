@@ -49,6 +49,8 @@
             this.lbRaw = new System.Windows.Forms.Label();
             this.lbZero = new System.Windows.Forms.Label();
             this.tbZeroReading = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbAlarmPressure = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lbModule
@@ -158,7 +160,7 @@
             // lbMin
             // 
             this.lbMin.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMin.Location = new System.Drawing.Point(96, 263);
+            this.lbMin.Location = new System.Drawing.Point(88, 263);
             this.lbMin.Name = "lbMin";
             this.lbMin.Size = new System.Drawing.Size(124, 23);
             this.lbMin.TabIndex = 216;
@@ -219,7 +221,7 @@
             // lbMax
             // 
             this.lbMax.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbMax.Location = new System.Drawing.Point(96, 313);
+            this.lbMax.Location = new System.Drawing.Point(88, 313);
             this.lbMax.Name = "lbMax";
             this.lbMax.Size = new System.Drawing.Size(124, 23);
             this.lbMax.TabIndex = 226;
@@ -242,7 +244,7 @@
             // lbCurrent
             // 
             this.lbCurrent.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCurrent.Location = new System.Drawing.Point(96, 363);
+            this.lbCurrent.Location = new System.Drawing.Point(88, 363);
             this.lbCurrent.Name = "lbCurrent";
             this.lbCurrent.Size = new System.Drawing.Size(124, 23);
             this.lbCurrent.TabIndex = 229;
@@ -272,7 +274,7 @@
             // lbZero
             // 
             this.lbZero.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbZero.Location = new System.Drawing.Point(96, 413);
+            this.lbZero.Location = new System.Drawing.Point(88, 413);
             this.lbZero.Name = "lbZero";
             this.lbZero.Size = new System.Drawing.Size(124, 23);
             this.lbZero.TabIndex = 235;
@@ -292,11 +294,36 @@
             this.tbZeroReading.TextChanged += new System.EventHandler(this.tbMinVol_TextChanged);
             this.tbZeroReading.Enter += new System.EventHandler(this.tbZeroReading_Enter);
             // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(88, 463);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(132, 23);
+            this.label1.TabIndex = 236;
+            this.label1.Text = "Max Pressure:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tbMaxPressure
+            // 
+            this.tbAlarmPressure.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbAlarmPressure.Location = new System.Drawing.Point(349, 459);
+            this.tbAlarmPressure.MaxLength = 8;
+            this.tbAlarmPressure.Name = "tbMaxPressure";
+            this.tbAlarmPressure.Size = new System.Drawing.Size(80, 30);
+            this.tbAlarmPressure.TabIndex = 237;
+            this.tbAlarmPressure.Text = "0";
+            this.tbAlarmPressure.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbAlarmPressure.TextChanged += new System.EventHandler(this.tbMinVol_TextChanged);
+            this.tbAlarmPressure.Enter += new System.EventHandler(this.tbMaxPressure_Enter);
+            // 
             // frmMenuPressure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.tbAlarmPressure);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lbZero);
             this.Controls.Add(this.tbZeroReading);
             this.Controls.Add(this.lbRaw);
@@ -350,5 +377,7 @@
         private System.Windows.Forms.Label lbRaw;
         private System.Windows.Forms.Label lbZero;
         private System.Windows.Forms.TextBox tbZeroReading;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbAlarmPressure;
     }
 }

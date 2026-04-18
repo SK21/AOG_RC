@@ -123,6 +123,7 @@ namespace RateController.Classes
         // continues for each module, up to 8 modules
 
         private static double[] PressureCals = new double[40];
+        private static double[] MaxPressure = new double[Props.MaxModules];
 
         #endregion pressure calibration
 
@@ -747,6 +748,22 @@ namespace RateController.Classes
             return PressureCals[Index];
         }
 
+        public static double GetMaxPressure(int ModuleID)
+        {
+            double Result = 0;
+            if (ModuleID >= 0 && ModuleID < MaxModules) Result = MaxPressure[ModuleID];
+            return Result;
+        }
+
+        public static void SetMaxPressure(int ModuleID, double NewMax)
+        {
+            if (ModuleID >= 0 && ModuleID < MaxModules && NewMax >= 0 && NewMax < 100000)
+            {
+                MaxPressure[ModuleID] = NewMax;
+                SetProp("MaxPressure_" + ModuleID, NewMax.ToString());
+            }
+        }
+
         public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
@@ -962,6 +979,17 @@ namespace RateController.Classes
                 cShowScale[i] = bool.TryParse(GetProp("ShowScale_" + i.ToString()), out NewVal) ? NewVal : false;
             }
 
+            for (int i = 0; i < 40; i++)
+            {
+                string key = "PressureCal_" + i.ToString();
+                PressureCals[i] = double.TryParse(GetProp(key), out double pc) ? pc : 0;
+            }
+
+            for (int i = 0; i < MaxModules; i++)
+            {
+                MaxPressure[i] = double.TryParse(GetProp("MaxPressure_" + i.ToString()), out double maxp) ? maxp : 0;
+            }
+
             // application properties
             cSimSpeed = double.TryParse(GetAppProp("SimSpeed"), out double spd) ? spd : 8;
             cSpeedMode = Enum.TryParse(GetAppProp("SpeedMode"), out SpeedType spt) ? spt : SpeedType.GPS;
@@ -976,12 +1004,6 @@ namespace RateController.Classes
             string port = GetAppProp("CanPort");
             cCanPort = string.IsNullOrEmpty(port) ? "COM7" : port;
             cMasterMaintained = bool.TryParse(GetAppProp("MasterMaintained"), out bool mm) ? mm : false;
-
-            for (int i = 0; i < 40; i++)
-            {
-                string key = "PressureCal_" + i.ToString();
-                if (double.TryParse(GetProp(key), out double pc)) PressureCals[i] = pc;
-            }
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)

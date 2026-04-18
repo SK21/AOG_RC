@@ -487,27 +487,55 @@ namespace RateController.Forms
                     btAlarm.BringToFront();
                     FlashState = !FlashState;
 
+                    bool pressureOn = Core.RCalarm.PressureAlarmIsOn;
+                    bool rateOn = false;
+                    string rateName = "Rate Alarm";
+
                     for (int i = 0; i < Props.MaxProducts; i++)
                     {
                         if (Core.RCalarm.Alarms[i])
                         {
+                            rateOn = true;
                             if (LastAlarm != i)
                             {
-                                // switch to first alarming product
                                 LastAlarm = i;
                                 Props.CurrentProduct = i;
                                 SwitchDisplay(false);
                                 UpdateForm();
                             }
-                            if (FlashState)
-                            {
-                                btAlarm.Text = Core.Tls.ClipText((i + 1).ToString() + ". " + Core.Products.Item(i).ProductName, 20);
-                            }
-                            else
-                            {
-                                btAlarm.Text = "Rate Alarm";
-                            }
+                            rateName = Core.Tls.ClipText((i + 1).ToString() + ". " + Core.Products.Item(i).ProductName, 20);
                             break;
+                        }
+                    }
+
+                    if (FlashState)
+                    {
+                        if (rateOn && pressureOn)
+                        {
+                            btAlarm.Text = "Rate + Pressure";
+                        }
+                        else if (pressureOn)
+                        {
+                            btAlarm.Text = "Pressure Alarm";
+                        }
+                        else
+                        {
+                            btAlarm.Text = "Rate Alarm";
+                        }
+                    }
+                    else
+                    {
+                        if (rateOn && pressureOn)
+                        {
+                            btAlarm.Text = rateName;
+                        }
+                        else if (pressureOn)
+                        {
+                            btAlarm.Text = "High Pressure";
+                        }
+                        else
+                        {
+                            btAlarm.Text = rateName;
                         }
                     }
                 }
