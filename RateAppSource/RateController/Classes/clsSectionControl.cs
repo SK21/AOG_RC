@@ -7,9 +7,7 @@ namespace RateController.Classes
     {
         private const int AdjustDelay = 250;
         private const double AutoStepMultiplier = 0.025;
-
-        private const double ManualStepMultiplier = 10;
-
+        private const int ManualMotorStepSize = 10;
         private const byte MaxSteps = 10;
         private const int StepDelay = 2000;
         private DateTime AdjustTime;
@@ -27,19 +25,19 @@ namespace RateController.Classes
         private bool PrimeInitialized;
         private System.Windows.Forms.Timer PrimeTimer = new System.Windows.Forms.Timer();
         private double RateDir;
-        private DateTime RatePressedTime;
         private int RateStep;
-        private bool[] RCsectionOn;
+        private bool[] SectionOnBySwitchBox;
         private bool[] RCzoneOn = new bool[8];
         private bool StateChanged;
         private DateTime StepTime;
         private int TimerCount = 0;
-        private bool WorkSWOnLast;
-        private const double StepMultiplier = 0.025;   // rate change amount for each step
         private int ValveRampPerTick = 15;
+
+        private bool WorkSWOnLast;
+
         public clsSectionControl()
         {
-            RCsectionOn = new bool[Props.MaxSections];
+            SectionOnBySwitchBox = new bool[Props.MaxSections];
             Core.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             Core.AOGsections.SectionsChanged += AOGsections_SectionsChanged;
             MasterIsOn = false;
@@ -101,14 +99,6 @@ namespace RateController.Classes
                             bool IsValve = Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed;
                             if (IsValve)
                             {
-                                //int minPWM = (int)Math.Max(20, (Prd.MinPWMadjust / 100.0) * 255.0);
-                                //Prd.ManualPWM = (int)(RateDir * (minPWM + (255 - minPWM) * (RateStep - 1) / (MaxSteps - 1)));
-
-
-                                //byte ADJ = (byte)(255.0 * Prd.MinPWMadjust / 100.0);
-                                //Prd.ManualPWM = (int)((ADJ + ADJ * StepMultiplier * RateStep) * RateDir);
-
-
                                 int minPWM = (int)(Prd.MinPWMadjust / 100.0 * 255.0);
                                 int absPWM = Math.Abs(Prd.ManualPWM);
                                 if (absPWM < minPWM)
@@ -122,14 +112,11 @@ namespace RateController.Classes
                                     absPWM = Math.Min(255, absPWM + ValveRampPerTick);
                                 }
                                 Prd.ManualPWM = (int)(absPWM * RateDir);
-
-
-
                             }
                             else
                             {
                                 // adjust motor
-                                Prd.ManualPWM += (int)(RateDir * RateStep * 2);
+                                Prd.ManualPWM += (int)(RateDir * RateStep * ManualMotorStepSize);
                             }
                         }
                         else
@@ -220,7 +207,7 @@ namespace RateController.Classes
             }
 
             // match switchbox and AOG
-            Array.Clear(RCsectionOn, 0, RCsectionOn.Length);
+            Array.Clear(SectionOnBySwitchBox, 0, SectionOnBySwitchBox.Length);
 
             if (MasterSWOff)
             {
@@ -233,24 +220,26 @@ namespace RateController.Classes
             {
                 MasterIsOn = true;
 
-                //set RC sections by switchbox switch positions
+                //set sections on by switchbox switch positions
                 foreach (clsSection Sec in Core.Sections.Items)
                 {
-                    RCsectionOn[Sec.ID] = (Core.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
+                    SectionOnBySwitchBox[Sec.ID] = (Core.SwitchBox.SectionSwitchOn(Sec.SwitchID) && Sec.Enabled);
                 }
             }
 
             // set sections on
+            bool MachineIsMoving = (Props.Speed_KMH > 0.1);
             if (Core.AutoSteerPGN.Connected() && !cPrimeOn && Core.SwitchBox.AutoSectionOn)
             {
+                // AOG auto section control
                 foreach (clsSection Sec in Core.Sections.Items)
                 {
-                    if (Sec.Enabled) Sec.IsON = Core.AOGsections.SectionIsOn(Sec.ID);
+                    if (Sec.Enabled) Sec.IsON = Core.AOGsections.SectionIsOn(Sec.ID) && MachineIsMoving;
                 }
             }
             else
             {
-                bool MachineIsMoving = (Props.Speed_KMH > 0.1);
+                // manual control or priming or no AOG
                 bool IsOn;
                 foreach (clsSection Sec in Core.Sections.Items)
                 {
@@ -265,7 +254,7 @@ namespace RateController.Classes
                             }
                             else
                             {
-                                IsOn = RCsectionOn[Sec.ID];
+                                IsOn = SectionOnBySwitchBox[Sec.ID];
                             }
                         }
                         Sec.IsON = IsOn;
@@ -291,7 +280,7 @@ namespace RateController.Classes
                     bool SectionsChanged = false;
                     for (int i = 0; i < Max; i++)
                     {
-                        if (RCsectionOn[i] != Core.AOGsections.SectionIsOn(i))
+                        if (SectionOnBySwitchBox[i] != Core.AOGsections.SectionIsOn(i))
                         {
                             SectionsChanged = true;
                             break;
@@ -325,7 +314,7 @@ namespace RateController.Classes
                             // auto off, send on bytes to match switchbox
                             for (int i = 0; i < Max; i++)
                             {
-                                if (RCsectionOn[i])
+                                if (SectionOnBySwitchBox[i])
                                 {
                                     if (i < 8)
                                     {
@@ -344,7 +333,7 @@ namespace RateController.Classes
                     if (Props.MaxSections < Max) Max = Props.MaxSections;
                     for (int i = 0; i < Max; i++)
                     {
-                        if (!RCsectionOn[i])
+                        if (!SectionOnBySwitchBox[i])
                         {
                             if (i < 8)
                             {
@@ -433,6 +422,7 @@ namespace RateController.Classes
             }
 
             // set sections on
+            bool MachineIsMoving = (Props.Speed_KMH > 0.1);
             foreach (clsZone Zn in Core.Zones.Items)
             {
                 if (Zn.Enabled)
@@ -441,7 +431,7 @@ namespace RateController.Classes
                     {
                         for (int i = Zn.Start - 1; i < Zn.End; i++)
                         {
-                            Core.Sections.Item(i).IsON = Core.AOGsections.SectionIsOn(i);
+                            Core.Sections.Item(i).IsON = MachineIsMoving && Core.AOGsections.SectionIsOn(i);
                         }
                     }
                     else
