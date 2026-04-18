@@ -350,6 +350,27 @@ TC Client features:
 - Teensy modules continue proprietary communication
 - Created design document: `docs/TC_Server_Design.md`
 
+### Apr 18, 2026 — Pressure Alarm, Speed Filter, Area Investigation
+
+**Pressure Alarm (alarm-only — firmware gate deferred):**
+- `clsAlarm.cs`: Added `cPressureAlarms[]`, `PressureAlarmIsOn`, `PressureAlarms` properties
+- `CheckAlarms()` loops all modules, compares `Props.PressureReading(i, raw)` vs `Props.GetMaxPressure(i)`
+- `cAlarmIsOn = CurrentState || PressureAlarmIsOn`
+- `frmMain.cs` `ShowAlarmButton()`: "Pressure Alarm" / "Rate + Pressure" / "High Pressure" states added
+- Props.cs and frmMenuPressure.cs edits done by user (GetMaxPressure, MaxPressure per-module)
+- Firmware gate dropped: closing valve on PTO/independent-pump systems raises pressure, not lowers it
+- PGN 32503 is taken (subnet change) — PGN **32505** reserved for any future firmware gate
+
+**Speed Filter Fix:**
+- `PGN254.cs`: Added 25/75 averaging (`cSpeed * 0.75 + newSpeed * 0.25`) — previously no filter
+- `PGN208.cs`: Removed 10/90 filter — TWOL/RTK GPS already high quality, double-filter unnecessary
+
+**Applied Area Discrepancy Investigation:**
+- RC showed 18.8 ac, AOG showed 17.67 ac (6.4% over) on 2-pass test with sections on at turns
+- Root cause: RC integrates full width × speed × turn time; AOG draws GPS triangle geometry of curved path (inside sections overlap already-covered ground, so AOG counts much less)
+- In normal practice sections are off at headlands — discrepancy does not occur
+- No code change needed
+
 ### Known Issue
 - Windows can block UDP ports after improper shutdown, requiring computer restart
 - Error: "Only one usage of each socket address...is normally permitted"

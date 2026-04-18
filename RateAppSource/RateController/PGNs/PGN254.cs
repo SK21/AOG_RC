@@ -54,7 +54,7 @@ namespace RateController.PGNs
                 {
                     if (Core.Tls.GoodCRC(Data, 2))
                     {
-                        cSpeed = (float)((Data[6] << 8 | Data[5]) / 10.0);
+                        cSpeed = (float)(cSpeed * 0.75 + ((Data[6] << 8 | Data[5]) / 10.0) * 0.25);
                         cRelayLo = Data[11];
                         CRelayHi = Data[12];
                         if (Changed()) SectionsChanged?.Invoke(this, EventArgs.Empty);
