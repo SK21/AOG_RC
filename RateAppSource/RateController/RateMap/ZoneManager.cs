@@ -256,7 +256,7 @@ namespace RateController.RateMap
                     }
                 }
 
-                return true;
+                return overlay.Polygons.Count > 0;
             }
             catch (Exception ex)
             {
@@ -775,15 +775,15 @@ namespace RateController.RateMap
                     }
                     else
                     {
-                        if (!MapController.legendManager.IsVisible)
-                        {
-                            MapController.legendManager.Show();
-                        }
-
                         double Rates = AppliedRates[MapController.ProductFilter];  // product rates to display
 
                         Trail.UpdateTrail(cAppliedOverlay, readings, MapController.TractorPosition, MapController.TravelHeading,
                             Core.Sections.TotalWidth(), Rates, MapController.ProductFilter);
+
+                        if (cAppliedOverlay.Polygons.Count > 0 && !MapController.legendManager.IsVisible)
+                        {
+                            MapController.legendManager.Show();
+                        }
                     }
                 }
             }

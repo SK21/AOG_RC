@@ -162,6 +162,7 @@ namespace RateController.RateMap
         {
             try
             {
+                kmlLayerManager.ClearKmlOverlaysFromMap(gmap);
                 var jobCopyPath = PersistKmlToJob(filePath) ?? filePath;
                 var overlay = kmlLayerManager.LoadKml(jobCopyPath);
                 if (overlay == null) return false;
@@ -373,7 +374,8 @@ namespace RateController.RateMap
             else
             {
                 cState = MapState.Tracking;
-                legendManager.Show();
+                if (ZnOverlays?.AppliedOverlay?.Polygons?.Count > 0)
+                    legendManager.Show();
                 if (ElevationCreator?.Enabled == true) ElevationCreator.Build();
                 if (EcCreator?.Enabled == true) EcCreator.Build();
             }

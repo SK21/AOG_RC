@@ -1071,7 +1071,8 @@ namespace RateController.Forms
                     Core.MainForm.MainMini.Top = MainTop;
                 }
 
-                if (UseMaxView && MapController.ZnOverlays.AppliedOverlayVisible)
+                if (UseMaxView && MapController.ZnOverlays.AppliedOverlayVisible
+                    && MapController.ZnOverlays.AppliedOverlay.Polygons.Count > 0)
                 {
                     MapController.legendManager.Show();
                 }
