@@ -159,7 +159,6 @@ namespace RateController.Classes
                 // return int value for relayLo, relayHi
 
                 bool SectionsOn = false;        // whether at least on section is on
-                bool MasterRelayFound = false;
                 bool MasterSwitchIsOn = Props.RateCalibrationOn || Core.SwitchBox.MasterOn;
 
                 // set master relays
@@ -170,7 +169,6 @@ namespace RateController.Classes
                     if (Rly.Type == RelayTypes.Master)
                     {
                         Rly.IsON = MasterSwitchIsOn;
-                        MasterRelayFound = true;
                     }
                 }
 
@@ -220,15 +218,8 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Slave:
-                                if (MasterSwitchIsOn)
-                                {
-                                    // set relay if at lease one section on
-                                    Rly.IsON = SectionsOn;
-                                }
-                                else
-                                {
-                                    Rly.IsON = false;
-                                }
+                                // set relay if at least one section on
+                                Rly.IsON = SectionsOn;
                                 break;
 
                             case RelayTypes.Power:
@@ -252,7 +243,7 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Invert_Master:
-                                Rly.IsON = (MasterRelayFound && !MasterSwitchIsOn) || !SectionsOn;
+                                Rly.IsON = !MasterSwitchIsOn || !SectionsOn;
                                 break;
                         }
 

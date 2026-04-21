@@ -325,7 +325,7 @@
     <value>Főelzáró</value>
   </data>
   <data name="lgMasterAll" xml:space="preserve">
-    <value>Összeset Vezérel</value>
+    <value>Standard</value>
   </data>
   <data name="lgMasterOverride" xml:space="preserve">
     <value>Főelzáró felülír</value>

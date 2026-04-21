@@ -22,7 +22,7 @@ namespace RateController.Classes
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
     public enum MasterSwitchMode
-    { ControlAll, Override };
+    { Standard, Override };
 
     public enum ModuleTypes
     {
@@ -88,7 +88,7 @@ namespace RateController.Classes
         private static string cErrorsFileName = "";
         private static string cFieldNames;
         private static bool cMapPreview = false;
-        private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.ControlAll;
+        private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.Standard;
         private static int cPrimeDelay = 3;
         private static double cPrimeTime = 0;
         private static string cProfilesFolder;
@@ -958,7 +958,7 @@ namespace RateController.Classes
 
             cReadOnly = bool.TryParse(GetProp("ReadOnly"), out bool rd) ? rd : false;
             cUseVariableRate = bool.TryParse(GetProp("UseVariableRate_" + CurrentFileName()), out bool vr) ? vr : false;
-            cMasterSwitchMode = Enum.TryParse(GetProp("MasterSwitchMode"), out MasterSwitchMode msm) ? msm : MasterSwitchMode.ControlAll;
+            cMasterSwitchMode = Enum.TryParse(GetProp("MasterSwitchMode"), out MasterSwitchMode msm) ? msm : MasterSwitchMode.Standard;
 
             cDefaultProduct = int.TryParse(GetProp("DefaultProduct"), out int dp) ? dp : 0;
             CurrentProduct = cDefaultProduct;

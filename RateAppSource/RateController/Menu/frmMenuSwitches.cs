@@ -38,7 +38,7 @@ namespace RateController.Menu
 
                 if (rbMasterAll.Checked)
                 {
-                    Props.MasterSwitchMode = MasterSwitchMode.ControlAll;
+                    Props.MasterSwitchMode = MasterSwitchMode.Standard;
                 }
                 else if (rbMasterOverride.Checked)
                 {
@@ -148,7 +148,7 @@ namespace RateController.Menu
 
             switch (Props.MasterSwitchMode)
             {
-                case MasterSwitchMode.ControlAll:
+                case MasterSwitchMode.Standard:
                     rbMasterAll.Checked = true;
                     break;
 

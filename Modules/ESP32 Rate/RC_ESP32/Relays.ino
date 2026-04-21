@@ -2,8 +2,6 @@
 // If both onboard relays and remote relays are enabled, onboard relays will do 0-7, remote will do 8-15.
 // If only one or the other are enabled it will do 0-15.
 
-bool RelayStatusPCA9555[16];
-bool RelayStatusPCA9685[16];
 uint8_t Relays8[] = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW on RelayDriver PCB
 uint8_t Relays16[] = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW on RelayDriver PCB
 
@@ -88,35 +86,17 @@ void ControlSwitch(byte Start, byte End, byte Control)
 		// PCA9555 8 relays
 		if (PCA9555PW_found)
 		{
-			uint8_t RelayByte;
-			if (Start == 0)
-			{
-				RelayByte = NewLo;
-			}
-			else
-			{
-				RelayByte = NewHi;
-			}
-
+			uint8_t RelayByte = (Start == 0) ? NewLo : NewHi;
 			for (int i = 0; i < 8; i++)
 			{
-				BitState = bitRead(RelayByte, i);
-
-				if (RelayStatusPCA9555[i] != BitState)
+				IOpin = Relays8[i];
+				if (bitRead(RelayByte, i))
 				{
-					IOpin = Relays8[i];
-
-					if (BitState)
-					{
-						// on
-						PCA.write(IOpin, PCA95x5::Level::L);
-					}
-					else
-					{
-						// off
-						PCA.write(IOpin, PCA95x5::Level::H);
-					}
-					RelayStatusPCA9555[i] = BitState;
+					PCA.write(IOpin, PCA95x5::Level::L);
+				}
+				else
+				{
+					PCA.write(IOpin, PCA95x5::Level::H);
 				}
 			}
 		}
@@ -128,32 +108,24 @@ void ControlSwitch(byte Start, byte End, byte Control)
 		{
 			for (int i = 0; i < 16; i++)
 			{
-				if (i < 8)
-				{
-					BitState = bitRead(NewLo, i);
-				}
-				else
-				{
-					BitState = bitRead(NewHi, i - 8);
-				}
-
 				if (i >= Start && i <= End)
 				{
-					if (RelayStatusPCA9555[i] != BitState)
+					if (i < 8)
 					{
-						IOpin = Relays16[i];
-
-						if (BitState)
-						{
-							// on
-							PCA.write(IOpin, PCA95x5::Level::L);
-						}
-						else
-						{
-							// off
-							PCA.write(IOpin, PCA95x5::Level::H);
-						}
-						RelayStatusPCA9555[i] = BitState;
+						BitState = bitRead(NewLo, i);
+					}
+					else
+					{
+						BitState = bitRead(NewHi, i - 8);
+					}
+					IOpin = Relays16[i];
+					if (BitState)
+					{
+						PCA.write(IOpin, PCA95x5::Level::L);
+					}
+					else
+					{
+						PCA.write(IOpin, PCA95x5::Level::H);
 					}
 				}
 			}
@@ -218,31 +190,26 @@ void ControlSwitch(byte Start, byte End, byte Control)
 				for (int i = 0; i < 8; i++)
 				{
 					BitState = bitRead(NewLo, i);
-
-					if (RelayStatusPCA9685[i] != BitState)
+					IOpin = (1 + i) * 2 - 1;
+					if (BitState)
 					{
-						IOpin = (1 + i) * 2 - 1;
-						if (BitState)
+						// on
+						PWMServoDriver.setPWM(IOpin, 4096, 0);
+						if (UseSpareDRV && i == 7)
 						{
-							// on
-							PWMServoDriver.setPWM(IOpin, 4096, 0);
-							if (UseSpareDRV && i == 7)
-							{
-								analogWrite(25, 255);
-								analogWrite(26, 0);
-							}
+							analogWrite(25, 255);
+							analogWrite(26, 0);
 						}
-						else
+					}
+					else
+					{
+						// off
+						PWMServoDriver.setPWM(IOpin, 0, 4096);
+						if (UseSpareDRV && i == 7)
 						{
-							// off
-							PWMServoDriver.setPWM(IOpin, 0, 4096);
-							if (UseSpareDRV && i == 7)
-							{
-								analogWrite(25, 0);
-								analogWrite(26, 255);
-							}
+							analogWrite(25, 0);
+							analogWrite(26, 255);
 						}
-						RelayStatusPCA9685[i] = BitState;
 					}
 				}
 			}
@@ -252,33 +219,28 @@ void ControlSwitch(byte Start, byte End, byte Control)
 				for (int i = 0; i < 8; i++)
 				{
 					BitState = bitRead(NewLo, i);
-
-					if (RelayStatusPCA9685[i] != BitState)
+					IOpin = i * 2;
+					if (BitState)
 					{
-						IOpin = i * 2;
-						if (BitState)
+						// on
+						PWMServoDriver.setPWM(IOpin, 4096, 0);
+						PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
+						if (UseSpareDRV && i == 7)
 						{
-							// on  
-							PWMServoDriver.setPWM(IOpin, 4096, 0);
-							PWMServoDriver.setPWM(IOpin + 1, 0, 4096);
-							if (UseSpareDRV && i == 7)
-							{
-								analogWrite(25, 255);
-								analogWrite(26, 0);
-							}
+							analogWrite(25, 255);
+							analogWrite(26, 0);
 						}
-						else
+					}
+					else
+					{
+						// off
+						PWMServoDriver.setPWM(IOpin, 0, 4096);
+						PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
+						if (UseSpareDRV && i == 7)
 						{
-							// off
-							PWMServoDriver.setPWM(IOpin, 0, 4096);
-							PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
-							if (UseSpareDRV && i == 7)
-							{
-								analogWrite(25, 0);
-								analogWrite(26, 255);
-							}
+							analogWrite(25, 0);
+							analogWrite(26, 255);
 						}
-						RelayStatusPCA9685[i] = BitState;
 					}
 				}
 			}

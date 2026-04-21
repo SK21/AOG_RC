@@ -1,6 +1,5 @@
 #include <avr/pgmspace.h>
 
-bool RelayStatus[16];
 const uint8_t Relays8[] PROGMEM = { 7,5,3,1,8,10,12,14 }; // 8 relay module and a PCA9535PW
 const uint8_t Relays16[] PROGMEM = { 15,14,13,12,11,10,9,8,0,1,2,3,4,5,6,7 }; // 16 relay module and a PCA9535PW
 
@@ -49,23 +48,14 @@ void CheckRelays()
         {
             for (int i = 0; i < 8; i++)
             {
-                BitState = bitRead(NewLo, i);
-
-                if (RelayStatus[i] != BitState)
+                IOpin = pgm_read_byte(&Relays8[i]);
+                if (bitRead(NewLo, i))
                 {
-                    IOpin = pgm_read_byte(&Relays8[i]);
-
-                    if (BitState)
-                    {
-                        // IsOn
-                        PCA.write(IOpin, PCA95x5::Level::L);
-                    }
-                    else
-                    {
-                        // off
-                        PCA.write(IOpin, PCA95x5::Level::H);
-                    }
-                    RelayStatus[i] = BitState;
+                    PCA.write(IOpin, PCA95x5::Level::L);
+                }
+                else
+                {
+                    PCA.write(IOpin, PCA95x5::Level::H);
                 }
             }
         }
@@ -85,22 +75,14 @@ void CheckRelays()
                 {
                     BitState = bitRead(NewHi, i - 8);
                 }
-
-                if (RelayStatus[i] != BitState)
+                IOpin = pgm_read_byte(&Relays16[i]);
+                if (BitState)
                 {
-                    IOpin = pgm_read_byte(&Relays16[i]);
-
-                    if (BitState)
-                    {
-                        // IsOn
-                        PCA.write(IOpin, PCA95x5::Level::L);
-                    }
-                    else
-                    {
-                        // off
-                        PCA.write(IOpin, PCA95x5::Level::H);
-                    }
-                    RelayStatus[i] = BitState;
+                    PCA.write(IOpin, PCA95x5::Level::L);
+                }
+                else
+                {
+                    PCA.write(IOpin, PCA95x5::Level::H);
                 }
             }
         }
