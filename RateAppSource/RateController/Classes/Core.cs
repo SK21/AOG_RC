@@ -25,6 +25,7 @@ namespace RateController.Classes
         public static PGN32501[] RelaySettings;
         public static PGN32296 ScaleIndicator;
         public static clsSectionControl SectionControl;
+        public static clsRateAdjustController RateAdjustController;
         public static clsSections Sections;
         public static PGN235 SectionsPGN;
         public static PGN32618 SwitchBox;
@@ -140,6 +141,7 @@ namespace RateController.Classes
                 ModuleConfig = new PGN32700();
                 AOGsections = new PGN229();
                 SectionControl = new clsSectionControl();
+                RateAdjustController = new clsRateAdjustController();
                 ScaleIndicator = new PGN32296();
                 GPS = new PGN208();
                 WheelSpeed = new PGN32504();
@@ -313,7 +315,7 @@ namespace RateController.Classes
 
         private static void MainTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            SectionControl.ReadRateSwitches();
+            RateAdjustController.Update();
             SafeEvent.Raise(UpdateStatus);
             SendRelays();
             RCalarm.CheckAlarms();
