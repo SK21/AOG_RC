@@ -40,7 +40,7 @@ namespace RateController.Classes
     { Applied, Target }
 
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master };
+    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master, Bypass };
 
     public enum SpeedType
     { GPS, Wheel, Simulated, ISOBUS }
@@ -69,7 +69,7 @@ namespace RateController.Classes
 
         public static string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
-            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master};
+            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass};
 
         private static string cActivityFileName = "";
         private static string cAppDate = "17-Apr-2026";

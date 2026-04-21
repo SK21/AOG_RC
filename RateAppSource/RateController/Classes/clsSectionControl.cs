@@ -234,7 +234,7 @@ namespace RateController.Classes
                 // AOG auto section control
                 foreach (clsSection Sec in Core.Sections.Items)
                 {
-                    if (Sec.Enabled) Sec.IsON = Core.AOGsections.SectionIsOn(Sec.ID) && MachineIsMoving;
+                    if (Sec.Enabled) Sec.IsON = MasterIsOn && Core.AOGsections.SectionIsOn(Sec.ID) && MachineIsMoving;
                 }
             }
             else
@@ -424,7 +424,7 @@ namespace RateController.Classes
                     {
                         for (int i = Zn.Start - 1; i < Zn.End; i++)
                         {
-                            Core.Sections.Item(i).IsON = MachineIsMoving && Core.AOGsections.SectionIsOn(i);
+                            Core.Sections.Item(i).IsON = MasterIsOn && MachineIsMoving && Core.AOGsections.SectionIsOn(i);
                         }
                     }
                     else

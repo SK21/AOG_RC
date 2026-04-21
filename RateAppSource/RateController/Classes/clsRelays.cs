@@ -206,15 +206,7 @@ namespace RateController.Classes
                         switch (Rly.Type)
                         {
                             case RelayTypes.Section:
-                                if (MasterSwitchIsOn)
-                                {
-                                    // set relay by section switch
-                                    Rly.IsON = (Rly.SectionID >= 0 && (Core.Sections.Items[Rly.SectionID].IsON || Props.RateCalibrationOn));
-                                }
-                                else
-                                {
-                                    Rly.IsON = false;
-                                }
+                                Rly.IsON = (Rly.SectionID >= 0 && (Core.Sections.Items[Rly.SectionID].IsON || Props.RateCalibrationOn));
                                 break;
 
                             case RelayTypes.Slave:
@@ -227,15 +219,7 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Invert_Section:
-                                if (MasterSwitchIsOn)
-                                {
-                                    // set relay by section
-                                    Rly.IsON = (Rly.SectionID >= 0 && !Core.Sections.Items[Rly.SectionID].IsON);
-                                }
-                                else
-                                {
-                                    Rly.IsON = false;
-                                }
+                                Rly.IsON = (Rly.SectionID >= 0 && !Core.Sections.Items[Rly.SectionID].IsON);
                                 break;
 
                             case RelayTypes.Switch:
@@ -243,7 +227,11 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Invert_Master:
-                                Rly.IsON = !MasterSwitchIsOn || !SectionsOn;
+                                Rly.IsON = !MasterSwitchIsOn;
+                                break;
+
+                            case RelayTypes.Bypass:
+                                Rly.IsON = !SectionsOn;
                                 break;
                         }
 
@@ -272,7 +260,7 @@ namespace RateController.Classes
                 for (int j = 0; j < cRelays.Count; j++)
                 {
                     clsRelay Rly = cRelays[j];
-                    if ((Rly.Type == RelayTypes.Invert_Section || Rly.Type == RelayTypes.Invert_Master) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
+                    if ((Rly.Type == RelayTypes.Invert_Section || Rly.Type == RelayTypes.Invert_Master || Rly.Type == RelayTypes.Bypass) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }

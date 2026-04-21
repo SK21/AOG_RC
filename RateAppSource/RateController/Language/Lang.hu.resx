@@ -303,6 +303,9 @@
   <data name="lgInvert_Master" xml:space="preserve">
     <value>Főelzáró Invertál</value>
   </data>
+  <data name="lgBypass" xml:space="preserve">
+    <value>Bypass</value>
+  </data>
   <data name="lgJobs" xml:space="preserve">
     <value>Munák</value>
   </data>
