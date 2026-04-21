@@ -22,7 +22,7 @@ namespace RateController.Classes
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
     public enum MasterSwitchMode
-    { ControlAll, ControlMasterRelayOnly, Override };
+    { ControlAll, Override };
 
     public enum ModuleTypes
     {

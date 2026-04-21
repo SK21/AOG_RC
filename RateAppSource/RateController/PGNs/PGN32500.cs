@@ -3,7 +3,7 @@ using System;
 
 namespace RateController.PGNs
 {
-    enum CommandPGN32500 : byte
+    internal enum CommandPGN32500 : byte
     {
         ResetQuantity = 1,              // 0000 0001, bit 0
         ControlStandard = 0,            // 0000 0000, bits 1,2,3 cleared
@@ -13,10 +13,10 @@ namespace RateController.PGNs
         ControlFan = 8,                 // 0000 1000, bit 3
         ControlComboCloseTimed = 10,    // 0000 1010, bit 1, bit 3
         MasterOnMode = 16,              // 0001 0000, bit 4
-        MasterOnPosition = 32,          // 0010 0000, bit 5
         AutoOn = 64,                    // 0100 0000, bit 6
         CalibrationOn = 128             // 1000 0000, bit 7
     }
+
     public class PGN32500
     {
         //PGN32500, Rate settings from RC to module
@@ -33,7 +33,7 @@ namespace RateController.PGNs
         //	        - bit 0		    reset acc.Quantity
         //	        - bit 1,2,3		control type 0-4
         //	        - bit 4		    MasterOn mode
-        //          - bit 5         MasterOn switch position
+        //          - bit 5         -
         //          - bit 6         AutoOn
         //          - bit 7         Calibration On
         //10    manual pwm Lo
@@ -145,11 +145,7 @@ namespace RateController.PGNs
                     // master on
                     if (Core.SwitchBox.Connected())
                     {
-                        if (Core.SectionControl.MasterOn
-                            || Props.MasterSwitchMode == MasterSwitchMode.Override
-                            || Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly) cData[9] |= (byte)CommandPGN32500.MasterOnMode;
-
-                        if (Core.SwitchBox.MasterOn) cData[9] |= (byte)CommandPGN32500.MasterOnPosition;
+                        if (Core.SectionControl.MasterOn || Props.MasterSwitchMode == MasterSwitchMode.Override) cData[9] |= (byte)CommandPGN32500.MasterOnMode;
                     }
                     else
                     {

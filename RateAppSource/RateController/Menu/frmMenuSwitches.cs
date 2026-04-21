@@ -40,10 +40,6 @@ namespace RateController.Menu
                 {
                     Props.MasterSwitchMode = MasterSwitchMode.ControlAll;
                 }
-                else if (rbMasterRelayOnly.Checked)
-                {
-                    Props.MasterSwitchMode = MasterSwitchMode.ControlMasterRelayOnly;
-                }
                 else if (rbMasterOverride.Checked)
                 {
                     Props.MasterSwitchMode = MasterSwitchMode.Override;
@@ -130,7 +126,6 @@ namespace RateController.Menu
             ckRate.Text = Lang.lgRate;
             rbMasterAll.Text = Lang.lgMasterAll;
             rbMasterOverride.Text = Lang.lgMasterOverride;
-            rbMasterRelayOnly.Text = Lang.lgMasterRelayOnly;
         }
 
         private void UpdateForm()
@@ -155,10 +150,6 @@ namespace RateController.Menu
             {
                 case MasterSwitchMode.ControlAll:
                     rbMasterAll.Checked = true;
-                    break;
-
-                case MasterSwitchMode.ControlMasterRelayOnly:
-                    rbMasterRelayOnly.Checked = true;
                     break;
 
                 case MasterSwitchMode.Override:

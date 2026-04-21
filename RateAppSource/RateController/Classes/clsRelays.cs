@@ -208,7 +208,7 @@ namespace RateController.Classes
                         switch (Rly.Type)
                         {
                             case RelayTypes.Section:
-                                if (MasterSwitchIsOn || (MasterRelayFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                if (MasterSwitchIsOn)
                                 {
                                     // set relay by section switch
                                     Rly.IsON = (Rly.SectionID >= 0 && (Core.Sections.Items[Rly.SectionID].IsON || Props.RateCalibrationOn));
@@ -220,7 +220,7 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Slave:
-                                if (MasterSwitchIsOn || (MasterRelayFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                if (MasterSwitchIsOn)
                                 {
                                     // set relay if at lease one section on
                                     Rly.IsON = SectionsOn;
@@ -236,7 +236,7 @@ namespace RateController.Classes
                                 break;
 
                             case RelayTypes.Invert_Section:
-                                if (MasterSwitchIsOn || (MasterRelayFound && Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly))
+                                if (MasterSwitchIsOn)
                                 {
                                     // set relay by section
                                     Rly.IsON = (Rly.SectionID >= 0 && !Core.Sections.Items[Rly.SectionID].IsON);

@@ -862,7 +862,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Control All.
+        ///   Looks up a localized string similar to Standard.
         /// </summary>
         internal static string lgMasterAll {
             get {

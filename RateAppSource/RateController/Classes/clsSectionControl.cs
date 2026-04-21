@@ -248,14 +248,7 @@ namespace RateController.Classes
                         IsOn = false;
                         if (!Core.SwitchBox.AutoSectionOn || MachineIsMoving)
                         {
-                            if (Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
-                            {
-                                IsOn = Core.SwitchBox.SectionSwitchOn(Sec.SwitchID);
-                            }
-                            else
-                            {
-                                IsOn = SectionOnBySwitchBox[Sec.ID];
-                            }
+                            IsOn = SectionOnBySwitchBox[Sec.ID];
                         }
                         Sec.IsON = IsOn;
                     }
@@ -438,14 +431,7 @@ namespace RateController.Classes
                     {
                         for (int i = Zn.Start - 1; i < Zn.End; i++)
                         {
-                            if (Props.MasterSwitchMode == MasterSwitchMode.ControlMasterRelayOnly)
-                            {
-                                Core.Sections.Item(i).IsON = Core.SwitchBox.SectionSwitchOn(Zn.SwitchID);
-                            }
-                            else
-                            {
-                                Core.Sections.Item(i).IsON = RCzoneOn[Zn.ID];
-                            }
+                            Core.Sections.Item(i).IsON = RCzoneOn[Zn.ID];
                         }
                     }
                 }

@@ -340,7 +340,7 @@
     <value>Master</value>
   </data>
   <data name="lgMasterAll" xml:space="preserve">
-    <value>Control All</value>
+    <value>Standard</value>
   </data>
   <data name="lgMasterOverride" xml:space="preserve">
     <value>Master Override</value>

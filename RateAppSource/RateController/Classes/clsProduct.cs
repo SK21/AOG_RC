@@ -246,6 +246,9 @@ namespace RateController.Classes
                 }
                 else
                 {
+                    bool wasMotor = cControlType != ControlTypeEnum.Valve && cControlType != ControlTypeEnum.ComboClose && cControlType != ControlTypeEnum.ComboCloseTimed;
+                    bool isValve = value == ControlTypeEnum.Valve || value == ControlTypeEnum.ComboClose || value == ControlTypeEnum.ComboCloseTimed;
+                    if (wasMotor && isValve) cManualPWM = 0;
                     cControlType = value;
                 }
             }
