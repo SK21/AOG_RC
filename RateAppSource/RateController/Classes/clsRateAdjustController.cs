@@ -132,6 +132,7 @@ namespace RateController.Classes
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             Update();
+            if (Core.SwitchBox.RateUp || Core.SwitchBox.RateDown) Core.SendRateSettings();
         }
     }
 }
