@@ -153,26 +153,13 @@ namespace RateController.Classes
         public int SetRelays(int ModuleID)
         {
             int Result = 0;
+
             try
             {
-                // based on sections status and relay type set relays
-                // return int value for relayLo, relayHi
+                bool SectionsOn = false;
+                bool MasterOn = Core.SectionControl.MasterOn || Props.RateCalibrationOn;
 
-                bool SectionsOn = false;        // whether at least on section is on
-                bool MasterSwitchIsOn = Props.RateCalibrationOn || Core.SwitchBox.MasterOn;
-
-                // set master relays
-                for (int i = 0; i < cRelays.Count; i++)
-                {
-                    clsRelay Rly = cRelays[i];
-
-                    if (Rly.Type == RelayTypes.Master)
-                    {
-                        Rly.IsON = MasterSwitchIsOn;
-                    }
-                }
-
-                // check if at least one section on
+                // determine if any section is ON
                 for (int i = 0; i < Props.MaxSections; i++)
                 {
                     if (Core.Sections.Item(i).IsON)
@@ -182,64 +169,69 @@ namespace RateController.Classes
                     }
                 }
 
-                // set hydraulic relays
+                // hydraulic handled separately
                 HydUPDown(ModuleID);
 
-                // set tram lines, geo stop
                 for (int i = 0; i < cRelays.Count; i++)
                 {
                     clsRelay Rly = cRelays[i];
-                    if (Rly.ModuleID == ModuleID)
+
+                    if (Rly.ModuleID != ModuleID) continue;
+
+                    bool state = false;
+
+                    switch (Rly.Type)
                     {
-                        if (Rly.Type == RelayTypes.TramLeft) Rly.IsON = Core.MachineData.TramLeft;
-                        if (Rly.Type == RelayTypes.TramRight) Rly.IsON = Core.MachineData.TramRight;
-                        if (Rly.Type == RelayTypes.GeoStop) Rly.IsON = Core.MachineData.GeoStop;
+                        case RelayTypes.Master:
+                            state = MasterOn;
+                            break;
+
+                        case RelayTypes.Invert_Master:
+                            state = !MasterOn;
+                            break;
+
+                        case RelayTypes.Section:
+                            state = (Rly.SectionID >= 0 && (Core.Sections.Item(Rly.SectionID).IsON || Props.RateCalibrationOn));
+                            break;
+
+                        case RelayTypes.Invert_Section:
+                            state = (Rly.SectionID >= 0 && !(Core.Sections.Item(Rly.SectionID).IsON));
+                            break;
+
+                        case RelayTypes.Slave:
+                            state = SectionsOn;
+                            break;
+
+                        case RelayTypes.Power:
+                            state = true;
+                            break;
+
+                        case RelayTypes.Bypass:
+                            state = !SectionsOn;
+                            break;
+
+                        case RelayTypes.Switch:
+                            state = Core.SwitchBox.SwitchIsOn((SwIDs)(Rly.SwitchID + 5));
+                            break;
+
+                        case RelayTypes.TramLeft:
+                            state = Core.MachineData.TramLeft;
+                            break;
+
+                        case RelayTypes.TramRight:
+                            state = Core.MachineData.TramRight;
+                            break;
+
+                        case RelayTypes.GeoStop:
+                            state = Core.MachineData.GeoStop;
+                            break;
                     }
-                }
 
-                // set section, slave, power relays
-                for (int i = 0; i < cRelays.Count; i++)
-                {
-                    clsRelay Rly = cRelays[i];
-                    if (Rly.ModuleID == ModuleID)
+                    Rly.IsON = state;
+
+                    if (state)
                     {
-                        switch (Rly.Type)
-                        {
-                            case RelayTypes.Section:
-                                Rly.IsON = (Rly.SectionID >= 0 && (Core.Sections.Items[Rly.SectionID].IsON || Props.RateCalibrationOn));
-                                break;
-
-                            case RelayTypes.Slave:
-                                // set relay if at least one section on
-                                Rly.IsON = SectionsOn;
-                                break;
-
-                            case RelayTypes.Power:
-                                cRelays[i].IsON = true;
-                                break;
-
-                            case RelayTypes.Invert_Section:
-                                Rly.IsON = (Rly.SectionID >= 0 && !Core.Sections.Items[Rly.SectionID].IsON);
-                                break;
-
-                            case RelayTypes.Switch:
-                                Rly.IsON = Core.SwitchBox.SwitchIsOn((SwIDs)(Rly.SwitchID + 5));
-                                break;
-
-                            case RelayTypes.Invert_Master:
-                                Rly.IsON = !MasterSwitchIsOn;
-                                break;
-
-                            case RelayTypes.Bypass:
-                                Rly.IsON = !SectionsOn;
-                                break;
-                        }
-
-                        // build return int
-                        if (Rly.IsON)
-                        {
-                            Result |= (int)Math.Pow(2, Rly.ID);
-                        }
+                        Result |= (1 << Rly.ID);
                     }
                 }
             }
@@ -250,7 +242,6 @@ namespace RateController.Classes
 
             return Result;
         }
-
         private void BuildInvertedRelays()
         {
             // a list of relays that should be powered on by the module in case of comm failure with the app
@@ -260,7 +251,8 @@ namespace RateController.Classes
                 for (int j = 0; j < cRelays.Count; j++)
                 {
                     clsRelay Rly = cRelays[j];
-                    if ((Rly.Type == RelayTypes.Invert_Section || Rly.Type == RelayTypes.Invert_Master || Rly.Type == RelayTypes.Bypass) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
+                    if ((Rly.Type == RelayTypes.Invert_Section || Rly.Type == RelayTypes.Invert_Master
+                        || Rly.Type == RelayTypes.Bypass) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }
