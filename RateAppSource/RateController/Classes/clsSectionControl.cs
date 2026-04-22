@@ -94,7 +94,11 @@ namespace RateController.Classes
                 bool IsOn = false;
                 if (sec.Enabled)
                 {
-                    if (inputs.AOGConnected && inputs.AutoSectionOn && !cPrimeOn)
+                    if (cPrimeOn)
+                    {
+                        IsOn = MasterIsOn && SectionOnBySwitchBox[sec.ID];
+                    }
+                    else if (inputs.AOGConnected && inputs.AutoSectionOn)
                     {
                         IsOn = MasterIsOn && Core.AOGsections.SectionIsOn(sec.ID) && SectionOnBySwitchBox[sec.ID];
                     }
@@ -114,7 +118,11 @@ namespace RateController.Classes
                 bool zoneSwitchOn = ZoneSwitchOnForSection(i);
                 bool isOn = false;
 
-                if (inputs.AOGConnected && inputs.AutoSectionOn && !cPrimeOn)
+                if (cPrimeOn)
+                {
+                    isOn = MasterIsOn && zoneSwitchOn;
+                }
+                else if (inputs.AOGConnected && inputs.AutoSectionOn)
                 {
                     isOn = MasterIsOn && zoneSwitchOn && Core.AOGsections.SectionIsOn(i);
                 }
@@ -318,7 +326,7 @@ namespace RateController.Classes
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if (!inputs.AutoSectionOn || cPrimeOn)
+                        if (!inputs.AutoSectionOn)
                         {
                             for (int i = 0; i < max; i++)
                             {
@@ -407,7 +415,7 @@ namespace RateController.Classes
                         MasterIsOnChanged = false;
                         AutoSectionsChanged = false;
 
-                        if (!inputs.AutoSectionOn || cPrimeOn)
+                        if (!inputs.AutoSectionOn)
                         {
                             for (int i = 0; i < max; i++)
                             {
