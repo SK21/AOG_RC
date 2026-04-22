@@ -116,7 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\clsRateAdjustController.cs" />
-    <Compile Include="Classes\clsRelaysOld.cs" />
     <Compile Include="Classes\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>

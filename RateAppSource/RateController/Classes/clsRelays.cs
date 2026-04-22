@@ -242,6 +242,7 @@ namespace RateController.Classes
 
             return Result;
         }
+
         private void BuildInvertedRelays()
         {
             // a list of relays that should be powered on by the module in case of comm failure with the app

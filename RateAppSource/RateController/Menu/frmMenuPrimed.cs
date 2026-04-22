@@ -13,7 +13,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
 
-        public frmMenuPrimed( frmMenu menu)
+        public frmMenuPrimed(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
@@ -204,6 +204,8 @@ namespace RateController.Menu
 
             tbTime.Text = Props.PrimeTime.ToString("N0");
             tbDelay.Text = Props.PrimeDelay.ToString("N0");
+
+            ckResume.Checked = Props.ResumeAfterPrime;
 
             if (!Props.UseMetric)
             {
