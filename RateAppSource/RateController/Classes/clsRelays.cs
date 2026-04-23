@@ -198,6 +198,11 @@ namespace RateController.Classes
                             state = (Rly.SectionID >= 0 && !(Core.Sections.Item(Rly.SectionID).IsON));
                             break;
 
+                        case RelayTypes.HydUp:
+                        case RelayTypes.HydDown:
+                            state = Rly.IsON;
+                            break;
+
                         case RelayTypes.Slave:
                             state = SectionsOn;
                             break;
