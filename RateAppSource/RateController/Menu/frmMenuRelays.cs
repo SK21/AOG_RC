@@ -9,6 +9,24 @@ namespace RateController.Menu
 {
     public partial class frmMenuRelays : Form
     {
+        private static readonly string[] RelayTypeDisplayOrder = new string[]
+        {
+            Lang.lgSection,
+            Lang.lgInvertSection,
+            Lang.lgSlave,
+            Lang.lgBypass,
+            Lang.lgMaster,
+            Lang.lgInvert_Master,
+            Lang.lgPower,
+            Lang.lgSwitch,
+            Lang.lgHydUp,
+            Lang.lgHydDown,
+            Lang.lgTramRight,
+            Lang.lgTramLeft,
+            Lang.lgGeoStop,
+            Lang.lgNone
+        };
+
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -121,6 +139,14 @@ namespace RateController.Menu
             if (!Initializing) SetButtons(true);
         }
 
+        private void DGV_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (DGV.IsCurrentCellDirty)
+            {
+                DGV.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
         private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             Props.WriteErrorLog("frmRelays/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
@@ -153,10 +179,11 @@ namespace RateController.Menu
 
             DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DGV.CurrentCellDirtyStateChanged += DGV_CurrentCellDirtyStateChanged;
 
             DataGridViewComboBoxColumn col = (DataGridViewComboBoxColumn)DGV.Columns[1];
             col.Name = "Type";
-            col.DataSource = Props.TypeDescriptions;
+            col.DataSource = RelayTypeDisplayOrder;
 
             UpdateForm();
         }
