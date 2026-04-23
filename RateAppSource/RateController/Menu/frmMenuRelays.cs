@@ -15,6 +15,7 @@ namespace RateController.Menu
             Lang.lgInvertSection,
             Lang.lgSlave,
             Lang.lgBypass,
+            Lang.lgFlowMaster,
             Lang.lgMaster,
             Lang.lgInvert_Master,
             Lang.lgPower,

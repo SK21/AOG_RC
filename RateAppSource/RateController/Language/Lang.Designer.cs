@@ -767,6 +767,15 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgBypass", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to FlowMaster.
+        /// </summary>
+        internal static string lgFlowMaster {
+            get {
+                return ResourceManager.GetString("lgFlowMaster", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Invert Flow Control.

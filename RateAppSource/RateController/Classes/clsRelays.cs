@@ -158,6 +158,21 @@ namespace RateController.Classes
             {
                 bool SectionsOn = false;
                 bool MasterOn = Core.SectionControl.MasterOn || Props.RateCalibrationOn;
+                bool FlowEnabled = Props.Speed_KMH > 0.1;
+                bool FlowMasterOn;
+
+                if (Props.RateCalibrationOn)
+                {
+                    FlowMasterOn = true;
+                }
+                else if (Core.SwitchBox.AutoSectionOn)
+                {
+                    FlowMasterOn = Core.SwitchBox.MasterOn && FlowEnabled;
+                }
+                else
+                {
+                    FlowMasterOn = Core.SwitchBox.MasterOn;
+                }
 
                 // determine if any section is ON
                 for (int i = 0; i < Props.MaxSections; i++)
@@ -184,6 +199,10 @@ namespace RateController.Classes
                     {
                         case RelayTypes.Master:
                             state = MasterOn;
+                            break;
+
+                        case RelayTypes.FlowMaster:
+                            state = FlowMasterOn;
                             break;
 
                         case RelayTypes.Invert_Master:

@@ -318,6 +318,9 @@
   <data name="lgBypass" xml:space="preserve">
     <value>Bypass</value>
   </data>
+  <data name="lgFlowMaster" xml:space="preserve">
+    <value>FlowMaster</value>
+  </data>
   <data name="lgJobs" xml:space="preserve">
     <value>Jobs</value>
   </data>
