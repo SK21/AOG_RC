@@ -1,4 +1,4 @@
-﻿using AgOpenGPS;
+using AgOpenGPS;
 using RateController.Classes;
 using RateController.Language;
 using System;
@@ -33,7 +33,6 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private bool Reset = false;
 
         public frmMenuRelays(frmMenu menu)
         {
@@ -45,7 +44,7 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            UpdateForm();
+            UpdateForm(true);
             SetButtons(false);
         }
 
@@ -53,13 +52,6 @@ namespace RateController.Menu
         {
             try
             {
-                if (Reset)
-                {
-                    Reset = false;
-                    Core.RelayObjects.Reset();
-                    UpdateForm();
-                }
-
                 if (ValidateFlowMasterValveMode())
                 {
                     SaveData();
@@ -99,7 +91,8 @@ namespace RateController.Menu
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            Reset = true;
+            Core.RelayObjects.Reset();
+            UpdateForm();
             SetButtons(true);
         }
 
@@ -480,3 +473,4 @@ namespace RateController.Menu
         }
     }
 }
+
