@@ -13,13 +13,13 @@ namespace RateController.Menu
         private static readonly string[] RelayTypeDisplayOrder = new string[]
         {
             Lang.lgSection,
-            Lang.lgInvertSection,
-            Lang.lgSlave,
-            Lang.lgBypass,
             Lang.lgFlowMaster,
             Lang.lgInvert_FlowMaster,
+            Lang.lgBypass,
             Lang.lgMaster,
             Lang.lgInvert_Master,
+            Lang.lgSlave,
+            Lang.lgInvertSection,
             Lang.lgPower,
             Lang.lgSwitch,
             Lang.lgHydUp,
@@ -93,6 +93,7 @@ namespace RateController.Menu
         {
             Core.RelayObjects.Reset();
             UpdateForm();
+            Core.RelayObjects.Load();   // restore live objects so relays don't change until Save is pressed
             SetButtons(true);
         }
 
@@ -173,7 +174,7 @@ namespace RateController.Menu
             btnRenumber.Left = btnCancel.Left - 78;
             btnRenumber.Top = btnOK.Top;
             btnReset.Left = btnRenumber.Left - 78;
-            btnReset.Top = btnOK.Top;
+            btnReset.Top = btnOK.Top + 5;
             MainMenu.StyleControls(this);
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;

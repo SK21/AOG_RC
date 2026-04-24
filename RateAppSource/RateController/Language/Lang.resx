@@ -328,13 +328,13 @@
     <value>FlowMaster valve</value>
   </data>
   <data name="lgFlowMaster2Wire" xml:space="preserve">
-    <value>2-wire valve (requires module support)</value>
+    <value>2-wire valve (single relay powers open and close)</value>
   </data>
   <data name="lgFlowMaster2WireInvert" xml:space="preserve">
-    <value>2-wire valve + Invert_FlowMaster</value>
+    <value>2-wire valve (2 relays: FlowMaster powers open, Invert_FlowMaster powers close)</value>
   </data>
   <data name="lgFlowMaster3Wire" xml:space="preserve">
-    <value>3-wire valve</value>
+    <value>3-wire valve (relay signal, valve self-powered)</value>
   </data>
   <data name="lgFlowMaster2WireValve" xml:space="preserve">
     <value>FlowMaster uses 2-wire valve</value>

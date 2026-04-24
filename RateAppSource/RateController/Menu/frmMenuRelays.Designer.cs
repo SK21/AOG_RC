@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataSet1 = new System.Data.DataSet();
             this.dataTable1 = new System.Data.DataTable();
             this.dataRelay = new System.Data.DataColumn();
@@ -132,7 +132,7 @@
             this.btnReset.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.Image = global::RateController.Properties.Resources.Update;
             this.btnReset.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReset.Location = new System.Drawing.Point(216, 603);
+            this.btnReset.Location = new System.Drawing.Point(216, 608);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(70, 63);
             this.btnReset.TabIndex = 178;
@@ -161,7 +161,7 @@
             // lbModule
             // 
             this.lbModule.AutoSize = true;
-            this.lbModule.Location = new System.Drawing.Point(146, 39);
+            this.lbModule.Location = new System.Drawing.Point(146, 18);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(74, 24);
             this.lbModule.TabIndex = 181;
@@ -172,7 +172,7 @@
             this.ModuleIndicator.BackColor = System.Drawing.SystemColors.Control;
             this.ModuleIndicator.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ModuleIndicator.Image = global::RateController.Properties.Resources.Off;
-            this.ModuleIndicator.Location = new System.Drawing.Point(322, 33);
+            this.ModuleIndicator.Location = new System.Drawing.Point(322, 12);
             this.ModuleIndicator.Name = "ModuleIndicator";
             this.ModuleIndicator.Size = new System.Drawing.Size(41, 37);
             this.ModuleIndicator.TabIndex = 0;
@@ -192,7 +192,7 @@
             "5",
             "6",
             "7"});
-            this.cbModules.Location = new System.Drawing.Point(235, 36);
+            this.cbModules.Location = new System.Drawing.Point(235, 15);
             this.cbModules.Name = "cbModules";
             this.cbModules.Size = new System.Drawing.Size(61, 31);
             this.cbModules.TabIndex = 179;
@@ -212,22 +212,22 @@
             this.ColSection});
             this.DGV.DataMember = "Table1";
             this.DGV.DataSource = this.dataSet1;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.NullValue = "<dbnull>";
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.NullValue = "<dbnull>";
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle6;
             this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.DGV.Location = new System.Drawing.Point(59, 100);
+            this.DGV.Location = new System.Drawing.Point(59, 53);
             this.DGV.Margin = new System.Windows.Forms.Padding(11);
             this.DGV.Name = "DGV";
             this.DGV.RowHeadersVisible = false;
             this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(391, 361);
+            this.DGV.Size = new System.Drawing.Size(391, 357);
             this.DGV.TabIndex = 0;
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
@@ -239,9 +239,9 @@
             this.gbFlowMasterValve.Controls.Add(this.rbFlowMaster2WireInvert);
             this.gbFlowMasterValve.Controls.Add(this.rbFlowMaster2Wire);
             this.gbFlowMasterValve.Enabled = false;
-            this.gbFlowMasterValve.Location = new System.Drawing.Point(59, 475);
+            this.gbFlowMasterValve.Location = new System.Drawing.Point(19, 419);
             this.gbFlowMasterValve.Name = "gbFlowMasterValve";
-            this.gbFlowMasterValve.Size = new System.Drawing.Size(391, 104);
+            this.gbFlowMasterValve.Size = new System.Drawing.Size(498, 170);
             this.gbFlowMasterValve.TabIndex = 182;
             this.gbFlowMasterValve.TabStop = false;
             this.gbFlowMasterValve.Text = "FlowMaster valve";
@@ -250,7 +250,7 @@
             // rbFlowMaster3Wire
             // 
             this.rbFlowMaster3Wire.AutoSize = true;
-            this.rbFlowMaster3Wire.Location = new System.Drawing.Point(13, 74);
+            this.rbFlowMaster3Wire.Location = new System.Drawing.Point(13, 136);
             this.rbFlowMaster3Wire.Name = "rbFlowMaster3Wire";
             this.rbFlowMaster3Wire.Size = new System.Drawing.Size(127, 28);
             this.rbFlowMaster3Wire.TabIndex = 2;
@@ -261,13 +261,13 @@
             // 
             // rbFlowMaster2WireInvert
             // 
-            this.rbFlowMaster2WireInvert.AutoSize = true;
-            this.rbFlowMaster2WireInvert.Location = new System.Drawing.Point(13, 49);
+            this.rbFlowMaster2WireInvert.Location = new System.Drawing.Point(13, 66);
             this.rbFlowMaster2WireInvert.Name = "rbFlowMaster2WireInvert";
-            this.rbFlowMaster2WireInvert.Size = new System.Drawing.Size(300, 28);
+            this.rbFlowMaster2WireInvert.Size = new System.Drawing.Size(479, 56);
             this.rbFlowMaster2WireInvert.TabIndex = 1;
             this.rbFlowMaster2WireInvert.TabStop = true;
             this.rbFlowMaster2WireInvert.Text = "2-wire valve + Invert_FlowMaster";
+            this.rbFlowMaster2WireInvert.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.rbFlowMaster2WireInvert.UseVisualStyleBackColor = true;
             this.rbFlowMaster2WireInvert.CheckedChanged += new System.EventHandler(this.FlowMasterValveMode_CheckedChanged);
             // 
@@ -286,8 +286,8 @@
             // ColRelay
             // 
             this.ColRelay.DataPropertyName = "cRelay";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColRelay.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColRelay.DefaultCellStyle = dataGridViewCellStyle4;
             this.ColRelay.HeaderText = "Relay";
             this.ColRelay.Name = "ColRelay";
             this.ColRelay.ReadOnly = true;
@@ -313,8 +313,8 @@
             // 
             this.ColSection.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ColSection.DataPropertyName = "cSection";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColSection.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColSection.DefaultCellStyle = dataGridViewCellStyle5;
             this.ColSection.HeaderText = "Number";
             this.ColSection.Name = "ColSection";
             // 
