@@ -307,7 +307,7 @@
             this.ColType.Name = "ColType";
             this.ColType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.ColType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColType.Width = 175;
+            this.ColType.Width = 215;
             // 
             // ColSection
             // 
