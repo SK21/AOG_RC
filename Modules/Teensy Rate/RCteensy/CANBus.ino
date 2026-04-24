@@ -329,6 +329,7 @@ void CANBus_HandleRelayCommand(const CAN_message_t& msg) {
 	PowerRelayHi = msg.buf[4];
 	InvertedLo = msg.buf[5];
 	InvertedHi = msg.buf[6];
+	FlowMasterValveIndex = (msg.len > 7) ? msg.buf[7] : 255;
 }
 
 void CANBus_HandlePidSettings1(const CAN_message_t& msg) {

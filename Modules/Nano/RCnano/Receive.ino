@@ -84,9 +84,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//6     power relay Hi      list of power type relays 8-15
 		//7     Inverted Lo         
 		//8     Inverted Hi
-		//9     CRC
+		//9     FlowMasterValveIndex    0-15, 255 disabled
+		//10    CRC
 
-		PGNlength = 10;
+		PGNlength = 11;
 
 		if (len > PGNlength - 1)
 		{
@@ -100,6 +101,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 					PowerRelayHi = data[6];
 					InvertedLo = data[7];
 					InvertedHi = data[8];
+					FlowMasterValveIndex = data[9];
 				}
 			}
 		}

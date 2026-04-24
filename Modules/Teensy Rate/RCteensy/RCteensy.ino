@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 21046;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 24046;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -135,6 +135,7 @@ byte PowerRelayLo;
 byte PowerRelayHi;
 byte InvertedLo;
 byte InvertedHi;
+byte FlowMasterValveIndex = 255;
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
 uint32_t LoopLast = LoopTime;
