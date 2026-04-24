@@ -209,6 +209,10 @@ namespace RateController.Classes
                             state = !MasterOn;
                             break;
 
+                        case RelayTypes.Invert_FlowMaster:
+                            state = !FlowMasterOn;
+                            break;
+
                         case RelayTypes.Section:
                             state = (Rly.SectionID >= 0 && (Core.Sections.Item(Rly.SectionID).IsON || Props.RateCalibrationOn));
                             break;
@@ -277,7 +281,7 @@ namespace RateController.Classes
                 {
                     clsRelay Rly = cRelays[j];
                     if ((Rly.Type == RelayTypes.Invert_Section || Rly.Type == RelayTypes.Invert_Master
-                        || Rly.Type == RelayTypes.Bypass) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
+                        || Rly.Type == RelayTypes.Invert_FlowMaster || Rly.Type == RelayTypes.Bypass) && Rly.ModuleID == i) cInvertedRelays[i] |= (int)Math.Pow(2, Rly.ID);
                 }
             }
         }

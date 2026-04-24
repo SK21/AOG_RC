@@ -44,12 +44,17 @@
             this.ModuleIndicator = new System.Windows.Forms.Label();
             this.cbModules = new System.Windows.Forms.ComboBox();
             this.DGV = new System.Windows.Forms.DataGridView();
+            this.gbFlowMasterValve = new System.Windows.Forms.GroupBox();
+            this.rbFlowMaster3Wire = new System.Windows.Forms.RadioButton();
+            this.rbFlowMaster2WireInvert = new System.Windows.Forms.RadioButton();
+            this.rbFlowMaster2Wire = new System.Windows.Forms.RadioButton();
             this.ColRelay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColSection = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
+            this.gbFlowMasterValve.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataSet1
@@ -222,11 +227,61 @@
             this.DGV.Name = "DGV";
             this.DGV.RowHeadersVisible = false;
             this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(391, 454);
+            this.DGV.Size = new System.Drawing.Size(391, 361);
             this.DGV.TabIndex = 0;
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);
             this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
+            // 
+            // gbFlowMasterValve
+            // 
+            this.gbFlowMasterValve.Controls.Add(this.rbFlowMaster3Wire);
+            this.gbFlowMasterValve.Controls.Add(this.rbFlowMaster2WireInvert);
+            this.gbFlowMasterValve.Controls.Add(this.rbFlowMaster2Wire);
+            this.gbFlowMasterValve.Enabled = false;
+            this.gbFlowMasterValve.Location = new System.Drawing.Point(59, 475);
+            this.gbFlowMasterValve.Name = "gbFlowMasterValve";
+            this.gbFlowMasterValve.Size = new System.Drawing.Size(391, 104);
+            this.gbFlowMasterValve.TabIndex = 182;
+            this.gbFlowMasterValve.TabStop = false;
+            this.gbFlowMasterValve.Text = "FlowMaster valve";
+            this.gbFlowMasterValve.Paint += new System.Windows.Forms.PaintEventHandler(this.gbFlowMasterValve_Paint);
+            // 
+            // rbFlowMaster3Wire
+            // 
+            this.rbFlowMaster3Wire.AutoSize = true;
+            this.rbFlowMaster3Wire.Location = new System.Drawing.Point(13, 74);
+            this.rbFlowMaster3Wire.Name = "rbFlowMaster3Wire";
+            this.rbFlowMaster3Wire.Size = new System.Drawing.Size(127, 28);
+            this.rbFlowMaster3Wire.TabIndex = 2;
+            this.rbFlowMaster3Wire.TabStop = true;
+            this.rbFlowMaster3Wire.Text = "3-wire valve";
+            this.rbFlowMaster3Wire.UseVisualStyleBackColor = true;
+            this.rbFlowMaster3Wire.CheckedChanged += new System.EventHandler(this.FlowMasterValveMode_CheckedChanged);
+            // 
+            // rbFlowMaster2WireInvert
+            // 
+            this.rbFlowMaster2WireInvert.AutoSize = true;
+            this.rbFlowMaster2WireInvert.Location = new System.Drawing.Point(13, 49);
+            this.rbFlowMaster2WireInvert.Name = "rbFlowMaster2WireInvert";
+            this.rbFlowMaster2WireInvert.Size = new System.Drawing.Size(300, 28);
+            this.rbFlowMaster2WireInvert.TabIndex = 1;
+            this.rbFlowMaster2WireInvert.TabStop = true;
+            this.rbFlowMaster2WireInvert.Text = "2-wire valve + Invert_FlowMaster";
+            this.rbFlowMaster2WireInvert.UseVisualStyleBackColor = true;
+            this.rbFlowMaster2WireInvert.CheckedChanged += new System.EventHandler(this.FlowMasterValveMode_CheckedChanged);
+            // 
+            // rbFlowMaster2Wire
+            // 
+            this.rbFlowMaster2Wire.AutoSize = true;
+            this.rbFlowMaster2Wire.Location = new System.Drawing.Point(13, 24);
+            this.rbFlowMaster2Wire.Name = "rbFlowMaster2Wire";
+            this.rbFlowMaster2Wire.Size = new System.Drawing.Size(127, 28);
+            this.rbFlowMaster2Wire.TabIndex = 0;
+            this.rbFlowMaster2Wire.TabStop = true;
+            this.rbFlowMaster2Wire.Text = "2-wire valve";
+            this.rbFlowMaster2Wire.UseVisualStyleBackColor = true;
+            this.rbFlowMaster2Wire.CheckedChanged += new System.EventHandler(this.FlowMasterValveMode_CheckedChanged);
             // 
             // ColRelay
             // 
@@ -236,6 +291,7 @@
             this.ColRelay.HeaderText = "Relay";
             this.ColRelay.Name = "ColRelay";
             this.ColRelay.ReadOnly = true;
+            this.ColRelay.Width = 75;
             // 
             // ColType
             // 
@@ -251,7 +307,7 @@
             this.ColType.Name = "ColType";
             this.ColType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.ColType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColType.Width = 150;
+            this.ColType.Width = 175;
             // 
             // ColSection
             // 
@@ -267,6 +323,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.gbFlowMasterValve);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.lbModule);
             this.Controls.Add(this.ModuleIndicator);
@@ -286,6 +343,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
+            this.gbFlowMasterValve.ResumeLayout(false);
+            this.gbFlowMasterValve.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -306,6 +365,10 @@
         private System.Windows.Forms.Label ModuleIndicator;
         private System.Windows.Forms.ComboBox cbModules;
         private System.Windows.Forms.DataGridView DGV;
+        private System.Windows.Forms.GroupBox gbFlowMasterValve;
+        private System.Windows.Forms.RadioButton rbFlowMaster3Wire;
+        private System.Windows.Forms.RadioButton rbFlowMaster2WireInvert;
+        private System.Windows.Forms.RadioButton rbFlowMaster2Wire;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColRelay;
         private System.Windows.Forms.DataGridViewComboBoxColumn ColType;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColSection;

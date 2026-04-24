@@ -321,6 +321,24 @@
   <data name="lgFlowMaster" xml:space="preserve">
     <value>FlowMaster</value>
   </data>
+  <data name="lgInvert_FlowMaster" xml:space="preserve">
+    <value>Invert_FlowMaster</value>
+  </data>
+  <data name="lgFlowMasterValveMode" xml:space="preserve">
+    <value>FlowMaster valve</value>
+  </data>
+  <data name="lgFlowMaster2Wire" xml:space="preserve">
+    <value>2-wire valve</value>
+  </data>
+  <data name="lgFlowMaster2WireInvert" xml:space="preserve">
+    <value>2-wire valve + Invert_FlowMaster</value>
+  </data>
+  <data name="lgFlowMaster3Wire" xml:space="preserve">
+    <value>3-wire valve</value>
+  </data>
+  <data name="lgFlowMaster2WireValve" xml:space="preserve">
+    <value>FlowMaster uses 2-wire valve</value>
+  </data>
   <data name="lgJobs" xml:space="preserve">
     <value>Jobs</value>
   </data>

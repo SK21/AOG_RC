@@ -1,9 +1,5 @@
 ﻿using RateController.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -19,9 +15,10 @@ namespace RateController.PGNs
         //6     power relay Hi      list of power type relays 8-15
         //7     InvertedLo
         //8     InvertedHi
-        //9     CRC
+        //9     FlowMasterValveIndex    0-15, 255 disabled
+        //10    CRC
 
-        private const byte cByteCount = 10;
+        private const byte cByteCount = 11;
         private byte[] cData = new byte[cByteCount];
         private int cModuleID;
         private DateTime cSendTime;
@@ -56,6 +53,8 @@ namespace RateController.PGNs
             cData[7] = (byte)Inverted;
             cData[8] = (byte)(Inverted >> 8);
 
+            cData[9] = FlowMasterValveIndex();
+
             // CRC
             cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);
 
@@ -70,6 +69,36 @@ namespace RateController.PGNs
             }
 
             cSendTime = DateTime.Now;
+        }
+
+        private byte FlowMasterValveIndex()
+        {
+            FlowMasterValveMode mode;
+            if (!Enum.TryParse(Props.GetProp(Props.FlowMasterValveModePropName(cModuleID)), out mode))
+            {
+                mode = (bool.TryParse(Props.GetProp(Props.FlowMaster2WirePropName(cModuleID)), out bool legacyEnabled) && legacyEnabled)
+                    ? FlowMasterValveMode.TwoWire
+                    : FlowMasterValveMode.ThreeWire;
+            }
+
+            if (mode != FlowMasterValveMode.TwoWire)
+            {
+                return 255;
+            }
+
+            int result = -1;
+            int count = 0;
+            foreach (clsRelay relay in Core.RelayObjects.Items)
+            {
+                if (relay.ModuleID == cModuleID && relay.Type == RelayTypes.FlowMaster)
+                {
+                    result = relay.ID;
+                    count++;
+                    if (count > 1) return 255;
+                }
+            }
+
+            return (count == 1) ? (byte)result : (byte)255;
         }
     }
 }

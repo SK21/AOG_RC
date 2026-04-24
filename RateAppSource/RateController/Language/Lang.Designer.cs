@@ -777,6 +777,42 @@ namespace RateController.Language {
             }
         }
         
+        internal static string lgInvert_FlowMaster {
+            get {
+                return ResourceManager.GetString("lgInvert_FlowMaster", resourceCulture);
+            }
+        }
+        
+        internal static string lgFlowMasterValveMode {
+            get {
+                return ResourceManager.GetString("lgFlowMasterValveMode", resourceCulture);
+            }
+        }
+        
+        internal static string lgFlowMaster2Wire {
+            get {
+                return ResourceManager.GetString("lgFlowMaster2Wire", resourceCulture);
+            }
+        }
+        
+        internal static string lgFlowMaster2WireInvert {
+            get {
+                return ResourceManager.GetString("lgFlowMaster2WireInvert", resourceCulture);
+            }
+        }
+        
+        internal static string lgFlowMaster3Wire {
+            get {
+                return ResourceManager.GetString("lgFlowMaster3Wire", resourceCulture);
+            }
+        }
+        
+        internal static string lgFlowMaster2WireValve {
+            get {
+                return ResourceManager.GetString("lgFlowMaster2WireValve", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Invert Flow Control.
         /// </summary>

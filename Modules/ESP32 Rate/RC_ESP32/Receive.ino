@@ -108,11 +108,12 @@ void ReadPGNs(byte data[], uint16_t len)
         //4 	relay Hi		    8-15
         //5     power relay Lo      list of power type relays 0-7
         //6     power relay Hi      list of power type relays 8-15
-        //7     Inverted Lo         
+        //7     Inverted Lo       
         //8     Inverted Hi
-        //9     CRC
+        //9     FlowMasterValveIndex    0-15, 255 disabled
+        //10    CRC
 
-        PGNlength = 10;
+        PGNlength = 11;
 
         if (len > PGNlength - 1)
         {
@@ -126,6 +127,7 @@ void ReadPGNs(byte data[], uint16_t len)
                     PowerRelayHi = data[6];
                     InvertedLo = data[7];
                     InvertedHi = data[8];
+                    FlowMasterValveIndex = data[9];
                 }
             }
         }

@@ -40,7 +40,10 @@ namespace RateController.Classes
     { Applied, Target }
 
     public enum RelayTypes
-    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master, Bypass, FlowMaster };
+    { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master, Bypass, FlowMaster, Invert_FlowMaster };
+
+    public enum FlowMasterValveMode
+    { ThreeWire, TwoWire, TwoWireInvertFlowMaster };
 
     public enum SpeedType
     { GPS, Wheel, Simulated, ISOBUS }
@@ -69,7 +72,7 @@ namespace RateController.Classes
 
         public static string[] TypeDescriptions = new string[] { Lang.lgSection, Lang.lgSlave, Lang.lgMaster, Lang.lgPower,
             Lang.lgInvertSection,Lang.lgHydUp,Lang.lgHydDown,Lang.lgTramRight,
-            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster};
+            Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
         private static string cAppDate = "17-Apr-2026";
@@ -767,6 +770,16 @@ namespace RateController.Classes
         public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
+        }
+
+        public static string FlowMasterValveModePropName(int moduleID)
+        {
+            return "FlowMasterValveMode_M" + moduleID.ToString();
+        }
+
+        public static string FlowMaster2WirePropName(int moduleID)
+        {
+            return "FlowMaster2Wire_M" + moduleID.ToString();
         }
 
         public static bool IsFormNameValid(string formName)

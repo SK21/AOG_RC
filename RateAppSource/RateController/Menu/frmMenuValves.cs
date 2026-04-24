@@ -11,7 +11,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
 
-        public frmMenuValves( frmMenu menu)
+        public frmMenuValves(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;

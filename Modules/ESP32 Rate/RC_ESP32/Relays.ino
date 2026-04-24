@@ -184,41 +184,18 @@ void ControlSwitch(byte Start, byte End, byte Control)
 		if (PCA9685_found)
 		{
 			bool UseSpareDRV = (MDL.SensorCount == 1 && PCB_Type == 0);	// use spare DRV for relay 8
-			if (MDL.Is3Wire)
+			uint8_t RelayByte = (Start == 0) ? NewLo : NewHi;
+			for (int i = 0; i < 8; i++)
 			{
-				// 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use IN1
-				for (int i = 0; i < 8; i++)
+				uint8_t RelayIndex = i + Start;
+				if (RelayIndex > End) continue;
+
+				BitState = bitRead(RelayByte, i);
+				bool Use2Wire = (!MDL.Is3Wire || FlowMasterValveIndex == RelayIndex);
+
+				if (Use2Wire)
 				{
-					BitState = bitRead(NewLo, i);
-					IOpin = (1 + i) * 2 - 1;
-					if (BitState)
-					{
-						// on
-						PWMServoDriver.setPWM(IOpin, 4096, 0);
-						if (UseSpareDRV && i == 7)
-						{
-							analogWrite(25, 255);
-							analogWrite(26, 0);
-						}
-					}
-					else
-					{
-						// off
-						PWMServoDriver.setPWM(IOpin, 0, 4096);
-						if (UseSpareDRV && i == 7)
-						{
-							analogWrite(25, 0);
-							analogWrite(26, 255);
-						}
-					}
-				}
-			}
-			else
-			{
-				// 2 pins used for each valve, powered on and off, 8 sections
-				for (int i = 0; i < 8; i++)
-				{
-					BitState = bitRead(NewLo, i);
+					// 2 pins used for each valve, powered on and off
 					IOpin = i * 2;
 					if (BitState)
 					{
@@ -236,6 +213,31 @@ void ControlSwitch(byte Start, byte End, byte Control)
 						// off
 						PWMServoDriver.setPWM(IOpin, 0, 4096);
 						PWMServoDriver.setPWM(IOpin + 1, 4096, 0);
+						if (UseSpareDRV && i == 7)
+						{
+							analogWrite(25, 0);
+							analogWrite(26, 255);
+						}
+					}
+				}
+				else
+				{
+					// 1 pin for each valve, powered on only, 8 sections, 1 drv for each section, use IN1
+					IOpin = (1 + i) * 2 - 1;
+					if (BitState)
+					{
+						// on
+						PWMServoDriver.setPWM(IOpin, 4096, 0);
+						if (UseSpareDRV && i == 7)
+						{
+							analogWrite(25, 255);
+							analogWrite(26, 0);
+						}
+					}
+					else
+					{
+						// off
+						PWMServoDriver.setPWM(IOpin, 0, 4096);
 						if (UseSpareDRV && i == 7)
 						{
 							analogWrite(25, 0);

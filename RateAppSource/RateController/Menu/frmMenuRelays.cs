@@ -3,6 +3,7 @@ using RateController.Classes;
 using RateController.Language;
 using System;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -16,6 +17,7 @@ namespace RateController.Menu
             Lang.lgSlave,
             Lang.lgBypass,
             Lang.lgFlowMaster,
+            Lang.lgInvert_FlowMaster,
             Lang.lgMaster,
             Lang.lgInvert_Master,
             Lang.lgPower,
@@ -57,9 +59,14 @@ namespace RateController.Menu
                     Core.RelayObjects.Reset();
                     UpdateForm();
                 }
-                SaveData();
-                SetButtons(false);
-                UpdateForm();
+
+                if (ValidateFlowMasterValveMode())
+                {
+                    SaveData();
+                    Core.SendRelays();
+                    SetButtons(false);
+                    UpdateForm();
+                }
             }
             catch (Exception ex)
             {
@@ -137,7 +144,11 @@ namespace RateController.Menu
 
         private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (!Initializing) SetButtons(true);
+            if (!Initializing)
+            {
+                RefreshFlowMasterValveOptions();
+                SetButtons(true);
+            }
         }
 
         private void DGV_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -187,6 +198,14 @@ namespace RateController.Menu
             col.DataSource = RelayTypeDisplayOrder;
 
             UpdateForm();
+        }
+
+        private void FlowMasterValveMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!Initializing && ((RadioButton)sender).Checked)
+            {
+                SetButtons(true);
+            }
         }
 
         private void LoadData(bool UpdateObject = false)
@@ -289,6 +308,13 @@ namespace RateController.Menu
                         }
                     }
                 }
+
+                FlowMasterValveMode mode = gbFlowMasterValve.Enabled
+                    ? SelectedFlowMasterValveMode()
+                    : FlowMasterValveMode.ThreeWire;
+
+                Props.SetProp(Props.FlowMasterValveModePropName(cbModules.SelectedIndex), mode.ToString());
+                Props.SetProp(Props.FlowMaster2WirePropName(cbModules.SelectedIndex), (mode == FlowMasterValveMode.TwoWire).ToString());
             }
             catch (Exception ex)
             {
@@ -328,6 +354,10 @@ namespace RateController.Menu
             DGV.Columns[0].HeaderText = Lang.lgRelay;
             DGV.Columns[1].HeaderText = Lang.lgType;
             DGV.Columns[2].HeaderText = Lang.lgRelayControlNumber;
+            gbFlowMasterValve.Text = Lang.lgFlowMasterValveMode;
+            rbFlowMaster2Wire.Text = Lang.lgFlowMaster2Wire;
+            rbFlowMaster2WireInvert.Text = Lang.lgFlowMaster2WireInvert;
+            rbFlowMaster3Wire.Text = Lang.lgFlowMaster3Wire;
         }
 
         private void SetModuleIndicator()
@@ -349,12 +379,104 @@ namespace RateController.Menu
             {
                 LoadData(UpdateObject);
                 SetModuleIndicator();
+                RefreshFlowMasterValveOptions(true);
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuRelays/UpdateForm: " + ex.Message);
             }
             Initializing = false;
+        }
+
+        private FlowMasterValveMode SavedFlowMasterValveMode(int moduleID)
+        {
+            if (Enum.TryParse(Props.GetProp(Props.FlowMasterValveModePropName(moduleID)), out FlowMasterValveMode mode))
+            {
+                return mode;
+            }
+
+            return FlowMaster2WireEnabled(moduleID)
+                ? FlowMasterValveMode.TwoWire
+                : FlowMasterValveMode.ThreeWire;
+        }
+
+        private FlowMasterValveMode SelectedFlowMasterValveMode()
+        {
+            if (rbFlowMaster2Wire.Checked) return FlowMasterValveMode.TwoWire;
+            if (rbFlowMaster2WireInvert.Checked) return FlowMasterValveMode.TwoWireInvertFlowMaster;
+            return FlowMasterValveMode.ThreeWire;
+        }
+
+        private bool ValidateFlowMasterValveMode()
+        {
+            bool Result = true;
+            if (gbFlowMasterValve.Enabled && SelectedFlowMasterValveMode() == FlowMasterValveMode.TwoWireInvertFlowMaster)
+            {
+                if (RelayTypeCountFromGrid(RelayTypes.Invert_FlowMaster) != 1)
+                {
+                    Props.ShowMessage("Option 2 requires exactly one Invert_FlowMaster relay on this module.", "FlowMaster valve");
+                    Result = false;
+                }
+            }
+
+            return Result;
+        }
+
+        private bool FlowMaster2WireEnabled(int moduleID)
+        {
+            return bool.TryParse(Props.GetProp(Props.FlowMaster2WirePropName(moduleID)), out bool val) && val;
+        }
+
+        private int RelayTypeCountFromGrid(RelayTypes relayType)
+        {
+            int count = 0;
+
+            foreach (DataGridViewRow row in DGV.Rows)
+            {
+                string typeDescription = row.Cells[1].EditedFormattedValue?.ToString();
+                if (Core.RelayObjects.RelayTypeID(typeDescription) == relayType)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private void RefreshFlowMasterValveOptions(bool loadSavedState = false)
+        {
+            gbFlowMasterValve.Enabled = (RelayTypeCountFromGrid(RelayTypes.FlowMaster) == 1);
+
+            if (gbFlowMasterValve.Enabled)
+            {
+                if (loadSavedState)
+                {
+                    switch (SavedFlowMasterValveMode(cbModules.SelectedIndex))
+                    {
+                        case FlowMasterValveMode.TwoWire:
+                            rbFlowMaster2Wire.Checked = true;
+                            break;
+
+                        case FlowMasterValveMode.TwoWireInvertFlowMaster:
+                            rbFlowMaster2WireInvert.Checked = true;
+                            break;
+
+                        default:
+                            rbFlowMaster3Wire.Checked = true;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                rbFlowMaster3Wire.Checked = true;
+            }
+        }
+
+        private void gbFlowMasterValve_Paint(object sender, PaintEventArgs e)
+        {
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+
         }
     }
 }
