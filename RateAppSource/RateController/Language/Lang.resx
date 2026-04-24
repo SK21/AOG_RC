@@ -328,7 +328,7 @@
     <value>FlowMaster valve</value>
   </data>
   <data name="lgFlowMaster2Wire" xml:space="preserve">
-    <value>2-wire valve</value>
+    <value>2-wire valve (requires module support)</value>
   </data>
   <data name="lgFlowMaster2WireInvert" xml:space="preserve">
     <value>2-wire valve + Invert_FlowMaster</value>
