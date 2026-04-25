@@ -427,7 +427,7 @@ namespace RateController.Menu
 
             foreach (DataGridViewRow row in DGV.Rows)
             {
-                string typeDescription = row.Cells[1].EditedFormattedValue?.ToString();
+                string typeDescription = row.Cells[1].Value?.ToString();
                 if (Core.RelayObjects.RelayTypeID(typeDescription) == relayType)
                 {
                     count++;

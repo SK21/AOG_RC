@@ -42,7 +42,6 @@ namespace RateController.Classes
         private int cSensorID = -1;
         private clsSensorSettings cSensorSettings;
         private int cSensorSettingsID = -1;
-        private int cSerialPort;
         private double cSessionTotalHectares = 0;
         private double cTankSize = 0;
         private double cUnitsApplied = 0;
@@ -613,10 +612,6 @@ namespace RateController.Classes
             if (bool.TryParse(Props.GetProp(IDname + "UseMinUPMbySpeed"), out bool ms)) cUseMinUPMbySpeed = ms;
 
             tmp = 0;
-            int.TryParse(Props.GetProp(IDname + "SerialPort"), out tmp);
-            cSerialPort = tmp;
-
-            tmp = 0;
             int.TryParse(Props.GetProp(IDname + "ManualPWM"), out tmp);
             cManualPWM = tmp;
 
@@ -845,7 +840,6 @@ namespace RateController.Classes
             Props.SetProp(IDname + "MinUPMbySpeed", cMinUPMbySpeed.ToString());
             Props.SetProp(IDname + "UseMinUPMbySpeed", cUseMinUPMbySpeed.ToString());
 
-            Props.SetProp(IDname + "SerialPort", cSerialPort.ToString());
             Props.SetProp(IDname + "ManualPWM", cManualPWM.ToString());
 
             Props.SetProp(IDname + "OnScreen", cOnScreen.ToString());
