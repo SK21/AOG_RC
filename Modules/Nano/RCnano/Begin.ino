@@ -325,6 +325,7 @@ void LoadData()
 		Serial.println(F("Stored settings not valid."));
 		LoadDefaults();
 		SaveData();
+		GoodPins=true;
 	}
 }
 
