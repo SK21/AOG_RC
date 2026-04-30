@@ -28,6 +28,7 @@ namespace RateController.Menu
             using (var dialog = new FolderBrowserDialog())
             {
                 dialog.Description = "Select a folder";
+                dialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 dialog.ShowNewFolderButton = true;
 
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -45,13 +46,32 @@ namespace RateController.Menu
             Hlp.Close();
             if (Result)
             {
-                Props.ChangeDataFolder(tbNewLocation.Text, ckOverwrite.Checked, ckCopyData.Checked);
+                int Change = Props.ChangeDataFolder(tbNewLocation.Text, ckOverwrite.Checked, ckCopyData.Checked);
+                string Message = "Could not change folder.";
+                switch (Change)
+                {
+                    case 1:
+                        Message += " Invalid folder.";
+                        break;
+
+                    case 2:
+                        Message += " Folder contains data.";
+                        break;
+
+                    case 3:
+                        Message += " Destination folder is sub-folder of current folder.";
+                        break;
+
+                    case 4:
+                        Message += " Data failed to copy.";
+                        break;
+
+                    case 5:
+                        Message = "Folder changed.";
+                        break;
+                }
+                Props.ShowMessage(Message);
                 UpdateForm();
-            }
-            else
-            {
-                UpdateForm();
-                SetButtons(false);
             }
         }
 

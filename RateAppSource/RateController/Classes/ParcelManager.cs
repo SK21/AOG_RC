@@ -8,8 +8,6 @@ namespace RateController.Classes
 {
     public static class ParcelManager
     {
-        private static readonly string FilePath = Props.FieldNamesPath;
-
         public static event EventHandler ElevationSelectionChanged;
 
         public static event EventHandler YieldSelectionChanged;
@@ -95,11 +93,11 @@ namespace RateController.Classes
 
         public static List<Parcel> GetParcels()
         {
-            if (File.Exists(FilePath))
+            if (File.Exists(Props.FieldNamesPath))
             {
                 try
                 {
-                    string json = File.ReadAllText(FilePath);
+                    string json = File.ReadAllText(Props.FieldNamesPath);
                     var mappings = JsonConvert.DeserializeObject<List<Parcel>>(json) ?? new List<Parcel>();
                     return mappings.Where(p => !string.IsNullOrWhiteSpace(p.Name)).OrderBy(p => p.Name).ToList();
                 }
@@ -135,7 +133,7 @@ namespace RateController.Classes
             {
                 var cleaned = mappings.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
                 string json = JsonConvert.SerializeObject(cleaned, Formatting.Indented);
-                File.WriteAllText(FilePath, json);
+                File.WriteAllText(Props.FieldNamesPath, json);
             }
             catch (Exception ex)
             {

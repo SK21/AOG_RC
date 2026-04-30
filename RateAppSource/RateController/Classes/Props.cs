@@ -637,32 +637,62 @@ namespace RateController.Classes
             }
         }
 
-        public static bool ChangeDataFolder(string NewFolder, bool overwrite, bool copy)
+        public static int ChangeDataFolder(string NewFolder, bool overwrite, bool copy)
         {
-            bool result = false;
+            int Result = 0;
             string CurrentFolder = DataFolder;
             try
             {
+                //NewFolder = Path.Combine(NewFolder, "RateController");
                 if (IsValidWindowsFolderPath(NewFolder))
                 {
-                    if (overwrite || (!Directory.EnumerateFileSystemEntries(NewFolder).Any()))
+                    Directory.CreateDirectory(NewFolder);
+                    if (copy)
+                    {
+                        if (overwrite || (!Directory.EnumerateFileSystemEntries(NewFolder).Any()))
+                        {
+                            if (!IsSubfolder(CurrentFolder, NewFolder))
+                            {
+                                if (CopyFolder(CurrentFolder, NewFolder))
+                                {
+                                    Properties.Settings.Default.DataFolder = NewFolder;
+                                    Properties.Settings.Default.Save();
+                                    Result = 5;
+                                    Core.RequestRestart();
+                                }
+                                else
+                                {
+                                    Result = 4;
+                                }
+                            }
+                            else
+                            {
+                                Result = 3;
+                            }
+                        }
+                        else
+                        {
+                            Result = 2;
+                        }
+                    }
+                    else
                     {
                         Properties.Settings.Default.DataFolder = NewFolder;
                         Properties.Settings.Default.Save();
-                        if (copy)
-                        {
-                            CopyFolder(CurrentFolder, NewFolder);
-                        }
+                        Result = 5;
                         Core.RequestRestart();
-                        result = true;
                     }
+                }
+                else
+                {
+                    Result = 1;
                 }
             }
             catch (Exception ex)
             {
                 WriteErrorLog("Props/ChangeDataFolder: " + ex.Message);
             }
-            return result;
+            return Result;
         }
 
         public static bool CheckFolders()
@@ -1407,24 +1437,45 @@ namespace RateController.Classes
             }
         }
 
-        private static void CopyFolder(string sourcePath, string destinationPath)
+        private static bool CopyFolder(string sourcePath, string destinationPath)
         {
-            // Create destination folder if it doesn't exist
-            Directory.CreateDirectory(destinationPath);
-
-            // Copy all files
-            foreach (string file in Directory.GetFiles(sourcePath))
+            try
             {
-                string destFile = Path.Combine(destinationPath, Path.GetFileName(file));
-                File.Copy(file, destFile, overwrite: true);
-            }
+                Directory.CreateDirectory(destinationPath);
 
-            // Copy all subdirectories recursively
-            foreach (string directory in Directory.GetDirectories(sourcePath))
-            {
-                string destDir = Path.Combine(destinationPath, Path.GetFileName(directory));
-                CopyFolder(directory, destDir);
+                // Copy all files
+                foreach (string file in Directory.GetFiles(sourcePath))
+                {
+                    string destFile = Path.Combine(destinationPath, Path.GetFileName(file));
+                    File.Copy(file, destFile, overwrite: true);
+                }
+
+                // Copy all subdirectories recursively
+                foreach (string directory in Directory.GetDirectories(sourcePath))
+                {
+                    string destDir = Path.Combine(destinationPath, Path.GetFileName(directory));
+
+                    // If any subfolder fails, bubble the failure upward
+                    if (!CopyFolder(directory, destDir)) return false;
+                }
+
+                return true; // If we reached here, everything succeeded
             }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/CopyFolder: " + ex.Message);
+                return false;
+            }
+        }
+
+        private static bool IsSubfolder(string parentPath, string childPath)
+        {
+            // Normalize both paths (removes trailing slashes, resolves "..", etc.)
+            string parent = Path.GetFullPath(parentPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
+
+            string child = Path.GetFullPath(childPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
+
+            return child.StartsWith(parent, StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool IsValidWindowsFolderPath(string path)
