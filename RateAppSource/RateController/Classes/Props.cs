@@ -21,6 +21,9 @@ namespace RateController.Classes
     public enum ControlTypeEnum
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
+    public enum FlowMasterValveMode
+    { ThreeWire, TwoWire, TwoWireInvertFlowMaster };
+
     public enum MasterSwitchMode
     { Standard, Override };
 
@@ -41,9 +44,6 @@ namespace RateController.Classes
 
     public enum RelayTypes
     { Section, Slave, Master, Power, Invert_Section, HydUp, HydDown, TramRight, TramLeft, GeoStop, Switch, None, Invert_Master, Bypass, FlowMaster, Invert_FlowMaster };
-
-    public enum FlowMasterValveMode
-    { ThreeWire, TwoWire, TwoWireInvertFlowMaster };
 
     public enum SpeedType
     { GPS, Wheel, Simulated, ISOBUS }
@@ -76,7 +76,6 @@ namespace RateController.Classes
 
         private static string cActivityFileName = "";
         private static string cAppDate = "25-Apr-2026";
-        private static string cApplicationFolder;
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -91,10 +90,10 @@ namespace RateController.Classes
         private static string cErrorsFileName = "";
         private static string cFieldNames;
         private static bool cMapPreview = false;
+        private static bool cMasterMaintained = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.Standard;
         private static int cPrimeDelay = 3;
         private static double cPrimeTime = 0;
-        private static string cProfilesFolder;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
         private static bool cRateCalibrationOn = false;
         private static bool cRateRecordEnabled;
@@ -114,7 +113,6 @@ namespace RateController.Classes
         private static string[] LanguageIDs = new string[] { "en", "de", "hu", "nl", "pl", "ru", "fr", "lt" };
         private static string lastMessage = "";
         private static DateTime lastMessageTime = DateTime.MinValue;
-        private static bool cMasterMaintained = false;
 
         #region pressure calibration
 
@@ -125,8 +123,8 @@ namespace RateController.Classes
         // cal 4    module 0, minimum voltage, below is 0 pressure
         // continues for each module, up to 8 modules
 
-        private static double[] PressureCals = new double[40];
         private static double[] MaxPressure = new double[Props.MaxModules];
+        private static double[] PressureCals = new double[40];
 
         #endregion pressure calibration
 
@@ -158,7 +156,7 @@ namespace RateController.Classes
         private static clsJobDataCollector cJobCollector;
 
         public static string ApplicationFolder
-        { get { return cApplicationFolder; } }
+        { get { return Path.Combine(DataFolder, "Application"); } }
 
         public static bool CanEnabled
         {
@@ -192,6 +190,28 @@ namespace RateController.Classes
                 {
                     cCurrentCanDriver = value;
                     SetAppProp("CanDriver", cCurrentCanDriver.ToString());
+                }
+            }
+        }
+
+        public static string CurrentFile
+        {
+            get
+            {
+                string filename = Path.GetFileName(Properties.Settings.Default.CurrentFile);
+                string subfolder = Path.GetFileNameWithoutExtension(filename);
+                string fldr = Path.Combine(DataFolder, "Profiles", subfolder, filename);
+                return fldr;
+            }
+            set
+            {
+                string filename = Path.GetFileName(value);
+                string subfolder = Path.GetFileNameWithoutExtension(filename);
+                string fldr = Path.Combine(DataFolder, "Profiles", subfolder);
+                if (IsValidWindowsFolderPath(fldr))
+                {
+                    Properties.Settings.Default.CurrentFile = filename;
+                    Properties.Settings.Default.Save();
                 }
             }
         }
@@ -246,6 +266,17 @@ namespace RateController.Classes
             }
         }
 
+        public static bool MasterMaintained
+        {
+            // whether the master switch is momentary or maintained
+            get { return cMasterMaintained; }
+            set
+            {
+                cMasterMaintained = value;
+                SetAppProp("MasterMaintained", cMasterMaintained.ToString());
+            }
+        }
+
         public static MasterSwitchMode MasterSwitchMode
         {
             get { return cMasterSwitchMode; }
@@ -293,7 +324,7 @@ namespace RateController.Classes
         }
 
         public static string ProfilesFolder
-        { get { return cProfilesFolder; } }
+        { get { return Path.Combine(DataFolder, "Profiles"); } }
 
         public static bool RateCalibrationOn
         {
@@ -308,7 +339,7 @@ namespace RateController.Classes
             {
                 bool Changed = cReadOnly != value;
                 cReadOnly = value;
-                if (Changed) Save(cProps, Properties.Settings.Default.CurrentFile);
+                if (Changed) Save(cProps, Props.CurrentFile);
             }
         }
 
@@ -390,17 +421,6 @@ namespace RateController.Classes
             }
         }
 
-        public static bool MasterMaintained
-        {
-            // whether the master switch is momentary or maintained
-            get { return cMasterMaintained; }
-            set
-            {
-                cMasterMaintained = value;
-                SetAppProp("MasterMaintained", cMasterMaintained.ToString());
-            }
-        }
-
         public static double Speed_KMH
         {
             get
@@ -453,7 +473,6 @@ namespace RateController.Classes
                 SetAppProp("SpeedMode", cSpeedMode.ToString());
             }
         }
-
 
         public static bool UseMapPreview
         {
@@ -552,7 +571,7 @@ namespace RateController.Classes
 
         public static string CurrentFileName()
         {
-            return Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
+            return Path.GetFileNameWithoutExtension(Props.CurrentFile);
         }
 
         public static string ParseDate(string input)
@@ -603,24 +622,65 @@ namespace RateController.Classes
 
         #endregion MainProperties
 
+        public static string DataFolder
+        {
+            get
+            {
+                string flder = Properties.Settings.Default.DataFolder;
+                if (!Directory.Exists(flder))
+                {
+                    flder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
+                    Properties.Settings.Default.DataFolder = flder;
+                    Properties.Settings.Default.Save();
+                }
+                return flder;
+            }
+        }
+
+        public static bool ChangeDataFolder(string NewFolder, bool overwrite, bool copy)
+        {
+            bool result = false;
+            string CurrentFolder = DataFolder;
+            try
+            {
+                if (IsValidWindowsFolderPath(NewFolder))
+                {
+                    if (overwrite || (!Directory.EnumerateFileSystemEntries(NewFolder).Any()))
+                    {
+                        Properties.Settings.Default.DataFolder = NewFolder;
+                        Properties.Settings.Default.Save();
+                        if (copy)
+                        {
+                            CopyFolder(CurrentFolder, NewFolder);
+                        }
+                        Core.RequestRestart();
+                        result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/ChangeDataFolder: " + ex.Message);
+            }
+            return result;
+        }
+
         public static bool CheckFolders()
         {
             bool Result = false;
             try
             {
                 // check for default dir and files
-                cDefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
+                cDefaultDir = DataFolder;
                 if (!Directory.Exists(cDefaultDir)) Directory.CreateDirectory(cDefaultDir);
 
                 // application folder
                 string name = cDefaultDir + "\\Application";
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
-                cApplicationFolder = name;
 
                 // profiles folder
                 name = cDefaultDir + "\\Profiles";
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
-                cProfilesFolder = name;
 
                 string DefaultProfile = name + "\\" + "Default";
                 if (!Directory.Exists(DefaultProfile)) Directory.CreateDirectory(DefaultProfile);
@@ -633,9 +693,9 @@ namespace RateController.Classes
                 if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
 
                 // check user files, current profile
-                if (!File.Exists(Properties.Settings.Default.CurrentFile))
+                if (!File.Exists(Props.CurrentFile))
                 {
-                    Properties.Settings.Default.CurrentFile = ExampleProfile + "\\Example.rcs";
+                    Props.CurrentFile = ExampleProfile + "\\Example.rcs";
                     Properties.Settings.Default.Save();
                 }
 
@@ -646,6 +706,28 @@ namespace RateController.Classes
             }
             catch (Exception)
             {
+            }
+            return Result;
+        }
+
+        public static bool DeleteLogs()
+        {
+            bool Result = false;
+            try
+            {
+                string file1 = Path.Combine(ApplicationFolder, "Activity Log.txt");
+                string file2 = Path.Combine(ApplicationFolder, "Error Log.txt");
+                string file3 = Path.Combine(ApplicationFolder, "Ethernet Log.txt");
+
+                File.Create(file1);
+                File.Create(file2);
+                File.Create(file3);
+
+                Result = true;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/DeleteFile: " + ex.Message);
             }
             return Result;
         }
@@ -726,17 +808,27 @@ namespace RateController.Classes
 
                     // Drawing Border
                     // Left
-                    g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+                    g.DrawLine(borderPen, rect.Location, new System.Drawing.Point(rect.X, rect.Y + rect.Height));
                     // Right
-                    g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                    g.DrawLine(borderPen, new System.Drawing.Point(rect.X + rect.Width, rect.Y), new System.Drawing.Point(rect.X + rect.Width, rect.Y + rect.Height));
                     // Bottom
-                    g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                    g.DrawLine(borderPen, new System.Drawing.Point(rect.X, rect.Y + rect.Height), new System.Drawing.Point(rect.X + rect.Width, rect.Y + rect.Height));
                     // Top1
-                    g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
+                    g.DrawLine(borderPen, new System.Drawing.Point(rect.X, rect.Y), new System.Drawing.Point(rect.X + box.Padding.Left, rect.Y));
                     // Top2
-                    g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+                    g.DrawLine(borderPen, new System.Drawing.Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new System.Drawing.Point(rect.X + rect.Width, rect.Y));
                 }
             }
+        }
+
+        public static string FlowMaster2WirePropName(int moduleID)
+        {
+            return "FlowMaster2Wire_M" + moduleID.ToString();
+        }
+
+        public static string FlowMasterValveModePropName(int moduleID)
+        {
+            return "FlowMasterValveMode_M" + moduleID.ToString();
         }
 
         public static String GetAppProp(string key)
@@ -746,11 +838,6 @@ namespace RateController.Classes
             //return int.TryParse(prop, out var vl) ? vl : -1;
         }
 
-        public static double GetPressureCal(int Index)
-        {
-            return PressureCals[Index];
-        }
-
         public static double GetMaxPressure(int ModuleID)
         {
             double Result = 0;
@@ -758,28 +845,14 @@ namespace RateController.Classes
             return Result;
         }
 
-        public static void SetMaxPressure(int ModuleID, double NewMax)
+        public static double GetPressureCal(int Index)
         {
-            if (ModuleID >= 0 && ModuleID < MaxModules && NewMax >= 0 && NewMax < 100000)
-            {
-                MaxPressure[ModuleID] = NewMax;
-                SetProp("MaxPressure_" + ModuleID, NewMax.ToString());
-            }
+            return PressureCals[Index];
         }
 
         public static string GetProp(string key)
         {
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
-        }
-
-        public static string FlowMasterValveModePropName(int moduleID)
-        {
-            return "FlowMasterValveMode_M" + moduleID.ToString();
-        }
-
-        public static string FlowMaster2WirePropName(int moduleID)
-        {
-            return "FlowMaster2Wire_M" + moduleID.ToString();
         }
 
         public static bool IsFormNameValid(string formName)
@@ -843,7 +916,7 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    rect = Ctrl.RectangleToScreen(new Rectangle(Point.Empty, Ctrl.Size));
+                    rect = Ctrl.RectangleToScreen(new Rectangle(System.Drawing.Point.Empty, Ctrl.Size));
                 }
 
                 bool result = Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(rect));
@@ -869,11 +942,8 @@ namespace RateController.Classes
             {
                 if (!string.IsNullOrEmpty(candidatePath))
                 {
-                    string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    string baseFolder = Path.Combine(myDocuments, "RateController");
-
                     string candidateFullPath = Path.GetFullPath(candidatePath);
-                    string safeBaseFullPath = Path.GetFullPath(baseFolder);
+                    string safeBaseFullPath = DataFolder;
 
                     // If the candidate is a file, use its parent folder for the containment check.
                     if (File.Exists(candidateFullPath))
@@ -1030,10 +1100,10 @@ namespace RateController.Classes
 
                 if (File.Exists(FileName))
                 {
-                    Properties.Settings.Default.CurrentFile = FileName;
+                    Props.CurrentFile = FileName;
                     Properties.Settings.Default.Save();
-                    Load(cProps, Properties.Settings.Default.CurrentFile);
-                    string CurrentDir = Path.GetDirectoryName(Properties.Settings.Default.CurrentFile);
+                    Load(cProps, Props.CurrentFile);
+                    string CurrentDir = Path.GetDirectoryName(Props.CurrentFile);
 
                     cAppPropsFileName = Path.Combine(ApplicationFolder, "AppData.txt");
                     if (!File.Exists(cAppPropsFileName)) File.WriteAllText(cAppPropsFileName, "");
@@ -1135,6 +1205,15 @@ namespace RateController.Classes
             }
         }
 
+        public static void SetMaxPressure(int ModuleID, double NewMax)
+        {
+            if (ModuleID >= 0 && ModuleID < MaxModules && NewMax >= 0 && NewMax < 100000)
+            {
+                MaxPressure[ModuleID] = NewMax;
+                SetProp("MaxPressure_" + ModuleID, NewMax.ToString());
+            }
+        }
+
         public static void SetPressureCal(int Index, double Value)
         {
             PressureCals[Index] = Value;
@@ -1151,7 +1230,7 @@ namespace RateController.Classes
                     if (!cProps.TryGetValue(key, out var existingValue) || existingValue != value)
                     {
                         cProps[key] = value;
-                        Save(cProps, Properties.Settings.Default.CurrentFile);
+                        Save(cProps, Props.CurrentFile);
                     }
                 }
             }
@@ -1169,7 +1248,7 @@ namespace RateController.Classes
                 string Name = "";
                 if (Location == null)
                 {
-                    Name = cApplicationFolder + "\\" + FileName;
+                    Name = ApplicationFolder + "\\" + FileName;
                 }
                 else
                 {
@@ -1185,28 +1264,6 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 WriteErrorLog("Tools: OpenFile: " + ex.Message);
-            }
-            return Result;
-        }
-
-        public static bool DeleteLogs()
-        {
-            bool Result = false;
-            try
-            {
-                string file1 = Path.Combine(cApplicationFolder, "Activity Log.txt");
-                string file2 = Path.Combine(cApplicationFolder, "Error Log.txt");
-                string file3 = Path.Combine(cApplicationFolder, "Ethernet Log.txt");
-
-                File.Create(file1);
-                File.Create(file2);
-                File.Create(file3);
-
-                Result = true;
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog("Props/DeleteFile: " + ex.Message);
             }
             return Result;
         }
@@ -1292,7 +1349,7 @@ namespace RateController.Classes
             if (Message == null) Message = "";
             try
             {
-                string FileName = cApplicationFolder + "\\" + LogName;
+                string FileName = ApplicationFolder + "\\" + LogName;
                 TrimFile(FileName);
 
                 if (NewLine) Line = "\r\n";
@@ -1342,11 +1399,75 @@ namespace RateController.Classes
                 int xPosition = (screenWidth / 2) - (formWidth / 2);
                 int yPosition = (screenHeight / 2) - (formHeight / 2);
 
-                form.Location = new Point(xPosition, yPosition);
+                form.Location = new System.Drawing.Point(xPosition, yPosition);
             }
             catch (Exception ex)
             {
                 WriteErrorLog("Props/CenterForm: " + ex.Message);
+            }
+        }
+
+        private static void CopyFolder(string sourcePath, string destinationPath)
+        {
+            // Create destination folder if it doesn't exist
+            Directory.CreateDirectory(destinationPath);
+
+            // Copy all files
+            foreach (string file in Directory.GetFiles(sourcePath))
+            {
+                string destFile = Path.Combine(destinationPath, Path.GetFileName(file));
+                File.Copy(file, destFile, overwrite: true);
+            }
+
+            // Copy all subdirectories recursively
+            foreach (string directory in Directory.GetDirectories(sourcePath))
+            {
+                string destDir = Path.Combine(destinationPath, Path.GetFileName(directory));
+                CopyFolder(directory, destDir);
+            }
+        }
+
+        private static bool IsValidWindowsFolderPath(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    return false;
+
+                // Check invalid characters
+                if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+                    return false;
+
+                // Normalize path (throws if malformed)
+                string full = Path.GetFullPath(path);
+
+                // Check that the drive/root exists (e.g., "C:\")
+                string root = Path.GetPathRoot(full);
+                if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
+                    return false;
+
+                // Check if folder exists OR can be created
+                // (We test write permission by trying to create a temp file)
+                string testDir = Directory.Exists(full) ? full : Path.GetDirectoryName(full);
+                if (string.IsNullOrEmpty(testDir))
+                    return false;
+
+                // Permission test: try writing a temp file
+                string testFile = Path.Combine(testDir, Path.GetRandomFileName());
+                try
+                {
+                    using (File.Create(testFile, 1, FileOptions.DeleteOnClose)) { }
+                }
+                catch
+                {
+                    return false; // cannot write here
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 

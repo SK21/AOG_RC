@@ -66,6 +66,7 @@
             this.gbSpacer1 = new System.Windows.Forms.GroupBox();
             this.gbSpacer2 = new System.Windows.Forms.GroupBox();
             this.butComm = new System.Windows.Forms.Button();
+            this.butFolders = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // butClose
@@ -722,11 +723,31 @@
             this.butComm.Visible = false;
             this.butComm.Click += new System.EventHandler(this.butComm_Click);
             // 
+            // butFolders
+            // 
+            this.butFolders.BackColor = System.Drawing.Color.Transparent;
+            this.butFolders.FlatAppearance.BorderSize = 0;
+            this.butFolders.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.butFolders.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.butFolders.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.butFolders.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butFolders.Location = new System.Drawing.Point(281, 443);
+            this.butFolders.Name = "butFolders";
+            this.butFolders.Size = new System.Drawing.Size(158, 49);
+            this.butFolders.TabIndex = 174;
+            this.butFolders.Text = "Folders";
+            this.butFolders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.butFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.butFolders.UseVisualStyleBackColor = false;
+            this.butFolders.Visible = false;
+            this.butFolders.Click += new System.EventHandler(this.butFolders_Click);
+            // 
             // frmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1249, 680);
+            this.Controls.Add(this.butFolders);
             this.Controls.Add(this.butComm);
             this.Controls.Add(this.gbSpacer2);
             this.Controls.Add(this.gbSpacer1);
@@ -816,5 +837,6 @@
         private System.Windows.Forms.GroupBox gbSpacer1;
         private System.Windows.Forms.GroupBox gbSpacer2;
         private System.Windows.Forms.Button butComm;
+        private System.Windows.Forms.Button butFolders;
     }
 }

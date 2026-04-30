@@ -91,6 +91,7 @@ namespace RateController
                         butDisplay.Visible = !Expanded;
                         butLanguage.Visible = !Expanded;
                         butColor.Visible = !Expanded;
+                        butFolders.Visible = !Expanded;
                         if (Expanded)
                         {
                             Expanded = false;
@@ -135,6 +136,10 @@ namespace RateController
                             butColor.Left = butFile.Left + SubOffset;
                             Pos += SubSpacing;
                             butColor.Top = Pos;
+
+                            butFolders.Left = butFile.Left + SubOffset;
+                            Pos += SubSpacing;
+                            butFolders.Top = Pos;
 
                             butProfiles.PerformClick();
                         }
@@ -444,6 +449,20 @@ namespace RateController
             if (fs == null)
             {
                 Form frm = new frmMenuOptions(this);
+                frm.Owner = this;
+                frm.Show();
+            }
+        }
+
+        private void butFolders_Click(object sender, EventArgs e)
+        {
+            SaveLastScreen("frmMenuFolders");
+            if (sender is Button button) HighlightButton(button);
+            Form fs = Props.IsFormOpen(cLastScreen);
+
+            if (fs == null)
+            {
+                Form frm = new frmMenuFolders(this);
                 frm.Owner = this;
                 frm.Show();
             }
@@ -1260,6 +1279,15 @@ namespace RateController
                             fs.Show();
                             break;
 
+                        case "frmMenuFolders":
+                            butFile.PerformClick();
+                            fs = new frmMenuFolders(this);
+                            fs.Owner = this;
+                            SaveLastScreen(Last);
+                            HighlightButton(butFolders);
+                            fs.Show();
+                            break;
+
                         case "frmMenuHelp":
                             fs = new frmMenuHelp(this);
                             fs.Owner = this;
@@ -1339,6 +1367,7 @@ namespace RateController
             butLanguage.Text = Lang.lgLanguage;
             butColor.Text = Lang.lgColor;
             btnPressure.Text = Lang.lgPressure;
+            butFolders.Text = Lang.lgFolders;
         }
 
         private sealed class RedrawScope : IDisposable

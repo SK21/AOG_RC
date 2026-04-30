@@ -831,4 +831,7 @@
   <data name="lgCommMenu" xml:space="preserve">
     <value>Comm</value>
   </data>
+  <data name="lgFolders" xml:space="preserve">
+    <value>Folders</value>
+  </data>
 </root>

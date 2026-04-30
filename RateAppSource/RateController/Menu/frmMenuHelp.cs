@@ -229,7 +229,7 @@ namespace RateController.Menu
             }
 
             lbIP.Text = Core.UDPmodules.SubNet;
-            lbFile.Text = Path.GetFileNameWithoutExtension(Properties.Settings.Default.CurrentFile);
+            lbFile.Text = Path.GetFileNameWithoutExtension(Props.CurrentFile);
 
             if (Core.SwitchBox.RealConnected())
             {

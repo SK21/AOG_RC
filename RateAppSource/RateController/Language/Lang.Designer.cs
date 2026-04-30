@@ -241,6 +241,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bypass.
+        /// </summary>
+        internal static string lgBypass {
+            get {
+                return ResourceManager.GetString("lgBypass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Meter Cal.
         /// </summary>
         internal static string lgCalFactor {
@@ -610,11 +619,74 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FlowMaster.
+        /// </summary>
+        internal static string lgFlowMaster {
+            get {
+                return ResourceManager.GetString("lgFlowMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2-wire valve (single relay powers open and close).
+        /// </summary>
+        internal static string lgFlowMaster2Wire {
+            get {
+                return ResourceManager.GetString("lgFlowMaster2Wire", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2-wire valve (2 relays: FlowMaster powers open, Invert_FlowMaster powers close).
+        /// </summary>
+        internal static string lgFlowMaster2WireInvert {
+            get {
+                return ResourceManager.GetString("lgFlowMaster2WireInvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FlowMaster uses 2-wire valve.
+        /// </summary>
+        internal static string lgFlowMaster2WireValve {
+            get {
+                return ResourceManager.GetString("lgFlowMaster2WireValve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3-wire valve (relay signal, valve self-powered).
+        /// </summary>
+        internal static string lgFlowMaster3Wire {
+            get {
+                return ResourceManager.GetString("lgFlowMaster3Wire", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FlowMaster valve.
+        /// </summary>
+        internal static string lgFlowMasterValveMode {
+            get {
+                return ResourceManager.GetString("lgFlowMasterValveMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string lgFlowOnHigh {
             get {
                 return ResourceManager.GetString("lgFlowOnHigh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folders.
+        /// </summary>
+        internal static string lgFolders {
+            get {
+                return ResourceManager.GetString("lgFolders", resourceCulture);
             }
         }
         
@@ -754,6 +826,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invert_FlowMaster.
+        /// </summary>
+        internal static string lgInvert_FlowMaster {
+            get {
+                return ResourceManager.GetString("lgInvert_FlowMaster", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invert_Master.
         /// </summary>
         internal static string lgInvert_Master {
@@ -761,58 +842,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgInvert_Master", resourceCulture);
             }
         }
-
-        internal static string lgBypass {
-            get {
-                return ResourceManager.GetString("lgBypass", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to FlowMaster.
-        /// </summary>
-        internal static string lgFlowMaster {
-            get {
-                return ResourceManager.GetString("lgFlowMaster", resourceCulture);
-            }
-        }
         
-        internal static string lgInvert_FlowMaster {
-            get {
-                return ResourceManager.GetString("lgInvert_FlowMaster", resourceCulture);
-            }
-        }
-        
-        internal static string lgFlowMasterValveMode {
-            get {
-                return ResourceManager.GetString("lgFlowMasterValveMode", resourceCulture);
-            }
-        }
-        
-        internal static string lgFlowMaster2Wire {
-            get {
-                return ResourceManager.GetString("lgFlowMaster2Wire", resourceCulture);
-            }
-        }
-        
-        internal static string lgFlowMaster2WireInvert {
-            get {
-                return ResourceManager.GetString("lgFlowMaster2WireInvert", resourceCulture);
-            }
-        }
-        
-        internal static string lgFlowMaster3Wire {
-            get {
-                return ResourceManager.GetString("lgFlowMaster3Wire", resourceCulture);
-            }
-        }
-        
-        internal static string lgFlowMaster2WireValve {
-            get {
-                return ResourceManager.GetString("lgFlowMaster2WireValve", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Invert Flow Control.
         /// </summary>

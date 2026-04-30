@@ -81,7 +81,7 @@ namespace RateController.Menu
                                 Directory.Delete(FilePath, true);
 
                                 // load default if current is deleted
-                                if (Properties.Settings.Default.CurrentFile == FilePath + "\\" + FileToDelete + ".rcs")
+                                if (Props.CurrentFile == FilePath + "\\" + FileToDelete + ".rcs")
                                 {
                                     Core.ChangeProfile(FilePath + "\\Default.rcs");
                                     tbName.Text = "";

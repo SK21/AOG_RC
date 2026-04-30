@@ -112,7 +112,7 @@ namespace RateController.Classes
                 if (Tls.PrevInstance()) Application.Exit();
 
                 Props.CheckFolders();
-                Props.OpenFile(Properties.Settings.Default.CurrentFile);
+                Props.OpenFile(Props.CurrentFile);
 
                 AutoSteerPGN = new PGN254();
                 SectionsPGN = new PGN235();
@@ -146,7 +146,7 @@ namespace RateController.Classes
                 GPS = new PGN208();
                 WheelSpeed = new PGN32504();
 
-                ChangeProfile(Properties.Settings.Default.CurrentFile);
+                ChangeProfile(Props.CurrentFile);
 
                 ParcelManager.Initialize();
                 JobManager.Initialize();
