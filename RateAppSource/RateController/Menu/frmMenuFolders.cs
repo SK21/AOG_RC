@@ -46,7 +46,7 @@ namespace RateController.Menu
             Hlp.Close();
             if (Result)
             {
-                int Change = Props.ChangeDataFolder(tbNewLocation.Text, ckOverwrite.Checked, ckCopyData.Checked);
+                int Change = Props.ChangeDataFolder(tbNewLocation.Text.Trim(), ckOverwrite.Checked, ckCopyData.Checked);
                 string Message = "Could not change folder.";
                 switch (Change)
                 {

@@ -124,8 +124,7 @@ namespace RateController.Classes
 
         public static string KmlFolder(int id) => Path.Combine(FieldFolder(id), "Kml");
 
-        public static string MapsFolder(int id) =>
-                                                    Path.Combine(FieldFolder(id), "Maps");
+        public static string MapsFolder(int id) => Path.Combine(FieldFolder(id), "Maps");
 
         public static void SaveParcels(List<Parcel> mappings)
         {

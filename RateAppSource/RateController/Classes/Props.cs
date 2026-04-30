@@ -75,11 +75,11 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "25-Apr-2026";
+        private static string cAppDate = "30-Apr-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.3.2";
+        private static string cAppVersion = "4.3.3";
         private static bool cCanEnabled = false;
         private static string cCanPort = "COM7";
         private static CanDriver cCurrentCanDriver = CanDriver.SLCAN;
@@ -88,7 +88,6 @@ namespace RateController.Classes
         private static string cDefaultDir;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
-        private static string cFieldNames;
         private static bool cMapPreview = false;
         private static bool cMasterMaintained = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.Standard;
@@ -255,7 +254,7 @@ namespace RateController.Classes
         }
 
         public static string FieldNamesPath
-        { get { return cFieldNames; } }
+        { get { return Path.Combine(ApplicationFolder, "FieldNames.txt"); } }
 
         public static clsJobDataCollector JobCollector
         {
@@ -728,9 +727,6 @@ namespace RateController.Classes
                     Props.CurrentFile = ExampleProfile + "\\Example.rcs";
                     Properties.Settings.Default.Save();
                 }
-
-                // create field names path
-                cFieldNames = Path.Combine(ApplicationFolder, "FieldNames.txt");
 
                 Result = true;
             }

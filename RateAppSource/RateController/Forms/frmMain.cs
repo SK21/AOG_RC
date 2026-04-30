@@ -342,6 +342,7 @@ namespace RateController.Forms
                 Core.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
                 Props.SaveFormLocation(this);
                 FlashTimer.Stop();
+                Props.SetAppProp("StartMinimized", MainMini.Visible.ToString());
             }
             else
             {
@@ -391,6 +392,13 @@ namespace RateController.Forms
                 }
             }
             FlashTimer.Start();
+
+            bool sm = bool.TryParse(Props.GetAppProp("StartMinimized"), out bool mm) ? mm : false;
+            if (sm)
+            {
+                Minimize?.Invoke(this, EventArgs.Empty);
+                Core.SetMainDisplay(false);
+            }
         }
 
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)

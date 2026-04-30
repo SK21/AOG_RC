@@ -203,11 +203,6 @@ namespace RateController.Classes
             SafeEvent.Raise(ColorChanged);
         }
 
-        //public static void RaiseRestoreMain()
-        //{
-        //    SafeEvent.Raise(RestoreMain);
-        //}
-
         public static void SetMainDisplay(bool ShowNormal)
         {
             if (ShowNormal)
