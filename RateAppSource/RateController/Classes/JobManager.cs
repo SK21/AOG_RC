@@ -318,7 +318,7 @@ namespace RateController.Classes
         public static void Initialize()
         {
             // jobs folder
-            string name = Props.DefaultDir + "\\Jobs";
+            string name = Props.DataFolder + "\\Jobs";
             if (!Directory.Exists(name)) Directory.CreateDirectory(name);
             cJobsFolder = name;
 

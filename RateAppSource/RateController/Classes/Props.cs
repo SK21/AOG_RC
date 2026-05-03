@@ -85,7 +85,7 @@ namespace RateController.Classes
         private static CanDriver cCurrentCanDriver = CanDriver.SLCAN;
         private static string cCurrentMenuName = "";
         private static int cCurrentProduct;
-        private static string cDefaultDir;
+        private static string cDataFolder;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
         private static bool cMapPreview = false;
@@ -236,9 +236,6 @@ namespace RateController.Classes
                 }
             }
         }
-
-        public static string DefaultDir
-        { get { return cDefaultDir; } }
 
         public static int DefaultProduct
         {
@@ -621,20 +618,7 @@ namespace RateController.Classes
 
         #endregion MainProperties
 
-        public static string DataFolder
-        {
-            get
-            {
-                string flder = Properties.Settings.Default.DataFolder;
-                if (!Directory.Exists(flder))
-                {
-                    flder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" + cAppName;
-                    Properties.Settings.Default.DataFolder = flder;
-                    Properties.Settings.Default.Save();
-                }
-                return flder;
-            }
-        }
+        public static string DataFolder { get { return cDataFolder; } }
 
         public static int ChangeDataFolder(string NewFolder, bool overwrite, bool copy)
         {
@@ -656,6 +640,7 @@ namespace RateController.Classes
                                 {
                                     Properties.Settings.Default.DataFolder = NewFolder;
                                     Properties.Settings.Default.Save();
+                                    cDataFolder = NewFolder;
                                     Result = 5;
                                     Core.RequestRestart();
                                 }
@@ -678,6 +663,7 @@ namespace RateController.Classes
                     {
                         Properties.Settings.Default.DataFolder = NewFolder;
                         Properties.Settings.Default.Save();
+                        cDataFolder = NewFolder;
                         Result = 5;
                         Core.RequestRestart();
                     }
@@ -699,16 +685,22 @@ namespace RateController.Classes
             bool Result = false;
             try
             {
-                // check for default dir and files
-                cDefaultDir = DataFolder;
-                if (!Directory.Exists(cDefaultDir)) Directory.CreateDirectory(cDefaultDir);
+                // check for data folder
+                string stored = Properties.Settings.Default.DataFolder;
+                if (!Directory.Exists(stored))
+                {
+                    stored = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), cAppName);
+                    Properties.Settings.Default.DataFolder = stored;
+                    Properties.Settings.Default.Save();
+                }
+                cDataFolder = stored;
 
                 // application folder
-                string name = cDefaultDir + "\\Application";
+                string name = cDataFolder + "\\Application";
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
 
                 // profiles folder
-                name = cDefaultDir + "\\Profiles";
+                name = cDataFolder + "\\Profiles";
                 if (!Directory.Exists(name)) Directory.CreateDirectory(name);
 
                 string DefaultProfile = name + "\\" + "Default";

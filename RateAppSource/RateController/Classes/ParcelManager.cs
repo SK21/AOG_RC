@@ -83,7 +83,7 @@ namespace RateController.Classes
             }
         }
 
-        public static string FieldFolder(int id) => Path.Combine(Props.DefaultDir, "Fields", $"Field_{id}");
+        public static string FieldFolder(int id) => Path.Combine(Props.DataFolder, "Fields", $"Field_{id}");
 
         public static List<string> GetEcFiles(int id) => GetFilenames(EcFolder(id), "*.csv");
 
