@@ -114,10 +114,22 @@ namespace RateController.Classes
                         // stop manual adjusting flow valve when rate adjust buttons are not pushed
                         clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
 
-                        if (Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed)
+                        switch (Prd.ControlType)
                         {
-                            Prd.ManualPWM = 0;
+                            case ControlTypeEnum.Valve:
+                                Prd.ManualPWM = 0;
+                                break;
+
+                            case ControlTypeEnum.ComboClose:
+                            case ControlTypeEnum.ComboCloseTimed:
+                                Prd.ManualPWM = Core.SectionControl.MasterOn ? 0 : -255;
+                                break;
+
+                            case ControlTypeEnum.Motor:
+                                // module sets motor to 0 if master is off
+                                break;
                         }
+
                         AdjustTime = DateTime.MinValue;
                         StepTime = DateTime.MinValue;
                     }
