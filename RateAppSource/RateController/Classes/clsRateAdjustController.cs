@@ -11,6 +11,7 @@ namespace RateController.Classes
         private const int StepDelay = 2000;
 
         private DateTime AdjustTime;
+        private bool LastMasterOn;
         private bool LastState;
         private bool Pressed;
         private double RateDir;
@@ -109,7 +110,9 @@ namespace RateController.Classes
                 }
                 else
                 {
-                    if (StateChanged)
+                    bool masterJustTurnedOff = LastMasterOn && !Core.SectionControl.MasterOn;
+
+                    if (StateChanged || masterJustTurnedOff)
                     {
                         // stop manual adjusting flow valve when rate adjust buttons are not pushed
                         clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
@@ -134,6 +137,8 @@ namespace RateController.Classes
                         StepTime = DateTime.MinValue;
                     }
                 }
+
+                LastMasterOn = Core.SectionControl.MasterOn;
             }
             catch (Exception ex)
             {
