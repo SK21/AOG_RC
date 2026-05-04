@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RateController.Classes
 {
@@ -9,10 +10,9 @@ namespace RateController.Classes
         private const int ManualMotorStepSize = 10;
         private const byte MaxSteps = 10;
         private const int StepDelay = 2000;
-
         private DateTime AdjustTime;
-        private bool LastMasterOn;
-        private bool LastState;
+        private bool LastPressedState;
+        private bool LastAutoState;
         private bool Pressed;
         private double RateDir;
         private int RateStep;
@@ -45,8 +45,9 @@ namespace RateController.Classes
                     RateStep = 0;
                 }
 
-                StateChanged = (LastState != Pressed);
-                LastState = Pressed;
+                StateChanged = (LastPressedState != Pressed) || (LastAutoState != Core.SwitchBox.AutoRateOn);
+                LastPressedState = Pressed;
+                LastAutoState = Core.SwitchBox.AutoRateOn;
 
                 if (Pressed)
                 {
@@ -64,7 +65,23 @@ namespace RateController.Classes
                         AdjustTime = DateTime.Now;
                         clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
 
-                        if (!Core.SwitchBox.MasterOn || !Core.SwitchBox.AutoRateOn)
+                        if (Core.SwitchBox.AutoRateOn)
+                        {
+                            // adjust target/acre 
+                            double CurrentRate = Prd.RateSet;
+                            if (CurrentRate == 0) CurrentRate = 1;
+
+                            if (RateDir == 1)
+                            {
+                                CurrentRate = CurrentRate * (1 + (AutoStepMultiplier * RateStep));
+                            }
+                            else
+                            {
+                                CurrentRate = CurrentRate / (1 + (AutoStepMultiplier * RateStep));
+                            }
+                            Prd.RateSet = CurrentRate;
+                        }
+                        else
                         {
                             // adjust PWM
                             bool IsValve = Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed;
@@ -90,55 +107,32 @@ namespace RateController.Classes
                                 Prd.ManualPWM += (int)(RateDir * RateStep * ManualMotorStepSize);
                             }
                         }
-                        else
-                        {
-                            // adjust target/acre - auto mode
-                            double CurrentRate = Prd.RateSet;
-                            if (CurrentRate == 0) CurrentRate = 1;
+                        Debug.Print(Prd.ID.ToString() + ", " + Prd.ManualPWM.ToString());
 
-                            if (RateDir == 1)
-                            {
-                                CurrentRate = CurrentRate * (1 + (AutoStepMultiplier * RateStep));
-                            }
-                            else
-                            {
-                                CurrentRate = CurrentRate / (1 + (AutoStepMultiplier * RateStep));
-                            }
-                            Prd.RateSet = CurrentRate;
-                        }
+
+                        //if (!Core.SwitchBox.MasterOn || !Core.SwitchBox.AutoRateOn)
+                        //{
+                        //}
+                        //else
+                        //{
+                        //}
                     }
                 }
                 else
                 {
-                    bool masterJustTurnedOff = LastMasterOn && !Core.SectionControl.MasterOn;
-
-                    if (StateChanged || masterJustTurnedOff)
+                    if (StateChanged)
                     {
-                        // stop manual adjusting flow valve when rate adjust buttons are not pushed
                         clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
-
-                        switch (Prd.ControlType)
+                        bool IsValve = Prd.ControlType == ControlTypeEnum.Valve || Prd.ControlType == ControlTypeEnum.ComboClose || Prd.ControlType == ControlTypeEnum.ComboCloseTimed;
+                        if (IsValve)
                         {
-                            case ControlTypeEnum.Valve:
-                                Prd.ManualPWM = 0;
-                                break;
-
-                            case ControlTypeEnum.ComboClose:
-                            case ControlTypeEnum.ComboCloseTimed:
-                                Prd.ManualPWM = Core.SectionControl.MasterOn ? 0 : -255;
-                                break;
-
-                            case ControlTypeEnum.Motor:
-                                // module sets motor to 0 if master is off
-                                break;
+                            // stop manual adjusting flow valve when rate adjust buttons are not pushed
+                            Prd.ManualPWM = 0;
                         }
-
                         AdjustTime = DateTime.MinValue;
                         StepTime = DateTime.MinValue;
                     }
                 }
-
-                LastMasterOn = Core.SectionControl.MasterOn;
             }
             catch (Exception ex)
             {

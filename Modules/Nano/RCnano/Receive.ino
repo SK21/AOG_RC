@@ -59,7 +59,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
 						MasterOn = ((InCommand & 16) == 16);
 
-						Sensor[SensorID].AutoOn = ((InCommand & 64) == 64);
+						AutoOn = ((InCommand & 64) == 64);
 
 						CalibrationOn[SensorID] = ((InCommand & 128) == 128);
 

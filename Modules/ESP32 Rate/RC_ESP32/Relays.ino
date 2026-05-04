@@ -14,6 +14,16 @@ void CheckRelays()
 	bool BitState;
 	uint8_t IOpin;
 
+	bool Connected = false;
+	for (int i = 0; i < MDL.SensorCount; i++)
+	{
+		if (SensorConnected[i])
+		{
+			Connected = true;
+			break;
+		}
+	}
+
 	if (WifiMasterOn)
 	{
 		// wifi relay control
@@ -33,7 +43,7 @@ void CheckRelays()
 			}
 		}
 	}
-	else if ((millis() - Sensor[0].CommTime < 4000) || (millis() - Sensor[1].CommTime < 4000))
+	else if (Connected)
 	{
 		NewLo = RelayLo;
 		NewHi = RelayHi;

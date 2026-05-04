@@ -310,7 +310,7 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	if (cmd & 0x01) Sensor[senId].TotalPulses = 0;  // Reset quantity
 	Sensor[senId].ControlType = (cmd >> 1) & 0x07;
 	MasterOn = ((cmd & 0x10) == 0x10);
-	Sensor[senId].AutoOn = ((cmd & 0x40) == 0x40);
+	AutoOn = ((cmd & 0x40) == 0x40);
 	CalibrationOn[senId] = ((cmd & 0x80) == 0x80);
 
 	// Update timeout
@@ -526,7 +526,7 @@ void CANBus_SendSensorRateQty(uint8_t sensorId) {
 	data[6] = (qtyRaw >> 16) & 0xFF;
 
 	// Byte 7: Status (bit 0 = sensor connected)
-	data[7] = (millis() - Sensor[sensorId].CommTime < 4000) ? 0x01 : 0x00;
+	data[7] = (SensorConnected[sensorId]) ? 0x01 : 0x00;
 
 	CANBus_SendProprietaryB(0x00, data, 8);
 }

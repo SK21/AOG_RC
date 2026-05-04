@@ -4,9 +4,6 @@ void DoSetup()
 	uint8_t ErrorCount = 0;
 	bool WheelMatch = false;
 
-	Sensor[0].AdjustmentEnabled = false;
-	Sensor[1].AdjustmentEnabled = false;
-
 	Serial.begin(38400);
 	delay(3000);
 	Serial.println("");
@@ -463,7 +460,6 @@ void LoadDefaults()
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
 		Sensor[i].PulseSampleSize = 12;
-		Sensor[i].AutoOn = true;
 	}
 
 	// relay pins

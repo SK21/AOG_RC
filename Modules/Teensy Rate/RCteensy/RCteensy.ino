@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 25046;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 4056;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -91,7 +91,6 @@ struct SensorConfig	// about 104 bytes
 	uint8_t FlowPin;
 	uint8_t DirPin;
 	uint8_t PWMPin;
-	bool AdjustmentEnabled;
 	float UPM;				// sent as upm X 1000
 	float PWM;
 	uint32_t CommTime;
@@ -117,10 +116,12 @@ struct SensorConfig	// about 104 bytes
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
-	bool AutoOn;
 };
 
-SensorConfig Sensor[2];
+SensorConfig Sensor[MaxProductCount];
+bool SensorConnected[MaxProductCount];
+bool PIDenabled[MaxProductCount];
+bool Applying[MaxProductCount];
 
 // ethernet
 EthernetUDP UDPcomm;
@@ -143,6 +144,7 @@ const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
 bool MasterOn = false;
+bool AutoOn = true;
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
@@ -199,7 +201,14 @@ void loop()
 	if (millis() - LoopLast >= LoopTime)
 	{
 		LoopLast = millis();
-		SetSensorsEnabled();
+
+		for (int i = 0; i < MDL.SensorCount; i++)
+		{
+			SensorConnected[i] = (millis() - Sensor[i].CommTime < 4000);
+			PIDenabled[i] = SensorConnected[i] && AutoOn && (Sensor[i].TargetUPM > 0);
+			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn);
+		}
+
 		CheckRelays();
 		GetUPM();
 		AdjustFlow();
@@ -220,30 +229,7 @@ void loop()
 	}
 
 	Blink();
-}
-
-void SetSensorsEnabled()
-{
-	for (int i = 0; i < MDL.SensorCount; i++)
-	{
-		bool Result = false;
-		if (millis() - Sensor[i].CommTime < 5000)
-		{
-			if (!MasterOn)
-			{
-				Result = true;
-			}
-			else if (Sensor[i].TargetUPM > 0)
-			{
-				Result = true;
-			}
-			else if (!Sensor[i].AutoOn)
-			{
-				Result = true;
-			}
-		}
-		Sensor[i].AdjustmentEnabled = Result;
-	}
+	//DebugTheIno();
 }
 
 byte ParseModID(byte ID)
@@ -356,3 +342,37 @@ void Blink()
 		digitalWrite(LED_BUILTIN, State);
 	}
 }
+
+//int16_t debug1;
+//int16_t debug2;
+//int16_t debug3;
+//int16_t debug4;
+//int16_t debug5;
+//int16_t debug6;
+//void DebugTheIno()
+//{
+//	static uint32_t DebugTime;
+//	if (millis() - DebugTime > 1000)
+//	{
+//		DebugTime = millis();
+//
+//		Serial.println("");
+//		Serial.print(debug1);
+//
+//		Serial.print(", ");
+//		Serial.print(debug2);
+//
+//		Serial.print(", ");
+//		Serial.print(debug3);
+//
+//		Serial.print(", ");
+//		Serial.print(debug4);
+//
+//		Serial.print(", ");
+//		Serial.print(debug5);
+//
+//		Serial.print(", ");
+//		Serial.print(debug6);
+//	}
+//}
+

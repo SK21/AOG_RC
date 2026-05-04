@@ -12,7 +12,17 @@ void CheckRelays()
     uint8_t NewLo = 0;
     uint8_t NewHi = 0;
 
-    if ((millis() - Sensor[0].CommTime < 4000) || (millis() - Sensor[1].CommTime < 4000))
+    bool Connected = false;
+    for (int i = 0; i < MDL.SensorCount; i++)
+    {
+        if (SensorConnected[i])
+        {
+            Connected = true;
+            break;
+        }
+    }
+
+    if (Connected)
     {
         NewLo = RelayLo;
         NewHi = RelayHi;

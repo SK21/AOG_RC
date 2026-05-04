@@ -26,23 +26,7 @@ void SetPWM()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		if (!Sensor[i].AutoOn || !MasterOn)
-		{
-			// manual control
-			switch (Sensor[i].ControlType)
-			{
-			case TimedCombo_ct:
-				// combo close timed adjustment
-				Sensor[i].PWM = TimedCombo(i, true);
-				break;
-
-			default:
-				Sensor[i].PWM = Sensor[i].ManualAdjust;
-				if (fabsf(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * ((Sensor[i].PWM >= 0.0) ? 1.0 : -1.0);
-				break;
-			}
-		}
-		else
+		if (AutoOn)
 		{
 			// auto control
 			switch (Sensor[i].ControlType)
@@ -63,6 +47,22 @@ void SetPWM()
 				break;
 			}
 		}
+		else
+		{
+			// manual control
+			switch (Sensor[i].ControlType)
+			{
+			case TimedCombo_ct:
+				// combo close timed adjustment
+				Sensor[i].PWM = TimedCombo(i, true);
+				break;
+
+			default:
+				Sensor[i].PWM = Sensor[i].ManualAdjust;
+				if (fabsf(Sensor[i].PWM) > Sensor[i].MaxPWM) Sensor[i].PWM = Sensor[i].MaxPWM * ((Sensor[i].PWM >= 0.0) ? 1.0 : -1.0);
+				break;
+			}
+		}
 	}
 }
 
@@ -70,7 +70,7 @@ float PIDvalve(byte ID)
 {
 	float Result = 0;
 
-	if (Sensor[ID].AdjustmentEnabled && Sensor[ID].TargetUPM > 0)
+	if (PIDenabled[ID])
 	{
 		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
@@ -129,7 +129,7 @@ float PIDmotor(byte ID)
 {
 	float Result = 0;
 
-	if (Sensor[ID].AdjustmentEnabled && Sensor[ID].TargetUPM > 0)
+	if (PIDenabled[ID])
 	{
 		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
@@ -180,7 +180,7 @@ float PIDmotor(byte ID)
 float TimedCombo(byte ID, bool ManualAdjust = false)
 {
 	float Result = 0;
-	if ((Sensor[ID].AdjustmentEnabled && Sensor[ID].TargetUPM > 0) || ManualAdjust)
+	if (PIDenabled[ID] || ManualAdjust)
 	{
 		if (Sensor[ID].UPM < (Sensor[ID].TimedMinStart * Sensor[ID].TargetUPM))
 		{

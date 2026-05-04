@@ -58,7 +58,7 @@ void SendComm()
 
 			// status
 			Data[11] = 0;
-			if (millis() - Sensor[i].CommTime < 4000) Data[11] |= 0b00000001;
+			if (SensorConnected[i]) Data[11] |= 0b00000001;
 
 			// Hz
 			uint16_t Hz = Sensor[i].Hz * 10;
