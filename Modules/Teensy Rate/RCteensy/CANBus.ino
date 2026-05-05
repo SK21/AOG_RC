@@ -114,14 +114,18 @@ void CANBus_SendAddressClaim() {
 		msg.buf[i] = (name >> (i * 8)) & 0xFF;
 	}
 
-#ifdef CANBUS_DEBUG
-	if (ISOBUS.write(msg)) {
+	if (ISOBUS.write(msg)) 
+	{
 		ISOBUSid.lastClaimTime = millis();
 		ISOBUSid.addressClaimed = true;
+#ifdef CANBUS_DEBUG
 		Serial.print("Address claim sent: 0x");
 		Serial.println(ISOBUSid.address, HEX);
+#endif
 	}
-	else {
+#ifdef CANBUS_DEBUG
+	else
+	{
 		Serial.println("Address claim FAILED");
 	}
 #endif
@@ -629,9 +633,11 @@ void CANBus_Update() {
 	CANBus_Receive();
 
 	// Address claiming - check every 5 seconds
-	if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000)) {
+	if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000)) 
+	{
 		lastClaimCheck = millis();
-		if (!ISOBUSid.addressClaimed) {
+		if (!ISOBUSid.addressClaimed) 
+		{
 			CANBus_SendAddressClaim();
 		}
 	}
