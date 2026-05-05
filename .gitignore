@@ -429,7 +429,6 @@ __vm/
 *.vsarduino.h
 Modules/**/*.[Ee][Ll][Ff]
 Modules/**/*.[Ee][Ee][Pp]
-Modules/**/*.[Bb][Ii][Nn]
 Modules/**/*.[Mm][Aa][Pp]
 Modules/**/[Bb]uild*/
 Modules/**/[Dd]ebug*/
