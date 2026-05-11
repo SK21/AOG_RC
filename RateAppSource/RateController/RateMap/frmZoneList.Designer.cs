@@ -64,6 +64,7 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnSelect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnPrint = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
@@ -94,7 +95,6 @@
             // 
             this.dataRelay.Caption = "Name";
             this.dataRelay.ColumnName = "cName";
-            this.dataRelay.MaxLength = -1;
             // 
             // dataType
             // 
@@ -359,11 +359,29 @@
             this.label1.TabIndex = 433;
             this.label1.Text = "label1";
             // 
+            // btnPrint
+            // 
+            this.btnPrint.BackColor = System.Drawing.Color.Transparent;
+            this.btnPrint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPrint.FlatAppearance.BorderSize = 0;
+            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrint.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnPrint.Image = global::RateController.Properties.Resources.printer;
+            this.btnPrint.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnPrint.Location = new System.Drawing.Point(251, 338);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(70, 63);
+            this.btnPrint.TabIndex = 434;
+            this.btnPrint.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            // 
             // frmZoneList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(671, 413);
+            this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.btnDelete);
@@ -419,5 +437,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cNameIndex;
         private System.Windows.Forms.Button btnSelect;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnPrint;
     }
 }

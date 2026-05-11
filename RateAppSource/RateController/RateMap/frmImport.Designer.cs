@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvMapping = new System.Windows.Forms.DataGridView();
             this.PredefinedAttribute = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ShapeFileAttribute = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -38,6 +38,14 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
+            this.btnBuild = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbArea = new System.Windows.Forms.Label();
+            this.tbMinZoneSize = new System.Windows.Forms.TextBox();
+            this.lblMinSize = new System.Windows.Forms.Label();
+            this.tbNumZones = new System.Windows.Forms.TextBox();
+            this.lblZoneCount = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapping)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,19 +53,19 @@
             // 
             this.dgvMapping.AllowUserToAddRows = false;
             this.dgvMapping.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvMapping.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvMapping.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvMapping.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvMapping.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PredefinedAttribute,
             this.ShapeFileAttribute});
-            this.dgvMapping.Location = new System.Drawing.Point(12, 59);
+            this.dgvMapping.Location = new System.Drawing.Point(46, 88);
             this.dgvMapping.Name = "dgvMapping";
             this.dgvMapping.RowHeadersVisible = false;
             this.dgvMapping.RowTemplate.Height = 40;
@@ -66,8 +74,8 @@
             // 
             // PredefinedAttribute
             // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PredefinedAttribute.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PredefinedAttribute.DefaultCellStyle = dataGridViewCellStyle2;
             this.PredefinedAttribute.HeaderText = "Zone Attribute";
             this.PredefinedAttribute.Name = "PredefinedAttribute";
             this.PredefinedAttribute.ReadOnly = true;
@@ -76,8 +84,8 @@
             // ShapeFileAttribute
             // 
             this.ShapeFileAttribute.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ShapeFileAttribute.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ShapeFileAttribute.DefaultCellStyle = dataGridViewCellStyle3;
             this.ShapeFileAttribute.HeaderText = "Shapefile Attribute";
             this.ShapeFileAttribute.Name = "ShapeFileAttribute";
             this.ShapeFileAttribute.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -89,7 +97,7 @@
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
-            this.btnSave.Location = new System.Drawing.Point(325, 381);
+            this.btnSave.Location = new System.Drawing.Point(414, 519);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(82, 64);
             this.btnSave.TabIndex = 7;
@@ -105,7 +113,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(230, 381);
+            this.btnCancel.Location = new System.Drawing.Point(319, 519);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(89, 64);
             this.btnCancel.TabIndex = 379;
@@ -116,7 +124,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(48, 15);
+            this.label1.Location = new System.Drawing.Point(52, 44);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 24);
             this.label1.TabIndex = 380;
@@ -124,16 +132,106 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(130, 12);
+            this.tbName.Location = new System.Drawing.Point(134, 41);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(225, 29);
             this.tbName.TabIndex = 0;
+            // 
+            // btnBuild
+            // 
+            this.btnBuild.FlatAppearance.BorderSize = 0;
+            this.btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBuild.Image = global::RateController.Properties.Resources.Start;
+            this.btnBuild.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnBuild.Location = new System.Drawing.Point(173, 402);
+            this.btnBuild.Name = "btnBuild";
+            this.btnBuild.Size = new System.Drawing.Size(132, 72);
+            this.btnBuild.TabIndex = 381;
+            this.btnBuild.Text = "Import";
+            this.btnBuild.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnBuild.UseVisualStyleBackColor = true;
+            this.btnBuild.Click += new System.EventHandler(this.btnBuild_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(167, 24);
+            this.label2.TabIndex = 382;
+            this.label2.Text = "Step 1 Import Data:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(12, 477);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(181, 24);
+            this.label3.TabIndex = 383;
+            this.label3.Text = "Step 2 Adjust zones:";
+            // 
+            // lbArea
+            // 
+            this.lbArea.AutoSize = true;
+            this.lbArea.Location = new System.Drawing.Point(253, 556);
+            this.lbArea.Name = "lbArea";
+            this.lbArea.Size = new System.Drawing.Size(33, 24);
+            this.lbArea.TabIndex = 445;
+            this.lbArea.Text = "Ac";
+            // 
+            // tbMinZoneSize
+            // 
+            this.tbMinZoneSize.Location = new System.Drawing.Point(173, 554);
+            this.tbMinZoneSize.Name = "tbMinZoneSize";
+            this.tbMinZoneSize.Size = new System.Drawing.Size(69, 29);
+            this.tbMinZoneSize.TabIndex = 444;
+            this.tbMinZoneSize.Text = "0";
+            this.tbMinZoneSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbMinZoneSize.Enter += new System.EventHandler(this.tbMinZoneSize_Enter);
+            // 
+            // lblMinSize
+            // 
+            this.lblMinSize.AutoSize = true;
+            this.lblMinSize.Location = new System.Drawing.Point(12, 556);
+            this.lblMinSize.Name = "lblMinSize";
+            this.lblMinSize.Size = new System.Drawing.Size(126, 24);
+            this.lblMinSize.TabIndex = 443;
+            this.lblMinSize.Text = "Min zone size";
+            // 
+            // tbNumZones
+            // 
+            this.tbNumZones.Location = new System.Drawing.Point(173, 519);
+            this.tbNumZones.Name = "tbNumZones";
+            this.tbNumZones.Size = new System.Drawing.Size(69, 29);
+            this.tbNumZones.TabIndex = 442;
+            this.tbNumZones.Text = "5";
+            this.tbNumZones.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbNumZones.Enter += new System.EventHandler(this.tbNumZones_Enter);
+            // 
+            // lblZoneCount
+            // 
+            this.lblZoneCount.AutoSize = true;
+            this.lblZoneCount.Location = new System.Drawing.Point(12, 521);
+            this.lblZoneCount.Name = "lblZoneCount";
+            this.lblZoneCount.Size = new System.Drawing.Size(158, 24);
+            this.lblZoneCount.TabIndex = 441;
+            this.lblZoneCount.Text = "Number of Zones";
             // 
             // frmImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(419, 454);
+            this.ClientSize = new System.Drawing.Size(508, 597);
+            this.Controls.Add(this.lbArea);
+            this.Controls.Add(this.tbMinZoneSize);
+            this.Controls.Add(this.lblMinSize);
+            this.Controls.Add(this.tbNumZones);
+            this.Controls.Add(this.lblZoneCount);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.btnBuild);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
@@ -164,5 +262,13 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.Button btnBuild;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbArea;
+        private System.Windows.Forms.TextBox tbMinZoneSize;
+        private System.Windows.Forms.Label lblMinSize;
+        private System.Windows.Forms.TextBox tbNumZones;
+        private System.Windows.Forms.Label lblZoneCount;
     }
 }
