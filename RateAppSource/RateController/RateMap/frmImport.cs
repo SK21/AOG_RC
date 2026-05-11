@@ -126,6 +126,42 @@ namespace RateController.Forms
                     var shapefileHelper = new ShapefileHelper();
                     var mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
 
+                    if (mapZones.Count > 100)
+                    {
+                        var answer = MessageBox.Show(
+                            string.Format("This prescription map has {0} zones, which may be unworkable in the field.\n\nSimplify to a smaller number of zones?", mapZones.Count),
+                            "Simplify Prescription Map",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (answer == DialogResult.Yes)
+                        {
+                            int zoneCount = 5;
+                            double minZoneHa = 1.0;
+
+                            using (var numForm = new AgOpenGPS.FormNumeric(2, 8, 5))
+                            {
+                                numForm.Text = "Number of zones (2-8)";
+                                if (numForm.ShowDialog() != DialogResult.OK) goto skipSimplify;
+                                zoneCount = (int)numForm.ReturnValue;
+                            }
+
+                            string areaUnit = Props.UseMetric ? "Ha" : "Ac";
+                            using (var areaForm = new AgOpenGPS.FormNumeric(0, 50, 1))
+                            {
+                                areaForm.Text = string.Format("Minimum zone size ({0})", areaUnit);
+                                if (areaForm.ShowDialog() == DialogResult.OK)
+                                {
+                                    double enteredArea = areaForm.ReturnValue;
+                                    minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
+                                }
+                            }
+
+                            mapZones = shapefileHelper.SimplifyPrescriptionGrid(mapZones, zoneCount, minZoneHa);
+                            skipSimplify:;
+                        }
+                    }
+
                     if (shapefileHelper.SaveMapZones(MP, mapZones))
                     {
                         MapController.LoadMap();

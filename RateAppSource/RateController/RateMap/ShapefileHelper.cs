@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace RateController.RateMap
 {
@@ -231,6 +232,245 @@ namespace RateController.RateMap
             return File.Exists(pathWithoutExtension + ".shp") &&
                    File.Exists(pathWithoutExtension + ".shx") &&
                    File.Exists(pathWithoutExtension + ".dbf");
+        }
+
+        public List<MapZone> SimplifyPrescriptionGrid(List<MapZone> zones, int zoneCount, double minZoneHa = 1.0)
+        {
+            var result = new List<MapZone>();
+            if (zones == null || zones.Count == 0) return result;
+
+            zoneCount = Math.Max(2, Math.Min(8, zoneCount));
+
+            // ── Build spatial grid from cell centroids ────────────────────────────
+            double minX = zones.Min(z => z.Geometry.EnvelopeInternal.MinX);
+            double maxX = zones.Max(z => z.Geometry.EnvelopeInternal.MaxX);
+            double minY = zones.Min(z => z.Geometry.EnvelopeInternal.MinY);
+            double maxY = zones.Max(z => z.Geometry.EnvelopeInternal.MaxY);
+
+            var env0 = zones[0].Geometry.EnvelopeInternal;
+            double cellW0 = env0.Width;
+            double cellH0 = env0.Height;
+            if (cellW0 < 1e-9 || cellH0 < 1e-9) return result;
+
+            int cols = Math.Max(1, (int)Math.Round((maxX - minX) / cellW0));
+            int rows = Math.Max(1, (int)Math.Round((maxY - minY) / cellH0));
+
+            // Use exact average cell dimensions so constructed rectangles tile seamlessly
+            double cellW = (maxX - minX) / cols;
+            double cellH = (maxY - minY) / rows;
+
+            var rateGrid = new double[rows, cols];
+            var hasCell  = new bool[rows, cols];
+            var cellIndex = new Dictionary<(int, int), MapZone>(zones.Count);
+
+            foreach (var z in zones)
+            {
+                var env = z.Geometry.EnvelopeInternal;
+                double cx = (env.MinX + env.MaxX) / 2.0;
+                double cy = (env.MinY + env.MaxY) / 2.0;
+                int c = Math.Max(0, Math.Min(cols - 1, (int)((cx - minX) / cellW)));
+                int r = Math.Max(0, Math.Min(rows - 1, (int)((cy - minY) / cellH)));
+                rateGrid[r, c] = z.Rates[ZoneFields.ProductA];
+                hasCell[r, c]  = true;
+                cellIndex[(r, c)] = z;
+            }
+
+            // ── Quantile-classify ─────────────────────────────────────────────────
+            var flatRates = new List<double>(zones.Count);
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                    if (hasCell[r, c]) flatRates.Add(rateGrid[r, c]);
+            flatRates.Sort();
+            int total = flatRates.Count;
+
+            var binGrid = new int[rows, cols];
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                {
+                    if (!hasCell[r, c]) continue;
+                    int rank = flatRates.BinarySearch(rateGrid[r, c]);
+                    if (rank < 0) rank = ~rank;
+                    rank = Math.Min(rank, total - 1);
+                    binGrid[r, c] = Math.Min(zoneCount - 1, rank * zoneCount / total);
+                }
+
+            // ── Spatial majority-filter smoothing (up to 30 passes) ───────────────
+            for (int pass = 0; pass < 30; pass++)
+            {
+                var next = GridMajorityFilter(binGrid, hasCell, rows, cols);
+                if (GridsEqual(binGrid, next, rows, cols)) break;
+                binGrid = next;
+            }
+
+            // ── Sieve: absorb small connected regions into dominant neighbour ──────
+            // Converts the ha threshold to cells, then reassigns any connected
+            // component smaller than that into its most-common neighbouring zone.
+            // Every field cell keeps a zone — nothing is left blank.
+            double midLat    = (minY + maxY) / 2.0 * Math.PI / 180.0;
+            double sqDegToHa = 111319.0 * 111319.0 * Math.Cos(midLat) / 10000.0;
+            int    minCells  = Math.Max(1, (int)(minZoneHa / sqDegToHa / (cellW * cellH)));
+            binGrid = GridSieveSmallRegions(binGrid, hasCell, rows, cols, minCells);
+
+            // ── Union cell geometries per bin ─────────────────────────────────────
+            // Construct fresh grid-aligned rectangles rather than using the original
+            // shapefile geometries. Adjacent constructed rectangles share exact edge
+            // coordinates (both computed as minX + k*cellW), so CascadedPolygonUnion
+            // produces a seamless result with no micro-gaps or interior holes.
+            var factory    = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var geomsByBin = new List<List<Geometry>>(zoneCount);
+            for (int b = 0; b < zoneCount; b++) geomsByBin.Add(new List<Geometry>());
+
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                {
+                    if (!hasCell[r, c]) continue;
+                    double left   = minX + c * cellW;
+                    double right  = minX + (c + 1) * cellW;
+                    double bottom = minY + r * cellH;
+                    double top    = minY + (r + 1) * cellH;
+                    var coords = new[]
+                    {
+                        new Coordinate(left, bottom), new Coordinate(right, bottom),
+                        new Coordinate(right, top),   new Coordinate(left, top),
+                        new Coordinate(left, bottom)
+                    };
+                    geomsByBin[binGrid[r, c]].Add(factory.CreatePolygon(coords));
+                }
+
+            // Minimum polygon area: sub-cell artifact filter only (sieve handles real minimums)
+            double minArea = 4.0 * cellW * cellH;
+
+            // ── Build result MapZones ─────────────────────────────────────────────
+            for (int bin = 0; bin < zoneCount; bin++)
+            {
+                if (geomsByBin[bin].Count == 0) continue;
+
+                Geometry merged;
+                try { merged = CascadedPolygonUnion.Union(geomsByBin[bin]); }
+                catch (TopologyException)
+                {
+                    merged = geomsByBin[bin][0];
+                    for (int i = 1; i < geomsByBin[bin].Count; i++)
+                        try { merged = merged.Union(geomsByBin[bin][i]); } catch { }
+                }
+                if (merged == null || merged.IsEmpty) continue;
+
+                // Rates: median ProductA, average for other products
+                var binZones = new List<MapZone>();
+                for (int r = 0; r < rows; r++)
+                    for (int c = 0; c < cols; c++)
+                        if (hasCell[r, c] && binGrid[r, c] == bin && cellIndex.TryGetValue((r, c), out var z))
+                            binZones.Add(z);
+                if (binZones.Count == 0) continue;
+
+                var binRatesSorted = binZones.Select(z => z.Rates[ZoneFields.ProductA]).OrderBy(v => v).ToList();
+                double medianRate  = binRatesSorted[binRatesSorted.Count / 2];
+
+                var avgRates = new Dictionary<string, double>();
+                foreach (var key in ZoneFields.Products)
+                    avgRates[key] = binZones.Average(z => z.Rates[key]);
+                avgRates[ZoneFields.ProductA] = medianRate;
+
+                Color color = Palette.GetProductivityColor(bin, zoneCount);
+
+                foreach (var geom in SplitGeometry(merged))
+                {
+                    if (geom is Polygon poly && poly.Area >= minArea)
+                    {
+                        result.Add(new MapZone(
+                            name: string.Format("Zone {0} ({1:F0})", bin + 1, medianRate),
+                            geometry: poly,
+                            rates: new Dictionary<string, double>(avgRates),
+                            zoneColor: color,
+                            zoneType: ZoneType.Target));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static int[,] GridSieveSmallRegions(int[,] grid, bool[,] mask, int rows, int cols, int minCells)
+        {
+            var result    = (int[,])grid.Clone();
+            bool anyMerged = true;
+            while (anyMerged)
+            {
+                anyMerged = false;
+                var visited = new bool[rows, cols];
+                for (int r0 = 0; r0 < rows; r0++)
+                    for (int c0 = 0; c0 < cols; c0++)
+                    {
+                        if (!mask[r0, c0] || visited[r0, c0]) continue;
+                        int zoneId = result[r0, c0];
+
+                        var cells = new List<(int r, int c)>();
+                        var queue = new Queue<(int, int)>();
+                        queue.Enqueue((r0, c0));
+                        visited[r0, c0] = true;
+                        while (queue.Count > 0)
+                        {
+                            var (r, c) = queue.Dequeue();
+                            cells.Add((r, c));
+                            foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                            {
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols
+                                    && mask[nr, nc] && !visited[nr, nc] && result[nr, nc] == zoneId)
+                                { visited[nr, nc] = true; queue.Enqueue((nr, nc)); }
+                            }
+                        }
+
+                        if (cells.Count >= minCells) continue;
+
+                        var neighborCounts = new Dictionary<int, int>();
+                        foreach (var (r, c) in cells)
+                            foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                            {
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols
+                                    && mask[nr, nc] && result[nr, nc] != zoneId)
+                                {
+                                    int nz = result[nr, nc];
+                                    neighborCounts[nz] = neighborCounts.ContainsKey(nz) ? neighborCounts[nz] + 1 : 1;
+                                }
+                            }
+
+                        if (neighborCounts.Count == 0) continue;
+                        int target = neighborCounts.OrderByDescending(kv => kv.Value).First().Key;
+                        foreach (var (r, c) in cells) result[r, c] = target;
+                        anyMerged = true;
+                    }
+            }
+            return result;
+        }
+
+        private static int[,] GridMajorityFilter(int[,] grid, bool[,] mask, int rows, int cols)
+        {
+            var result = (int[,])grid.Clone();
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                {
+                    if (!mask[r, c]) continue;
+                    var counts = new Dictionary<int, int>();
+                    for (int dr = -1; dr <= 1; dr++)
+                        for (int dc = -1; dc <= 1; dc++)
+                        {
+                            int rr = r + dr, cc = c + dc;
+                            if (rr < 0 || cc < 0 || rr >= rows || cc >= cols || !mask[rr, cc]) continue;
+                            int z = grid[rr, cc];
+                            counts[z] = counts.ContainsKey(z) ? counts[z] + 1 : 1;
+                        }
+                    if (counts.Count > 0)
+                        result[r, c] = counts.OrderByDescending(x => x.Value).First().Key;
+                }
+            return result;
+        }
+
+        private static bool GridsEqual(int[,] a, int[,] b, int rows, int cols)
+        {
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                    if (a[r, c] != b[r, c]) return false;
+            return true;
         }
 
         private List<MapZone> MergeApplied(List<MapZone> appliedZones)
