@@ -380,7 +380,7 @@ namespace RateController.RateMap
                     // overall zone is large enough to keep.
                     if (merged.Area * sqDegToHa < effectiveMinHa) continue;
 
-                    Color  color = Palette.GetProductivityColor(z, zoneCount);
+                    Color  color = Palette.GetProductivityColor(z, zoneCount, 255);
                     string label = z < prodLabels.Length ? prodLabels[z] : (z + 1).ToString();
                     string name  = string.IsNullOrEmpty(sourceLabel)
                         ? string.Format("Z{0} {1}", z + 1, label)

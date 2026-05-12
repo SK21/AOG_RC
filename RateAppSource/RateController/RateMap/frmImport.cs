@@ -14,6 +14,7 @@ namespace RateController.Forms
         private Dictionary<string, string> attributeMapping;
         private string selectedShapefilePath;
         private List<MapZone> _mapZones;
+        private List<MapZone> _simplifiedZones;
         private int _importedZoneCount;
 
         public frmImport()
@@ -40,9 +41,9 @@ namespace RateController.Forms
 
                 var shapefileHelper = new ShapefileHelper();
                 _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
+                _simplifiedZones = null;
                 _importedZoneCount = _mapZones.Count;
                 tbNumZones.Text = _importedZoneCount.ToString();
-                tbMinZoneSize.Text = "0";
             }
             catch (Exception ex)
             {
@@ -53,6 +54,37 @@ namespace RateController.Forms
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnAdjust_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_mapZones == null)
+                {
+                    Props.ShowMessage("Import the shapefile first (Step 1).");
+                    return;
+                }
+
+                int.TryParse(tbNumZones.Text, out int zoneCount);
+                double.TryParse(tbMinZoneSize.Text, out double enteredArea);
+                double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
+                double.TryParse(tbStep.Text, out double minRateStep);
+                Props.SetProp("ImportMinRateStep", tbStep.Text);
+                Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
+
+                var helper = new ShapefileHelper();
+                _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep);
+
+                int distinctZones = _simplifiedZones
+                    .Select(z => z.Rates[ZoneFields.ProductA])
+                    .Distinct().Count();
+                Props.ShowMessage(string.Format("{0} zones created.", distinctZones));
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmImport/btnAdjust_Click: " + ex.Message);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -75,14 +107,8 @@ namespace RateController.Forms
                         JobManager.SetActivePrescription(JB.ID, Fname + ".shp");
                         string MP = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
 
-                        int.TryParse(tbNumZones.Text, out int zoneCount);
-                        double.TryParse(tbMinZoneSize.Text, out double enteredArea);
-                        double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
-
                         var helper = new ShapefileHelper();
-                        var zonesToSave = _mapZones;
-                        if (zoneCount > 0 && (zoneCount < _importedZoneCount || enteredArea > 0))
-                            zonesToSave = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa);
+                        var zonesToSave = _simplifiedZones ?? _mapZones;
 
                         if (helper.SaveMapZones(MP, zonesToSave))
                         {
@@ -118,6 +144,9 @@ namespace RateController.Forms
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             lbArea.Text = Props.UseMetric ? "Ha" : "Ac";
+            lbAreaStep.Text = lbArea.Text;
+            tbStep.Text = Props.GetProp("ImportMinRateStep").Length > 0 ? Props.GetProp("ImportMinRateStep") : "5";
+            tbMinZoneSize.Text = Props.GetProp("ImportMinZoneSize").Length > 0 ? Props.GetProp("ImportMinZoneSize") : "0";
             SetLanguage();
             SelectShapefile(dgvMapping);
         }
@@ -194,6 +223,17 @@ namespace RateController.Forms
                 form.Text = "Number of zones (2-8)";
                 if (form.ShowDialog() == DialogResult.OK)
                     tbNumZones.Text = ((int)form.ReturnValue).ToString();
+            }
+        }
+
+        private void tbStep_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbStep.Text, out double current);
+            using (var form = new AgOpenGPS.FormNumeric(0, 9999, current))
+            {
+                form.Text = "Min rate step between zones";
+                if (form.ShowDialog() == DialogResult.OK)
+                    tbStep.Text = form.ReturnValue.ToString("N0");
             }
         }
     }

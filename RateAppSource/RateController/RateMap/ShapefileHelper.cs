@@ -180,7 +180,7 @@ namespace RateController.RateMap
                     { ZoneFields.ProductE, 0 }
                 };
 
-                Color color = Palette.GetColor(index);
+                Color color = Palette.GetColor(index, trns: 255);
 
                 if (mapping == null)
                 {
@@ -234,7 +234,7 @@ namespace RateController.RateMap
                    File.Exists(pathWithoutExtension + ".dbf");
         }
 
-        public List<MapZone> SimplifyPrescriptionGrid(List<MapZone> zones, int zoneCount, double minZoneHa = 1.0)
+        public List<MapZone> SimplifyPrescriptionGrid(List<MapZone> zones, int zoneCount, double minZoneHa = 1.0, double minRateStep = 0.0)
         {
             var result = new List<MapZone>();
             if (zones == null || zones.Count == 0) return result;
@@ -311,6 +311,12 @@ namespace RateController.RateMap
             int    minCells  = Math.Max(1, (int)(minZoneHa / sqDegToHa / (cellW * cellH)));
             binGrid = GridSieveSmallRegions(binGrid, hasCell, rows, cols, minCells);
 
+            // ── Fill empty cells (prescription gaps) ──────────────────────────────
+            // Cells where no original polygon centroid landed have hasCell=false and
+            // would leave visible holes. Flood-fill from filled neighbours so the
+            // entire bounding box is covered. hasCell is updated in-place.
+            binGrid = FillEmptyCells(binGrid, hasCell, rows, cols);
+
             // ── Union cell geometries per bin ─────────────────────────────────────
             // Construct fresh grid-aligned rectangles rather than using the original
             // shapefile geometries. Adjacent constructed rectangles share exact edge
@@ -371,7 +377,7 @@ namespace RateController.RateMap
                     avgRates[key] = binZones.Average(z => z.Rates[key]);
                 avgRates[ZoneFields.ProductA] = medianRate;
 
-                Color color = Palette.GetProductivityColor(bin, zoneCount);
+                Color color = Palette.GetProductivityColor(bin, zoneCount, 255);
 
                 foreach (var geom in SplitGeometry(merged))
                 {
@@ -387,6 +393,88 @@ namespace RateController.RateMap
                 }
             }
 
+            // Enforce minimum rate step between zones ordered by ProductA rate.
+            // Zones sharing the same rate value belong to the same bin — all get bumped together.
+            if (minRateStep > 0 && result.Count > 1)
+            {
+                var stepGroups = result
+                    .GroupBy(z => z.Rates[ZoneFields.ProductA])
+                    .OrderBy(g => g.Key)
+                    .ToList();
+
+                double prevRate = stepGroups[0].Key;
+                for (int gi = 1; gi < stepGroups.Count; gi++)
+                {
+                    double required = prevRate + minRateStep;
+                    if (stepGroups[gi].Key < required)
+                    {
+                        foreach (var zone in stepGroups[gi])
+                            zone.Rates[ZoneFields.ProductA] = required;
+                        prevRate = required;
+                    }
+                    else
+                    {
+                        prevRate = stepGroups[gi].Key;
+                    }
+                }
+            }
+
+            // Renumber zones sequentially (some bins may produce no geometry and get skipped,
+            // leaving gaps like Zone 1, 3, 5, 6) and update the rate in the name to reflect
+            // any min-step adjustment made above.
+            {
+                var nameGroups = result
+                    .GroupBy(z => z.Rates[ZoneFields.ProductA])
+                    .OrderBy(g => g.Key)
+                    .ToList();
+
+                int zoneNum = 1;
+                foreach (var group in nameGroups)
+                {
+                    double displayRate = group.Key;
+                    int partNum = 1;
+                    foreach (var zone in group)
+                    {
+                        zone.Name = partNum == 1
+                            ? string.Format("Zone {0} ({1:F0})", zoneNum, displayRate)
+                            : string.Format("Zone {0} ({1:F0}) ({2})", zoneNum, displayRate, partNum);
+                        partNum++;
+                    }
+                    zoneNum++;
+                }
+            }
+
+            return result;
+        }
+
+        private static int[,] FillEmptyCells(int[,] grid, bool[,] mask, int rows, int cols)
+        {
+            var result = (int[,])grid.Clone();
+            bool anyFilled = true;
+            while (anyFilled)
+            {
+                anyFilled = false;
+                for (int r = 0; r < rows; r++)
+                    for (int c = 0; c < cols; c++)
+                    {
+                        if (mask[r, c]) continue;
+                        var counts = new Dictionary<int, int>();
+                        foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                        {
+                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && mask[nr, nc])
+                            {
+                                int z = result[nr, nc];
+                                counts[z] = counts.ContainsKey(z) ? counts[z] + 1 : 1;
+                            }
+                        }
+                        if (counts.Count > 0)
+                        {
+                            result[r, c] = counts.OrderByDescending(kv => kv.Value).First().Key;
+                            mask[r, c] = true;
+                            anyFilled = true;
+                        }
+                    }
+            }
             return result;
         }
 

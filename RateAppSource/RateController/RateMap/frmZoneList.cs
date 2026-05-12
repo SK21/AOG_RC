@@ -356,7 +356,7 @@ namespace RateController.RateMap
 
                 // Footer
                 y += 4;
-                g.DrawString(label1.Text, subFont, Brushes.Black, margin, y);
+                g.DrawString(ZoneCountText(), subFont, Brushes.Black, margin, y);
                 e.HasMorePages = false;
             }
             finally
@@ -434,11 +434,22 @@ namespace RateController.RateMap
             }
         }
 
+        private string ZoneCountText()
+        {
+            var zones = MapController.ZnOverlays?.TargetZoneslist;
+            if (zones == null || zones.Count == 0) return "0 zones";
+            int totalParts = zones.Count;
+            int distinctZones = zones.Select(z => z.Rates[ZoneFields.ProductA]).Distinct().Count();
+            return distinctZones == totalParts
+                ? string.Format("{0} zones", totalParts)
+                : string.Format("{0} zones, {1} parts", distinctZones, totalParts);
+        }
+
         private void UpdateForm(bool UpdateObject = false)
         {
             Initializing = true;
             LoadData(UpdateObject);
-            label1.Text = "Zone count: " + DGV.Rows.Count.ToString();
+            label1.Text = ZoneCountText();
             Initializing = false;
         }
     }

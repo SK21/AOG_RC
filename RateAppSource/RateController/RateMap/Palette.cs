@@ -5,7 +5,7 @@ namespace RateController.RateMap
 {
     public static class Palette
     {
-        public const byte TargetZoneTransparency = 100;
+        public const byte TargetZoneTransparency = 150;
         public const byte ZoneTransparency = 150;
 
         // Rate zones: Blue=low rate, Red=high rate

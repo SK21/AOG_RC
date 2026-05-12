@@ -46,6 +46,10 @@
             this.lblMinSize = new System.Windows.Forms.Label();
             this.tbNumZones = new System.Windows.Forms.TextBox();
             this.lblZoneCount = new System.Windows.Forms.Label();
+            this.tbStep = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lbAreaStep = new System.Windows.Forms.Label();
+            this.btnAdjust = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapping)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,11 +69,11 @@
             this.dgvMapping.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PredefinedAttribute,
             this.ShapeFileAttribute});
-            this.dgvMapping.Location = new System.Drawing.Point(46, 88);
+            this.dgvMapping.Location = new System.Drawing.Point(36, 134);
             this.dgvMapping.Name = "dgvMapping";
             this.dgvMapping.RowHeadersVisible = false;
             this.dgvMapping.RowTemplate.Height = 40;
-            this.dgvMapping.Size = new System.Drawing.Size(395, 308);
+            this.dgvMapping.Size = new System.Drawing.Size(395, 301);
             this.dgvMapping.TabIndex = 8;
             // 
             // PredefinedAttribute
@@ -97,7 +101,7 @@
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
-            this.btnSave.Location = new System.Drawing.Point(414, 519);
+            this.btnSave.Location = new System.Drawing.Point(414, 551);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(82, 64);
             this.btnSave.TabIndex = 7;
@@ -113,7 +117,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(319, 519);
+            this.btnCancel.Location = new System.Drawing.Point(319, 551);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(89, 64);
             this.btnCancel.TabIndex = 379;
@@ -124,7 +128,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(52, 44);
+            this.label1.Location = new System.Drawing.Point(42, 90);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 24);
             this.label1.TabIndex = 380;
@@ -132,7 +136,7 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(134, 41);
+            this.tbName.Location = new System.Drawing.Point(124, 87);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(225, 29);
             this.tbName.TabIndex = 0;
@@ -143,7 +147,7 @@
             this.btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBuild.Image = global::RateController.Properties.Resources.Start;
             this.btnBuild.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBuild.Location = new System.Drawing.Point(173, 402);
+            this.btnBuild.Location = new System.Drawing.Point(217, 9);
             this.btnBuild.Name = "btnBuild";
             this.btnBuild.Size = new System.Drawing.Size(132, 72);
             this.btnBuild.TabIndex = 381;
@@ -156,7 +160,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 9);
+            this.label2.Location = new System.Drawing.Point(12, 33);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(167, 24);
             this.label2.TabIndex = 382;
@@ -166,7 +170,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 477);
+            this.label3.Location = new System.Drawing.Point(12, 465);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(181, 24);
             this.label3.TabIndex = 383;
@@ -215,15 +219,62 @@
             this.lblZoneCount.AutoSize = true;
             this.lblZoneCount.Location = new System.Drawing.Point(12, 521);
             this.lblZoneCount.Name = "lblZoneCount";
-            this.lblZoneCount.Size = new System.Drawing.Size(158, 24);
+            this.lblZoneCount.Size = new System.Drawing.Size(105, 24);
             this.lblZoneCount.TabIndex = 441;
-            this.lblZoneCount.Text = "Number of Zones";
+            this.lblZoneCount.Text = "Max Zones";
+            // 
+            // tbStep
+            // 
+            this.tbStep.Location = new System.Drawing.Point(173, 589);
+            this.tbStep.Name = "tbStep";
+            this.tbStep.Size = new System.Drawing.Size(69, 29);
+            this.tbStep.TabIndex = 447;
+            this.tbStep.Text = "5";
+            this.tbStep.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbStep.Enter += new System.EventHandler(this.tbStep_Enter);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 591);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(128, 24);
+            this.label4.TabIndex = 446;
+            this.label4.Text = "Min zone step";
+            // 
+            // lbAreaStep
+            // 
+            this.lbAreaStep.AutoSize = true;
+            this.lbAreaStep.Location = new System.Drawing.Point(253, 592);
+            this.lbAreaStep.Name = "lbAreaStep";
+            this.lbAreaStep.Size = new System.Drawing.Size(33, 24);
+            this.lbAreaStep.TabIndex = 448;
+            this.lbAreaStep.Text = "Ac";
+            // 
+            // btnAdjust
+            // 
+            this.btnAdjust.FlatAppearance.BorderSize = 0;
+            this.btnAdjust.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdjust.Image = global::RateController.Properties.Resources.Start;
+            this.btnAdjust.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdjust.Location = new System.Drawing.Point(217, 441);
+            this.btnAdjust.Name = "btnAdjust";
+            this.btnAdjust.Size = new System.Drawing.Size(132, 72);
+            this.btnAdjust.TabIndex = 449;
+            this.btnAdjust.Text = "Adjust";
+            this.btnAdjust.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnAdjust.UseVisualStyleBackColor = true;
+            this.btnAdjust.Click += new System.EventHandler(this.btnAdjust_Click);
             // 
             // frmImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(508, 597);
+            this.ClientSize = new System.Drawing.Size(508, 627);
+            this.Controls.Add(this.btnAdjust);
+            this.Controls.Add(this.lbAreaStep);
+            this.Controls.Add(this.tbStep);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.lbArea);
             this.Controls.Add(this.tbMinZoneSize);
             this.Controls.Add(this.lblMinSize);
@@ -270,5 +321,9 @@
         private System.Windows.Forms.Label lblMinSize;
         private System.Windows.Forms.TextBox tbNumZones;
         private System.Windows.Forms.Label lblZoneCount;
+        private System.Windows.Forms.TextBox tbStep;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lbAreaStep;
+        private System.Windows.Forms.Button btnAdjust;
     }
 }
