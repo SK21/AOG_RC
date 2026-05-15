@@ -63,6 +63,44 @@ namespace RateController.RateMap
             return new List<string>();
         }
 
+        public List<string> GetNumericVaryingAttributes(string shapefilePath, int sampleSize = 100)
+        {
+            var columnValues = new Dictionary<string, HashSet<string>>();
+            bool first = true;
+            int count = 0;
+            try
+            {
+                using (var shapefile = Shapefile.OpenRead(shapefilePath))
+                {
+                    foreach (var feature in shapefile)
+                    {
+                        if (first)
+                        {
+                            foreach (var name in feature.Attributes.GetNames())
+                                columnValues[name] = new HashSet<string>();
+                            first = false;
+                        }
+                        foreach (var name in columnValues.Keys.ToList())
+                        {
+                            var val = feature.Attributes[name]?.ToString();
+                            if (val != null) columnValues[name].Add(val);
+                        }
+                        if (++count >= sampleSize) break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("ShapefileHelper/GetNumericVaryingAttributes: " + ex.Message);
+            }
+            return columnValues
+                .Where(kvp => kvp.Value.Count > 1 &&
+                    kvp.Value.All(v => double.TryParse(v, System.Globalization.NumberStyles.Any,
+                        System.Globalization.CultureInfo.InvariantCulture, out _)))
+                .Select(kvp => kvp.Key)
+                .ToList();
+        }
+
         public bool SaveMapZones(string shapefilePath, List<MapZone> ZonesToSave)
         {
             bool Result = false;
@@ -259,6 +297,7 @@ namespace RateController.RateMap
 
             if (string.IsNullOrEmpty(primaryProduct)) primaryProduct = DetectPrimaryProduct(zones);
             zoneCount = Math.Max(2, Math.Min(20, zoneCount));
+            Props.WriteErrorLog(string.Format("SimplifyGrid: inputZones={0}, zoneCount={1}, primaryProduct={2}", zones.Count, zoneCount, primaryProduct));
 
             // ── Build spatial grid from cell centroids ────────────────────────────
             double minX = zones.Min(z => z.Geometry.EnvelopeInternal.MinX);
@@ -273,6 +312,7 @@ namespace RateController.RateMap
 
             int cols = Math.Max(1, (int)Math.Round((maxX - minX) / cellW0));
             int rows = Math.Max(1, (int)Math.Round((maxY - minY) / cellH0));
+            Props.WriteErrorLog(string.Format("SimplifyGrid: cellW0={0:G4}, cellH0={1:G4}, grid={2}x{3}", cellW0, cellH0, cols, rows));
 
             // Use exact average cell dimensions so constructed rectangles tile seamlessly
             double cellW = (maxX - minX) / cols;
@@ -293,6 +333,11 @@ namespace RateController.RateMap
                 hasCell[r, c]  = true;
                 cellIndex[(r, c)] = z;
             }
+
+            int filledCells = 0;
+            double minRate = double.MaxValue, maxRate = double.MinValue;
+            foreach (var z in zones) { double v = z.Rates.TryGetValue(primaryProduct, out double pv) ? pv : 0; if (v < minRate) minRate = v; if (v > maxRate) maxRate = v; filledCells++; }
+            Props.WriteErrorLog(string.Format("SimplifyGrid: filledCells={0}, rateRange={1:G4} to {2:G4}", filledCells, minRate, maxRate));
 
             // ── Quantile-classify ─────────────────────────────────────────────────
             var flatRates = new List<double>(zones.Count);
@@ -329,12 +374,6 @@ namespace RateController.RateMap
             double sqDegToHa = 111319.0 * 111319.0 * Math.Cos(midLat) / 10000.0;
             int    minCells  = Math.Max(1, (int)(minZoneHa / sqDegToHa / (cellW * cellH)));
             binGrid = GridSieveSmallRegions(binGrid, hasCell, rows, cols, minCells);
-
-            // ── Fill empty cells (prescription gaps) ──────────────────────────────
-            // Cells where no original polygon centroid landed have hasCell=false and
-            // would leave visible holes. Flood-fill from filled neighbours so the
-            // entire bounding box is covered. hasCell is updated in-place.
-            binGrid = FillEmptyCells(binGrid, hasCell, rows, cols);
 
             // ── Union cell geometries per bin ─────────────────────────────────────
             // Construct fresh grid-aligned rectangles rather than using the original
@@ -463,37 +502,7 @@ namespace RateController.RateMap
                 }
             }
 
-            return result;
-        }
-
-        private static int[,] FillEmptyCells(int[,] grid, bool[,] mask, int rows, int cols)
-        {
-            var result = (int[,])grid.Clone();
-            bool anyFilled = true;
-            while (anyFilled)
-            {
-                anyFilled = false;
-                for (int r = 0; r < rows; r++)
-                    for (int c = 0; c < cols; c++)
-                    {
-                        if (mask[r, c]) continue;
-                        var counts = new Dictionary<int, int>();
-                        foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
-                        {
-                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && mask[nr, nc])
-                            {
-                                int z = result[nr, nc];
-                                counts[z] = counts.ContainsKey(z) ? counts[z] + 1 : 1;
-                            }
-                        }
-                        if (counts.Count > 0)
-                        {
-                            result[r, c] = counts.OrderByDescending(kv => kv.Value).First().Key;
-                            mask[r, c] = true;
-                            anyFilled = true;
-                        }
-                    }
-            }
+            Props.WriteErrorLog(string.Format("SimplifyGrid: result={0} zones", result.Count));
             return result;
         }
 

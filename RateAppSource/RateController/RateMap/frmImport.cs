@@ -68,6 +68,9 @@ namespace RateController.Forms
                 }
                 else
                 {
+                    if (rbShapefile.Checked)
+                        RebuildMapZones();
+
                     int.TryParse(tbNumZones.Text, out int zoneCount);
                     double.TryParse(tbMinZoneSize.Text, out double enteredArea);
                     double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
@@ -109,6 +112,9 @@ namespace RateController.Forms
                 }
                 else
                 {
+                    if (rbShapefile.Checked && _simplifiedZones == null)
+                        RebuildMapZones();
+
                     Job JB = JobManager.CurrentJob;
                     if (JB != null && JB.FieldID >= 0)
                     {
@@ -208,7 +214,7 @@ namespace RateController.Forms
             }
         }
 
-        private void BuildFromShapefile()
+        private void RebuildMapZones()
         {
             attributeMapping = new Dictionary<string, string>();
             foreach (DataGridViewRow row in dgvMapping.Rows)
@@ -218,11 +224,15 @@ namespace RateController.Forms
                 if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
                     attributeMapping[predefined] = shapefileAttribute;
             }
-
             var shapefileHelper = new ShapefileHelper();
             _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
             _simplifiedZones = null;
             _importedZoneCount = _mapZones.Count;
+        }
+
+        private void BuildFromShapefile()
+        {
+            RebuildMapZones();
             tbNumZones.Text = _importedZoneCount.ToString();
             AutoSelectProduct();
         }
@@ -274,6 +284,7 @@ namespace RateController.Forms
         {
             var shapefileHelper = new ShapefileHelper();
             var shapefileAttributes = shapefileHelper.GetShapefileAttributes(selectedShapefilePath);
+            var numericVarying = shapefileHelper.GetNumericVaryingAttributes(selectedShapefilePath);
 
             if (DGV.Columns["ShapefileAttribute"] is DataGridViewComboBoxColumn bx)
             {
@@ -282,6 +293,8 @@ namespace RateController.Forms
             }
 
             var predefinedAttributes = new[] { ZoneFields.Name, ZoneFields.ProductA, ZoneFields.ProductB, ZoneFields.ProductC, ZoneFields.ProductD, ZoneFields.Color };
+            var productFields = new HashSet<string> { ZoneFields.ProductA, ZoneFields.ProductB, ZoneFields.ProductC, ZoneFields.ProductD };
+            var claimed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             DGV.Rows.Clear();
 
@@ -289,6 +302,13 @@ namespace RateController.Forms
             {
                 string matched = shapefileAttributes
                     .FirstOrDefault(attr => string.Equals(attr, predefined, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+
+                if (string.IsNullOrEmpty(matched) && productFields.Contains(predefined))
+                    matched = numericVarying.FirstOrDefault(attr => !claimed.Contains(attr)) ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(matched))
+                    claimed.Add(matched);
+
                 DGV.Rows.Add(predefined, matched);
             }
         }
