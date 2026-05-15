@@ -22,28 +22,26 @@ namespace RateController.Forms
             InitializeComponent();
             dgvMapping.AutoGenerateColumns = false;
             dgvMapping.AllowUserToAddRows = false;
+            rbShapefile.CheckedChanged += new EventHandler(rbMode_CheckedChanged);
+            rbXML.CheckedChanged += new EventHandler(rbMode_CheckedChanged);
         }
 
         private void btnBuild_Click(object sender, EventArgs e)
         {
             try
             {
-                if (string.IsNullOrEmpty(selectedShapefilePath)) return;
-
-                attributeMapping = new Dictionary<string, string>();
-                foreach (DataGridViewRow row in dgvMapping.Rows)
+                if (rbXML.Checked)
                 {
-                    var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
-                    var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
-                    if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
-                        attributeMapping[predefined] = shapefileAttribute;
+                    SelectXmlFile();
                 }
-
-                var shapefileHelper = new ShapefileHelper();
-                _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
-                _simplifiedZones = null;
-                _importedZoneCount = _mapZones.Count;
-                tbNumZones.Text = _importedZoneCount.ToString();
+                else if (!string.IsNullOrEmpty(selectedShapefilePath))
+                {
+                    BuildFromShapefile();
+                }
+                else
+                {
+                    SelectShapefile(dgvMapping);
+                }
             }
             catch (Exception ex)
             {
@@ -62,24 +60,25 @@ namespace RateController.Forms
             {
                 if (_mapZones == null)
                 {
-                    Props.ShowMessage("Import the shapefile first (Step 1).");
-                    return;
+                    Props.ShowMessage("Import data first (Step 1).");
                 }
+                else
+                {
+                    int.TryParse(tbNumZones.Text, out int zoneCount);
+                    double.TryParse(tbMinZoneSize.Text, out double enteredArea);
+                    double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
+                    double.TryParse(tbStep.Text, out double minRateStep);
+                    Props.SetProp("ImportMinRateStep", tbStep.Text);
+                    Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
 
-                int.TryParse(tbNumZones.Text, out int zoneCount);
-                double.TryParse(tbMinZoneSize.Text, out double enteredArea);
-                double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
-                double.TryParse(tbStep.Text, out double minRateStep);
-                Props.SetProp("ImportMinRateStep", tbStep.Text);
-                Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
+                    var helper = new ShapefileHelper();
+                    _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep);
 
-                var helper = new ShapefileHelper();
-                _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep);
-
-                int distinctZones = _simplifiedZones
-                    .Select(z => z.Rates[ZoneFields.ProductA])
-                    .Distinct().Count();
-                Props.ShowMessage(string.Format("{0} zones created.", distinctZones));
+                    int distinctZones = _simplifiedZones
+                        .Select(z => z.Rates[ZoneFields.ProductA])
+                        .Distinct().Count();
+                    Props.ShowMessage(string.Format("{0} zones created.", distinctZones));
+                }
             }
             catch (Exception ex)
             {
@@ -93,38 +92,39 @@ namespace RateController.Forms
             {
                 if (_mapZones == null)
                 {
-                    Props.ShowMessage("Import the shapefile first (Step 1).");
-                    return;
+                    Props.ShowMessage("Import data first (Step 1).");
                 }
-
-                Job JB = JobManager.CurrentJob;
-                if (JB != null && JB.FieldID >= 0)
+                else
                 {
-                    string Fname = Path.GetFileName(tbName.Text);
-                    if (FileNameValidator.IsValidFileName(Fname))
+                    Job JB = JobManager.CurrentJob;
+                    if (JB != null && JB.FieldID >= 0)
                     {
-                        ParcelManager.EnsureFieldFolders(JB.FieldID);
-                        JobManager.SetActivePrescription(JB.ID, Fname + ".shp");
-                        string MP = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
-
-                        var helper = new ShapefileHelper();
-                        var zonesToSave = _simplifiedZones ?? _mapZones;
-
-                        if (helper.SaveMapZones(MP, zonesToSave))
+                        string Fname = Path.GetFileName(tbName.Text);
+                        if (FileNameValidator.IsValidFileName(Fname))
                         {
-                            MapController.LoadMap();
-                            JobManager.SetActivePrescription(JB.ID, Path.GetFileName(MP));
-                            Props.ShowMessage("Prescription saved.");
-                            this.Close();
+                            ParcelManager.EnsureFieldFolders(JB.FieldID);
+                            JobManager.SetActivePrescription(JB.ID, Fname + ".shp");
+                            string MP = Path.Combine(ParcelManager.MapsFolder(JB.FieldID), JB.ActivePrescription);
+
+                            var helper = new ShapefileHelper();
+                            var zonesToSave = _simplifiedZones ?? _mapZones;
+
+                            if (helper.SaveMapZones(MP, zonesToSave))
+                            {
+                                MapController.LoadMap();
+                                JobManager.SetActivePrescription(JB.ID, Path.GetFileName(MP));
+                                Props.ShowMessage("Prescription saved.");
+                                this.Close();
+                            }
+                            else
+                            {
+                                Props.ShowMessage("Failed to save prescription.");
+                            }
                         }
                         else
                         {
-                            Props.ShowMessage("Failed to save prescription.");
+                            Props.ShowMessage("Invalid file name.", "Help", 10000);
                         }
-                    }
-                    else
-                    {
-                        Props.ShowMessage("Invalid file name.", "Help", 10000);
                     }
                 }
             }
@@ -148,33 +148,75 @@ namespace RateController.Forms
             tbStep.Text = Props.GetProp("ImportMinRateStep").Length > 0 ? Props.GetProp("ImportMinRateStep") : "5";
             tbMinZoneSize.Text = Props.GetProp("ImportMinZoneSize").Length > 0 ? Props.GetProp("ImportMinZoneSize") : "0";
             SetLanguage();
-            SelectShapefile(dgvMapping);
+            UpdateModeUI();
         }
 
-        private void LoadShapefileAttributes(DataGridView dgvMapping)
+        private void rbMode_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedShapefilePath = string.Empty;
+            _mapZones = null;
+            _simplifiedZones = null;
+            UpdateModeUI();
+        }
+
+        private void UpdateModeUI()
+        {
+            dgvMapping.Enabled = rbShapefile.Checked;
+        }
+
+        private void BuildFromShapefile()
+        {
+            attributeMapping = new Dictionary<string, string>();
+            foreach (DataGridViewRow row in dgvMapping.Rows)
+            {
+                var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
+                var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
+                if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
+                    attributeMapping[predefined] = shapefileAttribute;
+            }
+
+            var shapefileHelper = new ShapefileHelper();
+            _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
+            _simplifiedZones = null;
+            _importedZoneCount = _mapZones.Count;
+            tbNumZones.Text = _importedZoneCount.ToString();
+        }
+
+        private void SelectXmlFile()
+        {
+            using (var ofd = new OpenFileDialog { Title = "Open prescription XML.", Filter = "XML files (*.xml)|*.xml" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    _mapZones = AgGrowXmlParser.Parse(ofd.FileName);
+                    _simplifiedZones = null;
+                    _importedZoneCount = _mapZones.Count;
+                    tbNumZones.Text = _importedZoneCount.ToString();
+                    tbName.Text = Path.GetFileNameWithoutExtension(ofd.FileName);
+                }
+            }
+        }
+
+        private void LoadShapefileAttributes(DataGridView DGV)
         {
             var shapefileHelper = new ShapefileHelper();
             var shapefileAttributes = shapefileHelper.GetShapefileAttributes(selectedShapefilePath);
 
-            // add shapefile attribute names
-            if (dgvMapping.Columns["ShapefileAttribute"] is DataGridViewComboBoxColumn bx)
+            if (DGV.Columns["ShapefileAttribute"] is DataGridViewComboBoxColumn bx)
             {
                 bx.Items.Clear();
                 bx.Items.AddRange(shapefileAttributes.ToArray());
             }
 
-            // Map predefined attributes to shapefile attributes
             var predefinedAttributes = new[] { ZoneFields.Name, ZoneFields.ProductA, ZoneFields.ProductB, ZoneFields.ProductC, ZoneFields.ProductD, ZoneFields.Color };
 
-            dgvMapping.Rows.Clear();
+            DGV.Rows.Clear();
 
-            // Auto-match: try to find a shapefile attribute with the same name (case-insensitive)
             foreach (var predefined in predefinedAttributes)
             {
                 string matched = shapefileAttributes
                     .FirstOrDefault(attr => string.Equals(attr, predefined, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
-
-                dgvMapping.Rows.Add(predefined, matched);
+                DGV.Rows.Add(predefined, matched);
             }
         }
 
@@ -190,10 +232,6 @@ namespace RateController.Forms
                     tbName.SelectionLength = 0;
                     tbName.ScrollToCaret();
                     LoadShapefileAttributes(DGV);
-                }
-                else
-                {
-                    Close();
                 }
             }
         }

@@ -458,6 +458,7 @@
     <Compile Include="Printing\RichTexBoxPrinterRTF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RateMap\AgGrowXmlParser.cs" />
     <Compile Include="RateMap\ArcGIS_World_Imagery_Provider.cs" />
     <Compile Include="RateMap\CoverageTrail.cs" />
     <Compile Include="RateMap\DataCollector.cs" />
@@ -502,6 +503,7 @@
     <Compile Include="RateMap\RateReading.cs" />
     <Compile Include="RateMap\ShapefileHelper.cs" />
     <Compile Include="RateMap\ProductivityZoneCreator.cs" />
+    <Compile Include="RateMap\VrtGridImporter.cs" />
     <Compile Include="RateMap\YieldOverlayCreator.cs" />
     <Compile Include="RateMap\ZoneManager.cs" />
     <EmbeddedResource Include="Forms\FormNumeric.resx">

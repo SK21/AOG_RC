@@ -396,7 +396,6 @@
             this.MinimizeBox = false;
             this.Name = "frmZoneList";
             this.ShowInTaskbar = false;
-            this.Text = "Zone List";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmZoneList_FormClosing);
             this.Load += new System.EventHandler(this.frmZoneList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();

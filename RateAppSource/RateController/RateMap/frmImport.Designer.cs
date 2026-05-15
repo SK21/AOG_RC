@@ -50,6 +50,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.lbAreaStep = new System.Windows.Forms.Label();
             this.btnAdjust = new System.Windows.Forms.Button();
+            this.rbShapefile = new System.Windows.Forms.RadioButton();
+            this.rbXML = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapping)).BeginInit();
             this.SuspendLayout();
             // 
@@ -128,7 +130,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(42, 90);
+            this.label1.Location = new System.Drawing.Point(33, 102);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 24);
             this.label1.TabIndex = 380;
@@ -136,7 +138,7 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(124, 87);
+            this.tbName.Location = new System.Drawing.Point(115, 99);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(225, 29);
             this.tbName.TabIndex = 0;
@@ -266,11 +268,40 @@
             this.btnAdjust.UseVisualStyleBackColor = true;
             this.btnAdjust.Click += new System.EventHandler(this.btnAdjust_Click);
             // 
+            // rbShapefile
+            // 
+            this.rbShapefile.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbShapefile.Checked = true;
+            this.rbShapefile.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbShapefile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbShapefile.Location = new System.Drawing.Point(371, 12);
+            this.rbShapefile.Name = "rbShapefile";
+            this.rbShapefile.Size = new System.Drawing.Size(125, 36);
+            this.rbShapefile.TabIndex = 450;
+            this.rbShapefile.Text = "Shape file";
+            this.rbShapefile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbShapefile.UseVisualStyleBackColor = true;
+            // 
+            // rbXML
+            // 
+            this.rbXML.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbXML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbXML.Location = new System.Drawing.Point(371, 54);
+            this.rbXML.Name = "rbXML";
+            this.rbXML.Size = new System.Drawing.Size(125, 36);
+            this.rbXML.TabIndex = 451;
+            this.rbXML.Text = "XML";
+            this.rbXML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbXML.UseVisualStyleBackColor = true;
+            // 
             // frmImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(508, 627);
+            this.Controls.Add(this.rbXML);
+            this.Controls.Add(this.rbShapefile);
             this.Controls.Add(this.btnAdjust);
             this.Controls.Add(this.lbAreaStep);
             this.Controls.Add(this.tbStep);
@@ -325,5 +356,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lbAreaStep;
         private System.Windows.Forms.Button btnAdjust;
+        private System.Windows.Forms.RadioButton rbShapefile;
+        private System.Windows.Forms.RadioButton rbXML;
     }
 }
