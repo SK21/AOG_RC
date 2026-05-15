@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RateController.Forms
@@ -16,6 +17,7 @@ namespace RateController.Forms
         private List<MapZone> _mapZones;
         private List<MapZone> _simplifiedZones;
         private int _importedZoneCount;
+        private string[] _xmlLayerNames;
 
         public frmImport()
         {
@@ -26,13 +28,13 @@ namespace RateController.Forms
             rbXML.CheckedChanged += new EventHandler(rbMode_CheckedChanged);
         }
 
-        private void btnBuild_Click(object sender, EventArgs e)
+        private async void btnBuild_Click(object sender, EventArgs e)
         {
             try
             {
                 if (rbXML.Checked)
                 {
-                    SelectXmlFile();
+                    await SelectXmlFileAsync();
                 }
                 else if (!string.IsNullOrEmpty(selectedShapefilePath))
                 {
@@ -41,6 +43,8 @@ namespace RateController.Forms
                 else
                 {
                     SelectShapefile(dgvMapping);
+                    if (!string.IsNullOrEmpty(selectedShapefilePath))
+                        BuildFromShapefile();
                 }
             }
             catch (Exception ex)
@@ -71,11 +75,20 @@ namespace RateController.Forms
                     Props.SetProp("ImportMinRateStep", tbStep.Text);
                     Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
 
-                    var helper = new ShapefileHelper();
-                    _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep);
+                    string primaryProduct = ZoneFields.Products[Math.Max(0, Math.Min(ZoneFields.Products.Length - 1, cboProduct.SelectedIndex))];
+                    if (rbXML.Checked)
+                    {
+                        var xmlHelper = new XmlHelper();
+                        _simplifiedZones = xmlHelper.SimplifyZones(_mapZones, zoneCount, minZoneHa, minRateStep, primaryProduct);
+                    }
+                    else
+                    {
+                        var helper = new ShapefileHelper();
+                        _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep, primaryProduct);
+                    }
 
                     int distinctZones = _simplifiedZones
-                        .Select(z => z.Rates[ZoneFields.ProductA])
+                        .Select(z => string.Join("|", ZoneFields.Products.Select(p => z.Rates.TryGetValue(p, out double v) ? ((long)Math.Round(v * 10)).ToString() : "0")))
                         .Distinct().Count();
                     Props.ShowMessage(string.Format("{0} zones created.", distinctZones));
                 }
@@ -147,6 +160,8 @@ namespace RateController.Forms
             lbAreaStep.Text = lbArea.Text;
             tbStep.Text = Props.GetProp("ImportMinRateStep").Length > 0 ? Props.GetProp("ImportMinRateStep") : "5";
             tbMinZoneSize.Text = Props.GetProp("ImportMinZoneSize").Length > 0 ? Props.GetProp("ImportMinZoneSize") : "0";
+            cboProduct.Items.AddRange(new object[] { "A", "B", "C", "D", "E" });
+            cboProduct.SelectedIndex = 0;
             SetLanguage();
             UpdateModeUI();
         }
@@ -156,12 +171,41 @@ namespace RateController.Forms
             selectedShapefilePath = string.Empty;
             _mapZones = null;
             _simplifiedZones = null;
+            _xmlLayerNames = null;
             UpdateModeUI();
         }
 
         private void UpdateModeUI()
         {
-            dgvMapping.Enabled = rbShapefile.Checked;
+            bool xmlMode = rbXML.Checked;
+            dgvMapping.Enabled = !xmlMode;
+            dgvMapping.Rows.Clear();
+            dgvMapping.Columns[1].HeaderText = xmlMode ? "Product Name" : Lang.lgShapefileAttributes;
+            if (xmlMode && _xmlLayerNames != null)
+                ShowXmlLayerNames();
+        }
+
+        private void AutoSelectProduct()
+        {
+            if (_mapZones == null || _mapZones.Count == 0) return;
+            string best = ShapefileHelper.DetectPrimaryProduct(_mapZones);
+            int idx = Array.IndexOf(ZoneFields.Products, best);
+            if (idx >= 0 && idx < cboProduct.Items.Count)
+                cboProduct.SelectedIndex = idx;
+        }
+
+        private void ShowXmlLayerNames()
+        {
+            for (int i = 0; i < _xmlLayerNames.Length && i < ZoneFields.Products.Length; i++)
+            {
+                string name = _xmlLayerNames[i];
+                if (string.IsNullOrEmpty(name)) continue;
+                int rowIdx = dgvMapping.Rows.Add(ZoneFields.Products[i]);
+                var cell = (DataGridViewComboBoxCell)dgvMapping.Rows[rowIdx].Cells[1];
+                cell.Items.Clear();
+                cell.Items.Add(name);
+                cell.Value = name;
+            }
         }
 
         private void BuildFromShapefile()
@@ -180,21 +224,50 @@ namespace RateController.Forms
             _simplifiedZones = null;
             _importedZoneCount = _mapZones.Count;
             tbNumZones.Text = _importedZoneCount.ToString();
+            AutoSelectProduct();
         }
 
-        private void SelectXmlFile()
+        private async Task SelectXmlFileAsync()
         {
+            string path;
             using (var ofd = new OpenFileDialog { Title = "Open prescription XML.", Filter = "XML files (*.xml)|*.xml" })
             {
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    _mapZones = AgGrowXmlParser.Parse(ofd.FileName);
-                    _simplifiedZones = null;
-                    _importedZoneCount = _mapZones.Count;
-                    tbNumZones.Text = _importedZoneCount.ToString();
-                    tbName.Text = Path.GetFileNameWithoutExtension(ofd.FileName);
-                }
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+                path = ofd.FileName;
             }
+
+            btnBuild.Enabled = false;
+            btnAdjust.Enabled = false;
+            btnSave.Enabled = false;
+            var importMsg = Props.ShowMessageForm("Importing...", "Import", 60000);
+
+            List<MapZone> zones = null;
+            string[] layerNames = null;
+            try
+            {
+                (zones, layerNames) = await Task.Run(() =>
+                {
+                    var z = AgGrowXmlParser.Parse(path, out string[] names);
+                    return (z, names);
+                });
+            }
+            finally
+            {
+                if (!importMsg.IsDisposed) importMsg.Close();
+                btnBuild.Enabled = true;
+                btnAdjust.Enabled = true;
+                btnSave.Enabled = true;
+            }
+
+            _mapZones = zones;
+            _xmlLayerNames = layerNames;
+            _simplifiedZones = null;
+            _importedZoneCount = _mapZones?.Count ?? 0;
+            tbNumZones.Text = _importedZoneCount.ToString();
+            tbName.Text = Path.GetFileNameWithoutExtension(path);
+            dgvMapping.Rows.Clear();
+            ShowXmlLayerNames();
+            AutoSelectProduct();
         }
 
         private void LoadShapefileAttributes(DataGridView DGV)
@@ -256,9 +329,9 @@ namespace RateController.Forms
         private void tbNumZones_Enter(object sender, EventArgs e)
         {
             double.TryParse(tbNumZones.Text, out double current);
-            using (var form = new AgOpenGPS.FormNumeric(2, 8, current))
+            using (var form = new AgOpenGPS.FormNumeric(2, 20, current))
             {
-                form.Text = "Number of zones (2-8)";
+                form.Text = "Number of zones (2-20)";
                 if (form.ShowDialog() == DialogResult.OK)
                     tbNumZones.Text = ((int)form.ReturnValue).ToString();
             }

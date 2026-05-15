@@ -80,7 +80,9 @@ namespace RateController.RateMap
                     Dictionary<string, double> rateDict = BuildRateDict(groupRates);
                     Color color = Palette.GetColor(zoneIndex, trns: 255);
 
-                    AddZones(result, mergedWgs84, rateDict, color, zoneIndex++);
+                    int countBefore = result.Count;
+                    AddZones(result, mergedWgs84, rateDict, color, zoneIndex);
+                    if (result.Count > countBefore) zoneIndex++;
                 }
             }
             catch (Exception ex)

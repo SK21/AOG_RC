@@ -231,7 +231,7 @@ namespace RateController.RateMap
                 var zones = MapController.ZnOverlays?.TargetZoneslist;
                 if (zones != null && zones.Count > 0)
                 {
-                    foreach (var zone in zones.OrderBy(z => z.Name))
+                    foreach (var zone in zones.OrderBy(z => ExtractZoneNumber(z.Name)).ThenBy(z => z.Name))
                     {
                         DataRow Rw = dataSet1.Tables[0].NewRow();
                         Rw[0] = zone.Name;
@@ -434,12 +434,22 @@ namespace RateController.RateMap
             }
         }
 
+        private static int ExtractZoneNumber(string name)
+        {
+            if (!name.StartsWith("Zone ")) return int.MaxValue;
+            int start = 5, end = 5;
+            while (end < name.Length && char.IsDigit(name[end])) end++;
+            return end > start && int.TryParse(name.Substring(start, end - start), out int n) ? n : int.MaxValue;
+        }
+
         private string ZoneCountText()
         {
             var zones = MapController.ZnOverlays?.TargetZoneslist;
             if (zones == null || zones.Count == 0) return "0 zones";
             int totalParts = zones.Count;
-            int distinctZones = zones.Select(z => z.Rates[ZoneFields.ProductA]).Distinct().Count();
+            int distinctZones = zones
+                .Select(z => string.Join("|", ZoneFields.Products.Select(p => z.Rates.TryGetValue(p, out double v) ? ((long)Math.Round(v * 10)).ToString() : "0")))
+                .Distinct().Count();
             return distinctZones == totalParts
                 ? string.Format("{0} zones", totalParts)
                 : string.Format("{0} zones, {1} parts", distinctZones, totalParts);

@@ -234,12 +234,31 @@ namespace RateController.RateMap
                    File.Exists(pathWithoutExtension + ".dbf");
         }
 
-        public List<MapZone> SimplifyPrescriptionGrid(List<MapZone> zones, int zoneCount, double minZoneHa = 1.0, double minRateStep = 0.0)
+        public static string DetectPrimaryProduct(List<MapZone> zones)
+        {
+            string best = ZoneFields.ProductA;
+            int bestDistinct = 0;
+            foreach (var product in ZoneFields.Products)
+            {
+                int distinct = zones
+                    .Select(z => z.Rates.TryGetValue(product, out double v) ? v : 0)
+                    .Distinct().Count();
+                if (distinct > bestDistinct)
+                {
+                    bestDistinct = distinct;
+                    best = product;
+                }
+            }
+            return best;
+        }
+
+        public List<MapZone> SimplifyPrescriptionGrid(List<MapZone> zones, int zoneCount, double minZoneHa = 1.0, double minRateStep = 0.0, string primaryProduct = null)
         {
             var result = new List<MapZone>();
             if (zones == null || zones.Count == 0) return result;
 
-            zoneCount = Math.Max(2, Math.Min(8, zoneCount));
+            if (string.IsNullOrEmpty(primaryProduct)) primaryProduct = DetectPrimaryProduct(zones);
+            zoneCount = Math.Max(2, Math.Min(20, zoneCount));
 
             // ── Build spatial grid from cell centroids ────────────────────────────
             double minX = zones.Min(z => z.Geometry.EnvelopeInternal.MinX);
@@ -270,7 +289,7 @@ namespace RateController.RateMap
                 double cy = (env.MinY + env.MaxY) / 2.0;
                 int c = Math.Max(0, Math.Min(cols - 1, (int)((cx - minX) / cellW)));
                 int r = Math.Max(0, Math.Min(rows - 1, (int)((cy - minY) / cellH)));
-                rateGrid[r, c] = z.Rates[ZoneFields.ProductA];
+                rateGrid[r, c] = z.Rates.TryGetValue(primaryProduct, out double pv) ? pv : 0;
                 hasCell[r, c]  = true;
                 cellIndex[(r, c)] = z;
             }
@@ -312,12 +331,10 @@ namespace RateController.RateMap
             binGrid = GridSieveSmallRegions(binGrid, hasCell, rows, cols, minCells);
 
             // ── Fill empty cells (prescription gaps) ──────────────────────────────
-            // Only fill small connected empty regions (edge artefacts where no centroid
-            // landed). Large empty regions — yard sites, field-exterior bounding-box
-            // corners — are intentional and must NOT be filled. Use minCells as the
-            // upper limit so anything smaller than the minimum zone size is treated as
-            // a gap, but anything larger is left blank.
-            binGrid = FillEmptyCells(binGrid, hasCell, rows, cols, Math.Max(minCells, 4));
+            // Cells where no original polygon centroid landed have hasCell=false and
+            // would leave visible holes. Flood-fill from filled neighbours so the
+            // entire bounding box is covered. hasCell is updated in-place.
+            binGrid = FillEmptyCells(binGrid, hasCell, rows, cols);
 
             // ── Union cell geometries per bin ─────────────────────────────────────
             // Construct fresh grid-aligned rectangles rather than using the original
@@ -371,13 +388,13 @@ namespace RateController.RateMap
                             binZones.Add(z);
                 if (binZones.Count == 0) continue;
 
-                var binRatesSorted = binZones.Select(z => z.Rates[ZoneFields.ProductA]).OrderBy(v => v).ToList();
+                var binRatesSorted = binZones.Select(z => z.Rates.TryGetValue(primaryProduct, out double pv) ? pv : 0).OrderBy(v => v).ToList();
                 double medianRate  = binRatesSorted[binRatesSorted.Count / 2];
 
                 var avgRates = new Dictionary<string, double>();
                 foreach (var key in ZoneFields.Products)
                     avgRates[key] = binZones.Average(z => z.Rates[key]);
-                avgRates[ZoneFields.ProductA] = medianRate;
+                avgRates[primaryProduct] = medianRate;
 
                 Color color = Palette.GetProductivityColor(bin, zoneCount, 255);
 
@@ -400,7 +417,7 @@ namespace RateController.RateMap
             if (minRateStep > 0 && result.Count > 1)
             {
                 var stepGroups = result
-                    .GroupBy(z => z.Rates[ZoneFields.ProductA])
+                    .GroupBy(z => z.Rates.TryGetValue(primaryProduct, out double pv) ? pv : 0)
                     .OrderBy(g => g.Key)
                     .ToList();
 
@@ -411,7 +428,7 @@ namespace RateController.RateMap
                     if (stepGroups[gi].Key < required)
                     {
                         foreach (var zone in stepGroups[gi])
-                            zone.Rates[ZoneFields.ProductA] = required;
+                            zone.Rates[primaryProduct] = required;
                         prevRate = required;
                     }
                     else
@@ -426,7 +443,7 @@ namespace RateController.RateMap
             // any min-step adjustment made above.
             {
                 var nameGroups = result
-                    .GroupBy(z => z.Rates[ZoneFields.ProductA])
+                    .GroupBy(z => z.Rates.TryGetValue(primaryProduct, out double pv) ? pv : 0)
                     .OrderBy(g => g.Key)
                     .ToList();
 
@@ -449,66 +466,34 @@ namespace RateController.RateMap
             return result;
         }
 
-        private static int[,] FillEmptyCells(int[,] grid, bool[,] mask, int rows, int cols, int maxGapCells)
+        private static int[,] FillEmptyCells(int[,] grid, bool[,] mask, int rows, int cols)
         {
-            var result  = (int[,])grid.Clone();
-            var visited = new bool[rows, cols];
-
-            for (int r0 = 0; r0 < rows; r0++)
-                for (int c0 = 0; c0 < cols; c0++)
-                {
-                    if (mask[r0, c0] || visited[r0, c0]) continue;
-
-                    // BFS: find all cells in this connected empty region
-                    var cells = new List<(int r, int c)>();
-                    var queue = new Queue<(int, int)>();
-                    queue.Enqueue((r0, c0));
-                    visited[r0, c0] = true;
-                    while (queue.Count > 0)
+            var result = (int[,])grid.Clone();
+            bool anyFilled = true;
+            while (anyFilled)
+            {
+                anyFilled = false;
+                for (int r = 0; r < rows; r++)
+                    for (int c = 0; c < cols; c++)
                     {
-                        var (r, c) = queue.Dequeue();
-                        cells.Add((r, c));
+                        if (mask[r, c]) continue;
+                        var counts = new Dictionary<int, int>();
                         foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
                         {
-                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols
-                                && !mask[nr, nc] && !visited[nr, nc])
+                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && mask[nr, nc])
                             {
-                                visited[nr, nc] = true;
-                                queue.Enqueue((nr, nc));
+                                int z = result[nr, nc];
+                                counts[z] = counts.ContainsKey(z) ? counts[z] + 1 : 1;
                             }
                         }
-                    }
-
-                    // Skip large empty regions — yard sites, field-exterior corners
-                    if (cells.Count > maxGapCells) continue;
-
-                    // Flood-fill this small gap from its filled neighbours
-                    bool anyFilled = true;
-                    while (anyFilled)
-                    {
-                        anyFilled = false;
-                        foreach (var (r, c) in cells)
+                        if (counts.Count > 0)
                         {
-                            if (mask[r, c]) continue;
-                            var counts = new Dictionary<int, int>();
-                            foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
-                            {
-                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && mask[nr, nc])
-                                {
-                                    int z = result[nr, nc];
-                                    counts[z] = counts.ContainsKey(z) ? counts[z] + 1 : 1;
-                                }
-                            }
-                            if (counts.Count > 0)
-                            {
-                                result[r, c] = counts.OrderByDescending(kv => kv.Value).First().Key;
-                                mask[r, c]   = true;
-                                anyFilled    = true;
-                            }
+                            result[r, c] = counts.OrderByDescending(kv => kv.Value).First().Key;
+                            mask[r, c] = true;
+                            anyFilled = true;
                         }
                     }
-                }
-
+            }
             return result;
         }
 

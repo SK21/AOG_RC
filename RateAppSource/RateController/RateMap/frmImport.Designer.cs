@@ -52,6 +52,8 @@
             this.btnAdjust = new System.Windows.Forms.Button();
             this.rbShapefile = new System.Windows.Forms.RadioButton();
             this.rbXML = new System.Windows.Forms.RadioButton();
+            this.lbProduct = new System.Windows.Forms.Label();
+            this.cboProduct = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapping)).BeginInit();
             this.SuspendLayout();
             // 
@@ -103,7 +105,7 @@
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Image = global::RateController.Properties.Resources.Save;
-            this.btnSave.Location = new System.Drawing.Point(414, 551);
+            this.btnSave.Location = new System.Drawing.Point(413, 551);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(82, 64);
             this.btnSave.TabIndex = 7;
@@ -119,7 +121,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(319, 551);
+            this.btnCancel.Location = new System.Drawing.Point(318, 551);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(89, 64);
             this.btnCancel.TabIndex = 379;
@@ -149,7 +151,7 @@
             this.btnBuild.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBuild.Image = global::RateController.Properties.Resources.Start;
             this.btnBuild.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBuild.Location = new System.Drawing.Point(217, 9);
+            this.btnBuild.Location = new System.Drawing.Point(362, 12);
             this.btnBuild.Name = "btnBuild";
             this.btnBuild.Size = new System.Drawing.Size(132, 72);
             this.btnBuild.TabIndex = 381;
@@ -193,6 +195,7 @@
             this.tbMinZoneSize.Name = "tbMinZoneSize";
             this.tbMinZoneSize.Size = new System.Drawing.Size(69, 29);
             this.tbMinZoneSize.TabIndex = 444;
+            this.tbMinZoneSize.TabStop = false;
             this.tbMinZoneSize.Text = "0";
             this.tbMinZoneSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbMinZoneSize.Enter += new System.EventHandler(this.tbMinZoneSize_Enter);
@@ -212,6 +215,7 @@
             this.tbNumZones.Name = "tbNumZones";
             this.tbNumZones.Size = new System.Drawing.Size(69, 29);
             this.tbNumZones.TabIndex = 442;
+            this.tbNumZones.TabStop = false;
             this.tbNumZones.Text = "5";
             this.tbNumZones.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbNumZones.Enter += new System.EventHandler(this.tbNumZones_Enter);
@@ -231,6 +235,7 @@
             this.tbStep.Name = "tbStep";
             this.tbStep.Size = new System.Drawing.Size(69, 29);
             this.tbStep.TabIndex = 447;
+            this.tbStep.TabStop = false;
             this.tbStep.Text = "5";
             this.tbStep.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbStep.Enter += new System.EventHandler(this.tbStep_Enter);
@@ -259,7 +264,7 @@
             this.btnAdjust.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdjust.Image = global::RateController.Properties.Resources.Start;
             this.btnAdjust.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAdjust.Location = new System.Drawing.Point(217, 441);
+            this.btnAdjust.Location = new System.Drawing.Point(362, 441);
             this.btnAdjust.Name = "btnAdjust";
             this.btnAdjust.Size = new System.Drawing.Size(132, 72);
             this.btnAdjust.TabIndex = 449;
@@ -274,10 +279,11 @@
             this.rbShapefile.Checked = true;
             this.rbShapefile.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbShapefile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbShapefile.Location = new System.Drawing.Point(371, 12);
+            this.rbShapefile.Location = new System.Drawing.Point(215, 12);
             this.rbShapefile.Name = "rbShapefile";
             this.rbShapefile.Size = new System.Drawing.Size(125, 36);
             this.rbShapefile.TabIndex = 450;
+            this.rbShapefile.TabStop = true;
             this.rbShapefile.Text = "Shape file";
             this.rbShapefile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbShapefile.UseVisualStyleBackColor = true;
@@ -287,7 +293,7 @@
             this.rbXML.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbXML.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rbXML.Location = new System.Drawing.Point(371, 54);
+            this.rbXML.Location = new System.Drawing.Point(215, 54);
             this.rbXML.Name = "rbXML";
             this.rbXML.Size = new System.Drawing.Size(125, 36);
             this.rbXML.TabIndex = 451;
@@ -295,11 +301,31 @@
             this.rbXML.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbXML.UseVisualStyleBackColor = true;
             // 
+            // lbProduct
+            // 
+            this.lbProduct.AutoSize = true;
+            this.lbProduct.Location = new System.Drawing.Point(199, 465);
+            this.lbProduct.Name = "lbProduct";
+            this.lbProduct.Size = new System.Drawing.Size(80, 24);
+            this.lbProduct.TabIndex = 452;
+            this.lbProduct.Text = "Product:";
+            // 
+            // cboProduct
+            // 
+            this.cboProduct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboProduct.Location = new System.Drawing.Point(286, 460);
+            this.cboProduct.Name = "cboProduct";
+            this.cboProduct.Size = new System.Drawing.Size(70, 32);
+            this.cboProduct.TabIndex = 453;
+            this.cboProduct.TabStop = false;
+            // 
             // frmImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(508, 627);
+            this.ClientSize = new System.Drawing.Size(507, 627);
+            this.Controls.Add(this.cboProduct);
+            this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.rbXML);
             this.Controls.Add(this.rbShapefile);
             this.Controls.Add(this.btnAdjust);
@@ -358,5 +384,7 @@
         private System.Windows.Forms.Button btnAdjust;
         private System.Windows.Forms.RadioButton rbShapefile;
         private System.Windows.Forms.RadioButton rbXML;
+        private System.Windows.Forms.Label lbProduct;
+        private System.Windows.Forms.ComboBox cboProduct;
     }
 }

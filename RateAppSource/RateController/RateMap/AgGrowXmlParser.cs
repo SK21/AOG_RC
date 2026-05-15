@@ -21,8 +21,9 @@ namespace RateController.RateMap
             catch { return false; }
         }
 
-        public static List<MapZone> Parse(string filePath)
+        public static List<MapZone> Parse(string filePath, out string[] layerNames)
         {
+            layerNames = new string[MaxLayers];
             var result = new List<MapZone>();
             try
             {
@@ -40,6 +41,21 @@ namespace RateController.RateMap
                 {
                     Props.WriteErrorLog("AgGrowXmlParser: missing or invalid <Zone>.");
                     return result;
+                }
+
+                // Applicant names from <General><Layers><Layer><Applicant>, keyed by layer ID.
+                var generalLayers = root.Element("General")?.Element("Layers")?.Elements("Layer");
+                if (generalLayers != null)
+                {
+                    foreach (var gl in generalLayers)
+                    {
+                        int id = 0;
+                        int.TryParse(gl.Element("ID")?.Value, out id);
+                        string applicant = gl.Element("Applicant")?.Value ?? string.Empty;
+                        int idx = id - 1;
+                        if (idx >= 0 && idx < MaxLayers && !string.IsNullOrEmpty(applicant))
+                            layerNames[idx] = applicant;
+                    }
                 }
 
                 // Grid layers are in <Vrt><Layers><Layer> (not <General><Layers>)

@@ -611,6 +611,13 @@ namespace RateController.Classes
             }
         }
 
+        public static frmHelp ShowMessageForm(string Message, string Title = "Help", int timeInMsec = 20000)
+        {
+            var Hlp = new frmHelp(Message, Title, timeInMsec);
+            Hlp.Show();
+            return Hlp;
+        }
+
         public static string VersionDate()
         {
             return cAppDate;

@@ -504,6 +504,7 @@
     <Compile Include="RateMap\ShapefileHelper.cs" />
     <Compile Include="RateMap\ProductivityZoneCreator.cs" />
     <Compile Include="RateMap\VrtGridImporter.cs" />
+    <Compile Include="RateMap\XmlHelper.cs" />
     <Compile Include="RateMap\YieldOverlayCreator.cs" />
     <Compile Include="RateMap\ZoneManager.cs" />
     <EmbeddedResource Include="Forms\FormNumeric.resx">
