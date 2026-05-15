@@ -375,6 +375,10 @@ namespace RateController.RateMap
             int    minCells  = Math.Max(1, (int)(minZoneHa / sqDegToHa / (cellW * cellH)));
             binGrid = GridSieveSmallRegions(binGrid, hasCell, rows, cols, minCells);
 
+            // Fill small empty regions left by rasterization gaps or sieve removal.
+            // Large empty regions (yard sites, exterior corners) are left blank.
+            binGrid = FillEmptyCells(binGrid, hasCell, rows, cols, Math.Max(minCells, 4));
+
             // ── Union cell geometries per bin ─────────────────────────────────────
             // Construct fresh grid-aligned rectangles rather than using the original
             // shapefile geometries. Adjacent constructed rectangles share exact edge
@@ -503,6 +507,66 @@ namespace RateController.RateMap
             }
 
             Props.WriteErrorLog(string.Format("SimplifyGrid: result={0} zones", result.Count));
+            return result;
+        }
+
+        private static int[,] FillEmptyCells(int[,] grid, bool[,] mask, int rows, int cols, int maxGapCells)
+        {
+            var result  = (int[,])grid.Clone();
+            var visited = new bool[rows, cols];
+
+            for (int r0 = 0; r0 < rows; r0++)
+                for (int c0 = 0; c0 < cols; c0++)
+                {
+                    if (mask[r0, c0] || visited[r0, c0]) continue;
+
+                    var cells = new List<(int r, int c)>();
+                    var queue = new Queue<(int, int)>();
+                    queue.Enqueue((r0, c0));
+                    visited[r0, c0] = true;
+                    while (queue.Count > 0)
+                    {
+                        var (r, c) = queue.Dequeue();
+                        cells.Add((r, c));
+                        foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                        {
+                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols
+                                && !mask[nr, nc] && !visited[nr, nc])
+                            {
+                                visited[nr, nc] = true;
+                                queue.Enqueue((nr, nc));
+                            }
+                        }
+                    }
+
+                    if (cells.Count > maxGapCells) continue;
+
+                    bool anyFilled = true;
+                    while (anyFilled)
+                    {
+                        anyFilled = false;
+                        foreach (var (r, c) in cells)
+                        {
+                            if (mask[r, c]) continue;
+                            var counts = new Dictionary<int, int>();
+                            foreach (var (nr, nc) in new[] { (r-1,c),(r+1,c),(r,c-1),(r,c+1) })
+                            {
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && mask[nr, nc])
+                                {
+                                    int z = result[nr, nc];
+                                    counts[z] = counts.ContainsKey(z) ? counts[z] + 1 : 1;
+                                }
+                            }
+                            if (counts.Count > 0)
+                            {
+                                result[r, c] = counts.OrderByDescending(kv => kv.Value).First().Key;
+                                mask[r, c]   = true;
+                                anyFilled    = true;
+                            }
+                        }
+                    }
+                }
+
             return result;
         }
 

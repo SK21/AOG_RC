@@ -75,6 +75,7 @@ namespace RateController.Forms
                     double.TryParse(tbMinZoneSize.Text, out double enteredArea);
                     double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
                     double.TryParse(tbStep.Text, out double minRateStep);
+                    Props.SetProp("ImportNumZones", tbNumZones.Text);
                     Props.SetProp("ImportMinRateStep", tbStep.Text);
                     Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
 
@@ -164,6 +165,7 @@ namespace RateController.Forms
             this.BackColor = Properties.Settings.Default.MainBackColour;
             lbArea.Text = Props.UseMetric ? "Ha" : "Ac";
             lbAreaStep.Text = lbArea.Text;
+            tbNumZones.Text = Props.GetProp("ImportNumZones").Length > 0 ? Props.GetProp("ImportNumZones") : "8";
             tbStep.Text = Props.GetProp("ImportMinRateStep").Length > 0 ? Props.GetProp("ImportMinRateStep") : "5";
             tbMinZoneSize.Text = Props.GetProp("ImportMinZoneSize").Length > 0 ? Props.GetProp("ImportMinZoneSize") : "0";
             cboProduct.Items.AddRange(new object[] { "A", "B", "C", "D", "E" });
@@ -233,7 +235,6 @@ namespace RateController.Forms
         private void BuildFromShapefile()
         {
             RebuildMapZones();
-            tbNumZones.Text = _importedZoneCount.ToString();
             AutoSelectProduct();
         }
 
