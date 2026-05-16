@@ -144,7 +144,7 @@ namespace RateController.Forms
                             {
                                 MapController.LoadMap();
                                 JobManager.SetActivePrescription(JB.ID, Path.GetFileName(MP));
-                                OfferProductNameUpdate();
+                                OfferProductNameUpdate(MP);
                                 Props.ShowMessage("Prescription saved.");
                                 this.Close();
                             }
@@ -341,15 +341,17 @@ namespace RateController.Forms
             }
         }
 
-        private void OfferProductNameUpdate()
+        private void OfferProductNameUpdate(string prescriptionPath)
         {
             int rateProducts = Props.MaxProducts - 2;
             var newNames = new string[rateProducts];
+            bool hasNames = false;
 
             if (rbXML.Checked && _xmlLayerNames != null)
             {
                 for (int i = 0; i < rateProducts; i++)
                     newNames[i] = i < _xmlLayerNames.Length ? _xmlLayerNames[i] : null;
+                hasNames = newNames.Any(n => !string.IsNullOrEmpty(n));
             }
             else if (rbShapefile.Checked && attributeMapping != null)
             {
@@ -358,31 +360,34 @@ namespace RateController.Forms
                     string key = ZoneFields.Products[i];
                     newNames[i] = attributeMapping.TryGetValue(key, out string attr) ? attr : null;
                 }
+                hasNames = newNames.Any(n => !string.IsNullOrEmpty(n));
             }
-            else return;
 
-            if (!newNames.Any(n => !string.IsNullOrEmpty(n))) return;
-
-            var summary = string.Join("\r\n", newNames
-                .Select((n, i) => string.Format("{0}: {1}", (char)('A' + i), string.IsNullOrEmpty(n) ? "(default)" : n)));
-
-            bool confirmed;
-            using (var dlg = new frmMsgBox(
-                string.Format("Update product names from this prescription?\r\n\r\n{0}", summary),
-                "Product Names"))
+            if (hasNames)
             {
-                dlg.ShowDialog();
-                confirmed = dlg.Result;
-            }
-            if (!confirmed) return;
+                var summary = string.Join("\r\n", newNames
+                    .Select((n, i) => string.Format("{0}: {1}", (char)('A' + i),
+                        string.IsNullOrEmpty(n) ? "(default)" : n)));
 
-            for (int i = 0; i < rateProducts && i < Core.Products.Items.Count; i++)
-            {
-                Core.Products.Items[i].ProductName = newNames[i] ?? string.Empty;
-                Core.Products.Items[i].Save();
-            }
+                bool confirmed;
+                using (var dlg = new frmMsgBox(
+                    string.Format("Update product names from this prescription?\r\n\r\n{0}", summary),
+                    "Product Names"))
+                {
+                    dlg.ShowDialog();
+                    confirmed = dlg.Result;
+                }
 
-            Application.OpenForms.OfType<frmMap>().FirstOrDefault()?.LoadProductNames();
+                if (confirmed)
+                {
+                    for (int i = 0; i < rateProducts && i < Core.Products.Items.Count; i++)
+                    {
+                        Core.Products.Items[i].ProductName = newNames[i] ?? string.Empty;
+                        Core.Products.Items[i].Save();
+                    }
+                    Application.OpenForms.OfType<frmMap>().FirstOrDefault()?.LoadProductNames();
+                }
+            }
         }
 
         private void SetLanguage()

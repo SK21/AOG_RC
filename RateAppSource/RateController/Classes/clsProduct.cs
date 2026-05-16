@@ -858,6 +858,9 @@ namespace RateController.Classes
             Props.SetProp(IDname + "CurrentTankAmount", cCurrentTankAmount.ToString());
 
             cSensorSettings.Save();
+
+            string RxPath = JobManager.MapPath(JobManager.CurrentJob?.ID ?? -1);
+            if (!string.IsNullOrEmpty(RxPath)) Core.Products.SaveSidecar(RxPath);
         }
 
         public void SendSensorSettings()

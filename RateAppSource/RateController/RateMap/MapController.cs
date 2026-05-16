@@ -466,8 +466,24 @@ namespace RateController.RateMap
             bool Result = false;
             try
             {
+                string rxPath = JobManager.MapPath(JobManager.CurrentJob?.ID ?? -1);
+
+                if (!string.IsNullOrEmpty(rxPath) && Core.Products.ProductsAreOn())
+                {
+                    using (var dlg = new frmMsgBox(
+                        "Product settings will change for this prescription. Continue?",
+                        "Load Prescription", true))
+                    {
+                        dlg.ShowDialog();
+                        if (!dlg.Result) return false;
+                    }
+                }
+
                 ZnOverlays.ResetAppliedOverlay();
                 ZnOverlays.LoadZones();
+
+                if (!string.IsNullOrEmpty(rxPath))
+                    Core.Products.LoadSidecar(rxPath);
 
                 // kml
                 ReloadJobKML();
