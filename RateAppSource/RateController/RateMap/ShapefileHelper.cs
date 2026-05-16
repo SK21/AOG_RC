@@ -297,7 +297,6 @@ namespace RateController.RateMap
 
             if (string.IsNullOrEmpty(primaryProduct)) primaryProduct = DetectPrimaryProduct(zones);
             zoneCount = Math.Max(2, Math.Min(20, zoneCount));
-            Props.WriteErrorLog(string.Format("SimplifyGrid: inputZones={0}, zoneCount={1}, primaryProduct={2}", zones.Count, zoneCount, primaryProduct));
 
             // ── Build spatial grid from cell centroids ────────────────────────────
             double minX = zones.Min(z => z.Geometry.EnvelopeInternal.MinX);
@@ -312,7 +311,6 @@ namespace RateController.RateMap
 
             int cols = Math.Max(1, (int)Math.Round((maxX - minX) / cellW0));
             int rows = Math.Max(1, (int)Math.Round((maxY - minY) / cellH0));
-            Props.WriteErrorLog(string.Format("SimplifyGrid: cellW0={0:G4}, cellH0={1:G4}, grid={2}x{3}", cellW0, cellH0, cols, rows));
 
             // Use exact average cell dimensions so constructed rectangles tile seamlessly
             double cellW = (maxX - minX) / cols;
@@ -334,10 +332,6 @@ namespace RateController.RateMap
                 cellIndex[(r, c)] = z;
             }
 
-            int filledCells = 0;
-            double minRate = double.MaxValue, maxRate = double.MinValue;
-            foreach (var z in zones) { double v = z.Rates.TryGetValue(primaryProduct, out double pv) ? pv : 0; if (v < minRate) minRate = v; if (v > maxRate) maxRate = v; filledCells++; }
-            Props.WriteErrorLog(string.Format("SimplifyGrid: filledCells={0}, rateRange={1:G4} to {2:G4}", filledCells, minRate, maxRate));
 
             // ── Quantile-classify ─────────────────────────────────────────────────
             var flatRates = new List<double>(zones.Count);
@@ -506,7 +500,6 @@ namespace RateController.RateMap
                 }
             }
 
-            Props.WriteErrorLog(string.Format("SimplifyGrid: result={0} zones", result.Count));
             return result;
         }
 

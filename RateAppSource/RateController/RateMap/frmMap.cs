@@ -1392,7 +1392,7 @@ namespace RateController.Forms
             }
         }
 
-        private void LoadProductNames()
+        public void LoadProductNames()
         {
             lbP1.Text = Core.Products.Item(0).ProductName;
             lbP2.Text = Core.Products.Item(1).ProductName;

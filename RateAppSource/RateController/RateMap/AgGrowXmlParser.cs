@@ -132,7 +132,8 @@ namespace RateController.RateMap
                         for (int col = 0; col < colCount; col++)
                         {
                             string indexStr = rowData.Substring(col * charsPerCell, charsPerCell);
-                            if (int.TryParse(indexStr, out int paletteIdx)
+                            if (int.TryParse(indexStr, System.Globalization.NumberStyles.HexNumber,
+                                    System.Globalization.CultureInfo.InvariantCulture, out int paletteIdx)
                                 && paletteIdx >= 0 && paletteIdx < palette.Length)
                             {
                                 rates[row * cellsX + col][productIdx] = palette[paletteIdx];

@@ -58,36 +58,55 @@ namespace RateController.Forms
             this.Close();
         }
 
-        private void btnAdjust_Click(object sender, EventArgs e)
+        private async void btnAdjust_Click(object sender, EventArgs e)
         {
             try
             {
                 if (_mapZones == null)
                 {
                     Props.ShowMessage("Import data first (Step 1).");
+                    return;
                 }
-                else
+
+                if (rbShapefile.Checked)
+                    RebuildMapZones();
+
+                int.TryParse(tbNumZones.Text, out int zoneCount);
+                double.TryParse(tbMinZoneSize.Text, out double enteredArea);
+                double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
+                double.TryParse(tbStep.Text, out double minRateStep);
+                Props.SetProp("ImportNumZones", tbNumZones.Text);
+                Props.SetProp("ImportMinRateStep", tbStep.Text);
+                Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
+
+                string primaryProduct = ZoneFields.Products[Math.Max(0, Math.Min(ZoneFields.Products.Length - 1, cboProduct.SelectedIndex))];
+                var inputZones = _mapZones;
+
+                btnBuild.Enabled = false;
+                btnAdjust.Enabled = false;
+                btnSave.Enabled = false;
+                var busyMsg = Props.ShowMessageForm("Adjusting zones...", "Adjust", 60000);
+
+                List<MapZone> simplified = null;
+                try
                 {
-                    if (rbShapefile.Checked)
-                        RebuildMapZones();
-
-                    int.TryParse(tbNumZones.Text, out int zoneCount);
-                    double.TryParse(tbMinZoneSize.Text, out double enteredArea);
-                    double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
-                    double.TryParse(tbStep.Text, out double minRateStep);
-                    Props.SetProp("ImportNumZones", tbNumZones.Text);
-                    Props.SetProp("ImportMinRateStep", tbStep.Text);
-                    Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
-
-                    string primaryProduct = ZoneFields.Products[Math.Max(0, Math.Min(ZoneFields.Products.Length - 1, cboProduct.SelectedIndex))];
-                    var helper = new ShapefileHelper();
-                    _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep, primaryProduct);
-
-                    int distinctZones = _simplifiedZones
-                        .Select(z => string.Join("|", ZoneFields.Products.Select(p => z.Rates.TryGetValue(p, out double v) ? ((long)Math.Round(v * 10)).ToString() : "0")))
-                        .Distinct().Count();
-                    Props.ShowMessage(string.Format("{0} zones created.", distinctZones));
+                    simplified = await Task.Run(() =>
+                        new ShapefileHelper().SimplifyPrescriptionGrid(inputZones, zoneCount, minZoneHa, minRateStep, primaryProduct));
                 }
+                finally
+                {
+                    if (!busyMsg.IsDisposed) busyMsg.Close();
+                    btnBuild.Enabled = true;
+                    btnAdjust.Enabled = true;
+                    btnSave.Enabled = true;
+                }
+
+                _simplifiedZones = simplified;
+
+                int distinctZones = _simplifiedZones
+                    .Select(z => string.Join("|", ZoneFields.Products.Select(p => z.Rates.TryGetValue(p, out double v) ? ((long)Math.Round(v * 10)).ToString() : "0")))
+                    .Distinct().Count();
+                Props.ShowMessage(string.Format("{0} zones created.", distinctZones));
             }
             catch (Exception ex)
             {
@@ -125,6 +144,7 @@ namespace RateController.Forms
                             {
                                 MapController.LoadMap();
                                 JobManager.SetActivePrescription(JB.ID, Path.GetFileName(MP));
+                                OfferProductNameUpdate();
                                 Props.ShowMessage("Prescription saved.");
                                 this.Close();
                             }
@@ -242,7 +262,7 @@ namespace RateController.Forms
             btnBuild.Enabled = false;
             btnAdjust.Enabled = false;
             btnSave.Enabled = false;
-            var importMsg = Props.ShowMessageForm("Importing...", "Import", 60000);
+            var importMsg = Props.ShowMessageForm("Importing...", "Import", 20000);
 
             List<MapZone> zones = null;
             string[] layerNames = null;
@@ -319,6 +339,50 @@ namespace RateController.Forms
                     LoadShapefileAttributes(DGV);
                 }
             }
+        }
+
+        private void OfferProductNameUpdate()
+        {
+            int rateProducts = Props.MaxProducts - 2;
+            var newNames = new string[rateProducts];
+
+            if (rbXML.Checked && _xmlLayerNames != null)
+            {
+                for (int i = 0; i < rateProducts; i++)
+                    newNames[i] = i < _xmlLayerNames.Length ? _xmlLayerNames[i] : null;
+            }
+            else if (rbShapefile.Checked && attributeMapping != null)
+            {
+                for (int i = 0; i < rateProducts; i++)
+                {
+                    string key = ZoneFields.Products[i];
+                    newNames[i] = attributeMapping.TryGetValue(key, out string attr) ? attr : null;
+                }
+            }
+            else return;
+
+            if (!newNames.Any(n => !string.IsNullOrEmpty(n))) return;
+
+            var summary = string.Join("\r\n", newNames
+                .Select((n, i) => string.Format("{0}: {1}", (char)('A' + i), string.IsNullOrEmpty(n) ? "(default)" : n)));
+
+            bool confirmed;
+            using (var dlg = new frmMsgBox(
+                string.Format("Update product names from this prescription?\r\n\r\n{0}", summary),
+                "Product Names"))
+            {
+                dlg.ShowDialog();
+                confirmed = dlg.Result;
+            }
+            if (!confirmed) return;
+
+            for (int i = 0; i < rateProducts && i < Core.Products.Items.Count; i++)
+            {
+                Core.Products.Items[i].ProductName = newNames[i] ?? string.Empty;
+                Core.Products.Items[i].Save();
+            }
+
+            Application.OpenForms.OfType<frmMap>().FirstOrDefault()?.LoadProductNames();
         }
 
         private void SetLanguage()
