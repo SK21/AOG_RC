@@ -92,6 +92,33 @@ namespace RateController.RateMap
             return result;
         }
 
+        public static List<MapZone> ImportCells(VrtGrid grid)
+        {
+            var result = new List<MapZone>();
+            try
+            {
+                var transform = BuildTransform(grid.UtmZone);
+                for (int row = 0; row < grid.CellsY; row++)
+                {
+                    for (int col = 0; col < grid.CellsX; col++)
+                    {
+                        int i = row * grid.CellsX + col;
+                        double[] rates = grid.Rates[i];
+                        if (rates == null || rates.All(r => r == 0)) continue;
+                        var utmPoly = MakeCellPolygonUtm(grid, col, row);
+                        var wgsPoly = TransformPolygon(utmPoly, transform);
+                        if (wgsPoly == null || wgsPoly.IsEmpty) continue;
+                        result.Add(new MapZone("Cell", wgsPoly, BuildRateDict(rates), Color.Gray, ZoneType.Target));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("VrtGridImporter/ImportCells: " + ex.Message);
+            }
+            return result;
+        }
+
         private static MathTransform BuildTransform(int utmZone)
         {
             var utmCS = ProjectedCoordinateSystem.WGS84_UTM(utmZone, true);

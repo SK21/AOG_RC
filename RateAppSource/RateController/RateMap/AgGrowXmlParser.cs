@@ -153,7 +153,7 @@ namespace RateController.RateMap
                     Rates          = rates
                 };
 
-                result = VrtGridImporter.Import(grid);
+                result = VrtGridImporter.ImportCells(grid);
             }
             catch (Exception ex)
             {

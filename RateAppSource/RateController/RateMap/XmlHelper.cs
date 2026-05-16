@@ -1,3 +1,5 @@
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Operation.Union;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -6,9 +8,6 @@ namespace RateController.RateMap
 {
     public class XmlHelper
     {
-        // Simplify pre-merged XML prescription zones into zoneCount rate classes.
-        // Each input zone already covers a merged area (not a single raster cell),
-        // so we sort by rate, quantile-bin, and reassign rates — no geometry union.
         public List<MapZone> SimplifyZones(List<MapZone> inputZones, int zoneCount,
             double minZoneHa, double minRateStep, string primaryProduct)
         {
@@ -38,7 +37,7 @@ namespace RateController.RateMap
                     for (int b = 0; b < binZones.Count; b++)
                     {
                         if (binZones[b].Count == 0) continue;
-                        double binHa = binZones[b].Sum(z => z.Hectares());
+                        double binHa = binZones[b].Sum(z => FastHa(z.Geometry));
                         if (binHa < minZoneHa)
                         {
                             int neighbor = -1;
@@ -77,9 +76,28 @@ namespace RateController.RateMap
                 Color color = Palette.GetProductivityColor(b, activeBins.Count, 255);
                 string tempName = string.Format("Zone {0} ({1:F0})", b + 1, medianRate);
 
-                foreach (var zone in bz)
-                    result.Add(new MapZone(tempName, zone.Geometry,
+                // Union all polygons in this bin so scattered patches of the same rate
+                // are merged into the fewest possible output polygons.
+                var geoms = bz.Select(z => (Geometry)z.Geometry).ToList();
+                Geometry merged = null;
+                try { merged = CascadedPolygonUnion.Union(geoms); }
+                catch { merged = geoms.Count > 0 ? geoms[0] : null; }
+                if (merged == null || merged.IsEmpty) continue;
+
+                if (merged is Polygon poly)
+                {
+                    result.Add(new MapZone(tempName, poly,
                         new Dictionary<string, double>(avgRates), color, ZoneType.Target));
+                }
+                else if (merged is MultiPolygon mp)
+                {
+                    for (int j = 0; j < mp.NumGeometries; j++)
+                    {
+                        if (mp.GetGeometryN(j) is Polygon p && !p.IsEmpty)
+                            result.Add(new MapZone(tempName, p,
+                                new Dictionary<string, double>(avgRates), color, ZoneType.Target));
+                    }
+                }
             }
 
             // Enforce minimum rate step between zones ordered by primary product rate.
@@ -126,6 +144,12 @@ namespace RateController.RateMap
             }
 
             return result;
+        }
+
+        private static double FastHa(Polygon poly)
+        {
+            double midLatRad = poly.Centroid.Y * System.Math.PI / 180.0;
+            return poly.Area * 111319.0 * 111319.0 * System.Math.Cos(midLatRad) / 10000.0;
         }
     }
 }

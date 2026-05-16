@@ -80,16 +80,8 @@ namespace RateController.Forms
                     Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
 
                     string primaryProduct = ZoneFields.Products[Math.Max(0, Math.Min(ZoneFields.Products.Length - 1, cboProduct.SelectedIndex))];
-                    if (rbXML.Checked)
-                    {
-                        var xmlHelper = new XmlHelper();
-                        _simplifiedZones = xmlHelper.SimplifyZones(_mapZones, zoneCount, minZoneHa, minRateStep, primaryProduct);
-                    }
-                    else
-                    {
-                        var helper = new ShapefileHelper();
-                        _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep, primaryProduct);
-                    }
+                    var helper = new ShapefileHelper();
+                    _simplifiedZones = helper.SimplifyPrescriptionGrid(_mapZones, zoneCount, minZoneHa, minRateStep, primaryProduct);
 
                     int distinctZones = _simplifiedZones
                         .Select(z => string.Join("|", ZoneFields.Products.Select(p => z.Rates.TryGetValue(p, out double v) ? ((long)Math.Round(v * 10)).ToString() : "0")))
@@ -274,7 +266,6 @@ namespace RateController.Forms
             _xmlLayerNames = layerNames;
             _simplifiedZones = null;
             _importedZoneCount = _mapZones?.Count ?? 0;
-            tbNumZones.Text = _importedZoneCount.ToString();
             tbName.Text = Path.GetFileNameWithoutExtension(path);
             dgvMapping.Rows.Clear();
             ShowXmlLayerNames();
