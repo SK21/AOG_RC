@@ -79,7 +79,7 @@ void TC_RefreshMachineCommandTime()
 bool TC_MachineAutoMode()
 {
 	if (MDL.SensorCount == 0) return true;
-	return Machine.AutoRate[0];
+	return Machine.AutoOn;
 }
 
 void TC_ReportActualSectionState(bool force = false)
@@ -211,7 +211,7 @@ bool TC_RequestValue(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 
 	if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualVolumePerAreaApplicationRate))
 	{
-		processVariableValue = RateControl_LHaToTCValue(RateControl_ActualRateLHa(0));
+		processVariableValue = RateControl_LHaToTCValue(RateControl_UnitsPerArea(0));
 		return true;
 	}
 
@@ -249,7 +249,7 @@ bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 		}
 
 		Machine.TargetRateLHa[0] = RateControl_TCValueToLHa(processVariableValue);
-		Machine.AutoRate[0] = true;
+		Machine.AutoOn = true;
 		VT_SaveMachineSettings(false);
 		Serial.print(F("TC target rate: "));
 		Serial.print(Machine.TargetRateLHa[0]);
@@ -385,6 +385,17 @@ FLASHMEM void TC_Update()
 	}
 }
 
+// DDI 1/2 (Volume Per Area): 1 mm³/m² per bit. 1 L/ha = 100 mm³/m².
+int32_t RateControl_LHaToTCValue(float lha)
+{
+	return static_cast<int32_t>(lha * 100.0f);
+}
+
+float RateControl_TCValueToLHa(int32_t value)
+{
+	return static_cast<float>(value) / 100.0f;
+}
+
 void TC_MachineSettingsChanged(bool ddopGeometryChanged)
 {
 	if (ddopGeometryChanged)
@@ -397,3 +408,13 @@ void TC_MachineSettingsChanged(bool ddopGeometryChanged)
 		ISOBUSTaskController->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointVolumePerAreaApplicationRate));
 	}
 }
+
+//int32_t RateControl_LHaToTCValue(float rate)
+//{
+//	switch (Machine.UnitMode) {
+//	case 1:  return static_cast<int32_t>(rate * 100.0f);         // kg/ha → mg/m²
+//	case 2:  return static_cast<int32_t>(rate * 935.396f);       // gal/ac → mm³/m²
+//	case 3:  return static_cast<int32_t>(rate * 1.12085f * 100.0f); // lbs/ac → mg/m²
+//	default: return static_cast<int32_t>(rate * 100.0f);         // L/ha → mm³/m²
+//	}
+//}

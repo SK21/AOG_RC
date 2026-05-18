@@ -223,23 +223,6 @@ void DoSetup()
 		Serial.println(F("ADS1115: Disabled "));
 	}
 
-	Serial.print(F("Comm Mode: "));
-	switch (MDL.CommMode)
-	{
-	case 0:
-		Serial.println(F("UDP only"));
-		break;
-	case 1:
-		Serial.println(F("CAN/ISOBUS Proprietary"));
-		break;
-	case 2:
-		Serial.println(F("UDP + CAN/ISOBUS Proprietary"));
-		break;
-	default:
-		Serial.println(F("Unknown"));
-		break;
-	}
-
 	if (GoodPins)
 	{
 		Serial.println(F("Pin configuration correct."));
@@ -368,6 +351,69 @@ void InitializeRelays(uint8_t Control, int8_t End)
 			Serial.println("MCP23017 not found.");
 		}
 		break;
+
+	case 5:
+		// PCA9685
+		Serial.println("");
+		Serial.println("Starting PCA9685 I/O Expander for relays ...");
+		ErrorCount = 0;
+		while (!PCA9685_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(PCA9685Address);
+			PCA9685_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5)break;
+		}
+
+		Serial.println("");
+		if (PCA9685_found)
+		{
+			Serial.println("PCA9685 expander found.");
+			PWMServoDriver.begin();
+			PWMServoDriver.setPWMFreq(200);
+
+			pinMode(OutputEnablePin, OUTPUT);
+			digitalWrite(OutputEnablePin, LOW);	//enable
+
+			for (uint8_t channel = 0; channel < 16; channel++)
+			{
+				PWMServoDriver.setPWM(channel, 0, 4096);
+			}
+		}
+		else
+		{
+			Serial.println("PCA9685 expander not found.");
+		}
+		break;
+
+	case 6:
+		// PCF8574
+		Serial.println("");
+		Serial.println("Starting PCF8574 I/O Expander for relays ...");
+		ErrorCount = 0;
+		while (!PCF8574_found)
+		{
+			Serial.print(".");
+			Wire.beginTransmission(PCF8574address);
+			PCF8574_found = (Wire.endTransmission() == 0);
+			ErrorCount++;
+			delay(500);
+			if (ErrorCount > 5) break;
+		}
+
+		Serial.println("");
+		if (PCF8574_found)
+		{
+			Serial.println("PCF8574 found.");
+			PCF.begin();
+		}
+		else
+		{
+			Serial.println("PCF8574 not found.");
+		}
+		break;
 	}
 }
 
@@ -475,7 +521,6 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
-	MDL.CommMode = 0;
 }
 
 bool ValidData()

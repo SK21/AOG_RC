@@ -37,9 +37,7 @@
     </ClCompile>
     <ClCompile Include="PID.ino" />
     <ClCompile Include="Rate.ino" />
-    <ClCompile Include="Receive.ino" />
     <ClCompile Include="Relays.ino" />
-    <ClCompile Include="Send.ino" />
     <ClCompile Include="WheelSpeed.ino" />
     <ClCompile Include="ISOBUS_Speed.ino" />
     <ClCompile Include="ISOBUS_TC.ino" />
@@ -49,6 +47,8 @@
     </ClCompile>
     <ClCompile Include="FirmwareUpdate.ino" />
     <ClCompile Include="Server.ino" />
+    <ClCompile Include="Relays_VT.ino" />
+    <ClCompile Include="Rate_VT.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.RCteensy-Isobus.vsarduino.h">

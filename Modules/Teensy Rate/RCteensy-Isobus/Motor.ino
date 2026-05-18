@@ -36,39 +36,7 @@ void SetPWM(byte ID, float pwmVal)
 	bool Direction = (pwmVal >= 0.0f);
 	if (MDL.InvertFlow) Direction = !Direction;
 
-#if PWM_BITS == 8
-	duty = ditherAdjust(duty, fabsf(pwmVal));
-#endif
-
-
-#if defined(ESP32)
-	if (Direction)
-	{
-		analogWrite(Sensor[ID].IN1, duty);
-		analogWrite(Sensor[ID].IN2, 0);
-	}
-	else
-	{
-		analogWrite(Sensor[ID].IN1, 0);
-		analogWrite(Sensor[ID].IN2, duty);
-	}
-#else
 	digitalWrite(Sensor[ID].DirPin, Direction);
 	analogWrite(Sensor[ID].PWMPin, duty);
-#endif
 }
 
-#if PWM_BITS == 8
-int ditherAdjust(int base, float val255)
-{
-	const int maxDuty = 255;
-	float exactDuty = val255 * maxDuty / 255.0f;
-	float frac = exactDuty - base;
-
-	ditherCounter = (ditherCounter + 1) & 0x0F; // 16 step cycle
-	if (frac > 0 && ditherCounter < (uint8_t)(frac * 16)) {
-		base = min(base + 1, maxDuty);
-	}
-	return base;
-}
-#endif

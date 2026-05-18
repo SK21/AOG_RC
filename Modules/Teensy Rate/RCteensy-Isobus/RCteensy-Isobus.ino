@@ -8,15 +8,21 @@
 #include <NativeEthernetUdp.h>
 #include <FlexCAN_T4.h>
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
+#include <PCF8574.h>		// https://github.com/RobTillaart/PCF8574
 
 #include "FXUtil.h"		// read_ascii_line(), hex file support
 extern "C" {
 #include "FlashTxx.h"		// TLC/T3x/T4x/TMM flash primitives
 }
 
+#include <Adafruit_PWMServoDriver.h>	// Adafruit PCA9685 PWM Servo Driver Library
+
 #include "src/AgIsoStack/FlexCAN_T4.hpp"
+#include "src/AgIsoStack/AgIsoStack.hpp"
 #include "ISOBUS_VT_ObjectPool.cpp"
+#include <cstring>
 #include <memory>
+#include <string>
 #include <vector>
 
 std::shared_ptr<isobus::CANHardwarePlugin> canPlugin = nullptr;
@@ -30,6 +36,7 @@ std::shared_ptr<isobus::SpeedMessagesInterface> ISOBUSSpeedMessages = nullptr;
 
 # define InoDescription "RCteensy-Isobus"
 const uint16_t InoID = 17056;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint8_t InoType = 5;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate, 5 - Teensy Isobus
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
@@ -38,6 +45,7 @@ const uint32_t FlowTimeout = 4000;
 
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
+const uint8_t PCA9685Address = 0x40;
 const uint8_t PCF8574address = 0x20;
 uint8_t DefaultRelayPins[] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 
@@ -148,6 +156,13 @@ bool PCA9555PW_found = false;
 bool MCP23017_found = false;
 bool PCA9685_found = false;
 bool PCF8574_found = false;
+
+PCF8574 PCF;
+
+// PCA9685
+Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(PCA9685Address);
+const uint8_t OutputEnablePin = 27;
+const uint8_t PCA9685address = 0x55;	
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
 uint32_t LoopLast = LoopTime;

@@ -19,7 +19,7 @@ void PulseISR(uint8_t ID)
 		PulseTime[ID] = ReadTime - ReadLast[ID];
 		ReadLast[ID] = ReadTime;
 
-		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)			
+		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)
 		{
 			// valid pulses
 			PulseCount[ID]++;
@@ -37,9 +37,11 @@ void GetUPM()
 		if (PulseCount[i])
 		{
 			LastPulse[i] = millis();
+			uint16_t Pulses = 0;
 
 			noInterrupts();
-			Sensor[i].TotalPulses += PulseCount[i];
+			Pulses = PulseCount[i];
+			Sensor[i].TotalPulses += Pulses;
 			PulseCount[i] = 0;
 			uint16_t count = SamplesCount[i];
 			uint32_t Snapshot[MaxSampleSize];
@@ -48,6 +50,7 @@ void GetUPM()
 				Snapshot[k] = Samples[i][k];
 			}
 			interrupts();
+			RateControl_SubtractTankPulses(i, Pulses);
 
 			uint32_t median = MedianFromArray(Snapshot, count);
 
