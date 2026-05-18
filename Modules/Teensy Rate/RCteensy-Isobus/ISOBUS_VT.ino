@@ -881,7 +881,7 @@ void VT_AdjustSelectedField(int8_t direction)
 	if (moduleConfigChanged)
 	{
 		SaveData();
-		InitializeRelayOutputs();
+		SplitRelayControl();
 	}
 	else if (sensorConfigChanged)
 	{

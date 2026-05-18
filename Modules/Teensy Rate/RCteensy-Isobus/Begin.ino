@@ -139,15 +139,7 @@ void DoSetup()
 	analogWriteResolution(PWM_BITS);
 
 	// Relays
-	if (MDL.RemoteRelayControl > 0)
-	{
-		InitializeRelays(MDL.OnboardRelayControl, 7);
-		InitializeRelays(MDL.RemoteRelayControl, -1);
-	}
-	else
-	{
-		InitializeRelays(MDL.OnboardRelayControl, 15);
-	}
+	SplitRelayControl();
 
 	pinMode(LED_BUILTIN, OUTPUT);
 
@@ -244,6 +236,19 @@ void DoSetup()
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");
+}
+
+void SplitRelayControl()
+{
+	if (MDL.RemoteRelayControl > 0)
+	{
+		InitializeRelays(MDL.OnboardRelayControl, 7);
+		InitializeRelays(MDL.RemoteRelayControl, -1);
+	}
+	else
+	{
+		InitializeRelays(MDL.OnboardRelayControl, 15);
+	}
 }
 
 void InitializeRelays(uint8_t Control, int8_t End)

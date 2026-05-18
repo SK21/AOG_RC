@@ -64,7 +64,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <IncludePath>C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;C:\Program Files (x86)\Arduino\hardware\teensy\avr\cores\teensy4;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+dp\hard;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\backward;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include-fixed;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;D:\Sync\Documents\Arduino\libraries\PCF8574;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library</IncludePath>
+    <IncludePath>$(ProjectDir)..\RCteensy-Isobus;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;D:\Sync\Documents\Arduino\libraries\PCF8574;D:\Sync\Documents\Arduino\libraries\Adafruit_BusIO;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\SPI;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4\utility;D:\Sync\Documents\Arduino\libraries\PCF8574\utility;D:\Sync\Documents\Arduino\libraries\Adafruit_BusIO\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\SPI\utility;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\cores\teensy4;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+dp\hard;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\backward;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include-fixed;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;D:\Sync\Documents\Arduino\libraries\PCF8574;D:\Sync\Documents\Arduino\libraries\Adafruit_BusIO;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\SPI;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library</IncludePath>
     <RemoteCCompileToolExe>C:\Program Files (x86)\Arduino\hardware\tools\arm\bin\arm-none-eabi-g++</RemoteCCompileToolExe>
     <RemoteCppCompileToolExe>C:\Program Files (x86)\Arduino\hardware\tools\arm\bin\arm-none-eabi-g++</RemoteCppCompileToolExe>
     <ValidateArchitecture>false</ValidateArchitecture>
@@ -85,6 +85,47 @@
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>
     </ClCompile>
+    <ClCompile Include="src\AgIsoStack\can_callbacks.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_control_function.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_extended_transport_protocol.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_hardware_interface_single_thread.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_identifier.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_internal_control_function.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_message.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_message_data.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_message_frame.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_NAME.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_NAME_filter.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_network_configuration.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_network_manager.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_parameter_group_number_request_protocol.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_partnered_control_function.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_stack_logger.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_transport_protocol.cpp" />
+    <ClCompile Include="src\AgIsoStack\can_transport_protocol_base.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_data_dictionary.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_device_descriptor_object_pool.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_diagnostic_protocol.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_functionalities.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_guidance_interface.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_heartbeat.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_language_command_interface.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_maintain_power_interface.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_shortcut_button_interface.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_speed_distance_messages.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_task_controller_client.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_task_controller_client_objects.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_time_date_interface.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_virtual_terminal_client.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_virtual_terminal_client_state_tracker.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_virtual_terminal_client_update_helper.cpp" />
+    <ClCompile Include="src\AgIsoStack\isobus_virtual_terminal_objects.cpp" />
+    <ClCompile Include="src\AgIsoStack\nmea2000_fast_packet_protocol.cpp" />
+    <ClCompile Include="src\AgIsoStack\nmea2000_message_definitions.cpp" />
+    <ClCompile Include="src\AgIsoStack\nmea2000_message_interface.cpp" />
+    <ClCompile Include="src\AgIsoStack\platform_endianness.cpp" />
+    <ClCompile Include="src\AgIsoStack\processing_flags.cpp" />
+    <ClCompile Include="src\AgIsoStack\system_timing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FlashTxx.h">
@@ -99,6 +140,65 @@
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>
     </ClCompile>
+    <ClInclude Include="src\AgIsoStack\AgIsoStack.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_badge.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_callbacks.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_constants.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_control_function.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_extended_transport_protocol.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_general_parameter_group_numbers.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_hardware_abstraction.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_hardware_interface_single_thread.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_hardware_plugin.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_identifier.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_internal_control_function.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_message.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_message_data.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_message_frame.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_NAME.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_NAME_filter.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_network_configuration.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_network_manager.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_parameter_group_number_request_protocol.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_partnered_control_function.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_stack_logger.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_transport_protocol.hpp" />
+    <ClInclude Include="src\AgIsoStack\can_transport_protocol_base.hpp" />
+    <ClInclude Include="src\AgIsoStack\circular_buffer.hpp" />
+    <ClInclude Include="src\AgIsoStack\data_span.hpp" />
+    <ClInclude Include="src\AgIsoStack\event_dispatcher.hpp" />
+    <ClInclude Include="src\AgIsoStack\FlexCAN_T4.hpp" />
+    <ClInclude Include="src\AgIsoStack\flex_can_t4_plugin.hpp" />
+    <ClInclude Include="src\AgIsoStack\imxrt_flexcan.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_data_dictionary.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_device_descriptor_object_pool.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_diagnostic_protocol.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_functionalities.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_guidance_interface.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_heartbeat.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_language_command_interface.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_maintain_power_interface.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_preferred_addresses.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_shortcut_button_interface.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_speed_distance_messages.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_standard_data_description_indices.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_task_controller_client.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_task_controller_client_objects.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_time_date_interface.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_virtual_terminal_base.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_virtual_terminal_client.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_virtual_terminal_client_state_tracker.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_virtual_terminal_client_update_helper.hpp" />
+    <ClInclude Include="src\AgIsoStack\isobus_virtual_terminal_objects.hpp" />
+    <ClInclude Include="src\AgIsoStack\kinetis_flexcan.hpp" />
+    <ClInclude Include="src\AgIsoStack\nmea2000_fast_packet_protocol.hpp" />
+    <ClInclude Include="src\AgIsoStack\nmea2000_message_definitions.hpp" />
+    <ClInclude Include="src\AgIsoStack\nmea2000_message_interface.hpp" />
+    <ClInclude Include="src\AgIsoStack\platform_endianness.hpp" />
+    <ClInclude Include="src\AgIsoStack\processing_flags.hpp" />
+    <ClInclude Include="src\AgIsoStack\system_timing.hpp" />
+    <ClInclude Include="src\AgIsoStack\thread_synchronization.hpp" />
+    <ClInclude Include="src\AgIsoStack\to_string.hpp" />
     <ClInclude Include="__vm\.RCteensy-Isobus.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +296,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;C:\Program Files (x86)\Arduino\hardware\teensy\avr\cores\teensy4;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+dp\hard;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\backward;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include-fixed;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;D:\Sync\Documents\Arduino\libraries\PCF8574;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\RCteensy-Isobus;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;D:\Sync\Documents\Arduino\libraries\PCF8574;D:\Sync\Documents\Arduino\libraries\Adafruit_BusIO;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\SPI;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4\utility;D:\Sync\Documents\Arduino\libraries\PCF8574\utility;D:\Sync\Documents\Arduino\libraries\Adafruit_BusIO\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\SPI\utility;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\cores\teensy4;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\arm-none-eabi\thumb\v7e-m+dp\hard;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include\c++\11.3.1\backward;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include;c:\program files (x86)\arduino\hardware\tools\arm\lib\gcc\arm-none-eabi\11.3.1\include-fixed;c:\program files (x86)\arduino\hardware\tools\arm\arm-none-eabi\include;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\NativeEthernet\src\utility;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FNET\src;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\FlexCAN_T4;D:\Sync\Documents\Arduino\libraries\PCF8574;D:\Sync\Documents\Arduino\libraries\Adafruit_BusIO;C:\Program Files (x86)\Arduino\hardware\teensy\avr\libraries\SPI;D:\Sync\Documents\Arduino\libraries\Adafruit_PWM_Servo_Driver_Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GccToolChain>C:\Program Files (x86)\Arduino\hardware\tools\arm\bin\arm-none-eabi-g++</GccToolChain>
       <CppLanguageStandard>c++17</CppLanguageStandard>
       <CLanguageStandard>gnu11</CLanguageStandard>

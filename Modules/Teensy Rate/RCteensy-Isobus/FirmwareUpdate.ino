@@ -11,6 +11,9 @@ static int      fwLines  = 0;
 static bool     fwEOF    = false;
 static bool     fwActive = false;
 
+static uint32_t buffer_addr = 0;
+static uint32_t buffer_size = 0;
+
 // ─── Hex ASCII helpers ────────────────────────────────────────────────────────
 
 static uint8_t FW_Nibble(char c)

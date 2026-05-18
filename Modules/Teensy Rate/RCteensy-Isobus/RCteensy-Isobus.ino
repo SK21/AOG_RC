@@ -15,6 +15,11 @@ extern "C" {
 #include "FlashTxx.h"		// TLC/T3x/T4x/TMM flash primitives
 }
 
+#include <Adafruit_SPIDevice.h>
+#include <Adafruit_I2CRegister.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_GenericDevice.h>
+#include <Adafruit_BusIO_Register.h>
 #include <Adafruit_PWMServoDriver.h>	// Adafruit PCA9685 PWM Servo Driver Library
 
 #include "src/AgIsoStack/FlexCAN_T4.hpp"

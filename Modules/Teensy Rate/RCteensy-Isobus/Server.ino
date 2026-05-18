@@ -42,8 +42,9 @@ void Server_Begin()
     Serial.println(localIP);
 
     httpServer.begin();
-    Serial.printf("[HTTP] http://%s.local/  (%s)\n", mdnsHostname,
-        localIP.toString().c_str());
+    Serial.printf("[HTTP] http://%s.local/  (%u.%u.%u.%u)\n", mdnsHostname,
+        (unsigned)localIP[0], (unsigned)localIP[1],
+        (unsigned)localIP[2], (unsigned)localIP[3]);
 
     // Join mDNS multicast group 224.0.0.251 on port 5353
     mdnsUDP.beginMulticast(IPAddress(224, 0, 0, 251), 5353);
