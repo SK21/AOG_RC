@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 5056;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 6026;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -169,6 +169,10 @@ bool FirmwareUpdateMode = false;
 bool CalibrationOn[] = { false,false };
 float WheelSpeed = 0;
 uint32_t WheelCounts = 0;
+
+// PID damper
+bool LastAboveTarget[MaxProductCount];
+float OscDamp[MaxProductCount] = { 1.0f, 1.0f };
 
 void setup()
 {

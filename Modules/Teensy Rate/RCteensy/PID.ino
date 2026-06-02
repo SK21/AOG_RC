@@ -204,6 +204,18 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 			// adjusting state
 			if (millis() - ComboTime[ID] > Sensor[ID].TimedAdjust)
 			{
+				// detect oscillation at end of adjust burst
+				bool aboveTarget = (Sensor[ID].UPM > Sensor[ID].TargetUPM);
+				if (aboveTarget != LastAboveTarget[ID])
+				{
+					OscDamp[ID] = max(OscDamp[ID] * 0.7f, 0.1f);
+				}
+				else
+				{
+					OscDamp[ID] = min(OscDamp[ID] * 1.1f, 1.0f);
+				}
+				LastAboveTarget[ID] = aboveTarget;
+
 				// switch state
 				ComboTime[ID] = millis();
 				PauseAdjust[ID] = !PauseAdjust[ID];
@@ -218,7 +230,7 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 				else
 				{
 					// auto adjust
-					Result = PIDvalve(ID);
+					Result = PIDvalve(ID) * OscDamp[ID];
 				}
 			}
 		}
@@ -226,6 +238,7 @@ float TimedCombo(byte ID, bool ManualAdjust = false)
 	else
 	{
 		IntegralSum[ID] = 0;
+		OscDamp[ID] = 1.0f;
 	}
 	return Result;
 }
