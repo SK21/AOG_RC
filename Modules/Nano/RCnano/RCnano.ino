@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 5056;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 9066;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -104,6 +104,8 @@ SensorConfig Sensor[MaxProductCount];
 bool SensorConnected[MaxProductCount];
 bool PIDenabled[MaxProductCount];
 bool Applying[MaxProductCount];
+bool LastAboveTarget[MaxProductCount];
+float OscDamp[MaxProductCount] = { 1.0f, 1.0f };
 
 // If using the ENC28J60 ethernet shield these pins
 // are used by it and unavailable for relays:

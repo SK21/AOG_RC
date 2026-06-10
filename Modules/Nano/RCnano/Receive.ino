@@ -160,7 +160,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
 						if (data[6] > 0)
 						{
-							Sensor[SensorID].Ki = pow(1.1, data[6] - 120);
+							Sensor[SensorID].Ki = pow(1.1, data[6] - 108);
 						}
 						else
 						{

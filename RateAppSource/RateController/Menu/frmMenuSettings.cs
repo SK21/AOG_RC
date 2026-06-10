@@ -301,7 +301,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbOffRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 40, tempD))
+            using (var form = new FormNumeric(0, 60, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -315,7 +315,7 @@ namespace RateController.Menu
         {
             int tempInt;
             int.TryParse(tbOffRate.Text, out tempInt);
-            if (tempInt < 0 || tempInt > 40)
+            if (tempInt < 0 || tempInt > 60)
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;

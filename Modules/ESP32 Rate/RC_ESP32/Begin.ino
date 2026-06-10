@@ -339,6 +339,13 @@ void DoSetup()
 		Serial.println(F("Valves are 2 wire."));
 	}
 
+	// PID damper
+	for (int i = 0; i < MaxProductCount; i++)
+	{
+		OscDamp[i] = 1.0f;
+		LastAboveTarget[i] = false;
+	}
+
 	Serial.println("");
 	Serial.println("Finished setup.");
 	Serial.println("");

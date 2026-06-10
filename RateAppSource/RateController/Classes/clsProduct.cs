@@ -402,7 +402,7 @@ namespace RateController.Classes
             get { return cOffRateSetting; }
             set
             {
-                if (value >= 0 && value <= 40)
+                if (value >= 0 && value <= 60)
                 {
                     cOffRateSetting = value;
                 }

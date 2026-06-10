@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 5056;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 9066;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -246,6 +246,10 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 bool CalibrationOn[] = { false,false };
 float WheelSpeed = 0;
 uint32_t WheelCounts = 0;
+
+// PID damper
+bool LastAboveTarget[MaxProductCount];
+float OscDamp[MaxProductCount] = { 1.0f, 1.0f };
 
 void setup()
 {
