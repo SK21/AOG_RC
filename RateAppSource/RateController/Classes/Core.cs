@@ -207,6 +207,7 @@ namespace RateController.Classes
         {
             if (ShowNormal)
             {
+                Props.SaveFormLocation(MainForm.MainMini);
                 MainForm.MainMini.Hide();
                 MainForm.WindowState = FormWindowState.Normal;
                 SafeEvent.Raise(RestoreMain);
