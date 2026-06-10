@@ -8,9 +8,15 @@ namespace RateController
 {
     public partial class frmSwitches : Form
     {
+        private static readonly SwIDs[] SwIdMap = {
+            SwIDs.sw0, SwIDs.sw1, SwIDs.sw2,  SwIDs.sw3,
+            SwIDs.sw4, SwIDs.sw5, SwIDs.sw6,  SwIDs.sw7,
+            SwIDs.sw8, SwIDs.sw9, SwIDs.sw10, SwIDs.sw11,
+            SwIDs.sw12,SwIDs.sw13,SwIDs.sw14, SwIDs.sw15
+        };
         private Color ColorOff1 = Color.Silver;
         private Color ColorOff2 = Color.Silver;
-        //private Color ColorOff2 = Color.LightCoral;
+        private Button[] _switchButtons = new Button[0];
         private int mouseX = 0;
         private int mouseY = 0;
         private int windowLeft = 0;
@@ -23,54 +29,42 @@ namespace RateController
 
         public void SetDescriptions()
         {
-            btn1.Text = "1";
-            btn2.Text = "2";
-            btn3.Text = "3";
-            btn4.Text = "4";
-            btn5.Text = "5";
-            btn6.Text = "6";
-            btn7.Text = "7";
-            btn8.Text = "8";
+            for (int i = 0; i < _switchButtons.Length; i++)
+                _switchButtons[i].Text = (i + 1).ToString();
         }
 
-        private void btn1_Click(object sender, EventArgs e)
+        public void CreateSwitchButtons()
         {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw0);
+            foreach (Button b in _switchButtons) Controls.Remove(b);
+
+            int count = Props.SwitchCount;
+            _switchButtons = new Button[count];
+
+            const int btnW = 64, btnH = 46, startX = 12, startY = 68, spacingX = 78, spacingY = 57;
+
+            for (int i = 0; i < count; i++)
+            {
+                Button btn = new Button();
+                btn.Size = new Size(btnW, btnH);
+                btn.Location = new Point(startX + (i % 4) * spacingX, startY + (i / 4) * spacingY);
+                btn.Text = (i + 1).ToString();
+                btn.Tag = i;
+                btn.Click += SwitchButton_Click;
+                _switchButtons[i] = btn;
+                Controls.Add(btn);
+            }
+
+            int rows = count / 4;
+            int autoY = startY + rows * spacingY + 11;
+            btnAutoRate.Location = new Point(startX, autoY);
+            btnAutoSection.Location = new Point(startX + 2 * spacingX, autoY);
+            this.ClientSize = new Size(this.ClientSize.Width, autoY + btnH + 10);
         }
 
-        private void btn2_Click(object sender, EventArgs e)
+        private void SwitchButton_Click(object sender, EventArgs e)
         {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw1);
-        }
-
-        private void btn3_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw2);
-        }
-
-        private void btn4_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw3);
-        }
-
-        private void btn5_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw4);
-        }
-
-        private void btn6_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw5);
-        }
-
-        private void btn7_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw6);
-        }
-
-        private void btn8_Click(object sender, EventArgs e)
-        {
-            Core.vSwitchBox.PressSwitch(SwIDs.sw7);
+            int idx = (int)((Button)sender).Tag;
+            if (idx < SwIdMap.Length) Core.vSwitchBox.PressSwitch(SwIdMap[idx]);
         }
 
         private void btnAutoRate_Click(object sender, EventArgs e)
@@ -139,6 +133,7 @@ namespace RateController
             this.BackColor = Properties.Settings.Default.MainBackColour;
 
             Props.LoadFormLocation(this);
+            CreateSwitchButtons();
             timer1.Enabled = true;
             Core.vSwitchBox.UsefrmSwitches = true;
             Core.vSwitchBox.PressSwitch(SwIDs.MasterOff);
@@ -205,14 +200,8 @@ namespace RateController
             btnUp.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateUp) ? Color.LightGreen : this.TransparencyKey;
             btnDown.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateDown) ? Color.LightGreen : this.TransparencyKey;
 
-            btn1.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw0) ? Color.LightGreen : ColorOff1;
-            btn2.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw1) ? Color.LightGreen : ColorOff1;
-            btn3.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw2) ? Color.LightGreen : ColorOff1;
-            btn4.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw3) ? Color.LightGreen : ColorOff1;
-            btn5.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw4) ? Color.LightGreen : ColorOff1;
-            btn6.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw5) ? Color.LightGreen : ColorOff1;
-            btn7.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw6) ? Color.LightGreen : ColorOff1;
-            btn8.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.sw7) ? Color.LightGreen : ColorOff1;
+            for (int i = 0; i < _switchButtons.Length; i++)
+                _switchButtons[i].BackColor = Core.SwitchBox.SwitchIsOn(SwIdMap[i]) ? Color.LightGreen : ColorOff1;
 
             btnAutoSection.BackColor = Core.SwitchBox.AutoSectionOn ? Color.LightGreen : ColorOff1;
             btnAutoRate.BackColor = Core.SwitchBox.AutoRateOn ? Color.LightGreen : ColorOff1;

@@ -834,4 +834,7 @@
   <data name="lgFolders" xml:space="preserve">
     <value>Folders</value>
   </data>
+  <data name="lgEnabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
 </root>

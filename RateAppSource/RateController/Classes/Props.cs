@@ -75,7 +75,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "15-May-2026";
+        private static string cAppDate = "09-Jun-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -402,6 +402,16 @@ namespace RateController.Classes
                 Props.SetAppProp("ShowSwitches", cShowSwitches.ToString());
                 DisplaySwitches();
             }
+        }
+
+        public static int SwitchCount
+        {
+            get
+            {
+                int sc = int.TryParse(GetAppProp("SwitchCount"), out int v) ? v : 4;
+                return (sc == 4 || sc == 8 || sc == 12 || sc == 16) ? sc : 4;
+            }
+            set { SetAppProp("SwitchCount", value.ToString()); }
         }
 
         public static double SimSpeed_KMH

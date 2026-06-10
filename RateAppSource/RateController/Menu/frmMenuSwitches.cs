@@ -32,6 +32,22 @@ namespace RateController.Menu
             {
                 Props.MasterMaintained = rbMaintained.Checked;
                 Props.ShowSwitches = ckOnScreen.Checked;
+                int newCount = rb4.Checked ? 4 : rb12.Checked ? 12 : rb16.Checked ? 16 : 8;
+                if (newCount < Props.SwitchCount)
+                {
+                    bool conflict = false;
+                    foreach (var rly in Core.RelayObjects.Items)
+                    {
+                        if (rly.Type == RelayTypes.Switch && rly.SwitchID >= newCount)
+                        {
+                            conflict = true;
+                            break;
+                        }
+                    }
+                    if (conflict)
+                        Props.ShowMessage("Warning: one or more relays are assigned to a switch that will no longer be available. Check relay switch assignments.", "Switch Count", 15000, true);
+                }
+                Props.SwitchCount = newCount;
                 Core.SwitchBox.WorkSwitchEnabled = ckWorkSwitch.Checked;
                 Core.SwitchBox.AutoRateEnabled = ckRate.Checked;
                 Core.SwitchBox.AutoSectionEnabled = ckSections.Checked;
@@ -43,6 +59,13 @@ namespace RateController.Menu
                 else if (rbMasterOverride.Checked)
                 {
                     Props.MasterSwitchMode = MasterSwitchMode.Override;
+                }
+
+                frmSwitches sw = Props.IsFormOpen("frmSwitches", false) as frmSwitches;
+                if (sw != null)
+                {
+                    sw.CreateSwitchButtons();
+                    sw.SetDescriptions();
                 }
 
                 SetButtons(false);
@@ -57,6 +80,8 @@ namespace RateController.Menu
 
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
         {
+            if (!Initializing)
+                rb4.Enabled = rb8.Enabled = rb12.Enabled = rb16.Enabled = ckOnScreen.Checked;
             SetButtons(true);
         }
 
@@ -119,7 +144,7 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            ckOnScreen.Text = Lang.lgOnScreen;
+            ckOnScreen.Text = Lang.lgEnabled;
             ckWorkSwitch.Text = Lang.lgWorkSwitch;
             gbAutoSwitch.Text = Lang.lgAutoSwitch;
             ckSections.Text = Lang.lgSections;
@@ -142,6 +167,11 @@ namespace RateController.Menu
             }
 
             ckOnScreen.Checked = Props.ShowSwitches;
+            rb4.Checked = Props.SwitchCount == 4;
+            rb8.Checked = Props.SwitchCount == 8;
+            rb12.Checked = Props.SwitchCount == 12;
+            rb16.Checked = Props.SwitchCount == 16;
+            rb4.Enabled = rb8.Enabled = rb12.Enabled = rb16.Enabled = ckOnScreen.Checked;
             ckWorkSwitch.Checked = Core.SwitchBox.WorkSwitchEnabled;
             ckRate.Checked = Core.SwitchBox.AutoRateEnabled;
             ckSections.Checked = Core.SwitchBox.AutoSectionEnabled;

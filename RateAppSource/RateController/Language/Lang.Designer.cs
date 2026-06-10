@@ -529,6 +529,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        internal static string lgEnabled {
+            get {
+                return ResourceManager.GetString("lgEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable VR.
         /// </summary>
         internal static string lgEnableVR {
