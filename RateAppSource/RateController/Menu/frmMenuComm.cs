@@ -157,6 +157,11 @@ namespace RateController.Menu
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
 
+            tabControl1.SizeMode = TabSizeMode.Fixed;
+            tabControl1.ItemSize = new Size((tabControl1.Width - 4) / tabControl1.TabCount, tabControl1.ItemSize.Height);
+            foreach (TabPage tp in tabControl1.TabPages)
+                tp.BackColor = this.BackColor;
+
             timer1.Enabled = true;
 
             PositionForm();
