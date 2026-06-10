@@ -71,22 +71,6 @@ namespace RateController.Menu
             }
         }
 
-        private void btnResetTank_Click(object sender, EventArgs e)
-        {
-            //check if window already exists
-            Form fs = Props.IsFormOpen("frmResetQuantity");
-
-            if (fs != null)
-            {
-                fs.Focus();
-                return;
-            }
-
-            Form frm = new frmResetQuantity();
-            frm.ShowDialog();
-            UpdateForm();
-        }
-
         private void btnRight_Click(object sender, EventArgs e)
         {
             MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID + 1);
@@ -207,8 +191,6 @@ namespace RateController.Menu
             btnRight.Top = btnOK.Top;
             btnLeft.Left = btnRight.Left - SubMenuLayout.ButtonSpacing;
             btnLeft.Top = btnOK.Top;
-            btnResetTank.Left = btnLeft.Left - SubMenuLayout.ButtonSpacing;
-            btnResetTank.Top = btnOK.Top;
             PositionForm();
             MainMenu.StyleControls(this);
             SetLanguage();
@@ -323,7 +305,6 @@ namespace RateController.Menu
 
             pnlFan.Enabled = Enabled;
             pnlMain.Enabled = Enabled;
-            btnResetTank.Enabled = Enabled;
         }
 
         private void SetLanguage()
@@ -523,7 +504,6 @@ namespace RateController.Menu
                 }
 
                 TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-                btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
 
                 SetEnabled();
             }
@@ -539,7 +519,6 @@ namespace RateController.Menu
             SetButtons(true);
             SetCalDescription();
             TankSize.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
-            btnResetTank.Enabled = MainMenu.CurrentProduct.ControlType != ControlTypeEnum.MotorWeights;
         }
     }
 }

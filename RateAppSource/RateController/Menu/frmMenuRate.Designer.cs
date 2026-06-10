@@ -61,7 +61,6 @@
             this.pnlMain = new System.Windows.Forms.Panel();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
-            this.btnResetTank = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -463,22 +462,6 @@
             this.btnLeft.UseVisualStyleBackColor = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
-            // btnResetTank
-            // 
-            this.btnResetTank.BackColor = System.Drawing.Color.Transparent;
-            this.btnResetTank.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnResetTank.FlatAppearance.BorderSize = 0;
-            this.btnResetTank.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetTank.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetTank.Image = global::RateController.Properties.Resources.Update;
-            this.btnResetTank.Location = new System.Drawing.Point(147, 603);
-            this.btnResetTank.Name = "btnResetTank";
-            this.btnResetTank.Size = new System.Drawing.Size(70, 63);
-            this.btnResetTank.TabIndex = 146;
-            this.btnResetTank.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnResetTank.UseVisualStyleBackColor = false;
-            this.btnResetTank.Click += new System.EventHandler(this.btnResetTank_Click);
-            // 
             // btnCancel
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
@@ -530,7 +513,6 @@
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
-            this.Controls.Add(this.btnResetTank);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.DoubleBuffered = true;
@@ -569,7 +551,6 @@
         private System.Windows.Forms.Label lbBaseRateDes;
         private System.Windows.Forms.Label lb2;
         private System.Windows.Forms.Label lb1;
-        private System.Windows.Forms.Button btnResetTank;
         private System.Windows.Forms.TextBox lbBaseRate;
         private System.Windows.Forms.Label lbAltRate;
         private System.Windows.Forms.Button btnRight;
