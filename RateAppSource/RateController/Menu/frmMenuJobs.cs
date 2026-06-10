@@ -34,11 +34,6 @@ namespace RateController.Menu
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
-        private void btnCalender_Click(object sender, EventArgs e)
-        {
-            tbDate.Text = FormattedDate(DateTime.Now);
-        }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             try
@@ -205,34 +200,6 @@ namespace RateController.Menu
             HighlightCurrentJob();
         }
 
-        private void btnJobsDown_Click(object sender, EventArgs e)
-        {
-            if (lvJobs.Items.Count == 0) return;
-
-            // Estimate items per page
-            int itemHeight = lvJobs.Font.Height + 4; // Add small buffer for padding
-            int itemsPerPage = lvJobs.ClientSize.Height / itemHeight;
-
-            // Find the first visible item
-            int currentTopIndex = lvJobs.TopItem?.Index ?? 0;
-
-            // Scroll down by one page
-            int newTopIndex = Math.Min(lvJobs.Items.Count - 1, currentTopIndex + itemsPerPage);
-            lvJobs.EnsureVisible(newTopIndex);
-        }
-
-        private void btnJobsUp_Click(object sender, EventArgs e)
-        {
-            if (lvJobs.Items.Count == 0) return;
-
-            int itemHeight = lvJobs.Font.Height + 4;
-            int itemsPerPage = lvJobs.ClientSize.Height / itemHeight;
-
-            int currentTopIndex = lvJobs.TopItem?.Index ?? 0;
-            int newTopIndex = Math.Max(0, currentTopIndex - itemsPerPage);
-            lvJobs.EnsureVisible(newTopIndex);
-        }
-
         private void btnLoad_Click(object sender, EventArgs e)
         {
             try
@@ -271,16 +238,6 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuJobs/btnNew_Click: " + ex.Message);
             }
-        }
-
-        private void btnNotesDown_Click(object sender, EventArgs e)
-        {
-            SendMessage(tbNotes.Handle, WM_VSCROLL, new IntPtr(SB_PAGEDOWN), IntPtr.Zero);
-        }
-
-        private void btnNotesUp_Click(object sender, EventArgs e)
-        {
-            SendMessage(tbNotes.Handle, WM_VSCROLL, new IntPtr(SB_PAGEUP), IntPtr.Zero);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -504,6 +461,8 @@ namespace RateController.Menu
             {
                 SubMenuLayout.SetFormLayout(this, MainMenu, null);
 
+                HdrFileName.Width = lvJobs.ClientSize.Width - HdrName.Width - HdrDate.Width;
+
                 PositionForm();
                 MainMenu.MenuMoved += MainMenu_MenuMoved;
                 MainMenu.StyleControls(this);
@@ -617,6 +576,25 @@ namespace RateController.Menu
                 cEdited = Edited;
                 this.Tag = cEdited;
             }
+        }
+
+        private void lvJobs_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawBackground();
+            using (Font boldFont = new Font(lvJobs.Font, FontStyle.Bold))
+                TextRenderer.DrawText(e.Graphics, e.Header.Text, boldFont, e.Bounds,
+                    SystemColors.ControlText,
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+        }
+
+        private void lvJobs_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void lvJobs_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            e.DrawDefault = true;
         }
 
         private void SetLanguage()
