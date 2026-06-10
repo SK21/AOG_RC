@@ -1,5 +1,6 @@
 ﻿using RateController.Classes;
 using RateController.Language;
+using RateController.Menu;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -392,6 +393,15 @@ namespace RateController.Forms
                 }
             }
             FlashTimer.Start();
+
+            if (JobManager.ShowJobs)
+            {
+                frmMenu menu = new frmMenu(false);
+                menu.Show();
+                Form frm = new frmMenuJobs(menu);
+                frm.Owner = menu;
+                frm.Show();
+            }
 
             bool sm = bool.TryParse(Props.GetAppProp("StartMinimized"), out bool mm) ? mm : false;
             if (sm)
