@@ -59,9 +59,9 @@ namespace RateController.PGNs
             SW[(int)SwIDs.AutoSection] = false;
             SW[(int)SwIDs.AutoRate] = false;
 
-            if (bool.TryParse(Props.GetProp("UseWorkSwitch"), out bool uw)) cWorkSwitchEnabled = uw;
-            if (bool.TryParse(Props.GetProp("SwitchboxAutoRateEnabled"), out bool auto)) cAutoRateEnabled = auto;
-            if (bool.TryParse(Props.GetProp("SwitchboxAutoSectionEnabled"), out bool asec)) cAutoSectionEnabled = asec;
+            cWorkSwitchEnabled = bool.TryParse(Props.GetProp("UseWorkSwitch"), out bool ws) ? ws : false;
+            cAutoRateEnabled = bool.TryParse(Props.GetProp("SwitchboxAutoRateEnabled"), out bool ar) ? ar : true;
+            cAutoSectionEnabled = bool.TryParse(Props.GetProp("SwitchboxAutoSectionEnabled"), out bool autosec) ? autosec : true;
         }
 
         public event EventHandler SwitchPGNreceived;
