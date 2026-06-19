@@ -146,4 +146,88 @@ void SendComm()
     }
 }
 
+void SendPIDlog()
+{
+    // PGN32402, PID diagnostics from module to RC (one packet per sensor, at PID-loop cadence)
+    //0     HeaderLo    146
+    //1     HeaderHi    126
+    //2     Mod/Sen ID          0-15/0-15
+    //3     millis Lo           PID loop timestamp, uint32
+    //4     millis
+    //5     millis
+    //6     millis Hi
+    //7     TargetUPM Lo        1000 X actual
+    //8     TargetUPM Mid
+    //9     TargetUPM Hi
+    //10    UPM Lo              1000 X actual
+    //11    UPM Mid
+    //12    UPM Hi
+    //13    Error Lo            1000 X actual, signed 24-bit
+    //14    Error Mid
+    //15    Error Hi
+    //16    Integral Lo         10 X actual, signed 16-bit
+    //17    Integral Hi
+    //18    Change Lo           signed 16-bit
+    //19    Change Hi
+    //20    PWM Lo              signed 16-bit
+    //21    PWM Hi
+    //22    CRC
+
+    if (PidLogEnabled && Ethernet.linkStatus() == LinkON)
+    {
+        byte Data[24];
+
+        for (int i = 0; i < MDL.SensorCount; i++)
+        {
+            if (PidSampleReady[i])
+            {
+                PidSampleReady[i] = false;
+
+                Data[0] = 146;
+                Data[1] = 126;
+                Data[2] = BuildModSenID(MDL.ID, i);
+
+                uint32_t Stamp = DiagMillis[i];
+                Data[3] = Stamp;
+                Data[4] = Stamp >> 8;
+                Data[5] = Stamp >> 16;
+                Data[6] = Stamp >> 24;
+
+                uint32_t Target = Sensor[i].TargetUPM * 1000;
+                Data[7] = Target;
+                Data[8] = Target >> 8;
+                Data[9] = Target >> 16;
+
+                uint32_t Applied = Sensor[i].UPM * 1000;
+                Data[10] = Applied;
+                Data[11] = Applied >> 8;
+                Data[12] = Applied >> 16;
+
+                int32_t Error = DiagError[i] * 1000;	// signed 24-bit
+                Data[13] = Error;
+                Data[14] = Error >> 8;
+                Data[15] = Error >> 16;
+
+                int16_t Integral = DiagIntegral[i] * 10;
+                Data[16] = Integral;
+                Data[17] = Integral >> 8;
+
+                int16_t Change = DiagChange[i];
+                Data[18] = Change;
+                Data[19] = Change >> 8;
+
+                int16_t PWM = (int16_t)Sensor[i].PWM;
+                Data[20] = PWM;
+                Data[21] = PWM >> 8;
+
+                Data[22] = CRC(Data, 22, 0);
+
+                UDPcomm.beginPacket(DestinationIP, DestinationPort);
+                UDPcomm.write(Data, 23);
+                UDPcomm.endPacket();
+            }
+        }
+    }
+}
+
 

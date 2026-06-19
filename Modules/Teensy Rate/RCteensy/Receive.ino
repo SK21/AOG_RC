@@ -36,7 +36,7 @@ void ReadPGNs(byte data[], uint16_t len)
 		//	        - bit 0		    reset acc.Quantity
 		//	        - bit 1,2,3		control type 0-4
 		//	        - bit 4		    MasterOn
-		//          - bit 5         -
+		//          - bit 5         PID logging on (PGN 32402)
 		//          - bit 6         AutoOn
 		//          - bit 7         calibration on
 		//10    manual pwm Lo
@@ -73,6 +73,8 @@ void ReadPGNs(byte data[], uint16_t len)
 						if ((InCommand & 8) == 8) Sensor[SensorID].ControlType += 4;
 
 						MasterOn = ((InCommand & 16) == 16);
+
+						PidLogEnabled = ((InCommand & 32) == 32);
 
 						AutoOn = ((InCommand & 64) == 64);
 

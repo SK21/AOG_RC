@@ -78,6 +78,8 @@ float PIDvalve(byte ID)
 			LastCheck[ID] = millis();
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
+			DiagChange[ID] = 0.0f;
 
 			bool IsPositive = (RateError > 0);
 			if (IsPositive != ErrorIsPositive[ID])
@@ -98,6 +100,7 @@ float PIDvalve(byte ID)
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
 
 				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
+				DiagChange[ID] = ChangeAmount;
 
 				if (fabsf(ChangeAmount) < 0.1)
 				{
@@ -114,6 +117,10 @@ float PIDvalve(byte ID)
 				Result = 0.0f;
 				IntegralSum[ID] = 0.0f;
 			}
+
+			DiagIntegral[ID] = IntegralSum[ID];
+			DiagMillis[ID] = LastCheck[ID];
+			PidSampleReady[ID] = true;
 		}
 	}
 	else

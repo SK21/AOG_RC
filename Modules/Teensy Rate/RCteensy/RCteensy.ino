@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 9066;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19066;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -174,6 +174,14 @@ uint32_t WheelCounts = 0;
 bool LastAboveTarget[MaxProductCount];
 float OscDamp[MaxProductCount] = { 1.0f, 1.0f };
 
+// PID diagnostics logging (PGN 32402). Kept out of SensorConfig so EEPROM layout is unchanged.
+float DiagError[MaxProductCount];
+float DiagIntegral[MaxProductCount];
+float DiagChange[MaxProductCount];
+uint32_t DiagMillis[MaxProductCount];
+bool PidSampleReady[MaxProductCount];
+bool PidLogEnabled = false;
+
 void setup()
 {
 	DoSetup();
@@ -225,9 +233,11 @@ void loop()
 	{
 	case 0:
 		SendComm();
+		SendPIDlog();
 		break;
 	case 2:
 		SendComm();
+		SendPIDlog();
 		break;
 		// CommMode 1 doesn't need SendComm() - data sent via CANBus_Update()
 	}
