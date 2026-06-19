@@ -75,7 +75,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "09-Jun-2026";
+        private static string cAppDate = "19-Jun-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -88,6 +88,7 @@ namespace RateController.Classes
         private static string cDataFolder;
         private static int cDefaultProduct;
         private static string cErrorsFileName = "";
+        private static bool cLogPID = false;
         private static bool cMapPreview = false;
         private static bool cMasterMaintained = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.Standard;
@@ -259,6 +260,20 @@ namespace RateController.Classes
             {
                 if (cJobCollector == null) cJobCollector = new clsJobDataCollector();
                 return cJobCollector;
+            }
+        }
+
+        public static bool LogPID
+        {
+            // whether module PID diagnostics (PGN 32402) are being recorded
+            get { return cLogPID; }
+            set
+            {
+                if (cLogPID != value)
+                {
+                    cLogPID = value;
+                    SetAppProp("LogPID", cLogPID.ToString());
+                }
             }
         }
 
@@ -1122,6 +1137,7 @@ namespace RateController.Classes
             string port = GetAppProp("CanPort");
             cCanPort = string.IsNullOrEmpty(port) ? "COM7" : port;
             cMasterMaintained = bool.TryParse(GetAppProp("MasterMaintained"), out bool mm) ? mm : false;
+            cLogPID = bool.TryParse(GetAppProp("LogPID"), out bool lp) ? lp : false;
         }
 
         public static bool OpenFile(string FileName, bool IsNew = false)

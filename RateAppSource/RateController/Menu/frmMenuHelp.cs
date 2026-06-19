@@ -149,6 +149,9 @@ namespace RateController.Menu
             lbLat.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             ModuleIndicator.BackColor = this.BackColor;
             cModuleID = Core.Products.Item(Props.CurrentProduct).ModuleID;
+
+            // reflect persisted state; setting Checked fires CheckedChanged, which syncs PidLogger
+            ckPidLog.Checked = Props.LogPID;
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -264,6 +267,20 @@ namespace RateController.Menu
             bool Result = Hlp.Result;
             Hlp.Close();
             if (Result) Props.DeleteLogs();
+        }
+
+        private void ckPidLog_CheckedChanged(object sender, EventArgs e)
+        {
+            // Props.LogPID sets command bit 5 in PGN 32500, telling the module to send PGN 32402.
+            Props.LogPID = ckPidLog.Checked;
+            if (ckPidLog.Checked)
+            {
+                Core.PidLogger.Start();
+            }
+            else
+            {
+                Core.PidLogger.Stop();
+            }
         }
     }
 }

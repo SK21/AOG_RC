@@ -13,6 +13,7 @@ namespace RateController.PGNs
         ControlFan = 8,                 // 0000 1000, bit 3
         ControlComboCloseTimed = 10,    // 0000 1010, bit 1, bit 3
         MasterOnMode = 16,              // 0001 0000, bit 4
+        PidLoggingOn = 32,              // 0010 0000, bit 5
         AutoOn = 64,                    // 0100 0000, bit 6
         CalibrationOn = 128             // 1000 0000, bit 7
     }
@@ -104,6 +105,8 @@ namespace RateController.PGNs
 
                 if (Prod.EraseAccumulatedUnits) cData[9] |= (byte)CommandPGN32500.ResetQuantity;
                 Prod.EraseAccumulatedUnits = false;
+
+                if (Props.LogPID) cData[9] |= (byte)CommandPGN32500.PidLoggingOn;
 
                 if (Props.RateCalibrationOn)
                 {

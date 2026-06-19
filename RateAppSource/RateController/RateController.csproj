@@ -123,6 +123,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\clsAlarm.cs" />
+    <Compile Include="Classes\PidLogger.cs" />
     <Compile Include="Classes\clsCalibrate.cs" />
     <Compile Include="Classes\clsCalibrates.cs" />
     <Compile Include="Classes\clsJobDataCollector.cs" />
@@ -448,6 +449,7 @@
     <Compile Include="PGNs\PGN32296.cs" />
     <Compile Include="PGNs\PGN32400.cs" />
     <Compile Include="PGNs\PGN32401.cs" />
+    <Compile Include="PGNs\PGN32402.cs" />
     <Compile Include="PGNs\PGN32500.cs" />
     <Compile Include="PGNs\PGN32501.cs" />
     <Compile Include="PGNs\PGN32502.cs" />

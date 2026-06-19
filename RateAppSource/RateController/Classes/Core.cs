@@ -19,6 +19,8 @@ namespace RateController.Classes
         public static frmMain MainForm;
         public static PGN32700 ModuleConfig;
         public static PGN32401 ModulesStatus;
+        public static PGN32402 PgnPidLog;
+        public static PidLogger PidLogger;
         public static clsProducts Products;
         public static clsAlarm RCalarm;
         public static clsRelays RelayObjects;
@@ -121,6 +123,8 @@ namespace RateController.Classes
 
                 SwitchBox = new PGN32618();
                 ModulesStatus = new PGN32401();
+                PgnPidLog = new PGN32402();
+                PidLogger = new PidLogger();
 
                 Sections = new clsSections();
                 RCalarm = new clsAlarm();

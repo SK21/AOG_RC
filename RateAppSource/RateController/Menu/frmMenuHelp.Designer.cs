@@ -71,6 +71,7 @@
             this.butActivity = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnResetLogs = new System.Windows.Forms.Button();
+            this.ckPidLog = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label12
@@ -596,11 +597,28 @@
             this.btnResetLogs.UseVisualStyleBackColor = false;
             this.btnResetLogs.Click += new System.EventHandler(this.btnResetLogs_Click);
             // 
+            // ckPidLog
+            // 
+            this.ckPidLog.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckPidLog.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckPidLog.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckPidLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckPidLog.Location = new System.Drawing.Point(328, 295);
+            this.ckPidLog.Margin = new System.Windows.Forms.Padding(6);
+            this.ckPidLog.Name = "ckPidLog";
+            this.ckPidLog.Size = new System.Drawing.Size(192, 36);
+            this.ckPidLog.TabIndex = 341;
+            this.ckPidLog.Text = "PID Logging";
+            this.ckPidLog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckPidLog.UseVisualStyleBackColor = true;
+            this.ckPidLog.CheckedChanged += new System.EventHandler(this.ckPidLog_CheckedChanged);
+            // 
             // frmMenuHelp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.ckPidLog);
             this.Controls.Add(this.btnResetLogs);
             this.Controls.Add(this.btnUserManual);
             this.Controls.Add(this.AppLink);
@@ -698,5 +716,6 @@
         private System.Windows.Forms.LinkLabel AppLink;
         private System.Windows.Forms.Button btnUserManual;
         private System.Windows.Forms.Button btnResetLogs;
+        private System.Windows.Forms.CheckBox ckPidLog;
     }
 }
