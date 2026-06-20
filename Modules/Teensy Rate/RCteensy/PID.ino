@@ -79,6 +79,8 @@ float PIDvalve(byte ID)
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
+			DiagTarget[ID] = Sensor[ID].TargetUPM;	// snapshot with the same UPM used for the error
+			DiagApplied[ID] = Sensor[ID].UPM;
 			DiagChange[ID] = 0.0f;
 
 			bool IsPositive = (RateError > 0);
@@ -119,6 +121,7 @@ float PIDvalve(byte ID)
 			}
 
 			DiagIntegral[ID] = IntegralSum[ID];
+			DiagPWM[ID] = Result;	// final computed PWM for this sample
 			DiagMillis[ID] = LastCheck[ID];
 			PidSampleReady[ID] = true;
 		}

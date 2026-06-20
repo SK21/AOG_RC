@@ -193,12 +193,12 @@ void SendPIDlog()
                 Data[5] = Stamp >> 16;
                 Data[6] = Stamp >> 24;
 
-                uint32_t Target = Sensor[i].TargetUPM * 1000;
+                uint32_t Target = DiagTarget[i] * 1000;
                 Data[7] = Target;
                 Data[8] = Target >> 8;
                 Data[9] = Target >> 16;
 
-                uint32_t Applied = Sensor[i].UPM * 1000;
+                uint32_t Applied = DiagApplied[i] * 1000;
                 Data[10] = Applied;
                 Data[11] = Applied >> 8;
                 Data[12] = Applied >> 16;
@@ -216,7 +216,7 @@ void SendPIDlog()
                 Data[18] = Change;
                 Data[19] = Change >> 8;
 
-                int16_t PWM = (int16_t)Sensor[i].PWM;
+                int16_t PWM = (int16_t)DiagPWM[i];
                 Data[20] = PWM;
                 Data[21] = PWM >> 8;
 

@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 19066;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 20066;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -175,9 +175,15 @@ bool LastAboveTarget[MaxProductCount];
 float OscDamp[MaxProductCount] = { 1.0f, 1.0f };
 
 // PID diagnostics logging (PGN 32402). Kept out of SensorConfig so EEPROM layout is unchanged.
+// All fields are snapshotted together when the PID computes so the logged packet is
+// internally consistent (Target/Applied/Error/PWM all from the same instant) regardless
+// of when SendPIDlog() later runs.
 float DiagError[MaxProductCount];
 float DiagIntegral[MaxProductCount];
 float DiagChange[MaxProductCount];
+float DiagTarget[MaxProductCount];
+float DiagApplied[MaxProductCount];
+float DiagPWM[MaxProductCount];
 uint32_t DiagMillis[MaxProductCount];
 bool PidSampleReady[MaxProductCount];
 bool PidLogEnabled = false;
@@ -217,7 +223,7 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			SensorConnected[i] = (millis() - Sensor[i].CommTime < 4000);
-			PIDenabled[i] = SensorConnected[i] && AutoOn && (Sensor[i].TargetUPM > 0);
+			PIDenabled[i] = SensorConnected[i] && AutoOn && MasterOn && (Sensor[i].TargetUPM > 0);
 			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn);
 		}
 
