@@ -152,6 +152,26 @@ Gateway uses ~20-23% CPU even after optimizations. Initial changes (1ms→5ms ma
 
 ## Recent Changes
 
+### Jun 20, 2026 — Teensy Rate PID/Flow Fixes & Log Instrumentation
+
+Driven by analysis of PID logs in `D:\Temp\PIDLogs\` (rate "adjusting down while below target", valve overshoot on start, and "stuck valve"). All firmware edits in `Modules/Teensy Rate/RCteensy/`. **NOT YET FLASHED**; item 7 also needs an app rebuild. Full investigation detail in the auto-memory `project_pid_logging.md`.
+
+Note: the no-arg PID entry `SetPWM()` was renamed to `DoPID()` (disambiguates from the hardware writer `SetPWM(byte,float)` in `Motor.ino`); called at top of `loop()`.
+
+1. **Bug 1 — auto PID drove the valve while master OFF, and (1a) while all sections OFF (`RCteensy.ino`).** `PIDenabled` didn't include `MasterOn`, so with `AutoOn` + the `MinUPM` target floor the loop wound up and drove the valve open while off → ~10× overshoot when flow primed. **1a:** the same windup occurs when auto turns all sections off but the **master stays on** (e.g. spraying over already-sprayed ground) — no flow path, `UPM`=0, target nonzero → valve winds open. Fix (covers both): `PIDenabled[i] = SensorConnected[i] && AutoOn && MasterOn && (RelayLo || RelayHi) && (Sensor[i].TargetUPM > 0);` — the `(RelayLo || RelayHi)` term matches how `PulseISR`/`GetUPM` already define "no flow." Confirmed safe: prime and calibration assert master-on; manual adjust is the `AutoOn==false` path that bypasses `PIDenabled`. (`PIDenabled` vs `Applying` are intentionally separate — `Applying` = "energize output", used for Motor/Fan/ComboClose in `Motor.ino`; standard valve is a velocity-form actuator — PWM drives the valve motor's speed/direction, so PWM=0 means the motor stops and the valve HOLDS its last position, not closes. So gating PID off makes the valve hold its last position → no windup AND no re-entry lag when a section reopens.)
+
+2. **Logging consistency — snapshot (`RCteensy.ino`, `PID.ino`, `Send.ino`).** `SendPIDlog` had mixed snapshot fields (captured at PID-compute) with live `Sensor[i].*` (read at send) → impossible rows (Target 2, Applied 10.3, Error +2) in ~18% of samples. Fix: added `DiagTarget/DiagApplied/DiagPWM`, captured in `PIDvalve` with the rest of the `Diag*` set; `SendPIDlog` transmits those, not live `Sensor` values. (ChatGPT independently confirmed this diagnosis.)
+
+3. **Bug 2 — flow-measurement lag: hybrid fixed-time-window median (`Rate.ino`).** Measured ~200 ms response lag vs 100 ms `PIDtime` → overshoot/limit-cycle (the "down while below target" symptom). The median was fixed-COUNT (`PulseSampleSize` periods) so lag `≈ (PulseSampleSize/2)/Hz` ballooned at low flow and stale samples lingered on shutoff. Fix: per-pulse timestamps (`SampleStamp[]`), ring modulus changed to `MaxSampleSize` (decouples from `PulseSampleSize`, removes a `%0` risk), and `GetUPM` now takes the median of pulses within `FlowWindow` (150 ms, the tuning knob), capped at `PulseSampleSize`. Lag bounded ~`FlowWindow/2` at any flow; high flow still smooths, low flow stays responsive.
+
+4. **Stuck-valve — MaxIntegral semantics (`PID.ino`, valve & motor).** `MaxIntegral` (default 25) was documented as "per-loop change" but used as an absolute clamp on the total `IntegralSum`, capping integral authority at ±25 — too little to overcome valve stiction at small error. Fix (Option B, no app change): `MaxIntegral` now limits the per-loop increment (`IntegralSum += constrain(RateError*Ki, ±MaxIntegral)`) and the TOTAL is clamped to ±(MaxPWM−MinPWM) so the integral can reach full PWM authority while wind-up rate stays bounded.
+
+5. **Ki decode mismatch (`CANBus.ino`).** UDP (`Receive.ino`) decoded Ki as `1.1^(byte-108)`, CAN as `1.1^(byte-120)` — a 3.1× discrepancy per transport. The `-108` was a deliberate bump (integral too weak); changed CAN to `-108` to match UDP. (May be revisited after field-testing the MaxIntegral fix, since it likely compensated for the cap.)
+
+6. **Hysteresis integral reset (`PID.ino`, valve & motor).** Old reset fired on every raw `Error` sign flip = every `Target−Applied` zero crossing, which target wobble triggered (one log: 170 error flips, Applied reversed only 1×) → integral never accumulated. Fix: reset only when the rate clearly crosses to the other side of target beyond a band (`Deadband*Target`); small jitter no longer wipes the integral, genuine overshoots still do.
+
+7. **Median sample-count added to PID log — firmware + APP (`RCteensy.ino`, `Rate.ino`, `PID.ino`, `Send.ino`; `PGNs/PGN32402.cs`, `Classes/PidLogger.cs`, `docs/PID_Log_Excel_Analysis.md`).** PGN 32402 grew 23→24 bytes: new byte `[22] = Samples` (pulse count used in the median that loop), CRC moved to `[23]`. App parses it and writes a new `Samples` CSV column. Lets a field log confirm the fixed-time-window is binding (Samples < PulseSampleSize at low flow). `clsTools.GoodCRC` is length-agnostic. **Firmware and app must be deployed together** — the old app rejects the wider packet.
+
 ### Feb 6, 2026 - Session 2: Bug Fixes & Performance
 
 **Working Set Master PGN Correction:**

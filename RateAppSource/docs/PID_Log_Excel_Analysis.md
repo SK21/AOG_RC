@@ -32,6 +32,7 @@ still below target.
 | `Integral`    | Accumulated integral term (cleared on error sign-flip, by design) |
 | `Change`      | PID change amount this loop |
 | `PWM`         | Resulting valve PWM (signed) |
+| `Samples`     | Pulse samples used in the median this loop (fixed-time-window filter). Low = low flow / fewer samples in the window; confirms the time window is binding vs. the count cap |
 
 ## 1. Open and filter
 

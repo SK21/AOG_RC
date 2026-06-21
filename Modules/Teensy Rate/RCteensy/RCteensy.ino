@@ -184,6 +184,8 @@ float DiagChange[MaxProductCount];
 float DiagTarget[MaxProductCount];
 float DiagApplied[MaxProductCount];
 float DiagPWM[MaxProductCount];
+uint8_t DiagSamples[MaxProductCount];	// pulse samples used in the median (snapshot for logging)
+uint8_t MedianCount[MaxProductCount];	// live: samples GetUPM used in the latest median
 uint32_t DiagMillis[MaxProductCount];
 bool PidSampleReady[MaxProductCount];
 bool PidLogEnabled = false;
@@ -214,7 +216,7 @@ void loop()
 
 	ReceiveUDP();
 	ReceiveUpdate();
-	SetPWM();
+	DoPID();
 
 	if (millis() - LoopLast >= LoopTime)
 	{
@@ -223,7 +225,7 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			SensorConnected[i] = (millis() - Sensor[i].CommTime < 4000);
-			PIDenabled[i] = SensorConnected[i] && AutoOn && MasterOn && (Sensor[i].TargetUPM > 0);
+			PIDenabled[i] = SensorConnected[i] && AutoOn && MasterOn && (RelayLo || RelayHi) && (Sensor[i].TargetUPM > 0);
 			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn);
 		}
 

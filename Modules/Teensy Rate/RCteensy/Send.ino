@@ -171,7 +171,8 @@ void SendPIDlog()
     //19    Change Hi
     //20    PWM Lo              signed 16-bit
     //21    PWM Hi
-    //22    CRC
+    //22    Samples             pulse count used in the median
+    //23    CRC
 
     if (PidLogEnabled && Ethernet.linkStatus() == LinkON)
     {
@@ -220,10 +221,12 @@ void SendPIDlog()
                 Data[20] = PWM;
                 Data[21] = PWM >> 8;
 
-                Data[22] = CRC(Data, 22, 0);
+                Data[22] = DiagSamples[i];	// pulse samples used in the median
+
+                Data[23] = CRC(Data, 23, 0);
 
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 23);
+                UDPcomm.write(Data, 24);
                 UDPcomm.endPacket();
             }
         }

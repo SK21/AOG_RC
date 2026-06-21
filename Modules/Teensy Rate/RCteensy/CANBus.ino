@@ -357,7 +357,7 @@ void CANBus_HandlePidSettings1(const CAN_message_t& msg) {
 		Sensor[senId].Kp = 0;
 	}
 	if (msg.buf[4] > 0) {
-		Sensor[senId].Ki = pow(1.1, msg.buf[4] - 120);
+		Sensor[senId].Ki = pow(1.1, msg.buf[4] - 108);	// match UDP decode (Receive.ino) — Ki offset is -108, not -120
 	}
 	else {
 		Sensor[senId].Ki = 0;

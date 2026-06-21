@@ -22,7 +22,7 @@ float LastPWM[MaxProductCount] = { 0 };
 float IntegralSum[MaxProductCount];
 bool ErrorIsPositive[MaxProductCount] = { true };
 
-void SetPWM()
+void DoPID()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
@@ -81,13 +81,21 @@ float PIDvalve(byte ID)
 			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
 			DiagTarget[ID] = Sensor[ID].TargetUPM;	// snapshot with the same UPM used for the error
 			DiagApplied[ID] = Sensor[ID].UPM;
+			DiagSamples[ID] = MedianCount[ID];	// pulse samples behind this UPM
 			DiagChange[ID] = 0.0f;
 
-			bool IsPositive = (RateError > 0);
-			if (IsPositive != ErrorIsPositive[ID])
+			// Reset the integral only on a genuine overshoot - the rate must clearly cross to
+			// the other side of target (beyond the deadband). Hysteresis stops small target
+			// wobble near the setpoint from repeatedly wiping accumulated correction.
+			float ResetBand = Sensor[ID].Deadband * Sensor[ID].TargetUPM;
+			if (RateError > ResetBand && !ErrorIsPositive[ID])
 			{
-				// prevent integral overshoot on zero crossing
-				ErrorIsPositive[ID] = IsPositive;
+				ErrorIsPositive[ID] = true;
+				IntegralSum[ID] = 0;
+			}
+			else if (RateError < -ResetBand && ErrorIsPositive[ID])
+			{
+				ErrorIsPositive[ID] = false;
 				IntegralSum[ID] = 0;
 			}
 
@@ -95,9 +103,9 @@ float PIDvalve(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].Ki;
+				IntegralSum[ID] += constrain(RateError * Sensor[ID].Ki, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);  // max total integral pwm
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * (Sensor[ID].MaxPWM - Sensor[ID].MinPWM), Sensor[ID].MaxPWM - Sensor[ID].MinPWM);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
 
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
 
@@ -148,11 +156,17 @@ float PIDmotor(byte ID)
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 
-			bool IsPositive = (RateError > 0);
-			if (IsPositive != ErrorIsPositive[ID])
+			// Reset integral only on a genuine overshoot (rate clearly crosses target beyond
+			// the deadband); hysteresis ignores small target wobble near the setpoint.
+			float ResetBand = Sensor[ID].Deadband * Sensor[ID].TargetUPM;
+			if (RateError > ResetBand && !ErrorIsPositive[ID])
 			{
-				// prevent integral overshoot on zero crossing
-				ErrorIsPositive[ID] = IsPositive;
+				ErrorIsPositive[ID] = true;
+				IntegralSum[ID] = 0;
+			}
+			else if (RateError < -ResetBand && ErrorIsPositive[ID])
+			{
+				ErrorIsPositive[ID] = false;
 				IntegralSum[ID] = 0;
 			}
 
@@ -160,9 +174,9 @@ float PIDmotor(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].Ki;
+				IntegralSum[ID] += constrain(RateError * Sensor[ID].Ki, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);  // max total integral pwm
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * (Sensor[ID].MaxPWM - Sensor[ID].MinPWM), Sensor[ID].MaxPWM - Sensor[ID].MinPWM);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
 
 				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustMotor;
 

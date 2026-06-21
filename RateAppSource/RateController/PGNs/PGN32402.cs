@@ -28,9 +28,10 @@ namespace RateController.PGNs
         //19    Change Hi
         //20    PWM Lo              signed 16-bit
         //21    PWM Hi
-        //22    CRC
+        //22    Samples             pulse count used in the median
+        //23    CRC
 
-        private const byte cByteCount = 23;
+        private const byte cByteCount = 24;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 146;
 
@@ -56,7 +57,8 @@ namespace RateController.PGNs
                     Error = RawError / 1000.0,
                     Integral = (Int16)(Data[16] | Data[17] << 8) / 10.0,
                     Change = (Int16)(Data[18] | Data[19] << 8),
-                    PWM = (Int16)(Data[20] | Data[21] << 8)
+                    PWM = (Int16)(Data[20] | Data[21] << 8),
+                    Samples = Data[22]
                 };
 
                 Core.PidLogger?.Log(s);
