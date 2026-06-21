@@ -142,7 +142,15 @@ namespace RateController.PGNs
                     else
                     {
                         RateSet = Prod.TargetUPM() * 1000.0;
-                        if (RateSet < (Prod.MinUPM * 1000.0)) RateSet = Prod.MinUPMinUse() * 1000.0;
+
+                        // only apply the minimum-UPM floor when product is actually applying
+                        // (at least one section on with width); otherwise sections-off would
+                        // command a non-zero target and wind the valve open
+                        if (Prod.ProductOn(false))
+                        {
+                            double MinUPM = Prod.MinUPMinUse() * 1000.0;
+                            if (RateSet < MinUPM) RateSet = MinUPM;
+                        }
                     }
 
                     // master on

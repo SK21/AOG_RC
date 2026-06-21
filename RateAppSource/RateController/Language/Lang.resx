@@ -703,7 +703,7 @@
     <value>Error %</value>
   </data>
   <data name="lgUPMFixed" xml:space="preserve">
-    <value>Fixed Value</value>
+    <value>UPM</value>
   </data>
   <data name="lgUPMPWM" xml:space="preserve">
     <value>UPM/PWM</value>
@@ -836,5 +836,11 @@
   </data>
   <data name="lgEnabled" xml:space="preserve">
     <value>Enabled</value>
+  </data>
+  <data name="lgSpeedMPH" xml:space="preserve">
+    <value>MPH</value>
+  </data>
+  <data name="lgSpeedKMH" xml:space="preserve">
+    <value>KMH</value>
   </data>
 </root>

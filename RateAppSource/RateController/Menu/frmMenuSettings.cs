@@ -158,6 +158,27 @@ namespace RateController.Menu
             SetLanguage();
         }
 
+        private void SetMinUPMboxes()
+        {
+            bool wasInitializing = Initializing;
+            Initializing = true;
+
+            if (rbUPMFixed.Checked)
+            {
+                tbMinUPM.Enabled = true;
+                tbUPMspeed.Enabled = false;
+                tbUPMspeed.Text = "0.0";
+            }
+            else
+            {
+                tbMinUPM.Enabled = false;
+                tbUPMspeed.Enabled = true;
+                tbMinUPM.Text = "0.0";
+            }
+
+            Initializing = wasInitializing;
+        }
+
         private void grpMinUPM_Paint(object sender, PaintEventArgs e)
         {
             GroupBox box = sender as GroupBox;
@@ -182,13 +203,13 @@ namespace RateController.Menu
 
         private void rbUPMFixed_CheckedChanged(object sender, EventArgs e)
         {
-            tbUPMspeed.Text = "0.0";
+            SetMinUPMboxes();
             SetButtons(true);
         }
 
         private void rbUPMSpeed_CheckedChanged(object sender, EventArgs e)
         {
-            tbMinUPM.Text = "0.0";
+            SetMinUPMboxes();
             SetButtons(true);
         }
 
@@ -235,10 +256,18 @@ namespace RateController.Menu
             lbModuleID.Text = Lang.lgModuleID;
             lbSensorID.Text = Lang.lgSensorID;
             rbUPMFixed.Text = Lang.lgUPMFixed;
-            rbUPMSpeed.Text = Lang.lgUPMSpeed;
             ckDefault.Text = Lang.lgDefaultProduct;
             ckOffRate.Text = Lang.lgOffRate;
             ckScale.Text = Lang.lgScaleWeight;
+
+            if (Props.UseMetric)
+            {
+                rbUPMSpeed.Text = Lang.lgUPMSpeed + "  (" + Lang.lgSpeedKMH + ")";
+            }
+            else
+            {
+                rbUPMSpeed.Text = Lang.lgUPMSpeed + "  (" + Lang.lgSpeedMPH + ")";
+            }
         }
 
         private void SetModuleIndicator()

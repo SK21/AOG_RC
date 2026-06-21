@@ -165,10 +165,10 @@
             this.rbUPMSpeed.Location = new System.Drawing.Point(15, 70);
             this.rbUPMSpeed.Margin = new System.Windows.Forms.Padding(2);
             this.rbUPMSpeed.Name = "rbUPMSpeed";
-            this.rbUPMSpeed.Size = new System.Drawing.Size(128, 37);
+            this.rbUPMSpeed.Size = new System.Drawing.Size(184, 37);
             this.rbUPMSpeed.TabIndex = 123;
             this.rbUPMSpeed.Tag = "0";
-            this.rbUPMSpeed.Text = "By Speed";
+            this.rbUPMSpeed.Text = "By Speed  (MPH)";
             this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMSpeed.UseVisualStyleBackColor = true;
             this.rbUPMSpeed.CheckedChanged += new System.EventHandler(this.rbUPMSpeed_CheckedChanged);
@@ -183,11 +183,11 @@
             this.rbUPMFixed.Location = new System.Drawing.Point(15, 27);
             this.rbUPMFixed.Margin = new System.Windows.Forms.Padding(2);
             this.rbUPMFixed.Name = "rbUPMFixed";
-            this.rbUPMFixed.Size = new System.Drawing.Size(128, 37);
+            this.rbUPMFixed.Size = new System.Drawing.Size(184, 37);
             this.rbUPMFixed.TabIndex = 122;
             this.rbUPMFixed.TabStop = true;
             this.rbUPMFixed.Tag = "0";
-            this.rbUPMFixed.Text = "Fixed Value";
+            this.rbUPMFixed.Text = "UPM";
             this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbUPMFixed.UseVisualStyleBackColor = true;
             this.rbUPMFixed.CheckedChanged += new System.EventHandler(this.rbUPMFixed_CheckedChanged);
