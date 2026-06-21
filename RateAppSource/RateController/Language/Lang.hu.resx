@@ -753,4 +753,7 @@
   <data name="lgUseVR" xml:space="preserve">
     <value>Vátozó rátát használ</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>A minimális kiáramlás {0} alatt kapcsol be</value>
+  </data>
 </root>

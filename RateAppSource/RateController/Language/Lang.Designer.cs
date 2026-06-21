@@ -1033,6 +1033,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Minimum flow engages below {0}.
+        /// </summary>
+        internal static string lgMinFlowEngages {
+            get {
+                return ResourceManager.GetString("lgMinFlowEngages", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Minimum UPM.
         /// </summary>
         internal static string lgMinUPM {

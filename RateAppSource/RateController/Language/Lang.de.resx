@@ -283,4 +283,7 @@
   <data name="lgOverallRate" xml:space="preserve">
     <value>Rate seit Nullung</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Mindestdurchfluss aktiviert unter {0}</value>
+  </data>
 </root>

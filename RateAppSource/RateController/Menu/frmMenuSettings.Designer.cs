@@ -35,6 +35,7 @@
             this.tbOffRate = new System.Windows.Forms.TextBox();
             this.ckOffRate = new System.Windows.Forms.CheckBox();
             this.grpMinUPM = new System.Windows.Forms.GroupBox();
+            this.lbUPMhint = new System.Windows.Forms.Label();
             this.tbUPMspeed = new System.Windows.Forms.TextBox();
             this.rbUPMSpeed = new System.Windows.Forms.RadioButton();
             this.rbUPMFixed = new System.Windows.Forms.RadioButton();
@@ -63,7 +64,7 @@
             this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckScale.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckScale.Location = new System.Drawing.Point(288, 454);
+            this.ckScale.Location = new System.Drawing.Point(288, 469);
             this.ckScale.Name = "ckScale";
             this.ckScale.Size = new System.Drawing.Size(162, 34);
             this.ckScale.TabIndex = 149;
@@ -79,7 +80,7 @@
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckDefault.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckDefault.Location = new System.Drawing.Point(78, 454);
+            this.ckDefault.Location = new System.Drawing.Point(78, 469);
             this.ckDefault.Name = "ckDefault";
             this.ckDefault.Size = new System.Drawing.Size(162, 34);
             this.ckDefault.TabIndex = 0;
@@ -131,23 +132,35 @@
             // 
             // grpMinUPM
             // 
+            this.grpMinUPM.Controls.Add(this.lbUPMhint);
             this.grpMinUPM.Controls.Add(this.tbUPMspeed);
             this.grpMinUPM.Controls.Add(this.rbUPMSpeed);
             this.grpMinUPM.Controls.Add(this.rbUPMFixed);
             this.grpMinUPM.Controls.Add(this.tbMinUPM);
             this.grpMinUPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpMinUPM.Location = new System.Drawing.Point(86, 306);
+            this.grpMinUPM.Location = new System.Drawing.Point(86, 284);
             this.grpMinUPM.Name = "grpMinUPM";
-            this.grpMinUPM.Size = new System.Drawing.Size(354, 117);
+            this.grpMinUPM.Size = new System.Drawing.Size(354, 162);
             this.grpMinUPM.TabIndex = 142;
             this.grpMinUPM.TabStop = false;
             this.grpMinUPM.Text = "Minimum UPM";
             this.grpMinUPM.Paint += new System.Windows.Forms.PaintEventHandler(this.grpMinUPM_Paint);
             // 
+            // lbUPMhint
+            // 
+            this.lbUPMhint.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbUPMhint.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbUPMhint.Location = new System.Drawing.Point(18, 122);
+            this.lbUPMhint.Name = "lbUPMhint";
+            this.lbUPMhint.Size = new System.Drawing.Size(307, 33);
+            this.lbUPMhint.TabIndex = 152;
+            this.lbUPMhint.Text = "UPM";
+            this.lbUPMhint.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // tbUPMspeed
             // 
             this.tbUPMspeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbUPMspeed.Location = new System.Drawing.Point(250, 73);
+            this.tbUPMspeed.Location = new System.Drawing.Point(250, 32);
             this.tbUPMspeed.MaxLength = 8;
             this.tbUPMspeed.Name = "tbUPMspeed";
             this.tbUPMspeed.Size = new System.Drawing.Size(75, 29);
@@ -159,14 +172,16 @@
             // rbUPMSpeed
             // 
             this.rbUPMSpeed.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbUPMSpeed.Checked = true;
             this.rbUPMSpeed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbUPMSpeed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbUPMSpeed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbUPMSpeed.Location = new System.Drawing.Point(15, 70);
+            this.rbUPMSpeed.Location = new System.Drawing.Point(15, 28);
             this.rbUPMSpeed.Margin = new System.Windows.Forms.Padding(2);
             this.rbUPMSpeed.Name = "rbUPMSpeed";
             this.rbUPMSpeed.Size = new System.Drawing.Size(184, 37);
             this.rbUPMSpeed.TabIndex = 123;
+            this.rbUPMSpeed.TabStop = true;
             this.rbUPMSpeed.Tag = "0";
             this.rbUPMSpeed.Text = "By Speed  (MPH)";
             this.rbUPMSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -176,16 +191,14 @@
             // rbUPMFixed
             // 
             this.rbUPMFixed.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbUPMFixed.Checked = true;
             this.rbUPMFixed.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbUPMFixed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbUPMFixed.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbUPMFixed.Location = new System.Drawing.Point(15, 27);
+            this.rbUPMFixed.Location = new System.Drawing.Point(15, 75);
             this.rbUPMFixed.Margin = new System.Windows.Forms.Padding(2);
             this.rbUPMFixed.Name = "rbUPMFixed";
             this.rbUPMFixed.Size = new System.Drawing.Size(184, 37);
             this.rbUPMFixed.TabIndex = 122;
-            this.rbUPMFixed.TabStop = true;
             this.rbUPMFixed.Tag = "0";
             this.rbUPMFixed.Text = "UPM";
             this.rbUPMFixed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -195,7 +208,7 @@
             // tbMinUPM
             // 
             this.tbMinUPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbMinUPM.Location = new System.Drawing.Point(250, 30);
+            this.tbMinUPM.Location = new System.Drawing.Point(250, 79);
             this.tbMinUPM.MaxLength = 8;
             this.tbMinUPM.Name = "tbMinUPM";
             this.tbMinUPM.Size = new System.Drawing.Size(75, 29);
@@ -212,7 +225,7 @@
             this.grpSensor.Controls.Add(this.lbModuleID);
             this.grpSensor.Controls.Add(this.tbConID);
             this.grpSensor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpSensor.Location = new System.Drawing.Point(86, 145);
+            this.grpSensor.Location = new System.Drawing.Point(86, 144);
             this.grpSensor.Name = "grpSensor";
             this.grpSensor.Size = new System.Drawing.Size(354, 117);
             this.grpSensor.TabIndex = 141;
@@ -432,5 +445,6 @@
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox ckEnabled;
+        private System.Windows.Forms.Label lbUPMhint;
     }
 }

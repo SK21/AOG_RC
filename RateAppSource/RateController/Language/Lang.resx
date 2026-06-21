@@ -384,6 +384,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Minimum</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Minimum flow engages below {0}</value>
+  </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimum UPM</value>
   </data>

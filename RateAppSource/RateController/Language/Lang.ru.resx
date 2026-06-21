@@ -366,4 +366,7 @@
   <data name="lgUnitsVolt" xml:space="preserve">
     <value>Ед/вольт</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Минимальный поток включается ниже {0}</value>
+  </data>
 </root>

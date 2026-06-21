@@ -575,4 +575,7 @@ Następnie przejdź do kroku 3</value>
   <data name="lgRelayOnHigh" xml:space="preserve">
     <value>Poziom wysoki</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Minimalny przepływ włącza się poniżej {0}</value>
+  </data>
 </root>

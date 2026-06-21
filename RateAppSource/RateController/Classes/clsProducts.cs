@@ -101,6 +101,7 @@ namespace RateController.Classes
                     Prd.AppMode = ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;
                     Prd.MinUPM = 0;
+                    Prd.UseMinUPMbySpeed = true;   // by-speed is the default minimum mode for new profiles
                     Prd.CountsRev = 1;
                     Prd.Enabled = false;
                     Prd.Save();

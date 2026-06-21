@@ -659,12 +659,32 @@ namespace RateController.Classes
             double Result = cMinUPM;
             if (cUseMinUPMbySpeed)
             {
-                double KPH = cMinUPMbySpeed;
-                if (!Props.UseMetric) KPH *= Props.MPHtoKPH;
-                double HPM = Core.Sections.TotalWidth(false) * KPH / 600.0;   // hectares per minute
-                Result = TargetRate() * HPM;
-                if (CoverageUnits == 0) Result *= 2.47105;
+                Result = FloorUPMfromSpeed(cMinUPMbySpeed);
             }
+            return Result;
+        }
+
+        // The UPM floor produced by holding control down to a given minimum ground
+        // speed, at the current target rate and active section width.
+        // minSpeed is in the user's display units (mph or km/h).
+        public double FloorUPMfromSpeed(double minSpeed)
+        {
+            double KPH = minSpeed;
+            if (!Props.UseMetric) KPH *= Props.MPHtoKPH;
+            double HPM = Core.Sections.TotalWidth(false) * KPH / 600.0;   // hectares per minute
+            double Result = TargetRate() * HPM;
+            if (CoverageUnits == 0) Result *= 2.47105;
+            return Result;
+        }
+
+        // The minimum ground speed (user display units) that a given UPM floor
+        // corresponds to, at the current target rate and active section width.
+        // Returns 0 when it cannot be resolved (no target rate / zero width).
+        public double SpeedFromFloorUPM(double upm)
+        {
+            double Result = 0;
+            double upmPerUnitSpeed = FloorUPMfromSpeed(1.0);   // linear, so this is the slope
+            if (upmPerUnitSpeed > 0) Result = upm / upmPerUnitSpeed;
             return Result;
         }
 
