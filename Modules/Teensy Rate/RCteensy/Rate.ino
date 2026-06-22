@@ -6,14 +6,13 @@ uint32_t LastPulse[2];
 uint32_t ReadLast[2];
 uint32_t PulseTime[2];
 
-// Median is taken over pulses that arrived within FlowWindow (hybrid fixed-time window):
+// Median is taken over pulses that arrived within the flow window (hybrid fixed-time window):
 // at high flow the count cap (MaxSampleSize, via the ring buffer) binds and gives smoothing;
-// at low flow the time window binds, so measurement lag stays ~FlowWindow/2 instead of
-// ballooning, and stale samples age out by time (FlowWindow) rather than by pulse count.
-// Lower FlowWindow = less lag but noisier at low flow; this is the main tuning knob.
-// At 400 ms an 8 Hz meter still yields ~3 pulses per median (real outlier rejection) with
-// ~200 ms lag, vs ~750 ms under the old pulse-count filter.
-const uint32_t FlowWindow = 400000;	// microseconds (400 ms)
+// at low flow the time window binds, so measurement lag stays ~window/2 instead of ballooning,
+// and stale samples age out by time rather than by pulse count. Smaller window = less lag but
+// noisier at low flow; this is the main tuning knob.
+// The window is user-adjustable per sensor: Sensor[i].PulseSampleSize carries it as
+// centiseconds (x10 ms), so flowWindowUs = SampleWindow * 10000. 
 
 volatile uint32_t Samples[2][MaxSampleSize];
 volatile uint32_t SampleStamp[2][MaxSampleSize];	// micros() when each pulse arrived
@@ -51,6 +50,7 @@ void GetUPM()
 			LastPulse[i] = millis();
 
 			uint32_t nowMicros = micros();
+			uint32_t flowWindowUs = (uint32_t)Sensor[i].SampleWindow * 10000UL;	// centiseconds -> microseconds
 			uint32_t Snapshot[MaxSampleSize];
 			uint16_t count = 0;
 
@@ -64,7 +64,7 @@ void GetUPM()
 			for (uint8_t n = 0; n < fill && count < MaxSampleSize; n++)
 			{
 				uint8_t slot = (idx + MaxSampleSize - 1 - n) % MaxSampleSize;
-				if (nowMicros - SampleStamp[i][slot] <= FlowWindow)
+				if (nowMicros - SampleStamp[i][slot] <= flowWindowUs)
 				{
 					Snapshot[count++] = Samples[i][slot];
 				}

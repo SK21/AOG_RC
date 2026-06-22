@@ -466,7 +466,7 @@ void LoadDefaults()
 		Sensor[i].PIDtime = 100;
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
-		Sensor[i].PulseSampleSize = 12;
+		Sensor[i].SampleWindow = 40;	// flow window: 40 centiseconds = 400 ms
 	}
 
 	// relay pins

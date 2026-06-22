@@ -200,8 +200,7 @@ void ReadPGNs(byte data[], uint16_t len)
 						uint16_t MaxHz = data[20] | data[21] << 8;
 						if (MaxHz > 0) Sensor[SensorID].PulseMin = 1000000 / MaxHz;
 
-						Sensor[SensorID].PulseSampleSize = data[22];
-						if (Sensor[SensorID].PulseSampleSize > MaxSampleSize) Sensor[SensorID].PulseSampleSize = MaxSampleSize;
+						Sensor[SensorID].SampleWindow = constrain(data[22], 5, 200);	// flow window centiseconds (x10 ms), 50-2000 ms
 
 						SaveData();
 					}

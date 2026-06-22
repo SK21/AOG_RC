@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.Classes
 {
@@ -248,7 +244,7 @@ namespace RateController.Classes
             get { return cPulseSampleSize; }
             set
             {
-                if (value >= 4 && value <= 25)
+                if (value >= 5 && value <= 150)   // flow window centiseconds (x10 ms): 50-1000 ms
                 {
                     cPulseSampleSize = value;
                 }

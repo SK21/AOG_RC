@@ -47,10 +47,10 @@ namespace RateController.Menu
                 Boxes[i].Enter += BoxEnter;
                 Boxes[i].TextChanged += BoxTextChanged;
             }
-            BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 20, .1, 1, 1, 10 };
-            BoxesMax = new double[] { 10, 50, 100, 255, 25, 75, 1000, 2000, 25, 3000, 25, 250 };
+            BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 20, .1, 1, 50, 10 };       // index 10 (tbSampleSize) = flow window ms
+            BoxesMax = new double[] { 10, 50, 100, 255, 25, 75, 1000, 2000, 25, 3000, 1500, 250 };  // index 10 (tbSampleSize) = flow window ms
             BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N1",  "N0", "F0", "F0",
-                "N1","F0","N0","N0" };
+                "N1","F0","F0","N0" };   // index 10 (tbSampleSize) = "F0" so no thousands comma (would break UInt16.TryParse at btnOk)
         }
 
         private void BoxEnter(object sender, EventArgs e)
@@ -210,7 +210,7 @@ namespace RateController.Menu
                 if (UInt16.TryParse(tbPauseTm.Text, out UInt16 pt)) MainMenu.CurrentProduct.TimedPause = pt;
                 if (double.TryParse(tbMinHz.Text, out double mz)) MainMenu.CurrentProduct.PulseMinHz = (byte)(mz * 10);
                 if (UInt16.TryParse(tbMaxHz.Text, out UInt16 max)) MainMenu.CurrentProduct.PulseMaxHz = max;
-                if (byte.TryParse(tbSampleSize.Text, out byte sam)) MainMenu.CurrentProduct.PulseSampleSize = sam;
+                if (UInt16.TryParse(tbSampleSize.Text, out UInt16 win)) MainMenu.CurrentProduct.PulseSampleSize = (byte)(win / 10);   // flow window ms -> centiseconds
                 if (byte.TryParse(tbPIDtime.Text, out byte tim)) MainMenu.CurrentProduct.PIDtime = tim;
 
                 MainMenu.CurrentProduct.Save();
@@ -241,7 +241,7 @@ namespace RateController.Menu
             tbPauseTm.Text = Props.TimedPauseDefault.ToString();
             tbMinHz.Text = (Props.PulseMinHzDefault / 10.0).ToString("N1");
             tbMaxHz.Text = Props.PulseMaxHzDefault.ToString();
-            tbSampleSize.Text = Props.PulseSampleSizeDefault.ToString();
+            tbSampleSize.Text = (Props.PulseSampleSizeDefault * 10).ToString();   // centiseconds -> ms
             tbPIDtime.Text = Props.PIDtimeDefault.ToString();
         }
 
@@ -463,7 +463,7 @@ namespace RateController.Menu
             tbPauseTm.Text = MainMenu.CurrentProduct.TimedPause.ToString();
             tbMinHz.Text = (MainMenu.CurrentProduct.PulseMinHz / 10.0).ToString("N1");
             tbMaxHz.Text = MainMenu.CurrentProduct.PulseMaxHz.ToString();
-            tbSampleSize.Text = MainMenu.CurrentProduct.PulseSampleSize.ToString();
+            tbSampleSize.Text = (MainMenu.CurrentProduct.PulseSampleSize * 10).ToString();   // centiseconds -> ms
             tbPIDtime.Text = MainMenu.CurrentProduct.PIDtime.ToString();
 
             SetAdvanced();

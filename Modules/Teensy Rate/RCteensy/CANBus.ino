@@ -407,10 +407,7 @@ void CANBus_HandlePidSettings3(const CAN_message_t& msg) {
 	if (pulseMaxHz > 0) {
 		Sensor[senId].PulseMin = 1000000 / pulseMaxHz;  // Hz to micros
 	}
-	Sensor[senId].PulseSampleSize = msg.buf[5];
-	if (Sensor[senId].PulseSampleSize > MaxSampleSize) {
-		Sensor[senId].PulseSampleSize = MaxSampleSize;
-	}
+	Sensor[senId].SampleWindow = constrain(msg.buf[5], 5, 200);	// flow window centiseconds (x10 ms), 50-2000 ms
 }
 
 void CANBus_HandleWheelConfig(const CAN_message_t& msg) {
