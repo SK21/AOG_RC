@@ -1,29 +1,53 @@
 
 void AdjustFlow()
 {
+	CheckPressure();
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		float clamped = constrain(Sensor[i].PWM, -255.0f, 255.0f);
-
-		switch (Sensor[i].ControlType)
+		// Over-pressure gate overrides normal control: drive the flow-reducing direction.
+		// Runs in auto and manual, and even if PID is gated off. SetPWM applies MDL.InvertFlow
+		// uniformly, so the negative sign maps to the same physical direction the PID uses to
+		// shed flow on this rig.
+		if (PressureGateActive)
 		{
-		case StandardValve_ct:
-			SetPWM(i, SensorConnected[i] ? clamped : 0.0f);
-			break;
+			IntegralSum[i] = 0;	// no windup while gating
+			switch (Sensor[i].ControlType)
+			{
+			case Motor_ct:
+			case Fan_ct:
+				Sensor[i].PWM = 0.0f;		// stop the pump/fan (the actuator is the flow source)
+				break;
 
-		case Motor_ct:
-		case Fan_ct:
-			SetPWM(i, (SensorConnected[i] && Applying[i]) ? clamped : 0.0f);
-			break;
+			default:
+				Sensor[i].PWM = -255.0f;	// active relief: valve / combo close
+				break;
+			}
+			SetPWM(i, Sensor[i].PWM);		// store in Sensor[i].PWM so PGN32400 reports the real output
+		}
+		else
+		{
+			float clamped = constrain(Sensor[i].PWM, -255.0f, 255.0f);
 
-		case ComboClose_ct:
-		case TimedCombo_ct:
-			// fast close valve or combo close timed, used for flow control and on/off
-			SetPWM(i, SensorConnected[i] && Applying[i] ? clamped : -255.0f);
-			break;
+			switch (Sensor[i].ControlType)
+			{
+			case StandardValve_ct:
+				SetPWM(i, SensorConnected[i] ? clamped : 0.0f);
+				break;
 
-		default:
-			break;
+			case Motor_ct:
+			case Fan_ct:
+				SetPWM(i, (SensorConnected[i] && Applying[i]) ? clamped : 0.0f);
+				break;
+
+			case ComboClose_ct:
+			case TimedCombo_ct:
+				// fast close valve or combo close timed, used for flow control and on/off
+				SetPWM(i, SensorConnected[i] && Applying[i] ? clamped : -255.0f);
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 }
@@ -72,3 +96,74 @@ int ditherAdjust(int base, float val255)
 	return base;
 }
 #endif
+
+void CheckPressure()
+{
+	// Layer 1 over-pressure gate. Sets PressureGateActive; AdjustFlow() drives the
+	// flow-reducing direction while it is set. Topology-independent: reducing flow at
+	// the boom-line sensor reduces pressure at that sensor on every plumbing layout.
+	//
+	// Recovery is NOT pressure-alone: stopping the source collapses pressure, which would
+	// otherwise release the gate and let the loop drive straight back into the blockage
+	// (a bang-bang limit cycle). Instead:
+	//   - hysteresis band stops chatter at the threshold
+	//   - a minimum hold time rate-limits cycling on a transient
+	//   - repeated trips in a short window escalate to a hard latch that only an operator
+	//     reset (master off) clears - a persistent over-pressure is a fault, not a transient.
+
+	// Disabled sentinel - clear all state and leave normal control alone.
+	if (MDL.MaxPressureReading == 0xFFFF)
+	{
+		PressureGateActive = false;
+		PressureGateLatched = false;
+		PressureTripCount = 0;
+		return;
+	}
+
+	// Operator reset: master off clears a hard latch and re-arms the gate.
+	if (!MasterOn)
+	{
+		PressureGateActive = false;
+		PressureGateLatched = false;
+		PressureTripCount = 0;
+		return;
+	}
+
+	// Hard latch holds relief until the reset above.
+	if (PressureGateLatched)
+	{
+		PressureGateActive = true;
+		return;
+	}
+
+	uint16_t releaseLevel = MDL.MaxPressureReading - (MDL.MaxPressureReading / 20);	// 5% hysteresis below trip
+
+	if (PressureGateActive)
+	{
+		// Currently relieving - release only after the min hold AND pressure clearly below trip.
+		if (millis() - PressureGateStart >= PressureMinHold && PressureReading < releaseLevel)
+		{
+			PressureGateActive = false;
+		}
+	}
+	else
+	{
+		// Not relieving - trip on over-pressure.
+		if (PressureReading > MDL.MaxPressureReading)
+		{
+			PressureGateActive = true;
+			PressureGateStart = millis();
+
+			// Count trips in a sliding window; start a fresh window if the last one expired.
+			if (millis() - PressureTripWindow > PressureTripWindowMs)
+			{
+				PressureTripWindow = millis();
+				PressureTripCount = 0;
+			}
+			PressureTripCount++;
+
+			// Repeated trips = persistent fault -> hard latch (require operator reset).
+			if (PressureTripCount >= PressureMaxTrips) PressureGateLatched = true;
+		}
+	}
+}

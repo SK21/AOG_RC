@@ -365,6 +365,20 @@ namespace RateController.Classes.Can
                     }
                     break;
 
+                case 32505:
+                    // → 0xFF10 (max pressure gate threshold)
+                    // PGN32505 layout: [2]=moduleId, [3]=MaxLo, [4]=MaxHi (raw ADC, 0xFFFF=disabled)
+                    if (pgnData.Length >= 5)
+                    {
+                        frames.Add(BuildFrame(0x10, new byte[] {
+                            pgnData[2],  // moduleId
+                            pgnData[3],  // MaxPressureReading lo
+                            pgnData[4],  // MaxPressureReading hi
+                            0, 0, 0, 0, 0
+                        }));
+                    }
+                    break;
+
                 case 32700:
                     // → 0xFF0C (config part 1) + 0xFF0D (part 2) + 0xFF0E (part 3) + 0xFF0F (part 4/commit)
                     // PGN32700 layout: [2]=ModID, [3]=SensorCount, [4]=commands,

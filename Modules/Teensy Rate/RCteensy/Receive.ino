@@ -268,6 +268,27 @@ void ReadPGNs(byte data[], uint16_t len)
 		}
 		break;
 
+	case 32505:
+		// PGN32505, max pressure
+		//0		HeaderLo	249
+		//1		HeaderHi	126
+		//2		ModuleID	0-7
+		//3		MaxLo
+		//4		MaxHi
+		//5		CRC
+
+		PGNlength = 6;
+
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			{
+				MDL.MaxPressureReading = data[3] | data[4] << 8;
+				SaveData();
+			}
+		}
+		break;
+
 	case 32700:
 		// module config
 		//0     HeaderLo    188

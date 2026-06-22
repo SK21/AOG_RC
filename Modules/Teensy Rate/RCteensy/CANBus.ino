@@ -251,6 +251,10 @@ void CANBus_Receive() {
 			CANBus_HandleModuleConfig4(msg);
 			break;
 
+		case 0xFF10:  // Max pressure gate threshold (from PGN 32505)
+			CANBus_HandleMaxPressure(msg);
+			break;
+
 		}
 	}
 }
@@ -434,6 +438,16 @@ void CANBus_HandleFlowCal(const CAN_message_t& msg) {
 
 	uint32_t calRaw = msg.buf[1] | (msg.buf[2] << 8) | ((uint32_t)msg.buf[3] << 16);
 	Sensor[senId].MeterCal = calRaw / 1000.0;
+}
+
+void CANBus_HandleMaxPressure(const CAN_message_t& msg) {
+	// PGN 0xFF10 - Max pressure gate threshold (raw ADC)
+	// Matches UDP PGN 32505: buf[0]=ModID, buf[1]=MaxLo, buf[2]=MaxHi (0xFFFF=disabled)
+	uint8_t modId = msg.buf[0] & 0x0F;
+	if (modId == MDL.ID) {
+		MDL.MaxPressureReading = msg.buf[1] | (msg.buf[2] << 8);
+		SaveData();
+	}
 }
 
 //-----------------------------------------------------------------------------

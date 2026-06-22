@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
 using RateController.Language;
+using RateController.PGNs;
 using System;
 using System.Windows.Forms;
 
@@ -37,6 +38,9 @@ namespace RateController.Menu
                 Props.SetPressureCal(cbModules.SelectedIndex * 5 + 4, double.Parse(tbZeroReading.Text));
                 Props.ShowPressure = ckPressure.Checked;
                 Props.SetMaxPressure(cbModules.SelectedIndex, double.TryParse(tbAlarmPressure.Text, out double mp) ? mp : 0);
+
+                // push the raw-count threshold to the firmware over-pressure gate
+                new PGN32505().Send(cbModules.SelectedIndex);
 
                 SetButtons(false);
                 UpdateForm();

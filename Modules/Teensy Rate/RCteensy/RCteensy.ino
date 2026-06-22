@@ -68,6 +68,7 @@ struct ModuleConfig
 	uint8_t WheelSpeedPin = NC;
 	float WheelCal = 0;
 	uint8_t CommMode = 1;			// 0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary
+	uint16_t MaxPressureReading = 0xFFFF;	// raw analog reading for pressure. 0xFFFF is off
 };
 
 ModuleConfig MDL;
@@ -155,6 +156,16 @@ bool MCP23017_found = false;
 uint PressureReading = 0;
 bool ADSfound = false;
 
+// Pressure max gate (Layer 1 over-pressure cutout). Module-wide: one pressure sensor per module.
+bool PressureGateActive = false;	// currently driving actuators to relieve
+bool PressureGateLatched = false;	// persistent fault - holds relief until operator reset (master off)
+uint32_t PressureGateStart = 0;		// millis() when current relief began (min-hold timer)
+uint8_t PressureTripCount = 0;		// trips counted in the current window
+uint32_t PressureTripWindow = 0;	// millis() at the start of the trip-count window
+const uint16_t PressureMinHold = 3000;			// ms: minimum relief hold after a trip (rate-limits cycling)
+const uint16_t PressureTripWindowMs = 10000;	// ms: window for counting repeated trips
+const uint8_t PressureMaxTrips = 3;				// trips within the window -> escalate to hard latch
+
 bool GoodPins = false;	// configuration pins correct
 
 float TimedCombo(byte, bool);	// function prototype
@@ -189,6 +200,8 @@ uint8_t MedianCount[MaxProductCount];	// live: samples GetUPM used in the latest
 uint32_t DiagMillis[MaxProductCount];
 bool PidSampleReady[MaxProductCount];
 bool PidLogEnabled = false;
+
+float IntegralSum[MaxProductCount];
 
 void setup()
 {
@@ -231,8 +244,8 @@ void loop()
 
 		CheckRelays();
 		GetUPM();
-		AdjustFlow();
 		ReadAnalog();
+		AdjustFlow();
 		if (MDL.WheelSpeedPin != NC) GetSpeed();
 	}
 

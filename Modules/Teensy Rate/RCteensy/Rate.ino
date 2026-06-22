@@ -7,11 +7,13 @@ uint32_t ReadLast[2];
 uint32_t PulseTime[2];
 
 // Median is taken over pulses that arrived within FlowWindow (hybrid fixed-time window):
-// at high flow the count cap (PulseSampleSize) binds and gives smoothing; at low flow the
-// time window binds, so measurement lag stays ~FlowWindow/2 instead of ballooning, and stale
-// samples age out by time (FlowWindow) rather than by pulse count. Lower FlowWindow = less
-// lag but noisier at low flow; this is the main tuning knob.
-const uint32_t FlowWindow = 150000;	// microseconds (150 ms)
+// at high flow the count cap (MaxSampleSize, via the ring buffer) binds and gives smoothing;
+// at low flow the time window binds, so measurement lag stays ~FlowWindow/2 instead of
+// ballooning, and stale samples age out by time (FlowWindow) rather than by pulse count.
+// Lower FlowWindow = less lag but noisier at low flow; this is the main tuning knob.
+// At 400 ms an 8 Hz meter still yields ~3 pulses per median (real outlier rejection) with
+// ~200 ms lag, vs ~750 ms under the old pulse-count filter.
+const uint32_t FlowWindow = 400000;	// microseconds (400 ms)
 
 volatile uint32_t Samples[2][MaxSampleSize];
 volatile uint32_t SampleStamp[2][MaxSampleSize];	// micros() when each pulse arrived
@@ -55,12 +57,11 @@ void GetUPM()
 			noInterrupts();
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
+
+			// walk newest -> oldest, keep pulses inside the time window, capped by count
 			uint8_t fill = SamplesCount[i];
 			uint8_t idx = SamplesIndex[i];				// next write slot
-			uint8_t cap = Sensor[i].PulseSampleSize;	// hybrid count limit
-			if (cap > MaxSampleSize) cap = MaxSampleSize;
-			// walk newest -> oldest, keep pulses inside the time window, capped by count
-			for (uint8_t n = 0; n < fill && count < cap; n++)
+			for (uint8_t n = 0; n < fill && count < MaxSampleSize; n++)
 			{
 				uint8_t slot = (idx + MaxSampleSize - 1 - n) % MaxSampleSize;
 				if (nowMicros - SampleStamp[i][slot] <= FlowWindow)
@@ -72,6 +73,7 @@ void GetUPM()
 					break;	// older than window; everything further back is older too
 				}
 			}
+
 			interrupts();
 
 			uint32_t median = (count > 0) ? MedianFromArray(Snapshot, count) : 0;

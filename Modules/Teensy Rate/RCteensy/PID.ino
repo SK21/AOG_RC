@@ -19,7 +19,6 @@ bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
 float LastPWM[MaxProductCount] = { 0 };
-float IntegralSum[MaxProductCount];
 bool ErrorIsPositive[MaxProductCount] = { true };
 
 void DoPID()
