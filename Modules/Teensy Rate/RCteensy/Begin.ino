@@ -453,17 +453,17 @@ void LoadDefaults()
 	{
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 5;
-		Sensor[i].Kp = pow(1.1, 65 - 120);	// Kp = 65
-		Sensor[i].Ki = pow(1.1, 65 - 120);	// Ki = 65
-		Sensor[i].Deadband = 0.015;
-		Sensor[i].BrakePoint = 35;
-		Sensor[i].PIDslowAdjust = 80;
+		Sensor[i].Kp = pow(1.1, 45 - 120);	// Kp = 45 (KPdefault, app Props.cs)
+		Sensor[i].Ki = pow(1.1, 50 - 108);	// Ki = 50 (KIdefault) - offset -108 matches runtime decode (Receive.ino)
+		Sensor[i].Deadband = 0.015;			// DeadbandDefault 15 / 1000
+		Sensor[i].BrakePoint = 35;			// BrakePointDefault
+		Sensor[i].PIDslowAdjust = 50;		// PIDslowAdjustDefault
 		Sensor[i].SlewRate = 25;
 		Sensor[i].MaxIntegral = 25;
 		Sensor[i].TimedMinStart = 0.5;
 		Sensor[i].TimedAdjust = 80;
 		Sensor[i].TimedPause = 400;
-		Sensor[i].PIDtime = 100;
+		Sensor[i].PIDtime = 150;		// PIDtimeDefault
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
 		Sensor[i].SampleWindow = 40;	// flow window: 40 centiseconds = 400 ms

@@ -58,19 +58,22 @@ void GetUPM()
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
 
-			// walk newest -> oldest, keep pulses inside the time window, capped by count
+			// walk newest -> oldest. Keep pulses inside the time window; but if the window
+			// holds fewer than MinMedianSamples, keep reaching back past the window until we
+			// have the floor, so the median always has enough samples to reject a single
+			// outlier (a 2-sample median is just the mean -> one long period halves the reading).
 			uint8_t fill = SamplesCount[i];
 			uint8_t idx = SamplesIndex[i];				// next write slot
 			for (uint8_t n = 0; n < fill && count < MaxSampleSize; n++)
 			{
 				uint8_t slot = (idx + MaxSampleSize - 1 - n) % MaxSampleSize;
-				if (nowMicros - SampleStamp[i][slot] <= flowWindowUs)
+				if (nowMicros - SampleStamp[i][slot] <= flowWindowUs || count < MinMedianSamples)
 				{
 					Snapshot[count++] = Samples[i][slot];
 				}
 				else
 				{
-					break;	// older than window; everything further back is older too
+					break;	// older than window AND floor met; everything further back is older too
 				}
 			}
 

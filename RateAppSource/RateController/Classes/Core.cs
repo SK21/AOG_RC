@@ -126,6 +126,10 @@ namespace RateController.Classes
                 ModulesStatus = new PGN32401();
                 PgnPidLog = new PGN32402();
                 PidLogger = new PidLogger();
+                // LogPID persists across restarts and already sets PGN 32500 bit 5 (module sends
+                // PGN 32402), so start the CSV writer here too - otherwise logging only began when
+                // the help page opened and fired ckPidLog.CheckedChanged.
+                if (Props.LogPID) PidLogger.Start();
 
                 Sections = new clsSections();
                 RCalarm = new clsAlarm();

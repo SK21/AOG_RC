@@ -15,14 +15,18 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 21066;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 22066;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
+
 const int MaxSampleSize = 25;
 const uint32_t FlowTimeout = 4000;
+const uint8_t MinMedianSamples = 5;   // floor: take at least this many pulses for the
+                                      // median even if older than the flow window, so a
+                                      // 2-sample window can't be corrupted by one bad period
 
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
@@ -390,6 +394,8 @@ void Blink()
 //	if (millis() - DebugTime > 1000)
 //	{
 //		DebugTime = millis();
+//
+//		debug1=Sensor[0].SampleWindow;
 //
 //		Serial.println("");
 //		Serial.print(debug1);

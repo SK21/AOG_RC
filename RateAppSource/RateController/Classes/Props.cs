@@ -75,7 +75,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "21-Jun-2026";
+        private static string cAppDate = "22-Jun-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -132,13 +132,13 @@ namespace RateController.Classes
 
         public static readonly byte BrakePointDefault = 35;
         public static readonly byte DeadbandDefault = 15;
-        public static readonly byte KIdefault = 65;
-        public static readonly byte KPdefault = 65;
+        public static readonly byte KIdefault = 50;
+        public static readonly byte KPdefault = 45;
         public static readonly byte MaxIntegralDefault = 250;
         public static readonly byte MaxPWMdefault = 100;
         public static readonly byte MinPWMdefault = 5;
-        public static readonly byte PIDslowAdjustDefault = 80;
-        public static readonly byte PIDtimeDefault = 100;
+        public static readonly byte PIDslowAdjustDefault = 50;
+        public static readonly byte PIDtimeDefault = 150;
         public static readonly UInt16 PulseMaxHzDefault = 3000;
         public static readonly byte PulseMinHzDefault = 10;
         public static readonly byte PulseSampleSizeDefault = 40;   // flow window: 40 centiseconds = 400 ms

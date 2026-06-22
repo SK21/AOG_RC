@@ -154,6 +154,11 @@ float PIDmotor(byte ID)
 			LastCheck[ID] = millis();
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
+			DiagTarget[ID] = Sensor[ID].TargetUPM;	// snapshot with the same UPM used for the error
+			DiagApplied[ID] = Sensor[ID].UPM;
+			DiagSamples[ID] = MedianCount[ID];	// pulse samples behind this UPM
+			DiagChange[ID] = 0.0f;
 
 			// Reset integral only on a genuine overshoot (rate clearly crosses target beyond
 			// the deadband); hysteresis ignores small target wobble near the setpoint.
@@ -181,6 +186,7 @@ float PIDmotor(byte ID)
 
 				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
 				ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
+				DiagChange[ID] = ChangeAmount;	// slew-limited per-loop change actually applied
 
 				Result += ChangeAmount;
 				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
@@ -190,6 +196,11 @@ float PIDmotor(byte ID)
 			{
 				IntegralSum[ID] = 0.0f;
 			}
+
+			DiagIntegral[ID] = IntegralSum[ID];
+			DiagPWM[ID] = Result;	// final computed PWM for this sample
+			DiagMillis[ID] = LastCheck[ID];
+			PidSampleReady[ID] = true;
 		}
 	}
 	else
