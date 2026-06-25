@@ -152,6 +152,36 @@ Gateway uses ~20-23% CPU even after optimizations. Initial changes (1ms→5ms ma
 
 ## Recent Changes
 
+### Jun 24, 2026 — Min-UPM Floor Scaled by Active Working Width (app only)
+
+Driven by analysis of today's 100 ms-loop PID logs in `D:\Sync\RATE CONTROL\PID logs\`.
+The Min-UPM floor over-applied on **partial-width** passes: the flow target already scales
+with sections currently on (`cHectaresPerMinute = WorkingWidth() * speed / 600`), but the
+floor did not. Fixed `cMinUPM` had no width term; by-speed `FloorUPMfromSpeed` used
+`Core.Sections.TotalWidth(false)` (all *configured* sections — whole implement) instead of
+`WorkingWidth` (sections ON now). With 1 of N sections on, target dropped to ~1/N but the
+floor stayed full-width, so the `RateSet < MinUPM` clamp in `PGN32500.cs` won → over-apply
+on the active section. Smoking gun in `PIDlog_20260624_182648.csv`: recurring flat
+`Target = 4.682` with `Applied 0 / Samples 0` driving PWM to +255 (full-width floor binding
+at low real demand; also fed integral windup → ±255 overshoot reversals).
+
+**Fix (`Classes/clsProduct.cs` — `MinUPMinUse()`):** scale the floor by the active-width
+fraction on the runtime-only path (only `PGN32500` calls it, via `ProductOn(false)`):
+```csharp
+double fullWidth = Core.Sections.TotalWidth(false);
+if (fullWidth > 0) Result *= Core.Sections.WorkingWidth(false) / fullWidth;
+```
+Both modes handled at once: by-speed's `TotalWidth × (WorkingWidth/TotalWidth)` nets to
+`WorkingWidth`; fixed `cMinUPM` gets the active fraction. All sections on → factor 1 →
+unchanged. **Deliberately NOT** placed inside `FloorUPMfromSpeed`/`SpeedFromFloorUPM` —
+those also feed the Settings UI floor↔speed hint (`frmMenuSettings.cs:207/213`), where the
+operator is parked with sections off and `WorkingWidth` would be 0; that preview stays on
+full configured width.
+
+App-side (RateController) only — no firmware. **Needs a Visual Studio rebuild of
+`RateController.sln`.** Reduces (does not eliminate) the over-pressure exposure tracked in
+`docs/MinUPM_OverPressure_Risk.md` (now has a matching 2026-06-24 update section).
+
 ### Jun 20, 2026 — Teensy Rate PID/Flow Fixes & Log Instrumentation
 
 Driven by analysis of PID logs in `D:\Temp\PIDLogs\` (rate "adjusting down while below target", valve overshoot on start, and "stuck valve"). All firmware edits in `Modules/Teensy Rate/RCteensy/`. **NOT YET FLASHED**; item 7 also needs an app rebuild. Full investigation detail in the auto-memory `project_pid_logging.md`.

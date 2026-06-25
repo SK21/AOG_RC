@@ -661,6 +661,16 @@ namespace RateController.Classes
             {
                 Result = FloorUPMfromSpeed(cMinUPMbySpeed);
             }
+
+            // Scale the floor to the active working width so a partial-width pass
+            // isn't floored to the full-implement minimum (which over-applies on the
+            // sections still on). All sections on -> factor 1 -> unchanged.
+            // FloorUPMfromSpeed/SpeedFromFloorUPM stay on full configured width for the
+            // UI preview (sections are off while parked in the menu); the active-width
+            // scaling lives here, on the runtime-only path (PGN32500 via ProductOn).
+            double fullWidth = Core.Sections.TotalWidth(false);
+            if (fullWidth > 0) Result *= Core.Sections.WorkingWidth(false) / fullWidth;
+
             return Result;
         }
 

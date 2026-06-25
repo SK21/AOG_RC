@@ -71,3 +71,38 @@ settled.
 - PGN **32505** is reserved for the future firmware pressure gate (32503 is taken — subnet change).
 - Min-UPM application site: `PGNs/PGN32500.cs` (floor applied under `Prod.ProductOn(false)`).
 - Floor math: `Classes/clsProduct.cs` — `MinUPMinUse()` / `FloorUPMfromSpeed()`.
+
+---
+
+## Update 2026-06-24 — Working-width scaling (separate fix, applied)
+
+A distinct Min-UPM bug was fixed: the floor over-applied on **partial-width** passes.
+The flow *target* already scales with active sections (`cHectaresPerMinute =
+WorkingWidth() * speed / 600`), but the floor did not — fixed `cMinUPM` had no width
+term, and by-speed `FloorUPMfromSpeed` used `TotalWidth(false)` (all **configured**
+sections, the whole implement) rather than `WorkingWidth` (sections currently on). With
+one of N sections on, the target dropped to ~1/N while the floor stayed full-width, so the
+`RateSet < MinUPM` clamp in `PGN32500` won and over-applied on the active section.
+Confirmed in the 100 ms-loop PID log `PIDlog_20260624_182648.csv`: a recurring flat
+`Target = 4.682` with `Applied 0 / Samples 0` driving PWM to +255 was the full-width floor
+binding while real demand was low (also feeding integral windup → ±255 overshoot
+reversals).
+
+**Fix:** scale the floor by the active-width fraction in `MinUPMinUse()` (the runtime-only
+path — only `PGN32500` calls it, via `ProductOn(false)`):
+
+```csharp
+double fullWidth = Core.Sections.TotalWidth(false);
+if (fullWidth > 0) Result *= Core.Sections.WorkingWidth(false) / fullWidth;
+```
+
+Handles both modes uniformly: by-speed's `TotalWidth × (WorkingWidth/TotalWidth)` nets to
+`WorkingWidth`; fixed `cMinUPM` gets the active fraction. All sections on → factor 1 →
+unchanged. The scaling is deliberately **not** placed inside `FloorUPMfromSpeed` /
+`SpeedFromFloorUPM`, because those also drive the Settings UI floor↔speed hint
+(`frmMenuSettings.cs:207/213`), where the operator is parked with master/sections off and
+`WorkingWidth` would be 0 — that preview stays on full configured width.
+
+Relation to the over-pressure risk above: shrinking the partial-width floor **reduces but
+does not eliminate** the exposure, since the floor is now smaller at reduced width. App
+change only (RateController); needs a Visual Studio rebuild of `RateController.sln`.
