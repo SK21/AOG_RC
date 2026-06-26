@@ -36,6 +36,12 @@ IsobusIdentity ISOBUSid;
 uint8_t cfgBuf[30];
 uint8_t cfgFrames = 0;  // bitmask: bit0=0xFF0C, bit1=0xFF0D, bit2=0xFF0E, bit3=0xFF0F
 
+// Board label set over CAN — 3-frame accumulation of PGN 32506 (16 chars).
+// Each frame: buf[0]=ModID (low nibble), buf[1..7]=7 chars.
+//   0xFF11 → boardBuf[0..6], 0xFF12 → boardBuf[7..13], 0xFF13 → boardBuf[14..15] (commit)
+uint8_t boardBuf[16];
+uint8_t boardFrames = 0;  // bitmask: bit0=0xFF11, bit1=0xFF12, bit2=0xFF13
+
 //-----------------------------------------------------------------------------
 // Build 64-bit NAME from identity fields
 //-----------------------------------------------------------------------------
@@ -255,6 +261,18 @@ void CANBus_Receive() {
 			CANBus_HandleMaxPressure(msg);
 			break;
 
+		case 0xFF11:  // Board label set part 1 (from PGN 32506)
+			CANBus_HandleBoardLabel1(msg);
+			break;
+
+		case 0xFF12:  // Board label set part 2 (from PGN 32506)
+			CANBus_HandleBoardLabel2(msg);
+			break;
+
+		case 0xFF13:  // Board label set part 3 / commit (from PGN 32506)
+			CANBus_HandleBoardLabel3(msg);
+			break;
+
 		}
 	}
 }
@@ -448,6 +466,36 @@ void CANBus_HandleMaxPressure(const CAN_message_t& msg) {
 }
 
 //-----------------------------------------------------------------------------
+// Board label set over CAN — 3-frame accumulation of PGN 32506 (16 chars).
+// Each frame carries ModID in buf[0] low nibble; only our frames are buffered.
+//-----------------------------------------------------------------------------
+void CANBus_HandleBoardLabel1(const CAN_message_t& msg) {
+	if ((msg.buf[0] & 0x0F) != MDL.ID) return;
+	boardFrames = 0;  // restart sequence
+	memcpy(boardBuf, msg.buf + 1, 7);   // chars 0-6
+	boardFrames = 0x01;
+}
+
+void CANBus_HandleBoardLabel2(const CAN_message_t& msg) {
+	if ((msg.buf[0] & 0x0F) != MDL.ID) return;
+	memcpy(boardBuf + 7, msg.buf + 1, 7);  // chars 7-13
+	boardFrames |= 0x02;
+}
+
+void CANBus_HandleBoardLabel3(const CAN_message_t& msg) {
+	if ((msg.buf[0] & 0x0F) != MDL.ID) return;
+	boardBuf[14] = msg.buf[1];  // char 14
+	boardBuf[15] = msg.buf[2];  // char 15
+	boardFrames |= 0x04;
+
+	if (boardFrames != 0x07) { boardFrames = 0; return; }  // need all 3 frames
+	boardFrames = 0;
+
+	memcpy(MDLboard.Text, boardBuf, 16);
+	SaveBoardID();  // persist; no restart needed (label is informational)
+}
+
+//-----------------------------------------------------------------------------
 // Module config over CAN — 4-frame accumulation of PGN 32700
 // Frame layout (cfgBuf offset = PGN32700 byte - 2):
 //   0xFF0C → cfgBuf[0..7]  = pgnData[2..9]  (ModID, SensorCount, commands, relay types, Sensor0 pins)
@@ -632,6 +680,29 @@ void CANBus_SendModuleIdent() {
 }
 
 //-----------------------------------------------------------------------------
+// Send board label to RC (PGN 0xFF14/0xFF15/0xFF16 -> assembled as PGN 32403).
+// Each frame: data[0]=ModID (low nibble), data[1..7]=7 chars.
+//-----------------------------------------------------------------------------
+void CANBus_SendBoardLabel() {
+	uint8_t data[8];
+	uint8_t mod = MDL.ID & 0x0F;
+
+	data[0] = mod;
+	memcpy(data + 1, MDLboard.Text, 7);          // chars 0-6
+	CANBus_SendProprietaryB(0x14, data, 8);
+
+	data[0] = mod;
+	memcpy(data + 1, MDLboard.Text + 7, 7);      // chars 7-13
+	CANBus_SendProprietaryB(0x15, data, 8);
+
+	data[0] = mod;
+	data[1] = MDLboard.Text[14];                 // char 14
+	data[2] = MDLboard.Text[15];                 // char 15
+	data[3] = data[4] = data[5] = data[6] = data[7] = 0;
+	CANBus_SendProprietaryB(0x16, data, 8);
+}
+
+//-----------------------------------------------------------------------------
 // Periodic CAN communication (call from main loop)
 //-----------------------------------------------------------------------------
 void CANBus_Update() {
@@ -639,6 +710,7 @@ void CANBus_Update() {
 	static uint32_t lastStatusSend = 0;
 	static uint32_t lastClaimCheck = 0;
 	static uint32_t lastIdentSend = 0;
+	static uint32_t lastBoardIdSend = 0;
 
 	// Receive any pending messages
 	CANBus_Receive();
@@ -672,6 +744,12 @@ void CANBus_Update() {
 	if (millis() - lastIdentSend >= 500) {
 		lastIdentSend = millis();
 		CANBus_SendModuleIdent();
+	}
+
+	// Send board label every 2 s (static; mirrors the UDP PGN 32403 report)
+	if (millis() - lastBoardIdSend >= 2000) {
+		lastBoardIdSend = millis();
+		CANBus_SendBoardLabel();
 	}
 }
 

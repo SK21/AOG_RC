@@ -37,9 +37,15 @@ namespace RateController.PGNs
 
                 cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);
 
-                // UDP only for now - the firmware board-label path (PGN 32403/32506) is UDP only.
-                // CAN support needs a CanFrameTranslator mapping + firmware CANBus handling (TODO).
-                Core.UDPmodules.Send(cData);
+                // Route through the CAN bridge (0xFF11-0xFF13) or Ethernet, same pattern as PGN32505.
+                if (Props.CanEnabled && Core.CanBridgeComm != null)
+                {
+                    Core.CanBridgeComm.SendModuleCommand(cData);
+                }
+                else
+                {
+                    Core.UDPmodules.Send(cData);
+                }
             }
         }
     }

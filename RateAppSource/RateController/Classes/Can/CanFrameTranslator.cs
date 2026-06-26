@@ -26,6 +26,15 @@ namespace RateController.Classes.Can
     ///   0xFF0D: Module config 2  (from PGN 32700, bytes 10-17)
     ///   0xFF0E: Module config 3  (from PGN 32700, bytes 18-25)
     ///   0xFF0F: Module config 4  (from PGN 32700, bytes 26-31, commit)
+    ///   0xFF11: Board label set 1 (from PGN 32506, chars 0-6)
+    ///   0xFF12: Board label set 2 (from PGN 32506, chars 7-13)
+    ///   0xFF13: Board label set 3 (from PGN 32506, chars 14-15, commit)
+    ///
+    /// Frame protocol (Teensy → RC):
+    ///   0xFF14: Board label rpt 1 (→ PGN 32403, chars 0-6)
+    ///   0xFF15: Board label rpt 2 (→ PGN 32403, chars 7-13)
+    ///   0xFF16: Board label rpt 3 (→ PGN 32403, chars 14-15, assemble)
+    /// Board-label frames carry moduleId in data[0] low nibble + 7 chars in data[1-7].
     /// </summary>
     public class CanFrameTranslator
     {
@@ -40,6 +49,9 @@ namespace RateController.Classes.Can
             public byte[] Last0xFF02;  // ModuleStatus
             public byte[] Last0xFF08;  // ModuleIdentification
             public byte[] Last0xFF09;  // WheelCounts (optional, calibration mode)
+            public byte[] Last0xFF14;  // BoardLabel report part 1
+            public byte[] Last0xFF15;  // BoardLabel report part 2
+            public byte[] Last0xFF16;  // BoardLabel report part 3
             public DateTime Last0xFF08Time = DateTime.MinValue;
             public bool WasConnected = false;
         }
@@ -51,6 +63,9 @@ namespace RateController.Classes.Can
 
         /// <summary>Raised when PGN 32401 (module status) is assembled from 0xFF02+0xFF08.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32401Ready;
+
+        /// <summary>Raised when PGN 32403 (board label) is assembled from 0xFF14+0xFF15+0xFF16.</summary>
+        public event EventHandler<PgnAssembledEventArgs> PGN32403Ready;
 
         /// <summary>Raised when 0xFF08 is first seen from a module (module came online).</summary>
         public event EventHandler<int> ModuleConnected;
@@ -143,6 +158,30 @@ namespace RateController.Classes.Can
                 case 0x09:  // 0xFF09 — Wheel Counts (24-bit, calibration mode)
                     if (frame.Dlc >= 4)
                         state.Last0xFF09 = CloneData(frame.Data, 8);
+                    break;
+
+                case 0x14:  // 0xFF14 — Board label report part 1
+                    if (frame.Dlc >= 8)
+                    {
+                        state.Last0xFF14 = CloneData(frame.Data, 8);
+                        TryAssemble32403(state);
+                    }
+                    break;
+
+                case 0x15:  // 0xFF15 — Board label report part 2
+                    if (frame.Dlc >= 8)
+                    {
+                        state.Last0xFF15 = CloneData(frame.Data, 8);
+                        TryAssemble32403(state);
+                    }
+                    break;
+
+                case 0x16:  // 0xFF16 — Board label report part 3 (assemble)
+                    if (frame.Dlc >= 3)
+                    {
+                        state.Last0xFF16 = CloneData(frame.Data, 8);
+                        TryAssemble32403(state);
+                    }
                     break;
             }
         }
@@ -243,6 +282,29 @@ namespace RateController.Classes.Can
             pgn[14] = CalcCrc(pgn, 14);
 
             PGN32401Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
+        }
+
+        private void TryAssemble32403(ModuleState state)
+        {
+            if (state.Last0xFF14 == null || state.Last0xFF15 == null || state.Last0xFF16 == null) return;
+
+            // PGN 32403 (20 bytes): header 0x93 0x7E
+            //  [2]     moduleId   ← f14[0] & 0x0F
+            //  [3-9]   chars 0-6  ← f14[1-7]
+            //  [10-16] chars 7-13 ← f15[1-7]
+            //  [17-18] chars 14-15← f16[1-2]
+            //  [19]    CRC
+            var pgn = new byte[20];
+            pgn[0] = 0x93;
+            pgn[1] = 0x7E;
+            pgn[2] = (byte)(state.Last0xFF14[0] & 0x0F);
+            Array.Copy(state.Last0xFF14, 1, pgn, 3, 7);
+            Array.Copy(state.Last0xFF15, 1, pgn, 10, 7);
+            pgn[17] = state.Last0xFF16[1];
+            pgn[18] = state.Last0xFF16[2];
+            pgn[19] = CalcCrc(pgn, 19);
+
+            PGN32403Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }
 
         // --- Outbound translation ---
@@ -375,6 +437,25 @@ namespace RateController.Classes.Can
                             pgnData[3],  // MaxPressureReading lo
                             pgnData[4],  // MaxPressureReading hi
                             0, 0, 0, 0, 0
+                        }));
+                    }
+                    break;
+
+                case 32506:
+                    // → 0xFF11/0xFF12/0xFF13 (board label, 16 chars in 3 frames, commit on 0xFF13)
+                    // PGN32506 layout: [2]=moduleId, [3-18]=16 chars (0-padded)
+                    // Each frame: [0]=moduleId (low nibble), [1-7]=7 chars
+                    if (pgnData.Length >= 20)
+                    {
+                        byte mod = (byte)(pgnData[2] & 0x0F);
+                        frames.Add(BuildFrame(0x11, new byte[] {
+                            mod, pgnData[3], pgnData[4], pgnData[5], pgnData[6], pgnData[7], pgnData[8], pgnData[9]
+                        }));
+                        frames.Add(BuildFrame(0x12, new byte[] {
+                            mod, pgnData[10], pgnData[11], pgnData[12], pgnData[13], pgnData[14], pgnData[15], pgnData[16]
+                        }));
+                        frames.Add(BuildFrame(0x13, new byte[] {
+                            mod, pgnData[17], pgnData[18], 0, 0, 0, 0, 0
                         }));
                     }
                     break;

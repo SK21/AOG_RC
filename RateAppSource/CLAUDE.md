@@ -74,12 +74,23 @@ Key points:
 | 32501 | 11 | Relay/section states |
 | 32502 | 24 | PID settings |
 | 32504 | 9 | Wheel speed config |
+| 32505 | 6 | Max pressure gate threshold (raw ADC) |
+| 32506 | 20 | Board ID label set (16-char description → module EEPROM) |
+| 32700 | 32 | Module config (pins, relay types, CommMode) |
 
 ### Module → RC PGNs (data)
 | PGN | Size | Description |
 |-----|------|-------------|
 | 32400 | 15 | Sensor data (rate, qty, PWM, Hz) |
 | 32401 | 15 | Module status (pressure, wheel speed, flags) |
+| 32402 | 24 | PID diagnostics log (per-sensor, PID-loop cadence) |
+| 32403 | 20 | Board ID label report (16-char description, ~2 s cyclic) |
+
+### CAN proprietary frame mapping (CommMode 1/2, via `CanFrameTranslator`)
+Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF). Board label:
+- RC → module: PGN 32506 → **0xFF11/0xFF12/0xFF13** (16 chars in 3 frames, `data[0]`=ModID + 7 chars, commit on 0xFF13)
+- module → RC: **0xFF14/0xFF15/0xFF16** → PGN 32403 (assembled on 0xFF16)
+- Stored in a dedicated EEPROM slot (offset 3) that **survives a firmware reflash** (unlike settings).
 
 ### Gateway PGNs
 | PGN | Direction | Description |

@@ -61,6 +61,7 @@ namespace RateController.Classes.Can
                 _translator = new CanFrameTranslator();
                 _translator.PGN32400Ready += OnPGN32400Ready;
                 _translator.PGN32401Ready += OnPGN32401Ready;
+                _translator.PGN32403Ready += OnPGN32403Ready;
                 _translator.ModuleConnected += OnModuleConnected;
                 _translator.ModuleDisconnected += OnModuleDisconnected;
 
@@ -124,6 +125,7 @@ namespace RateController.Classes.Can
             {
                 _translator.PGN32400Ready -= OnPGN32400Ready;
                 _translator.PGN32401Ready -= OnPGN32401Ready;
+                _translator.PGN32403Ready -= OnPGN32403Ready;
                 _translator.ModuleConnected -= OnModuleConnected;
                 _translator.ModuleDisconnected -= OnModuleDisconnected;
                 _translator = null;
@@ -191,6 +193,17 @@ namespace RateController.Classes.Can
             {
                 if (!Core.IsShuttingDown)
                     Core.ModulesStatus.ParseByteData(e.Data);
+            });
+        }
+
+        private void OnPGN32403Ready(object sender, PgnAssembledEventArgs e)
+        {
+            _lastModuleDataTime = DateTime.Now;
+            AddToLog("< 32403");
+            InvokeOnMainForm(() =>
+            {
+                if (!Core.IsShuttingDown)
+                    Core.ModulesBoardID.ParseByteData(e.Data);
             });
         }
 
