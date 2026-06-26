@@ -1,6 +1,7 @@
 ﻿using RateController.Classes;
 using RateController.PGNs;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -10,17 +11,25 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
+        private Timer cBoardIDtimer;
 
         public frmMenuNetwork(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
             this.Tag = false;
+            tbDescription.TextChanged += tbDescription_TextChanged;
+        }
+
+        private void tbDescription_TextChanged(object sender, EventArgs e)
+        {
+            // Editing the board description enables Save (guarded by Initializing so the
+            // read-back populate on Load doesn't enable it).
+            SetButtons(true);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            UpdateForm();
             SetButtons(false);
         }
 
@@ -42,19 +51,24 @@ namespace RateController.Menu
                     NewBoard = 1;
                 }
 
-                if (NewBoard != CurrentBoardType())
-                {
-                    Props.SetProp("BoardType", NewBoard.ToString());
-                    SetDefaults();
-                }
-                else
-                {
-                    if (btnReset.Checked) SetDefaults();
+                SetDefaults(NewBoard);
 
+                // Send the user's board description to the module (stored in its EEPROM,
+                // survives reflash). The Boards page configures module 0 (see SetDefaults).
+                // Only send when non-empty so a blank box can't wipe an existing label
+                // before the read-back (PGN 32403) is wired up.
+                string desc = tbDescription.Text.Trim();
+                if (desc.Length > 0)
+                {
+                    PGN32506 BoardLabel = new PGN32506();
+                    BoardLabel.Send(0, desc);
+
+                    // Reflect the sent label in the cache immediately so the live refresh doesn't
+                    // briefly show the old value until the module reports the new one (~2 s later).
+                    Core.ModulesBoardID.SetLabel(0, desc);
                 }
 
                 SetButtons(false);
-                UpdateForm();
             }
             catch (Exception ex)
             {
@@ -62,13 +76,15 @@ namespace RateController.Menu
             }
         }
 
-        private int CurrentBoardType()
-        {
-            return int.TryParse(Props.GetProp("BoardType"), out int bt) ? bt : 1;
-        }
 
         private void frmMenuNetwork_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (cBoardIDtimer != null)
+            {
+                cBoardIDtimer.Stop();
+                cBoardIDtimer.Dispose();
+                cBoardIDtimer = null;
+            }
             Props.SaveFormLocation(this);
         }
 
@@ -79,12 +95,57 @@ namespace RateController.Menu
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
+
+            // StyleControls restyles every label's font and colours; capture the two hint
+            // labels' designer formatting and restore it afterwards so the hints keep their look.
+            Font exFont = lbExampleHint.Font;
+            Color exFore = lbExampleHint.ForeColor;
+            Font curFont = lbCurrentHint.Font;
+            Color curFore = lbCurrentHint.ForeColor;
+
             MainMenu.StyleControls(this);
+
+            lbExampleHint.Font = exFont;
+            lbExampleHint.ForeColor = exFore;
+            lbCurrentHint.Font = curFont;
+            lbCurrentHint.ForeColor = curFore;
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
-            UpdateForm();
+
+            // Show the description stored on the module, and keep it live-updated while the
+            // form is open (the module reports its label every ~2 s on PGN 32403).
+            RefreshDescription();
+
+            cBoardIDtimer = new Timer();
+            cBoardIDtimer.Interval = 1000;
+            cBoardIDtimer.Tick += BoardIDtimer_Tick;
+            cBoardIDtimer.Start();
+        }
+
+        private void BoardIDtimer_Tick(object sender, EventArgs e)
+        {
+            RefreshDescription();
+        }
+
+        private void RefreshDescription()
+        {
+            // Keep the box in sync with the module: show its reported label while connected,
+            // and clear it when the module is gone (a stale label would misrepresent what's
+            // present). Skipped while the user has unsaved edits so it doesn't clobber typing;
+            // guarded so it doesn't enable Save; only written when it actually changed.
+            if (!cEdited)
+            {
+                string label = Core.ModulesStatus.Connected(0) ? Core.ModulesBoardID.BoardLabel(0) : "";
+                if (label != tbDescription.Text)
+                {
+                    Initializing = true;
+                    tbDescription.Text = label;
+                    Initializing = false;
+                }
+            }
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -101,6 +162,17 @@ namespace RateController.Menu
         private void rbESP32_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+
+            // If the board has no description yet, default it to the selected preset's name
+            // (without the "Load " prefix) so it gets saved to the module when Save is pressed.
+            // Won't overwrite a description already typed or read back from the module.
+            if (!Initializing && sender is RadioButton rb && rb.Checked
+                && string.IsNullOrWhiteSpace(tbDescription.Text))
+            {
+                string name = rb.Text;
+                if (name.StartsWith("Load ")) name = name.Substring(5);
+                tbDescription.Text = name.Trim();
+            }
         }
 
         private void SetButtons(bool Edited)
@@ -116,7 +188,9 @@ namespace RateController.Menu
                 {
                     btnCancel.Enabled = false;
                     btnOK.Enabled = false;
-                    btnReset.Checked = false;
+                    rbNano.Checked = false;
+                    rbTeensy.Checked = false;
+                    rbESP32.Checked = false;
                 }
 
                 cEdited = Edited;
@@ -124,7 +198,7 @@ namespace RateController.Menu
             }
         }
 
-        private void SetDefaults()
+        private void SetDefaults(int Brd)
         {
             PGN32700 Set = Core.ModuleConfig;
             byte[] Pins = new byte[16];
@@ -134,7 +208,7 @@ namespace RateController.Menu
                 Pins[i] = 255;
             }
 
-            switch (CurrentBoardType())
+            switch (Brd)
             {
                 case 1:
                     // RC11-2, Teensy
@@ -241,26 +315,9 @@ namespace RateController.Menu
         {
         }
 
-        private void UpdateForm()
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
         {
-            Initializing = true;
-
-            switch (CurrentBoardType())
-            {
-                case 1:
-                    rbTeensy.Checked = true;
-                    break;
-
-                case 2:
-                    rbESP32.Checked = true;
-                    break;
-
-                default:
-                    rbNano.Checked = true;
-                    break;
-            }
-
-            Initializing = false;
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

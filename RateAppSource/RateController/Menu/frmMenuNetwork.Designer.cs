@@ -33,7 +33,14 @@
             this.rbNano = new System.Windows.Forms.RadioButton();
             this.rbESP32 = new System.Windows.Forms.RadioButton();
             this.rbTeensy = new System.Windows.Forms.RadioButton();
-            this.btnReset = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbExampleHint = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lbCurrentHint = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbDescription = new System.Windows.Forms.TextBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -75,16 +82,14 @@
             // rbNano
             // 
             this.rbNano.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbNano.Checked = true;
             this.rbNano.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbNano.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbNano.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbNano.Location = new System.Drawing.Point(162, 125);
+            this.rbNano.Location = new System.Drawing.Point(51, 101);
             this.rbNano.Name = "rbNano";
-            this.rbNano.Size = new System.Drawing.Size(170, 37);
+            this.rbNano.Size = new System.Drawing.Size(243, 37);
             this.rbNano.TabIndex = 0;
-            this.rbNano.TabStop = true;
-            this.rbNano.Text = "Nano (RC12-3)";
+            this.rbNano.Text = "Load Nano (RC12-3)";
             this.rbNano.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbNano.UseVisualStyleBackColor = true;
             this.rbNano.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
@@ -95,11 +100,11 @@
             this.rbESP32.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbESP32.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbESP32.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbESP32.Location = new System.Drawing.Point(162, 247);
+            this.rbESP32.Location = new System.Drawing.Point(51, 223);
             this.rbESP32.Name = "rbESP32";
-            this.rbESP32.Size = new System.Drawing.Size(170, 37);
+            this.rbESP32.Size = new System.Drawing.Size(243, 37);
             this.rbESP32.TabIndex = 46;
-            this.rbESP32.Text = "ESP32 (RC15)";
+            this.rbESP32.Text = "Load ESP32 (RC15)";
             this.rbESP32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbESP32.UseVisualStyleBackColor = true;
             this.rbESP32.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
@@ -110,42 +115,92 @@
             this.rbTeensy.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbTeensy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbTeensy.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbTeensy.Location = new System.Drawing.Point(162, 186);
+            this.rbTeensy.Location = new System.Drawing.Point(51, 162);
             this.rbTeensy.Name = "rbTeensy";
-            this.rbTeensy.Size = new System.Drawing.Size(170, 37);
+            this.rbTeensy.Size = new System.Drawing.Size(243, 37);
             this.rbTeensy.TabIndex = 45;
-            this.rbTeensy.Text = "Teensy (RC11-2)";
+            this.rbTeensy.Text = "Load Teensy (RC11-2)";
             this.rbTeensy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbTeensy.UseVisualStyleBackColor = true;
             this.rbTeensy.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
             // 
-            // btnReset
+            // groupBox1
             // 
-            this.btnReset.Appearance = System.Windows.Forms.Appearance.Button;
-            this.btnReset.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.Image = global::RateController.Properties.Resources.refresh;
-            this.btnReset.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnReset.Location = new System.Drawing.Point(162, 360);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(170, 69);
-            this.btnReset.TabIndex = 170;
-            this.btnReset.Text = "Reset to defaults";
-            this.btnReset.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.CheckedChanged += new System.EventHandler(this.rbESP32_CheckedChanged);
+            this.groupBox1.Controls.Add(this.lbExampleHint);
+            this.groupBox1.Controls.Add(this.rbNano);
+            this.groupBox1.Controls.Add(this.rbTeensy);
+            this.groupBox1.Controls.Add(this.rbESP32);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(93, 65);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(344, 281);
+            this.groupBox1.TabIndex = 171;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Example Presets";
+            this.groupBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // lbExampleHint
+            // 
+            this.lbExampleHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbExampleHint.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbExampleHint.Location = new System.Drawing.Point(6, 25);
+            this.lbExampleHint.Name = "lbExampleHint";
+            this.lbExampleHint.Size = new System.Drawing.Size(332, 60);
+            this.lbExampleHint.TabIndex = 47;
+            this.lbExampleHint.Text = "These load a starting pin layout for a known board. After loading, edit Pins, Rel" +
+    "ay Pins and Valves to match your own board.";
+            this.lbExampleHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.lbCurrentHint);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.tbDescription);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(93, 406);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(344, 149);
+            this.groupBox2.TabIndex = 172;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Current Board";
+            this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // lbCurrentHint
+            // 
+            this.lbCurrentHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCurrentHint.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lbCurrentHint.Location = new System.Drawing.Point(8, 25);
+            this.lbCurrentHint.Name = "lbCurrentHint";
+            this.lbCurrentHint.Size = new System.Drawing.Size(332, 60);
+            this.lbCurrentHint.TabIndex = 48;
+            this.lbCurrentHint.Text = "Descripton saved on the module to identify it - kept through firmware updates.";
+            this.lbCurrentHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(109, 24);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Description:";
+            // 
+            // tbDescription
+            // 
+            this.tbDescription.Location = new System.Drawing.Point(122, 100);
+            this.tbDescription.Name = "tbDescription";
+            this.tbDescription.Size = new System.Drawing.Size(206, 29);
+            this.tbDescription.TabIndex = 0;
+            this.tbDescription.Text = " ";
             // 
             // frmMenuNetwork
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
-            this.Controls.Add(this.btnReset);
-            this.Controls.Add(this.rbNano);
-            this.Controls.Add(this.rbESP32);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.rbTeensy);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmMenuNetwork";
@@ -153,6 +208,9 @@
             this.Text = "frmMenuNetwork";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuNetwork_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuNetwork_Load);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -164,6 +222,11 @@
         private System.Windows.Forms.RadioButton rbNano;
         private System.Windows.Forms.RadioButton rbESP32;
         private System.Windows.Forms.RadioButton rbTeensy;
-        private System.Windows.Forms.CheckBox btnReset;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox tbDescription;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbExampleHint;
+        private System.Windows.Forms.Label lbCurrentHint;
     }
 }

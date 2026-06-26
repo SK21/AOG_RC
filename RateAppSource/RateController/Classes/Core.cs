@@ -19,6 +19,7 @@ namespace RateController.Classes
         public static frmMain MainForm;
         public static PGN32700 ModuleConfig;
         public static PGN32401 ModulesStatus;
+        public static PGN32403 ModulesBoardID;
         public static PGN32402 PgnPidLog;
         public static PidLogger PidLogger;
         public static clsProducts Products;
@@ -124,6 +125,7 @@ namespace RateController.Classes
 
                 SwitchBox = new PGN32618();
                 ModulesStatus = new PGN32401();
+                ModulesBoardID = new PGN32403();
                 PgnPidLog = new PGN32402();
                 PidLogger = new PidLogger();
                 // LogPID persists across restarts and already sets PGN 32500 bit 5 (module sends

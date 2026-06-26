@@ -143,6 +143,30 @@ void SendComm()
                 UDPcomm.endPacket();
             }
         }
+
+        // PGN32403, board ID label report from module to RC (slow cyclic - static label)
+        //0     HeaderLo    147
+        //1     HeaderHi    126
+        //2     Module ID   (high nibble)
+        //3-18  16 chars    board label, 0-padded
+        //19    CRC
+        static uint32_t BoardIDLast = 0;
+        if (millis() - BoardIDLast > 2000)
+        {
+            BoardIDLast = millis();
+            byte B[20];
+            B[0] = 147;
+            B[1] = 126;
+            B[2] = MDL.ID;	// raw module ID, matching the module-level status report (PGN 32401)
+            for (byte k = 0; k < 16; k++) B[3 + k] = MDLboard.Text[k];
+            B[19] = CRC(B, 19, 0);
+            if (Ethernet.linkStatus() == LinkON)
+            {
+                UDPcomm.beginPacket(DestinationIP, DestinationPort);
+                UDPcomm.write(B, 20);
+                UDPcomm.endPacket();
+            }
+        }
     }
 }
 

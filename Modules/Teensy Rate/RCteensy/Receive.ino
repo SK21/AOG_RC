@@ -291,6 +291,26 @@ void ReadPGNs(byte data[], uint16_t len)
 		}
 		break;
 
+	case 32506:
+		// PGN32506, set board ID label from RC to module (stored in EEPROM, survives reflash)
+		//0		HeaderLo	250
+		//1		HeaderHi	126
+		//2		ModuleID	(high nibble)
+		//3-18	16 chars	board label, 0-padded
+		//19	CRC
+
+		PGNlength = 20;
+
+		if (len > PGNlength - 1 && MDL.CommMode != 1)
+		{
+			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			{
+				for (byte b = 0; b < 16; b++) MDLboard.Text[b] = data[3 + b];
+				SaveBoardID();
+			}
+		}
+		break;
+
 	case 32700:
 		// module config
 		//0     HeaderLo    188

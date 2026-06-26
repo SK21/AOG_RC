@@ -13,6 +13,7 @@ void DoSetup()
 	// eeprom
 	LoadData();
 	LoadNetworks();
+	LoadBoardID();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -556,5 +557,31 @@ void LoadNetworks()
 void SaveNetworks()
 {
 	EEPROM.put(168, MDLnetwork);
+}
+
+void LoadBoardID()
+{
+	// Independent EEPROM slot, NOT guarded by InoID, so the board label survives a firmware
+	// reflash / LoadDefaults (it identifies the hardware, not the settings). SaveData()
+	// only writes offsets 0/2/23/253+, never the 3-22 region, so this is left untouched there.
+	BoardLabel tmp;
+	EEPROM.get(EE_BoardID, tmp);
+	if (tmp.Identifier == BoardIDMagic)
+	{
+		MDLboard = tmp;
+	}
+	else
+	{
+		// uninitialized EEPROM -> start with an empty label
+		MDLboard.Identifier = BoardIDMagic;
+		memset(MDLboard.Text, 0, sizeof(MDLboard.Text));
+		SaveBoardID();
+	}
+}
+
+void SaveBoardID()
+{
+	MDLboard.Identifier = BoardIDMagic;
+	EEPROM.put(EE_BoardID, MDLboard);
 }
 

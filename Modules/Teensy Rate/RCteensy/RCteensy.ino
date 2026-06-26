@@ -95,6 +95,19 @@ struct ModuleNetwork
 
 ModuleNetwork MDLnetwork;
 
+// Board label: a user-entered text description stored on the module to identify the
+// physical board/PCB ("RC12-3", etc). Kept in its own EEPROM slot (like
+// ModuleNetwork) so it SURVIVES a firmware reflash / default reload - it describes the
+// hardware, not the settings. See PID_Normalized_Control_Rationale.md neighbours in docs.
+struct BoardLabel
+{
+	uint16_t Identifier;	// magic to detect an initialized slot
+	char Text[16];			// up to 16 chars; app 0-pads short strings
+};
+BoardLabel MDLboard;
+const int EE_BoardID = 3;			// free EEPROM region 3-22 (between InoType@2 and MDL@23)
+const uint16_t BoardIDMagic = 4321;	// marks an initialized board label slot
+
 struct SensorConfig	// about 104 bytes
 {
 	uint8_t FlowPin;
