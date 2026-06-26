@@ -11,6 +11,11 @@
 // TimedAdjust      time in ms where there is adjustment of the combo valve.
 // TimedPause       time in ms where there is no adjustment of the combo valve.
 // PIDtime          time interval in ms the pid runs
+//
+// PID uses NORMALIZED (ratio) control: error as a fraction of a reference flow, output as a
+// fraction of PWM authority, so Kp/Ki are dimensionless. For the rationale (why this replaced
+// the old absolute-error/raw-PWM scheme), see:
+//   AOG_RC/RateAppSource/docs/PID_Normalized_Control_Rationale.md
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
