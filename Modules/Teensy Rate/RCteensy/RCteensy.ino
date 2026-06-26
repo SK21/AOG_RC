@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 22066;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 25066;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -24,9 +24,13 @@ const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano R
 
 const int MaxSampleSize = 25;
 const uint32_t FlowTimeout = 4000;
-const uint8_t MinMedianSamples = 5;   // floor: take at least this many pulses for the
+const uint8_t MinMedianSamples = 7;   // floor: take at least this many pulses for the
                                       // median even if older than the flow window, so a
-                                      // 2-sample window can't be corrupted by one bad period
+                                      // 2-sample window can't be corrupted by one bad period.
+                                      // 7 (was 5) rejects more bad periods at low flow (field
+                                      // test ~4-8 UPM sat at the floor) at the cost of ~2 pulse
+                                      // periods more lag; only affects low flow (high flow fills
+                                      // the time window before reaching the floor)
 
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;

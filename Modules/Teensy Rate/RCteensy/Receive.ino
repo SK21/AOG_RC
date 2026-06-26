@@ -165,10 +165,13 @@ void ReadPGNs(byte data[], uint16_t len)
 						Sensor[SensorID].MaxPWM = (255.0 * data[3] / 100.0);
 						Sensor[SensorID].MinPWM = (255.0 * data[4] / 100.0);
 
+						// Normalized PID: Kp/Ki are dimensionless (fraction of ref flow -> fraction of PWM
+						// authority). Kp /1000 spreads the usable gain across the slider. Ki uses a
+						// finer /10000 scale: with conditional integration the integral only trims near
+						// target, so it wants a small, fine value while Kp carries the approach.
 						if (data[5] > 0)
 						{
-							// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
-							Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+							Sensor[SensorID].Kp = data[5] / 1000.0;
 						}
 						else
 						{
@@ -177,7 +180,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 						if (data[6] > 0)
 						{
-							Sensor[SensorID].Ki = pow(1.1, data[6] - 108);
+							Sensor[SensorID].Ki = data[6] / 10000.0;
 						}
 						else
 						{

@@ -12,14 +12,12 @@
 // TimedPause       time in ms where there is no adjustment of the combo valve.
 // PIDtime          time interval in ms the pid runs
 
-const float FastAdjustMotor = 1.0;
-const float FastAdjustValve = 40.0;
-const float KpMultiplier = 100.0;
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
 float LastPWM[MaxProductCount] = { 0 };
 bool ErrorIsPositive[MaxProductCount] = { true };
+float RefUPM[MaxProductCount] = { 0 };	// section-independent reference flow for gain normalization (peak target this run)
 
 void DoPID()
 {
@@ -67,6 +65,11 @@ void DoPID()
 
 float PIDvalve(byte ID)
 {
+	// Normalized PID: error is a fraction of a section-independent REFERENCE flow, output a
+	// fraction of PWM authority, so Kp/Ki are dimensionless and one UI scale fits any hardware.
+	// Reference = peak target this run (NOT the live target): dividing by live target made loop
+	// gain ~1/target, so closing sections multiplied the gain and caused oscillation. Peak-target
+	// reference keeps gain constant as sections close while staying identical at full sections.
 	float Result = 0;
 
 	if (PIDenabled[ID])
@@ -75,6 +78,8 @@ float PIDvalve(byte ID)
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
 		{
 			LastCheck[ID] = millis();
+
+			if (Sensor[ID].TargetUPM > RefUPM[ID]) RefUPM[ID] = Sensor[ID].TargetUPM;	// latch peak target as the fixed gain reference
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
@@ -102,13 +107,28 @@ float PIDvalve(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += constrain(RateError * Sensor[ID].Ki, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop
+				// RefUPM is the section-independent reference (>= TargetUPM > 0), so this is safe and
+				// gives constant gain across section states. At full sections RefUPM == TargetUPM.
+				float FracError = RateError / RefUPM[ID];	// bounded to [-1, 1]; smaller at reduced sections -> gentler, not hotter
+				float Authority = Sensor[ID].MaxPWM - Sensor[ID].MinPWM;
+
+				// Conditional integration (anti-windup): only accumulate inside the brakepoint band
+				// (near target). Far from target the P term drives the approach; integrating there
+				// winds up and causes capture overshoot plus extra over-travel ("excessive drop") on
+				// large setpoint steps such as a quick multi-section close.
+				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
+				if (nearTarget)
+				{
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * (Sensor[ID].MaxPWM - Sensor[ID].MinPWM), Sensor[ID].MaxPWM - Sensor[ID].MinPWM);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
 
-				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
+				// BrakeScale is a 0-1 multiplier (replaces FastAdjustValve=40): full authority when far
+				// from target, scaled down inside the brakepoint band.
+				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * BrakeScale * Authority + IntegralSum[ID];
 				DiagChange[ID] = ChangeAmount;
 
 				if (fabsf(ChangeAmount) < 0.1)
@@ -136,6 +156,7 @@ float PIDvalve(byte ID)
 	else
 	{
 		IntegralSum[ID] = 0;
+		RefUPM[ID] = 0;	// re-latch the reference on the next enabled run
 	}
 
 	LastPWM[ID] = Result;
@@ -152,6 +173,8 @@ float PIDmotor(byte ID)
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
 		{
 			LastCheck[ID] = millis();
+
+			if (Sensor[ID].TargetUPM > RefUPM[ID]) RefUPM[ID] = Sensor[ID].TargetUPM;	// latch peak target as the fixed gain reference
 
 			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
 			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
@@ -178,13 +201,28 @@ float PIDmotor(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += constrain(RateError * Sensor[ID].Ki, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop
+				// RefUPM is the section-independent reference (>= TargetUPM > 0), so this is safe and
+				// gives constant gain across section states. At full sections RefUPM == TargetUPM.
+				float FracError = RateError / RefUPM[ID];	// bounded to [-1, 1]; smaller at reduced sections -> gentler, not hotter
+				float Authority = Sensor[ID].MaxPWM - Sensor[ID].MinPWM;
+
+				// Conditional integration (anti-windup): only accumulate inside the brakepoint band
+				// (near target). Far from target the P term drives the approach; integrating there
+				// winds up and causes capture overshoot plus extra over-travel ("excessive drop") on
+				// large setpoint steps such as a quick multi-section close.
+				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
+				if (nearTarget)
+				{
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * (Sensor[ID].MaxPWM - Sensor[ID].MinPWM), Sensor[ID].MaxPWM - Sensor[ID].MinPWM);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
 
-				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustMotor;
+				// BrakeScale is a 0-1 multiplier (replaces FastAdjustMotor): full authority when far
+				// from target, scaled down inside the brakepoint band.
+				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * BrakeScale * Authority + IntegralSum[ID];
 				ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
 				DiagChange[ID] = ChangeAmount;	// slew-limited per-loop change actually applied
 
@@ -206,6 +244,7 @@ float PIDmotor(byte ID)
 	else
 	{
 		IntegralSum[ID] = 0;
+		RefUPM[ID] = 0;	// re-latch the reference on the next enabled run
 	}
 
 	return Result;
