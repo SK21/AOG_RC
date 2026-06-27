@@ -29,10 +29,31 @@ still below target.
 | `Target`      | Target rate (UPM) |
 | `Applied`     | Measured rate (UPM) |
 | `Error`       | `Target - Applied`, raw before deadband/constrain |
-| `Integral`    | Accumulated integral term (cleared on error sign-flip, by design) |
+| `Integral`    | Accumulated integral term (reset only on a *genuine* overshoot — error crossing target beyond the deadband; small jitter no longer wipes it) |
 | `Change`      | PID change amount this loop |
 | `PWM`         | Resulting valve PWM (signed) |
 | `Samples`     | Pulse samples used in the median this loop (fixed-time-window filter). Low = low flow / fewer samples in the window; confirms the time window is binding vs. the count cap |
+| `InoID`       | Firmware build id that produced the row (e.g. `25066`, encoding build `25/06/2026`). **Identifies the exact firmware** — present from the InoID-change build onward; older logs omit this column |
+
+## 0. Identify the firmware first
+
+Before reading anything into the numbers, confirm **which firmware** produced the log — tuning
+signatures only mean something if you know whether the normalized/conditional-integration
+controller was actually running.
+
+- **In Excel:** check the `InoID` column. It should be constant for the whole run; it names the
+  exact build (`25066` → built `25/06/2026`). Compare it to the InoID of the build you intended
+  to flash. If the column is absent, the log predates this feature.
+- **Quick automated read:** run the bundled script (Git Bash), which prints the InoID, the
+  CRAWL-vs-OVERSHOOT verdict, and the matching tuning lever:
+
+  ```
+  bash docs/pid_log_compare.sh "<path to PIDlog_*.csv>" [brakepoint%]
+  ```
+
+  On logs without an `InoID` column it falls back to fingerprinting `Change`/`PWM` magnitude
+  (old absolute-error firmware pegs `PWM` at 255 and produces three-digit `Change`; the
+  normalized build keeps `PWM` ≤ ~100 and `Change` small).
 
 ## 1. Open and filter
 
@@ -71,13 +92,14 @@ This shows Target vs. Applied and whether PWM moves the correct direction when t
 
 Make a second scatter chart of `T_sec` vs `Error`, `Integral`, `Change`. Look for these signatures:
 
-- **Flow-noise false reversals (most likely cause):** `Applied` jitters rapidly across `Target`, so
-  `Error` flips sign every few samples. The firmware zeroes `Integral` on every sign-flip (to prevent
-  overshoot), so you will see `Integral` repeatedly snap to 0 — accumulated correction is thrown away.
-  This looks exactly like "it was low, then drove down."
-  **Fix is upstream:** more flow filtering (`PulseSampleSize`) or a wider `Deadband` — *not* the gains.
+- **Flow-noise false reversals:** `Applied` jitters rapidly across `Target`, so `Error` flips sign
+  every few samples. Current firmware only resets `Integral` on a *genuine* overshoot (error crossing
+  target beyond the deadband), so jitter no longer wipes the integral the way it did in older builds —
+  but heavy noise still drives `Change`/`PWM` chatter. If you see `Integral` snapping to 0 on nearly
+  every sign-flip, you are looking at an **old build** (confirm with `InoID` / §0).
+  **Fix is upstream:** more flow filtering (`PulseSampleSize`/flow window) or a wider `Deadband` — *not* the gains.
   **Detect it:** add a helper column on `Error` (column G): `=IF(SIGN(G2)<>SIGN(G1),1,0)` and sum it.
-  A high flip count over a short window confirms noise-driven integral resets.
+  A high flip count over a short window confirms noise-driven chatter.
 - **Measurement lag:** `Applied` trends the right way but arrives late (flow median/exponential filter),
   so `Change`/`PWM` are still reacting to an error that is already gone — classic overshoot-then-correct.
 - **Genuine over-correction:** modest `Error` but large `Change` → `Kp` (or the fast-adjust brake region)
@@ -98,4 +120,6 @@ Make a second scatter chart of `T_sec` vs `Error`, `Integral`, `Change`. Look fo
 
 - Logging is gated behind command **bit 5 of PGN 32500** and is off by default, so it adds no load in
   normal use. When on it is well under 1% of Teensy loop time and does not affect PID/flow timing.
-- Only **valve** (and timed-combo) sensors emit log samples; the motor/fan PID path is not instrumented.
+- **Valve**, **timed-combo**, and **motor/fan** PID paths all emit log samples. Note the motor path is
+  velocity-form (`PWM` accumulates) while the valve path is positional, so the `PWM`/`Change` columns
+  read differently between them — interpret each in light of its control type.

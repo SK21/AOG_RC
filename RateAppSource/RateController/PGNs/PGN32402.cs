@@ -29,9 +29,11 @@ namespace RateController.PGNs
         //20    PWM Lo              signed 16-bit
         //21    PWM Hi
         //22    Samples             pulse count used in the median
-        //23    CRC
+        //23    InoID Lo            firmware build id, uint16
+        //24    InoID Hi
+        //25    CRC
 
-        private const byte cByteCount = 24;
+        private const byte cByteCount = 26;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 146;
 
@@ -58,7 +60,8 @@ namespace RateController.PGNs
                     Integral = (Int16)(Data[16] | Data[17] << 8) / 10.0,
                     Change = (Int16)(Data[18] | Data[19] << 8),
                     PWM = (Int16)(Data[20] | Data[21] << 8),
-                    Samples = Data[22]
+                    Samples = Data[22],
+                    InoID = Data[23] | Data[24] << 8
                 };
 
                 Core.PidLogger?.Log(s);

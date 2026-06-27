@@ -17,6 +17,7 @@ namespace RateController.Classes
         public double Change;
         public double PWM;
         public int Samples;
+        public int InoID;
     }
 
     // Records PID diagnostics (PGN 32402) to a CSV file for offline analysis.
@@ -24,10 +25,10 @@ namespace RateController.Classes
     // thread, so all file access is locked.
     //
     // Example file contents:
-    //   PCTime,ModuleMillis,ModuleID,SensorID,Target,Applied,Error,Integral,Change,PWM,Samples
-    //   14:32:07.812,1048576,0,0,120,114.3,5.7,12.4,38.2,162,12
-    //   14:32:07.912,1048676,0,0,120,118.9,1.1,12.4,7.3,170,12
-    //   14:32:08.013,1048776,0,0,120,121.4,-1.4,0,-9.6,160,9
+    //   PCTime,ModuleMillis,ModuleID,SensorID,Target,Applied,Error,Integral,Change,PWM,Samples,InoID
+    //   14:32:07.812,1048576,0,0,120,114.3,5.7,12.4,38.2,162,12,25066
+    //   14:32:07.912,1048676,0,0,120,118.9,1.1,12.4,7.3,170,12,25066
+    //   14:32:08.013,1048776,0,0,120,121.4,-1.4,0,-9.6,160,9,25066
     //
     //   PCTime       - tablet clock when the sample was received (HH:mm:ss.fff)
     //   ModuleMillis - Teensy millis() at the PID loop; use this to see true sub-200 ms cadence
@@ -38,6 +39,7 @@ namespace RateController.Classes
     //   Change       - PID change amount this loop
     //   PWM          - resulting valve PWM (signed)
     //   Samples      - pulse samples used in the median this loop (time-window filter; low = low flow / fewer samples)
+    //   InoID        - firmware build id that produced the row (e.g. 25066); identifies the exact firmware
     public class PidLogger
     {
         private readonly object cLock = new object();
@@ -70,7 +72,8 @@ namespace RateController.Classes
                             s.Integral.ToString("0.#", CultureInfo.InvariantCulture),
                             s.Change.ToString("0.###", CultureInfo.InvariantCulture),
                             s.PWM.ToString("0.###", CultureInfo.InvariantCulture),
-                            s.Samples.ToString(CultureInfo.InvariantCulture)));
+                            s.Samples.ToString(CultureInfo.InvariantCulture),
+                            s.InoID.ToString(CultureInfo.InvariantCulture)));
                     }
                     catch (Exception ex)
                     {
@@ -93,7 +96,7 @@ namespace RateController.Classes
 
                         cFilePath = Path.Combine(folder, "PIDlog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
                         cWriter = new StreamWriter(cFilePath, false) { AutoFlush = true };
-                        cWriter.WriteLine("PCTime,ModuleMillis,ModuleID,SensorID,Target,Applied,Error,Integral,Change,PWM,Samples");
+                        cWriter.WriteLine("PCTime,ModuleMillis,ModuleID,SensorID,Target,Applied,Error,Integral,Change,PWM,Samples,InoID");
                         cRunning = true;
                     }
                     catch (Exception ex)

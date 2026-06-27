@@ -196,11 +196,13 @@ void SendPIDlog()
     //20    PWM Lo              signed 16-bit
     //21    PWM Hi
     //22    Samples             pulse count used in the median
-    //23    CRC
+    //23    InoID Lo            firmware build id, uint16 (identifies exact firmware that produced the log)
+    //24    InoID Hi
+    //25    CRC
 
     if (PidLogEnabled && Ethernet.linkStatus() == LinkON)
     {
-        byte Data[24];
+        byte Data[26];
 
         for (int i = 0; i < MDL.SensorCount; i++)
         {
@@ -247,10 +249,13 @@ void SendPIDlog()
 
                 Data[22] = DiagSamples[i];	// pulse samples used in the median
 
-                Data[23] = CRC(Data, 23, 0);
+                Data[23] = (byte)InoID;		// firmware build id, lets the analyzer name the exact firmware
+                Data[24] = InoID >> 8;
+
+                Data[25] = CRC(Data, 25, 0);
 
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 24);
+                UDPcomm.write(Data, 26);
                 UDPcomm.endPacket();
             }
         }
