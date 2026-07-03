@@ -682,11 +682,13 @@ private:
 	void mbCallbacks(const FLEXCAN_MAILBOX &mb_num, const CAN_message_t &msg);
 };
 
-#include "FlexCAN_T4.tpp"
+// _impl.hpp files were .tpp — renamed because the classic Arduino IDE build
+// only copies recognized extensions into its build tree, breaking the include
+#include "FlexCAN_T4_impl.hpp"
 
 #if defined(__IMXRT1062__)
-#include "FlexCAN_T4FD.tpp"
-#include "FlexCAN_T4FDTimings.tpp"
+#include "FlexCAN_T4FD_impl.hpp"
+#include "FlexCAN_T4FDTimings_impl.hpp"
 #endif
 
 #endif
