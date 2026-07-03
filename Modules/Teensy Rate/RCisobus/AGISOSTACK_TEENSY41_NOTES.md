@@ -16,7 +16,7 @@ unused `flex_can_t4_plugin.cpp` disabled. This keeps the project independent of
 the stock library installed in `Documents/Arduino/libraries`.
 
 If Arduino IDE still compiles the stock AgIsoStack library and reports RAM1
-overflow, restart Arduino IDE and make sure `RCteensy.ino` includes:
+overflow, restart Arduino IDE and make sure `RCisobus.ino` includes:
 
 `#include "src/AgIsoStack/AgIsoStack.hpp"`
 

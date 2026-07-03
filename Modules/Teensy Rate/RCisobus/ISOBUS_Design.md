@@ -47,7 +47,7 @@ This firmware has one communication mode: **ISOBUS over CAN**. There is no propr
 - **CAN bus** carries ISOBUS TC and VT traffic only. The proprietary 0xFF03–0xFF0F CAN frame handlers exist in `CANBus.ino` as dead code from an earlier design iteration and can be removed.
 - RC communicates with the module exclusively via the **Gateway TC server**, which translates between RC's UDP PGNs and standard ISOBUS TC protocol.
 
-The `ISOBUS_TC_MODE` and `ETHERNET_COMM_ENABLED` compile flags in `RCteensy.ino` reflect the current in-progress state of the codebase. The target architecture makes these permanent — they are not user-selectable options.
+The `ISOBUS_TC_MODE` and `ETHERNET_COMM_ENABLED` compile flags in `RCisobus.ino` reflect the current in-progress state of the codebase. The target architecture makes these permanent — they are not user-selectable options.
 
 ### TC Client (ISOBUS_TC.ino) — Mostly complete
 
@@ -352,7 +352,7 @@ Ethernet is always enabled for OTA firmware update. No proprietary RC UDP commun
 
 ### Ethernet Initialisation
 
-Change `ETHERNET_COMM_ENABLED` to 1 in `RCteensy.ino`. Remove the `ReceiveUDP()` and `SendComm()` calls from the main loop entirely — they are not used in this architecture. `ReceiveUpdate()` (OTA) remains. `Receive.ino` and `Send.ino` can be deleted or left as stubs.
+Change `ETHERNET_COMM_ENABLED` to 1 in `RCisobus.ino`. Remove the `ReceiveUDP()` and `SendComm()` calls from the main loop entirely — they are not used in this architecture. `ReceiveUpdate()` (OTA) remains. `Receive.ino` and `Send.ino` can be deleted or left as stubs.
 
 ### IP Address for OTA
 
@@ -447,7 +447,7 @@ Each RC11-isobus module is an independent ISOBUS node with its own NAME and TC c
 
 | # | Item | File | Edit |
 |---|------|------|------|
-| F1 | Enable Ethernet for OTA | `RCteensy.ino`, main loop | Change `ETHERNET_COMM_ENABLED` to 1. Remove `ReceiveUDP()` and `SendComm()` calls from main loop. Keep `ReceiveUpdate()`. Delete or stub `Receive.ino` and `Send.ino`. |
+| F1 | Enable Ethernet for OTA | `RCisobus.ino`, main loop | Change `ETHERNET_COMM_ENABLED` to 1. Remove `ReceiveUDP()` and `SendComm()` calls from main loop. Keep `ReceiveUpdate()`. Delete or stub `Receive.ino` and `Send.ino`. |
 | F2 | MasterOn from TC | `ISOBUS_TC.ino` | In `TC_Update()` or `TC_ValueCommand()` section state handler: `if (TC_SectionControlActive) MasterOn = true;` Reset `MasterOn = false` only when TC disconnects or all sections commanded off and no rate active. |
 | F3 | RAM1 relief — VTCache to DMAMEM | `ISOBUS_VT.ino` | Convert ~40 function-static char arrays in `VT_SendStatus()` to a file-scope `DMAMEM struct VTCache`. Replace all `static char foo[]` with `VTCache.foo`. Also mark `Machine`, `Sensor[2]`, and TC/VT state variables as `DMAMEM`. |
 
@@ -457,7 +457,7 @@ Each RC11-isobus module is an independent ISOBUS node with its own NAME and TC c
 |---|------|------|------|
 | F4 | Total volume DDI | `ISOBUS_TC.ino` | Add `TotalVolumePerArea` DPD per product in `TC_CreateDDOP()`. In `TC_RequestValue()`, return `(int32_t)(Machine.TripAppliedUnits * Sensor[i].MeterCal * 10000.0f)` for this DDI. Handle reset flag to call `RateControl_ResetTripCounters()`. |
 | F5 | Rate units — DDI 6/7 for kg | `ISOBUS_TC.ino` | In `TC_CreateDDOP()`: when `Machine.UnitMode == 1`, declare DDI 6/7 instead of DDI 1/2. In `TC_RequestValue()`/`TC_ValueCommand()`: DDI 6 setpoint → `kg_per_ha = value / 100.0f`, convert to L/ha via `Density_gL`, call `RateControl_LHaToTCValue`. DDI 7 actual → reverse. Set `TC_DDOPNeedsReupload` when UnitMode changes. |
-| F6 | Product density field | `RCteensy.ino`, `ISOBUS_VT.ino` | Add `float Density_gL` to `MachineSettings` struct (default 1.0). Add to EEPROM save/load in `SaveMachineSettings()`. Add density adjustment field to VT RATE screen. |
+| F6 | Product density field | `RCisobus.ino`, `ISOBUS_VT.ino` | Add `float Density_gL` to `MachineSettings` struct (default 1.0). Add to EEPROM save/load in `SaveMachineSettings()`. Add density adjustment field to VT RATE screen. |
 | F7 | Multi-product DDOP | `ISOBUS_TC.ino` | In `TC_CreateDDOP()`: when `MDL.SensorCount == 2`, add second product bin element with matching DDI DPDs. Extend `TC_RequestValue()` and `TC_ValueCommand()` to check element ID and route to `Sensor[1]`. |
 | F8 | Pressure DDI | `ISOBUS_TC.ino` | Add DDI 130 (ActualWorkingPressure, Pa) DPD to boom element in `TC_CreateDDOP()`. In `TC_RequestValue()`, return `(int32_t)PressureReading` converted to Pa via existing calibration. |
 
@@ -503,7 +503,7 @@ Each RC11-isobus module is an independent ISOBUS node with its own NAME and TC c
 | `ISOBUS_Speed.ino` | Speed source from ISOBUS messages | Complete; Gateway provides speed (G5) |
 | `Begin.ino` | AgIsoStack++ init; relay init | Needs F1 (Ethernet init gate), F16, F17 |
 | `CANBus.ino` | FlexCAN_T4 hardware plugin; ISOBUS CAN update | Complete; proprietary handlers disabled by design |
-| `RCteensy.ino` | Main loop, compile flags, shared structs | Needs F1 (ETHERNET_OTA_ENABLED flag) |
+| `RCisobus.ino` | Main loop, compile flags, shared structs | Needs F1 (ETHERNET_OTA_ENABLED flag) |
 | `EthernetUpdate.ino` | OTA firmware update receive | Gate on ETHERNET_OTA_ENABLED (F1) |
 | `Receive.ino` / `Send.ino` | Proprietary UDP — not used in this architecture | Delete (F1) |
 | `Rate.ino` | Flow sensing, rate calc, area/tank tracking | Complete |
