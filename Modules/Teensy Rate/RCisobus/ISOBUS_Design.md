@@ -62,7 +62,7 @@ What works:
 - 3-second grace period after DDOP activation before process data begins
 
 Gaps:
-- **MasterOn has no TC source.** `MasterOn` is set only by the RC proprietary protocol (disabled). `RateControl_TargetUPMFromAreaRate()` returns 0 when `!MasterOn`, so TC rate commands have no effect even if AutoRate is on. Fix: set `MasterOn=true` when TC section control becomes active (`TC_SectionControlActive`), or add a MasterOn field to the VT MAIN screen. `SetSensorsEnabled()` already uses `TC_SectionControlActive` to keep sensors warm — apply the same logic to MasterOn.
+- **MasterOn — RESOLVED (verified 2026-07-03; this gap description was stale).** `MasterOn` IS TC/VT-sourced in the code (identical in jaworeA's original): `TC_ApplyCondensedWorkState()` sets it from every TC section setpoint (any section on ⇒ master on), `TC_SetAllConfiguredSections()` sets it from the VT master toggle, and `TC_Update()` clears it in auto mode when TC section control goes inactive. Remaining edge case (future item, not a blocker): a TC master doing rate without section control (TC-BAS only) never raises MasterOn, so the operator must use the VT master button in that configuration.
 - Only product 0 is wired to TC; MaxProductCount=2 but DDOP has one rate DPD
 - No total applied volume DDI (TotalVolumePerArea or TotalMassPerArea) — TC cannot track tank/area without this
 - No lifetime counters exposed via TC
@@ -448,7 +448,7 @@ Each RC11-isobus module is an independent ISOBUS node with its own NAME and TC c
 | # | Item | File | Edit |
 |---|------|------|------|
 | F1 | Enable Ethernet for OTA | `RCisobus.ino`, main loop | Change `ETHERNET_COMM_ENABLED` to 1. Remove `ReceiveUDP()` and `SendComm()` calls from main loop. Keep `ReceiveUpdate()`. Delete or stub `Receive.ino` and `Send.ino`. |
-| F2 | MasterOn from TC | `ISOBUS_TC.ino` | In `TC_Update()` or `TC_ValueCommand()` section state handler: `if (TC_SectionControlActive) MasterOn = true;` Reset `MasterOn = false` only when TC disconnects or all sections commanded off and no rate active. |
+| F2 | MasterOn from TC | `ISOBUS_TC.ino` | ~~Already implemented~~ — verified 2026-07-03: `TC_ApplyCondensedWorkState()` / `TC_SetAllConfiguredSections()` set MasterOn, `TC_Update()` clears it. No change required. See Current State note. |
 | F3 | RAM1 relief — VTCache to DMAMEM | `ISOBUS_VT.ino` | Convert ~40 function-static char arrays in `VT_SendStatus()` to a file-scope `DMAMEM struct VTCache`. Replace all `static char foo[]` with `VTCache.foo`. Also mark `Machine`, `Sensor[2]`, and TC/VT state variables as `DMAMEM`. |
 
 ### Firmware — TC Client additions
