@@ -26,7 +26,7 @@ void SetPWM()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		if (!Sensor[i].AutoOn || !MasterOn)
+		if (!Machine.AutoOn || !MasterOn)
 		{
 			// manual control
 			switch (Sensor[i].ControlType)

@@ -22,7 +22,7 @@ void AdjustFlow()
             Serial.print(F(" enabled="));
             Serial.print(Sensor[0].AdjustmentEnabled ? F("yes") : F("no"));
             Serial.print(F(" mode="));
-            Serial.print(Sensor[0].AutoOn ? F("AUTO") : F("MAN"));
+            Serial.print(Machine.AutoOn ? F("AUTO") : F("MAN"));
             Serial.print(F(" manual="));
             Serial.print(Sensor[0].ManualAdjust);
             Serial.print(F(" pwm="));
@@ -95,7 +95,7 @@ void LogPWMWrite(byte ID, float pwmVal, int duty, bool direction)
     Serial.print(F(" master="));
     Serial.print(MasterOn ? F("ON") : F("OFF"));
     Serial.print(F(" mode="));
-    Serial.println(Sensor[ID].AutoOn ? F("AUTO") : F("MAN"));
+    Serial.println(Machine.AutoOn ? F("AUTO") : F("MAN"));
 }
 
 void SetPWM(byte ID, float pwmVal)

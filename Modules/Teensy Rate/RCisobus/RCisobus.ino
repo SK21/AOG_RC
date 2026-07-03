@@ -33,11 +33,11 @@ std::shared_ptr<isobus::TaskControllerClient> ISOBUSTaskController = nullptr;
 std::shared_ptr<isobus::SpeedMessagesInterface> ISOBUSSpeedMessages = nullptr;
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 25046;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 3076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define ISOBUS_TC_MODE 1
-#define MACHINE_SETTINGS_IDENTIFIER 0x5445
+#define MACHINE_SETTINGS_IDENTIFIER 0x5446
 
 #define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
@@ -141,7 +141,6 @@ struct SensorConfig	// about 104 bytes
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
-	bool AutoOn;
 };
 
 DMAMEM SensorConfig Sensor[2];
@@ -155,7 +154,7 @@ struct MachineSettings
 	float MeterCal[MaxProductCount] = { 0.0f,0.0f };
 	float TargetRateLHa[MaxProductCount] = { 100.0f,100.0f };
 	int16_t ManualPWM[MaxProductCount] = { 0,0 };
-	bool AutoRate[MaxProductCount] = { true,true };
+	bool AutoOn = true;
 	float TankCapacityUnits = 0.0f;
 	float TankRemainingUnits = 0.0f;
 	uint8_t UnitMode = 0; // 0=l, 1=kg
@@ -312,7 +311,7 @@ void SetSensorsEnabled()
 			{
 				Result = true;
 			}
-			else if (!Sensor[i].AutoOn)
+			else if (!Machine.AutoOn)
 			{
 				Result = true;
 			}

@@ -79,7 +79,7 @@ void TC_RefreshMachineCommandTime()
 bool TC_MachineAutoMode()
 {
 	if (MDL.SensorCount == 0) return true;
-	return Machine.AutoRate[0];
+	return Machine.AutoOn;
 }
 
 void TC_ReportActualSectionState(bool force = false)
@@ -249,7 +249,7 @@ bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 		}
 
 		Machine.TargetRateLHa[0] = RateControl_TCValueToLHa(processVariableValue);
-		Machine.AutoRate[0] = true;
+		Machine.AutoOn = true;
 		VT_SaveMachineSettings(false);
 		Serial.print(F("TC target rate: "));
 		Serial.print(Machine.TargetRateLHa[0]);

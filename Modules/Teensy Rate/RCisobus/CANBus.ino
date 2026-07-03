@@ -378,7 +378,7 @@ FLASHMEM void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	if (cmd & 0x01) Sensor[senId].TotalPulses = 0;  // Reset quantity
 	Sensor[senId].ControlType = (cmd >> 1) & 0x07;
 	MasterOn = ((cmd & 0x10) == 0x10);
-	Sensor[senId].AutoOn = ((cmd & 0x40) == 0x40);
+	Machine.AutoOn = ((cmd & 0x40) == 0x40);
 	CalibrationOn[senId] = ((cmd & 0x80) == 0x80);
 
 	// Update timeout

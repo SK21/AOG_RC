@@ -371,7 +371,7 @@ RC cannot auto-discover the module via UDP heartbeat since `SendComm()` is remov
 ## EEPROM Migration
 
 RC11-isobus uses a different EEPROM layout from RCteensy:
-- Machine settings moved to address 640+, identified by `MACHINE_SETTINGS_IDENTIFIER = 0x5445`
+- Machine settings moved to address 640+, identified by `MACHINE_SETTINGS_IDENTIFIER = 0x5446` (0x5445 was the per-product-AutoRate layout; LoadMachineSettings migrates 0x5445/0x5444/0x5443 data forward)
 - Sensor block addresses differ
 - New fields: `Density_gL`, `WheelSpeedPin` location changed
 

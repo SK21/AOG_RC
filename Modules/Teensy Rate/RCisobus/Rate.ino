@@ -230,14 +230,12 @@ void RateControl_UpdateTargets()
 
 	for (uint8_t i = 0; i < MDL.SensorCount; i++)
 	{
-		if (Machine.AutoRate[i])
+		if (Machine.AutoOn)
 		{
-			Sensor[i].AutoOn = true;
 			Sensor[i].TargetUPM = RateControl_TargetUPMFromAreaRate(Machine.TargetRateLHa[i], speedKmh, activeWidthM);
 		}
 		else
 		{
-			Sensor[i].AutoOn = false;
 			Sensor[i].ManualAdjust = Machine.ManualPWM[i];
 			Sensor[i].TargetUPM = 0.0f;
 		}

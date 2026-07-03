@@ -583,7 +583,6 @@ void LoadDefaults()
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
 		Sensor[i].PulseSampleSize = 12;
-		Sensor[i].AutoOn = true;
 	}
 
 	// relay pins
@@ -641,10 +640,31 @@ void LoadMachineSettings()
 			bool AutoRate[MaxProductCount];
 		};
 
+		struct Previous5445MachineSettings	// 0x5445 layout: per-product AutoRate[], since replaced by global AutoOn
+		{
+			uint16_t Identifier;
+			uint8_t SectionCount;
+			uint16_t SectionWidthCm[16];
+			float TargetUPM[MaxProductCount];
+			float MeterCal[MaxProductCount];
+			float TargetRateLHa[MaxProductCount];
+			int16_t ManualPWM[MaxProductCount];
+			bool AutoRate[MaxProductCount];
+			float TankCapacityUnits;
+			float TankRemainingUnits;
+			uint8_t UnitMode;
+			float TripAreaHa;
+			float TripAppliedUnits;
+			float LifetimeAreaHa;
+			float LifetimeAppliedUnits;
+		};
+
 		LegacyMachineSettings legacy;
 		PreviousMachineSettings previous;
+		Previous5445MachineSettings previous5445;
 		EEPROM.get(640, legacy);
 		EEPROM.get(640, previous);
+		EEPROM.get(640, previous5445);
 
 		Machine.Identifier = MACHINE_SETTINGS_IDENTIFIER;
 		Machine.SectionCount = 8;
@@ -655,8 +675,8 @@ void LoadMachineSettings()
 			Machine.MeterCal[i] = (Sensor[i].MeterCal > 0.0f) ? Sensor[i].MeterCal : 600.0f;
 			Machine.TargetRateLHa[i] = 100.0f;
 			Machine.ManualPWM[i] = 0;
-			Machine.AutoRate[i] = true;
 		}
+		Machine.AutoOn = true;
 		Machine.TankCapacityUnits = 0.0f;
 		Machine.TankRemainingUnits = 0.0f;
 		Machine.UnitMode = 0;
@@ -665,7 +685,27 @@ void LoadMachineSettings()
 		Machine.LifetimeAreaHa = 0.0f;
 		Machine.LifetimeAppliedUnits = 0.0f;
 
-		if (previous.Identifier == 0x5444)
+		if (previous5445.Identifier == 0x5445)
+		{
+			Machine.SectionCount = previous5445.SectionCount;
+			for (int i = 0; i < 16; i++) Machine.SectionWidthCm[i] = previous5445.SectionWidthCm[i];
+			for (int i = 0; i < MaxProductCount; i++)
+			{
+				Machine.TargetUPM[i] = previous5445.TargetUPM[i];
+				Machine.MeterCal[i] = previous5445.MeterCal[i];
+				Machine.TargetRateLHa[i] = previous5445.TargetRateLHa[i];
+				Machine.ManualPWM[i] = previous5445.ManualPWM[i];
+			}
+			Machine.AutoOn = previous5445.AutoRate[0];	// product 0 governed TC mode in the old layout
+			Machine.TankCapacityUnits = previous5445.TankCapacityUnits;
+			Machine.TankRemainingUnits = previous5445.TankRemainingUnits;
+			Machine.UnitMode = previous5445.UnitMode;
+			Machine.TripAreaHa = previous5445.TripAreaHa;
+			Machine.TripAppliedUnits = previous5445.TripAppliedUnits;
+			Machine.LifetimeAreaHa = previous5445.LifetimeAreaHa;
+			Machine.LifetimeAppliedUnits = previous5445.LifetimeAppliedUnits;
+		}
+		else if (previous.Identifier == 0x5444)
 		{
 			Machine.SectionCount = previous.SectionCount;
 			for (int i = 0; i < 16; i++) Machine.SectionWidthCm[i] = previous.SectionWidthCm[i];
@@ -675,8 +715,8 @@ void LoadMachineSettings()
 				Machine.MeterCal[i] = previous.MeterCal[i];
 				Machine.TargetRateLHa[i] = previous.TargetRateLHa[i];
 				Machine.ManualPWM[i] = previous.ManualPWM[i];
-				Machine.AutoRate[i] = previous.AutoRate[i];
 			}
+			Machine.AutoOn = previous.AutoRate[0];
 		}
 		else if (legacy.Identifier == 0x5443)
 		{
@@ -715,9 +755,8 @@ void ApplyMachineSettings()
 		Machine.ManualPWM[i] = constrain(Machine.ManualPWM[i], -4095, 4095);
 
 		if (Machine.MeterCal[i] > 0.0f) Sensor[i].MeterCal = Machine.MeterCal[i];
-		Sensor[i].AutoOn = Machine.AutoRate[i];
 		Sensor[i].ManualAdjust = Machine.ManualPWM[i];
-		if (!Machine.AutoRate[i]) Sensor[i].TargetUPM = 0.0f;
+		if (!Machine.AutoOn) Sensor[i].TargetUPM = 0.0f;
 	}
 
 	Machine.TankCapacityUnits = constrain(Machine.TankCapacityUnits, 0.0f, 100000.0f);

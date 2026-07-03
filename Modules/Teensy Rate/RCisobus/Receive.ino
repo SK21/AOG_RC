@@ -76,7 +76,7 @@ FLASHMEM void ReadPGNs(byte data[], uint16_t len)
 
 						MasterOn = ((InCommand & 16) == 16);
 
-						Sensor[SensorID].AutoOn = ((InCommand & 64) == 64);
+						Machine.AutoOn = ((InCommand & 64) == 64);
 
 						CalibrationOn[SensorID] = ((InCommand & 128) == 128);
 

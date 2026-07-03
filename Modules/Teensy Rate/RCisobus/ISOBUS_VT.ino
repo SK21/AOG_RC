@@ -470,10 +470,7 @@ void VT_SetMachineAutoMode(bool autoMode)
 {
 	if (MDL.SensorCount == 0) return;
 
-	for (uint8_t i = 0; i < VT_ProductCount(); i++)
-	{
-		Machine.AutoRate[i] = autoMode;
-	}
+	Machine.AutoOn = autoMode;
 
 	VT_SaveMachineSettings(false);
 
@@ -608,7 +605,7 @@ void VT_AdjustMainDose(int8_t direction)
 	const uint8_t productIndex = 0;
 	if (MDL.SensorCount <= productIndex) return;
 
-	if (Machine.AutoRate[productIndex])
+	if (Machine.AutoOn)
 	{
 		Machine.TargetRateLHa[productIndex] += direction * 5.0f;
 		if (Machine.TargetRateLHa[productIndex] < 0.0f) Machine.TargetRateLHa[productIndex] = 0.0f;
@@ -802,11 +799,11 @@ void VT_AdjustSelectedField(int8_t direction)
 		}
 		else if (productField == 1)
 		{
-			Machine.AutoRate[productIndex] = !Machine.AutoRate[productIndex];
+			Machine.AutoOn = !Machine.AutoOn;
 		}
 		else if (productField == 2)
 		{
-			if (Machine.AutoRate[productIndex])
+			if (Machine.AutoOn)
 			{
 				Machine.TargetRateLHa[productIndex] += direction * 1.0f;
 				if (Machine.TargetRateLHa[productIndex] < 0.0f) Machine.TargetRateLHa[productIndex] = 0.0f;
@@ -1433,12 +1430,12 @@ FLASHMEM void VT_SendStatus(bool force)
 		}
 		else if (productField == 1)
 		{
-			snprintf(selected, sizeof(selected), "Prod %u Mode %s", productIndex + 1, Machine.AutoRate[productIndex] ? "AUTO" : "MAN");
-			displayedValue += Machine.AutoRate[productIndex] ? 1 : 0;
+			snprintf(selected, sizeof(selected), "Prod %u Mode %s", productIndex + 1, Machine.AutoOn ? "AUTO" : "MAN");
+			displayedValue += Machine.AutoOn ? 1 : 0;
 		}
 		else if (productField == 2)
 		{
-			if (Machine.AutoRate[productIndex])
+			if (Machine.AutoOn)
 			{
 				snprintf(selected, sizeof(selected), "Prod %u Dose %.0f %s/ha", productIndex + 1, Machine.TargetRateLHa[productIndex], VT_UnitName());
 				displayedValue += static_cast<uint32_t>(Machine.TargetRateLHa[productIndex]);
@@ -1669,15 +1666,15 @@ FLASHMEM void VT_SendStatus(bool force)
 		{
 			snprintf(detail, sizeof(detail), "P1 %s %s  Dose %.0f  PWM %d",
 			         hasSensor ? VT_ControlTypeName(Sensor[sensorIndex].ControlType) : "None",
-			         hasSensor ? VT_ModeName(Sensor[sensorIndex].AutoOn) : "-",
+			         hasSensor ? VT_ModeName(Machine.AutoOn) : "-",
 			         Machine.TargetRateLHa[sensorIndex],
 			         Machine.ManualPWM[sensorIndex]);
 			snprintf(configCard01Title, sizeof(configCard01Title), "PRODUCT");
 			snprintf(configCard01Value, sizeof(configCard01Value), "%s", hasSensor ? VT_ControlTypeName(Sensor[sensorIndex].ControlType) : "None");
 			snprintf(configCard02Title, sizeof(configCard02Title), "MODE");
-			snprintf(configCard02Value, sizeof(configCard02Value), "%s", hasSensor ? VT_ModeName(Machine.AutoRate[sensorIndex]) : "-");
+			snprintf(configCard02Value, sizeof(configCard02Value), "%s", hasSensor ? VT_ModeName(Machine.AutoOn) : "-");
 			snprintf(configCard03Title, sizeof(configCard03Title), "RATE");
-			if (hasSensor && Machine.AutoRate[sensorIndex])
+			if (hasSensor && Machine.AutoOn)
 			{
 				char targetRateText[12];
 				VT_FormatFloatValue(targetRateText, sizeof(targetRateText), Machine.TargetRateLHa[sensorIndex], 0);
