@@ -177,7 +177,7 @@ namespace RateController.Classes
                 // determine if any section is ON
                 for (int i = 0; i < Props.MaxSections; i++)
                 {
-                    if (Core.Sections.Item(i).IsON)
+                    if (Core.Sections.Item(i).IsON || Props.RateCalibrationOn)
                     {
                         SectionsOn = true;
                         break;

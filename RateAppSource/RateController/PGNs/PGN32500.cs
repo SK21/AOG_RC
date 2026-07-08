@@ -126,6 +126,12 @@ namespace RateController.PGNs
                             cData[9] |= (byte)CommandPGN32500.AutoOn;
                         }
                     }
+                    else
+                    {
+                        // not calibrating this sensor, but keep MasterOn and AutoOn
+                        // set so the module's global flags aren't overwritten
+                        cData[9] |= (byte)(CommandPGN32500.MasterOnMode | CommandPGN32500.AutoOn);
+                    }
                 }
                 else
                 {
