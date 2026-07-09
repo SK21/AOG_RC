@@ -156,12 +156,16 @@ namespace RateController.Classes
 
             try
             {
+                // calibration forces relays only on the module actually calibrating;
+                // other modules keep their normal relay states
+                bool CalibratingModule = Props.RateCalibrationOn && Core.Products.CalibrationOnModule(ModuleID);
+
                 bool SectionsOn = false;
-                bool MasterOn = Core.SectionControl.MasterOn || Props.RateCalibrationOn;
+                bool MasterOn = Core.SectionControl.MasterOn || CalibratingModule;
                 bool FlowEnabled = Props.Speed_KMH > 0.1;
                 bool FlowMasterOn;
 
-                if (Props.RateCalibrationOn)
+                if (CalibratingModule)
                 {
                     FlowMasterOn = true;
                 }
@@ -175,12 +179,19 @@ namespace RateController.Classes
                 }
 
                 // determine if any section is ON
-                for (int i = 0; i < Props.MaxSections; i++)
+                if (CalibratingModule)
                 {
-                    if (Core.Sections.Item(i).IsON)
+                    SectionsOn = true;
+                }
+                else
+                {
+                    for (int i = 0; i < Props.MaxSections; i++)
                     {
-                        SectionsOn = true;
-                        break;
+                        if (Core.Sections.Item(i).IsON)
+                        {
+                            SectionsOn = true;
+                            break;
+                        }
                     }
                 }
 
@@ -214,7 +225,7 @@ namespace RateController.Classes
                             break;
 
                         case RelayTypes.Section:
-                            state = (Rly.SectionID >= 0 && (Core.Sections.Item(Rly.SectionID).IsON || Props.RateCalibrationOn));
+                            state = (Rly.SectionID >= 0 && (Core.Sections.Item(Rly.SectionID).IsON || CalibratingModule));
                             break;
 
                         case RelayTypes.Invert_Section:

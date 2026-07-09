@@ -38,7 +38,7 @@ void DoPID()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		if (AutoOn)
+		if (AutoOn[i])
 		{
 			// auto control
 			switch (Sensor[i].ControlType)

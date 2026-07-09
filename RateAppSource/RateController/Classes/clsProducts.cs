@@ -65,6 +65,30 @@ namespace RateController.Classes
             return Result;
         }
 
+        // True when a product on the given module is actively calibrating (calibrate object
+        // powered on). Scopes calibration behaviour (PGN32500 command bits, forced relays) to
+        // the modules actually involved, so uninvolved modules run normally during calibration.
+        public bool CalibrationOnModule(int moduleID)
+        {
+            bool Result = false;
+            try
+            {
+                foreach (clsProduct P in cProducts)
+                {
+                    if (P.ModuleID == moduleID && P.CalibrateOjbect?.PowerOn == true)
+                    {
+                        Result = true;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsProducts/CalibrationOnModule: " + ex.Message);
+            }
+            return Result;
+        }
+
         public clsProduct Item(int ProdID)  // access records by Product ID
         {
             int IDX = ListID(ProdID);

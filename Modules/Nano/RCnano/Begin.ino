@@ -45,6 +45,14 @@ void DoSetup()
 	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
+	// PID damper + per-sensor auto mode
+	for (int i = 0; i < MaxProductCount; i++)
+	{
+		OscDamp[i] = 1.0f;
+		LastAboveTarget[i] = false;
+		AutoOn[i] = true;
+	}
+
 	// I2C
 	Wire.begin();			// I2C on pins SCL 19, SDA 18
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz

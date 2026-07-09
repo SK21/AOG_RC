@@ -88,7 +88,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
                         PidLogEnabled = ((InCommand & 32) == 32);
 
-                        AutoOn = ((InCommand & 64) == 64);
+                        AutoOn[SensorID] = ((InCommand & 64) == 64);	// per-sensor: this packet's bit only affects this sensor
 
                         CalibrationOn[SensorID] = ((InCommand & 128) == 128);
 

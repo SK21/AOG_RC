@@ -138,7 +138,7 @@ const uint16_t SendTime = 200;
 uint32_t SendLast = SendTime;
 
 bool MasterOn = false;
-bool AutoOn = true;
+bool AutoOn[MaxProductCount];	// per-sensor: each sensor's own PGN32500 bit 6 (allows mixed auto/manual, e.g. multi-sensor calibration phases); set true in DoSetup
 
 PCA9555 PCA;
 bool PCA9555PW_found = false;
@@ -204,8 +204,8 @@ void loop()
 			// gate PID off when master or all sections are off - no flow path means UPM=0
 			// with a nonzero target, so the loop would wind the valve open (huge overshoot
 			// when flow starts). PWM=0 makes a standard valve HOLD position, not close.
-			PIDenabled[i] = SensorConnected[i] && AutoOn && MasterOn && (RelayLo || RelayHi) && (Sensor[i].TargetUPM > 0);
-			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn);
+			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && (RelayLo || RelayHi) && (Sensor[i].TargetUPM > 0);
+			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn[i]);
 		}
 
 		CheckRelays();

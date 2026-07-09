@@ -336,7 +336,7 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	if (cmd & 0x01) Sensor[senId].TotalPulses = 0;  // Reset quantity
 	Sensor[senId].ControlType = (cmd >> 1) & 0x07;
 	MasterOn = ((cmd & 0x10) == 0x10);
-	AutoOn = ((cmd & 0x40) == 0x40);
+	AutoOn[senId] = ((cmd & 0x40) == 0x40);	// per-sensor (matches UDP decode in Receive.ino)
 	CalibrationOn[senId] = ((cmd & 0x80) == 0x80);
 
 	// Update timeout
