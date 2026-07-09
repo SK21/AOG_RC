@@ -364,11 +364,11 @@ void LoadDefaults()
 	{
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 5;
-		Sensor[i].Kp = pow(1.1, 65 - 120);	// Kp = 65
-		Sensor[i].Ki = pow(1.1, 65 - 120);	// Ki = 65
+		Sensor[i].Kp = 45 / 100.0;	// Kp = 45 (KPdefault, app Props.cs) - matches uniform /100 decode (Receive.ino)
+		Sensor[i].Ki = 50 / 100.0;	// Ki = 50 (KIdefault) - matches uniform /100 decode (Receive.ino)
 		Sensor[i].Deadband = 0.015;
 		Sensor[i].BrakePoint = 35;
-		Sensor[i].PIDslowAdjust = 30;
+		Sensor[i].PIDslowAdjust = 50;	// PIDslowAdjustDefault, matches app
 		Sensor[i].SlewRate = 25;
 		Sensor[i].MaxIntegral = 25;
 		Sensor[i].TimedMinStart = 0.5;
@@ -377,7 +377,7 @@ void LoadDefaults()
 		Sensor[i].PIDtime = 100;
 		Sensor[i].PulseMin = 250;      // 4000 Hz
 		Sensor[i].PulseMax = 1000000;  // 1 Hz
-		Sensor[i].PulseSampleSize = 12;
+		Sensor[i].PulseSampleSize = 11;	// median pulse-count cap, max = MaxSampleSize (see Receive.ino byte 22 note)
 	}
 
 	// relay pins

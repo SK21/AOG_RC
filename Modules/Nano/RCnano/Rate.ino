@@ -21,11 +21,13 @@ void PulseISR(uint8_t ID)
 
 		if (PulseTime[ID] > Sensor[ID].PulseMin && PulseTime[ID] < Sensor[ID].PulseMax)
 		{
-			// valid pulses
+			// valid pulses - fixed-size ring, decoupled from PulseSampleSize so a
+			// setting change (or a 0 on the wire) can never scramble the buffer or
+			// divide by zero inside the ISR
 			PulseCount[ID]++;
 			Samples[ID][SamplesIndex[ID]] = PulseTime[ID];
-			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % Sensor[ID].PulseSampleSize;
-			if (SamplesCount[ID] < Sensor[ID].PulseSampleSize) SamplesCount[ID]++;
+			SamplesIndex[ID] = (SamplesIndex[ID] + 1) % MaxSampleSize;
+			if (SamplesCount[ID] < MaxSampleSize) SamplesCount[ID]++;
 		}
 	}
 }
@@ -41,11 +43,18 @@ void GetUPM()
 			noInterrupts();
 			Sensor[i].TotalPulses += PulseCount[i];
 			PulseCount[i] = 0;
-			uint16_t count = SamplesCount[i];
+
+			// median over the NEWEST PulseSampleSize pulses (walk back from the next
+			// write slot) so the setting still controls smoothing with the fixed ring
+			uint8_t fill = SamplesCount[i];
+			uint8_t idx = SamplesIndex[i];		// next write slot
+			uint8_t count = fill;
+			if (count > Sensor[i].PulseSampleSize) count = Sensor[i].PulseSampleSize;
 			uint32_t Snapshot[MaxSampleSize];
-			for (uint16_t k = 0; k < count; k++)
+			for (uint8_t n = 0; n < count; n++)
 			{
-				Snapshot[k] = Samples[i][k];
+				uint8_t slot = (idx + MaxSampleSize - 1 - n) % MaxSampleSize;
+				Snapshot[n] = Samples[i][slot];
 			}
 			interrupts();
 

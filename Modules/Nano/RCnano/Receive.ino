@@ -148,10 +148,12 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						Sensor[SensorID].MaxPWM = (255.0 * data[3] / 100.0);
 						Sensor[SensorID].MinPWM = (255.0 * data[4] / 100.0);
 
+						// Normalized PID: Kp/Ki are dimensionless (fraction of ref flow -> fraction of PWM
+						// authority). Uniform /100 decode: slider 0-100 -> 0.00-1.00. Per-actuator
+						// scaling (valve vs motor) is applied in PID.ino, not here.
 						if (data[5] > 0)
 						{
-							// 1.1 ^ (gain scroll bar value - 120) gives a scale range of 0.00001 to 0.1486
-							Sensor[SensorID].Kp = pow(1.1, data[5] - 120);
+							Sensor[SensorID].Kp = data[5] / 100.0;
 						}
 						else
 						{
@@ -160,7 +162,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
 						if (data[6] > 0)
 						{
-							Sensor[SensorID].Ki = pow(1.1, data[6] - 108);
+							Sensor[SensorID].Ki = data[6] / 100.0;
 						}
 						else
 						{
@@ -183,12 +185,37 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 						uint16_t MaxHz = data[20] | data[21] << 8;
 						if (MaxHz > 0) Sensor[SensorID].PulseMin = 1000000 / MaxHz;
 
-						Sensor[SensorID].PulseSampleSize = data[22];
-						if (Sensor[SensorID].PulseSampleSize > MaxSampleSize) Sensor[SensorID].PulseSampleSize = MaxSampleSize;
+						// byte 22 is the flow window in centiseconds on Teensy/ESP32; the Nano has no
+						// room for pulse timestamps, so it uses the value as a pulse-count cap for the
+						// median instead (the app default 40 clamps to all 11 slots = max smoothing).
+						// Clamped >= 1 so the value can never zero the median.
+						Sensor[SensorID].PulseSampleSize = constrain(data[22], 1, MaxSampleSize);
 
 						SaveData();
 					}
 				}
+			}
+		}
+		break;
+
+	case 32505:
+		// PGN32505, max pressure gate threshold (raw ADC counts, 0xFFFF = disabled)
+		//0		HeaderLo	249
+		//1		HeaderHi	126
+		//2		ModuleID	0-7
+		//3		MaxLo
+		//4		MaxHi
+		//5		CRC
+
+		PGNlength = 6;
+
+		if (len > PGNlength - 1)
+		{
+			// module-level PGN: data[2] is the raw module ID (like 32700/32401), not Mod/Sen packed
+			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
+			{
+				MDL.MaxPressureReading = data[3] | (uint16_t)data[4] << 8;
+				SaveData();
 			}
 		}
 		break;

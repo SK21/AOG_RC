@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 9066;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 8076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -51,8 +51,9 @@ struct ModuleConfig
 	uint8_t WorkPin = 15;
 	bool WorkPinIsMomentary = false;
 	bool Is3Wire = true;			// False - powered on/off, True - powered on only
-	uint8_t PressurePin = 14;		
+	uint8_t PressurePin = 14;
 	bool ADS1115Enabled = false;
+	uint16_t MaxPressureReading = 0xFFFF;	// raw analog reading for pressure gate. 0xFFFF is off
 };
 
 ModuleConfig MDL;
@@ -144,6 +145,16 @@ bool PCA9555PW_found = false;
 bool MCP23017_found = false;
 int16_t PressureReading = 0;
 
+// Pressure max gate (Layer 1 over-pressure cutout). Module-wide: one pressure sensor per module.
+bool PressureGateActive = false;	// currently driving actuators to relieve
+bool PressureGateLatched = false;	// persistent fault - holds relief until operator reset (master off)
+uint32_t PressureGateStart = 0;		// millis() when current relief began (min-hold timer)
+uint8_t PressureTripCount = 0;		// trips counted in the current window
+uint32_t PressureTripWindow = 0;	// millis() at the start of the trip-count window
+const uint16_t PressureMinHold = 3000;			// ms: minimum relief hold after a trip (rate-limits cycling)
+const uint16_t PressureTripWindowMs = 10000;	// ms: window for counting repeated trips
+const uint8_t PressureMaxTrips = 3;				// trips within the window -> escalate to hard latch
+
 bool GoodPins;	// pin configuration correct
 
 float TimedCombo(byte, bool);	// function prototype
@@ -164,6 +175,10 @@ bool EthernetConnected()
 
 bool CalibrationOn[] = { false,false };
 
+// declared here (not PID.ino) so Motor.ino's pressure gate can see it - .ino files
+// concatenate alphabetically and Motor comes before PID
+float IntegralSum[MaxProductCount];
+
 void setup()
 {
 	DoSetup();
@@ -177,7 +192,7 @@ void loop()
 		ether.packetLoop(ether.packetReceive());
 	}
 
-	SetPWM();
+	DoPID();
 
 	if (millis() - LoopLast >= LoopTime)
 	{
@@ -186,14 +201,17 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			SensorConnected[i] = (millis() - Sensor[i].CommTime < 4000);
-			PIDenabled[i] = SensorConnected[i] && AutoOn && (Sensor[i].TargetUPM > 0);
+			// gate PID off when master or all sections are off - no flow path means UPM=0
+			// with a nonzero target, so the loop would wind the valve open (huge overshoot
+			// when flow starts). PWM=0 makes a standard valve HOLD position, not close.
+			PIDenabled[i] = SensorConnected[i] && AutoOn && MasterOn && (RelayLo || RelayHi) && (Sensor[i].TargetUPM > 0);
 			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn);
 		}
 
 		CheckRelays();
 		GetUPM();
+		CheckPressure();	// read the sensor BEFORE AdjustFlow so the gate acts on fresh pressure
 		AdjustFlow();
-		CheckPressure();
 	}
 
 	SendComm();
