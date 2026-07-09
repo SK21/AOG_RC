@@ -18,19 +18,17 @@ extern "C" {
 const uint16_t InoID = 8076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
-#define MaxProductCount 2
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
 
-const int MaxSampleSize = 25;
 const uint32_t FlowTimeout = 4000;
-const uint8_t MinMedianSamples = 7;   // floor: take at least this many pulses for the
-                                      // median even if older than the flow window, so a
-                                      // 2-sample window can't be corrupted by one bad period.
-                                      // 7 (was 5) rejects more bad periods at low flow (field
-                                      // test ~4-8 UPM sat at the floor) at the cost of ~2 pulse
-                                      // periods more lag; only affects low flow (high flow fills
-                                      // the time window before reaching the floor)
+const uint8_t MinMedianSamples = 7;		// floor: take at least this many pulses for the
+										// median even if older than the flow window, so a
+										// 2-sample window can't be corrupted by one bad period.
+										// 7 (was 5) rejects more bad periods at low flow (field
+										// test ~4-8 UPM sat at the floor) at the cost of ~2 pulse
+										// periods more lag; only affects low flow (high flow fills
+										// the time window before reaching the floor)
 
 const int16_t ADS1115_Address = 0x48;
 uint8_t MCP23017address;
@@ -40,13 +38,19 @@ uint8_t DefaultRelayPins[] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };	
 #if defined(ESP32)
 const int PWM_BITS = 12;
 const int PWM_FREQ = 490;
+const uint8_t MaxProductCount = 6;
+const int MaxSampleSize = 25;
 #elif defined(ARDUINO_TEENSY41)
 const int PWM_BITS = 12;
 const int PWM_FREQ = 490;
+const uint8_t MaxProductCount = 2;
+const int MaxSampleSize = 25;
 #else // Nano & similar AVR
 const int PWM_BITS = 8;
 const int PWM_FREQ = 490;  // Default
 uint8_t ditherCounter = 0; // for Nano dithering
+const uint8_t MaxProductCount = 2;
+const int MaxSampleSize = 11;
 #endif
 
 enum ControlType
@@ -62,7 +66,7 @@ struct ModuleConfig
 {
 	// RC11-2
 	uint8_t ID = 0;
-	uint8_t SensorCount = 2;        // up to 2 sensors, if 0 rate control will be disabled
+	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11

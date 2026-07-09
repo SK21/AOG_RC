@@ -16,6 +16,7 @@ void DoSetup()
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
 	LoadNetworks();
+	LoadBoardID();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -167,8 +168,15 @@ void DoSetup()
 	}
 
 	// Relays
-	if (MDL.OnboardRelayControl > 0) InitializeRelays(MDL.OnboardRelayControl, 7);	// 0-7
-	if (MDL.RemoteRelayControl > 0) InitializeRelays(MDL.RemoteRelayControl, -1);	// remaining
+	if (MDL.RemoteRelayControl > 0)
+	{
+		InitializeRelays(MDL.OnboardRelayControl, 7);
+		InitializeRelays(MDL.RemoteRelayControl, -1);
+	}
+	else
+	{
+		InitializeRelays(MDL.OnboardRelayControl, 15);
+	}
 
 	// Wifi
 	WiFi.mode(WIFI_MODE_APSTA);
@@ -587,8 +595,8 @@ void LoadDefaults()
 	{
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 5;
-		Sensor[i].Kp = pow(1.1, 65 - 120);	// Kp = 65
-		Sensor[i].Ki = pow(1.1, 65 - 120);	// Ki = 65
+		Sensor[i].Kp = 45 / 100.0;	// Kp = 45 (KPdefault, app Props.cs) - matches uniform /100 decode (Receive.ino)
+		Sensor[i].Ki = 50 / 100.0;	// Ki = 50 (KIdefault) - matches uniform /100 decode (Receive.ino)
 		Sensor[i].Deadband = 0.015;
 		Sensor[i].BrakePoint = 35;
 		Sensor[i].PIDslowAdjust = 30;
@@ -597,10 +605,10 @@ void LoadDefaults()
 		Sensor[i].TimedMinStart = 0.5;
 		Sensor[i].TimedAdjust = 80;
 		Sensor[i].TimedPause = 400;
-		Sensor[i].PIDtime = 100;
+		Sensor[i].PIDtime = 150;
 		Sensor[i].PulseMin = 250;		// 4000 Hz
 		Sensor[i].PulseMax = 1000000;	// 1 Hz
-		Sensor[i].PulseSampleSize = 12;
+		Sensor[i].SampleWindow = 40;	// flow window: 40 centiseconds = 400 ms
 	}
 
 	// relay pins
@@ -771,5 +779,33 @@ void SaveNetworks()
 	EEPROM.put(168, MDLnetwork);
 	EEPROM.commit();
 }
+
+void LoadBoardID()
+{
+	// Independent EEPROM slot, NOT guarded by InoID, so the board label survives a firmware
+	// reflash / LoadDefaults (it identifies the hardware, not the settings). SaveData()
+	// only writes offsets 0/2/23/253+, never the 3-22 region, so this is left untouched there.
+	BoardLabel tmp;
+	EEPROM.get(EE_BoardID, tmp);
+	if (tmp.Identifier == BoardIDMagic)
+	{
+		MDLboard = tmp;
+	}
+	else
+	{
+		// uninitialized EEPROM -> start with an empty label
+		MDLboard.Identifier = BoardIDMagic;
+		memset(MDLboard.Text, 0, sizeof(MDLboard.Text));
+		SaveBoardID();
+	}
+}
+
+void SaveBoardID()
+{
+	MDLboard.Identifier = BoardIDMagic;
+	EEPROM.put(EE_BoardID, MDLboard);
+	EEPROM.commit();
+}
+
 
 

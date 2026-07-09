@@ -11,18 +11,31 @@
 // TimedAdjust      time in ms where there is adjustment of the combo valve.
 // TimedPause       time in ms where there is no adjustment of the combo valve.
 // PIDtime          time interval in ms the pid runs
+//
+// PID uses NORMALIZED (ratio) control: error as a fraction of a reference flow, output as a
+// fraction of PWM authority, so Kp/Ki are dimensionless. For the rationale (why this replaced
+// the old absolute-error/raw-PWM scheme), see:
+//   AOG_RC/RateAppSource/docs/PID_Normalized_Control_Rationale.md
 
-const float FastAdjustMotor = 1.0;
-const float FastAdjustValve = 40.0;
-const float KpMultiplier = 100.0;
+// Kp/Ki arrive as slider/100 (0.00-1.00). Each actuator type scales what slider 100 means.
+// These are scale alignment, NOT tuning constants: a valve PWM is a positional drive-speed
+// command recomputed each loop, so full slider = full authority at full error (scale 1.0);
+// a motor PWM accumulates ChangeAmount every loop (integrating), so it needs ~10x smaller
+// per-loop gain for the same response. Ki is a further 10x finer than Kp on each path
+// because conditional integration only trims near target where FracError is small.
+const float ValveKpScale = 1.0;
+const float ValveKiScale = 0.1;
+const float MotorKpScale = 0.1;
+const float MotorKiScale = 0.01;
+
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
 float LastPWM[MaxProductCount] = { 0 };
-float IntegralSum[MaxProductCount];
 bool ErrorIsPositive[MaxProductCount] = { true };
+float RefUPM[MaxProductCount] = { 0 };	// section-independent reference flow for gain normalization (peak target this run)
 
-void SetPWM()
+void DoPID()
 {
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
@@ -68,6 +81,11 @@ void SetPWM()
 
 float PIDvalve(byte ID)
 {
+	// Normalized PID: error is a fraction of a section-independent REFERENCE flow, output a
+	// fraction of PWM authority, so Kp/Ki are dimensionless and one UI scale fits any hardware.
+	// Reference = peak target this run (NOT the live target): dividing by live target made loop
+	// gain ~1/target, so closing sections multiplied the gain and caused oscillation. Peak-target
+	// reference keeps gain constant as sections close while staying identical at full sections.
 	float Result = 0;
 
 	if (PIDenabled[ID])
@@ -77,13 +95,27 @@ float PIDvalve(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			if (Sensor[ID].TargetUPM > RefUPM[ID]) RefUPM[ID] = Sensor[ID].TargetUPM;	// latch peak target as the fixed gain reference
 
-			bool IsPositive = (RateError > 0);
-			if (IsPositive != ErrorIsPositive[ID])
+			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
+			DiagTarget[ID] = Sensor[ID].TargetUPM;	// snapshot with the same UPM used for the error
+			DiagApplied[ID] = Sensor[ID].UPM;
+			DiagSamples[ID] = MedianCount[ID];	// pulse samples behind this UPM
+			DiagChange[ID] = 0.0f;
+
+			// Reset the integral only on a genuine overshoot - the rate must clearly cross to
+			// the other side of target (beyond the deadband). Hysteresis stops small target
+			// wobble near the setpoint from repeatedly wiping accumulated correction.
+			float ResetBand = Sensor[ID].Deadband * Sensor[ID].TargetUPM;
+			if (RateError > ResetBand && !ErrorIsPositive[ID])
 			{
-				// prevent integral overshoot on zero crossing
-				ErrorIsPositive[ID] = IsPositive;
+				ErrorIsPositive[ID] = true;
+				IntegralSum[ID] = 0;
+			}
+			else if (RateError < -ResetBand && ErrorIsPositive[ID])
+			{
+				ErrorIsPositive[ID] = false;
 				IntegralSum[ID] = 0;
 			}
 
@@ -91,13 +123,30 @@ float PIDvalve(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].Ki;
+				// RefUPM is the section-independent reference (>= TargetUPM > 0), so this is safe and
+				// gives constant gain across section states. At full sections RefUPM == TargetUPM.
+				float FracError = RateError / RefUPM[ID];	// bounded to [-1, 1]; smaller at reduced sections -> gentler, not hotter
+				float Authority = Sensor[ID].MaxPWM - Sensor[ID].MinPWM;
+				if (Authority < 1.0) Authority = 1.0;	// guard MaxPWM <= MinPWM misconfig, which would silently zero all output
+
+				// Conditional integration (anti-windup): only accumulate inside the brakepoint band
+				// (near target). Far from target the P term drives the approach; integrating there
+				// winds up and causes capture overshoot plus extra over-travel ("excessive drop") on
+				// large setpoint steps such as a quick multi-section close.
+				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
+				if (nearTarget)
+				{
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * ValveKiScale * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);  // max total integral pwm
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
 
-				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustValve : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustValve;
+				// BrakeScale is a 0-1 multiplier (replaces FastAdjustValve=40): full authority when far
+				// from target, scaled down inside the brakepoint band.
+				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * ValveKpScale * BrakeScale * Authority + IntegralSum[ID];
+				DiagChange[ID] = ChangeAmount;
 
 				if (fabsf(ChangeAmount) < 0.1)
 				{
@@ -114,11 +163,17 @@ float PIDvalve(byte ID)
 				Result = 0.0f;
 				IntegralSum[ID] = 0.0f;
 			}
+
+			DiagIntegral[ID] = IntegralSum[ID];
+			DiagPWM[ID] = Result;	// final computed PWM for this sample
+			DiagMillis[ID] = LastCheck[ID];
+			PidSampleReady[ID] = true;
 		}
 	}
 	else
 	{
 		IntegralSum[ID] = 0;
+		RefUPM[ID] = 0;	// re-latch the reference on the next enabled run
 	}
 
 	LastPWM[ID] = Result;
@@ -136,13 +191,26 @@ float PIDmotor(byte ID)
 		{
 			LastCheck[ID] = millis();
 
-			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			if (Sensor[ID].TargetUPM > RefUPM[ID]) RefUPM[ID] = Sensor[ID].TargetUPM;	// latch peak target as the fixed gain reference
 
-			bool IsPositive = (RateError > 0);
-			if (IsPositive != ErrorIsPositive[ID])
+			float RateError = Sensor[ID].TargetUPM - Sensor[ID].UPM;
+			DiagError[ID] = RateError;	// raw error before deadband/constrain, for PGN 32402 logging
+			DiagTarget[ID] = Sensor[ID].TargetUPM;	// snapshot with the same UPM used for the error
+			DiagApplied[ID] = Sensor[ID].UPM;
+			DiagSamples[ID] = MedianCount[ID];	// pulse samples behind this UPM
+			DiagChange[ID] = 0.0f;
+
+			// Reset integral only on a genuine overshoot (rate clearly crosses target beyond
+			// the deadband); hysteresis ignores small target wobble near the setpoint.
+			float ResetBand = Sensor[ID].Deadband * Sensor[ID].TargetUPM;
+			if (RateError > ResetBand && !ErrorIsPositive[ID])
 			{
-				// prevent integral overshoot on zero crossing
-				ErrorIsPositive[ID] = IsPositive;
+				ErrorIsPositive[ID] = true;
+				IntegralSum[ID] = 0;
+			}
+			else if (RateError < -ResetBand && ErrorIsPositive[ID])
+			{
+				ErrorIsPositive[ID] = false;
 				IntegralSum[ID] = 0;
 			}
 
@@ -150,14 +218,31 @@ float PIDmotor(byte ID)
 			{
 				RateError = constrain(RateError, Sensor[ID].TargetUPM * -1, Sensor[ID].TargetUPM);
 
-				IntegralSum[ID] += RateError * Sensor[ID].Ki;
+				// RefUPM is the section-independent reference (>= TargetUPM > 0), so this is safe and
+				// gives constant gain across section states. At full sections RefUPM == TargetUPM.
+				float FracError = RateError / RefUPM[ID];	// bounded to [-1, 1]; smaller at reduced sections -> gentler, not hotter
+				float Authority = Sensor[ID].MaxPWM - Sensor[ID].MinPWM;
+				if (Authority < 1.0) Authority = 1.0;	// guard MaxPWM <= MinPWM misconfig, which would silently zero all output
+
+				// Conditional integration (anti-windup): only accumulate inside the brakepoint band
+				// (near target). Far from target the P term drives the approach; integrating there
+				// winds up and causes capture overshoot plus extra over-travel ("excessive drop") on
+				// large setpoint steps such as a quick multi-section close.
+				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
+				if (nearTarget)
+				{
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * MotorKiScale * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
-				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);  // max total integral pwm
+				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
 
-				float BrakeFactor = (fabsf(RateError) > Sensor[ID].TargetUPM * Sensor[ID].BrakePoint / 100.0) ? FastAdjustMotor : Sensor[ID].PIDslowAdjust / 100.0 * FastAdjustMotor;
+				// BrakeScale is a 0-1 multiplier (replaces FastAdjustMotor): full authority when far
+				// from target, scaled down inside the brakepoint band.
+				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = RateError * Sensor[ID].Kp * KpMultiplier * BrakeFactor + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * MotorKpScale * BrakeScale * Authority + IntegralSum[ID];
 				ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
+				DiagChange[ID] = ChangeAmount;	// slew-limited per-loop change actually applied
 
 				Result += ChangeAmount;
 				Result = constrain(Result, Sensor[ID].MinPWM, Sensor[ID].MaxPWM);
@@ -167,11 +252,17 @@ float PIDmotor(byte ID)
 			{
 				IntegralSum[ID] = 0.0f;
 			}
+
+			DiagIntegral[ID] = IntegralSum[ID];
+			DiagPWM[ID] = Result;	// final computed PWM for this sample
+			DiagMillis[ID] = LastCheck[ID];
+			PidSampleReady[ID] = true;
 		}
 	}
 	else
 	{
 		IntegralSum[ID] = 0;
+		RefUPM[ID] = 0;	// re-latch the reference on the next enabled run
 	}
 
 	return Result;
