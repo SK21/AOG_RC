@@ -24,6 +24,7 @@ namespace RateController.Forms
             InitializeComponent();
             dgvMapping.AutoGenerateColumns = false;
             dgvMapping.AllowUserToAddRows = false;
+            dgvMapping.CellClick += dgvMapping_CellClick;
             rbShapefile.CheckedChanged += new EventHandler(rbMode_CheckedChanged);
             rbXML.CheckedChanged += new EventHandler(rbMode_CheckedChanged);
         }
@@ -166,6 +167,29 @@ namespace RateController.Forms
             }
         }
 
+        private void dgvMapping_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+                if (dgvMapping.Columns[e.ColumnIndex].Name != "DefaultRate") return;
+                if (dgvMapping.Rows[e.RowIndex].Cells[e.ColumnIndex].ReadOnly) return;
+
+                var raw = dgvMapping.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "0";
+                double.TryParse(raw, out double current);
+                using (var form = new AgOpenGPS.FormNumeric(0, 9999, current))
+                {
+                    form.Text = "Default Rate";
+                    if (form.ShowDialog() == DialogResult.OK)
+                        dgvMapping.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue.ToString("N1");
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmImport/dgvMapping_CellClick: " + ex.Message);
+            }
+        }
+
         private void frmImport_FormClosed(object sender, FormClosedEventArgs e)
         {
             Props.SaveFormLocation(this);
@@ -220,26 +244,32 @@ namespace RateController.Forms
             {
                 string name = _xmlLayerNames[i];
                 if (string.IsNullOrEmpty(name)) continue;
-                int rowIdx = dgvMapping.Rows.Add(ZoneFields.Products[i]);
-                var cell = (DataGridViewComboBoxCell)dgvMapping.Rows[rowIdx].Cells[1];
-                cell.Items.Clear();
-                cell.Items.Add(name);
-                cell.Value = name;
+                int rowIdx = dgvMapping.Rows.Add(ZoneFields.Products[i], name, "");
             }
         }
 
         private void RebuildMapZones()
         {
             attributeMapping = new Dictionary<string, string>();
+            var defaultRates = new Dictionary<string, double>();
             foreach (DataGridViewRow row in dgvMapping.Rows)
             {
                 var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
                 var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
                 if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
                     attributeMapping[predefined] = shapefileAttribute;
+
+                if (!string.IsNullOrEmpty(predefined) && ZoneFields.Products.Contains(predefined))
+                {
+                    double def = 0;
+                    var defVal = row.Cells["DefaultRate"].Value?.ToString();
+                    if (!string.IsNullOrEmpty(defVal) && double.TryParse(defVal, out double parsed))
+                        def = parsed;
+                    defaultRates[predefined] = def;
+                }
             }
             var shapefileHelper = new ShapefileHelper();
-            _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
+            _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping, defaultRates);
             _simplifiedZones = null;
             _importedZoneCount = _mapZones.Count;
         }
@@ -321,7 +351,11 @@ namespace RateController.Forms
                 if (!string.IsNullOrEmpty(matched))
                     claimed.Add(matched);
 
-                DGV.Rows.Add(predefined, matched);
+                int rowIdx = DGV.Rows.Add(predefined, matched, "");
+                if (!productFields.Contains(predefined))
+                {
+                    DGV.Rows[rowIdx].Cells["DefaultRate"].ReadOnly = true;
+                }
             }
         }
 

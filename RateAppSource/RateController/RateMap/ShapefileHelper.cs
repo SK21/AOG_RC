@@ -14,7 +14,7 @@ namespace RateController.RateMap
 {
     public class ShapefileHelper
     {
-        public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping = null)
+        public List<MapZone> CreateZoneList(string shapefilePath, Dictionary<string, string> attributeMapping = null, Dictionary<string, double> defaultRates = null)
         {
             var zones = new List<MapZone>();
 
@@ -29,7 +29,7 @@ namespace RateController.RateMap
                         {
                             if (feature.Geometry is Polygon)
                             {
-                                var zone = CreateMapZone(feature, (Polygon)feature.Geometry, attributeMapping, index++);
+                                var zone = CreateMapZone(feature, (Polygon)feature.Geometry, attributeMapping, index++, defaultRates);
                                 if (zone != null) zones.Add(zone);
                             }
                             else if (feature.Geometry is MultiPolygon)
@@ -37,7 +37,7 @@ namespace RateController.RateMap
                                 var mp = (MultiPolygon)feature.Geometry;
                                 foreach (Polygon poly in mp.Geometries)
                                 {
-                                    var zone = CreateMapZone(feature, poly, attributeMapping, index++);
+                                    var zone = CreateMapZone(feature, poly, attributeMapping, index++, defaultRates);
                                     if (zone != null) zones.Add(zone);
                                 }
                             }
@@ -204,7 +204,7 @@ namespace RateController.RateMap
             return new[] { g };
         }
 
-        private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index)
+        private MapZone CreateMapZone(IFeature feature, Polygon polygon, Dictionary<string, string> mapping, int index, Dictionary<string, double> defaultRates = null)
         {
             try
             {
@@ -241,7 +241,10 @@ namespace RateController.RateMap
                     foreach (var k in rates.Keys.ToList())
                     {
                         string mappedField = mapping.ContainsKey(k) ? mapping[k] : k;
-                        if (feature.Attributes.Exists(mappedField)) rates[k] = Convert.ToDouble(feature.Attributes[mappedField]);
+                        if (feature.Attributes.Exists(mappedField))
+                            rates[k] = Convert.ToDouble(feature.Attributes[mappedField]);
+                        else if (defaultRates != null && defaultRates.TryGetValue(k, out double def))
+                            rates[k] = def;
                     }
 
                     // Map the color

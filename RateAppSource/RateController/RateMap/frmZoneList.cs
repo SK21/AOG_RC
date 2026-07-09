@@ -16,10 +16,118 @@ namespace RateController.RateMap
         private bool cEdited = false;
         private bool Initializing = false;
         private int _printRow;
+        private ComboBox cboOverrideProduct;
+        private TextBox tbOverrideValue;
+        private Button btnOverrideApply;
 
         public frmZoneList()
         {
             InitializeComponent();
+        }
+
+        private void btnOverrideApply_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cboOverrideProduct.SelectedIndex < 0)
+                {
+                    System.Media.SystemSounds.Exclamation.Play();
+                    return;
+                }
+
+                double value = 0;
+                if (!double.TryParse(tbOverrideValue.Text, out value))
+                {
+                    using (var form = new FormNumeric(0, 9999, 0))
+                    {
+                        form.Text = "Override Value";
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            value = form.ReturnValue;
+                            tbOverrideValue.Text = value.ToString("N1");
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                int colIndex = 3 + cboOverrideProduct.SelectedIndex;
+                bool anySelected = false;
+                foreach (DataGridViewRow row in DGV.Rows)
+                {
+                    if (Convert.ToBoolean(row.Cells[0].Value))
+                    {
+                        row.Cells[colIndex].Value = (decimal)value;
+                        anySelected = true;
+                    }
+                }
+
+                if (!anySelected)
+                {
+                    Props.ShowMessage("No zones selected. Check the zones you want to override.");
+                }
+                else
+                {
+                    SetButtons(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/btnOverrideApply_Click: " + ex.Message);
+            }
+        }
+
+        private void TbOverrideValue_Click(object sender, EventArgs e)
+        {
+            double.TryParse(tbOverrideValue.Text, out double current);
+            using (var form = new FormNumeric(0, 9999, current))
+            {
+                form.Text = "Override Value";
+                if (form.ShowDialog() == DialogResult.OK)
+                    tbOverrideValue.Text = form.ReturnValue.ToString("N1");
+            }
+        }
+
+        private void InitOverrideControls()
+        {
+            int y = DGV.Bottom + 4;
+
+            var lblProduct = new Label();
+            lblProduct.Text = "Product:";
+            lblProduct.AutoSize = true;
+            lblProduct.Location = new Point(DGV.Left, y + 4);
+            this.Controls.Add(lblProduct);
+
+            cboOverrideProduct = new ComboBox();
+            cboOverrideProduct.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboOverrideProduct.Items.AddRange(new object[] { "A", "B", "C", "D", "E" });
+            cboOverrideProduct.SelectedIndex = 0;
+            cboOverrideProduct.Location = new Point(lblProduct.Right + 4, y);
+            cboOverrideProduct.Size = new Size(45, 28);
+            this.Controls.Add(cboOverrideProduct);
+
+            var lblValue = new Label();
+            lblValue.Text = "Value:";
+            lblValue.AutoSize = true;
+            lblValue.Location = new Point(cboOverrideProduct.Right + 8, y + 4);
+            this.Controls.Add(lblValue);
+
+            tbOverrideValue = new TextBox();
+            tbOverrideValue.Location = new Point(lblValue.Right + 4, y);
+            tbOverrideValue.Size = new Size(70, 28);
+            tbOverrideValue.TextAlign = HorizontalAlignment.Right;
+            tbOverrideValue.Click += TbOverrideValue_Click;
+            this.Controls.Add(tbOverrideValue);
+
+            btnOverrideApply = new Button();
+            btnOverrideApply.Text = "Apply";
+            btnOverrideApply.Location = new Point(tbOverrideValue.Right + 6, y - 2);
+            btnOverrideApply.Size = new Size(80, 32);
+            btnOverrideApply.FlatStyle = FlatStyle.Flat;
+            btnOverrideApply.Click += btnOverrideApply_Click;
+            this.Controls.Add(btnOverrideApply);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -219,6 +327,7 @@ namespace RateController.RateMap
             this.BackColor = Properties.Settings.Default.MainBackColour;
             DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            InitOverrideControls();
             UpdateForm();
             SetButtons(false);
         }
