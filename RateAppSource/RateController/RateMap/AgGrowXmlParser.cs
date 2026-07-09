@@ -1,6 +1,7 @@
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -70,10 +71,11 @@ namespace RateController.RateMap
                 var first = gridLayers[0];
                 double north = 0, west = 0, cellX = 0, cellY = 0;
                 int cellsX = 0, cellsY = 0;
-                double.TryParse(first.Element("North")?.Value, out north);
-                double.TryParse(first.Element("West")?.Value, out west);
-                double.TryParse(first.Element("MetresPerCellX")?.Value, out cellX);
-                double.TryParse(first.Element("MetresPerCellY")?.Value, out cellY);
+                // XML numbers always use '.' - parse invariant so comma-decimal locales don't misread them
+                double.TryParse(first.Element("North")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out north);
+                double.TryParse(first.Element("West")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out west);
+                double.TryParse(first.Element("MetresPerCellX")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out cellX);
+                double.TryParse(first.Element("MetresPerCellY")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out cellY);
                 int.TryParse(first.Element("CellsX")?.Value, out cellsX);
                 int.TryParse(first.Element("CellsY")?.Value, out cellsY);
 
@@ -107,7 +109,7 @@ namespace RateController.RateMap
                     // <Rates> is a palette of distinct rate values (not per-cell data).
                     double[] palette = layer.Element("Rates")
                         ?.Elements("Rate")
-                        .Select(e => { double.TryParse(e.Value, out double v); return v; })
+                        .Select(e => { double.TryParse(e.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v); return v; })
                         .ToArray() ?? new double[0];
 
                     if (palette.Length == 0) continue;
