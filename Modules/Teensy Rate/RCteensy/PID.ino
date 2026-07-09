@@ -17,6 +17,17 @@
 // the old absolute-error/raw-PWM scheme), see:
 //   AOG_RC/RateAppSource/docs/PID_Normalized_Control_Rationale.md
 
+// Kp/Ki arrive as slider/100 (0.00-1.00). Each actuator type scales what slider 100 means.
+// These are scale alignment, NOT tuning constants: a valve PWM is a positional drive-speed
+// command recomputed each loop, so full slider = full authority at full error (scale 1.0);
+// a motor PWM accumulates ChangeAmount every loop (integrating), so it needs ~10x smaller
+// per-loop gain for the same response. Ki is a further 10x finer than Kp on each path
+// because conditional integration only trims near target where FracError is small.
+const float ValveKpScale = 1.0;
+const float ValveKiScale = 0.1;
+const float MotorKpScale = 0.1;
+const float MotorKiScale = 0.01;
+
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
 uint32_t LastCheck[MaxProductCount];
@@ -116,6 +127,7 @@ float PIDvalve(byte ID)
 				// gives constant gain across section states. At full sections RefUPM == TargetUPM.
 				float FracError = RateError / RefUPM[ID];	// bounded to [-1, 1]; smaller at reduced sections -> gentler, not hotter
 				float Authority = Sensor[ID].MaxPWM - Sensor[ID].MinPWM;
+				if (Authority < 1.0) Authority = 1.0;	// guard MaxPWM <= MinPWM misconfig, which would silently zero all output
 
 				// Conditional integration (anti-windup): only accumulate inside the brakepoint band
 				// (near target). Far from target the P term drives the approach; integrating there
@@ -124,7 +136,7 @@ float PIDvalve(byte ID)
 				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
 				if (nearTarget)
 				{
-					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * ValveKiScale * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
 				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
 				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
@@ -133,7 +145,7 @@ float PIDvalve(byte ID)
 				// from target, scaled down inside the brakepoint band.
 				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = FracError * Sensor[ID].Kp * BrakeScale * Authority + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * ValveKpScale * BrakeScale * Authority + IntegralSum[ID];
 				DiagChange[ID] = ChangeAmount;
 
 				if (fabsf(ChangeAmount) < 0.1)
@@ -210,6 +222,7 @@ float PIDmotor(byte ID)
 				// gives constant gain across section states. At full sections RefUPM == TargetUPM.
 				float FracError = RateError / RefUPM[ID];	// bounded to [-1, 1]; smaller at reduced sections -> gentler, not hotter
 				float Authority = Sensor[ID].MaxPWM - Sensor[ID].MinPWM;
+				if (Authority < 1.0) Authority = 1.0;	// guard MaxPWM <= MinPWM misconfig, which would silently zero all output
 
 				// Conditional integration (anti-windup): only accumulate inside the brakepoint band
 				// (near target). Far from target the P term drives the approach; integrating there
@@ -218,7 +231,7 @@ float PIDmotor(byte ID)
 				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
 				if (nearTarget)
 				{
-					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * MotorKiScale * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
 				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
 				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
@@ -227,7 +240,7 @@ float PIDmotor(byte ID)
 				// from target, scaled down inside the brakepoint band.
 				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = FracError * Sensor[ID].Kp * BrakeScale * Authority + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * MotorKpScale * BrakeScale * Authority + IntegralSum[ID];
 				ChangeAmount = constrain(ChangeAmount, -1 * Sensor[ID].SlewRate, Sensor[ID].SlewRate);
 				DiagChange[ID] = ChangeAmount;	// slew-limited per-loop change actually applied
 

@@ -371,15 +371,16 @@ void CANBus_HandlePidSettings1(const CAN_message_t& msg) {
 	Sensor[senId].MaxPWM = (255.0 * msg.buf[1] / 100.0);
 	Sensor[senId].MinPWM = (255.0 * msg.buf[2] / 100.0);
 
-	// Normalized PID: Kp/Ki dimensionless; Kp /1000, Ki finer /10000 (must match UDP decode in Receive.ino).
+	// Normalized PID: Kp/Ki dimensionless; uniform /100 decode, slider 0-100 -> 0.00-1.00.
+	// Per-actuator scaling (valve vs motor) is applied in PID.ino (must match UDP decode in Receive.ino).
 	if (msg.buf[3] > 0) {
-		Sensor[senId].Kp = msg.buf[3] / 1000.0;
+		Sensor[senId].Kp = msg.buf[3] / 100.0;
 	}
 	else {
 		Sensor[senId].Kp = 0;
 	}
 	if (msg.buf[4] > 0) {
-		Sensor[senId].Ki = msg.buf[4] / 10000.0;
+		Sensor[senId].Ki = msg.buf[4] / 100.0;
 	}
 	else {
 		Sensor[senId].Ki = 0;

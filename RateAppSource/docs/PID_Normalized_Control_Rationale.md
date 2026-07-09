@@ -116,13 +116,28 @@ higher** than it was when the integral helped during the approach.
 
 ## 5. UI decode after normalization
 
-With dimensionless gains, the exponential decode was replaced with a simple linear scale that spreads the
-usable range across the slider:
+With dimensionless gains, the exponential decode was replaced with a simple linear scale. The decode is a
+uniform percentage; what "slider 100" means for the actuator is applied per control type in `PID.ino`:
 
 ```
-Kp = slider / 1000          // e.g. slider 35 -> Kp 0.035
-Ki = slider / 10000          // finer; the integral only trims near target so it wants a small value
+Kp = slider / 100           // 0-100 -> 0.00-1.00  (uniform, both transports)
+Ki = slider / 100
+
+// per-actuator scale constants (PID.ino):
+ValveKpScale = 1.0          // valve PWM is a positional drive-speed command recomputed each
+ValveKiScale = 0.1          // loop, so slider 100 = full authority at full error
+MotorKpScale = 0.1          // motor PWM accumulates ChangeAmount every loop (integrating),
+MotorKiScale = 0.01         // so it needs ~10x smaller per-loop gain for the same response
 ```
+
+The Ki scale is a further 10x finer than Kp on each path because conditional integration means the
+integral only trims near target, where `FracError` is small.
+
+Why the split: the first field session (2026-07-08, sprayer valve) showed the valve path pinned at
+slider 100 and still sluggish — a valve's PWM is consumed directly as drive speed each loop, unlike the
+motor path which accumulates it, so the valve needs ~10x more per-loop gain at the same slider position.
+The old firmware expressed this as `FastAdjustValve = 40`; the per-type scale constants express the same
+physics explicitly.
 
 The CAN (`CANBus.ino`) and UDP (`Receive.ino`) decode paths are kept identical to each other.
 

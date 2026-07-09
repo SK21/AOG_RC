@@ -166,12 +166,11 @@ void ReadPGNs(byte data[], uint16_t len)
 						Sensor[SensorID].MinPWM = (255.0 * data[4] / 100.0);
 
 						// Normalized PID: Kp/Ki are dimensionless (fraction of ref flow -> fraction of PWM
-						// authority). Kp /1000 spreads the usable gain across the slider. Ki uses a
-						// finer /10000 scale: with conditional integration the integral only trims near
-						// target, so it wants a small, fine value while Kp carries the approach.
+						// authority). Uniform /100 decode: slider 0-100 -> 0.00-1.00. Per-actuator
+						// scaling (valve vs motor) is applied in PID.ino, not here.
 						if (data[5] > 0)
 						{
-							Sensor[SensorID].Kp = data[5] / 1000.0;
+							Sensor[SensorID].Kp = data[5] / 100.0;
 						}
 						else
 						{
@@ -180,7 +179,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 						if (data[6] > 0)
 						{
-							Sensor[SensorID].Ki = data[6] / 10000.0;
+							Sensor[SensorID].Ki = data[6] / 100.0;
 						}
 						else
 						{
