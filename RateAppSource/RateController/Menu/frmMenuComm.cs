@@ -307,6 +307,7 @@ namespace RateController.Menu
             try
             {
                 LoadCombo();
+                lbModule.Text = Core.ModuleConfigDescription();
                 lbModuleIP.Text = Core.UDPmodules.SubNet;
 
                 if (Props.CanEnabled)

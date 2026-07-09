@@ -247,6 +247,53 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		}
 		break;
 
+	case 32507:
+		// PGN32507, sensor pins from RC, one packet per sensor
+		//0		HeaderLo	251
+		//1		HeaderHi	126
+		//2		Mod/Sen ID
+		//3		flow pin
+		//4		dir pin
+		//5		pwm pin
+		//6		bin sensor pin		255 = no bin alarm
+		//7		flags				bit 0 - invert bin sensor
+		//8		spare
+		//9		spare
+		//10	CRC
+
+		PGNlength = 11;
+
+		if (len > PGNlength - 1)
+		{
+			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			{
+				byte SenID = ParseSenID(data[2]);
+				if (SenID < MaxProductCount)
+				{
+					bool BinInv = ((data[7] & 1) == 1);
+					bool Changed = (Sensor[SenID].FlowPin != data[3])
+						|| (Sensor[SenID].DirPin != data[4])
+						|| (Sensor[SenID].PWMPin != data[5])
+						|| (Sensor[SenID].BinPin != data[6])
+						|| (Sensor[SenID].BinInvert != BinInv);
+
+					if (Changed)
+					{
+						Sensor[SenID].FlowPin = data[3];
+						Sensor[SenID].DirPin = data[4];
+						Sensor[SenID].PWMPin = data[5];
+						Sensor[SenID].BinPin = data[6];
+						Sensor[SenID].BinInvert = BinInv;
+
+						SaveData();
+						RestartPending = true;	// deferred - more sensor packets may follow
+					}
+					RestartLastConfig = millis();
+				}
+			}
+		}
+		break;
+
 	case 32700:
 		// module config
 		//0     HeaderLo    188

@@ -420,7 +420,7 @@ namespace RateController.Classes
                 {
                     NewState = ProductState.Off;
                 }
-                else if (Core.RCalarm.Alarms[i])
+                else if (Core.RCalarm.Alarms[i] || Core.RCalarm.BinAlarms[i])
                 {
                     NewState = ProductState.Error;
                 }

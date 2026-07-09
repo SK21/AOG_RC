@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 8076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 9076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 0xFF		// Pins not connected
@@ -43,7 +43,7 @@ const int MaxSampleSize = 25;
 #elif defined(ARDUINO_TEENSY41)
 const int PWM_BITS = 12;
 const int PWM_FREQ = 490;
-const uint8_t MaxProductCount = 2;
+const uint8_t MaxProductCount = 6;
 const int MaxSampleSize = 25;
 #else // Nano & similar AVR
 const int PWM_BITS = 8;
@@ -142,6 +142,8 @@ struct SensorConfig	// about 104 bytes
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte SampleWindow;	// flow window in centiseconds (x10 ms)
+	uint8_t BinPin;		// bin level sensor (digital), NC = no bin alarm
+	bool BinInvert;		// invert bin sensor reading
 };
 
 SensorConfig Sensor[MaxProductCount];
@@ -202,13 +204,26 @@ uint16_t UpdateSendPort = 29000;
 uint32_t buffer_addr, buffer_size;
 bool FirmwareUpdateMode = false;
 
-bool CalibrationOn[] = { false,false };
+bool CalibrationOn[MaxProductCount];	// zero-initialized; sized by constant, not initializer (an
+										// aggregate initializer silently under-fills at 6 products)
 float WheelSpeed = 0;
 uint32_t WheelCounts = 0;
 
 // PID damper
 bool LastAboveTarget[MaxProductCount];
-float OscDamp[MaxProductCount] = { 1.0f, 1.0f };
+float OscDamp[MaxProductCount];		// set to 1.0 in DoSetup (no aggregate initializer - see CalibrationOn)
+
+// Bin level sensors: debounced per-sensor empty state, reported in PGN 32400 status bit 1
+bool BinEmpty[MaxProductCount];
+uint32_t BinChangeTime[MaxProductCount];		// millis() when the raw reading last matched the debounced state
+const uint16_t BinDebounce = 2500;				// ms: raw state must persist this long before the reported state flips
+
+// Deferred restart for config that arrives as multiple packets (PGN 32507 / 0xFF17):
+// restarting on the first packet would drop the rest, so apply+save each one and
+// restart after the config stream has been quiet for RestartDelay
+bool RestartPending = false;
+uint32_t RestartLastConfig = 0;					// millis() of the last 32507 packet
+const uint16_t RestartDelay = 1500;
 
 // PID diagnostics logging (PGN 32402). Kept out of SensorConfig so EEPROM layout is unchanged.
 // All fields are snapshotted together when the PID computes so the logged packet is
@@ -271,7 +286,15 @@ void loop()
 		GetUPM();
 		ReadAnalog();
 		AdjustFlow();
+		CheckBinSensors();
 		if (MDL.WheelSpeedPin != NC) GetSpeed();
+
+		// deferred restart: the sensor-pins config (PGN 32507) arrives as one packet
+		// per sensor; restart once the stream has been quiet for RestartDelay
+		if (RestartPending && (millis() - RestartLastConfig >= RestartDelay))
+		{
+			SCB_AIRCR = 0x05FA0004;
+		}
 	}
 
 	// Send data back based on CommMode
@@ -352,6 +375,36 @@ bool WorkPinOn()
 		WrkOn = false;
 	}
 	return WrkOn;
+}
+
+void CheckBinSensors()
+{
+	// Debounced per-sensor bin level. The raw reading must disagree with the
+	// reported state for BinDebounce ms straight before the state flips -
+	// paddle/capacitive sensors flicker as product shifts across them.
+	// Default sense (no invert): pin pulled up, sensor pulls low while covered,
+	// so a HIGH read means empty.
+	for (int i = 0; i < MDL.SensorCount; i++)
+	{
+		if (Sensor[i].BinPin < NC)
+		{
+			bool RawEmpty = digitalRead(Sensor[i].BinPin);
+			if (Sensor[i].BinInvert) RawEmpty = !RawEmpty;
+
+			if (RawEmpty == BinEmpty[i])
+			{
+				BinChangeTime[i] = millis();
+			}
+			else if (millis() - BinChangeTime[i] >= BinDebounce)
+			{
+				BinEmpty[i] = RawEmpty;
+			}
+		}
+		else
+		{
+			BinEmpty[i] = false;
+		}
+	}
 }
 
 uint32_t MedianFromArray(uint32_t buf[], int count)

@@ -273,6 +273,10 @@ void CANBus_Receive() {
 			CANBus_HandleBoardLabel3(msg);
 			break;
 
+		case 0xFF17:  // Sensor pins (from PGN 32507, one frame per sensor)
+			CANBus_HandleSensorPins(msg);
+			break;
+
 		}
 	}
 }
@@ -356,6 +360,41 @@ void CANBus_HandleRelayCommand(const CAN_message_t& msg) {
 	InvertedLo = msg.buf[5];
 	InvertedHi = msg.buf[6];
 	FlowMasterValveIndex = (msg.len > 7) ? msg.buf[7] : 255;
+}
+
+void CANBus_HandleSensorPins(const CAN_message_t& msg) {
+	// PGN 0xFF17 - Sensor pins from PGN 32507, one frame per sensor
+	// Byte 0: ModuleId(0-3) | SensorId(4-7)
+	// Byte 1: Flow pin, Byte 2: Dir pin, Byte 3: PWM pin, Byte 4: Bin pin
+	// Byte 5: flags (bit 0 = invert bin), Bytes 6-7: spare
+	// Applies + saves, then defers the restart (more sensor frames may follow) -
+	// same behaviour as the UDP 32507 handler in Receive.ino.
+
+	uint8_t modId = msg.buf[0] & 0x0F;
+	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
+
+	if (modId == MDL.ID && senId < MaxProductCount)
+	{
+		bool BinInv = ((msg.buf[5] & 1) == 1);
+		bool Changed = (Sensor[senId].FlowPin != msg.buf[1])
+			|| (Sensor[senId].DirPin != msg.buf[2])
+			|| (Sensor[senId].PWMPin != msg.buf[3])
+			|| (Sensor[senId].BinPin != msg.buf[4])
+			|| (Sensor[senId].BinInvert != BinInv);
+
+		if (Changed)
+		{
+			Sensor[senId].FlowPin = msg.buf[1];
+			Sensor[senId].DirPin = msg.buf[2];
+			Sensor[senId].PWMPin = msg.buf[3];
+			Sensor[senId].BinPin = msg.buf[4];
+			Sensor[senId].BinInvert = BinInv;
+
+			SaveData();
+			RestartPending = true;
+		}
+		RestartLastConfig = millis();
+	}
 }
 
 void CANBus_HandlePidSettings1(const CAN_message_t& msg) {
@@ -589,8 +628,9 @@ void CANBus_SendSensorRateQty(uint8_t sensorId) {
 	data[5] = (qtyRaw >> 8) & 0xFF;
 	data[6] = (qtyRaw >> 16) & 0xFF;
 
-	// Byte 7: Status (bit 0 = sensor connected)
+	// Byte 7: Status (bit 0 = sensor connected, bit 1 = bin empty)
 	data[7] = (SensorConnected[sensorId]) ? 0x01 : 0x00;
+	if (BinEmpty[sensorId]) data[7] |= 0x02;
 
 	CANBus_SendProprietaryB(0x00, data, 8);
 }

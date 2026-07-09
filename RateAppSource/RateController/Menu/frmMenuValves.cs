@@ -105,6 +105,7 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
+            lbModule.Text = Core.ModuleConfigDescription();
             rb3Wire.Checked = Core.ModuleConfig.Is3Wire;
             rb2Wire.Checked = !rb3Wire.Checked;
             Initializing = false;

@@ -155,7 +155,11 @@ namespace RateController.Menu
         {
             double temp;
             double.TryParse(tbSensorCount.Text, out temp);
-            using (var form = new FormNumeric(0, 2, temp))
+
+            // cap by the target module's board type and firmware (2, or 6 on
+            // 6-product boards with current firmware)
+            if (!byte.TryParse(tbModuleID.Text, out byte id)) id = Core.ModuleConfig.GetData()[2];
+            using (var form = new FormNumeric(0, Core.MaxSensorsForModule(id), temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -171,6 +175,7 @@ namespace RateController.Menu
             try
             {
                 byte[] data = Core.ModuleConfig.GetData();
+                lbModule.Text = Core.ModuleConfigDescription();
                 tbModuleID.Text = data[2].ToString();
                 tbSensorCount.Text = data[3].ToString();
                 cbOnboardRelays.SelectedIndex = data[5];

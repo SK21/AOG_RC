@@ -102,6 +102,13 @@ namespace RateController.PGNs
             return (ValidID(ModuleID) && (DateTime.Now - ReceiveTime[ModuleID]).TotalSeconds < 4);
         }
 
+        public UInt16 InoID(int Module)
+        {
+            UInt16 Result = 0;
+            if (ValidID(Module)) Result = cInoID[Module];
+            return Result;
+        }
+
         public UInt16 ModuleType(int Module)
         {
             UInt16 Result = 0;

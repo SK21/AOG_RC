@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 8076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 9076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -99,6 +99,8 @@ struct SensorConfig
 	uint32_t PulseMin;
 	uint32_t PulseMax;
 	byte PulseSampleSize;
+	uint8_t BinPin;		// bin level sensor (digital), NC = no bin alarm
+	bool BinInvert;		// invert bin sensor reading
 };
 
 SensorConfig Sensor[MaxProductCount];
@@ -175,6 +177,18 @@ bool EthernetConnected()
 
 bool CalibrationOn[] = { false,false };
 
+// Bin level sensors: debounced per-sensor empty state, reported in PGN 32400 status bit 1
+bool BinEmpty[MaxProductCount];
+uint32_t BinChangeTime[MaxProductCount];		// millis() when the raw reading last matched the debounced state
+const uint16_t BinDebounce = 2500;				// ms: raw state must persist this long before the reported state flips
+
+// Deferred restart for config that arrives as multiple packets (PGN 32507):
+// restarting on the first packet would drop the rest, so apply+save each one and
+// restart after the config stream has been quiet for RestartDelay
+bool RestartPending = false;
+uint32_t RestartLastConfig = 0;					// millis() of the last 32507 packet
+const uint16_t RestartDelay = 1500;
+
 // declared here (not PID.ino) so Motor.ino's pressure gate can see it - .ino files
 // concatenate alphabetically and Motor comes before PID
 float IntegralSum[MaxProductCount];
@@ -212,6 +226,14 @@ void loop()
 		GetUPM();
 		CheckPressure();	// read the sensor BEFORE AdjustFlow so the gate acts on fresh pressure
 		AdjustFlow();
+		CheckBinSensors();
+
+		// deferred restart: the sensor-pins config (PGN 32507) arrives as one packet
+		// per sensor; restart once the stream has been quiet for RestartDelay
+		if (RestartPending && (millis() - RestartLastConfig >= RestartDelay))
+		{
+			resetFunc();
+		}
 	}
 
 	SendComm();
@@ -286,6 +308,36 @@ void CheckPressure()
 	if (MDL.PressurePin < NC)
 	{
 		PressureReading = analogRead(MDL.PressurePin);	// 10 bit, 0-1023
+	}
+}
+
+void CheckBinSensors()
+{
+	// Debounced per-sensor bin level. The raw reading must disagree with the
+	// reported state for BinDebounce ms straight before the state flips -
+	// paddle/capacitive sensors flicker as product shifts across them.
+	// Default sense (no invert): pin pulled up, sensor pulls low while covered,
+	// so a HIGH read means empty.
+	for (int i = 0; i < MDL.SensorCount; i++)
+	{
+		if (Sensor[i].BinPin < NC)
+		{
+			bool RawEmpty = digitalRead(Sensor[i].BinPin);
+			if (Sensor[i].BinInvert) RawEmpty = !RawEmpty;
+
+			if (RawEmpty == BinEmpty[i])
+			{
+				BinChangeTime[i] = millis();
+			}
+			else if (millis() - BinChangeTime[i] >= BinDebounce)
+			{
+				BinEmpty[i] = RawEmpty;
+			}
+		}
+		else
+		{
+			BinEmpty[i] = false;
+		}
 	}
 }
 

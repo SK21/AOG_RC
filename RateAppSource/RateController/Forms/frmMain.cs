@@ -16,6 +16,7 @@ namespace RateController.Forms
         private bool FlashState;
 
         private int LastAlarm;
+        private AlarmKind LastAlarmKind = AlarmKind.None;
 
         private bool LastAogConnected;
 
@@ -505,56 +506,47 @@ namespace RateController.Forms
                     btAlarm.BringToFront();
                     FlashState = !FlashState;
 
-                    bool pressureOn = Core.RCalarm.PressureAlarmIsOn;
-                    bool rateOn = false;
-                    string rateName = "Rate Alarm";
+                    // announce the most recently latched alarm; the product tiles
+                    // enumerate any others (ProductState.Error)
+                    AlarmKind kind = Core.RCalarm.Announced(out int idx);
+                    if (kind != AlarmKind.None)
+                    {
+                        // a newly announced product alarm switches the display to
+                        // that product, once
+                        if ((kind == AlarmKind.Rate || kind == AlarmKind.Bin)
+                            && (LastAlarmKind != kind || LastAlarm != idx))
+                        {
+                            LastAlarmKind = kind;
+                            LastAlarm = idx;
+                            Props.CurrentProduct = idx;
+                            SwitchDisplay(false);
+                            UpdateForm();
+                        }
 
-                    for (int i = 0; i < Props.MaxProducts; i++)
-                    {
-                        if (Core.RCalarm.Alarms[i])
+                        string family;
+                        string specific;
+                        switch (kind)
                         {
-                            rateOn = true;
-                            if (LastAlarm != i)
-                            {
-                                LastAlarm = i;
-                                Props.CurrentProduct = i;
-                                SwitchDisplay(false);
-                                UpdateForm();
-                            }
-                            rateName = Core.Tls.ClipText((i + 1).ToString() + ". " + Core.Products.Item(i).ProductName, 20);
-                            break;
-                        }
-                    }
+                            case AlarmKind.Pressure:
+                                family = "Pressure Alarm";
+                                specific = "High Pressure";
+                                break;
 
-                    if (FlashState)
-                    {
-                        if (rateOn && pressureOn)
-                        {
-                            btAlarm.Text = "Rate + Pressure";
+                            case AlarmKind.Bin:
+                                family = "Bin Empty";
+                                specific = Core.Tls.ClipText((idx + 1).ToString() + ". " + Core.Products.Item(idx).ProductName, 20);
+                                break;
+
+                            default:
+                                family = "Rate Alarm";
+                                specific = Core.Tls.ClipText((idx + 1).ToString() + ". " + Core.Products.Item(idx).ProductName, 20);
+                                break;
                         }
-                        else if (pressureOn)
-                        {
-                            btAlarm.Text = "Pressure Alarm";
-                        }
-                        else
-                        {
-                            btAlarm.Text = "Rate Alarm";
-                        }
-                    }
-                    else
-                    {
-                        if (rateOn && pressureOn)
-                        {
-                            btAlarm.Text = rateName;
-                        }
-                        else if (pressureOn)
-                        {
-                            btAlarm.Text = "High Pressure";
-                        }
-                        else
-                        {
-                            btAlarm.Text = rateName;
-                        }
+
+                        int count = Core.RCalarm.ActiveCount;
+                        if (count > 1) family += " (" + count.ToString() + ")";
+
+                        btAlarm.Text = FlashState ? family : specific;
                     }
                 }
             }
@@ -562,6 +554,7 @@ namespace RateController.Forms
             {
                 btAlarm.Visible = false;
                 LastAlarm = -1;
+                LastAlarmKind = AlarmKind.None;
                 AlarmButtonCountDown = 5;
             }
         }
@@ -607,6 +600,9 @@ namespace RateController.Forms
         {
             lbRateAmount.Text = Core.Products.Item(5).CurrentRate().ToString("N0");
             lbTargetAmount.Text = Core.Products.Item(6).CurrentRate().ToString("N0");
+
+            // the products view may have left the rate readout alarm-red
+            lbRateAmount.ForeColor = lbTargetAmount.ForeColor;
         }
 
         private void UpdateForm()
@@ -646,6 +642,10 @@ namespace RateController.Forms
                     lbRateAmount.Text = rt.ToString("N1");
                 }
 
+                // red while this product's rate alarm is latched; the target label
+                // never alarms, so it always carries the themed colour to restore
+                lbRateAmount.ForeColor = Core.RCalarm.Alarms[Prd.ID] ? Color.Red : lbTargetAmount.ForeColor;
+
                 // target rate
                 lbTargetType.Text = Core.Tls.ClipText(Prd.Units(), 8);
                 rt = Prd.TargetRate();
@@ -673,6 +673,19 @@ namespace RateController.Forms
                     btnQuantity.Text = Core.Tls.ClipText(Lang.lgQuantityApplied, 14);
                     Tnk = Prd.UnitsApplied();
                 }
+
+                // bin sensor overrides the quantity caption while empty; the coverage
+                // button never alarms, so it always carries the themed colour to restore
+                if (Core.RCalarm.BinAlarms[Prd.ID])
+                {
+                    btnQuantity.Text = "Bin Empty";
+                    btnQuantity.ForeColor = Color.Red;
+                }
+                else
+                {
+                    btnQuantity.ForeColor = btnCoverage.ForeColor;
+                }
+
                 if (Math.Abs(Tnk) > 9999)
                 {
                     lbQuantityAmount.Text = Tnk.ToString("N0");

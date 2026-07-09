@@ -117,22 +117,43 @@ void DoSetup()
 	// sensors
 	for (int i = 0; i < MDL.SensorCount; i++)
 	{
-		pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
-		pinMode(Sensor[i].DirPin, OUTPUT);
-		pinMode(Sensor[i].PWMPin, OUTPUT);
-
-		switch (i)
+		if (Sensor[i].FlowPin < NC)
 		{
-		case 0:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, FALLING);
-			break;
-		case 1:
-			attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
-			break;
+			pinMode(Sensor[i].FlowPin, INPUT_PULLUP);
+
+			switch (i)
+			{
+			case 0:
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR0, FALLING);
+				break;
+			case 1:
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR1, FALLING);
+				break;
+			case 2:
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR2, FALLING);
+				break;
+			case 3:
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR3, FALLING);
+				break;
+			case 4:
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR4, FALLING);
+				break;
+			case 5:
+				attachInterrupt(digitalPinToInterrupt(Sensor[i].FlowPin), ISR5, FALLING);
+				break;
+			}
 		}
 
-		// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
-		analogWriteFrequency(Sensor[i].PWMPin, 490);
+		if (Sensor[i].DirPin < NC) pinMode(Sensor[i].DirPin, OUTPUT);
+		if (Sensor[i].PWMPin < NC)
+		{
+			pinMode(Sensor[i].PWMPin, OUTPUT);
+
+			// pwm frequency change from default 4482 Hz to 490 Hz, required for some valves to work
+			analogWriteFrequency(Sensor[i].PWMPin, 490);
+		}
+
+		if (Sensor[i].BinPin < NC) pinMode(Sensor[i].BinPin, INPUT_PULLUP);
 
 		if (Sensor[i].FlowPin == MDL.WheelSpeedPin) WheelMatch = true;
 	}
@@ -167,24 +188,29 @@ void DoSetup()
 	Serial.println("");
 	Serial.print("Sensors enabled: ");
 	Serial.println(MDL.SensorCount);
-	Serial.println("");
-	Serial.println("Sensor 1: ");
-	Serial.print("Enabled: ");
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[0].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[0].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.println(Sensor[0].PWMPin);
 
-	Serial.println("");
-	Serial.println("Sensor 2: ");
-	Serial.print("Flow Pin: ");
-	Serial.println(Sensor[1].FlowPin);
-	Serial.print("DIR Pin: ");
-	Serial.println(Sensor[1].DirPin);
-	Serial.print("PWM Pin: ");
-	Serial.println(Sensor[1].PWMPin);
+	for (int i = 0; i < MDL.SensorCount; i++)
+	{
+		Serial.println("");
+		Serial.print("Sensor ");
+		Serial.print(i + 1);
+		Serial.println(": ");
+		Serial.print("Flow Pin: ");
+		Serial.println(Sensor[i].FlowPin);
+		Serial.print("DIR Pin: ");
+		Serial.println(Sensor[i].DirPin);
+		Serial.print("PWM Pin: ");
+		Serial.println(Sensor[i].PWMPin);
+		Serial.print("Bin Pin: ");
+		if (Sensor[i].BinPin == NC)
+		{
+			Serial.println(F("Disabled"));
+		}
+		else
+		{
+			Serial.println(Sensor[i].BinPin);
+		}
+	}
 
 	Serial.println("");
 
@@ -266,12 +292,14 @@ void DoSetup()
 		Serial.println(F("Valves are 2 wire."));
 	}
 
-	// PID damper + per-sensor auto mode
+	// PID damper + per-sensor auto mode + bin state
 	for (int i = 0; i < MaxProductCount; i++)
 	{
 		OscDamp[i] = 1.0f;
 		LastAboveTarget[i] = false;
 		AutoOn[i] = true;
+		BinEmpty[i] = false;
+		BinChangeTime[i] = millis();
 	}
 
 	Serial.println("");
@@ -390,10 +418,10 @@ void InitializeRelays(uint8_t Control, int8_t End)
 // eeprom map:
 // ID					0-1
 // module type			2
+// board label			3-22
 // module data			23-147
 // network				168-232
-// sensor 1				253-356
-// sensor 2				377-480
+// sensors 1-6			253 + i*124, ~106 bytes each (6th ends at 977, EEPROM is 4284)
 
 void LoadData()
 {
@@ -450,9 +478,20 @@ void LoadDefaults()
 	Sensor[1].DirPin = 14;
 	Sensor[1].PWMPin = 15;
 
-	// default control settings
-	for (int i = 0; i < 2; i++)
+	// sensors beyond the board's two driver channels have no default pins;
+	// explicit NC - zero-initialized globals would otherwise leave pin 0 (a real pin)
+	for (int i = 2; i < MaxProductCount; i++)
 	{
+		Sensor[i].FlowPin = NC;
+		Sensor[i].DirPin = NC;
+		Sensor[i].PWMPin = NC;
+	}
+
+	// default control settings
+	for (int i = 0; i < MaxProductCount; i++)
+	{
+		Sensor[i].BinPin = NC;
+		Sensor[i].BinInvert = false;
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 5;
 		Sensor[i].Kp = 45 / 100.0;	// Kp = 45 (KPdefault, app Props.cs) - matches uniform /100 decode (Receive.ino)
@@ -504,9 +543,14 @@ bool ValidData()
 
 	if (Result)
 	{
+		// NC is a valid setting (sensor input/output not used) - a 6-sensor module
+		// may legitimately have sensors without pins assigned yet
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			if ((Sensor[i].FlowPin > 41) || (Sensor[i].DirPin > 41) || (Sensor[i].PWMPin > 41))
+			if ((Sensor[i].FlowPin > 41 && Sensor[i].FlowPin != NC)
+				|| (Sensor[i].DirPin > 41 && Sensor[i].DirPin != NC)
+				|| (Sensor[i].PWMPin > 41 && Sensor[i].PWMPin != NC)
+				|| (Sensor[i].BinPin > 41 && Sensor[i].BinPin != NC))
 			{
 				Result = false;
 				break;

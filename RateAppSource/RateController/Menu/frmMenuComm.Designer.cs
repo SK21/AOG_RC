@@ -56,15 +56,26 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lbModule = new System.Windows.Forms.Label();
             this.gbxDrivers.SuspendLayout();
             this.gbxPort.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
+            // lbModule
+            //
+            this.lbModule.AutoSize = true;
+            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModule.Location = new System.Drawing.Point(12, 576);
+            this.lbModule.Name = "lbModule";
+            this.lbModule.Size = new System.Drawing.Size(90, 24);
+            this.lbModule.TabIndex = 260;
+            this.lbModule.Text = "Module 0";
+            //
             // btnCancel
-            // 
+            //
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
@@ -419,6 +430,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbModule);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -467,6 +479,7 @@
         private System.Windows.Forms.CheckBox ckDiagnostics;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.Label lbModule;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
     }

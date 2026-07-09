@@ -458,6 +458,7 @@
     <Compile Include="PGNs\PGN32504.cs" />
     <Compile Include="PGNs\PGN32505.cs" />
     <Compile Include="PGNs\PGN32506.cs" />
+    <Compile Include="PGNs\PGN32507.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN32700.cs" />
     <Compile Include="Printing\RichTexBoxPrinterRTF.cs" />

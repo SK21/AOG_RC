@@ -253,6 +253,9 @@ namespace RateController.Classes
             }
         }
 
+        public bool BinEmpty
+        { get { return RateSensorData.BinEmpty; } }
+
         public int CountsRev
         {
             get { return cCountsRev; }

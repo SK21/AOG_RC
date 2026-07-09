@@ -20,6 +20,7 @@ namespace RateController.PGNs
         //10    PWM Hi
         //11    Status
         //      bit 0   sensor connected
+        //      bit 1   bin empty
         //12    Hz Lo   10 X actual
         //13    Hz Hi
         //14    CRC
@@ -28,6 +29,7 @@ namespace RateController.PGNs
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
+        private bool cBinEmpty;
         private double cElapsedTime;
         private double cHz;
         private double cPWMsetting;
@@ -47,6 +49,9 @@ namespace RateController.PGNs
 
         public double AccumulatedQuantity
         { get { return cQuantity; } }
+
+        public bool BinEmpty
+        { get { return cBinEmpty && ModuleSending(); } }
 
         public double Hz
         { get { return cHz; } }
@@ -101,6 +106,7 @@ namespace RateController.PGNs
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;
                         cPWMsetting = (Int16)(Data[10] << 8 | Data[9]);  // need to cast to 16 bit integer to preserve the sign bit
                         cSensorReceiving = ((Data[11] & 0b00000001) == 0b00000001);
+                        cBinEmpty = ((Data[11] & 0b00000010) == 0b00000010);
                         cHz = (Data[12] | Data[13] << 8) / 10.0;
 
                         ReceiveTime = DateTime.Now;

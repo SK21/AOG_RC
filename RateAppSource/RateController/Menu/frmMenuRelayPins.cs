@@ -181,6 +181,8 @@ namespace RateController.Menu
         {
             Initializing = true;
             byte[] data = Core.ModuleConfig.GetData();
+
+            lbModule.Text = Core.ModuleConfigDescription();
             string[] display = new string[data.Length];
             for (int i = 13; i < 29; i++)
             {

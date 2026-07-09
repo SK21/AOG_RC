@@ -961,6 +961,9 @@ namespace RateController
         {
             try
             {
+                // sensor pins first: 32700 restarts the module immediately on receipt,
+                // so 32507 packets sent after it would arrive during the reboot and be lost
+                Core.SensorPins.Send();
                 Core.ModuleConfig.Send();
                 Props.ShowMessage("Settings sent to module", "Config", 10000);
 

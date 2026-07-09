@@ -19,6 +19,7 @@ void SendComm()
         //10    PWM Hi
         //11    Status
         //      bit 0   sensor connected
+        //      bit 1   bin empty
         //12    Hz Lo
         //13    Hz Hi
         //14    CRC
@@ -60,6 +61,7 @@ void SendComm()
             // status
             Data[11] = 0;
             if (SensorConnected[i]) Data[11] |= 0b00000001;
+            if (BinEmpty[i]) Data[11] |= 0b00000010;
 
             // Hz
             uint16_t Hz = Sensor[i].Hz * 10;

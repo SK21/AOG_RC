@@ -29,6 +29,7 @@ namespace RateController.Classes.Can
     ///   0xFF11: Board label set 1 (from PGN 32506, chars 0-6)
     ///   0xFF12: Board label set 2 (from PGN 32506, chars 7-13)
     ///   0xFF13: Board label set 3 (from PGN 32506, chars 14-15, commit)
+    ///   0xFF17: Sensor pins      (from PGN 32507, one frame per sensor)
     ///
     /// Frame protocol (Teensy → RC):
     ///   0xFF14: Board label rpt 1 (→ PGN 32403, chars 0-6)
@@ -456,6 +457,25 @@ namespace RateController.Classes.Can
                         }));
                         frames.Add(BuildFrame(0x13, new byte[] {
                             mod, pgnData[17], pgnData[18], 0, 0, 0, 0, 0
+                        }));
+                    }
+                    break;
+
+                case 32507:
+                    // → 0xFF17 (sensor pins, one frame per sensor packet)
+                    // PGN32507 layout: [2]=ModSenId (UDP: high=ModID,low=SenID), [3]=Flow pin,
+                    //   [4]=Dir pin, [5]=PWM pin, [6]=Bin pin, [7]=flags (bit0=invert bin), [8-9]=spare
+                    if (pgnData.Length >= 10)
+                    {
+                        frames.Add(BuildFrame(0x17, new byte[] {
+                            SwapModSenNibbles(pgnData[2]),  // ModSenId (CAN nibble order)
+                            pgnData[3],  // flow pin
+                            pgnData[4],  // dir pin
+                            pgnData[5],  // pwm pin
+                            pgnData[6],  // bin pin
+                            pgnData[7],  // flags
+                            pgnData[8],  // spare
+                            pgnData[9]   // spare
                         }));
                     }
                     break;

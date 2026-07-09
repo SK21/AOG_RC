@@ -45,12 +45,14 @@ void DoSetup()
 	if (MDL.WorkPin < NC) pinMode(MDL.WorkPin, INPUT_PULLUP);
 	if (MDL.SensorCount > MaxProductCount) MDL.SensorCount = MaxProductCount;
 
-	// PID damper + per-sensor auto mode
+	// PID damper + per-sensor auto mode + bin state
 	for (int i = 0; i < MaxProductCount; i++)
 	{
 		OscDamp[i] = 1.0f;
 		LastAboveTarget[i] = false;
 		AutoOn[i] = true;
+		BinEmpty[i] = false;
+		BinChangeTime[i] = millis();
 	}
 
 	// I2C
@@ -105,6 +107,7 @@ void DoSetup()
 		//pinMode(Sensor[i].FlowPin, INPUT); 	// for direct connection to inductive sensor, no opto
 		pinMode(Sensor[i].DirPin, OUTPUT);
 		pinMode(Sensor[i].PWMPin, OUTPUT);
+		if (Sensor[i].BinPin < NC) pinMode(Sensor[i].BinPin, INPUT_PULLUP);
 
 		switch (i)
 		{
@@ -370,6 +373,8 @@ void LoadDefaults()
 	// default control settings
 	for (int i = 0; i < 2; i++)
 	{
+		Sensor[i].BinPin = NC;
+		Sensor[i].BinInvert = false;
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 5;
 		Sensor[i].Kp = 45 / 100.0;	// Kp = 45 (KPdefault, app Props.cs) - matches uniform /100 decode (Receive.ino)
@@ -412,9 +417,13 @@ bool ValidData()
 
 	if (Result)
 	{
+		// NC is a valid setting (sensor input/output not used)
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
-			if ((Sensor[i].FlowPin > 21) || (Sensor[i].DirPin > 21) || (Sensor[i].PWMPin > 21))
+			if ((Sensor[i].FlowPin > 21 && Sensor[i].FlowPin != NC)
+				|| (Sensor[i].DirPin > 21 && Sensor[i].DirPin != NC)
+				|| (Sensor[i].PWMPin > 21 && Sensor[i].PWMPin != NC)
+				|| (Sensor[i].BinPin > 21 && Sensor[i].BinPin != NC))
 			{
 				Result = false;
 				break;

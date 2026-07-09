@@ -307,6 +307,16 @@ namespace RateController.Menu
             Set.RelayPins(Pins);
             Set.Save();
 
+            // the sensor-pins config (PGN 32507) is the source the 32700 mirror reads
+            // from at send, so board defaults must land there too; bin pins default off
+            Core.SensorPins.SetPins(0, Set.Sensor0Flow, Set.Sensor0Dir, Set.Sensor0PWM, 255, false);
+            Core.SensorPins.SetPins(1, Set.Sensor1Flow, Set.Sensor1Dir, Set.Sensor1PWM, 255, false);
+            for (int i = 2; i < PGN32507.MaxSensors; i++)
+            {
+                Core.SensorPins.SetPins(i, 255, 255, 255, 255, false);
+            }
+            Core.SensorPins.Save();
+
             MainMenu.DefaultsSet();
             MainMenu.HighlightUpdateButton();
         }

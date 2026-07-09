@@ -35,12 +35,23 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.rb3Wire = new System.Windows.Forms.RadioButton();
             this.rb2Wire = new System.Windows.Forms.RadioButton();
+            this.lbModule = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
+            // lbModule
+            //
+            this.lbModule.AutoSize = true;
+            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModule.Location = new System.Drawing.Point(89, 40);
+            this.lbModule.Name = "lbModule";
+            this.lbModule.Size = new System.Drawing.Size(90, 24);
+            this.lbModule.TabIndex = 165;
+            this.lbModule.Text = "Module 0";
+            //
             // btnCancel
-            // 
+            //
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
@@ -132,6 +143,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbModule);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.rb3Wire);
@@ -158,5 +170,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RadioButton rb3Wire;
         private System.Windows.Forms.RadioButton rb2Wire;
+        private System.Windows.Forms.Label lbModule;
     }
 }

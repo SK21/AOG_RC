@@ -18,6 +18,7 @@ namespace RateController.Classes
         public static PGN239 MachineData;
         public static frmMain MainForm;
         public static PGN32700 ModuleConfig;
+        public static PGN32507 SensorPins;
         public static PGN32401 ModulesStatus;
         public static PGN32403 ModulesBoardID;
         public static PGN32402 PgnPidLog;
@@ -152,6 +153,7 @@ namespace RateController.Classes
                 vSwitchBox = new clsVirtualSwitchBox();
                 Zones = new clsZones();
                 ModuleConfig = new PGN32700();
+                SensorPins = new PGN32507();
                 AOGsections = new PGN229();
                 SectionControl = new clsSectionControl();
                 RateAdjustController = new clsRateAdjustController();
@@ -277,6 +279,29 @@ namespace RateController.Classes
             }
         }
 
+        public static string ModuleConfigDescription()
+        {
+            // identifies which module the config pages (Config/Comm/Pins/Relay Pins/Valves)
+            // are editing: ID, board label when the module has reported one, connection state
+            byte id = ModuleConfig.GetData()[2];
+            string Result = "Module " + id.ToString();
+            string label = ModulesBoardID.BoardLabel(id);
+            if (label.Length > 0) Result += " - " + label;
+            if (!ModulesStatus.Connected(id)) Result += "  (not connected)";
+            return Result;
+        }
+
+        public static int MaxSensorsForModule(int moduleID)
+        {
+            // Nano hardware (InoType 2) is 2 products; everything else (Teensy, ESP32,
+            // offline/unknown) allows up to 6 so a module can be configured before it
+            // is connected or flashed. Safe for old firmware: every firmware clamps
+            // SensorCount to its own MaxProductCount at boot.
+            int Result = 6;
+            if (ModulesStatus.ModuleType(moduleID) == 2) Result = 2;
+            return Result;
+        }
+
         public static void SendPressureGate()
         {
             PGN32505 gate = new PGN32505();
@@ -290,11 +315,18 @@ namespace RateController.Classes
         {
             // Resend the gate threshold to any module on its disconnected->connected edge,
             // so a freshly powered/never-configured module is armed without a profile reload.
+            // The sensor-pins config (PGN 32507) rides the same edge for the configured module;
+            // the firmware only restarts if the pins actually changed, so this is loop-safe.
             PGN32505 gate = new PGN32505();
+            byte configModule = ModuleConfig.GetData()[2];
             for (int i = 0; i < Props.MaxModules; i++)
             {
                 bool connected = ModulesStatus.Connected(i);
-                if (connected && !cPressureGateLastConnected[i]) gate.Send(i);
+                if (connected && !cPressureGateLastConnected[i])
+                {
+                    gate.Send(i);
+                    if (i == configModule) SensorPins.Send();
+                }
                 cPressureGateLastConnected[i] = connected;
             }
         }

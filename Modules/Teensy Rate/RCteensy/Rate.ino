@@ -2,9 +2,9 @@
 // PulseMaxHz       maximum Hz of the flow sensor
 // PulseSampeSize   number of pulses used to get the median Hz reading
 
-uint32_t LastPulse[2];
-uint32_t ReadLast[2];
-uint32_t PulseTime[2];
+uint32_t LastPulse[MaxProductCount];
+uint32_t ReadLast[MaxProductCount];
+uint32_t PulseTime[MaxProductCount];
 
 // Median is taken over pulses that arrived within the flow window (hybrid fixed-time window):
 // at high flow the count cap (MaxSampleSize, via the ring buffer) binds and gives smoothing;
@@ -14,11 +14,11 @@ uint32_t PulseTime[2];
 // The window is user-adjustable per sensor: Sensor[i].PulseSampleSize carries it as
 // centiseconds (x10 ms), so flowWindowUs = SampleWindow * 10000. 
 
-volatile uint32_t Samples[2][MaxSampleSize];
-volatile uint32_t SampleStamp[2][MaxSampleSize];	// micros() when each pulse arrived
-volatile uint16_t PulseCount[2];
-volatile uint8_t SamplesCount[2];
-volatile uint8_t SamplesIndex[2];
+volatile uint32_t Samples[MaxProductCount][MaxSampleSize];
+volatile uint32_t SampleStamp[MaxProductCount][MaxSampleSize];	// micros() when each pulse arrived
+volatile uint16_t PulseCount[MaxProductCount];
+volatile uint8_t SamplesCount[MaxProductCount];
+volatile uint8_t SamplesIndex[MaxProductCount];
 
 void PulseISR(uint8_t ID)
 {
@@ -115,5 +115,25 @@ void ISR0()
 void ISR1()
 {
 	PulseISR(1);
+}
+
+void ISR2()
+{
+	PulseISR(2);
+}
+
+void ISR3()
+{
+	PulseISR(3);
+}
+
+void ISR4()
+{
+	PulseISR(4);
+}
+
+void ISR5()
+{
+	PulseISR(5);
 }
 

@@ -256,6 +256,18 @@ namespace RateController.PGNs
 
         public void Send(byte? commMode = null)
         {
+            // sensor 0/1 pins mirror the sensor-pins config (PGN 32507) so firmware
+            // that only reads 32700 stays in sync with the pins grid
+            if (Core.SensorPins != null)
+            {
+                cData[7] = Core.SensorPins.FlowPin(0);
+                cData[8] = Core.SensorPins.DirPin(0);
+                cData[9] = Core.SensorPins.PWMPin(0);
+                cData[10] = Core.SensorPins.FlowPin(1);
+                cData[11] = Core.SensorPins.DirPin(1);
+                cData[12] = Core.SensorPins.PWMPin(1);
+            }
+
             cData[31] = commMode ?? (Props.CanEnabled ? (byte)1 : (byte)0);
             cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);
 

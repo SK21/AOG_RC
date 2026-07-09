@@ -1,7 +1,8 @@
-﻿using AgOpenGPS;
+using AgOpenGPS;
 using RateController.Classes;
 using RateController.Language;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -19,9 +20,9 @@ namespace RateController.Menu
             MainMenu = menu;
             this.Tag = false;
 
-            Boxes = new System.Windows.Forms.TextBox[] { tbFlow1, tbFlow2, tbDir1, tbDir2, tbPWM1, tbPWM2, tbWrk, tbPressure };
+            Boxes = new System.Windows.Forms.TextBox[] { tbWrk, tbPressure };
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < Boxes.Length; i++)
             {
                 Boxes[i].Enter += Boxes_Enter;
                 Boxes[i].TextChanged += Boxes_TextChanged;
@@ -65,85 +66,56 @@ namespace RateController.Menu
         {
             try
             {
-                byte val;
-                Core.ModuleConfig.Momentary = ckMomentary.Checked;
+                if (DuplicatePins())
+                {
+                    Props.ShowMessage("Duplicate pin numbers.", "Pins", 10000);
+                }
+                else
+                {
+                    byte val;
+                    Core.ModuleConfig.Momentary = ckMomentary.Checked;
 
-                // flow
-                if (byte.TryParse(tbFlow1.Text, out val))
-                {
-                    Core.ModuleConfig.Sensor0Flow = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.Sensor0Flow = 255;
-                }
-                if (byte.TryParse(tbFlow2.Text, out val))
-                {
-                    Core.ModuleConfig.Sensor1Flow = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.Sensor1Flow = 255;
-                }
+                    // sensor pins from the grid
+                    for (int i = 0; i < DGV.Rows.Count; i++)
+                    {
+                        Core.SensorPins.SetPins(i, CellPin(i, 1), CellPin(i, 2), CellPin(i, 3), CellPin(i, 4), CellChecked(i));
+                    }
 
-                // motor
-                if (byte.TryParse(tbDir1.Text, out val))
-                {
-                    Core.ModuleConfig.Sensor0Dir = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.Sensor0Dir = 255;
-                }
-                if (byte.TryParse(tbDir2.Text, out val))
-                {
-                    Core.ModuleConfig.Sensor1Dir = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.Sensor1Dir = 255;
-                }
-                if (byte.TryParse(tbPWM1.Text, out val))
-                {
-                    Core.ModuleConfig.Sensor0PWM = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.Sensor0PWM = 255;
-                }
-                if (byte.TryParse(tbPWM2.Text, out val))
-                {
-                    Core.ModuleConfig.Sensor1PWM = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.Sensor1PWM = 255;
-                }
+                    // mirror sensors 0/1 into the module config for older firmware
+                    Core.ModuleConfig.Sensor0Flow = Core.SensorPins.FlowPin(0);
+                    Core.ModuleConfig.Sensor0Dir = Core.SensorPins.DirPin(0);
+                    Core.ModuleConfig.Sensor0PWM = Core.SensorPins.PWMPin(0);
+                    Core.ModuleConfig.Sensor1Flow = Core.SensorPins.FlowPin(1);
+                    Core.ModuleConfig.Sensor1Dir = Core.SensorPins.DirPin(1);
+                    Core.ModuleConfig.Sensor1PWM = Core.SensorPins.PWMPin(1);
 
-                // Work Pin
-                if (byte.TryParse(tbWrk.Text, out val))
-                {
-                    Core.ModuleConfig.WorkPin = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.WorkPin = 255;
-                }
+                    // Work Pin
+                    if (byte.TryParse(tbWrk.Text, out val))
+                    {
+                        Core.ModuleConfig.WorkPin = val;
+                    }
+                    else
+                    {
+                        Core.ModuleConfig.WorkPin = 255;
+                    }
 
-                // Pressure
-                if (byte.TryParse(tbPressure.Text, out val))
-                {
-                    Core.ModuleConfig.PressurePin = val;
-                }
-                else
-                {
-                    Core.ModuleConfig.PressurePin = 255;
-                }
-                Core.ModuleConfig.Save();
+                    // Pressure
+                    if (byte.TryParse(tbPressure.Text, out val))
+                    {
+                        Core.ModuleConfig.PressurePin = val;
+                    }
+                    else
+                    {
+                        Core.ModuleConfig.PressurePin = 255;
+                    }
 
-                SetButtons(false);
-                UpdateForm();
-                MainMenu.HighlightUpdateButton();
+                    Core.SensorPins.Save();
+                    Core.ModuleConfig.Save();
+
+                    SetButtons(false);
+                    UpdateForm();
+                    MainMenu.HighlightUpdateButton();
+                }
             }
             catch (Exception ex)
             {
@@ -153,15 +125,130 @@ namespace RateController.Menu
 
         private void btnRescan_Click(object sender, EventArgs e)
         {
-            tbFlow1.Text = "-";
-            tbDir1.Text = "-";
-            tbPWM1.Text = "-";
-            tbFlow2.Text = "-";
-            tbDir2.Text = "-";
-            tbPWM2.Text = "-";
+            for (int i = 0; i < DGV.Rows.Count; i++)
+            {
+                DGV.Rows[i].Cells[1].Value = "-";
+                DGV.Rows[i].Cells[2].Value = "-";
+                DGV.Rows[i].Cells[3].Value = "-";
+                DGV.Rows[i].Cells[4].Value = "-";
+                DGV.Rows[i].Cells[5].Value = false;
+            }
             tbWrk.Text = "-";
             tbPressure.Text = "-";
             ckMomentary.Checked = false;
+        }
+
+        private byte CellPin(int Row, int Col)
+        {
+            byte Result = 255;
+            if (byte.TryParse(DGV.Rows[Row].Cells[Col].EditedFormattedValue.ToString(), out byte val))
+            {
+                Result = val;
+            }
+            return Result;
+        }
+
+        private bool CellChecked(int Row)
+        {
+            bool Result = false;
+            object vl = DGV.Rows[Row].Cells[5].EditedFormattedValue;
+            if (vl != null) bool.TryParse(vl.ToString(), out Result);
+            return Result;
+        }
+
+        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                // pin columns open the numeric pad; Sensor (0) is read-only and
+                // Invert (5) toggles natively
+                if (e.RowIndex >= 0 && e.ColumnIndex >= 1 && e.ColumnIndex <= 4)
+                {
+                    string val = DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+                    double.TryParse(val, out double temp);
+
+                    using (var form = new FormNumeric(0, 50, temp))
+                    {
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            if (form.IsBlank)
+                            {
+                                DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "-";
+                            }
+                            else
+                            {
+                                DGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue.ToString("N0");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuPins/DGV_CellClick: " + ex.Message);
+            }
+        }
+
+        private void DGV_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void DGV_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (DGV.IsCurrentCellDirty)
+            {
+                DGV.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void DGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            Props.WriteErrorLog("frmMenuPins/DGV_DataError: Row,Column: " + e.RowIndex.ToString() + ", " + e.ColumnIndex.ToString()
+                + " " + e.Exception.Message);
+        }
+
+        private bool DuplicatePins()
+        {
+            bool Result = false;
+            List<byte> Used = new List<byte>();
+
+            for (int i = 0; i < DGV.Rows.Count; i++)
+            {
+                for (int j = 1; j <= 4; j++)
+                {
+                    byte pin = CellPin(i, j);
+                    if (pin != 255)
+                    {
+                        if (Used.Contains(pin))
+                        {
+                            Result = true;
+                        }
+                        else
+                        {
+                            Used.Add(pin);
+                        }
+                    }
+                }
+            }
+
+            if (byte.TryParse(tbWrk.Text, out byte wrk) && wrk != 255)
+            {
+                if (Used.Contains(wrk))
+                {
+                    Result = true;
+                }
+                else
+                {
+                    Used.Add(wrk);
+                }
+            }
+
+            if (byte.TryParse(tbPressure.Text, out byte prs) && prs != 255)
+            {
+                if (Used.Contains(prs)) Result = true;
+            }
+            return Result;
         }
 
         private void frmMenuPins_FormClosed(object sender, FormClosedEventArgs e)
@@ -177,6 +264,11 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+
+            DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
+            DGV.ColumnHeadersDefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            DGV.CurrentCellDirtyStateChanged += DGV_CurrentCellDirtyStateChanged;
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             MainMenu.ModuleDefaultsSet += MainMenu_ModuleDefaultsSet;
@@ -194,6 +286,13 @@ namespace RateController.Menu
         {
             UpdateForm();
             SetButtons(false);
+        }
+
+        private string PinText(byte Pin)
+        {
+            string Result = "-";
+            if (Pin <= 60) Result = Pin.ToString();
+            return Result;
         }
 
         private void PositionForm()
@@ -233,26 +332,28 @@ namespace RateController.Menu
         {
             Initializing = true;
             byte[] data = Core.ModuleConfig.GetData();
-            string[] display = new string[data.Length];
-            for (int i = 7; i < 13; i++)
+
+            lbModule.Text = Core.ModuleConfigDescription();
+
+            // one grid row per sensor, capped by the target board type/firmware
+            int Count = data[3];
+            int Max = Core.MaxSensorsForModule(data[2]);
+            if (Count < 1) Count = 1;
+            if (Count > Max) Count = Max;
+
+            DGV.Rows.Clear();
+            for (int i = 0; i < Count; i++)
             {
-                if (data[i] > 60)
-                {
-                    display[i] = "-";
-                }
-                else
-                {
-                    display[i] = data[i].ToString();
-                }
+                DGV.Rows.Add(
+                    (i + 1).ToString(),
+                    PinText(Core.SensorPins.FlowPin(i)),
+                    PinText(Core.SensorPins.DirPin(i)),
+                    PinText(Core.SensorPins.PWMPin(i)),
+                    PinText(Core.SensorPins.BinPin(i)),
+                    Core.SensorPins.InvertBin(i));
             }
 
             ckMomentary.Checked = Core.ModuleConfig.Momentary;
-            tbFlow1.Text = display[7].ToString();
-            tbDir1.Text = display[8].ToString();
-            tbPWM1.Text = display[9].ToString();
-            tbFlow2.Text = display[10].ToString();
-            tbDir2.Text = display[11].ToString();
-            tbPWM2.Text = display[12].ToString();
 
             // work pin
             if (data[29] > 60)
