@@ -163,6 +163,61 @@ Gateway uses ~20-23% CPU even after optimizations. Initial changes (1ms→5ms ma
 
 ## Recent Changes
 
+### Jul 9, 2026 — Multi-Sensor Calibration (per-sensor AutoOn) — firmware ×3 + app
+
+Motivated by PR #57 (gunicsba): on a multi-sensor module, calibration flags flapped because
+`MasterOn`/`AutoOn` are module-global in the firmware but written by every per-sensor PGN 32500 —
+last packet wins. The PR's app-side fix was adopted but was only safe for the unlocked phase; the
+locked (Testing Rate) phase needs `AutoOn = 0` for manual CalPWM, which idle sensors' packets
+would overwrite. Root fix implemented instead:
+
+**Firmware (RCteensy, RC_ESP32, RCnano):** `AutoOn` is now **per-sensor** — `bool AutoOn[MaxProductCount]`,
+decoded from each sensor's own packet bit 6 (`Receive.ino`; Teensy also `CANBus.ino` 0xFF03).
+Used in `PIDenabled[i]`, `Applying[i]`, and `DoPID()`. Initialized true in the `DoSetup` loop
+(NOT an aggregate initializer — `{ true, true }` silently under-fills on the 6-product ESP32).
+`MasterOn` stays module-global (machine-level, identical in both calibration phases). No EEPROM
+layout change. Teensy + Nano compile-verified; ESP32 needs a Visual Micro build.
+
+**App:**
+- `clsProducts.CalibrationOnModule(moduleID)` — true when a product on that module is calibrating.
+- `PGN32500.cs`: calibration branch scoped per module (uninvolved modules take the normal path).
+  All products on a calibrating module assert `MasterOnMode` (hoisted, set once); the calibrating
+  product adds `CalibrationOn` (+`AutoOn` unlocked / manual CalPWM bytes locked); idle products add
+  `AutoOn` — parks them (rate 0 → PID gated off, combo-close valves driven closed). Safe because
+  AutoOn is per-sensor now.
+- `clsRelays.SetRelays`: calibration relay forcing (Master/FlowMaster/Slave/Bypass/Section) scoped
+  via a single `CalibratingModule` local — idle modules' relays are untouched during calibration.
+
+Result: any number of sensors can calibrate simultaneously, in any phase mix, same or different
+modules. **Deploy firmware + app together** — a new app with old firmware reintroduces the
+clobbering. Supersedes PR #57 (credit gunicsba for report + diagnosis).
+
+Known pre-existing asymmetry (not fixed): `Invert_Section` relays are not forced off during
+calibration while `Section` relays are forced on — paired NC/NO section hardware sees
+contradictory states while calibrating.
+
+### Jul 8, 2026 — Valve-Path Gain Fix, Firmware Sync, Dev-vs-Main Review Fixes
+
+- **Scale-tuned PID decode** (field session showed valve sluggish at max sliders): uniform `/100`
+  Kp/Ki decode with per-actuator scales in `PID.ino` (`ValveKpScale 1.0/ValveKiScale 0.1`,
+  `MotorKpScale 0.1/MotorKiScale 0.01` — motor numerically unchanged). Authority≥1 guard. Stale
+  exponential EEPROM defaults fixed. InoID 8076. Valve tunes land mid-slider (~35/40) after re-tune.
+- **ESP32 sync fixes:** `SendPIDlog()` was never called; PID log gated on Ethernet only (dead on
+  WiFi); board-label report transmitted the wrong buffer; `CalibrationOn[]` sized 2 with 6 products
+  (out-of-bounds); `PulseISR` shadowed its timestamp parameter.
+- **Nano brought up to date** (memory-tiered): normalized PID (no logging), `/100` decode, master-off
+  windup fix, ISR ring fix (fixed modulus — byte 22 acts as a median pulse-count cap, no room for
+  timestamps), pressure max gate (`CheckPressureGate()` — `CheckPressure()` is the ADC reader there).
+  78% flash, 614 B stack free. Skipped: time-window median, PID logging, board label.
+- **Module-level PGN convention fixed (firmware):** 32504/32505/32506 handlers compared
+  `ParseModID(data[2])` (high nibble) but module-level PGNs carry the RAW module ID in byte 2
+  (like 32700/32401/32403) — worked for module 0 only. Now `data[2] == MDL.ID` on Teensy + ESP32 + Nano.
+  Per-sensor PGNs (32500/32501/32502) still use `BuildModSenID`/`ParseModID`.
+- **AgGrow XML import:** `double.TryParse` now uses `NumberStyles.Float, CultureInfo.InvariantCulture`
+  (comma-decimal locales misparsed rates/geometry).
+- PID replay validation: dev firmware math reproduced 89% of 38k logged field samples within ±1 PWM
+  count (mismatches = mid-day settings changes, not math). See `docs/` PID analysis material.
+
 ### Jun 24, 2026 — Min-UPM Floor Scaled by Active Working Width (app only)
 
 Driven by analysis of today's 100 ms-loop PID logs in `D:\Sync\RATE CONTROL\PID logs\`.
