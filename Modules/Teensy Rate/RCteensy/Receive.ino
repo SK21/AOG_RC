@@ -255,7 +255,8 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		if (len > PGNlength - 1 && MDL.CommMode != 1)
 		{
-			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			// module-level PGN: data[2] is the raw module ID (like 32700/32401/32403), not Mod/Sen packed
+			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
 			{
 				bool NewPin = (data[3] != MDL.WheelSpeedPin);
 
@@ -282,7 +283,8 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		if (len > PGNlength - 1)
 		{
-			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			// module-level PGN: data[2] is the raw module ID (like 32700/32401/32403), not Mod/Sen packed
+			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
 			{
 				MDL.MaxPressureReading = data[3] | data[4] << 8;
 				SaveData();
@@ -294,7 +296,7 @@ void ReadPGNs(byte data[], uint16_t len)
 		// PGN32506, set board ID label from RC to module (stored in EEPROM, survives reflash)
 		//0		HeaderLo	250
 		//1		HeaderHi	126
-		//2		ModuleID	(high nibble)
+		//2		ModuleID	0-7
 		//3-18	16 chars	board label, 0-padded
 		//19	CRC
 
@@ -302,7 +304,8 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		if (len > PGNlength - 1 && MDL.CommMode != 1)
 		{
-			if (GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+			// module-level PGN: data[2] is the raw module ID (like 32700/32401/32403), not Mod/Sen packed
+			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
 			{
 				for (byte b = 0; b < 16; b++) MDLboard.Text[b] = data[3 + b];
 				SaveBoardID();

@@ -147,7 +147,7 @@ void SendComm()
         // PGN32403, board ID label report from module to RC (slow cyclic - static label)
         //0     HeaderLo    147
         //1     HeaderHi    126
-        //2     Module ID   (high nibble)
+        //2     Module ID   0-7
         //3-18  16 chars    board label, 0-padded
         //19    CRC
         static uint32_t BoardIDLast = 0;

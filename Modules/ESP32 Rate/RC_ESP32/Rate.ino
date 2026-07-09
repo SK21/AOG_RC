@@ -24,7 +24,6 @@ IRAM_ATTR void PulseISR(uint8_t ID, uint32_t ReadTime)
 {
 	if (RelayLo > 0 || RelayHi > 0)
 	{
-		uint32_t ReadTime = micros();
 		PulseTime[ID] = ReadTime - ReadLast[ID];
 		ReadLast[ID] = ReadTime;
 

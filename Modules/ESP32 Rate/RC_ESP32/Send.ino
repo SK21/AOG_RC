@@ -193,7 +193,7 @@ void SendComm()
 		// PGN32403, board ID label report from module to RC (slow cyclic - static label)
 		//0     HeaderLo    147
 		//1     HeaderHi    126
-		//2     Module ID   (high nibble)
+		//2     Module ID   0-7
 		//3-18  16 chars    board label, 0-padded
 		//19    CRC
 		static uint32_t BoardIDLast = 0;
@@ -215,7 +215,7 @@ void SendComm()
 				{
 
 					UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-					UDP_Ethernet.write(Data, 20);
+					UDP_Ethernet.write(B, 20);
 					UDP_Ethernet.endPacket();
 					Sent = true;
 				}
@@ -225,7 +225,7 @@ void SendComm()
 			if (!Sent)
 			{
 				UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-				UDP_Wifi.write(Data, 20);
+				UDP_Wifi.write(B, 20);
 				UDP_Wifi.endPacket();
 			}
 		}
@@ -262,7 +262,9 @@ void SendPIDlog()
 	//24    InoID Hi
 	//25    CRC
 
-	if (PidLogEnabled && Ethernet.linkStatus() == LinkON)
+	// gate on the flag only - the per-packet code below picks ethernet or wifi
+	// (the Teensy version gates on ethernet link because it has no other transport)
+	if (PidLogEnabled)
 	{
 		byte Data[26];
 

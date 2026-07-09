@@ -276,7 +276,7 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	}
 }
 
-bool CalibrationOn[] = { false,false };
+bool CalibrationOn[MaxProductCount] = { false };
 float WheelSpeed = 0;
 uint32_t WheelCounts = 0;
 
@@ -332,6 +332,7 @@ void loop()
 		if (MDL.WheelSpeedPin != NC) GetSpeed();
 	}
 	SendComm();
+	SendPIDlog();
 	//Blink();
 }
 
