@@ -106,6 +106,12 @@ namespace RateController.Classes
             }
         }
 
+        public Color AlarmColor()
+        {
+            // pure red is nearly invisible on a dark user-set background
+            return UseLightContrast() ? Color.FromArgb(255, 90, 90) : Color.Red;
+        }
+
         public bool UseLightContrast()
         {
             Color background = Properties.Settings.Default.DisplayBackColour;

@@ -153,6 +153,7 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
@@ -307,7 +308,6 @@ namespace RateController.Menu
             try
             {
                 LoadCombo();
-                lbModule.Text = Core.ModuleConfigDescription();
                 lbModuleIP.Text = Core.UDPmodules.SubNet;
 
                 if (Props.CanEnabled)

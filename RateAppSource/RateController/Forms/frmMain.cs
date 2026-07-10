@@ -603,6 +603,7 @@ namespace RateController.Forms
 
             // the products view may have left the rate readout alarm-red
             lbRateAmount.ForeColor = lbTargetAmount.ForeColor;
+            btnUnits.ForeColor = btnTarget.ForeColor;
         }
 
         private void UpdateForm()
@@ -642,9 +643,21 @@ namespace RateController.Forms
                     lbRateAmount.Text = rt.ToString("N1");
                 }
 
-                // red while this product's rate alarm is latched; the target label
-                // never alarms, so it always carries the themed colour to restore
-                lbRateAmount.ForeColor = Core.RCalarm.Alarms[Prd.ID] ? Color.Red : lbTargetAmount.ForeColor;
+                // caption and value go alarm-red while this product's rate alarm is
+                // latched; the target label/button never alarm, so they always carry
+                // the themed colour to restore
+                if (Core.RCalarm.Alarms[Prd.ID])
+                {
+                    btnUnits.Text = "Rate Error";
+                    btnUnits.ForeColor = Core.Tls.AlarmColor();
+                    lbRateAmount.ForeColor = Core.Tls.AlarmColor();
+                }
+                else
+                {
+                    btnUnits.Text = Core.Tls.ClipText(Lang.lgCurrentRate, 14);
+                    btnUnits.ForeColor = btnTarget.ForeColor;
+                    lbRateAmount.ForeColor = lbTargetAmount.ForeColor;
+                }
 
                 // target rate
                 lbTargetType.Text = Core.Tls.ClipText(Prd.Units(), 8);
@@ -674,16 +687,22 @@ namespace RateController.Forms
                     Tnk = Prd.UnitsApplied();
                 }
 
-                // bin sensor overrides the quantity caption while empty; the coverage
-                // button never alarms, so it always carries the themed colour to restore
+                // bin sensor overrides the quantity caption while empty; caption and
+                // value go alarm-red; the coverage button/amount never alarm, so they
+                // always carry the themed colour to restore
                 if (Core.RCalarm.BinAlarms[Prd.ID])
                 {
                     btnQuantity.Text = "Bin Empty";
-                    btnQuantity.ForeColor = Color.Red;
+                    btnQuantity.ForeColor = Core.Tls.AlarmColor();
+                    lbQuantityAmount.ForeColor = Core.Tls.AlarmColor();
+
+                    // display only - the product's tank amount is not modified
+                    Tnk = 0;
                 }
                 else
                 {
                     btnQuantity.ForeColor = btnCoverage.ForeColor;
+                    lbQuantityAmount.ForeColor = lbCoverageAmount.ForeColor;
                 }
 
                 if (Math.Abs(Tnk) > 9999)

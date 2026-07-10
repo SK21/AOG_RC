@@ -45,19 +45,9 @@
             this.cbRemoteRelays = new System.Windows.Forms.ComboBox();
             this.lbModule = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            //
-            // lbModule
-            //
-            this.lbModule.AutoSize = true;
-            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModule.Location = new System.Drawing.Point(59, 50);
-            this.lbModule.Name = "lbModule";
-            this.lbModule.Size = new System.Drawing.Size(90, 24);
-            this.lbModule.TabIndex = 250;
-            this.lbModule.Text = "Module 0";
-            //
+            // 
             // btnCancel
-            //
+            // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
@@ -257,6 +247,16 @@
             this.cbRemoteRelays.TabIndex = 220;
             this.cbRemoteRelays.TabStop = false;
             this.cbRemoteRelays.SelectedIndexChanged += new System.EventHandler(this.tbModuleID_TextChanged);
+            // 
+            // lbModule
+            // 
+            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModule.Location = new System.Drawing.Point(59, 50);
+            this.lbModule.Name = "lbModule";
+            this.lbModule.Size = new System.Drawing.Size(403, 24);
+            this.lbModule.TabIndex = 250;
+            this.lbModule.Text = "Module 0";
+            this.lbModule.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmMenuConfig
             // 

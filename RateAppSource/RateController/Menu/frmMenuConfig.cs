@@ -72,6 +72,7 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+            lbModule.Font = new Font(lbModule.Font, FontStyle.Underline);
 
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;

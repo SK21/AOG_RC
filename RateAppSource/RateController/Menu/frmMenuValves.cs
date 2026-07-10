@@ -1,6 +1,7 @@
 ﻿using RateController.Classes;
 using RateController.Language;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -53,6 +54,8 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
+            lbModule.Font = new Font(lbModule.Font, FontStyle.Underline);
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;

@@ -187,14 +187,19 @@ namespace RateController.Classes
                 }
             }
 
+            // bin state only matters while applying - unsuppressed it is a
+            // distraction at startup, when bins are legitimately empty
             BinAlarmIsOn = false;
-            foreach (clsProduct Prd in Core.Products.Items)
+            if (Core.SectionControl.MasterOn)
             {
-                // BinEmpty is already false when the module is not sending
-                if (Prd.Enabled && Prd.BinEmpty)
+                foreach (clsProduct Prd in Core.Products.Items)
                 {
-                    NewBin[Prd.ID] = true;
-                    BinAlarmIsOn = true;
+                    // BinEmpty is already false when the module is not sending
+                    if (Prd.Enabled && Prd.BinEmpty)
+                    {
+                        NewBin[Prd.ID] = true;
+                        BinAlarmIsOn = true;
+                    }
                 }
             }
 

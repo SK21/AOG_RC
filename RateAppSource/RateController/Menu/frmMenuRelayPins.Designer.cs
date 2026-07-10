@@ -68,19 +68,9 @@
             this.lbHighRelays = new System.Windows.Forms.Label();
             this.lbModule = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            //
-            // lbModule
-            //
-            this.lbModule.AutoSize = true;
-            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModule.Location = new System.Drawing.Point(51, 20);
-            this.lbModule.Name = "lbModule";
-            this.lbModule.Size = new System.Drawing.Size(90, 24);
-            this.lbModule.TabIndex = 240;
-            this.lbModule.Text = "Module 0";
-            //
+            // 
             // btnCancel
-            //
+            // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
@@ -471,6 +461,16 @@
             this.lbHighRelays.TabIndex = 242;
             this.lbHighRelays.Text = "Remote Relays";
             this.lbHighRelays.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbModule
+            // 
+            this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModule.Location = new System.Drawing.Point(51, 20);
+            this.lbModule.Name = "lbModule";
+            this.lbModule.Size = new System.Drawing.Size(425, 24);
+            this.lbModule.TabIndex = 240;
+            this.lbModule.Text = "Module 0";
+            this.lbModule.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmMenuRelayPins
             // 
