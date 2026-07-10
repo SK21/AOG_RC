@@ -201,6 +201,7 @@ namespace RateController.Forms
             dgvMapping.Enabled = !xmlMode;
             dgvMapping.Rows.Clear();
             dgvMapping.Columns[1].HeaderText = xmlMode ? "Product Name" : Lang.lgShapefileAttributes;
+            dgvMapping.Columns["DefaultRate"].Visible = !xmlMode;
             if (xmlMode && _xmlLayerNames != null)
                 ShowXmlLayerNames();
         }
@@ -231,15 +232,22 @@ namespace RateController.Forms
         private void RebuildMapZones()
         {
             attributeMapping = new Dictionary<string, string>();
+            var defaultRates = new Dictionary<string, double>();
             foreach (DataGridViewRow row in dgvMapping.Rows)
             {
                 var predefined = row.Cells["PredefinedAttribute"].Value?.ToString();
                 var shapefileAttribute = row.Cells["ShapefileAttribute"].Value?.ToString();
                 if (!string.IsNullOrEmpty(predefined) && !string.IsNullOrEmpty(shapefileAttribute))
                     attributeMapping[predefined] = shapefileAttribute;
+
+                // fallback rate for zones missing the mapped attribute; 0 is the
+                // built-in fallback, so only non-zero defaults need passing through
+                var defVal = row.Cells["DefaultRate"].Value?.ToString();
+                if (!string.IsNullOrEmpty(predefined) && double.TryParse(defVal, out double def) && def != 0)
+                    defaultRates[predefined] = def;
             }
             var shapefileHelper = new ShapefileHelper();
-            _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping);
+            _mapZones = shapefileHelper.CreateZoneList(selectedShapefilePath, attributeMapping, defaultRates);
             _simplifiedZones = null;
             _importedZoneCount = _mapZones.Count;
         }
@@ -321,7 +329,14 @@ namespace RateController.Forms
                 if (!string.IsNullOrEmpty(matched))
                     claimed.Add(matched);
 
-                DGV.Rows.Add(predefined, matched);
+                if (productFields.Contains(predefined))
+                {
+                    DGV.Rows.Add(predefined, matched, 0d);
+                }
+                else
+                {
+                    DGV.Rows.Add(predefined, matched);
+                }
             }
         }
 
@@ -387,6 +402,34 @@ namespace RateController.Forms
                     }
                     Application.OpenForms.OfType<frmMap>().FirstOrDefault()?.LoadProductNames();
                 }
+            }
+        }
+
+        private void dgvMapping_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                // default-rate keypad, product rows only - Name/Color have no fallback rate
+                if (e.RowIndex >= 0 && dgvMapping.Columns[e.ColumnIndex].Name == "DefaultRate")
+                {
+                    var productFields = new HashSet<string> { ZoneFields.ProductA, ZoneFields.ProductB, ZoneFields.ProductC, ZoneFields.ProductD };
+                    string predefined = dgvMapping.Rows[e.RowIndex].Cells["PredefinedAttribute"].Value?.ToString();
+                    if (!string.IsNullOrEmpty(predefined) && productFields.Contains(predefined))
+                    {
+                        string val = dgvMapping.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue.ToString();
+                        double.TryParse(val, out double current);
+                        using (var form = new AgOpenGPS.FormNumeric(0, 9999, current))
+                        {
+                            form.Text = "Default rate";
+                            if (form.ShowDialog() == DialogResult.OK)
+                                dgvMapping.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = form.ReturnValue;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmImport/dgvMapping_CellClick: " + ex.Message);
             }
         }
 

@@ -1,6 +1,7 @@
 using AgOpenGPS;
 using RateController.Classes;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -120,6 +121,63 @@ namespace RateController.RateMap
             }
         }
 
+        private void btnOverrideApply_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // bulk-set the chosen product's rate on the checked zones. The checked
+                // records are captured before writing - assigning a sorted column
+                // re-sorts the bound view mid-loop, skipping/repeating rows
+                DGV.EndEdit();
+                double.TryParse(tbOverrideValue.Text, out double rate);
+                int col = 3 + cboOverrideProduct.SelectedIndex;
+                string prodCol = DGV.Columns[col].DataPropertyName;
+
+                var targets = new List<DataRowView>();
+                foreach (DataGridViewRow row in DGV.Rows)
+                {
+                    if (Convert.ToBoolean(row.Cells[0].Value) && row.DataBoundItem is DataRowView drv)
+                    {
+                        targets.Add(drv);
+                    }
+                }
+
+                foreach (DataRowView drv in targets)
+                {
+                    // explicit edit cycle - a bare indexer write leaves the grid's
+                    // current row holding the value in its uncommitted edit version
+                    drv.BeginEdit();
+                    drv[prodCol] = (decimal)rate;
+                    drv.EndEdit();
+                }
+                DGV.Refresh();
+
+                if (targets.Count == 0)
+                {
+                    Props.ShowMessage("No zones selected.");
+                }
+                else
+                {
+                    // writes through the data source bypass DGV.CellValueChanged
+                    SetButtons(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmZoneList/btnOverrideApply_Click: " + ex.Message);
+            }
+        }
+
+        private void tbOverrideValue_Enter(object sender, EventArgs e)
+        {
+            double.TryParse(tbOverrideValue.Text, out double current);
+            using (var form = new FormNumeric(0, 9999, current))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                    tbOverrideValue.Text = form.ReturnValue.ToString("N1");
+            }
+        }
+
         private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -219,6 +277,8 @@ namespace RateController.RateMap
             this.BackColor = Properties.Settings.Default.MainBackColour;
             DGV.BackgroundColor = DGV.DefaultCellStyle.BackColor;
             DGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            cboOverrideProduct.Items.AddRange(new object[] { "A", "B", "C", "D", "E" });
+            cboOverrideProduct.SelectedIndex = 0;
             UpdateForm();
             SetButtons(false);
         }

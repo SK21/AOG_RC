@@ -31,9 +31,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvMapping = new System.Windows.Forms.DataGridView();
             this.PredefinedAttribute = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ShapeFileAttribute = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.DefaultRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -72,13 +74,15 @@
             this.dgvMapping.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvMapping.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PredefinedAttribute,
-            this.ShapeFileAttribute});
+            this.ShapeFileAttribute,
+            this.DefaultRate});
             this.dgvMapping.Location = new System.Drawing.Point(36, 134);
             this.dgvMapping.Name = "dgvMapping";
             this.dgvMapping.RowHeadersVisible = false;
             this.dgvMapping.RowTemplate.Height = 40;
             this.dgvMapping.Size = new System.Drawing.Size(395, 301);
             this.dgvMapping.TabIndex = 8;
+            this.dgvMapping.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMapping_CellClick);
             // 
             // PredefinedAttribute
             // 
@@ -98,9 +102,20 @@
             this.ShapeFileAttribute.Name = "ShapeFileAttribute";
             this.ShapeFileAttribute.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.ShapeFileAttribute.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
+            //
+            // DefaultRate
+            //
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N1";
+            dataGridViewCellStyle4.NullValue = null;
+            this.DefaultRate.DefaultCellStyle = dataGridViewCellStyle4;
+            this.DefaultRate.HeaderText = "Default";
+            this.DefaultRate.Name = "DefaultRate";
+            this.DefaultRate.ReadOnly = true;
+            this.DefaultRate.Width = 90;
+            //
             // btnSave
-            // 
+            //
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -366,6 +381,7 @@
         private System.Windows.Forms.DataGridView dgvMapping;
         private System.Windows.Forms.DataGridViewTextBoxColumn PredefinedAttribute;
         private System.Windows.Forms.DataGridViewComboBoxColumn ShapeFileAttribute;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DefaultRate;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label1;

@@ -1803,6 +1803,16 @@ namespace RateController.Forms
             }
         }
 
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // leaving the Zones tab ends any zone edit/new-zone mode still active
+            if (tabControl1.SelectedTab != tabZones)
+            {
+                if (ckEdit.Checked) ckEdit.Checked = false;
+                if (ckNew.Checked) ckNew.Checked = false;
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (UseMaxView)

@@ -65,6 +65,9 @@
             this.btnSelect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnPrint = new System.Windows.Forms.Button();
+            this.cboOverrideProduct = new System.Windows.Forms.ComboBox();
+            this.tbOverrideValue = new System.Windows.Forms.TextBox();
+            this.btnOverrideApply = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
@@ -301,7 +304,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(513, 341);
+            this.btnCancel.Location = new System.Drawing.Point(513, 381);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 178;
@@ -318,7 +321,7 @@
             this.btnOK.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnOK.Image = global::RateController.Properties.Resources.Save;
             this.btnOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnOK.Location = new System.Drawing.Point(589, 341);
+            this.btnOK.Location = new System.Drawing.Point(589, 381);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(70, 63);
             this.btnOK.TabIndex = 177;
@@ -331,7 +334,7 @@
             this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Image = global::RateController.Properties.Resources.Trash;
-            this.btnDelete.Location = new System.Drawing.Point(425, 341);
+            this.btnDelete.Location = new System.Drawing.Point(425, 381);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(82, 64);
             this.btnDelete.TabIndex = 430;
@@ -343,7 +346,7 @@
             this.btnSelect.FlatAppearance.BorderSize = 0;
             this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelect.Image = global::RateController.Properties.Resources.selection;
-            this.btnSelect.Location = new System.Drawing.Point(337, 341);
+            this.btnSelect.Location = new System.Drawing.Point(337, 381);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(82, 64);
             this.btnSelect.TabIndex = 432;
@@ -353,7 +356,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 361);
+            this.label1.Location = new System.Drawing.Point(16, 401);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 24);
             this.label1.TabIndex = 433;
@@ -368,19 +371,53 @@
             this.btnPrint.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnPrint.Image = global::RateController.Properties.Resources.printer;
             this.btnPrint.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnPrint.Location = new System.Drawing.Point(261, 338);
+            this.btnPrint.Location = new System.Drawing.Point(261, 378);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(70, 63);
             this.btnPrint.TabIndex = 434;
             this.btnPrint.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnPrint.UseVisualStyleBackColor = false;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
-            // 
+            //
+            // cboOverrideProduct
+            //
+            this.cboOverrideProduct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboOverrideProduct.Location = new System.Drawing.Point(20, 341);
+            this.cboOverrideProduct.Name = "cboOverrideProduct";
+            this.cboOverrideProduct.Size = new System.Drawing.Size(70, 32);
+            this.cboOverrideProduct.TabIndex = 435;
+            this.cboOverrideProduct.TabStop = false;
+            //
+            // tbOverrideValue
+            //
+            this.tbOverrideValue.Location = new System.Drawing.Point(100, 343);
+            this.tbOverrideValue.Name = "tbOverrideValue";
+            this.tbOverrideValue.Size = new System.Drawing.Size(69, 29);
+            this.tbOverrideValue.TabIndex = 436;
+            this.tbOverrideValue.TabStop = false;
+            this.tbOverrideValue.Text = "0";
+            this.tbOverrideValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbOverrideValue.Enter += new System.EventHandler(this.tbOverrideValue_Enter);
+            //
+            // btnOverrideApply
+            //
+            this.btnOverrideApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOverrideApply.Location = new System.Drawing.Point(180, 337);
+            this.btnOverrideApply.Name = "btnOverrideApply";
+            this.btnOverrideApply.Size = new System.Drawing.Size(90, 40);
+            this.btnOverrideApply.TabIndex = 437;
+            this.btnOverrideApply.Text = "Apply";
+            this.btnOverrideApply.UseVisualStyleBackColor = true;
+            this.btnOverrideApply.Click += new System.EventHandler(this.btnOverrideApply_Click);
+            //
             // frmZoneList
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(671, 413);
+            this.ClientSize = new System.Drawing.Size(671, 453);
+            this.Controls.Add(this.btnOverrideApply);
+            this.Controls.Add(this.tbOverrideValue);
+            this.Controls.Add(this.cboOverrideProduct);
             this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSelect);
@@ -437,5 +474,8 @@
         private System.Windows.Forms.Button btnSelect;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnPrint;
+        private System.Windows.Forms.ComboBox cboOverrideProduct;
+        private System.Windows.Forms.TextBox tbOverrideValue;
+        private System.Windows.Forms.Button btnOverrideApply;
     }
 }
