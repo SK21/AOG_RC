@@ -42,6 +42,10 @@ namespace RateController.Menu
 
                 SetButtons(false);
                 UpdateForm();
+
+                // refresh the other open module pages too - the Pins page row
+                // count follows the sensor count saved here
+                MainMenu.DefaultsSet();
                 MainMenu.HighlightUpdateButton();
             }
             catch (Exception ex)
@@ -62,6 +66,8 @@ namespace RateController.Menu
 
         private void frmMenuConfig_FormClosed(object sender, FormClosedEventArgs e)
         {
+            MainMenu.MenuMoved -= MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet -= MainMenu_ModuleDefaultsSet;
             Props.SaveFormLocation(this);
         }
 

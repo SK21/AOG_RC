@@ -90,7 +90,7 @@ namespace RateController.Menu
             // tbPressure
             // 
             this.tbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressure.Location = new System.Drawing.Point(232, 509);
+            this.tbPressure.Location = new System.Drawing.Point(225, 468);
             this.tbPressure.Name = "tbPressure";
             this.tbPressure.Size = new System.Drawing.Size(58, 29);
             this.tbPressure.TabIndex = 238;
@@ -101,7 +101,7 @@ namespace RateController.Menu
             // 
             this.lbPressure.AutoSize = true;
             this.lbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressure.Location = new System.Drawing.Point(77, 511);
+            this.lbPressure.Location = new System.Drawing.Point(70, 470);
             this.lbPressure.Name = "lbPressure";
             this.lbPressure.Size = new System.Drawing.Size(117, 24);
             this.lbPressure.TabIndex = 237;
@@ -113,7 +113,7 @@ namespace RateController.Menu
             this.ckMomentary.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMomentary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckMomentary.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckMomentary.Location = new System.Drawing.Point(346, 450);
+            this.ckMomentary.Location = new System.Drawing.Point(339, 409);
             this.ckMomentary.Name = "ckMomentary";
             this.ckMomentary.Size = new System.Drawing.Size(119, 40);
             this.ckMomentary.TabIndex = 236;
@@ -125,7 +125,7 @@ namespace RateController.Menu
             // tbWrk
             // 
             this.tbWrk.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWrk.Location = new System.Drawing.Point(232, 456);
+            this.tbWrk.Location = new System.Drawing.Point(225, 415);
             this.tbWrk.Name = "tbWrk";
             this.tbWrk.Size = new System.Drawing.Size(58, 29);
             this.tbWrk.TabIndex = 235;
@@ -136,7 +136,7 @@ namespace RateController.Menu
             // 
             this.lbWorkPin.AutoSize = true;
             this.lbWorkPin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkPin.Location = new System.Drawing.Point(77, 458);
+            this.lbWorkPin.Location = new System.Drawing.Point(70, 417);
             this.lbWorkPin.Name = "lbWorkPin";
             this.lbWorkPin.Size = new System.Drawing.Size(86, 24);
             this.lbWorkPin.TabIndex = 234;
@@ -205,7 +205,7 @@ namespace RateController.Menu
             this.DGV.Name = "DGV";
             this.DGV.RowHeadersVisible = false;
             this.DGV.RowTemplate.Height = 40;
-            this.DGV.Size = new System.Drawing.Size(480, 310);
+            this.DGV.Size = new System.Drawing.Size(480, 274);
             this.DGV.TabIndex = 240;
             this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
             this.DGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellValueChanged);

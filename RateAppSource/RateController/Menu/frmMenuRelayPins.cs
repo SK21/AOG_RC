@@ -108,6 +108,9 @@ namespace RateController.Menu
 
         private void frmMenuRelayPins_FormClosed(object sender, FormClosedEventArgs e)
         {
+            MainMenu.MenuMoved -= MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet -= MainMenu_ModuleDefaultsSet;
+            MainMenu.SelectionChanged -= MainMenu_SelectionChanged;
             Props.SaveFormLocation(this);
         }
 

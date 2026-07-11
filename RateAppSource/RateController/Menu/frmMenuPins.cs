@@ -258,6 +258,10 @@ namespace RateController.Menu
 
         private void frmMenuPins_FormClosed(object sender, FormClosedEventArgs e)
         {
+            // unsubscribe so a disposed instance isn't called when the Boards page
+            // fires ModuleDefaultsSet (its DGV has no columns once disposed)
+            MainMenu.MenuMoved -= MainMenu_MenuMoved;
+            MainMenu.ModuleDefaultsSet -= MainMenu_ModuleDefaultsSet;
             Props.SaveFormLocation(this);
         }
 
