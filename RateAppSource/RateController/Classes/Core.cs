@@ -282,13 +282,30 @@ namespace RateController.Classes
         public static string ModuleConfigDescription()
         {
             // identifies which module the config pages (Config/Comm/Pins/Relay Pins/Valves)
-            // are editing: ID, board label when the module has reported one, connection state
+            // are editing: ID, board label when the module has reported one (falling
+            // back to the locally saved description), connection state
             byte id = ModuleConfig.GetData()[2];
             string Result = "Module " + id.ToString();
             string label = ModulesBoardID.BoardLabel(id);
+            if (label.Length == 0) label = Props.GetModuleDescription(id);
             if (label.Length > 0) Result += " - " + label;
-            if (!ModulesStatus.Connected(id)) Result += "  (not connected)";
+            if (ModulesStatus.Connected(id))
+            {
+                Result += "  (Connected)";
+            }
+            else
+            {
+                Result += "  (not connected)";
+            }
             return Result;
+        }
+
+        public static bool DuplicateModule(int moduleID)
+        {
+            // two boards answering as one ID reveal themselves by alternating board
+            // labels (PGN 32403) or alternating board type / firmware version
+            // (PGN 32401 - catches boards that send no label, e.g. a Nano)
+            return ModulesBoardID.DuplicateID(moduleID) || ModulesStatus.DuplicateID(moduleID);
         }
 
         public static int MaxSensorsForModule(int moduleID)

@@ -165,6 +165,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>MinPWM</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Minimumdebiet schakelt in onder {0}</value>
+  </data>
   <data name="lgMinute" xml:space="preserve">
     <value>minuut</value>
   </data>
@@ -278,8 +281,5 @@
   </data>
   <data name="lgOverallRate" xml:space="preserve">
     <value>globale hoeveelheid</value>
-  </data>
-  <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Minimumdebiet schakelt in onder {0}</value>
   </data>
 </root>

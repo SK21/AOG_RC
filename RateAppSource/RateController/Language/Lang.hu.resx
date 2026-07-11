@@ -348,6 +348,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Minimum</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>A minimális kiáramlás {0} alatt kapcsol be</value>
+  </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimum UPM</value>
   </data>
@@ -752,8 +755,5 @@
   </data>
   <data name="lgUseVR" xml:space="preserve">
     <value>Vátozó rátát használ</value>
-  </data>
-  <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>A minimális kiáramlás {0} alatt kapcsol be</value>
   </data>
 </root>

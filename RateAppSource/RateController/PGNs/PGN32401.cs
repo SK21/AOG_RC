@@ -47,6 +47,7 @@ namespace RateController.PGNs
         private ModuleStatus[] LastStatus;
         private Stopwatch[] PGNstopWatch;
         private DateTime[] ReceiveTime;
+        private DateTime[] cDuplicateTime;
 
         public PGN32401()
         {
@@ -62,6 +63,7 @@ namespace RateController.PGNs
             cWheelSpeed = new double[Props.MaxModules];
             cWheelCounts = new ushort[Props.MaxModules];
             cElapsedTime = new double[Props.MaxModules];
+            cDuplicateTime = new DateTime[Props.MaxModules];
 
             PGNstopWatch = new Stopwatch[Props.MaxModules];
             for (int i = 0; i < Props.MaxModules; i++)
@@ -83,6 +85,13 @@ namespace RateController.PGNs
         public bool Connected(int Module)
         {
             return (ValidID(Module) && (DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4);
+        }
+
+        // Latched for a while after the last conflicting report so the warning is
+        // stable; clears itself once one of the boards is disconnected.
+        public bool DuplicateID(int Module)
+        {
+            return (ValidID(Module) && (DateTime.Now - cDuplicateTime[Module]).TotalSeconds < 15);
         }
 
         public double ElapsedTime(int ModuleID)
@@ -143,8 +152,20 @@ namespace RateController.PGNs
 
                         cWheelCounts[ModuleID] = (ushort)(Data[7] | Data[8] << 8 | Data[9] << 16);
 
+                        // Two boards sharing an ID reveal themselves when reports alternate
+                        // between different board types or firmware versions within the
+                        // 200 ms status cycle (catches pairs that send no board label, e.g.
+                        // a Nano). A legitimate change needs a reflash, which takes the
+                        // board offline far longer than the freshness gate.
+                        ushort inoID = (ushort)(Data[11] | Data[12] << 8);
+                        if ((DateTime.Now - ReceiveTime[ModuleID]).TotalSeconds < 2
+                            && (cInoType[ModuleID] != Data[10] || cInoID[ModuleID] != inoID))
+                        {
+                            cDuplicateTime[ModuleID] = DateTime.Now;
+                        }
+
                         cInoType[ModuleID] = Data[10];
-                        cInoID[ModuleID] = (ushort)(Data[11] | Data[12] << 8);
+                        cInoID[ModuleID] = inoID;
                         cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
 
                         // wifi strength

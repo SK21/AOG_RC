@@ -195,6 +195,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Minimum</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Le débit minimum s'active sous {0}</value>
+  </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimum UPM</value>
   </data>
@@ -410,8 +413,5 @@
   </data>
   <data name="lgUnitsVolt" xml:space="preserve">
     <value>Units/Volt</value>
-  </data>
-  <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Le débit minimum s'active sous {0}</value>
   </data>
 </root>

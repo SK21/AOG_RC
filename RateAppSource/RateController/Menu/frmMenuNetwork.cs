@@ -11,27 +11,16 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private Timer cBoardIDtimer;
-        private byte cDescriptionModule;
 
         public frmMenuNetwork(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
             this.Tag = false;
-            tbDescription.TextChanged += tbDescription_TextChanged;
-        }
-
-        private void tbDescription_TextChanged(object sender, EventArgs e)
-        {
-            // Editing the board description enables Save (guarded by Initializing so the
-            // read-back populate on Load doesn't enable it).
-            SetButtons(true);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            LoadDescription();
             SetButtons(false);
         }
 
@@ -54,16 +43,6 @@ namespace RateController.Menu
                     SetDefaults(1);
                 }
 
-                // Save the board description locally for the module being configured;
-                // butUpdateModules sends it to the module (PGN 32506, stored in its
-                // EEPROM, survives reflash). Only saved when non-empty so a blank box
-                // can't wipe an existing label.
-                string desc = tbDescription.Text.Trim();
-                if (desc.Length > 0)
-                {
-                    Props.SetModuleDescription(Core.ModuleConfig.GetData()[2], desc);
-                }
-
                 SetButtons(false);
             }
             catch (Exception ex)
@@ -76,12 +55,6 @@ namespace RateController.Menu
         private void frmMenuNetwork_FormClosed(object sender, FormClosedEventArgs e)
         {
             MainMenu.MenuMoved -= MainMenu_MenuMoved;
-            if (cBoardIDtimer != null)
-            {
-                cBoardIDtimer.Stop();
-                cBoardIDtimer.Dispose();
-                cBoardIDtimer = null;
-            }
             Props.SaveFormLocation(this);
         }
 
@@ -93,73 +66,20 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
 
-            // StyleControls restyles every label's font and colours; capture the two hint
-            // labels' designer formatting and restore it afterwards so the hints keep their look.
+            // StyleControls restyles every label's font and colours; capture the hint
+            // label's designer formatting and restore it afterwards so the hint keeps its look.
             Font exFont = lbExampleHint.Font;
             Color exFore = lbExampleHint.ForeColor;
-            Font curFont = lbCurrentHint.Font;
-            Color curFore = lbCurrentHint.ForeColor;
 
             MainMenu.StyleControls(this);
 
             lbExampleHint.Font = exFont;
             lbExampleHint.ForeColor = exFore;
-            lbCurrentHint.Font = curFont;
-            lbCurrentHint.ForeColor = curFore;
 
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
-
-            // The description box holds the locally saved text (sent with Update Modules);
-            // the "On module" label shows what the target module itself reports (PGN 32403,
-            // every ~2 s) and is kept live while the form is open.
-            LoadDescription();
-            RefreshOnModuleLabel();
-
-            cBoardIDtimer = new Timer();
-            cBoardIDtimer.Interval = 1000;
-            cBoardIDtimer.Tick += BoardIDtimer_Tick;
-            cBoardIDtimer.Start();
-        }
-
-        private void BoardIDtimer_Tick(object sender, EventArgs e)
-        {
-            RefreshOnModuleLabel();
-
-            // follow a target-module change made on the Config page while this form is
-            // open; skipped while the user has unsaved edits so it doesn't clobber typing
-            if (!cEdited && Core.ModuleConfig.GetData()[2] != cDescriptionModule)
-            {
-                LoadDescription();
-            }
-        }
-
-        private void LoadDescription()
-        {
-            // guarded so the populate doesn't enable Save
-            cDescriptionModule = Core.ModuleConfig.GetData()[2];
-            Initializing = true;
-            tbDescription.Text = Props.GetModuleDescription(cDescriptionModule);
-            Initializing = false;
-        }
-
-        private void RefreshOnModuleLabel()
-        {
-            // the module being configured is the one the config pages target
-            byte moduleID = Core.ModuleConfig.GetData()[2];
-            string label;
-            if (Core.ModulesStatus.Connected(moduleID))
-            {
-                label = Core.ModulesBoardID.BoardLabel(moduleID);
-                if (label.Length == 0) label = "(none)";
-            }
-            else
-            {
-                label = "module " + moduleID.ToString() + " not connected";
-            }
-            if (lbOnModuleValue.Text != label) lbOnModuleValue.Text = label;
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -218,11 +138,12 @@ namespace RateController.Menu
                 Pins[i] = 255;
             }
 
+            // presets load a starting pin layout only - the target module ID
+            // (config byte 2) is left alone
             switch (Brd)
             {
                 case 1:
                     // RC11-2, Teensy
-                    Set.ModuleID = 0;
                     Set.SensorCount = 1;
                     Set.OnboardRelayType = 1;
                     Set.RemoteRelayType = 0;
@@ -253,7 +174,6 @@ namespace RateController.Menu
 
                 case 2:
                     // RC15, ESP32
-                    Set.ModuleID = 0;
                     Set.SensorCount = 1;
                     Set.OnboardRelayType = 5;
                     Set.RemoteRelayType = 0;
@@ -275,7 +195,6 @@ namespace RateController.Menu
 
                 default:
                     // RC12-3, Nano
-                    Set.ModuleID = 0;
                     Set.SensorCount = 1;
                     Set.OnboardRelayType = 4;
                     Set.RemoteRelayType = 0;

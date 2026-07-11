@@ -186,6 +186,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>ШИМ Минимум</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Минимальный поток включается ниже {0}</value>
+  </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Мин ед/мин</value>
   </data>
@@ -365,8 +368,5 @@
   </data>
   <data name="lgUnitsVolt" xml:space="preserve">
     <value>Ед/вольт</value>
-  </data>
-  <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Минимальный поток включается ниже {0}</value>
   </data>
 </root>

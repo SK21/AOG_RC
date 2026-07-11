@@ -306,6 +306,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//      bit 2 - client mode
 		//      bit 3 - work pin is momentary
 		//      bit 4 - Is3Wire valve
+		//      bit 6 - assign module ID: adopt data[2] as the new ID (only one
+		//              board connected); clear = data[2] is a filter, config is
+		//              for that module only
 		//5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
 		//                           , 5 - PCA9685, 6 - PCF8574
 		//6	    wifi module serial port
@@ -325,7 +328,11 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
 		if (len > PGNlength - 1)
 		{
-			if (GoodCRC(data, PGNlength))
+			// bit 6 set = ID assignment, adopt data[2] unconditionally (commissioning,
+			// one board connected); clear = data[2] must match our ID (normal update,
+			// multi-board safe). MDL.ID = data[2] below is a no-op in filtered mode.
+			bool AssignID = ((data[4] & 64) == 64);
+			if (GoodCRC(data, PGNlength) && (AssignID || data[2] == MDL.ID))
 			{
 				MDL.ID = data[2];
 				MDL.SensorCount = data[3];

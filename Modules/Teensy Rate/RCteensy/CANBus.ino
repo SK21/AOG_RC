@@ -542,7 +542,9 @@ void CANBus_HandleBoardLabel3(const CAN_message_t& msg) {
 //   0xFF0D → cfgBuf[8..15] = pgnData[10..17] (Sensor1 pins, RelayPins[0-4])
 //   0xFF0E → cfgBuf[16..23]= pgnData[18..25] (RelayPins[5-12])
 //   0xFF0F → cfgBuf[24..29]= pgnData[26..31] (RelayPins[13-15], WorkPin, PressurePin, CommMode)
-//            buf[6] = ModID (identity check), buf[7] = 0
+//            buf[6] = ModID (unused copy), buf[7] = 0
+// Command-byte (cfgBuf[2]) bit 6: set = adopt cfgBuf[0] as new ID, clear =
+// cfgBuf[0] is a filter (apply only when it matches MDL.ID).
 //-----------------------------------------------------------------------------
 
 void CANBus_HandleModuleConfig1(const CAN_message_t& msg) {
@@ -565,9 +567,15 @@ void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
 	memcpy(cfgBuf + 24, msg.buf, 6);  // only 6 config bytes; buf[6]=ModID, buf[7]=0
 	cfgFrames |= 0x08;
 
-	// All 4 frames must have arrived (no ModID identity check — mirrors UDP handler behaviour)
+	// All 4 frames must have arrived
 	if (cfgFrames != 0x0F) { cfgFrames = 0; return; }
 	cfgFrames = 0;
+
+	// Command-byte bit 6 set = ID assignment, adopt cfgBuf[0] unconditionally
+	// (commissioning, one board connected); clear = cfgBuf[0] must match our ID
+	// (normal update, multi-board safe). Mirrors the UDP handler in Receive.ino.
+	bool AssignID = ((cfgBuf[2] & 64) == 64);
+	if (!AssignID && cfgBuf[0] != MDL.ID) return;
 
 	// Apply config (mirrors UDP PGN 32700 handler in Receive.ino case 32700)
 	MDL.ID = cfgBuf[0];
@@ -726,19 +734,22 @@ void CANBus_SendModuleIdent() {
 //-----------------------------------------------------------------------------
 void CANBus_SendBoardLabel() {
 	uint8_t data[8];
+	uint8_t label[16];
 	uint8_t mod = MDL.ID & 0x0F;
 
+	EffectiveBoardLabel(label);                  // stored label, or MAC fallback when none stored
+
 	data[0] = mod;
-	memcpy(data + 1, MDLboard.Text, 7);          // chars 0-6
+	memcpy(data + 1, label, 7);                  // chars 0-6
 	CANBus_SendProprietaryB(0x14, data, 8);
 
 	data[0] = mod;
-	memcpy(data + 1, MDLboard.Text + 7, 7);      // chars 7-13
+	memcpy(data + 1, label + 7, 7);              // chars 7-13
 	CANBus_SendProprietaryB(0x15, data, 8);
 
 	data[0] = mod;
-	data[1] = MDLboard.Text[14];                 // char 14
-	data[2] = MDLboard.Text[15];                 // char 15
+	data[1] = label[14];                         // char 14
+	data[2] = label[15];                         // char 15
 	data[3] = data[4] = data[5] = data[6] = data[7] = 0;
 	CANBus_SendProprietaryB(0x16, data, 8);
 }

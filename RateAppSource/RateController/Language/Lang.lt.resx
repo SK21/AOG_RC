@@ -261,6 +261,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>Minimalus PP&lt;</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Minimalus srautas įsijungia žemiau {0}</value>
+  </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimalus VPM</value>
   </data>
@@ -601,8 +604,5 @@ Calibration steps:
   </data>
   <data name="lgRelayOnHigh" xml:space="preserve">
     <value>Invertuoti relės</value>
-  </data>
-  <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Minimalus srautas įsijungia žemiau {0}</value>
   </data>
 </root>

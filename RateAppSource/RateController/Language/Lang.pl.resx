@@ -252,6 +252,9 @@
   <data name="lgMinPWM" xml:space="preserve">
     <value>PWM Min</value>
   </data>
+  <data name="lgMinFlowEngages" xml:space="preserve">
+    <value>Minimalny przepływ włącza się poniżej {0}</value>
+  </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Min UPM</value>
   </data>
@@ -574,8 +577,5 @@ Następnie przejdź do kroku 3</value>
   </data>
   <data name="lgRelayOnHigh" xml:space="preserve">
     <value>Poziom wysoki</value>
-  </data>
-  <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Minimalny przepływ włącza się poniżej {0}</value>
   </data>
 </root>

@@ -206,7 +206,7 @@ void SendComm()
 			B[0] = 147;
 			B[1] = 126;
 			B[2] = MDL.ID;	// raw module ID, matching the module-level status report (PGN 32401)
-			for (byte k = 0; k < 16; k++) B[3 + k] = MDLboard.Text[k];
+			EffectiveBoardLabel(B + 3);	// stored label, or MAC fallback when none stored
 			B[19] = CRC(B, 19, 0);
 
 			bool Sent = false;

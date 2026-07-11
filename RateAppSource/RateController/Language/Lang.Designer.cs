@@ -1015,6 +1015,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Minimum flow engages below {0}.
+        /// </summary>
+        internal static string lgMinFlowEngages {
+            get {
+                return ResourceManager.GetString("lgMinFlowEngages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PWM Minimum.
         /// </summary>
         internal static string lgMinPWM {
@@ -1032,15 +1041,6 @@ namespace RateController.Language {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to Minimum flow engages below {0}.
-        /// </summary>
-        internal static string lgMinFlowEngages {
-            get {
-                return ResourceManager.GetString("lgMinFlowEngages", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Minimum UPM.
         /// </summary>
@@ -1101,6 +1101,15 @@ namespace RateController.Language {
         internal static string lgModules {
             get {
                 return ResourceManager.GetString("lgModules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module to edit.
+        /// </summary>
+        internal static string lgModuleToEdit {
+            get {
+                return ResourceManager.GetString("lgModuleToEdit", resourceCulture);
             }
         }
         

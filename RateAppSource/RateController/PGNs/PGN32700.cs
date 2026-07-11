@@ -17,6 +17,9 @@ namespace RateController.PGNs
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
         //      bit 5 - ADS1115 enabled
+        //      bit 6 - assign module ID: board adopts byte 2 as its new ID
+        //              (only one board may be connected); clear = byte 2 is a
+        //              filter, board applies config only when it matches its ID
         //5	    onboard relay control   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
         //                              , 5 - PCA9685, 6 - PCF8574
         //6	    remote relay control    0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
@@ -254,7 +257,7 @@ namespace RateController.PGNs
             }
         }
 
-        public void Send(byte? commMode = null)
+        public void Send(byte? commMode = null, bool assignID = false)
         {
             // sensor 0/1 pins mirror the sensor-pins config (PGN 32507) so firmware
             // that only reads 32700 stays in sync with the pins grid
@@ -266,6 +269,17 @@ namespace RateController.PGNs
                 cData[10] = Core.SensorPins.FlowPin(1);
                 cData[11] = Core.SensorPins.DirPin(1);
                 cData[12] = Core.SensorPins.PWMPin(1);
+            }
+
+            // bit 6 is per-send, not part of the saved config - written both ways
+            // so a normal send can never carry a leftover assign bit
+            if (assignID)
+            {
+                cData[4] = (byte)(cData[4] | 0b0100_0000);
+            }
+            else
+            {
+                cData[4] = (byte)(cData[4] & 0b1011_1111);
             }
 
             cData[31] = commMode ?? (Props.CanEnabled ? (byte)1 : (byte)0);

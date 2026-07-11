@@ -162,9 +162,9 @@ namespace RateController.Menu
             // lbModule
             // 
             this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModule.Location = new System.Drawing.Point(30, 18);
+            this.lbModule.Location = new System.Drawing.Point(59, 18);
             this.lbModule.Name = "lbModule";
-            this.lbModule.Size = new System.Drawing.Size(480, 24);
+            this.lbModule.Size = new System.Drawing.Size(403, 24);
             this.lbModule.TabIndex = 241;
             this.lbModule.Text = "Module 0";
             this.lbModule.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

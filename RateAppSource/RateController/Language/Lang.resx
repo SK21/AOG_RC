@@ -846,4 +846,7 @@
   <data name="lgSpeedKMH" xml:space="preserve">
     <value>KMH</value>
   </data>
+  <data name="lgModuleToEdit" xml:space="preserve">
+    <value>Module to edit</value>
+  </data>
 </root>
