@@ -12,6 +12,7 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
         private Timer cBoardIDtimer;
+        private byte cDescriptionModule;
 
         public frmMenuNetwork(frmMenu menu)
         {
@@ -30,6 +31,7 @@ namespace RateController.Menu
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            LoadDescription();
             SetButtons(false);
         }
 
@@ -37,29 +39,29 @@ namespace RateController.Menu
         {
             try
             {
-                int NewBoard;
+                // only load a preset when one was actually selected - the description
+                // alone also enables Save, and that must not reset the module config
                 if (rbNano.Checked)
                 {
-                    NewBoard = 0;
+                    SetDefaults(0);
                 }
                 else if (rbESP32.Checked)
                 {
-                    NewBoard = 2;
+                    SetDefaults(2);
                 }
-                else
+                else if (rbTeensy.Checked)
                 {
-                    NewBoard = 1;
+                    SetDefaults(1);
                 }
 
-                SetDefaults(NewBoard);
-
-                // Save the board description locally; butUpdateModules sends it to the
-                // module (PGN 32506, stored in its EEPROM, survives reflash). Only saved
-                // when non-empty so a blank box can't wipe an existing label.
+                // Save the board description locally for the module being configured;
+                // butUpdateModules sends it to the module (PGN 32506, stored in its
+                // EEPROM, survives reflash). Only saved when non-empty so a blank box
+                // can't wipe an existing label.
                 string desc = tbDescription.Text.Trim();
                 if (desc.Length > 0)
                 {
-                    Props.SetProp("ModuleDescription", desc);
+                    Props.SetModuleDescription(Core.ModuleConfig.GetData()[2], desc);
                 }
 
                 SetButtons(false);
@@ -110,9 +112,11 @@ namespace RateController.Menu
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
 
-            // Show the description stored on the module, and keep it live-updated while the
-            // form is open (the module reports its label every ~2 s on PGN 32403).
-            RefreshDescription();
+            // The description box holds the locally saved text (sent with Update Modules);
+            // the "On module" label shows what the target module itself reports (PGN 32403,
+            // every ~2 s) and is kept live while the form is open.
+            LoadDescription();
+            RefreshOnModuleLabel();
 
             cBoardIDtimer = new Timer();
             cBoardIDtimer.Interval = 1000;
@@ -122,29 +126,40 @@ namespace RateController.Menu
 
         private void BoardIDtimer_Tick(object sender, EventArgs e)
         {
-            RefreshDescription();
+            RefreshOnModuleLabel();
+
+            // follow a target-module change made on the Config page while this form is
+            // open; skipped while the user has unsaved edits so it doesn't clobber typing
+            if (!cEdited && Core.ModuleConfig.GetData()[2] != cDescriptionModule)
+            {
+                LoadDescription();
+            }
         }
 
-        private void RefreshDescription()
+        private void LoadDescription()
         {
-            // Show the locally saved description (sent with Update Modules); when none is
-            // saved, fall back to the module's live reported label while connected.
-            // Skipped while the user has unsaved edits so it doesn't clobber typing;
-            // guarded so it doesn't enable Save; only written when it actually changed.
-            if (!cEdited)
+            // guarded so the populate doesn't enable Save
+            cDescriptionModule = Core.ModuleConfig.GetData()[2];
+            Initializing = true;
+            tbDescription.Text = Props.GetModuleDescription(cDescriptionModule);
+            Initializing = false;
+        }
+
+        private void RefreshOnModuleLabel()
+        {
+            // the module being configured is the one the config pages target
+            byte moduleID = Core.ModuleConfig.GetData()[2];
+            string label;
+            if (Core.ModulesStatus.Connected(moduleID))
             {
-                string label = Props.GetProp("ModuleDescription");
-                if (label.Length == 0)
-                {
-                    label = Core.ModulesStatus.Connected(0) ? Core.ModulesBoardID.BoardLabel(0) : "";
-                }
-                if (label != tbDescription.Text)
-                {
-                    Initializing = true;
-                    tbDescription.Text = label;
-                    Initializing = false;
-                }
+                label = Core.ModulesBoardID.BoardLabel(moduleID);
+                if (label.Length == 0) label = "(none)";
             }
+            else
+            {
+                label = "module " + moduleID.ToString() + " not connected";
+            }
+            if (lbOnModuleValue.Text != label) lbOnModuleValue.Text = label;
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -162,31 +177,12 @@ namespace RateController.Menu
         {
             // Fires on uncheck too (SetButtons(false) clears the radios after
             // Save/Cancel) - only a genuine selection marks the form edited.
+            // The description is left alone - it identifies the physical board,
+            // so the user fills it in themselves.
             if (sender is RadioButton rb && rb.Checked)
             {
                 SetButtons(true);
-
-                // Default the description to the selected preset's name when the box is
-                // blank or still holds another preset's default (switching presets before
-                // saving follows along). Won't overwrite a description the user typed.
-                if (!Initializing)
-                {
-                    string current = tbDescription.Text.Trim();
-                    if (current.Length == 0 || current == PresetName(rbNano)
-                        || current == PresetName(rbTeensy) || current == PresetName(rbESP32))
-                    {
-                        tbDescription.Text = PresetName(rb);
-                    }
-                }
             }
-        }
-
-        private static string PresetName(RadioButton rb)
-        {
-            // preset name is the button text without the "Load " prefix
-            string name = rb.Text;
-            if (name.StartsWith("Load ")) name = name.Substring(5);
-            return name.Trim();
         }
 
         private void SetButtons(bool Edited)

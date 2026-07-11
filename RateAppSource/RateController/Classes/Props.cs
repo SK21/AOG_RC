@@ -905,6 +905,36 @@ namespace RateController.Classes
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
         }
 
+        public static string GetModuleDescription(int ModuleID)
+        {
+            string Result = "";
+            if (ModuleID >= 0 && ModuleID < MaxModules)
+            {
+                Result = GetProp("ModuleDescription_" + ModuleID.ToString());
+                if (Result.Length == 0)
+                {
+                    // migrate the pre-per-module single value to the module being
+                    // configured, the one the old value was in use for
+                    string Legacy = GetProp("ModuleDescription");
+                    if (Legacy.Length > 0)
+                    {
+                        SetProp("ModuleDescription_" + ModuleID.ToString(), Legacy);
+                        SetProp("ModuleDescription", "");
+                        Result = Legacy;
+                    }
+                }
+            }
+            return Result;
+        }
+
+        public static void SetModuleDescription(int ModuleID, string Description)
+        {
+            if (ModuleID >= 0 && ModuleID < MaxModules && Description != null)
+            {
+                SetProp("ModuleDescription_" + ModuleID.ToString(), Description);
+            }
+        }
+
         public static bool IsFormNameValid(string formName)
         {
             bool Result = false;

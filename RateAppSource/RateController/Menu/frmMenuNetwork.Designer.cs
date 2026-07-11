@@ -39,6 +39,8 @@
             this.lbCurrentHint = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tbDescription = new System.Windows.Forms.TextBox();
+            this.lbOnModule = new System.Windows.Forms.Label();
+            this.lbOnModuleValue = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -156,6 +158,8 @@
             this.groupBox2.Controls.Add(this.lbCurrentHint);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.tbDescription);
+            this.groupBox2.Controls.Add(this.lbOnModule);
+            this.groupBox2.Controls.Add(this.lbOnModuleValue);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(93, 406);
             this.groupBox2.Name = "groupBox2";
@@ -171,27 +175,45 @@
             this.lbCurrentHint.ForeColor = System.Drawing.SystemColors.Highlight;
             this.lbCurrentHint.Location = new System.Drawing.Point(8, 25);
             this.lbCurrentHint.Name = "lbCurrentHint";
-            this.lbCurrentHint.Size = new System.Drawing.Size(332, 60);
+            this.lbCurrentHint.Size = new System.Drawing.Size(332, 44);
             this.lbCurrentHint.TabIndex = 48;
             this.lbCurrentHint.Text = "Descripton saved on the module to identify it - kept through firmware updates.";
             this.lbCurrentHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 100);
+            this.label1.Location = new System.Drawing.Point(7, 74);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 24);
             this.label1.TabIndex = 1;
             this.label1.Text = "Description:";
-            // 
+            //
             // tbDescription
-            // 
-            this.tbDescription.Location = new System.Drawing.Point(122, 100);
+            //
+            this.tbDescription.Location = new System.Drawing.Point(122, 74);
             this.tbDescription.Name = "tbDescription";
             this.tbDescription.Size = new System.Drawing.Size(206, 29);
             this.tbDescription.TabIndex = 0;
             this.tbDescription.Text = " ";
+            //
+            // lbOnModule
+            //
+            this.lbOnModule.AutoSize = true;
+            this.lbOnModule.Location = new System.Drawing.Point(7, 112);
+            this.lbOnModule.Name = "lbOnModule";
+            this.lbOnModule.Size = new System.Drawing.Size(102, 24);
+            this.lbOnModule.TabIndex = 2;
+            this.lbOnModule.Text = "On module:";
+            //
+            // lbOnModuleValue
+            //
+            this.lbOnModuleValue.Location = new System.Drawing.Point(122, 112);
+            this.lbOnModuleValue.Name = "lbOnModuleValue";
+            this.lbOnModuleValue.Size = new System.Drawing.Size(206, 24);
+            this.lbOnModuleValue.TabIndex = 3;
+            this.lbOnModuleValue.Text = "";
+            this.lbOnModuleValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // frmMenuNetwork
             // 
@@ -228,5 +250,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbExampleHint;
         private System.Windows.Forms.Label lbCurrentHint;
+        private System.Windows.Forms.Label lbOnModule;
+        private System.Windows.Forms.Label lbOnModuleValue;
     }
 }

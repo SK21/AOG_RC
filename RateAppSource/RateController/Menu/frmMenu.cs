@@ -964,10 +964,10 @@ namespace RateController
                 // 32700 restarts the module immediately on receipt, so the board label
                 // (32506) and sensor pins (32507) must go out before it or they would
                 // arrive during the reboot and be lost
-                string desc = Props.GetProp("ModuleDescription").Trim();
+                byte ModuleID = Core.ModuleConfig.GetData()[2];
+                string desc = Props.GetModuleDescription(ModuleID).Trim();
                 if (desc.Length > 0)
                 {
-                    byte ModuleID = Core.ModuleConfig.GetData()[2];
                     new PGNs.PGN32506().Send(ModuleID, desc);
 
                     // reflect the sent label in the cache so the Boards page doesn't
