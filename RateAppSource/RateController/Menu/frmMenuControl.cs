@@ -47,7 +47,7 @@ namespace RateController.Menu
                 Boxes[i].Enter += BoxEnter;
                 Boxes[i].TextChanged += BoxTextChanged;
             }
-            BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 20, .1, 1, 50, 10 };       // index 10 (tbSampleSize) = flow window ms
+            BoxesMin = new double[] { .5, 5, 5, 1, .1, 0, 1, 20, .1, 1, 50, 50 };       // index 10 (tbSampleSize) = flow window ms; index 11 (tbPIDtime) floored at 50ms firmware LoopTime
             BoxesMax = new double[] { 10, 50, 100, 255, 25, 75, 1000, 2000, 25, 3000, 1500, 250 };  // index 10 (tbSampleSize) = flow window ms
             BoxesFormat = new string[] { "N1", "N0", "N0", "N0", "N1",  "N0", "F0", "F0",
                 "N1","F0","F0","N0" };   // index 10 (tbSampleSize) = "F0" so no thousands comma (would break UInt16.TryParse at btnOk)
