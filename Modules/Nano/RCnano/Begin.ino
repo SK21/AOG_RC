@@ -378,10 +378,10 @@ void LoadDefaults()
 		Sensor[i].MaxPWM = 255;
 		Sensor[i].MinPWM = 5;
 		Sensor[i].Kp = 45 / 100.0;	// Kp = 45 (KPdefault, app Props.cs) - matches uniform /100 decode (Receive.ino)
-		Sensor[i].Ki = 50 / 100.0;	// Ki = 50 (KIdefault) - matches uniform /100 decode (Receive.ino)
+		Sensor[i].Ki = 70 / 100.0;	// Ki = 70 (KIdefault) - matches uniform /100 decode (Receive.ino)
 		Sensor[i].Deadband = 0.015;
 		Sensor[i].BrakePoint = 35;
-		Sensor[i].PIDslowAdjust = 50;	// PIDslowAdjustDefault, matches app
+		Sensor[i].PIDslowAdjust = 60;	// PIDslowAdjustDefault, matches app
 		Sensor[i].SlewRate = 25;
 		Sensor[i].MaxIntegral = 25;
 		Sensor[i].TimedMinStart = 0.5;
