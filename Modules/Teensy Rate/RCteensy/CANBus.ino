@@ -375,25 +375,36 @@ void CANBus_HandleSensorPins(const CAN_message_t& msg) {
 
 	if (modId == MDL.ID && senId < MaxProductCount)
 	{
-		bool BinInv = ((msg.buf[5] & 1) == 1);
-		bool Changed = (Sensor[senId].FlowPin != msg.buf[1])
-			|| (Sensor[senId].DirPin != msg.buf[2])
-			|| (Sensor[senId].PWMPin != msg.buf[3])
-			|| (Sensor[senId].BinPin != msg.buf[4])
-			|| (Sensor[senId].BinInvert != BinInv);
-
-		if (Changed)
+		if (PinAllowed(msg.buf[1]) && PinAllowed(msg.buf[2])
+			&& PinAllowed(msg.buf[3]) && PinAllowed(msg.buf[4]))
 		{
-			Sensor[senId].FlowPin = msg.buf[1];
-			Sensor[senId].DirPin = msg.buf[2];
-			Sensor[senId].PWMPin = msg.buf[3];
-			Sensor[senId].BinPin = msg.buf[4];
-			Sensor[senId].BinInvert = BinInv;
+			bool BinInv = ((msg.buf[5] & 1) == 1);
+			bool Changed = (Sensor[senId].FlowPin != msg.buf[1])
+				|| (Sensor[senId].DirPin != msg.buf[2])
+				|| (Sensor[senId].PWMPin != msg.buf[3])
+				|| (Sensor[senId].BinPin != msg.buf[4])
+				|| (Sensor[senId].BinInvert != BinInv);
 
-			SaveData();
-			RestartPending = true;
+			if (Changed)
+			{
+				Sensor[senId].FlowPin = msg.buf[1];
+				Sensor[senId].DirPin = msg.buf[2];
+				Sensor[senId].PWMPin = msg.buf[3];
+				Sensor[senId].BinPin = msg.buf[4];
+				Sensor[senId].BinInvert = BinInv;
+
+				SaveData();
+				RestartPending = true;
+			}
+			RestartLastConfig = millis();
 		}
-		RestartLastConfig = millis();
+		else
+		{
+			// pins not usable on this board - discard the frame,
+			// reported via module status (0xFF02 byte 0 bit 7)
+			ConfigRejected = true;
+			ConfigRejectedTime = millis();
+		}
 	}
 }
 
@@ -577,6 +588,34 @@ void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
 	bool AssignID = ((cfgBuf[2] & 64) == 64);
 	if (!AssignID && cfgBuf[0] != MDL.ID) return;
 
+	// Validate pins before applying (mirrors the UDP 32700 handler) - a config
+	// that boot-time ValidData() would reject must not be saved at all
+	bool PinsOK = PinAllowed(cfgBuf[5]) && PinAllowed(cfgBuf[6]) && PinAllowed(cfgBuf[7])
+		&& PinAllowed(cfgBuf[8]) && PinAllowed(cfgBuf[9]) && PinAllowed(cfgBuf[10])
+		&& PinAllowed(cfgBuf[27]) && PinAllowed(cfgBuf[28]);
+
+	if (PinsOK && cfgBuf[3] == 1)
+	{
+		// onboard relay control by GPIOs
+		for (int i = 0; i < 16; i++)
+		{
+			if (!PinAllowed(cfgBuf[11 + i]))
+			{
+				PinsOK = false;
+				break;
+			}
+		}
+	}
+
+	if (!PinsOK)
+	{
+		// pins not usable on this board - discard the config,
+		// reported via module status (0xFF02 byte 0 bit 7)
+		ConfigRejected = true;
+		ConfigRejectedTime = millis();
+		return;
+	}
+
 	// Apply config (mirrors UDP PGN 32700 handler in Receive.ino case 32700)
 	MDL.ID = cfgBuf[0];
 	MDL.SensorCount = cfgBuf[1];
@@ -683,6 +722,19 @@ void CANBus_SendModuleStatus() {
 	if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin) == LOW) data[0] |= 0x10;  // Work switch
 	if (Ethernet.linkStatus() == LinkON) data[0] |= 0x20;  // Ethernet connected
 	if (GoodPins) data[0] |= 0x40;  // Good pin config
+
+	// Config rejected (2 s window, then self-clears) - app maps to 32401 byte 13 bit 7
+	if (ConfigRejected)
+	{
+		if (millis() - ConfigRejectedTime < ConfigRejectedReport)
+		{
+			data[0] |= 0x80;
+		}
+		else
+		{
+			ConfigRejected = false;
+		}
+	}
 
 	// Byte 1: WiFi strength (N/A for Teensy - use 0)
 	data[1] = 0;

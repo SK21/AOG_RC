@@ -130,6 +130,20 @@ void SendComm()
         if (GoodPins) Data[13] |= 0b00100000;
         if (MDL.Is3Wire) Data[13] |= 0b01000000;
 
+        // config rejected: reported for ConfigRejectedReport ms after the
+        // discarded packet, then self-clears
+        if (ConfigRejected)
+        {
+            if (millis() - ConfigRejectedTime < ConfigRejectedReport)
+            {
+                Data[13] |= 0b10000000;
+            }
+            else
+            {
+                ConfigRejected = false;
+            }
+        }
+
         Data[14] = CRC(Data, 14, 0);
 
         if (EthernetConnected())

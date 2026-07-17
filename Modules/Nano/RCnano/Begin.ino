@@ -408,6 +408,12 @@ void LoadDefaults()
 	MDL.PressurePin = 14;
 }
 
+// NC is a valid setting (input/output not used); Nano GPIOs are 0-21 (14-21 = A0-A7)
+bool PinAllowed(byte pin)
+{
+	return (pin <= 21 || pin == NC);
+}
+
 bool ValidData()
 {
 	bool Result = true;

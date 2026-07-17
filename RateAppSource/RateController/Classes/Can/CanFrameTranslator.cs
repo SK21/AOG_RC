@@ -247,6 +247,7 @@ namespace RateController.Classes.Can
             //   f02[1] bits0-2 = wifiRSSI  → pgn[13] bits1-3
             //   f02[0] bit5 = ethernetConn → pgn[13] bit4
             //   f02[0] bit6 = goodPinCfg   → pgn[13] bit5
+            //   f02[0] bit7 = configRejected → pgn[13] bit7
             var pgn = new byte[15];
             pgn[0] = 0x91;
             pgn[1] = 0x7E;
@@ -278,6 +279,7 @@ namespace RateController.Classes.Can
             status |= (byte)(((f02.Length > 1 ? f02[1] : 0) & 0x07) << 1);
             if ((f02[0] & 0x20) != 0) status |= 0x10;
             if ((f02[0] & 0x40) != 0) status |= 0x20;
+            if ((f02[0] & 0x80) != 0) status |= 0x80;
             pgn[13] = status;
 
             pgn[14] = CalcCrc(pgn, 14);

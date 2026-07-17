@@ -8,7 +8,7 @@ namespace RateController
     {
         private bool cResult;
 
-        public frmMsgBox(string Message, string Title = "Help", bool Shrink = false)
+        public frmMsgBox(string Message, string Title = "Help", bool Shrink = false, bool ShowCancel = true)
         {
             InitializeComponent();
             this.Text = Title;
@@ -27,6 +27,7 @@ namespace RateController
                 btnCancel.Top = 321;
                 btnOK.Top = 321;
             }
+            btnCancel.Visible = ShowCancel;
         }
 
         public bool Result { get => cResult; set => cResult = value; }

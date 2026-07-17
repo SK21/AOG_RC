@@ -537,6 +537,12 @@ void LoadDefaults()
 	MDL.CommMode = 0;
 }
 
+// NC is a valid setting (input/output not used); Teensy 4.1 GPIOs are 0-41
+bool PinAllowed(byte pin)
+{
+	return (pin <= 41 || pin == NC);
+}
+
 bool ValidData()
 {
 	bool Result = true;

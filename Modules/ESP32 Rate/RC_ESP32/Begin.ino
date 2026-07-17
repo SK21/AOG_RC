@@ -1,5 +1,27 @@
 // valid pins for each processor
 uint8_t ValidPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33,34,35,36,39 };	// SPI pins 5,18,19,23 excluded for ethernet module
+uint8_t OutputPins0[] = { 0,2,4,13,14,15,16,17,21,22,25,26,27,32,33 };	// GPIO 34-39 are input-only, cannot drive IN1/IN2
+
+// NC is always allowed (input/output not used)
+bool PinAllowed(byte pin)
+{
+	bool Result = (pin == NC);
+	for (int i = 0; !Result && i < (int)sizeof(ValidPins0); i++)
+	{
+		Result = (pin == ValidPins0[i]);
+	}
+	return Result;
+}
+
+bool OutputPinAllowed(byte pin)
+{
+	bool Result = (pin == NC);
+	for (int i = 0; !Result && i < (int)sizeof(OutputPins0); i++)
+	{
+		Result = (pin == OutputPins0[i]);
+	}
+	return Result;
+}
 
 void DoSetup()
 {
@@ -664,7 +686,7 @@ void LoadDefaults()
 	MDL.WorkPin = NC;
 	MDL.WorkPinIsMomentary = false;
 	MDL.Is3Wire = true;
-	MDL.ADS1115Enabled = false;
+	MDL.ADS1115Enabled = true;
 	MDL.PressurePin = NC;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;

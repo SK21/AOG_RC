@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 14076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 16076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -232,11 +232,11 @@ bool ADSfound = false;
 bool PressureGateActive = false;	// currently driving actuators to relieve
 bool PressureGateLatched = false;	// persistent fault - holds relief until operator reset (master off)
 uint32_t PressureGateStart = 0;		// millis() when current relief began (min-hold timer)
-uint8_t PressureTripCount = 0;		// trips counted in the current window
-uint32_t PressureTripWindow = 0;	// millis() at the start of the trip-count window
+uint8_t PressureTripCount = 0;		// consecutive trips (re-trips within PressureTripResetMs of the last)
+uint32_t PressureTripLast = 0;		// millis() of the most recent trip
 const uint16_t PressureMinHold = 3000;			// ms: minimum relief hold after a trip (rate-limits cycling)
-const uint16_t PressureTripWindowMs = 10000;	// ms: window for counting repeated trips
-const uint8_t PressureMaxTrips = 3;				// trips within the window -> escalate to hard latch
+const uint16_t PressureTripResetMs = 20000;		// ms: a quiet spell this long since the last trip forgives the count
+const uint8_t PressureMaxTrips = 3;				// consecutive trips -> escalate to hard latch
 
 bool GoodPins;	// pin configuration correct
 
@@ -300,6 +300,12 @@ const uint16_t BinDebounce = 2500;				// ms: raw state must persist this long be
 bool RestartPending = false;
 uint32_t RestartLastConfig = 0;					// millis() of the last 32507 packet
 const uint16_t RestartDelay = 1500;
+
+// Config rejection: a received 32507/32700 with pins invalid for this board is
+// discarded; reported in PGN 32401 byte 13 bit 7 for 2 s so the app can alert
+bool ConfigRejected = false;
+uint32_t ConfigRejectedTime = 0;			// millis() of the rejected packet
+const uint16_t ConfigRejectedReport = 2000;	// ms: how long the status bit stays set
 
 // PID diagnostics logging (PGN 32402). Kept out of SensorConfig so EEPROM layout is unchanged.
 // All fields are snapshotted together when the PID computes so the logged packet is

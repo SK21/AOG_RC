@@ -104,12 +104,13 @@ void CheckPressureGate()
             PressureGateActive = true;
             PressureGateStart = millis();
 
-            // Count trips in a sliding window; start a fresh window if the last one expired.
-            if (millis() - PressureTripWindow > PressureTripWindowMs)
-            {
-                PressureTripWindow = millis();
-                PressureTripCount = 0;
-            }
+            // Count trips toward the hard latch: a re-trip within PressureTripResetMs
+            // of the previous one is the same ongoing fault; a longer quiet spell
+            // means recovery happened and earlier trips are forgiven. (A window
+            // anchored at the first trip could never latch on slow steady cycling -
+            // the count reset every time the window expired.)
+            if (millis() - PressureTripLast > PressureTripResetMs) PressureTripCount = 0;
+            PressureTripLast = millis();
             PressureTripCount++;
 
             // Repeated trips = persistent fault -> hard latch (require operator reset).

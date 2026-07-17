@@ -114,13 +114,16 @@ void SendComm()
 		//      bit 4   ethernet connected
 		//      bit 5   good pin configuration
 		//      bit 6   0 - 2 wire relays, 1 - 3 wire relays
+		//		bit 7	bad config
 		//14    CRC
 
 		Data[0] = 145;
 		Data[1] = 126;
 		Data[2] = MDL.ID;
 
-		if (MDL.PressurePin == NC) PressureReading = 0;
+		// zero only when there is genuinely no pressure source - the ADS1115
+		// supplies PressureReading even with no GPIO pressure pin configured
+		if (!ADSfound && MDL.PressurePin == NC) PressureReading = 0;
 		Data[3] = (byte)PressureReading;
 		Data[4] = (byte)(PressureReading >> 8);
 
@@ -167,6 +170,20 @@ void SendComm()
 
 		if (GoodPins) Data[13] |= 0b00100000;
 		if (MDL.Is3Wire) Data[13] |= 0b01000000;
+
+		// config rejected: reported for ConfigRejectedReport ms after the
+		// discarded packet, then self-clears
+		if (ConfigRejected)
+		{
+			if (millis() - ConfigRejectedTime < ConfigRejectedReport)
+			{
+				Data[13] |= 0b10000000;
+			}
+			else
+			{
+				ConfigRejected = false;
+			}
+		}
 
 		Data[14] = CRC(Data, 14, 0);
 

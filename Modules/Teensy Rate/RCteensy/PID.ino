@@ -184,7 +184,7 @@ float PIDmotor(byte ID)
 {
 	float Result = 0;
 
-	if (PIDenabled[ID])
+	if (PIDenabled[ID] && !PressureGateActive)
 	{
 		Result = LastPWM[ID];
 		if (millis() - LastCheck[ID] >= Sensor[ID].PIDtime)
@@ -263,6 +263,11 @@ float PIDmotor(byte ID)
 	{
 		IntegralSum[ID] = 0;
 		RefUPM[ID] = 0;	// re-latch the reference on the next enabled run
+
+		// Hard latch: park the ramp at 0 so the motor restarts from 0 after the
+		// operator reset. Transient gate trips (and normal master off/on) keep
+		// LastPWM and resume at the last working PWM for fast recapture.
+		if (PressureGateLatched) LastPWM[ID] = 0;
 	}
 
 	return Result;

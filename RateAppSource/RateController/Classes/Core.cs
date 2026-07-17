@@ -47,7 +47,6 @@ namespace RateController.Classes
 
         private static DateTime cStartTime;
         private static System.Timers.Timer MainTimer;
-        private static bool[] cPressureGateLastConnected;   // tracks connect edge for on-connect pressure-gate resend
 
         #endregion private variables
 
@@ -147,8 +146,6 @@ namespace RateController.Classes
                 {
                     RelaySettings[i] = new PGN32501(i);
                 }
-
-                cPressureGateLastConnected = new bool[Props.MaxModules];
 
                 vSwitchBox = new clsVirtualSwitchBox();
                 Zones = new clsZones();
@@ -328,26 +325,6 @@ namespace RateController.Classes
             }
         }
 
-        public static void ResendPressureGateOnConnect()
-        {
-            // Resend the gate threshold to any module on its disconnected->connected edge,
-            // so a freshly powered/never-configured module is armed without a profile reload.
-            // The sensor-pins config (PGN 32507) rides the same edge for the configured module;
-            // the firmware only restarts if the pins actually changed, so this is loop-safe.
-            PGN32505 gate = new PGN32505();
-            byte configModule = ModuleConfig.GetData()[2];
-            for (int i = 0; i < Props.MaxModules; i++)
-            {
-                bool connected = ModulesStatus.Connected(i);
-                if (connected && !cPressureGateLastConnected[i])
-                {
-                    gate.Send(i);
-                    if (i == configModule) SensorPins.Send();
-                }
-                cPressureGateLastConnected[i] = connected;
-            }
-        }
-
         public static int UseCanComm(bool enable)
         {
             int Result = -1;
@@ -398,7 +375,6 @@ namespace RateController.Classes
             RateAdjustController.Update();
             SafeEvent.Raise(UpdateStatus);
             SendRelays();
-            ResendPressureGateOnConnect();
             RCalarm.CheckAlarms();
         }
 
