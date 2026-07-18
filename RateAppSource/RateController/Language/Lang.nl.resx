@@ -246,4 +246,373 @@
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>werkbreedte meter</value>
   </data>
+  <data name="lg2Wire" xml:space="preserve">
+    <value>2-draads ventielen</value>
+  </data>
+  <data name="lg3Wire" xml:space="preserve">
+    <value>3-draads ventielen</value>
+  </data>
+  <data name="lgActivity" xml:space="preserve">
+    <value>activiteit</value>
+  </data>
+  <data name="lgActual" xml:space="preserve">
+    <value>werkelijk</value>
+  </data>
+  <data name="lgAltRate" xml:space="preserve">
+    <value>alt. dosering (%)</value>
+  </data>
+  <data name="lgAutoRate" xml:space="preserve">
+    <value>auto dosering</value>
+  </data>
+  <data name="lgAutoSection" xml:space="preserve">
+    <value>auto sectie</value>
+  </data>
+  <data name="lgAutoSwitch" xml:space="preserve">
+    <value>auto schakelaar</value>
+  </data>
+  <data name="lgBackColor" xml:space="preserve">
+    <value>achtergrond</value>
+  </data>
+  <data name="lgBaseRate" xml:space="preserve">
+    <value>basisdosering</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>printplaten</value>
+  </data>
+  <data name="lgCalFactor" xml:space="preserve">
+    <value>kalibratiefactor</value>
+  </data>
+  <data name="lgCalSpeed" xml:space="preserve">
+    <value>kalibratiesnelheid</value>
+  </data>
+  <data name="lgColor" xml:space="preserve">
+    <value>kleur</value>
+  </data>
+  <data name="lgComboTimed" xml:space="preserve">
+    <value>combiventiel getimed</value>
+  </data>
+  <data name="lgConfig" xml:space="preserve">
+    <value>configuratie</value>
+  </data>
+  <data name="lgControl" xml:space="preserve">
+    <value>regeling</value>
+  </data>
+  <data name="lgData" xml:space="preserve">
+    <value>gegevens</value>
+  </data>
+  <data name="lgDefaultProduct" xml:space="preserve">
+    <value>standaardproduct</value>
+  </data>
+  <data name="lgDensity" xml:space="preserve">
+    <value>dichtheid</value>
+  </data>
+  <data name="lgEnd" xml:space="preserve">
+    <value>einde</value>
+  </data>
+  <data name="lgError" xml:space="preserve">
+    <value>fout %</value>
+  </data>
+  <data name="lgErrors" xml:space="preserve">
+    <value>fouten</value>
+  </data>
+  <data name="lgExpectedAmount" xml:space="preserve">
+    <value>verwachte hoeveelheid</value>
+  </data>
+  <data name="lgFan" xml:space="preserve">
+    <value>ventilator</value>
+  </data>
+  <data name="lgFile" xml:space="preserve">
+    <value>bestand</value>
+  </data>
+  <data name="lgGeoStop" xml:space="preserve">
+    <value>geo-stop</value>
+  </data>
+  <data name="lgHelp" xml:space="preserve">
+    <value>help</value>
+  </data>
+  <data name="lgHydDown" xml:space="preserve">
+    <value>hydr. omlaag</value>
+  </data>
+  <data name="lgHydUp" xml:space="preserve">
+    <value>hydr. omhoog</value>
+  </data>
+  <data name="lgInvertFlow" xml:space="preserve">
+    <value>doorstroomregeling omkeren</value>
+  </data>
+  <data name="lgInvertRelays" xml:space="preserve">
+    <value>relais omkeren</value>
+  </data>
+  <data name="lgInvertSection" xml:space="preserve">
+    <value>sectie omkeren</value>
+  </data>
+  <data name="lgInvert_Master" xml:space="preserve">
+    <value>master omkeren</value>
+  </data>
+  <data name="lgBypass" xml:space="preserve">
+    <value>bypass</value>
+  </data>
+  <data name="lgFlowMaster" xml:space="preserve">
+    <value>FlowMaster</value>
+  </data>
+  <data name="lgInvert_FlowMaster" xml:space="preserve">
+    <value>Invert_FlowMaster</value>
+  </data>
+  <data name="lgFlowMasterValveMode" xml:space="preserve">
+    <value>FlowMaster-ventiel</value>
+  </data>
+  <data name="lgFlowMaster2Wire" xml:space="preserve">
+    <value>2-draads ventiel (één relais opent en sluit)</value>
+  </data>
+  <data name="lgFlowMaster2WireInvert" xml:space="preserve">
+    <value>2-draads ventiel (2 relais: FlowMaster opent, Invert_FlowMaster sluit)</value>
+  </data>
+  <data name="lgFlowMaster3Wire" xml:space="preserve">
+    <value>3-draads ventiel (relaissignaal, ventiel eigen voeding)</value>
+  </data>
+  <data name="lgJobs" xml:space="preserve">
+    <value>taken</value>
+  </data>
+  <data name="lgLanguage" xml:space="preserve">
+    <value>taal</value>
+  </data>
+  <data name="lgMachine" xml:space="preserve">
+    <value>machine</value>
+  </data>
+  <data name="lgMaster" xml:space="preserve">
+    <value>master</value>
+  </data>
+  <data name="lgMasterAll" xml:space="preserve">
+    <value>standaard</value>
+  </data>
+  <data name="lgMasterOverride" xml:space="preserve">
+    <value>master-override</value>
+  </data>
+  <data name="lgMeasuredAmount" xml:space="preserve">
+    <value>gemeten hoeveelheid</value>
+  </data>
+  <data name="lgMeterSet" xml:space="preserve">
+    <value>doseerder ingesteld</value>
+  </data>
+  <data name="lgMetric" xml:space="preserve">
+    <value>metrische eenheden</value>
+  </data>
+  <data name="lgMinUPM" xml:space="preserve">
+    <value>minimum eenheden/min</value>
+  </data>
+  <data name="lgMode" xml:space="preserve">
+    <value>modus</value>
+  </data>
+  <data name="lgModules" xml:space="preserve">
+    <value>modules</value>
+  </data>
+  <data name="lgMomentary" xml:space="preserve">
+    <value>drukknop</value>
+  </data>
+  <data name="lgMonitoring" xml:space="preserve">
+    <value>bewaking</value>
+  </data>
+  <data name="lgMotorWeight" xml:space="preserve">
+    <value>motor/gewicht</value>
+  </data>
+  <data name="lgNetwork" xml:space="preserve">
+    <value>netwerk</value>
+  </data>
+  <data name="lgNone" xml:space="preserve">
+    <value>geen</value>
+  </data>
+  <data name="lgOffRate" xml:space="preserve">
+    <value>afwijkingsalarm</value>
+  </data>
+  <data name="lgOnTime" xml:space="preserve">
+    <value>inschakeltijd</value>
+  </data>
+  <data name="lgPerZone" xml:space="preserve">
+    <value>secties per zone</value>
+  </data>
+  <data name="lgPIDTune" xml:space="preserve">
+    <value>afstelgrafiek</value>
+  </data>
+  <data name="lgPins" xml:space="preserve">
+    <value>pinnen</value>
+  </data>
+  <data name="lgPower" xml:space="preserve">
+    <value>aan/uit</value>
+  </data>
+  <data name="lgPressure" xml:space="preserve">
+    <value>druk</value>
+  </data>
+  <data name="lgPressureCurrent" xml:space="preserve">
+    <value>actueel:</value>
+  </data>
+  <data name="lgPressureMax" xml:space="preserve">
+    <value>hoog:</value>
+  </data>
+  <data name="lgPressureMin" xml:space="preserve">
+    <value>laag:</value>
+  </data>
+  <data name="lgPressurePin" xml:space="preserve">
+    <value>drukpin</value>
+  </data>
+  <data name="lgPressurePressure" xml:space="preserve">
+    <value>druk</value>
+  </data>
+  <data name="lgPressureVoltage" xml:space="preserve">
+    <value>meetwaarde</value>
+  </data>
+  <data name="lgPressureZero" xml:space="preserve">
+    <value>minimum:</value>
+  </data>
+  <data name="lgPrimedStart" xml:space="preserve">
+    <value>voorgevulde start</value>
+  </data>
+  <data name="lgProductsMenu" xml:space="preserve">
+    <value>producten</value>
+  </data>
+  <data name="lgProfiles" xml:space="preserve">
+    <value>profielen</value>
+  </data>
+  <data name="lgPulses" xml:space="preserve">
+    <value>pulsen</value>
+  </data>
+  <data name="lgPWMmax" xml:space="preserve">
+    <value>max</value>
+  </data>
+  <data name="lgPWMmin" xml:space="preserve">
+    <value>min</value>
+  </data>
+  <data name="lgRateMap" xml:space="preserve">
+    <value>kaart</value>
+  </data>
+  <data name="lgRelay" xml:space="preserve">
+    <value>relais</value>
+  </data>
+  <data name="lgRelayControl" xml:space="preserve">
+    <value>onboard relaisbesturing</value>
+  </data>
+  <data name="lgRelayControlNumber" xml:space="preserve">
+    <value>nummer</value>
+  </data>
+  <data name="lgRelayPins" xml:space="preserve">
+    <value>relaispinnen</value>
+  </data>
+  <data name="lgRelays" xml:space="preserve">
+    <value>relais</value>
+  </data>
+  <data name="lgResetApplied" xml:space="preserve">
+    <value>hoeveelheid resetten</value>
+  </data>
+  <data name="lgResume" xml:space="preserve">
+    <value>hervatten</value>
+  </data>
+  <data name="lgScaleWeight" xml:space="preserve">
+    <value>weeggewicht</value>
+  </data>
+  <data name="lgScaling" xml:space="preserve">
+    <value>versterking</value>
+  </data>
+  <data name="lgSeconds" xml:space="preserve">
+    <value>seconden</value>
+  </data>
+  <data name="lgSend" xml:space="preserve">
+    <value>verzenden</value>
+  </data>
+  <data name="lgSensorCount" xml:space="preserve">
+    <value>aantal sensoren</value>
+  </data>
+  <data name="lgSetPoint" xml:space="preserve">
+    <value>instellen</value>
+  </data>
+  <data name="lgSettings" xml:space="preserve">
+    <value>instellingen</value>
+  </data>
+  <data name="lgShapefileAttributes" xml:space="preserve">
+    <value>shapefile-attribuut</value>
+  </data>
+  <data name="lgSimulateSpeed" xml:space="preserve">
+    <value>gesimuleerde snelheid</value>
+  </data>
+  <data name="lgSlave" xml:space="preserve">
+    <value>slave</value>
+  </data>
+  <data name="lgStart" xml:space="preserve">
+    <value>start</value>
+  </data>
+  <data name="lgSwitchDelay" xml:space="preserve">
+    <value>vertraging masterschakelaar</value>
+  </data>
+  <data name="lgSwitches" xml:space="preserve">
+    <value>schakelaars</value>
+  </data>
+  <data name="lgTargetRateAlt" xml:space="preserve">
+    <value>doelwaarde alt</value>
+  </data>
+  <data name="lgTextColor" xml:space="preserve">
+    <value>tekstkleur</value>
+  </data>
+  <data name="lgTramLeft" xml:space="preserve">
+    <value>spuitspoor links</value>
+  </data>
+  <data name="lgTramRight" xml:space="preserve">
+    <value>spuitspoor rechts</value>
+  </data>
+  <data name="lgType" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="lgUPMFixed" xml:space="preserve">
+    <value>eenheden/min</value>
+  </data>
+  <data name="lgUPMPWM" xml:space="preserve">
+    <value>UPM/PWM</value>
+  </data>
+  <data name="lgUPMSpeed" xml:space="preserve">
+    <value>op snelheid</value>
+  </data>
+  <data name="lgValves" xml:space="preserve">
+    <value>ventielen</value>
+  </data>
+  <data name="lgWifi" xml:space="preserve">
+    <value>wifi</value>
+  </data>
+  <data name="lgWorkPin" xml:space="preserve">
+    <value>werkpin</value>
+  </data>
+  <data name="lgWorkSwitch" xml:space="preserve">
+    <value>werkschakelaar</value>
+  </data>
+  <data name="lgZone" xml:space="preserve">
+    <value>zone</value>
+  </data>
+  <data name="lgZoneAttributes" xml:space="preserve">
+    <value>zone-attribuut</value>
+  </data>
+  <data name="lgAreaApplied" xml:space="preserve">
+    <value>bewerkte oppervlakte</value>
+  </data>
+  <data name="lgAreaRemain" xml:space="preserve">
+    <value>resterende oppervlakte</value>
+  </data>
+  <data name="lgRemoteRelayControl" xml:space="preserve">
+    <value>externe relaisbesturing</value>
+  </data>
+  <data name="lgPWM" xml:space="preserve">
+    <value>PWM</value>
+  </data>
+  <data name="lgCommMenu" xml:space="preserve">
+    <value>comm</value>
+  </data>
+  <data name="lgFolders" xml:space="preserve">
+    <value>mappen</value>
+  </data>
+  <data name="lgEnabled" xml:space="preserve">
+    <value>ingeschakeld</value>
+  </data>
+  <data name="lgSpeedMPH" xml:space="preserve">
+    <value>mijl/u</value>
+  </data>
+  <data name="lgSpeedKMH" xml:space="preserve">
+    <value>km/h</value>
+  </data>
+  <data name="lgModuleToEdit" xml:space="preserve">
+    <value>te bewerken module</value>
+  </data>
 </root>

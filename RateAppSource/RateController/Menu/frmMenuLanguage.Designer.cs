@@ -87,7 +87,7 @@
             this.rbFrench.Size = new System.Drawing.Size(140, 34);
             this.rbFrench.TabIndex = 169;
             this.rbFrench.Tag = "6";
-            this.rbFrench.Text = "French";
+            this.rbFrench.Text = "Français";
             this.rbFrench.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbFrench.UseVisualStyleBackColor = true;
             // 
@@ -117,7 +117,7 @@
             this.rbRussian.Size = new System.Drawing.Size(140, 34);
             this.rbRussian.TabIndex = 167;
             this.rbRussian.Tag = "5";
-            this.rbRussian.Text = "Russian";
+            this.rbRussian.Text = "Русский";
             this.rbRussian.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbRussian.UseVisualStyleBackColor = true;
             // 
@@ -132,7 +132,7 @@
             this.rbHungarian.Size = new System.Drawing.Size(140, 34);
             this.rbHungarian.TabIndex = 170;
             this.rbHungarian.Tag = "2";
-            this.rbHungarian.Text = "Hungarian";
+            this.rbHungarian.Text = "Magyar";
             this.rbHungarian.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbHungarian.UseVisualStyleBackColor = true;
             // 
@@ -147,7 +147,7 @@
             this.rbPolish.Size = new System.Drawing.Size(140, 34);
             this.rbPolish.TabIndex = 165;
             this.rbPolish.Tag = "4";
-            this.rbPolish.Text = "Polish";
+            this.rbPolish.Text = "Polski";
             this.rbPolish.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbPolish.UseVisualStyleBackColor = true;
             // 
@@ -179,7 +179,7 @@
             this.rbDeustch.TabIndex = 166;
             this.rbDeustch.TabStop = true;
             this.rbDeustch.Tag = "0";
-            this.rbDeustch.Text = "Deustch";
+            this.rbDeustch.Text = "Deutsch";
             this.rbDeustch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbDeustch.UseVisualStyleBackColor = true;
             // 
@@ -194,7 +194,7 @@
             this.rbLithuanian.Size = new System.Drawing.Size(140, 34);
             this.rbLithuanian.TabIndex = 172;
             this.rbLithuanian.Tag = "6";
-            this.rbLithuanian.Text = "Lithuanian";
+            this.rbLithuanian.Text = "Lietuvių";
             this.rbLithuanian.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbLithuanian.UseVisualStyleBackColor = true;
             // 

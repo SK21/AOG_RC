@@ -133,13 +133,13 @@
     <value>Wersja PCB</value>
   </data>
   <data name="lgCalFactor" xml:space="preserve">
-    <value>WspÃ³Å‚czynnik (impulsy/jednostka)</value>
+    <value>Współczynnik (impulsy/jednostka)</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibracja</value>
   </data>
   <data name="lgCalSpeed" xml:space="preserve">
-    <value>PrÄ™dkoÅ›Ä‡ Kalibracji</value>
+    <value>Prędkość Kalibracji</value>
   </data>
   <data name="lgComboClose" xml:space="preserve">
     <value>Combo Close</value>
@@ -166,10 +166,10 @@
     <value>Wydatek chwilowy</value>
   </data>
   <data name="lgDefaultProduct" xml:space="preserve">
-    <value>Produkt domyÅ›lny</value>
+    <value>Produkt domyślny</value>
   </data>
   <data name="lgDensity" xml:space="preserve">
-    <value>GÄ™stoÅ›Ä‡</value>
+    <value>Gęstość</value>
   </data>
   <data name="lgEnd" xml:space="preserve">
     <value>Koniec</value>
@@ -199,25 +199,25 @@
     <value>Godziny</value>
   </data>
   <data name="lgHydDown" xml:space="preserve">
-    <value>Dawka  do GÃ³ry</value>
+    <value>Dawka  do Góry</value>
   </data>
   <data name="lgHydUp" xml:space="preserve">
-    <value>Dawka w DÃ³Å‚</value>
+    <value>Dawka w Dół</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
-    <value>OdwrÃ³Ä‡ sekcjÄ™</value>
+    <value>Odwróć sekcję</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>km/h</value>
   </data>
   <data name="lgLanguage" xml:space="preserve">
-    <value>JÄ™zyk</value>
+    <value>Język</value>
   </data>
   <data name="lgMaster" xml:space="preserve">
-    <value>GÅ‚owny</value>
+    <value>Głowny</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>IloÅ›Ä‡ zmierzona</value>
+    <value>Ilość zmierzona</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
     <value>Metryczne</value>
@@ -226,7 +226,7 @@
     <value>Jednostki metryczne</value>
   </data>
   <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Minimalny przepÅ‚yw wÅ‚Ä…cza siÄ™ poniÅ¼ej {0}</value>
+    <value>Minimalny przepływ włącza się poniżej {0}</value>
   </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Min UPM</value>
@@ -238,10 +238,10 @@
     <value>Minuty</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
-    <value>ModuÅ‚ ID</value>
+    <value>Moduł ID</value>
   </data>
   <data name="lgModules" xml:space="preserve">
-    <value>ModuÅ‚y</value>
+    <value>Moduły</value>
   </data>
   <data name="lgMotor" xml:space="preserve">
     <value>Silnik</value>
@@ -253,16 +253,16 @@
     <value>MPH</value>
   </data>
   <data name="lgNetwork" xml:space="preserve">
-    <value>SieÄ‡</value>
+    <value>Sieć</value>
   </data>
   <data name="lgNone" xml:space="preserve">
-    <value>Å»aden</value>
+    <value>Żaden</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
     <value>Liczba sekcji</value>
   </data>
   <data name="lgOffRate" xml:space="preserve">
-    <value>Alarm wyÅ‚Ä…czenia</value>
+    <value>Alarm wyłączenia</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
     <value>Czas</value>
@@ -271,7 +271,7 @@
     <value>Opcje</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
-    <value>Sekcji na strefÄ™</value>
+    <value>Sekcji na strefę</value>
   </data>
   <data name="lgPIDTune" xml:space="preserve">
     <value>Wykres strojenia PID</value>
@@ -283,10 +283,10 @@
     <value>Zasilanie</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
-    <value>CiÅ›nienie</value>
+    <value>Ciśnienie</value>
   </data>
   <data name="lgPrimedStart" xml:space="preserve">
-    <value>Ustawienia poczÄ…tkowe</value>
+    <value>Ustawienia początkowe</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Produkt</value>
@@ -319,7 +319,7 @@
     <value>Zmiany Konf</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
-    <value>PrzekaÅºniki</value>
+    <value>Przekaźniki</value>
   </data>
   <data name="lgSeconds" xml:space="preserve">
     <value>Sekundy</value>
@@ -340,40 +340,40 @@
     <value>Id Czujnika</value>
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
-    <value>Czujnik poÅ‚oÅ¼enia</value>
+    <value>Czujnik położenia</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Praca</value>
   </data>
   <data name="lgSpeed" xml:space="preserve">
-    <value>PrÄ™dkoÅ›Ä‡</value>
+    <value>Prędkość</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
-    <value>ZawÃ³r gÅ‚Ã³wny</value>
+    <value>Zawór główny</value>
   </data>
   <data name="lgStart" xml:space="preserve">
     <value>Start</value>
   </data>
   <data name="lgSwitch" xml:space="preserve">
-    <value>PrzeÅ‚acznik</value>
+    <value>Przełacznik</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>OpÃ³Åºnienie zmiany</value>
+    <value>Opóźnienie zmiany</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
-    <value>PrzeÅ‚Ä…czniki</value>
+    <value>Przełączniki</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
-    <value>PojemnoÅ›Ä‡ zbiornika</value>
+    <value>Pojemność zbiornika</value>
   </data>
   <data name="lgTank_Remaining" xml:space="preserve">
-    <value>PozostaÅ‚a iloÅ›Ä‡</value>
+    <value>Pozostała ilość</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
     <value>Dawka Zadana</value>
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
-    <value>Dawka Altâ€¦</value>
+    <value>Dawka Alt…</value>
   </data>
   <data name="lgTramLeft" xml:space="preserve">
     <value>Tram Left</value>
@@ -397,15 +397,222 @@
     <value>Docelowa dawka</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
-    <value>SzerokoÅ›Ä‡</value>
+    <value>Szerokość</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
-    <value>SzerokoÅ›Ä‡ robocza (stopy)</value>
+    <value>Szerokość robocza (stopy)</value>
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
-    <value>SzerokoÅ›Ä‡ robocza (metry)</value>
+    <value>Szerokość robocza (metry)</value>
   </data>
   <data name="lgZone" xml:space="preserve">
     <value>Strefa</value>
+  </data>
+  <data name="lg2Wire" xml:space="preserve">
+    <value>Zawory 2-przewodowe</value>
+  </data>
+  <data name="lg3Wire" xml:space="preserve">
+    <value>Zawory 3-przewodowe</value>
+  </data>
+  <data name="lgActivity" xml:space="preserve">
+    <value>Aktywność</value>
+  </data>
+  <data name="lgActual" xml:space="preserve">
+    <value>Rzeczywisty</value>
+  </data>
+  <data name="lgAutoRate" xml:space="preserve">
+    <value>Dawka Auto</value>
+  </data>
+  <data name="lgAutoSection" xml:space="preserve">
+    <value>Sekcja Auto</value>
+  </data>
+  <data name="lgAutoSwitch" xml:space="preserve">
+    <value>Przełącznik Auto</value>
+  </data>
+  <data name="lgBackColor" xml:space="preserve">
+    <value>Tło</value>
+  </data>
+  <data name="lgColor" xml:space="preserve">
+    <value>Kolor</value>
+  </data>
+  <data name="lgData" xml:space="preserve">
+    <value>Dane</value>
+  </data>
+  <data name="lgErrors" xml:space="preserve">
+    <value>Błędy</value>
+  </data>
+  <data name="lgFile" xml:space="preserve">
+    <value>Plik</value>
+  </data>
+  <data name="lgHelp" xml:space="preserve">
+    <value>Pomoc</value>
+  </data>
+  <data name="lgInvertFlow" xml:space="preserve">
+    <value>Odwróć sterowanie przepływem</value>
+  </data>
+  <data name="lgInvertRelays" xml:space="preserve">
+    <value>Odwróć przekaźniki</value>
+  </data>
+  <data name="lgInvert_Master" xml:space="preserve">
+    <value>Odwróć główny</value>
+  </data>
+  <data name="lgBypass" xml:space="preserve">
+    <value>Bypass</value>
+  </data>
+  <data name="lgFlowMaster" xml:space="preserve">
+    <value>FlowMaster</value>
+  </data>
+  <data name="lgInvert_FlowMaster" xml:space="preserve">
+    <value>Invert_FlowMaster</value>
+  </data>
+  <data name="lgFlowMasterValveMode" xml:space="preserve">
+    <value>Zawór FlowMaster</value>
+  </data>
+  <data name="lgFlowMaster2Wire" xml:space="preserve">
+    <value>Zawór 2-przewodowy (jeden przekaźnik otwiera i zamyka)</value>
+  </data>
+  <data name="lgFlowMaster2WireInvert" xml:space="preserve">
+    <value>Zawór 2-przewodowy (2 przekaźniki: FlowMaster otwiera, Invert_FlowMaster zamyka)</value>
+  </data>
+  <data name="lgFlowMaster3Wire" xml:space="preserve">
+    <value>Zawór 3-przewodowy (sygnał przekaźnika, zawór z własnym zasilaniem)</value>
+  </data>
+  <data name="lgJobs" xml:space="preserve">
+    <value>Zadania</value>
+  </data>
+  <data name="lgMachine" xml:space="preserve">
+    <value>Maszyna</value>
+  </data>
+  <data name="lgMasterAll" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="lgMasterOverride" xml:space="preserve">
+    <value>Priorytet głównego</value>
+  </data>
+  <data name="lgMode" xml:space="preserve">
+    <value>Tryb</value>
+  </data>
+  <data name="lgMomentary" xml:space="preserve">
+    <value>Chwilowy</value>
+  </data>
+  <data name="lgMonitoring" xml:space="preserve">
+    <value>Monitorowanie</value>
+  </data>
+  <data name="lgPressureCurrent" xml:space="preserve">
+    <value>Aktualne:</value>
+  </data>
+  <data name="lgPressureMax" xml:space="preserve">
+    <value>Wysokie:</value>
+  </data>
+  <data name="lgPressureMin" xml:space="preserve">
+    <value>Niskie:</value>
+  </data>
+  <data name="lgPressurePin" xml:space="preserve">
+    <value>Pin ciśnienia</value>
+  </data>
+  <data name="lgPressurePressure" xml:space="preserve">
+    <value>Ciśnienie</value>
+  </data>
+  <data name="lgPressureVoltage" xml:space="preserve">
+    <value>Odczyt</value>
+  </data>
+  <data name="lgPressureZero" xml:space="preserve">
+    <value>Minimum:</value>
+  </data>
+  <data name="lgProductsMenu" xml:space="preserve">
+    <value>Produkty</value>
+  </data>
+  <data name="lgProfiles" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="lgRateMap" xml:space="preserve">
+    <value>Mapa</value>
+  </data>
+  <data name="lgRelayControlNumber" xml:space="preserve">
+    <value>Numer</value>
+  </data>
+  <data name="lgRelayPins" xml:space="preserve">
+    <value>Piny przekaźników</value>
+  </data>
+  <data name="lgResetApplied" xml:space="preserve">
+    <value>Resetuj ilość</value>
+  </data>
+  <data name="lgResume" xml:space="preserve">
+    <value>Wznów</value>
+  </data>
+  <data name="lgScaleWeight" xml:space="preserve">
+    <value>Masa z wagi</value>
+  </data>
+  <data name="lgScaling" xml:space="preserve">
+    <value>Wzmocnienie</value>
+  </data>
+  <data name="lgSend" xml:space="preserve">
+    <value>Wyślij</value>
+  </data>
+  <data name="lgSetPoint" xml:space="preserve">
+    <value>Ustaw</value>
+  </data>
+  <data name="lgSettings" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="lgShapefileAttributes" xml:space="preserve">
+    <value>Atrybut shapefile</value>
+  </data>
+  <data name="lgSimulateSpeed" xml:space="preserve">
+    <value>Prędkość symulowana</value>
+  </data>
+  <data name="lgTextColor" xml:space="preserve">
+    <value>Kolor tekstu</value>
+  </data>
+  <data name="lgUPMFixed" xml:space="preserve">
+    <value>UPM</value>
+  </data>
+  <data name="lgUPMSpeed" xml:space="preserve">
+    <value>Wg prędkości</value>
+  </data>
+  <data name="lgValves" xml:space="preserve">
+    <value>Zawory</value>
+  </data>
+  <data name="lgWifi" xml:space="preserve">
+    <value>Wifi</value>
+  </data>
+  <data name="lgWorkPin" xml:space="preserve">
+    <value>Pin roboczy</value>
+  </data>
+  <data name="lgWorkSwitch" xml:space="preserve">
+    <value>Przełącznik roboczy</value>
+  </data>
+  <data name="lgZoneAttributes" xml:space="preserve">
+    <value>Atrybut strefy</value>
+  </data>
+  <data name="lgAreaApplied" xml:space="preserve">
+    <value>Powierzchnia wykonana</value>
+  </data>
+  <data name="lgAreaRemain" xml:space="preserve">
+    <value>Powierzchnia pozostała</value>
+  </data>
+  <data name="lgRemoteRelayControl" xml:space="preserve">
+    <value>Zdalne sterowanie przekaźnikami</value>
+  </data>
+  <data name="lgPWM" xml:space="preserve">
+    <value>PWM</value>
+  </data>
+  <data name="lgCommMenu" xml:space="preserve">
+    <value>Komunikacja</value>
+  </data>
+  <data name="lgFolders" xml:space="preserve">
+    <value>Foldery</value>
+  </data>
+  <data name="lgEnabled" xml:space="preserve">
+    <value>Włączone</value>
+  </data>
+  <data name="lgSpeedMPH" xml:space="preserve">
+    <value>MPH</value>
+  </data>
+  <data name="lgSpeedKMH" xml:space="preserve">
+    <value>km/h</value>
+  </data>
+  <data name="lgModuleToEdit" xml:space="preserve">
+    <value>Moduł do edycji</value>
   </data>
 </root>
