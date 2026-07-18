@@ -123,29 +123,20 @@
   <data name="lgAcresHr" xml:space="preserve">
     <value>akrai/valanda</value>
   </data>
-  <data name="lgAlreadyRunning" xml:space="preserve">
-    <value>Jau Paleista</value>
-  </data>
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Norma (%)</value>
-  </data>
-  <data name="lgApplied" xml:space="preserve">
-    <value>Dabar</value>
   </data>
   <data name="lgBaseRate" xml:space="preserve">
     <value>Norma</value>
   </data>
   <data name="lgBoards" xml:space="preserve">
-    <value>Plokštė</value>
+    <value>PlokÅ¡tÄ—</value>
   </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Kal. Faktorius (Pulsai/Vnt)</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibruoti</value>
-  </data>
-  <data name="lgCalProduct" xml:space="preserve">
-    <value>Produktas</value>
   </data>
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Kalibracijos Greitis</value>
@@ -154,16 +145,13 @@
     <value>Spalva</value>
   </data>
   <data name="lgComboClose" xml:space="preserve">
-    <value>Kombo uždarymas</value>
+    <value>Kombo uÅ¾darymas</value>
   </data>
   <data name="lgComboTimed" xml:space="preserve">
     <value>Combo Timed</value>
   </data>
   <data name="lgConfig" xml:space="preserve">
     <value>Konfiguracija</value>
-  </data>
-  <data name="lgConfigIP" xml:space="preserve">
-    <value>Local IP</value>
   </data>
   <data name="lgControl" xml:space="preserve">
     <value>Valdymas</value>
@@ -186,23 +174,14 @@
   <data name="lgDensity" xml:space="preserve">
     <value>Tankumas</value>
   </data>
-  <data name="lgDescription" xml:space="preserve">
-    <value>Apibudinimas</value>
-  </data>
-  <data name="lgDisplay" xml:space="preserve">
-    <value>Displėjus</value>
-  </data>
   <data name="lgEnd" xml:space="preserve">
     <value>Baigti</value>
   </data>
   <data name="lgError" xml:space="preserve">
     <value>Paklaida %</value>
   </data>
-  <data name="lgExit" xml:space="preserve">
-    <value>Išeitį</value>
-  </data>
   <data name="lgExpectedAmount" xml:space="preserve">
-    <value>Paskaičiuotas Kiekis</value>
+    <value>PaskaiÄiuotas Kiekis</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Ventiliatorius</value>
@@ -228,12 +207,6 @@
   <data name="lgHydUp" xml:space="preserve">
     <value>Hyd Up</value>
   </data>
-  <data name="lgID" xml:space="preserve">
-    <value>ID</value>
-  </data>
-  <data name="lgInstantRate" xml:space="preserve">
-    <value>Greita Norma</value>
-  </data>
   <data name="lgInvertSection" xml:space="preserve">
     <value>Invertuoti sekcijas</value>
   </data>
@@ -243,38 +216,29 @@
   <data name="lgLanguage" xml:space="preserve">
     <value>Kalba</value>
   </data>
-  <data name="lgLargeScreen" xml:space="preserve">
-    <value>Didelis Langas</value>
-  </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Pagrindinis</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>Išmatuotas Kiekis</value>
+    <value>IÅ¡matuotas Kiekis</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
-    <value>Sureguliuoti dozatorių</value>
+    <value>Sureguliuoti dozatoriÅ³</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metrai</value>
   </data>
-  <data name="lgMinPWM" xml:space="preserve">
-    <value>Minimalus PP&lt;</value>
-  </data>
   <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Minimalus srautas įsijungia žemiau {0}</value>
+    <value>Minimalus srautas Ä¯sijungia Å¾emiau {0}</value>
   </data>
   <data name="lgMinUPM" xml:space="preserve">
     <value>Minimalus VPM</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
-    <value>Minutė</value>
+    <value>MinutÄ—</value>
   </data>
   <data name="lgMinutes" xml:space="preserve">
-    <value>Minutės</value>
-  </data>
-  <data name="lgModule" xml:space="preserve">
-    <value>Modulis</value>
+    <value>MinutÄ—s</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
     <value>Modulio ID</value>
@@ -294,29 +258,17 @@
   <data name="lgNetwork" xml:space="preserve">
     <value>Tinklas</value>
   </data>
-  <data name="lgNew" xml:space="preserve">
-    <value>Naujas</value>
-  </data>
   <data name="lgNone" xml:space="preserve">
     <value>Jokio</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
-    <value>Sekcijų kiekis</value>
+    <value>SekcijÅ³ kiekis</value>
   </data>
   <data name="lgOffRate" xml:space="preserve">
     <value>Nuokrypio Aliarmas</value>
   </data>
-  <data name="lgOffset" xml:space="preserve">
-    <value>Poslinkis</value>
-  </data>
-  <data name="lgOnScreen" xml:space="preserve">
-    <value>Ekrane</value>
-  </data>
   <data name="lgOnTime" xml:space="preserve">
     <value>Ijungimo Laikas</value>
-  </data>
-  <data name="lgOpen" xml:space="preserve">
-    <value>Atidaryti</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Opcijos</value>
@@ -328,28 +280,22 @@
     <value>PID Diagrama</value>
   </data>
   <data name="lgPins" xml:space="preserve">
-    <value>Išvadai</value>
+    <value>IÅ¡vadai</value>
   </data>
   <data name="lgPower" xml:space="preserve">
-    <value>Įjungimas</value>
+    <value>Ä®jungimas</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Spaudimas</value>
   </data>
   <data name="lgPrimedStart" xml:space="preserve">
-    <value>Išankstinis Startas</value>
+    <value>IÅ¡ankstinis Startas</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Produktas</value>
   </data>
   <data name="lgProductName" xml:space="preserve">
     <value>Produkto  pavadinimas</value>
-  </data>
-  <data name="lgProducts" xml:space="preserve">
-    <value>Produktai/Ventiliatoiai</value>
-  </data>
-  <data name="lgProportional" xml:space="preserve">
-    <value>P dedamoji</value>
   </data>
   <data name="lgPulses" xml:space="preserve">
     <value>Pulsai</value>
@@ -370,37 +316,22 @@
     <value>Norma</value>
   </data>
   <data name="lgRelay" xml:space="preserve">
-    <value>Relė</value>
+    <value>RelÄ—</value>
   </data>
   <data name="lgRelayControl" xml:space="preserve">
-    <value>Relių valdymas</value>
+    <value>ReliÅ³ valdymas</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
-    <value>Relės</value>
-  </data>
-  <data name="lgRPM" xml:space="preserve">
-    <value>APM</value>
-  </data>
-  <data name="lgSaveAs" xml:space="preserve">
-    <value>Išsaugoti kaip</value>
+    <value>RelÄ—s</value>
   </data>
   <data name="lgSeconds" xml:space="preserve">
-    <value>Sekundės</value>
+    <value>SekundÄ—s</value>
   </data>
   <data name="lgSection" xml:space="preserve">
     <value>Sekcija</value>
   </data>
-  <data name="lgSectionNum" xml:space="preserve">
-    <value>Sekciju #</value>
-  </data>
   <data name="lgSections" xml:space="preserve">
     <value>Sekcijos</value>
-  </data>
-  <data name="lgSelectedSubnet" xml:space="preserve">
-    <value>Pasirinkti Subnet</value>
-  </data>
-  <data name="lgSensor" xml:space="preserve">
-    <value>Sensorius</value>
   </data>
   <data name="lgSensorCount" xml:space="preserve">
     <value>Sensoriu #</value>
@@ -414,9 +345,6 @@
   <data name="lgSensorLocation" xml:space="preserve">
     <value>Sensoriaus vieta</value>
   </data>
-  <data name="lgShowPressure" xml:space="preserve">
-    <value>Rodytį spaudimą</value>
-  </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Vergas</value>
   </data>
@@ -424,25 +352,16 @@
     <value>Greitis</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
-    <value>Standartinis vožtuvas</value>
-  </data>
-  <data name="lgStandardScreen" xml:space="preserve">
-    <value>Mažas langas</value>
+    <value>Standartinis voÅ¾tuvas</value>
   </data>
   <data name="lgStart" xml:space="preserve">
     <value>Startas</value>
-  </data>
-  <data name="lgStartQuantity" xml:space="preserve">
-    <value>Pradinis bako tūris</value>
-  </data>
-  <data name="lgSubnet" xml:space="preserve">
-    <value>Subnet Addresas</value>
   </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>Jungtukas</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Mygtukų Uždelsimas</value>
+    <value>MygtukÅ³ UÅ¾delsimas</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Mygtukai</value>
@@ -459,20 +378,11 @@
   <data name="lgTargetRateAlt" xml:space="preserve">
     <value>Alt. Norma</value>
   </data>
-  <data name="lgTimeForMulti" xml:space="preserve">
-    <value>Daugiapulsis</value>
-  </data>
-  <data name="lgTimeForSingle" xml:space="preserve">
-    <value>Vienapulsis</value>
-  </data>
   <data name="lgTramLeft" xml:space="preserve">
     <value>Tram Left</value>
   </data>
   <data name="lgTramRight" xml:space="preserve">
     <value>Tram Right</value>
-  </data>
-  <data name="lgTransparent" xml:space="preserve">
-    <value>Permatomas</value>
   </data>
   <data name="lgType" xml:space="preserve">
     <value>Tipas</value>
@@ -490,19 +400,10 @@
     <value>VPM Taikinys</value>
   </data>
   <data name="lgValves" xml:space="preserve">
-    <value>Vožtuvai</value>
+    <value>VoÅ¾tuvai</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
     <value>Plotis</value>
-  </data>
-  <data name="lgWifiClient" xml:space="preserve">
-    <value>Wifi </value>
-  </data>
-  <data name="lgWifiPort" xml:space="preserve">
-    <value>Wifi Port</value>
-  </data>
-  <data name="lgWifiSignal" xml:space="preserve">
-    <value>Wifi Strength</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
     <value>Darbinis plotis (FT)</value>
@@ -518,91 +419,5 @@
   </data>
   <data name="lgZone" xml:space="preserve">
     <value>Zona</value>
-  </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value>Connect</value>
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>Diagnostika</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>Atsijūngti</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
-  </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value>Maksimalus PPM</value>
-  </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>Normos vidurkis</value>
-  </data>
-  <data name="lgComm" xml:space="preserve">
-    <value>ryšys</value>
-  </data>
-  <data name="lgCommDiagnostics" xml:space="preserve">
-    <value>ryšio diagnostika</value>
-  </data>
-  <data name="lgDerivative" xml:space="preserve">
-    <value>Derivatyvas</value>
-  </data>
-  <data name="lgIntegral" xml:space="preserve">
-    <value>Integralas</value>
-  </data>
-  <data name="lgRateMethod" xml:space="preserve">
-    <value>Normos strategija</value>
-  </data>
-  <data name="lgUnitsVolt" xml:space="preserve">
-    <value>Vnt/Volta</value>
-  </data>
-  <data name="lgChannel" xml:space="preserve">
-    <value>Kanalas</value>
-  </data>
-  <data name="lgMaxRate" xml:space="preserve">
-    <value>Maksimali norma</value>
-  </data>
-  <data name="lgMinRate" xml:space="preserve">
-    <value>Minimali norma</value>
-  </data>
-  <data name="lgUseVR" xml:space="preserve">
-    <value>Kintama norma</value>
-  </data>
-  <data name="lgFlowOnHigh" xml:space="preserve">
-    <value>Invertuoti srauto valdyma</value>
-  </data>
-  <data name="lgCalHelp" xml:space="preserve">
-    <value>This screen is used to set the Cal Factor (pulses/unit) for a product. The goal is to have a consistent rpm each time the calibration is done and have the meter roller at a rpm that is normally being used in the field.
-
-  First the rpm must be set. This is done by entering the usual operating speed and expected product application rate. After entering an estimated Cal Factor RC will try to set the rpm of the meter roller to produce the expected rate. If RC is not successful in reaching this rate be sure ground speed matches what you normally operate at. Estimated Cal Factor, PWM minimum, PWM maximum or machine metering drive range may need to be adjusted. When RC does set the rpm and displays an engaged lock, then the next step is to set the actual Cal Factor. If the rpm is not set the next step can not continue.
-
-  Next the Cal Factor is set. Run the meter roller to get an adequate sample to measure. RC takes the measured amount and divides it by the meter roller pulses to get the new Cal Factor. This value is saved and calibration is complete.
-
-Calibration steps:
-1. enter ground speed you normally operate at
-2. set calibration meter speed (rpm)
-    - start with SwitchBox Master switch off
-    - switch product on with the power button
-    - enter initial base rate
-    - enter estimated Cal Factor
-    - press start, RC attempts to adjust flow/rate to target
-    - if successful meter speed is locked
-    - press stop
-3. set Cal Factor (pulses/unit)
-    - start with Master switch off
-    - press start, turn Master switch on and let run to get an adequate sample amount
-    - press stop and enter measured amount. Cal Factor is calculated.
-    - press save to record new values
-4. options to start over
-    - to redo the meter speed the lock button can be pressed to unlock. RC will then attempt to find a new meter speed when step 2 is redone.
-    - to start from a previously saved setting the lock button can be pressed to lock. Then continue with step 3.</value>
-  </data>
-  <data name="lgPage1" xml:space="preserve">
-    <value>1 Lapas</value>
-  </data>
-  <data name="lgPage2" xml:space="preserve">
-    <value>2 Lapas</value>
-  </data>
-  <data name="lgRelayOnHigh" xml:space="preserve">
-    <value>Invertuoti relės</value>
   </data>
 </root>

@@ -123,9 +123,6 @@
   <data name="lgAcresHr" xml:space="preserve">
     <value>opp./u</value>
   </data>
-  <data name="lgAlreadyRunning" xml:space="preserve">
-    <value>draait al</value>
-  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>calibreren</value>
   </data>
@@ -156,14 +153,8 @@
   <data name="lgHours" xml:space="preserve">
     <value>Hours</value>
   </data>
-  <data name="lgInstantRate" xml:space="preserve">
-    <value>momentane toepassing</value>
-  </data>
   <data name="lgKPH" xml:space="preserve">
     <value>km/h</value>
-  </data>
-  <data name="lgMinPWM" xml:space="preserve">
-    <value>MinPWM</value>
   </data>
   <data name="lgMinFlowEngages" xml:space="preserve">
     <value>Minimumdebiet schakelt in onder {0}</value>
@@ -195,9 +186,6 @@
   <data name="lgProductName" xml:space="preserve">
     <value>productnaam</value>
   </data>
-  <data name="lgProducts" xml:space="preserve">
-    <value>producten</value>
-  </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>hoeveelheid</value>
   </data>
@@ -206,12 +194,6 @@
   </data>
   <data name="lgRate" xml:space="preserve">
     <value>toepassing</value>
-  </data>
-  <data name="lgRPM" xml:space="preserve">
-    <value>omw./min</value>
-  </data>
-  <data name="lgSaveAs" xml:space="preserve">
-    <value>opslaan als</value>
   </data>
   <data name="lgSection" xml:space="preserve">
     <value>sectie</value>
@@ -263,23 +245,5 @@
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>werkbreedte meter</value>
-  </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value>verbinden</value>
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>diagnose</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>verbreken</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
-  </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value>HoogMax</value>
-  </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>globale hoeveelheid</value>
   </data>
 </root>

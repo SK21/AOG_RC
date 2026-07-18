@@ -135,20 +135,8 @@
   <data name="lgActual" xml:space="preserve">
     <value>Actual</value>
   </data>
-  <data name="lgAlreadyRunning" xml:space="preserve">
-    <value>Already Running</value>
-  </data>
   <data name="lgAltRate" xml:space="preserve">
     <value>Alt. Rate (%)</value>
-  </data>
-  <data name="lgApplied" xml:space="preserve">
-    <value>Applied</value>
-  </data>
-  <data name="lgAuto" xml:space="preserve">
-    <value>Auto</value>
-  </data>
-  <data name="lgAutoAll" xml:space="preserve">
-    <value>Rate + Sections</value>
   </data>
   <data name="lgAutoRate" xml:space="preserve">
     <value>Auto Rate</value>
@@ -168,23 +156,14 @@
   <data name="lgBoards" xml:space="preserve">
     <value>Boards</value>
   </data>
-  <data name="lgBumpButtons" xml:space="preserve">
-    <value>Bump Buttons</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Meter Cal</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Calibrate</value>
   </data>
-  <data name="lgCalProduct" xml:space="preserve">
-    <value>Product</value>
-  </data>
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Calibration Speed</value>
-  </data>
-  <data name="lgCalValue" xml:space="preserve">
-    <value>Cal Value</value>
   </data>
   <data name="lgColor" xml:space="preserve">
     <value>Color</value>
@@ -197,9 +176,6 @@
   </data>
   <data name="lgConfig" xml:space="preserve">
     <value>Config</value>
-  </data>
-  <data name="lgConfigIP" xml:space="preserve">
-    <value>Local IP</value>
   </data>
   <data name="lgControl" xml:space="preserve">
     <value>Control</value>
@@ -222,23 +198,8 @@
   <data name="lgDefaultProduct" xml:space="preserve">
     <value>Default Product</value>
   </data>
-  <data name="lgDefaults" xml:space="preserve">
-    <value>Defaults</value>
-  </data>
   <data name="lgDensity" xml:space="preserve">
     <value>Density</value>
-  </data>
-  <data name="lgDescription" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="lgDisplay" xml:space="preserve">
-    <value>Display</value>
-  </data>
-  <data name="lgDualAuto" xml:space="preserve">
-    <value>Dual Auto</value>
-  </data>
-  <data name="lgEnableVR" xml:space="preserve">
-    <value>Enable VR</value>
   </data>
   <data name="lgEnd" xml:space="preserve">
     <value>End</value>
@@ -249,9 +210,6 @@
   <data name="lgErrors" xml:space="preserve">
     <value>Errors</value>
   </data>
-  <data name="lgExit" xml:space="preserve">
-    <value>Exit</value>
-  </data>
   <data name="lgExpectedAmount" xml:space="preserve">
     <value>Expected Amount</value>
   </data>
@@ -260,12 +218,6 @@
   </data>
   <data name="lgFile" xml:space="preserve">
     <value>File</value>
-  </data>
-  <data name="lgFillTank" xml:space="preserve">
-    <value>Fill Tank</value>
-  </data>
-  <data name="lgFullScreen" xml:space="preserve">
-    <value>Full Screen</value>
   </data>
   <data name="lgGeoStop" xml:space="preserve">
     <value>Geo Stop</value>
@@ -279,9 +231,6 @@
   <data name="lgHelp" xml:space="preserve">
     <value>Help</value>
   </data>
-  <data name="lgHighAdjust" xml:space="preserve">
-    <value>High Adjust</value>
-  </data>
   <data name="lgHour" xml:space="preserve">
     <value>Hour</value>
   </data>
@@ -293,15 +242,6 @@
   </data>
   <data name="lgHydUp" xml:space="preserve">
     <value>Hyd Up</value>
-  </data>
-  <data name="lgID" xml:space="preserve">
-    <value>ID</value>
-  </data>
-  <data name="lgImport" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="lgInstantRate" xml:space="preserve">
-    <value>Instant Rate</value>
   </data>
   <data name="lgInvertFlow" xml:space="preserve">
     <value>Invert Flow Control</value>
@@ -336,9 +276,6 @@
   <data name="lgFlowMaster3Wire" xml:space="preserve">
     <value>3-wire valve (relay signal, valve self-powered)</value>
   </data>
-  <data name="lgFlowMaster2WireValve" xml:space="preserve">
-    <value>FlowMaster uses 2-wire valve</value>
-  </data>
   <data name="lgJobs" xml:space="preserve">
     <value>Jobs</value>
   </data>
@@ -348,17 +285,8 @@
   <data name="lgLanguage" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="lgLargeScreen" xml:space="preserve">
-    <value>Large Screen</value>
-  </data>
-  <data name="lgLowAdjust" xml:space="preserve">
-    <value>Low Adjust</value>
-  </data>
   <data name="lgMachine" xml:space="preserve">
     <value>Machine</value>
-  </data>
-  <data name="lgMap" xml:space="preserve">
-    <value>Map</value>
   </data>
   <data name="lgMaster" xml:space="preserve">
     <value>Master</value>
@@ -369,9 +297,6 @@
   <data name="lgMasterOverride" xml:space="preserve">
     <value>Master Override</value>
   </data>
-  <data name="lgMasterRelayOnly" xml:space="preserve">
-    <value>Master Relay Only</value>
-  </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
     <value>Measured Amount</value>
   </data>
@@ -380,9 +305,6 @@
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metric Units</value>
-  </data>
-  <data name="lgMinPWM" xml:space="preserve">
-    <value>PWM Minimum</value>
   </data>
   <data name="lgMinFlowEngages" xml:space="preserve">
     <value>Minimum flow engages below {0}</value>
@@ -398,9 +320,6 @@
   </data>
   <data name="lgMode" xml:space="preserve">
     <value>Mode</value>
-  </data>
-  <data name="lgModule" xml:space="preserve">
-    <value>Module</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
     <value>Module ID</value>
@@ -426,15 +345,6 @@
   <data name="lgNetwork" xml:space="preserve">
     <value>Network</value>
   </data>
-  <data name="lgNetworkName" xml:space="preserve">
-    <value>Network Name</value>
-  </data>
-  <data name="lgNetworkPassword" xml:space="preserve">
-    <value>Network Password</value>
-  </data>
-  <data name="lgNew" xml:space="preserve">
-    <value>New</value>
-  </data>
   <data name="lgNone" xml:space="preserve">
     <value>None</value>
   </data>
@@ -444,23 +354,11 @@
   <data name="lgOffRate" xml:space="preserve">
     <value>Off-rate Alarm</value>
   </data>
-  <data name="lgOffset" xml:space="preserve">
-    <value>Offset</value>
-  </data>
-  <data name="lgOnScreen" xml:space="preserve">
-    <value>On-Screen Switches</value>
-  </data>
   <data name="lgOnTime" xml:space="preserve">
     <value>On Time</value>
   </data>
-  <data name="lgOpen" xml:space="preserve">
-    <value>Open</value>
-  </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
-  </data>
-  <data name="lgOther" xml:space="preserve">
-    <value>Other</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sections Per Zone</value>
@@ -507,17 +405,11 @@
   <data name="lgProductName" xml:space="preserve">
     <value>Product Name</value>
   </data>
-  <data name="lgProducts" xml:space="preserve">
-    <value>Products/Fans</value>
-  </data>
   <data name="lgProductsMenu" xml:space="preserve">
     <value>Products</value>
   </data>
   <data name="lgProfiles" xml:space="preserve">
     <value>Profiles</value>
-  </data>
-  <data name="lgProportional" xml:space="preserve">
-    <value>Proportional</value>
   </data>
   <data name="lgPulses" xml:space="preserve">
     <value>Pulses</value>
@@ -536,9 +428,6 @@
   </data>
   <data name="lgRate" xml:space="preserve">
     <value>Rate</value>
-  </data>
-  <data name="lgRateData" xml:space="preserve">
-    <value>Rate Data</value>
   </data>
   <data name="lgRateMap" xml:space="preserve">
     <value>Map</value>
@@ -561,17 +450,8 @@
   <data name="lgResetApplied" xml:space="preserve">
     <value>Reset Applied</value>
   </data>
-  <data name="lgResetProducts" xml:space="preserve">
-    <value>Reset Products</value>
-  </data>
   <data name="lgResume" xml:space="preserve">
     <value>Resume</value>
-  </data>
-  <data name="lgRPM" xml:space="preserve">
-    <value>RPM</value>
-  </data>
-  <data name="lgSaveAs" xml:space="preserve">
-    <value>Save As</value>
   </data>
   <data name="lgScaleWeight" xml:space="preserve">
     <value>Scale Weight</value>
@@ -585,20 +465,11 @@
   <data name="lgSection" xml:space="preserve">
     <value>Section</value>
   </data>
-  <data name="lgSectionNum" xml:space="preserve">
-    <value>Section #</value>
-  </data>
   <data name="lgSections" xml:space="preserve">
     <value>Sections</value>
   </data>
-  <data name="lgSelectedSubnet" xml:space="preserve">
-    <value>Selected Subnet</value>
-  </data>
   <data name="lgSend" xml:space="preserve">
     <value>Send</value>
-  </data>
-  <data name="lgSensor" xml:space="preserve">
-    <value>Sensor</value>
   </data>
   <data name="lgSensorCount" xml:space="preserve">
     <value>Sensor Count</value>
@@ -621,14 +492,8 @@
   <data name="lgShapefileAttributes" xml:space="preserve">
     <value>Shapefile Attribute</value>
   </data>
-  <data name="lgShowPressure" xml:space="preserve">
-    <value>Show</value>
-  </data>
   <data name="lgSimulateSpeed" xml:space="preserve">
     <value>Simulated Speed</value>
-  </data>
-  <data name="lgSingleProduct" xml:space="preserve">
-    <value>Single Product</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
     <value>Slave</value>
@@ -639,17 +504,8 @@
   <data name="lgStandard" xml:space="preserve">
     <value>Standard valve</value>
   </data>
-  <data name="lgStandardScreen" xml:space="preserve">
-    <value>Standard Screen</value>
-  </data>
   <data name="lgStart" xml:space="preserve">
     <value>Start</value>
-  </data>
-  <data name="lgStartQuantity" xml:space="preserve">
-    <value>Tank Start Quantity</value>
-  </data>
-  <data name="lgSubnet" xml:space="preserve">
-    <value>Subnet Address</value>
   </data>
   <data name="lgSwitch" xml:space="preserve">
     <value>Switch</value>
@@ -659,9 +515,6 @@
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Switches</value>
-  </data>
-  <data name="lgSwitchesOnScreen" xml:space="preserve">
-    <value>On Screen</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
     <value>Tank Size</value>
@@ -678,23 +531,11 @@
   <data name="lgTextColor" xml:space="preserve">
     <value>Text Color</value>
   </data>
-  <data name="lgThreshold" xml:space="preserve">
-    <value>Threshold</value>
-  </data>
-  <data name="lgTimeForMulti" xml:space="preserve">
-    <value>Multi-Pulse</value>
-  </data>
-  <data name="lgTimeForSingle" xml:space="preserve">
-    <value>Single Pulse</value>
-  </data>
   <data name="lgTramLeft" xml:space="preserve">
     <value>Tram Left</value>
   </data>
   <data name="lgTramRight" xml:space="preserve">
     <value>Tram Right</value>
-  </data>
-  <data name="lgTransparent" xml:space="preserve">
-    <value>Transparent</value>
   </data>
   <data name="lgType" xml:space="preserve">
     <value>Type</value>
@@ -717,9 +558,6 @@
   <data name="lgUPMTarget" xml:space="preserve">
     <value>UPM Target</value>
   </data>
-  <data name="lgUseWifi" xml:space="preserve">
-    <value>Use Wifi Client Mode</value>
-  </data>
   <data name="lgValves" xml:space="preserve">
     <value>Valves</value>
   </data>
@@ -728,15 +566,6 @@
   </data>
   <data name="lgWifi" xml:space="preserve">
     <value>Wifi</value>
-  </data>
-  <data name="lgWifiClient" xml:space="preserve">
-    <value>Wifi </value>
-  </data>
-  <data name="lgWifiPort" xml:space="preserve">
-    <value>Wifi Port</value>
-  </data>
-  <data name="lgWifiSignal" xml:space="preserve">
-    <value>Wifi Strength</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
     <value>Working Width (FT)</value>
@@ -761,69 +590,6 @@
   </data>
   <data name="lgAreaRemain" xml:space="preserve">
     <value>Area Remain</value>
-  </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgComm" xml:space="preserve">
-    <value>Comm</value>
-  </data>
-  <data name="lgCommDiagnostics" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgDerivative" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgIntegral" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgRateMethod" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgUnitsVolt" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgChannel" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgMaxRate" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgMinRate" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgUseVR" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgFlowOnHigh" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgCalHelp" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgPage1" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgPage2" xml:space="preserve">
-    <value />
-  </data>
-  <data name="lgRelayOnHigh" xml:space="preserve">
-    <value />
   </data>
   <data name="lgRemoteRelayControl" xml:space="preserve">
     <value>Remote Relay Control</value>

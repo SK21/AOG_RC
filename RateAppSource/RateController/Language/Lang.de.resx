@@ -123,9 +123,6 @@
   <data name="lgAcresHr" xml:space="preserve">
     <value>Acres/h</value>
   </data>
-  <data name="lgAlreadyRunning" xml:space="preserve">
-    <value>läuft bereits</value>
-  </data>
   <data name="lgCalibrate" xml:space="preserve">
     <value>Kalibrieren</value>
   </data>
@@ -156,14 +153,8 @@
   <data name="lgHours" xml:space="preserve">
     <value>Stunden</value>
   </data>
-  <data name="lgInstantRate" xml:space="preserve">
-    <value>momentane Rate</value>
-  </data>
   <data name="lgKPH" xml:space="preserve">
     <value>km/h</value>
-  </data>
-  <data name="lgMinPWM" xml:space="preserve">
-    <value>minimale PWM</value>
   </data>
   <data name="lgMinFlowEngages" xml:space="preserve">
     <value>Mindestdurchfluss aktiviert unter {0}</value>
@@ -195,9 +186,6 @@
   <data name="lgProductName" xml:space="preserve">
     <value>Produktname</value>
   </data>
-  <data name="lgProducts" xml:space="preserve">
-    <value>Produkte</value>
-  </data>
   <data name="lgQuantity" xml:space="preserve">
     <value>Menge</value>
   </data>
@@ -211,17 +199,11 @@
   <data name="lgRelayControl" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="lgRPM" xml:space="preserve">
-    <value>U/min</value>
-  </data>
-  <data name="lgSaveAs" xml:space="preserve">
-    <value>Speichern unter</value>
-  </data>
   <data name="lgSection" xml:space="preserve">
     <value>Teilbreiten</value>
   </data>
   <data name="lgSections" xml:space="preserve">
-    <value>Teilbreiten für dieses Produkt</value>
+    <value>Teilbreiten fÃ¼r dieses Produkt</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
     <value>Pulse/Einheit Durchflussgeber</value>
@@ -267,23 +249,5 @@
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
     <value>Arbeitsbreite m</value>
-  </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value>Verbinden</value>
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>Diagnose</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>Disconnect</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
-  </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value>HighMax</value>
-  </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>Rate seit Nullung</value>
   </data>
 </root>

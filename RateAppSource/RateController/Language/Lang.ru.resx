@@ -118,255 +118,177 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lgAcres" xml:space="preserve">
-    <value>Акр</value>
+    <value>ÐÐºÑ€</value>
   </data>
   <data name="lgAcresHr" xml:space="preserve">
-    <value>Акр/ч</value>
-  </data>
-  <data name="lgAlreadyRunning" xml:space="preserve">
-    <value>Уже работает</value>
+    <value>ÐÐºÑ€/Ñ‡</value>
   </data>
   <data name="lgAltRate" xml:space="preserve">
-    <value>Альт Расход</value>
+    <value>ÐÐ»ÑŒÑ‚ Ð Ð°ÑÑ…Ð¾Ð´</value>
   </data>
   <data name="lgBaseRate" xml:space="preserve">
-    <value>Расход уст</value>
+    <value>Ð Ð°ÑÑ…Ð¾Ð´ ÑƒÑÑ‚</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
-    <value>Калибровка</value>
+    <value>ÐšÐ°Ð»Ð¸Ð±Ñ€Ð¾Ð²ÐºÐ°</value>
   </data>
   <data name="lgComboClose" xml:space="preserve">
-    <value>Комбо Закрыть</value>
+    <value>ÐšÐ¾Ð¼Ð±Ð¾ Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ</value>
   </data>
   <data name="lgControl" xml:space="preserve">
-    <value>Контроль</value>
+    <value>ÐšÐ¾Ð½Ñ‚Ñ€Ð¾Ð»ÑŒ</value>
   </data>
   <data name="lgControlType" xml:space="preserve">
-    <value>Тип контроля</value>
+    <value>Ð¢Ð¸Ð¿ ÐºÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ñ</value>
   </data>
   <data name="lgCountsRev" xml:space="preserve">
-    <value>Количество/об</value>
+    <value>ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾/Ð¾Ð±</value>
   </data>
   <data name="lgCoverage" xml:space="preserve">
-    <value>Охват</value>
+    <value>ÐžÑ…Ð²Ð°Ñ‚</value>
   </data>
   <data name="lgCurrentRate" xml:space="preserve">
-    <value>Текущий расход …</value>
-  </data>
-  <data name="lgDescription" xml:space="preserve">
-    <value>Название</value>
+    <value>Ð¢ÐµÐºÑƒÑ‰Ð¸Ð¹ Ñ€Ð°ÑÑ…Ð¾Ð´ â€¦</value>
   </data>
   <data name="lgHectares" xml:space="preserve">
-    <value>Гектар</value>
+    <value>Ð“ÐµÐºÑ‚Ð°Ñ€</value>
   </data>
   <data name="lgHectares_Hr" xml:space="preserve">
-    <value>Гектар/ч</value>
+    <value>Ð“ÐµÐºÑ‚Ð°Ñ€/Ñ‡</value>
   </data>
   <data name="lgHour" xml:space="preserve">
-    <value>Час</value>
+    <value>Ð§Ð°Ñ</value>
   </data>
   <data name="lgHours" xml:space="preserve">
-    <value>Часов</value>
-  </data>
-  <data name="lgInstantRate" xml:space="preserve">
-    <value>Мгновенный расход …</value>
+    <value>Ð§Ð°ÑÐ¾Ð²</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
-    <value>Инверт Секция</value>
+    <value>Ð˜Ð½Ð²ÐµÑ€Ñ‚ Ð¡ÐµÐºÑ†Ð¸Ñ</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
-    <value>км/ч</value>
+    <value>ÐºÐ¼/Ñ‡</value>
   </data>
   <data name="lgLanguage" xml:space="preserve">
-    <value>Язык</value>
+    <value>Ð¯Ð·Ñ‹Ðº</value>
   </data>
   <data name="lgMaster" xml:space="preserve">
-    <value>Главный</value>
-  </data>
-  <data name="lgMinPWM" xml:space="preserve">
-    <value>ШИМ Минимум</value>
+    <value>Ð“Ð»Ð°Ð²Ð½Ñ‹Ð¹</value>
   </data>
   <data name="lgMinFlowEngages" xml:space="preserve">
-    <value>Минимальный поток включается ниже {0}</value>
+    <value>ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¿Ð¾Ñ‚Ð¾Ðº Ð²ÐºÐ»ÑŽÑ‡Ð°ÐµÑ‚ÑÑ Ð½Ð¸Ð¶Ðµ {0}</value>
   </data>
   <data name="lgMinUPM" xml:space="preserve">
-    <value>Мин ед/мин</value>
+    <value>ÐœÐ¸Ð½ ÐµÐ´/Ð¼Ð¸Ð½</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
-    <value>Минута</value>
+    <value>ÐœÐ¸Ð½ÑƒÑ‚Ð°</value>
   </data>
   <data name="lgMinutes" xml:space="preserve">
-    <value>Минуты</value>
-  </data>
-  <data name="lgModule" xml:space="preserve">
-    <value>Модуль</value>
+    <value>ÐœÐ¸Ð½ÑƒÑ‚Ñ‹</value>
   </data>
   <data name="lgModuleID" xml:space="preserve">
-    <value>Идентификатор модуля</value>
+    <value>Ð˜Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð¼Ð¾Ð´ÑƒÐ»Ñ</value>
   </data>
   <data name="lgMotor" xml:space="preserve">
-    <value>Мотор</value>
+    <value>ÐœÐ¾Ñ‚Ð¾Ñ€</value>
   </data>
   <data name="lgMPH" xml:space="preserve">
-    <value>Миль в час</value>
-  </data>
-  <data name="lgNew" xml:space="preserve">
-    <value>Новый</value>
+    <value>ÐœÐ¸Ð»ÑŒ Ð² Ñ‡Ð°Ñ</value>
   </data>
   <data name="lgNumSections" xml:space="preserve">
-    <value>Количество секций</value>
+    <value>ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐµÐºÑ†Ð¸Ð¹</value>
   </data>
   <data name="lgOffRate" xml:space="preserve">
-    <value>Отклонение Расхода</value>
-  </data>
-  <data name="lgOffset" xml:space="preserve">
-    <value>Поправка</value>
-  </data>
-  <data name="lgOpen" xml:space="preserve">
-    <value>Открыть</value>
+    <value>ÐžÑ‚ÐºÐ»Ð¾Ð½ÐµÐ½Ð¸Ðµ Ð Ð°ÑÑ…Ð¾Ð´Ð°</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
-    <value>Опции</value>
+    <value>ÐžÐ¿Ñ†Ð¸Ð¸</value>
   </data>
   <data name="lgPower" xml:space="preserve">
-    <value>Питание</value>
+    <value>ÐŸÐ¸Ñ‚Ð°Ð½Ð¸Ðµ</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
-    <value>Давление</value>
+    <value>Ð”Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
-    <value>Продукт</value>
+    <value>ÐŸÑ€Ð¾Ð´ÑƒÐºÑ‚</value>
   </data>
   <data name="lgProductName" xml:space="preserve">
-    <value>Имя продукта</value>
-  </data>
-  <data name="lgProducts" xml:space="preserve">
-    <value>Продукты</value>
+    <value>Ð˜Ð¼Ñ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°</value>
   </data>
   <data name="lgQuantity" xml:space="preserve">
-    <value>Количество</value>
+    <value>ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾</value>
   </data>
   <data name="lgQuantityApplied" xml:space="preserve">
-    <value>Количество применено</value>
+    <value>ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¿Ñ€Ð¸Ð¼ÐµÐ½ÐµÐ½Ð¾</value>
   </data>
   <data name="lgRate" xml:space="preserve">
-    <value>Расход</value>
+    <value>Ð Ð°ÑÑ…Ð¾Ð´</value>
   </data>
   <data name="lgRelay" xml:space="preserve">
-    <value>Реле</value>
+    <value>Ð ÐµÐ»Ðµ</value>
   </data>
   <data name="lgRelays" xml:space="preserve">
-    <value>Реле</value>
-  </data>
-  <data name="lgRPM" xml:space="preserve">
-    <value>Об/мин</value>
-  </data>
-  <data name="lgSaveAs" xml:space="preserve">
-    <value>Сохранить как</value>
+    <value>Ð ÐµÐ»Ðµ</value>
   </data>
   <data name="lgSection" xml:space="preserve">
-    <value>Секции</value>
-  </data>
-  <data name="lgSectionNum" xml:space="preserve">
-    <value>Номер раздела</value>
+    <value>Ð¡ÐµÐºÑ†Ð¸Ð¸</value>
   </data>
   <data name="lgSections" xml:space="preserve">
-    <value>Секции для этого продукта</value>
-  </data>
-  <data name="lgSensor" xml:space="preserve">
-    <value>Датчик</value>
+    <value>Ð¡ÐµÐºÑ†Ð¸Ð¸ Ð´Ð»Ñ ÑÑ‚Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ð°</value>
   </data>
   <data name="lgSensorCounts" xml:space="preserve">
-    <value>Датчик отсчетов/единица измерения</value>
+    <value>Ð”Ð°Ñ‚Ñ‡Ð¸Ðº Ð¾Ñ‚ÑÑ‡ÐµÑ‚Ð¾Ð²/ÐµÐ´Ð¸Ð½Ð¸Ñ†Ð° Ð¸Ð·Ð¼ÐµÑ€ÐµÐ½Ð¸Ñ</value>
   </data>
   <data name="lgSensorID" xml:space="preserve">
-    <value>Датчик ИН</value>
+    <value>Ð”Ð°Ñ‚Ñ‡Ð¸Ðº Ð˜Ð</value>
   </data>
   <data name="lgSensorLocation" xml:space="preserve">
-    <value>Расположение датчика расхода</value>
-  </data>
-  <data name="lgShowPressure" xml:space="preserve">
-    <value>Давление Вкл</value>
+    <value>Ð Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð´Ð°Ñ‚Ñ‡Ð¸ÐºÐ° Ñ€Ð°ÑÑ…Ð¾Ð´Ð°</value>
   </data>
   <data name="lgSlave" xml:space="preserve">
-    <value>Подчиненный</value>
+    <value>ÐŸÐ¾Ð´Ñ‡Ð¸Ð½ÐµÐ½Ð½Ñ‹Ð¹</value>
   </data>
   <data name="lgSpeed" xml:space="preserve">
-    <value>Скорость</value>
+    <value>Ð¡ÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
-    <value>Стандарт</value>
-  </data>
-  <data name="lgStartQuantity" xml:space="preserve">
-    <value>Начальная емкость бака</value>
+    <value>Ð¡Ñ‚Ð°Ð½Ð´Ð°Ñ€Ñ‚</value>
   </data>
   <data name="lgSwitch" xml:space="preserve">
-    <value>Тумблер</value>
+    <value>Ð¢ÑƒÐ¼Ð±Ð»ÐµÑ€</value>
   </data>
   <data name="lgTankSize" xml:space="preserve">
-    <value>Емкость Бака</value>
+    <value>Ð•Ð¼ÐºÐ¾ÑÑ‚ÑŒ Ð‘Ð°ÐºÐ°</value>
   </data>
   <data name="lgTank_Remaining" xml:space="preserve">
-    <value>Количество ост</value>
+    <value>ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¾ÑÑ‚</value>
   </data>
   <data name="lgTargetRate" xml:space="preserve">
-    <value>Расход Уст ...</value>
+    <value>Ð Ð°ÑÑ…Ð¾Ð´ Ð£ÑÑ‚ ...</value>
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
-    <value>Альт Расход Уст ...</value>
-  </data>
-  <data name="lgTimeForMulti" xml:space="preserve">
-    <value>Сред время имп (&lt;50 мс)</value>
-  </data>
-  <data name="lgTimeForSingle" xml:space="preserve">
-    <value>Время имп (&gt;50 мс)</value>
+    <value>ÐÐ»ÑŒÑ‚ Ð Ð°ÑÑ…Ð¾Ð´ Ð£ÑÑ‚ ...</value>
   </data>
   <data name="lgType" xml:space="preserve">
-    <value>Тип</value>
+    <value>Ð¢Ð¸Ð¿</value>
   </data>
   <data name="lgUPMApplied" xml:space="preserve">
-    <value>Едизм/мин Применяемый</value>
+    <value>Ð•Ð´Ð¸Ð·Ð¼/Ð¼Ð¸Ð½ ÐŸÑ€Ð¸Ð¼ÐµÐ½ÑÐµÐ¼Ñ‹Ð¹</value>
   </data>
   <data name="lgUPMerror" xml:space="preserve">
-    <value>Ошибка %</value>
+    <value>ÐžÑˆÐ¸Ð±ÐºÐ° %</value>
   </data>
   <data name="lgUPMTarget" xml:space="preserve">
-    <value>Едизм/мин целевой</value>
+    <value>Ð•Ð´Ð¸Ð·Ð¼/Ð¼Ð¸Ð½ Ñ†ÐµÐ»ÐµÐ²Ð¾Ð¹</value>
   </data>
   <data name="lgWidth" xml:space="preserve">
-    <value>Ширина</value>
+    <value>Ð¨Ð¸Ñ€Ð¸Ð½Ð°</value>
   </data>
   <data name="lgWorkingWidthFT" xml:space="preserve">
-    <value>Рабочая ширина Фут</value>
+    <value>Ð Ð°Ð±Ð¾Ñ‡Ð°Ñ ÑˆÐ¸Ñ€Ð¸Ð½Ð° Ð¤ÑƒÑ‚</value>
   </data>
   <data name="lgWorkingWidthM" xml:space="preserve">
-    <value>Рабочая ширина (M)</value>
-  </data>
-  <data name="lgConnect" xml:space="preserve">
-    <value>Соединить</value>
-  </data>
-  <data name="lgDiagnostics" xml:space="preserve">
-    <value>Диагностика</value>
-  </data>
-  <data name="lgDisconnect" xml:space="preserve">
-    <value>Отключить</value>
-  </data>
-  <data name="lgEqual" xml:space="preserve">
-    <value>=1</value>
-  </data>
-  <data name="lgHighMax" xml:space="preserve">
-    <value>ШИМ Высокий Макс.</value>
-  </data>
-  <data name="lgOverallRate" xml:space="preserve">
-    <value>Общий расход …</value>
-  </data>
-  <data name="lgComm" xml:space="preserve">
-    <value>Связь</value>
-  </data>
-  <data name="lgRateMethod" xml:space="preserve">
-    <value>Способ измерения</value>
-  </data>
-  <data name="lgUnitsVolt" xml:space="preserve">
-    <value>Ед/вольт</value>
+    <value>Ð Ð°Ð±Ð¾Ñ‡Ð°Ñ ÑˆÐ¸Ñ€Ð¸Ð½Ð° (M)</value>
   </data>
 </root>
