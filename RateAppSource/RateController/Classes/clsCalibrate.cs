@@ -62,7 +62,16 @@ namespace RateController.Classes
         }
 
         public int CalPWM
-        { get { return cCalPWM; } }
+        {
+            get { return cCalPWM; }
+            set
+            {
+                if (value >= 0 & value <= 255)
+                {
+                    cCalPWM = value;
+                }
+            }
+        }
 
         public double ExpectedAmount
         { get { return cExpectedAmount; } }

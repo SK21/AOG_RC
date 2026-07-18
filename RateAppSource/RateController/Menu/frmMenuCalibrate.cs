@@ -31,19 +31,43 @@ namespace RateController.Menu
             // after btnCalStart to receive the focus
             if (Cals.ReadyToCalibrate())
             {
-                Props.SpeedMode = SpeedType.Simulated;
-                pbRunning.Value = 0;
-                Cals.Running(true);
-                SetButtons();
-                Props.RateCalibrationOn = true;
-                timer1.Enabled = true;
-                if (Cal.Locked)
+                // a locked motor/fan with no PWM would run with the motor stopped
+                bool PWMmissing = false;
+                foreach (clsCalibrate cl in Cals.Items)
                 {
-                    Props.ShowMessage("Setting meter cal.", "Calibrate", 5000);
+                    if (cl.PowerOn && cl.Locked && cl.CalPWM == 0)
+                    {
+                        switch (cl.Product.ControlType)
+                        {
+                            case ControlTypeEnum.Motor:
+                            case ControlTypeEnum.MotorWeights:
+                            case ControlTypeEnum.Fan:
+                                PWMmissing = true;
+                                break;
+                        }
+                    }
+                }
+
+                if (PWMmissing)
+                {
+                    Props.ShowMessage("Enter a PWM value before starting.", "Calibrate", 5000);
                 }
                 else
                 {
-                    Props.ShowMessage("Setting calibration speed.", "Calibrate", 5000);
+                    Props.SpeedMode = SpeedType.Simulated;
+                    pbRunning.Value = 0;
+                    Cals.Running(true);
+                    SetButtons();
+                    Props.RateCalibrationOn = true;
+                    timer1.Enabled = true;
+                    if (Cal.Locked)
+                    {
+                        Props.ShowMessage("Setting meter cal.", "Calibrate", 5000);
+                    }
+                    else
+                    {
+                        Props.ShowMessage("Setting calibration speed.", "Calibrate", 5000);
+                    }
                 }
             }
         }
@@ -91,6 +115,7 @@ namespace RateController.Menu
                     Cal.BaseRate = double.TryParse(tbBaseRate.Text, out double br) ? br : 0;
                     Cal.MeterCal = double.TryParse(tbMeterCal.Text, out double mc) ? mc : 0;
                     Cal.MeasuredAmount = double.TryParse(tbMeasured.Text, out double me) ? me : 0;
+                    Cal.CalPWM = int.TryParse(tbPWM.Text, out int pw) ? pw : 0;
                     Cals.Save();
 
                     SetButtons(false);
@@ -149,7 +174,7 @@ namespace RateController.Menu
             }
             if (count == 1) StopCal();
             Props.ShowMessage("Step 1 complete: Meter speed / flow rate has been set for Product "
-                 + (CurrentProduct + 1).ToString() 
+                 + (CurrentProduct + 1).ToString()
                  + ".\n\nProceed to Step 2: Run the calibration again and measure the product output to calculate the final meter calibration."
              );
         }
@@ -169,12 +194,12 @@ namespace RateController.Menu
                 case ControlTypeEnum.MotorWeights:
                 case ControlTypeEnum.Fan:
                     lbPWM.Visible = true;
-                    lbPWMData.Visible = true;
+                    tbPWM.Visible = true;
                     break;
 
                 default:
                     lbPWM.Visible = false;
-                    lbPWMData.Visible = false;
+                    tbPWM.Visible = false;
                     break;
             }
         }
@@ -219,6 +244,8 @@ namespace RateController.Menu
             lbSpeed.Font = Fnt;
             lbSpeed.ForeColor = Color.DarkGreen;
             lbName.Font = new Font("Tahoma", 14, FontStyle.Underline);
+            lbHzDescription.ForeColor = FC;
+            lbHzDescription.Font = Fnt;
 
             PositionForm();
 
@@ -376,6 +403,31 @@ namespace RateController.Menu
             if (tmp < 0 || tmp > 2000) e.Cancel = true;
         }
 
+        private void tbPWM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPWM.Text, out tempD);
+            using (var form = new FormNumeric(0, 255, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPWM.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbPWM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbPWM_Validating(object sender, CancelEventArgs e)
+        {
+            double.TryParse(tbPWM.Text, out double tmp);
+            if (tmp < 0 || tmp > 255) e.Cancel = true;
+        }
+
         private void tbSpeed_Enter(object sender, EventArgs e)
         {
             double tempD;
@@ -421,6 +473,8 @@ namespace RateController.Menu
 
             double displaySpeed = Props.UseMetric ? Props.SimSpeed_KMH : Props.SimSpeed_KMH / Props.MPHtoKPH;
             tbSpeed.Text = displaySpeed.ToString("N1");
+
+            lbHz.Text = Prd.Hz().ToString("N1");
 
             Initializing = false;
         }
@@ -517,7 +571,8 @@ namespace RateController.Menu
             btnLocked.Visible = true;
 
             // pwm display
-            lbPWMData.Text = Cal.CalPWM.ToString("N0");
+            tbPWM.Enabled = false;
+            tbPWM.Text = Cal.CalPWM.ToString("N0");
         }
 
         private void UpdateWithPowerOn()
@@ -555,7 +610,8 @@ namespace RateController.Menu
                 btnLocked.Visible = true;
 
                 // pwm display
-                lbPWMData.Text = Cal.CalPWM.ToString("N0");
+                tbPWM.Enabled = !Cal.Running;
+                tbPWM.Text = Cal.CalPWM.ToString("N0");
             }
             else
             {
@@ -574,13 +630,14 @@ namespace RateController.Menu
                 btnLocked.Visible = !Cal.Running;
 
                 // pwm display
+                tbPWM.Enabled = false;
                 if (Cal.Running)
                 {
-                    lbPWMData.Text = Prd.PWM().ToString("N0");
+                    tbPWM.Text = Prd.PWM().ToString("N0");
                 }
                 else
                 {
-                    lbPWMData.Text = Cal.CalPWM.ToString("N0");
+                    tbPWM.Text = Cal.CalPWM.ToString("N0");
                 }
             }
         }

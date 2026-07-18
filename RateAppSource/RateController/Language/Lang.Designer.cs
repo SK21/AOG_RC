@@ -592,7 +592,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exp..
+        ///   Looks up a localized string similar to Expected Amount.
         /// </summary>
         internal static string lgExpectedAmount {
             get {
@@ -988,7 +988,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Amt..
+        ///   Looks up a localized string similar to Measured Amount.
         /// </summary>
         internal static string lgMeasuredAmount {
             get {
@@ -997,7 +997,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Set.
+        ///   Looks up a localized string similar to Meter Set.
         /// </summary>
         internal static string lgMeterSet {
             get {

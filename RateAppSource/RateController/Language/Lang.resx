@@ -253,7 +253,7 @@
     <value>Exit</value>
   </data>
   <data name="lgExpectedAmount" xml:space="preserve">
-    <value>Exp.</value>
+    <value>Expected Amount</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Fan</value>
@@ -373,10 +373,10 @@
     <value>Master Relay Only</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>Amt.</value>
+    <value>Measured Amount</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
-    <value>Set</value>
+    <value>Meter Set</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metric Units</value>
