@@ -448,6 +448,7 @@ void ReadPGNs(byte data[], uint16_t len)
                     MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
                     MDL.Is3Wire = ((tmp & 16) == 16);
                     MDL.ADS1115Enabled = ((tmp & 32) == 32);
+                    MDL.InvertWork = ((tmp & 128) == 128);
 
                     MDL.OnboardRelayControl = data[5];
                     MDL.RemoteRelayControl = data[6];

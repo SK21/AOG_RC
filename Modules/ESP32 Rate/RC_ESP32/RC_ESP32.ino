@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 16076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 17076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -98,6 +98,7 @@ struct ModuleConfig	// about 130 bytes
 	char APpassword[ModStringLengths] = "";
 	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
+	bool InvertWork = false;		// true for NO work switch sensor
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output1 only, Output2 is off
 	uint8_t PressurePin = NC;		// NC - no pressure pin
 	bool ADS1115Enabled = true;
@@ -409,6 +410,7 @@ bool WorkPinOn()
 	if (MDL.WorkPin < NC)
 	{
 		bool WrkCurrent = digitalRead(MDL.WorkPin);
+		if (MDL.InvertWork) WrkCurrent = !WrkCurrent;
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)

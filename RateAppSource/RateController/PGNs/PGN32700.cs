@@ -20,6 +20,7 @@ namespace RateController.PGNs
         //      bit 6 - assign module ID: board adopts byte 2 as its new ID
         //              (only one board may be connected); clear = byte 2 is a
         //              filter, board applies config only when it matches its ID
+        //      bit 7 - invert work switch (NO sensor)
         //5	    onboard relay control   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
         //                              , 5 - PCA9685, 6 - PCF8574
         //6	    remote relay control    0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
@@ -118,6 +119,25 @@ namespace RateController.PGNs
                 else
                 {
                     cData[4] = (byte)(cData[4] & 0b1111_1110);
+                }
+            }
+        }
+
+        public bool InvertWork
+        {
+            get
+            {
+                return ((cData[4] & 0b1000_0000) == 0b1000_0000);
+            }
+            set
+            {
+                if (value)
+                {
+                    cData[4] = (byte)(cData[4] | 0b1000_0000);
+                }
+                else
+                {
+                    cData[4] = (byte)(cData[4] & 0b0111_1111);
                 }
             }
         }

@@ -29,9 +29,9 @@ namespace RateController.Menu
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuPins));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.tbPressure = new System.Windows.Forms.TextBox();
@@ -48,7 +48,10 @@ namespace RateController.Menu
             this.ColPWM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColBin = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColInvert = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ckInvert = new System.Windows.Forms.CheckBox();
+            this.grpWorkSwitch = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
+            this.grpWorkSwitch.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -90,7 +93,7 @@ namespace RateController.Menu
             // tbPressure
             // 
             this.tbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPressure.Location = new System.Drawing.Point(225, 468);
+            this.tbPressure.Location = new System.Drawing.Point(214, 529);
             this.tbPressure.Name = "tbPressure";
             this.tbPressure.Size = new System.Drawing.Size(58, 29);
             this.tbPressure.TabIndex = 238;
@@ -101,7 +104,7 @@ namespace RateController.Menu
             // 
             this.lbPressure.AutoSize = true;
             this.lbPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPressure.Location = new System.Drawing.Point(70, 470);
+            this.lbPressure.Location = new System.Drawing.Point(59, 531);
             this.lbPressure.Name = "lbPressure";
             this.lbPressure.Size = new System.Drawing.Size(117, 24);
             this.lbPressure.TabIndex = 237;
@@ -113,9 +116,9 @@ namespace RateController.Menu
             this.ckMomentary.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMomentary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckMomentary.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckMomentary.Location = new System.Drawing.Point(339, 409);
+            this.ckMomentary.Location = new System.Drawing.Point(294, 28);
             this.ckMomentary.Name = "ckMomentary";
-            this.ckMomentary.Size = new System.Drawing.Size(119, 40);
+            this.ckMomentary.Size = new System.Drawing.Size(129, 40);
             this.ckMomentary.TabIndex = 236;
             this.ckMomentary.Text = "Momentary";
             this.ckMomentary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -125,7 +128,7 @@ namespace RateController.Menu
             // tbWrk
             // 
             this.tbWrk.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWrk.Location = new System.Drawing.Point(225, 415);
+            this.tbWrk.Location = new System.Drawing.Point(172, 59);
             this.tbWrk.Name = "tbWrk";
             this.tbWrk.Size = new System.Drawing.Size(58, 29);
             this.tbWrk.TabIndex = 235;
@@ -136,7 +139,7 @@ namespace RateController.Menu
             // 
             this.lbWorkPin.AutoSize = true;
             this.lbWorkPin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWorkPin.Location = new System.Drawing.Point(70, 417);
+            this.lbWorkPin.Location = new System.Drawing.Point(17, 61);
             this.lbWorkPin.Name = "lbWorkPin";
             this.lbWorkPin.Size = new System.Drawing.Size(86, 24);
             this.lbWorkPin.TabIndex = 234;
@@ -175,14 +178,14 @@ namespace RateController.Menu
             this.DGV.AllowUserToDeleteRows = false;
             this.DGV.AllowUserToResizeColumns = false;
             this.DGV.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGV.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.DGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColSensor,
@@ -191,14 +194,14 @@ namespace RateController.Menu
             this.ColPWM,
             this.ColBin,
             this.ColInvert});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV.DefaultCellStyle = dataGridViewCellStyle6;
             this.DGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
             this.DGV.Location = new System.Drawing.Point(30, 55);
             this.DGV.Margin = new System.Windows.Forms.Padding(11);
@@ -213,8 +216,8 @@ namespace RateController.Menu
             // 
             // ColSensor
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColSensor.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColSensor.DefaultCellStyle = dataGridViewCellStyle5;
             this.ColSensor.HeaderText = "Sensor";
             this.ColSensor.Name = "ColSensor";
             this.ColSensor.ReadOnly = true;
@@ -250,19 +253,47 @@ namespace RateController.Menu
             this.ColInvert.HeaderText = "Invert";
             this.ColInvert.Name = "ColInvert";
             // 
+            // ckInvert
+            // 
+            this.ckInvert.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckInvert.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckInvert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckInvert.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckInvert.Location = new System.Drawing.Point(294, 84);
+            this.ckInvert.Name = "ckInvert";
+            this.ckInvert.Size = new System.Drawing.Size(129, 40);
+            this.ckInvert.TabIndex = 242;
+            this.ckInvert.Text = "Invert";
+            this.ckInvert.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckInvert.UseVisualStyleBackColor = true;
+            this.ckInvert.CheckedChanged += new System.EventHandler(this.Boxes_TextChanged);
+            // 
+            // grpWorkSwitch
+            // 
+            this.grpWorkSwitch.Controls.Add(this.ckInvert);
+            this.grpWorkSwitch.Controls.Add(this.ckMomentary);
+            this.grpWorkSwitch.Controls.Add(this.lbWorkPin);
+            this.grpWorkSwitch.Controls.Add(this.tbWrk);
+            this.grpWorkSwitch.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpWorkSwitch.Location = new System.Drawing.Point(42, 343);
+            this.grpWorkSwitch.Name = "grpWorkSwitch";
+            this.grpWorkSwitch.Size = new System.Drawing.Size(456, 142);
+            this.grpWorkSwitch.TabIndex = 243;
+            this.grpWorkSwitch.TabStop = false;
+            this.grpWorkSwitch.Text = "Work Switch";
+            this.grpWorkSwitch.Paint += new System.Windows.Forms.PaintEventHandler(this.grpWorkSwitch_Paint);
+            // 
             // frmMenuPins
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.grpWorkSwitch);
             this.Controls.Add(this.lbModule);
             this.Controls.Add(this.DGV);
             this.Controls.Add(this.btnRescan);
             this.Controls.Add(this.tbPressure);
             this.Controls.Add(this.lbPressure);
-            this.Controls.Add(this.ckMomentary);
-            this.Controls.Add(this.tbWrk);
-            this.Controls.Add(this.lbWorkPin);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -272,6 +303,8 @@ namespace RateController.Menu
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuPins_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuPins_Load);
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
+            this.grpWorkSwitch.ResumeLayout(false);
+            this.grpWorkSwitch.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,5 +327,7 @@ namespace RateController.Menu
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPWM;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColBin;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColInvert;
+        private System.Windows.Forms.CheckBox ckInvert;
+        private System.Windows.Forms.GroupBox grpWorkSwitch;
     }
 }

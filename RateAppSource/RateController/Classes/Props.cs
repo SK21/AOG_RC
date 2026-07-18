@@ -75,7 +75,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "16-Jul-2026";
+        private static string cAppDate = "17-Jul-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -1221,7 +1221,8 @@ namespace RateController.Classes
                 double MaxVol = GetPressureCal(ModuleID * 5 + 2);   // x2
                 double MaxPres = GetPressureCal(ModuleID * 5 + 3);  // y2
                 double ZeroValue = GetPressureCal(ModuleID * 5 + 4);
-                if ((MaxPres - MinPres) > 0 && Reading >= ZeroValue)
+                // Reading of 0 means no sensor signal, show 0 instead of the intercept
+                if ((MaxPres - MinPres) > 0 && Reading > 0 && Reading >= ZeroValue)
                 {
                     double M = (MaxPres - MinPres) / (MaxVol - MinVol);
                     double B = MaxPres - M * MaxVol;

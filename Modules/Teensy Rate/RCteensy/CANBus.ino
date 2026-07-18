@@ -626,6 +626,7 @@ void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
 	MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
 	MDL.Is3Wire = ((tmp & 16) == 16);
 	MDL.ADS1115Enabled = ((tmp & 32) == 32);
+	MDL.InvertWork = ((tmp & 128) == 128);
 
 	MDL.OnboardRelayControl = cfgBuf[3];
 	MDL.RemoteRelayControl = cfgBuf[4];
@@ -719,7 +720,7 @@ void CANBus_SendModuleStatus() {
 
 	// Byte 0: ModuleId | Status bits
 	data[0] = (MDL.ID & 0x0F);
-	if (MDL.WorkPin < NC && digitalRead(MDL.WorkPin) == LOW) data[0] |= 0x10;  // Work switch
+	if (WorkPinOn()) data[0] |= 0x10;  // Work switch
 	if (Ethernet.linkStatus() == LinkON) data[0] |= 0x20;  // Ethernet connected
 	if (GoodPins) data[0] |= 0x40;  // Good pin config
 

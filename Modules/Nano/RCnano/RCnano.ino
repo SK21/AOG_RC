@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 14076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 17076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define MaxProductCount 2
@@ -50,6 +50,7 @@ struct ModuleConfig
 	uint8_t RelayControl = 4;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	uint8_t WorkPin = 15;
 	bool WorkPinIsMomentary = false;
+	bool InvertWork = false;		// true for NO work switch sensor
 	bool Is3Wire = true;			// False - powered on/off, True - powered on only
 	uint8_t PressurePin = 14;
 	bool ADS1115Enabled = false;
@@ -288,6 +289,7 @@ bool WorkPinOn()
 	if (MDL.WorkPin < NC)
 	{
 		bool WrkCurrent = digitalRead(MDL.WorkPin);
+		if (MDL.InvertWork) WrkCurrent = !WrkCurrent;
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)

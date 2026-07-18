@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 16076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 17076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 0xFF		// Pins not connected
@@ -74,6 +74,7 @@ struct ModuleConfig
 	uint8_t RemoteRelayControl = 0;			// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	uint8_t WorkPin = 30;
 	bool WorkPinIsMomentary = false;
+	bool InvertWork = false;		// true for NO work switch sensor
 	bool Is3Wire = true;			// False - DRV8870 provides powered on/off with Output1/Output2, True - DRV8870 provides on/off with Output2 only, Output1 is off
 	uint8_t PressurePin = 40;
 	bool ADS1115Enabled = false;
@@ -363,6 +364,7 @@ bool WorkPinOn()
 	if (MDL.WorkPin < NC)
 	{
 		bool WrkCurrent = digitalRead(MDL.WorkPin);
+		if (MDL.InvertWork) WrkCurrent = !WrkCurrent;
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)
@@ -475,7 +477,8 @@ void Blink()
 //	{
 //		DebugTime = millis();
 //
-//		debug1=Sensor[0].SampleWindow;
+//		debug1=WorkPinOn();
+//		debug2=digitalRead(MDL.WorkPin);
 //
 //		Serial.println("");
 //		Serial.print(debug1);
@@ -483,17 +486,17 @@ void Blink()
 //		Serial.print(", ");
 //		Serial.print(debug2);
 //
-//		Serial.print(", ");
-//		Serial.print(debug3);
+//		//Serial.print(", ");
+//		//Serial.print(debug3);
 //
-//		Serial.print(", ");
-//		Serial.print(debug4);
+//		//Serial.print(", ");
+//		//Serial.print(debug4);
 //
-//		Serial.print(", ");
-//		Serial.print(debug5);
+//		//Serial.print(", ");
+//		//Serial.print(debug5);
 //
-//		Serial.print(", ");
-//		Serial.print(debug6);
+//		//Serial.print(", ");
+//		//Serial.print(debug6);
 //	}
 //}
 

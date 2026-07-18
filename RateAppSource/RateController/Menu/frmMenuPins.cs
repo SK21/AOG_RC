@@ -79,6 +79,7 @@ namespace RateController.Menu
                 {
                     byte val;
                     Core.ModuleConfig.Momentary = ckMomentary.Checked;
+                    Core.ModuleConfig.InvertWork = ckInvert.Checked;
 
                     // sensor pins from the grid
                     for (int i = 0; i < DGV.Rows.Count; i++)
@@ -141,6 +142,7 @@ namespace RateController.Menu
             tbWrk.Text = "-";
             tbPressure.Text = "-";
             ckMomentary.Checked = false;
+            ckInvert.Checked = false;
         }
 
         private byte CellPin(int Row, int Col)
@@ -364,6 +366,7 @@ namespace RateController.Menu
             }
 
             ckMomentary.Checked = Core.ModuleConfig.Momentary;
+            ckInvert.Checked = Core.ModuleConfig.InvertWork;
 
             // work pin
             if (data[29] > 60)
@@ -386,6 +389,13 @@ namespace RateController.Menu
             }
 
             Initializing = false;
+        }
+
+        private void grpWorkSwitch_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+
         }
     }
 }

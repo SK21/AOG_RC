@@ -373,6 +373,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 					MDL.WorkPinIsMomentary = ((tmp & 8) == 8);
 					MDL.Is3Wire = ((tmp & 16) == 16);
 					MDL.ADS1115Enabled = ((tmp & 32) == 32);
+					MDL.InvertWork = ((tmp & 128) == 128);
 
 					MDL.RelayControl = data[5];
 					Sensor[0].FlowPin = data[7];

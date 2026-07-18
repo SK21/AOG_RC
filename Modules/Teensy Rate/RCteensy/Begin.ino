@@ -529,6 +529,7 @@ void LoadDefaults()
 	MDL.RemoteRelayControl=0;
 	MDL.WorkPin = 30;
 	MDL.WorkPinIsMomentary = false;
+	MDL.InvertWork = false;
 	MDL.Is3Wire = true;
 	MDL.ADS1115Enabled = false;
 	MDL.PressurePin = 40;
