@@ -113,7 +113,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgActual", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Alt. Rate (%).
         /// </summary>
@@ -122,7 +122,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgAltRate", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Area Applied.
         /// </summary>
@@ -140,7 +140,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgAreaRemain", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Auto Rate.
         /// </summary>
@@ -194,7 +194,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgBoards", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Bypass.
         /// </summary>
@@ -212,7 +212,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgCalFactor", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Calibrate.
         /// </summary>
@@ -221,7 +221,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgCalibrate", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Calibration Speed.
         /// </summary>
@@ -230,7 +230,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgCalSpeed", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Color.
         /// </summary>
@@ -257,7 +257,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgComboTimed", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Comm.
         /// </summary>
@@ -275,7 +275,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgConfig", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Control.
         /// </summary>
@@ -338,7 +338,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgDefaultProduct", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Density.
         /// </summary>
@@ -347,7 +347,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgDensity", resourceCulture);
             }
         }
-                                                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
@@ -356,7 +356,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgEnabled", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to End.
         /// </summary>
@@ -365,7 +365,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgEnd", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Error %.
         /// </summary>
@@ -383,7 +383,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgErrors", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Expected Amount.
         /// </summary>
@@ -410,7 +410,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFile", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to FlowMaster.
         /// </summary>
@@ -437,7 +437,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFlowMaster2WireInvert", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to 3-wire valve (relay signal, valve self-powered).
         /// </summary>
@@ -455,7 +455,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFlowMasterValveMode", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Folders.
         /// </summary>
@@ -464,7 +464,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFolders", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Geo Stop.
         /// </summary>
@@ -500,7 +500,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgHelp", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Hour.
         /// </summary>
@@ -536,7 +536,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgHydUp", resourceCulture);
             }
         }
-                                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Invert_FlowMaster.
         /// </summary>
@@ -608,7 +608,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgLanguage", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Machine.
         /// </summary>
@@ -617,7 +617,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgMachine", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Master.
         /// </summary>
@@ -644,7 +644,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgMasterOverride", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Measured Amount.
         /// </summary>
@@ -680,7 +680,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgMinFlowEngages", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Minimum UPM.
         /// </summary>
@@ -716,7 +716,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgMode", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Module ID.
         /// </summary>
@@ -797,7 +797,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgNetwork", resourceCulture);
             }
         }
-                                
+        
         /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
@@ -824,7 +824,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgOffRate", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to On Time.
         /// </summary>
@@ -833,7 +833,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgOnTime", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
@@ -842,7 +842,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgOptions", resourceCulture);
             }
         }
-                                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Sections Per Zone.
         /// </summary>
@@ -977,7 +977,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgProductName", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Products.
         /// </summary>
@@ -995,7 +995,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgProfiles", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Pulses.
         /// </summary>
@@ -1058,7 +1058,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgRate", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Map.
         /// </summary>
@@ -1067,7 +1067,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgRateMap", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Relay.
         /// </summary>
@@ -1094,7 +1094,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgRelayControlNumber", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Relay Pins.
         /// </summary>
@@ -1130,7 +1130,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgResetApplied", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Resume.
         /// </summary>
@@ -1139,7 +1139,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgResume", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Scale Weight.
         /// </summary>
@@ -1175,7 +1175,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgSection", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Sections.
         /// </summary>
@@ -1184,7 +1184,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgSections", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Send.
         /// </summary>
@@ -1193,7 +1193,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgSend", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Sensor Count.
         /// </summary>
@@ -1256,7 +1256,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgShapefileAttributes", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Simulated Speed.
         /// </summary>
@@ -1265,7 +1265,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgSimulateSpeed", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Slave.
         /// </summary>
@@ -1310,7 +1310,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgStandard", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
@@ -1319,7 +1319,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgStart", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Switch.
         /// </summary>
@@ -1346,7 +1346,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgSwitches", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Qty Remain.
         /// </summary>
@@ -1391,7 +1391,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgTextColor", resourceCulture);
             }
         }
-                                
+        
         /// <summary>
         ///   Looks up a localized string similar to Tram Left.
         /// </summary>
@@ -1409,7 +1409,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgTramRight", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
@@ -1418,7 +1418,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgType", resourceCulture);
             }
         }
-                
+        
         /// <summary>
         ///   Looks up a localized string similar to UPM Applied.
         /// </summary>
@@ -1472,7 +1472,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgUPMTarget", resourceCulture);
             }
         }
-                        
+        
         /// <summary>
         ///   Looks up a localized string similar to Valves.
         /// </summary>
@@ -1499,7 +1499,7 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgWifi", resourceCulture);
             }
         }
-                                
+        
         /// <summary>
         ///   Looks up a localized string similar to Working Width (FT).
         /// </summary>
