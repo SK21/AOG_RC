@@ -157,10 +157,10 @@
     <value>PCBk</value>
   </data>
   <data name="lgCalFactor" xml:space="preserve">
-    <value>Mérő Kalib</value>
+    <value>Kalibrációs szám</value>
   </data>
   <data name="lgCalibrate" xml:space="preserve">
-    <value>Kalibrál</value>
+    <value>Kalibrálás</value>
   </data>
   <data name="lgCalSpeed" xml:space="preserve">
     <value>Kalibrációs Sebesség</value>
@@ -202,7 +202,7 @@
     <value>Sűrűség</value>
   </data>
   <data name="lgEnd" xml:space="preserve">
-    <value>Befejez</value>
+    <value>Befejezés</value>
   </data>
   <data name="lgError" xml:space="preserve">
     <value>Hiba %</value>
@@ -211,7 +211,7 @@
     <value>Hibák</value>
   </data>
   <data name="lgExpectedAmount" xml:space="preserve">
-    <value>Várt</value>
+    <value>Várt mennyiség</value>
   </data>
   <data name="lgFan" xml:space="preserve">
     <value>Ventillátor</value>
@@ -235,13 +235,13 @@
     <value>Órák</value>
   </data>
   <data name="lgInvertFlow" xml:space="preserve">
-    <value>Vezérlést Invertál</value>
+    <value>Vezérlés invertálva</value>
   </data>
   <data name="lgInvertRelays" xml:space="preserve">
-    <value>Relét Invertál</value>
+    <value>Kimenetek invertálva</value>
   </data>
   <data name="lgInvertSection" xml:space="preserve">
-    <value>Szakaszt Invertál</value>
+    <value>Szakasz Invertál</value>
   </data>
   <data name="lgInvert_Master" xml:space="preserve">
     <value>Főelzáró Invertál</value>
@@ -250,7 +250,7 @@
     <value>Bypass</value>
   </data>
   <data name="lgJobs" xml:space="preserve">
-    <value>Munák</value>
+    <value>Munkák</value>
   </data>
   <data name="lgKPH" xml:space="preserve">
     <value>Km/h</value>
@@ -271,10 +271,10 @@
     <value>Főelzáró felülír</value>
   </data>
   <data name="lgMeasuredAmount" xml:space="preserve">
-    <value>Menny.</value>
+    <value>Mért Mennyiség</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
-    <value>Rögzít</value>
+    <value>Sebesség Rögzítve</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Metrikus mértékek</value>
@@ -286,7 +286,7 @@
     <value>Minimum UPM</value>
   </data>
   <data name="lgMinute" xml:space="preserve">
-    <value>Perce</value>
+    <value>Perc</value>
   </data>
   <data name="lgMinutes" xml:space="preserve">
     <value>Percek</value>
@@ -340,7 +340,7 @@
     <value>Lábak</value>
   </data>
   <data name="lgPower" xml:space="preserve">
-    <value>Bekapcolva</value>
+    <value>Power</value>
   </data>
   <data name="lgPressure" xml:space="preserve">
     <value>Nyomás</value>
@@ -355,19 +355,19 @@
     <value>Alacsony:</value>
   </data>
   <data name="lgPressurePin" xml:space="preserve">
-    <value>Nyomás Pin</value>
+    <value>Nyomás Láb</value>
   </data>
   <data name="lgPressurePressure" xml:space="preserve">
     <value>Nyomás</value>
   </data>
   <data name="lgPressureVoltage" xml:space="preserve">
-    <value>Érték V</value>
+    <value>Érték</value>
   </data>
   <data name="lgPressureZero" xml:space="preserve">
     <value>Minimum:</value>
   </data>
   <data name="lgPrimedStart" xml:space="preserve">
-    <value>Előkészített indítás</value>
+    <value>Kényszerindítás</value>
   </data>
   <data name="lgProduct" xml:space="preserve">
     <value>Anyag</value>
@@ -394,7 +394,7 @@
     <value>Mennyiség</value>
   </data>
   <data name="lgQuantityApplied" xml:space="preserve">
-    <value>Kijuttatott Mennyiség</value>
+    <value>Használt Mennyiség</value>
   </data>
   <data name="lgRate" xml:space="preserve">
     <value>Dózis</value>
@@ -418,7 +418,7 @@
     <value>Relék</value>
   </data>
   <data name="lgResetApplied" xml:space="preserve">
-    <value>Kijuttatot nulláz</value>
+    <value>Kijuttatottat nulláz</value>
   </data>
   <data name="lgResume" xml:space="preserve">
     <value>Folytat</value>
@@ -430,10 +430,10 @@
     <value>Másodpercek</value>
   </data>
   <data name="lgSection" xml:space="preserve">
-    <value>Szakaszok</value>
+    <value>Szakasz</value>
   </data>
   <data name="lgSections" xml:space="preserve">
-    <value>Szakaszok ehhez az anyaghoz</value>
+    <value>Szakaszok</value>
   </data>
   <data name="lgSend" xml:space="preserve">
     <value>Küld</value>
@@ -475,7 +475,7 @@
     <value>Kapcsoló</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Főelzáró késleltetése</value>
+    <value>MST kapcsoló késleltetése</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Kapcsolók</value>
@@ -490,7 +490,7 @@
     <value>Cél Dózis</value>
   </data>
   <data name="lgTargetRateAlt" xml:space="preserve">
-    <value>Cél Altern. Dózis</value>
+    <value>Altern. Dózis</value>
   </data>
   <data name="lgTextColor" xml:space="preserve">
     <value>Szöveg szín</value>
@@ -586,13 +586,13 @@
     <value>Shapefile tulajdonság</value>
   </data>
   <data name="lgAreaApplied" xml:space="preserve">
-    <value>Kijuttatott terület</value>
+    <value>Lefedett terület</value>
   </data>
   <data name="lgAreaRemain" xml:space="preserve">
     <value>Hátralévő terület</value>
   </data>
   <data name="lgRemoteRelayControl" xml:space="preserve">
-    <value>Távoli relé vezérlés</value>
+    <value>Kiegészítő relé vezérlés</value>
   </data>
   <data name="lgPWM" xml:space="preserve">
     <value>PWM</value>
