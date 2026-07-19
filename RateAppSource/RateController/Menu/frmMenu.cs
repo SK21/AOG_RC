@@ -512,6 +512,7 @@ namespace RateController
                         butSwitches.Visible = !Expanded;
                         butPrimed.Visible = !Expanded;
                         btnPressure.Visible = !Expanded;
+                        butUpdateModules.Visible = false;   // pressure page shows it on demand
 
                         if (Expanded)
                         {
@@ -961,76 +962,118 @@ namespace RateController
         {
             try
             {
-                byte ModuleID = Core.ModuleConfig.GetData()[2];
-
-                // a pending ID assignment (saved on the Config page) sends 32700 with
-                // bit 6 set: the board adopts byte 2 instead of filtering on it, so
-                // every board that hears it takes the ID - allow at most one connected
-                bool AssignID = (Props.GetProp("ModuleConfig_AssignPending") == "True");
-                bool OkToSend = true;
-                if (AssignID)
+                if (cLastScreen == "frmMenuPressure")
                 {
-                    int connected = 0;
-                    int dupID = -1;
-                    for (int i = 0; i < Props.MaxModules; i++)
-                    {
-                        if (Core.ModulesStatus.Connected(i)) connected++;
-                        if (Core.DuplicateModule(i)) dupID = i;
-                    }
-                    if (connected > 1)
-                    {
-                        OkToSend = false;
-                        Props.ShowMessage("Module ID assignment needs only one board connected. "
-                            + connected.ToString() + " modules are connected.", "Config", 15000);
-                    }
-                    else if (dupID >= 0)
-                    {
-                        // two boards with the same ID count as one connected module -
-                        // their alternating board labels give them away
-                        OkToSend = false;
-                        Props.ShowMessage("Two boards are answering as module " + dupID.ToString()
-                            + ". Disconnect one before assigning an ID.", "Config", 15000);
-                    }
-                }
-
-                if (OkToSend)
-                {
-                    // 32700 restarts the module immediately on receipt, so the board label
-                    // (32506) and sensor pins (32507) must go out before it or they would
-                    // arrive during the reboot and be lost
-                    string desc = Props.GetModuleDescription(ModuleID).Trim();
-                    if (desc.Length > 0)
-                    {
-                        new PGNs.PGN32506().Send(ModuleID, desc);
-
-                        // reflect the sent label in the cache so the Boards page doesn't
-                        // show the old value until the module reports back (~2 s later)
-                        Core.ModulesBoardID.SetLabel(ModuleID, desc);
-                    }
-
-                    Core.SensorPins.Send();
-                    Core.ModuleConfig.Send(null, AssignID);
-
-                    if (AssignID)
-                    {
-                        // 32506/32507 above were addressed to the new ID, so the board
-                        // (still on its old ID) dropped them - a second Send after it
-                        // reconnects delivers them
-                        Props.SetProp("ModuleConfig_AssignPending", "False");
-                        Props.ShowMessage("Module ID sent. Press Send again after the module reconnects"
-                            + " so the description and sensor pins reach it.", "Config", 15000);
-                    }
-                    else
-                    {
-                        Props.ShowMessage("Settings sent to module", "Config", 10000);
-                    }
-
+                    // the pressure page borrows Send to push only the over-pressure
+                    // gate (32505) - no board label, pins or 32700, so no restart
+                    Core.SendPressureGate();
+                    Props.ShowMessage("Pressure settings sent", "Pressure", 10000);
                     HighlightUpdateButton(false);
+                }
+                else
+                {
+                    SendModuleConfig();
                 }
             }
             catch (Exception ex)
             {
                 Props.ShowMessage("frmModuleConfig/btnSendToModule  " + ex.Message, "Help", 10000, true, true);
+            }
+        }
+
+        private void SendModuleConfig()
+        {
+            byte ModuleID = Core.ModuleConfig.GetData()[2];
+
+            // a pending ID assignment (saved on the Config page) sends 32700 with
+            // bit 6 set: the board adopts byte 2 instead of filtering on it, so
+            // every board that hears it takes the ID - allow at most one connected
+            bool AssignID = (Props.GetProp("ModuleConfig_AssignPending") == "True");
+            bool OkToSend = true;
+            if (AssignID)
+            {
+                int connected = 0;
+                int dupID = -1;
+                for (int i = 0; i < Props.MaxModules; i++)
+                {
+                    if (Core.ModulesStatus.Connected(i)) connected++;
+                    if (Core.DuplicateModule(i)) dupID = i;
+                }
+                if (connected > 1)
+                {
+                    OkToSend = false;
+                    Props.ShowMessage("Module ID assignment needs only one board connected. "
+                        + connected.ToString() + " modules are connected.", "Config", 15000);
+                }
+                else if (dupID >= 0)
+                {
+                    // two boards with the same ID count as one connected module -
+                    // their alternating board labels give them away
+                    OkToSend = false;
+                    Props.ShowMessage("Two boards are answering as module " + dupID.ToString()
+                        + ". Disconnect one before assigning an ID.", "Config", 15000);
+                }
+            }
+
+            if (OkToSend)
+            {
+                // 32700 restarts the module immediately on receipt, so the board label
+                // (32506) and sensor pins (32507) must go out before it or they would
+                // arrive during the reboot and be lost
+                string desc = Props.GetModuleDescription(ModuleID).Trim();
+                if (desc.Length > 0)
+                {
+                    new PGNs.PGN32506().Send(ModuleID, desc);
+
+                    // reflect the sent label in the cache so the Boards page doesn't
+                    // show the old value until the module reports back (~2 s later)
+                    Core.ModulesBoardID.SetLabel(ModuleID, desc);
+                }
+
+                Core.SensorPins.Send();
+                Core.ModuleConfig.Send(null, AssignID);
+
+                if (AssignID)
+                {
+                    // 32506/32507 above were addressed to the new ID, so the board
+                    // (still on its old ID) dropped them - a second Send after it
+                    // reconnects delivers them
+                    Props.SetProp("ModuleConfig_AssignPending", "False");
+                    Props.ShowMessage("Module ID sent. Press Send again after the module reconnects"
+                        + " so the description and sensor pins reach it.", "Config", 15000);
+                }
+                else
+                {
+                    Props.ShowMessage("Settings sent to module", "Config", 10000);
+                }
+
+                HighlightUpdateButton(false);
+            }
+        }
+
+        private void ShowPressureSend(string Name)
+        {
+            // the pressure page borrows the Modules-submenu Send button; the
+            // Modules screens are left alone - their expansion logic owns it
+            switch (Name)
+            {
+                case "frmMenuPressure":
+                    butUpdateModules.Left = butFile.Left + SubOffset;
+                    butUpdateModules.Top = butCalibrate.Top + SubSpacing;
+                    butUpdateModules.Visible = true;
+                    break;
+
+                case "frmMenuComm":
+                case "frmMenuNetwork":
+                case "frmMenuConfig":
+                case "frmMenuPins":
+                case "frmMenuRelayPins":
+                case "frmMenuValves":
+                    break;
+
+                default:
+                    butUpdateModules.Visible = false;
+                    break;
             }
         }
 
@@ -1392,6 +1435,7 @@ namespace RateController
         {
             cLastScreen = Name;
             Props.CurrentMenuName = cLastScreen;
+            ShowPressureSend(Name);
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
