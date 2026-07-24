@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 17076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 24076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -228,6 +228,7 @@ Adafruit_PWMServoDriver PWMServoDriver = Adafruit_PWMServoDriver(PCA9685Address)
 // analog
 int16_t PressureReading = 0;
 bool ADSfound = false;
+uint32_t LastADSReadMs = 0;	// set on every successful conversion-register read
 
 // Pressure max gate (Layer 1 over-pressure cutout). Module-wide: one pressure sensor per module.
 bool PressureGateActive = false;	// currently driving actuators to relieve

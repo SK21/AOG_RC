@@ -77,6 +77,7 @@ void DoSetup()
 	// I2C
 	Wire.begin();			// I2C on pins SCL 22, SDA 21
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
+	Wire.setWireTimeout(25000, true);	// 25ms timeout; auto-reset the bus lines on timeout
 
 	// ADS1115
 	if (MDL.ADS1115Enabled)

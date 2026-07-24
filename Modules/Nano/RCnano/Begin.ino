@@ -58,6 +58,7 @@ void DoSetup()
 	// I2C
 	Wire.begin();			// I2C on pins SCL 19, SDA 18
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
+	Wire.setWireTimeout(25000, true);	// 25ms timeout; auto-reset the bus lines on timeout
 
 	// ethernet 
 	Serial.println(F("Starting Ethernet ..."));

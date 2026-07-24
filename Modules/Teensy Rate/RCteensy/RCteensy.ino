@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 17076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 24076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 0xFF		// Pins not connected
@@ -183,6 +183,7 @@ bool MCP23017_found = false;
 // analog
 uint PressureReading = 0;
 bool ADSfound = false;
+uint32_t LastADSReadMs = 0;	// set on every successful conversion-register read
 
 // Pressure max gate (Layer 1 over-pressure cutout). Module-wide: one pressure sensor per module.
 bool PressureGateActive = false;	// currently driving actuators to relieve
