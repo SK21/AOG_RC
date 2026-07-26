@@ -1,5 +1,7 @@
-﻿using RateController.Classes;
+﻿using AgOpenGPS;
+using RateController.Classes;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -119,6 +121,7 @@ namespace RateController.Menu
 
         private void rbModeControlledUPM_CheckedChanged(object sender, EventArgs e)
         {
+            SetEnabled();
             SetButtons(true);
         }
 
@@ -136,10 +139,17 @@ namespace RateController.Menu
             {
                 Prd.AppMode = ApplicationMode.DocumentApplied;
             }
+            else if (rbModeManual.Checked)
+            {
+                Prd.AppMode = ApplicationMode.DocumentAppliedManual;
+            }
             else
             {
                 Prd.AppMode = ApplicationMode.DocumentTarget;
             }
+
+            if (double.TryParse(tbUPM.Text, out double mu)) Prd.ManualUPM = mu;
+
             MainMenu.CurrentProduct.Save();
         }
 
@@ -175,6 +185,9 @@ namespace RateController.Menu
             rbModeConstant.Enabled = Enabled;
             rbModeControlledUPM.Enabled = Enabled;
             rbModeTarget.Enabled = Enabled;
+            rbModeManual.Enabled = Enabled;
+
+            gbManual.Enabled = Enabled && rbModeManual.Checked;
         }
 
         private void SetLanguage()
@@ -208,13 +221,56 @@ namespace RateController.Menu
                     rbModeTarget.Checked = true;
                     break;
 
+                case ApplicationMode.DocumentAppliedManual:
+                    rbModeManual.Checked = true;
+                    break;
+
                 default:
                     rbModeControlledUPM.Checked = true;
                     break;
             }
+
+            tbUPM.Text = MainMenu.CurrentProduct.ManualUPM.ToString("N1");
+
             SetEnabled();
 
             Initializing = false;
+        }
+
+        private void tbUPM_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbUPM.Text, out tempD);
+            using (var form = new FormNumeric(0, 50000, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbUPM.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbUPM_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
+        private void tbUPM_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbUPM.Text, out tempD);
+            if (tempD < 0 || tempD > 50000)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            Props.DrawGroupBox(box, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
     }
 }

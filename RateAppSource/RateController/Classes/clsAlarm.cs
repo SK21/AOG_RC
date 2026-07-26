@@ -128,7 +128,7 @@ namespace RateController.Classes
             {
                 foreach (clsProduct Prd in Core.Products.Items)
                 {
-                    if (Prd.Enabled && Prd.UseOffRateAlarm)
+                    if (Prd.Enabled && Prd.UseOffRateAlarm && Prd.AppMode != ApplicationMode.DocumentAppliedManual)
                     {
                         // too low?
                         bool OutOfBand = false;

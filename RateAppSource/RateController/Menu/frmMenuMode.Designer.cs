@@ -36,7 +36,12 @@
             this.rbModeTarget = new System.Windows.Forms.RadioButton();
             this.rbModeConstant = new System.Windows.Forms.RadioButton();
             this.rbModeControlledUPM = new System.Windows.Forms.RadioButton();
+            this.rbModeManual = new System.Windows.Forms.RadioButton();
             this.lbProduct = new System.Windows.Forms.Label();
+            this.gbManual = new System.Windows.Forms.GroupBox();
+            this.tbUPM = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.gbManual.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnRight
@@ -107,7 +112,7 @@
             this.rbModeApplied.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeApplied.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeApplied.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeApplied.Location = new System.Drawing.Point(46, 330);
+            this.rbModeApplied.Location = new System.Drawing.Point(46, 231);
             this.rbModeApplied.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeApplied.Name = "rbModeApplied";
             this.rbModeApplied.Size = new System.Drawing.Size(434, 74);
@@ -124,7 +129,7 @@
             this.rbModeTarget.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeTarget.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeTarget.Location = new System.Drawing.Point(46, 450);
+            this.rbModeTarget.Location = new System.Drawing.Point(46, 323);
             this.rbModeTarget.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeTarget.Name = "rbModeTarget";
             this.rbModeTarget.Size = new System.Drawing.Size(434, 74);
@@ -141,7 +146,7 @@
             this.rbModeConstant.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeConstant.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeConstant.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeConstant.Location = new System.Drawing.Point(46, 210);
+            this.rbModeConstant.Location = new System.Drawing.Point(46, 139);
             this.rbModeConstant.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeConstant.Name = "rbModeConstant";
             this.rbModeConstant.Size = new System.Drawing.Size(434, 74);
@@ -159,7 +164,7 @@
             this.rbModeControlledUPM.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbModeControlledUPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rbModeControlledUPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbModeControlledUPM.Location = new System.Drawing.Point(46, 90);
+            this.rbModeControlledUPM.Location = new System.Drawing.Point(46, 47);
             this.rbModeControlledUPM.Margin = new System.Windows.Forms.Padding(2);
             this.rbModeControlledUPM.Name = "rbModeControlledUPM";
             this.rbModeControlledUPM.Size = new System.Drawing.Size(434, 74);
@@ -170,6 +175,23 @@
             this.rbModeControlledUPM.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbModeControlledUPM.UseVisualStyleBackColor = true;
             this.rbModeControlledUPM.CheckedChanged += new System.EventHandler(this.rbModeControlledUPM_CheckedChanged);
+            // 
+            // rbModeManual
+            // 
+            this.rbModeManual.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbModeManual.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbModeManual.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbModeManual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbModeManual.Location = new System.Drawing.Point(46, 415);
+            this.rbModeManual.Margin = new System.Windows.Forms.Padding(2);
+            this.rbModeManual.Name = "rbModeManual";
+            this.rbModeManual.Size = new System.Drawing.Size(434, 74);
+            this.rbModeManual.TabIndex = 173;
+            this.rbModeManual.Tag = "0";
+            this.rbModeManual.Text = "5. Document applied manual rate, no rate control,\r\nno module";
+            this.rbModeManual.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbModeManual.UseVisualStyleBackColor = true;
+            this.rbModeManual.CheckedChanged += new System.EventHandler(this.rbModeControlledUPM_CheckedChanged);
             // 
             // lbProduct
             // 
@@ -183,12 +205,47 @@
             this.lbProduct.Text = "Product";
             this.lbProduct.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // gbManual
+            // 
+            this.gbManual.Controls.Add(this.label1);
+            this.gbManual.Controls.Add(this.tbUPM);
+            this.gbManual.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbManual.Location = new System.Drawing.Point(120, 507);
+            this.gbManual.Name = "gbManual";
+            this.gbManual.Size = new System.Drawing.Size(286, 71);
+            this.gbManual.TabIndex = 190;
+            this.gbManual.TabStop = false;
+            this.gbManual.Text = "Manual Rate";
+            this.gbManual.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
+            // 
+            // tbUPM
+            // 
+            this.tbUPM.Location = new System.Drawing.Point(168, 26);
+            this.tbUPM.Name = "tbUPM";
+            this.tbUPM.Size = new System.Drawing.Size(100, 29);
+            this.tbUPM.TabIndex = 174;
+            this.tbUPM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbUPM.TextChanged += new System.EventHandler(this.tbUPM_TextChanged);
+            this.tbUPM.Enter += new System.EventHandler(this.tbUPM_Enter);
+            this.tbUPM.Validating += new System.ComponentModel.CancelEventHandler(this.tbUPM_Validating);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(146, 24);
+            this.label1.TabIndex = 175;
+            this.label1.Text = "Units per Minute";
+            // 
             // frmMenuMode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.gbManual);
             this.Controls.Add(this.lbProduct);
+            this.Controls.Add(this.rbModeManual);
             this.Controls.Add(this.rbModeApplied);
             this.Controls.Add(this.rbModeTarget);
             this.Controls.Add(this.rbModeConstant);
@@ -205,6 +262,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMenuMode_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuMode_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuMode_Load);
+            this.gbManual.ResumeLayout(false);
+            this.gbManual.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -219,6 +278,10 @@
         private System.Windows.Forms.RadioButton rbModeTarget;
         private System.Windows.Forms.RadioButton rbModeConstant;
         private System.Windows.Forms.RadioButton rbModeControlledUPM;
+        private System.Windows.Forms.RadioButton rbModeManual;
         private System.Windows.Forms.Label lbProduct;
+        private System.Windows.Forms.GroupBox gbManual;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbUPM;
     }
 }

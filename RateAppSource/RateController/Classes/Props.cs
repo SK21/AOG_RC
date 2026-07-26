@@ -13,7 +13,7 @@ using System.Windows.Forms;
 namespace RateController.Classes
 {
     public enum ApplicationMode
-    { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget }
+    { ControlledUPM, ConstantUPM, DocumentApplied, DocumentTarget, DocumentAppliedManual }
 
     public enum CanDriver
     { SLCAN, InnoMaker, PCAN }
@@ -75,11 +75,11 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "18-Jul-2026";
+        private static string cAppDate = "26-Jul-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.3.5";
+        private static string cAppVersion = "4.3.6";
         private static bool cCanEnabled = false;
         private static string cCanPort = "COM7";
         private static CanDriver cCurrentCanDriver = CanDriver.SLCAN;

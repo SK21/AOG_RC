@@ -1301,7 +1301,7 @@ namespace RateController.Forms
 
                 MapController.MapZoomed += MapController_MapZoomed;
                 MapController.MapLeftClicked += MapController_MapLeftClicked;
-                MapController.LoadMap();
+                MapController.LoadMap(false);   // just opening the screen - don't re-apply/re-prompt for the active prescription
                 MapController.Enabled = true;
 
                 // Reserve 1px around the edges so the painted border remains visible

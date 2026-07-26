@@ -461,17 +461,25 @@ namespace RateController.RateMap
             Close();
         }
 
-        public static bool LoadMap()
+        // ApplySidecar: only true when the active prescription itself just changed
+        // (picked from the list, created, imported) - that's the moment its saved
+        // product settings should take effect, and the only moment worth confirming
+        // first if something is currently applying. Simply opening/refreshing the
+        // map screen must not re-apply or re-prompt for a prescription that hasn't
+        // changed. Also skipped whenever variable rate isn't enabled, since the
+        // sidecar only matters to a VRA-driven rate.
+        public static bool LoadMap(bool ApplySidecar = true)
         {
             bool Result = false;
             try
             {
                 string rxPath = JobManager.MapPath(JobManager.CurrentJob?.ID ?? -1);
+                bool applySidecar = ApplySidecar && Props.VariableRateEnabled && !string.IsNullOrEmpty(rxPath);
 
-                if (!string.IsNullOrEmpty(rxPath) && Core.Products.ProductsAreOn())
+                if (applySidecar && Core.Products.ProductsAreOn())
                 {
                     using (var dlg = new frmMsgBox(
-                        "Product settings will change for this prescription. Continue?",
+                        "Product settings will change for this prescription.\n Continue?",
                         "Load Prescription", true))
                     {
                         dlg.ShowDialog();
@@ -482,7 +490,7 @@ namespace RateController.RateMap
                 ZnOverlays.ResetAppliedOverlay();
                 ZnOverlays.LoadZones();
 
-                if (!string.IsNullOrEmpty(rxPath))
+                if (applySidecar)
                     Core.Products.LoadSidecar(rxPath);
 
                 // kml

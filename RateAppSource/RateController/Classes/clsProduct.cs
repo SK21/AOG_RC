@@ -25,7 +25,9 @@ namespace RateController.Classes
         private double cHours1;
         private double cHours2;
         private int cManualPWM;
+        private double cManualUPM = 0;
         private double cMeterCal = 0;
+        private double cVirtualQuantity = 0;
         private double cMinUPM;
         private double cMinUPMbySpeed;
         private int cModuleID = -1;
@@ -341,6 +343,15 @@ namespace RateController.Classes
             }
         }
 
+        public double ManualUPM
+        {
+            get { return cManualUPM; }
+            set
+            {
+                if (value >= 0 && value < 50001) cManualUPM = value;
+            }
+        }
+
         public double MeterCal
         {
             get { return cMeterCal; }
@@ -603,6 +614,8 @@ namespace RateController.Classes
             double.TryParse(Props.GetProp(IDname + "FlowCal"), out cMeterCal);
             if (double.TryParse(Props.GetProp(IDname + "TankSize"), out double ts)) cTankSize = ts;
 
+            if (double.TryParse(Props.GetProp(IDname + "ManualUPM"), out double mu)) cManualUPM = mu;
+
             cProductName = Props.GetProp(IDname + "ProductName");
 
             int.TryParse(Props.GetProp(IDname + "CountsRev"), out cCountsRev);
@@ -751,6 +764,12 @@ namespace RateController.Classes
                         double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = RateSensorData.UPM / (HPM * 2.47105);
                     }
+                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    {
+                        // manually entered constant flow, no sensor/module
+                        double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
+                        if (HPM > 0) Result = cManualUPM / (HPM * 2.47105);
+                    }
                     else
                     {
                         // Document target rate
@@ -772,6 +791,12 @@ namespace RateController.Classes
                         double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = RateSensorData.UPM / HPM;
                     }
+                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    {
+                        // manually entered constant flow, no sensor/module
+                        double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
+                        if (HPM > 0) Result = cManualUPM / HPM;
+                    }
                     else
                     {
                         // Document target rate
@@ -786,6 +811,10 @@ namespace RateController.Classes
                         // document target rate
                         Result = TargetRate();
                     }
+                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    {
+                        Result = cManualUPM;
+                    }
                     else
                     {
                         Result = RateSensorData.UPM;
@@ -798,6 +827,10 @@ namespace RateController.Classes
                     {
                         // document target rate
                         Result = TargetRate();
+                    }
+                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    {
+                        Result = cManualUPM * 60;
                     }
                     else
                     {
@@ -860,6 +893,7 @@ namespace RateController.Classes
             Props.SetProp(IDname + "RateAlt", cRateAlt.ToString());
             Props.SetProp(IDname + "FlowCal", cMeterCal.ToString());
             Props.SetProp(IDname + "TankSize", TankSize.ToString());
+            Props.SetProp(IDname + "ManualUPM", cManualUPM.ToString());
             Props.SetProp(IDname + "ValveType", cControlType.ToString());
 
             Props.SetProp(IDname + "ProductName", cProductName);
@@ -1057,7 +1091,7 @@ namespace RateController.Classes
 
         public void Update()
         {
-            if (RateSensorData.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget)
+            if (RateSensorData.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
             {
                 double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
                 UpdateStopWatch.Restart();
@@ -1104,19 +1138,40 @@ namespace RateController.Classes
                 // send to arduino
                 ModuleRateSettings.Send();
 
-                if (cAppMode == ApplicationMode.DocumentTarget)
+                if (cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
                 {
-                    // send pgn from virtual module
-                    byte[] Data = new byte[13];
+                    // send pgn from virtual module (no real sensor/module for this product)
+                    // heartbeat always goes out so Connected() stays true, but reported flow
+                    // is 0 (like a real sensor would read) unless actually applying
+                    double VirtualUPM = 0;
+                    if (cHectaresPerMinute > 0)
+                    {
+                        VirtualUPM = cAppMode == ApplicationMode.DocumentTarget ? TargetUPM() : cManualUPM;
+                        cVirtualQuantity += VirtualUPM * CurrentMinutes;
+                    }
+
+                    byte[] Data = new byte[15];
                     Data[0] = 144;
                     Data[1] = 126;
                     Data[2] = Core.Tls.BuildModSenID((byte)cModuleID, (byte)cSensorID);
-                    double Hz = (TargetUPM() * MeterCal / 60.0) * 1000;
-                    Data[3] = (byte)Hz;
-                    Data[4] = (byte)((int)Hz >> 8);
-                    Data[5] = (byte)((int)Hz >> 16);
+
+                    double UPMx1000 = VirtualUPM * 1000.0;
+                    Data[3] = (byte)((int)UPMx1000);
+                    Data[4] = (byte)((int)UPMx1000 >> 8);
+                    Data[5] = (byte)((int)UPMx1000 >> 16);
+
+                    double Qx10 = cVirtualQuantity * 10.0;
+                    Data[6] = (byte)((int)Qx10);
+                    Data[7] = (byte)((int)Qx10 >> 8);
+                    Data[8] = (byte)((int)Qx10 >> 16);
+
                     Data[11] = 0b00000001; // sensor connected
-                    Data[12] = Core.Tls.CRC(Data, 12);
+
+                    double Hzx10 = (VirtualUPM * MeterCal / 60.0) * 10;
+                    Data[12] = (byte)((int)Hzx10);
+                    Data[13] = (byte)((int)Hzx10 >> 8);
+
+                    Data[14] = Core.Tls.CRC(Data, 14);
                     if (RateSensorData.ParseByteData(Data)) UpdateUnitsApplied();
                 }
             }
