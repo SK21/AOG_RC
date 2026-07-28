@@ -22,10 +22,7 @@ volatile uint8_t SamplesIndex[MaxProductCount];
 
 void PulseISR(uint8_t ID)
 {
-	// the relay bits are output states, so relays in the inverted list read backwards.
-	// XOR that list to recover the logical state - otherwise a module whose sections are
-	// all Invert_Section looks idle exactly when every section is on, and flow is dropped
-	if ((RelayLo ^ InvertedLo) || (RelayHi ^ InvertedHi))
+	if (AnySectionOn())
 	{
 		uint32_t ReadTime = micros();
 		PulseTime[ID] = ReadTime - ReadLast[ID];
@@ -95,7 +92,7 @@ void GetUPM()
 		else
 		{
 			// No flow check
-			if (millis() - LastPulse[i] > FlowTimeout || ((RelayLo ^ InvertedLo) == 0 && (RelayHi ^ InvertedHi) == 0))
+			if (millis() - LastPulse[i] > FlowTimeout || !AnySectionOn())
 			{
 				Sensor[i].UPM = 0;
 				Sensor[i].Hz = 0;

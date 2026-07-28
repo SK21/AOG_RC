@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 24076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 28076;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 0xFF		// Pins not connected
@@ -161,13 +161,25 @@ IPAddress DestinationIP(MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255);
 // Relays
 volatile byte RelayLo = 0;	// sections 0-7
 volatile byte RelayHi = 0;	// sections 8-15
-byte PowerRelayLo;
-byte PowerRelayHi;
+// Power type relays - always energized, so they must not count as a flow path.
+volatile byte PowerRelayLo;
+volatile byte PowerRelayHi;
 // relays whose energized state is the complement of their logical state
 // (Invert_Section/Master/FlowMaster, Bypass). Volatile - read in PulseISR.
 volatile byte InvertedLo;
 volatile byte InvertedHi;
 byte FlowMasterValveIndex = 255;
+
+// "is any section on", the flow-path test. The relay bits are OUTPUT states, so two
+// corrections are needed before they mean anything logical: XOR the inverted list
+// (Invert_Section and friends read backwards - a module with every section inverted
+// otherwise looks idle exactly when all sections are on), and mask off Power relays
+// (always energized, so they would make the test permanently true).
+// A macro, not a function: PulseISR uses it, and an ESP32 ISR cannot call into flash.
+// STILL IMPERFECT - Master/Switch/Hyd/Tram/GeoStop relays are not sections either but
+// have no mask on the wire. See the Option B note (explicit section state in PGN 32500
+// byte 12) for the real fix.
+#define AnySectionOn() ((((RelayLo ^ InvertedLo) & ~PowerRelayLo) | ((RelayHi ^ InvertedHi) & ~PowerRelayHi)) != 0)
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
 uint32_t LoopLast = LoopTime;
@@ -288,7 +300,7 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			SensorConnected[i] = (millis() - Sensor[i].CommTime < 4000);
-			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && ((RelayLo ^ InvertedLo) || (RelayHi ^ InvertedHi)) && (Sensor[i].TargetUPM > 0);
+			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && AnySectionOn() && (Sensor[i].TargetUPM > 0);
 			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn[i]);
 		}
 
