@@ -75,7 +75,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "26-Jul-2026";
+        private static string cAppDate = "28-Jul-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -712,6 +712,83 @@ namespace RateController.Classes
             return Result;
         }
 
+        public static bool ClearReadOnly(string FilePath)
+        {
+            // a copied profile is the user's own file and must not inherit the read only flag
+            bool Result = false;
+            try
+            {
+                if (File.Exists(FilePath))
+                {
+                    var Kept = new List<string>();
+                    bool Found = false;
+                    foreach (string Line in File.ReadAllLines(FilePath))
+                    {
+                        if (Line.StartsWith("ReadOnly=", StringComparison.OrdinalIgnoreCase)) Found = true;
+                        else Kept.Add(Line);
+                    }
+
+                    if (Found)
+                    {
+                        File.WriteAllLines(FilePath, Kept);
+                        Result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/ClearReadOnly: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public static bool IsReadOnlyFile(string FilePath)
+        {
+            // reads the flag without opening the profile
+            bool Result = false;
+            try
+            {
+                if (File.Exists(FilePath))
+                {
+                    foreach (string Line in File.ReadAllLines(FilePath))
+                    {
+                        if (Line.StartsWith("ReadOnly=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Result = bool.TryParse(Line.Substring(9), out bool rd) && rd;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/IsReadOnlyFile: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public static List<string> EditableProfiles()
+        {
+            // profile files that are not flagged read only
+            var Result = new List<string>();
+            try
+            {
+                if (Directory.Exists(ProfilesFolder))
+                {
+                    foreach (string Sub in Directory.GetDirectories(ProfilesFolder))
+                    {
+                        string FileName = Sub + "\\" + Path.GetFileName(Sub) + ".rcs";
+                        if (File.Exists(FileName) && !IsReadOnlyFile(FileName)) Result.Add(FileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog("Props/EditableProfiles: " + ex.Message);
+            }
+            return Result;
+        }
+
         public static bool CheckFolders()
         {
             bool Result = false;
@@ -740,15 +817,26 @@ namespace RateController.Classes
                 if (!File.Exists(DefaultProfile + "\\Default.rcs")) File.WriteAllBytes(DefaultProfile + "\\Default.rcs", Properties.Resources.Default);
                 if (!File.Exists(DefaultProfile + "\\DefaultPressureData.csv")) File.WriteAllText(DefaultProfile + "\\DefaultPressureData.csv", string.Empty);
 
-                string ExampleProfile = name + "\\" + "Example";
-                if (!Directory.Exists(ExampleProfile)) Directory.CreateDirectory(ExampleProfile);
-                if (!File.Exists(ExampleProfile + "\\Example.rcs")) File.WriteAllBytes(ExampleProfile + "\\Example.rcs", Properties.Resources.Example);
-                if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
-
                 // check user files, current profile
-                if (!File.Exists(Props.CurrentFile))
+                // Default is the read only reference profile, never leave the user sitting in it.
+                // Example is an editable working copy of it, restored whenever it is needed
+                if (!File.Exists(Props.CurrentFile) || IsReadOnlyFile(Props.CurrentFile))
                 {
-                    Props.CurrentFile = ExampleProfile + "\\Example.rcs";
+                    // use a profile the user already has, only build Example when there are none
+                    var Editable = EditableProfiles();
+                    string WorkingFile = Editable.Count > 0 ? Editable[0] : "";
+
+                    if (WorkingFile == "")
+                    {
+                        string ExampleProfile = name + "\\Example";
+                        if (!Directory.Exists(ExampleProfile)) Directory.CreateDirectory(ExampleProfile);
+                        if (!File.Exists(ExampleProfile + "\\Example.rcs")) File.Copy(DefaultProfile + "\\Default.rcs", ExampleProfile + "\\Example.rcs");
+                        if (!File.Exists(ExampleProfile + "\\ExamplePressureData.csv")) File.WriteAllText(ExampleProfile + "\\ExamplePressureData.csv", string.Empty);
+                        ClearReadOnly(ExampleProfile + "\\Example.rcs");
+                        WorkingFile = ExampleProfile + "\\Example.rcs";
+                    }
+
+                    Props.CurrentFile = WorkingFile;
                     Properties.Settings.Default.Save();
                 }
 

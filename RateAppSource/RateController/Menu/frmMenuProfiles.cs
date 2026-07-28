@@ -32,13 +32,17 @@ namespace RateController.Menu
 
                         string OldFileName = lstProfiles.SelectedItem.ToString();
                         string OldFileFullName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + ".rcs";
-                        File.Copy(OldFileFullName, NewFilePath + "\\" + tbName.Text + ".rcs");
+                        string NewFileFullName = NewFilePath + "\\" + tbName.Text + ".rcs";
+                        File.Copy(OldFileFullName, NewFileFullName);
+
+                        // the copy is the user's own file, clear before it is loaded
+                        Props.ClearReadOnly(NewFileFullName);
 
                         string NewFilePressureName = NewFilePath + "\\" + tbName.Text + "PressureData.csv";
                         string OldFilePressureName = Props.ProfilesFolder + "\\" + OldFileName + "\\" + OldFileName + "PressureData.csv";
                         File.Copy(OldFilePressureName, NewFilePressureName);
 
-                        Core.ChangeProfile(NewFilePath + "\\" + tbName.Text + ".rcs");
+                        Core.ChangeProfile(NewFileFullName);
                         tbName.Text = "";
                         UpdateForm();
                     }
@@ -65,7 +69,23 @@ namespace RateController.Menu
                 if (lstProfiles.SelectedIndex >= 0)
                 {
                     string FileToDelete = lstProfiles.SelectedItem.ToString();
-                    if (FileToDelete != "Default" && FileToDelete != "Example")
+                    string SelectedFile = Props.ProfilesFolder + "\\" + FileToDelete + "\\" + FileToDelete + ".rcs";
+
+                    bool CanDelete = true;
+                    string Reason = "";
+                    if (FileToDelete == "Default")
+                    {
+                        CanDelete = false;
+                        Reason = "Can not delete the Default profile.";
+                    }
+                    else if (!Props.IsReadOnlyFile(SelectedFile) && Props.EditableProfiles().Count < 2)
+                    {
+                        // Default can not be edited, so one editable profile must always remain
+                        CanDelete = false;
+                        Reason = "Can not delete the only editable profile.";
+                    }
+
+                    if (CanDelete)
                     {
                         var Hlp = new frmMsgBox("Confirm Delete [" + FileToDelete + "]?", "Delete File", true);
                         Hlp.TopMost = true;
@@ -80,10 +100,11 @@ namespace RateController.Menu
                             {
                                 Directory.Delete(FilePath, true);
 
-                                // load default if current is deleted
+                                // load a writable profile if current is deleted
                                 if (Props.CurrentFile == FilePath + "\\" + FileToDelete + ".rcs")
                                 {
-                                    Core.ChangeProfile(FilePath + "\\Default.rcs");
+                                    Props.CheckFolders();
+                                    Core.ChangeProfile(Props.CurrentFile);
                                     tbName.Text = "";
                                 }
                                 UpdateForm();
@@ -96,7 +117,7 @@ namespace RateController.Menu
                     }
                     else
                     {
-                        Props.ShowMessage("Can not delete file.", "Help", 20000, true);
+                        Props.ShowMessage(Reason, "Help", 20000, true);
                     }
                 }
                 else

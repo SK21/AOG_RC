@@ -218,6 +218,22 @@ namespace RateController.Menu
             SetButtons(true);
         }
 
+        private bool ColoursMatch(Control Swatch)
+        {
+            return Swatch.BackColor.ToArgb() == Properties.Settings.Default.DisplayBackColour.ToArgb()
+                && Swatch.ForeColor.ToArgb() == Properties.Settings.Default.DisplayForeColour.ToArgb();
+        }
+
+        private int ChoiceFromColours()
+        {
+            // the choice is not stored, work it out from the colours in use
+            int Result = 3;     // user colours
+            if (ColoursMatch(tbColourDefault1)) Result = 0;
+            else if (ColoursMatch(tbColourDefault2)) Result = 1;
+            else if (ColoursMatch(tbColourDefault3)) Result = 2;
+            return Result;
+        }
+
         private void UpdateForm()
         {
             Initializing = true;
@@ -225,6 +241,8 @@ namespace RateController.Menu
             // set colours
             tbColourUser1.ForeColor = Properties.Settings.Default.DisplayForeColourUser;
             tbColourUser1.BackColor = Properties.Settings.Default.DisplayBackColourUser;
+
+            ColorChoice = ChoiceFromColours();
 
             switch (ColorChoice)
             {
