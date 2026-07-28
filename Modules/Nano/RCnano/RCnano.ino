@@ -131,8 +131,10 @@ volatile byte RelayLo = 0;	// sections 0-7
 volatile byte RelayHi = 0;	// sections 8-15
 byte PowerRelayLo;
 byte PowerRelayHi;
-byte InvertedLo;
-byte InvertedHi;
+// relays whose energized state is the complement of their logical state
+// (Invert_Section/Master/FlowMaster, Bypass). Volatile - read in PulseISR.
+volatile byte InvertedLo;
+volatile byte InvertedHi;
 byte FlowMasterValveIndex = 255;
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
@@ -225,7 +227,7 @@ void loop()
 			// gate PID off when master or all sections are off - no flow path means UPM=0
 			// with a nonzero target, so the loop would wind the valve open (huge overshoot
 			// when flow starts). PWM=0 makes a standard valve HOLD position, not close.
-			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && (RelayLo || RelayHi) && (Sensor[i].TargetUPM > 0);
+			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && ((RelayLo ^ InvertedLo) || (RelayHi ^ InvertedHi)) && (Sensor[i].TargetUPM > 0);
 			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn[i]);
 		}
 

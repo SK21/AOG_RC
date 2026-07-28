@@ -280,15 +280,21 @@ namespace RateController.PGNs
         public void Send(byte? commMode = null, bool assignID = false)
         {
             // sensor 0/1 pins mirror the sensor-pins config (PGN 32507) so firmware
-            // that only reads 32700 stays in sync with the pins grid
+            // that only reads 32700 stays in sync with the pins grid. Only slots below
+            // the sensor count (byte 3) are mirrored - unused slots go out as NC, the
+            // same as PGN 32507 which sends one packet per configured sensor. The
+            // firmware validates bytes 7-12 against a board specific pin list no matter
+            // what the sensor count is, so an unused sensor's stale pins would otherwise
+            // get the whole config rejected.
             if (Core.SensorPins != null)
             {
-                cData[7] = Core.SensorPins.FlowPin(0);
-                cData[8] = Core.SensorPins.DirPin(0);
-                cData[9] = Core.SensorPins.PWMPin(0);
-                cData[10] = Core.SensorPins.FlowPin(1);
-                cData[11] = Core.SensorPins.DirPin(1);
-                cData[12] = Core.SensorPins.PWMPin(1);
+                for (int i = 0; i < 2; i++)
+                {
+                    bool InUse = (i < cData[3]);
+                    cData[7 + i * 3] = InUse ? Core.SensorPins.FlowPin(i) : PGN32507.NC;
+                    cData[8 + i * 3] = InUse ? Core.SensorPins.DirPin(i) : PGN32507.NC;
+                    cData[9 + i * 3] = InUse ? Core.SensorPins.PWMPin(i) : PGN32507.NC;
+                }
             }
 
             // bit 6 is per-send, not part of the saved config - written both ways

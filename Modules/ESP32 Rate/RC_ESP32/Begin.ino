@@ -77,7 +77,9 @@ void DoSetup()
 	// I2C
 	Wire.begin();			// I2C on pins SCL 22, SDA 21
 	Wire.setClock(400000);	//Increase I2C data rate to 400kHz
-	Wire.setWireTimeout(25000, true);	// 25ms timeout; auto-reset the bus lines on timeout
+	// 25ms timeout. setWireTimeout(us, reset) is AVR only - the ESP32 Wire takes
+	// milliseconds and its driver recovers the bus itself, so there is no reset flag
+	Wire.setTimeOut(25);
 
 	// ADS1115
 	if (MDL.ADS1115Enabled)
