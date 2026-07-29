@@ -62,7 +62,11 @@ namespace RateController.Menu
             bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
             if (diagnosticsChanged) Props.ShowCanDiagnostics = ckDiagnostics.Checked;
 
-            if (Props.CanEnabled != ckCanBus.Checked) CanSettingsChanged = true;
+            // only a transport flip reaches the module - a driver or COM port change just
+            // restarts the bridge locally, so it must not claim to have sent anything or
+            // write the module config back to the profile
+            bool ModeChanged = Props.CanEnabled != ckCanBus.Checked;
+            if (ModeChanged) CanSettingsChanged = true;
             if (CanSettingsChanged)
             {
                 int Result = Core.UseCanComm(ckCanBus.Checked);
@@ -83,8 +87,12 @@ namespace RateController.Menu
                         break;
                 }
 
-                Core.ModuleConfig.Save();
-                Props.ShowMessage("Comm change sent to module. " + Mes, "Config", 10000);
+                if (ModeChanged)
+                {
+                    Core.ModuleConfig.Save();
+                    Mes = "Comm change sent to module. " + Mes;
+                }
+                Props.ShowMessage(Mes, "Config", 10000);
             }
 
             SetButtons(false);

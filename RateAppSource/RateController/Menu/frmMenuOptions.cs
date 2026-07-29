@@ -208,6 +208,24 @@ namespace RateController.Menu
             }
         }
 
+        private void Setting_Changed(object sender, EventArgs e)
+        {
+            // SetButtons already ignores changes made while the form is loading
+            SetButtons(true);
+        }
+
+        private void WheelSetting_Changed(object sender, EventArgs e)
+        {
+            // module, pin and cal all travel to the module in PGN 32504, so an edit has to
+            // mark WheelSpeedChanged too - btnOK only sends when that is set, and until now
+            // only the Wheel radio set it, so editing a pin alone saved without sending
+            if (!Initializing)
+            {
+                WheelSpeedChanged = true;
+                SetButtons(true);
+            }
+        }
+
         private void SetLanguage()
         {
             ckMetric.Text = Lang.lgMetric;

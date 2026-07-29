@@ -232,6 +232,7 @@
             this.tbWheelPin.TabIndex = 239;
             this.tbWheelPin.TabStop = false;
             this.tbWheelPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelPin.TextChanged += new System.EventHandler(this.WheelSetting_Changed);
             this.tbWheelPin.Enter += new System.EventHandler(this.tbWheelPin_Enter);
             this.tbWheelPin.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelPin_Validating);
             // 
@@ -259,6 +260,7 @@
             this.tbWheelCal.TabIndex = 240;
             this.tbWheelCal.TabStop = false;
             this.tbWheelCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelCal.TextChanged += new System.EventHandler(this.WheelSetting_Changed);
             this.tbWheelCal.Enter += new System.EventHandler(this.tbWheelCal_Enter);
             this.tbWheelCal.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelCal_Validating);
             // 
@@ -274,6 +276,7 @@
             this.tbSimSpeed.TabIndex = 338;
             this.tbSimSpeed.Text = "0";
             this.tbSimSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSimSpeed.TextChanged += new System.EventHandler(this.Setting_Changed);
             this.tbSimSpeed.Enter += new System.EventHandler(this.tbSimSpeed_Enter);
             this.tbSimSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.tbSimSpeed_Validating);
             // 
@@ -312,6 +315,7 @@
             this.tbWheelModule.TabIndex = 243;
             this.tbWheelModule.TabStop = false;
             this.tbWheelModule.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbWheelModule.TextChanged += new System.EventHandler(this.WheelSetting_Changed);
             this.tbWheelModule.Enter += new System.EventHandler(this.tbWheelModule_Enter);
             this.tbWheelModule.Validating += new System.ComponentModel.CancelEventHandler(this.tbWheelModule_Validating);
             // 

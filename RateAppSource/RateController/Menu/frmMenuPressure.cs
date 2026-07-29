@@ -1,6 +1,7 @@
 ﻿using AgOpenGPS;
 using RateController.Classes;
 using RateController.Language;
+using RateController.PGNs;
 using System;
 using System.Windows.Forms;
 
@@ -8,6 +9,12 @@ namespace RateController.Menu
 {
     public partial class frmMenuPressure : Form
     {
+        // Entry limit for the raw sensor reading fields (min/max cal points and the zero
+        // reading). These are ADC counts, not pressure units. An ADS1115 is a signed 16 bit
+        // converter reading up to 32767 - an RC15 runs well past the old 5000 limit, which
+        // only ever suited a 12 bit analogRead (0-4095).
+        private const int MaxRawReading = 32767;
+
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -30,18 +37,30 @@ namespace RateController.Menu
         {
             try
             {
-                Props.SetPressureCal(cbModules.SelectedIndex * 5, double.Parse(tbMinVol.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 1, double.Parse(tbMinPres.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 2, double.Parse(tbMaxVol.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 3, double.Parse(tbMaxPres.Text));
-                Props.SetPressureCal(cbModules.SelectedIndex * 5 + 4, double.Parse(tbZeroReading.Text));
+                int Module = cbModules.SelectedIndex;
+                PGN32505 Gate = new PGN32505();
+
+                // What the module receives is the raw threshold (32505), derived from the max
+                // pressure AND the calibration. Compare the computed threshold either side of
+                // the save - the old check looked only at the max pressure, so editing the
+                // calibration moved the threshold with nothing prompting the user to send it.
+                ushort OldThreshold = Gate.RawThreshold(Module);
+
+                Props.SetPressureCal(Module * 5, double.Parse(tbMinVol.Text));
+                Props.SetPressureCal(Module * 5 + 1, double.Parse(tbMinPres.Text));
+                Props.SetPressureCal(Module * 5 + 2, double.Parse(tbMaxVol.Text));
+                Props.SetPressureCal(Module * 5 + 3, double.Parse(tbMaxPres.Text));
+                Props.SetPressureCal(Module * 5 + 4, double.Parse(tbZeroReading.Text));
                 Props.ShowPressure = ckPressure.Checked;
 
-                // only the max pressure goes to the module (32505); highlight
-                // Send only when it actually changed
                 double NewMax = double.TryParse(tbAlarmPressure.Text, out double mp) ? mp : 0;
-                if (NewMax != Props.GetMaxPressure(cbModules.SelectedIndex)) MainMenu.HighlightUpdateButton();
-                Props.SetMaxPressure(cbModules.SelectedIndex, NewMax);
+                Props.SetMaxPressure(Module, NewMax);
+
+                if (Gate.RawThreshold(Module) != OldThreshold)
+                {
+                    MainMenu.HighlightUpdateButton();
+                    Props.ShowMessage("Pressure gate changed. Press Send to apply it to the module.", "Pressure", 4000);
+                }
 
                 SetButtons(false);
                 UpdateForm();
@@ -157,7 +176,7 @@ namespace RateController.Menu
         {
             double temp;
             double.TryParse(tbMaxVol.Text, out temp);
-            using (var form = new FormNumeric(0, 5000, temp))
+            using (var form = new FormNumeric(0, MaxRawReading, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -185,7 +204,7 @@ namespace RateController.Menu
         {
             double temp;
             double.TryParse(tbMinVol.Text, out temp);
-            using (var form = new FormNumeric(0, 5000, temp))
+            using (var form = new FormNumeric(0, MaxRawReading, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -204,7 +223,7 @@ namespace RateController.Menu
         {
             double temp;
             double.TryParse(tbZeroReading.Text, out temp);
-            using (var form = new FormNumeric(0, 5000, temp))
+            using (var form = new FormNumeric(0, MaxRawReading, temp))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
