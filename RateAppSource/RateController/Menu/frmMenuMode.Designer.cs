@@ -215,7 +215,7 @@
             this.gbManual.Size = new System.Drawing.Size(286, 71);
             this.gbManual.TabIndex = 190;
             this.gbManual.TabStop = false;
-            this.gbManual.Text = "Manual Rate";
+            this.gbManual.Text = "Manual Rate, All Sections On";
             this.gbManual.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox1_Paint);
             // 
             // tbUPM

@@ -247,6 +247,14 @@ namespace RateController.Menu
                 if (result == DialogResult.OK)
                 {
                     tbUPM.Text = form.ReturnValue.ToString("N1");
+
+                    // The value is total output with everything running; flow is reported
+                    // scaled to the width currently switched on (clsProduct.ManualUPMinUse).
+                    // That only matches the machine if sections and dispensers line up.
+                    Props.ShowMessage("Enter the total output of the machine with all sections on."
+                        + "\r\n\r\nThere must be one section per dispenser, and each section's width must match"
+                        + " the ground that dispenser covers. A section turned off then lowers the reported"
+                        + " flow by that dispenser's share.", "Manual Rate", 15000);
                 }
             }
         }

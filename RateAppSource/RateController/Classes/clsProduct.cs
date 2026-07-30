@@ -690,6 +690,20 @@ namespace RateController.Classes
             return Result;
         }
 
+        // Manual (mode 5) flow scaled to the sections currently on. The typed value is
+        // total machine output with every section running; flow tracks width because a
+        // single product is applied uniformly across the implement, so one dispenser of
+        // N shutting off removes its share of both the flow and the ground covered.
+        // Requires one section per dispenser (see the warning on frmMenuMode).
+        // Master off -> WorkingWidth is 0 -> no flow, same as a real sensor would read.
+        public double ManualUPMinUse()
+        {
+            double Result = 0;
+            double fullWidth = Core.Sections.TotalWidth(false);
+            if (fullWidth > 0) Result = cManualUPM * Core.Sections.WorkingWidth(false) / fullWidth;
+            return Result;
+        }
+
         // The UPM floor produced by holding control down to a given minimum ground
         // speed, at the current target rate and active section width.
         // minSpeed is in the user's display units (mph or km/h).
@@ -766,7 +780,12 @@ namespace RateController.Classes
                     }
                     else if (cAppMode == ApplicationMode.DocumentAppliedManual)
                     {
-                        // manually entered constant flow, no sensor/module
+                        // manually entered flow, no sensor/module
+                        // Deliberately total width, not working width: sections off cut the
+                        // flow and the ground covered by the same fraction, so the two cancel
+                        // and rate/area is unchanged. Scaling the flow then dividing by
+                        // working width gives the identical answer but divides by zero when
+                        // parked with everything off.
                         double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = cManualUPM / (HPM * 2.47105);
                     }
@@ -793,7 +812,8 @@ namespace RateController.Classes
                     }
                     else if (cAppMode == ApplicationMode.DocumentAppliedManual)
                     {
-                        // manually entered constant flow, no sensor/module
+                        // manually entered flow, no sensor/module
+                        // total width, not working width - see the acres case above
                         double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = cManualUPM / HPM;
                     }
@@ -813,7 +833,7 @@ namespace RateController.Classes
                     }
                     else if (cAppMode == ApplicationMode.DocumentAppliedManual)
                     {
-                        Result = cManualUPM;
+                        Result = ManualUPMinUse();
                     }
                     else
                     {
@@ -830,7 +850,7 @@ namespace RateController.Classes
                     }
                     else if (cAppMode == ApplicationMode.DocumentAppliedManual)
                     {
-                        Result = cManualUPM * 60;
+                        Result = ManualUPMinUse() * 60;
                     }
                     else
                     {
@@ -1146,7 +1166,7 @@ namespace RateController.Classes
                     double VirtualUPM = 0;
                     if (cHectaresPerMinute > 0)
                     {
-                        VirtualUPM = cAppMode == ApplicationMode.DocumentTarget ? TargetUPM() : cManualUPM;
+                        VirtualUPM = cAppMode == ApplicationMode.DocumentTarget ? TargetUPM() : ManualUPMinUse();
                         cVirtualQuantity += VirtualUPM * CurrentMinutes;
                     }
 
