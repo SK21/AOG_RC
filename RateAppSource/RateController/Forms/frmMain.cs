@@ -368,7 +368,7 @@ namespace RateController.Forms
             ProductIcons[4] = prod5;
             ProductIcons[5] = Fans;
 
-            Props.LoadFormLocation(this);
+            // location is restored in Core.Initialize, before the floating display forms open
             SetColors();
 
             for (int i = 0; i < Props.MaxProducts; i++)

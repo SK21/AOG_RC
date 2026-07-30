@@ -1,4 +1,4 @@
-﻿using RateController.Classes;
+using RateController.Classes;
 using RateController.Language;
 using System;
 using System.Drawing;
@@ -14,16 +14,17 @@ namespace RateController
             SwIDs.sw8, SwIDs.sw9, SwIDs.sw10, SwIDs.sw11,
             SwIDs.sw12,SwIDs.sw13,SwIDs.sw14, SwIDs.sw15
         };
-        private Color ColorOff1 = Color.Silver;
-        private Color ColorOff2 = Color.Silver;
         private Button[] _switchButtons = new Button[0];
-        private int mouseX = 0;
-        private int mouseY = 0;
-        private int windowLeft = 0;
-        private int windowTop = 0;
-        private int FullWidth;
-        private Point UpHome;
+        private Color ColorOff = Color.Silver;
         private Point DownHome;
+        private Form FormToTrack = null;
+        private int FullWidth;
+        private bool IsManuallyMoved = false;
+        private bool IsShutDown = false;
+        private Point MouseDownLocation;
+        private Point Offset;
+        private bool trackingAttached = false;
+        private Point UpHome;
 
         public frmSwitches()
         {
@@ -35,11 +36,7 @@ namespace RateController
             DownHome = btnDown.Location;
         }
 
-        public void SetDescriptions()
-        {
-            for (int i = 0; i < _switchButtons.Length; i++)
-                _switchButtons[i].Text = (i + 1).ToString();
-        }
+        private bool IsPinned => this.Owner != null && FormToTrack == this.Owner;
 
         public void CreateSwitchButtons()
         {
@@ -56,10 +53,14 @@ namespace RateController
 
             if (RateOnly)
             {
-                // rate up/down only, moved into the top left corner
-                btnUp.Location = new Point(startX, 12);
-                btnDown.Location = new Point(startX + spacingX, 12);
-                this.ClientSize = new Size(startX + spacingX + btnW + startX, 12 + btnH + 12);
+                // rate up/down only, centred in a small panel
+                const int panelW = 155, panelH = 68;
+                int gapX = (panelW - 2 * btnW) / 3;
+                int top = (panelH - btnH) / 2;
+
+                this.ClientSize = new Size(panelW, panelH);
+                btnUp.Location = new Point(gapX, top);
+                btnDown.Location = new Point(2 * gapX + btnW, top);
             }
             else
             {
@@ -77,6 +78,9 @@ namespace RateController
                     btn.Text = (i + 1).ToString();
                     btn.Tag = i;
                     btn.Click += SwitchButton_Click;
+                    btn.MouseDown += button_MouseDown;
+                    btn.MouseMove += button_MouseMove;
+                    btn.MouseUp += frmSwitches_MouseUp;
                     _switchButtons[i] = btn;
                     Controls.Add(btn);
                 }
@@ -87,12 +91,122 @@ namespace RateController
                 btnAutoSection.Location = new Point(startX + 2 * spacingX, autoY);
                 this.ClientSize = new Size(FullWidth, autoY + btnH + 10);
             }
+
+            SetColor();
+
+            // the panel changed size, so re-evaluate whether it still overlaps the tracked form
+            TryToPin();
         }
 
-        private void SwitchButton_Click(object sender, EventArgs e)
+        public void DetachFromOwner()
         {
-            int idx = (int)((Button)sender).Tag;
-            if (idx < SwIdMap.Length) Core.vSwitchBox.PressSwitch(SwIdMap[idx]);
+            try
+            {
+                this.Owner = null;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/Detach: " + ex.Message);
+            }
+        }
+
+        public void SetDescriptions()
+        {
+            for (int i = 0; i < _switchButtons.Length; i++)
+                _switchButtons[i].Text = (i + 1).ToString();
+        }
+
+        public void TrackingSetup()
+        {
+            try
+            {
+                Form newFormToTrack = null;
+
+                // Priority selection
+                if (Core.MainForm.WindowState != FormWindowState.Minimized)
+                {
+                    newFormToTrack = Core.MainForm;
+                }
+                else if (Props.IsFormOpen("RCRestore", false) != null)
+                {
+                    newFormToTrack = Props.IsFormOpen("RCRestore", false);
+                }
+
+                if (newFormToTrack != FormToTrack)
+                {
+                    // Switch tracking cleanly
+                    DetachTrackingFromCurrentForm();
+                    FormToTrack = newFormToTrack;
+                    AttachTracking(FormToTrack);
+                }
+
+                // Attempt pin if appropriate
+                if (FormToTrack != null) TryToPin();
+
+                // Refresh z-order
+                if (!this.TopMost) this.TopMost = true;
+                this.BringToFront();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/TrackingSetup: " + ex.Message);
+            }
+        }
+
+        public bool TryToPin()
+        {
+            bool Intersects = false;
+            try
+            {
+                if (FormToTrack != null && !FormToTrack.IsDisposed)
+                {
+                    // Always drop owner first; we will reassign if pin conditions met.
+                    this.Owner = null;
+
+                    Rectangle recThis = this.Bounds;
+                    Rectangle recTrackForm = FormToTrack.Bounds;
+
+                    Intersects = recThis.IntersectsWith(recTrackForm);
+                    if (Intersects)
+                    {
+                        this.Owner = FormToTrack;
+                        // Recompute offset every time we pin to allow manual repositioning before pin.
+                        Offset = new Point(this.Location.X - FormToTrack.Location.X,
+                                           this.Location.Y - FormToTrack.Location.Y);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/TryToPin: " + ex.Message);
+            }
+            return Intersects;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Color borderColor = Properties.Settings.Default.DisplayForeColour;
+            int borderWidth = 1;
+            using (Pen pen = new Pen(borderColor, borderWidth))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, this.ClientSize.Width - 1, this.ClientSize.Height - 1);
+            }
+        }
+
+        private void AttachTracking(Form frm)
+        {
+            if (frm == null || frm.IsDisposed || trackingAttached) return;
+            try
+            {
+                frm.LocationChanged += TrackForm;
+                frm.FormClosing += StopTrackingForm;
+                trackingAttached = true;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/AttachTracking: " + ex.Message);
+            }
         }
 
         private void btnAutoRate_Click(object sender, EventArgs e)
@@ -105,14 +219,17 @@ namespace RateController
             Core.vSwitchBox.PressSwitch(SwIDs.AutoSection);
         }
 
+        // The buttons cover nearly the whole panel, so the right button drags it from anywhere.
+        // Switch actions are left-button only, otherwise starting a drag on a rate button would
+        // also send a rate press.
         private void btnDown_MouseDown(object sender, MouseEventArgs e)
         {
-            Core.vSwitchBox.RateDownPressed();
+            if (e.Button == MouseButtons.Left) Core.vSwitchBox.RateDownPressed();
         }
 
         private void btnDown_MouseUp(object sender, MouseEventArgs e)
         {
-            Core.vSwitchBox.RateDownReleased();
+            if (e.Button == MouseButtons.Left) Core.vSwitchBox.RateDownReleased();
         }
 
         private void btnMaster_Click(object sender, EventArgs e)
@@ -122,7 +239,7 @@ namespace RateController
 
         private void btnMaster_MouseUp(object sender, MouseEventArgs e)
         {
-            Core.vSwitchBox.MasterReleased();
+            if (e.Button == MouseButtons.Left) Core.vSwitchBox.MasterReleased();
         }
 
         private void btnPrime_Click(object sender, EventArgs e)
@@ -132,12 +249,37 @@ namespace RateController
 
         private void btnUp_MouseDown(object sender, MouseEventArgs e)
         {
-            Core.vSwitchBox.RateUpPressed();
+            if (e.Button == MouseButtons.Left) Core.vSwitchBox.RateUpPressed();
         }
 
         private void btnUp_MouseUp(object sender, MouseEventArgs e)
         {
-            Core.vSwitchBox.RateUpReleased();
+            if (e.Button == MouseButtons.Left) Core.vSwitchBox.RateUpReleased();
+        }
+
+        private void button_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+        }
+
+        private void button_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                this.Location = new Point(this.Left + e.X - MouseDownLocation.X,
+                                          this.Top + e.Y - MouseDownLocation.Y);
+                IsManuallyMoved = true;
+            }
+        }
+
+        private void Core_AppExit(object sender, EventArgs e)
+        {
+            if (!IsShutDown) ShutDown();
+        }
+
+        private void Core_ColorChanged(object sender, EventArgs e)
+        {
+            SetColor();
         }
 
         private void Core_ProfileChanged(object sender, EventArgs e)
@@ -145,28 +287,77 @@ namespace RateController
             LoadSettings();
         }
 
+        private void Core_RestoreMain(object sender, EventArgs e)
+        {
+            TrackingSetup();
+        }
+
+        private void DetachTrackingFromCurrentForm()
+        {
+            if (!trackingAttached || FormToTrack == null) return;
+            try
+            {
+                FormToTrack.LocationChanged -= TrackForm;
+                FormToTrack.FormClosing -= StopTrackingForm;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/DetachTracking: " + ex.Message);
+            }
+            finally
+            {
+                trackingAttached = false;
+            }
+        }
+
         private void frmSwitches_Closed(object sender, FormClosedEventArgs e)
         {
-            Props.SaveFormLocation(this);
-            timer1.Enabled = false;
-            Core.vSwitchBox.UsefrmSwitches = false;
-            Core.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
-            Core.ProfileChanged -= Core_ProfileChanged;
+            if (!IsShutDown) ShutDown();
         }
 
         private void frmSwitches_Load(object sender, EventArgs e)
         {
             Core.SwitchBox.SwitchPGNreceived += SwitchBox_SwitchPGNreceived;
             Core.ProfileChanged += Core_ProfileChanged;
-            this.BackColor = Properties.Settings.Default.MainBackColour;
+            Core.ColorChanged += Core_ColorChanged;
+            Core.MainForm.Minimize += MainForm_Minimize;
+            Core.AppExit += Core_AppExit;
+            Core.RestoreMain += Core_RestoreMain;
 
             Props.LoadFormLocation(this);
             CreateSwitchButtons();
+            TrackingSetup();
             timer1.Enabled = true;
             Core.vSwitchBox.UsefrmSwitches = true;
             Core.vSwitchBox.PressSwitch(SwIDs.MasterOff);
             SetDescriptions();
             LoadSettings();
+        }
+
+        private void frmSwitches_LocationChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                // If user manually moves while previously pinned, drop pin until re-evaluated.
+                if (IsManuallyMoved && IsPinned)
+                {
+                    this.Owner = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/locationChanged " + ex.Message);
+            }
+        }
+
+        private void frmSwitches_MouseUp(object sender, MouseEventArgs e)
+        {
+            // When user releases mouse, attempt re-pin if overlapping tracked form.
+            IsManuallyMoved = false;
+            if (FormToTrack != null && !FormToTrack.IsDisposed)
+            {
+                TryToPin();
+            }
         }
 
         private void LoadSettings()
@@ -175,31 +366,37 @@ namespace RateController
             SetLanguage();
         }
 
+        private void MainForm_Minimize(object sender, EventArgs e)
+        {
+            DetachFromOwner();
+        }
+
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            // Log the current window location and the mouse location.
-            if (e.Button == MouseButtons.Right)
-            {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-                mouseX = e.X;
-                mouseY = e.Y;
-            }
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left)
             {
-                windowTop = this.Top;
-                windowLeft = this.Left;
-
-                Point pos = new Point(0, 0);
-
-                pos.X = windowLeft + e.X - mouseX;
-                pos.Y = windowTop + e.Y - mouseY;
-                this.Location = pos;
+                this.Location = new Point(this.Left + e.X - MouseDownLocation.X,
+                                          this.Top + e.Y - MouseDownLocation.Y);
+                IsManuallyMoved = true;
             }
+        }
+
+        private void SetColor()
+        {
+            this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            ColorOff = Properties.Settings.Default.MainBackColour;
+
+            foreach (Control c in this.Controls)
+            {
+                if (c is Button) c.ForeColor = Properties.Settings.Default.MainForeColour;
+            }
+            UpdateForm();
+            this.Invalidate();   // repaint the border
         }
 
         private void SetLanguage()
@@ -208,9 +405,38 @@ namespace RateController
             btnAutoSection.Text = Lang.lgAutoSection;
         }
 
+        private void ShutDown()
+        {
+            Props.SaveFormLocation(this);
+            timer1.Enabled = false;
+            Core.vSwitchBox.UsefrmSwitches = false;
+            Core.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
+            Core.ProfileChanged -= Core_ProfileChanged;
+            Core.ColorChanged -= Core_ColorChanged;
+            Core.MainForm.Minimize -= MainForm_Minimize;
+            Core.AppExit -= Core_AppExit;
+            Core.RestoreMain -= Core_RestoreMain;
+
+            DetachTrackingFromCurrentForm();
+            IsShutDown = true;
+        }
+
+        private void StopTrackingForm(object sender, FormClosingEventArgs e)
+        {
+            // Tracked form is closing; detach ownership so this form remains.
+            DetachTrackingFromCurrentForm();
+            this.Owner = null;
+        }
+
         private void SwitchBox_SwitchPGNreceived(object sender, EventArgs e)
         {
             UpdateForm();
+        }
+
+        private void SwitchButton_Click(object sender, EventArgs e)
+        {
+            int idx = (int)((Button)sender).Tag;
+            if (idx < SwIdMap.Length) Core.vSwitchBox.PressSwitch(SwIdMap[idx]);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -218,21 +444,55 @@ namespace RateController
             UpdateForm();
         }
 
+        private void TrackForm(object sender, EventArgs e)
+        {
+            try
+            {
+                if (FormToTrack == null || FormToTrack.IsDisposed) return;
+
+                if (IsPinned)
+                {
+                    Point desiredLocation = new Point(FormToTrack.Location.X + Offset.X,
+                                                      FormToTrack.Location.Y + Offset.Y);
+
+                    if (this.Location != desiredLocation)
+                    {
+                        Point oldLocation = this.Location;
+                        this.Location = desiredLocation;
+
+                        // Revert if new location off-screen
+                        if (!Props.IsOnScreen(this, false))
+                        {
+                            this.Location = oldLocation;
+                        }
+
+                        // Bring to front (less flicker than toggling TopMost)
+                        if (!this.TopMost) this.TopMost = true;
+                        this.BringToFront();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmSwitches/TrackForm: " + ex.Message);
+            }
+        }
+
         private void UpdateForm()
         {
             btnPrime.Enabled = !Props.MasterMaintained && Props.Speed_KMH < 0.1;
 
-            btnPrime.BackColor = Core.SectionControl.PrimeOn ? Color.LightGreen : ColorOff2;
-            btnMaster.BackColor = Core.SwitchBox.MasterOn ? Color.LightGreen : ColorOff2;
+            btnPrime.BackColor = Core.SectionControl.PrimeOn ? Color.LightGreen : ColorOff;
+            btnMaster.BackColor = Core.SwitchBox.MasterOn ? Color.LightGreen : ColorOff;
 
-            btnUp.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateUp) ? Color.LightGreen : this.TransparencyKey;
-            btnDown.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateDown) ? Color.LightGreen : this.TransparencyKey;
+            btnUp.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateUp) ? Color.LightGreen : Color.Transparent;
+            btnDown.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateDown) ? Color.LightGreen : Color.Transparent;
 
             for (int i = 0; i < _switchButtons.Length; i++)
-                _switchButtons[i].BackColor = Core.SwitchBox.SwitchIsOn(SwIdMap[i]) ? Color.LightGreen : ColorOff1;
+                _switchButtons[i].BackColor = Core.SwitchBox.SwitchIsOn(SwIdMap[i]) ? Color.LightGreen : ColorOff;
 
-            btnAutoSection.BackColor = Core.SwitchBox.AutoSectionOn ? Color.LightGreen : ColorOff1;
-            btnAutoRate.BackColor = Core.SwitchBox.AutoRateOn ? Color.LightGreen : ColorOff1;
+            btnAutoSection.BackColor = Core.SwitchBox.AutoSectionOn ? Color.LightGreen : ColorOff;
+            btnAutoRate.BackColor = Core.SwitchBox.AutoRateOn ? Color.LightGreen : ColorOff;
         }
     }
 }

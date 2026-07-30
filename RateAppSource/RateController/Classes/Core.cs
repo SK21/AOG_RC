@@ -118,6 +118,12 @@ namespace RateController.Classes
                 Props.CheckFolders();
                 Props.OpenFile(Props.CurrentFile);
 
+                // Restore the main window position here, as soon as the app properties are loaded
+                // (OpenFile loads them) and before anything below can open a floating display form.
+                // Those forms latch onto the main form by testing whether they overlap it, so they
+                // must see its saved position, not the default one it was created at.
+                Props.LoadFormLocation(MainForm);
+
                 AutoSteerPGN = new PGN254();
                 SectionsPGN = new PGN235();
                 MachineConfig = new PGN238();

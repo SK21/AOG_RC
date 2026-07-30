@@ -243,14 +243,13 @@ namespace RateController
 
         private void SetForUnits()
         {
+            this.Width = 230;
             if (Props.UseMetric)
             {
-                this.Width = 230;
                 NumberFormat = "N2";
             }
             else
             {
-                this.Width = 210;
                 NumberFormat = "N0";
             }
             lbPressureValue.Width = this.Width - 79;
