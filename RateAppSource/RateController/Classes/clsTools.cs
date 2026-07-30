@@ -112,6 +112,13 @@ namespace RateController.Classes
             return UseLightContrast() ? Color.FromArgb(255, 90, 90) : Color.Red;
         }
 
+        public Color SwitchOnColor()
+        {
+            // light green glares on a dark user-set background, more so on the rounded buttons
+            // because they lighten their back colour for the top of the gradient
+            return UseLightContrast() ? Color.FromArgb(46, 125, 50) : Color.LightGreen;
+        }
+
         public bool UseLightContrast()
         {
             Color background = Properties.Settings.Default.DisplayBackColour;

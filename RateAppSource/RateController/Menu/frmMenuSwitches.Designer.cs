@@ -42,11 +42,11 @@
             this.rbMomentary = new System.Windows.Forms.RadioButton();
             this.ckOnScreen = new System.Windows.Forms.CheckBox();
             this.gbOnScreenSwitches = new System.Windows.Forms.GroupBox();
+            this.ckRateOnly = new System.Windows.Forms.CheckBox();
             this.rb4 = new System.Windows.Forms.RadioButton();
             this.rb8 = new System.Windows.Forms.RadioButton();
             this.rb12 = new System.Windows.Forms.RadioButton();
             this.rb16 = new System.Windows.Forms.RadioButton();
-            this.ckRateOnly = new System.Windows.Forms.CheckBox();
             this.gbAutoSwitch.SuspendLayout();
             this.gbMasterMode.SuspendLayout();
             this.gbMasterType.SuspendLayout();
@@ -240,9 +240,9 @@
             this.ckOnScreen.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckOnScreen.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOnScreen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckOnScreen.Location = new System.Drawing.Point(8, 28);
+            this.ckOnScreen.Location = new System.Drawing.Point(149, 28);
             this.ckOnScreen.Name = "ckOnScreen";
-            this.ckOnScreen.Size = new System.Drawing.Size(125, 37);
+            this.ckOnScreen.Size = new System.Drawing.Size(161, 37);
             this.ckOnScreen.TabIndex = 344;
             this.ckOnScreen.Text = "Enabled";
             this.ckOnScreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -265,12 +265,27 @@
             this.gbOnScreenSwitches.Text = "On-Screen Switches";
             this.gbOnScreenSwitches.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
             // 
+            // ckRateOnly
+            // 
+            this.ckRateOnly.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckRateOnly.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRateOnly.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckRateOnly.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckRateOnly.Location = new System.Drawing.Point(8, 77);
+            this.ckRateOnly.Name = "ckRateOnly";
+            this.ckRateOnly.Size = new System.Drawing.Size(125, 37);
+            this.ckRateOnly.TabIndex = 350;
+            this.ckRateOnly.Text = "Rate Only";
+            this.ckRateOnly.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRateOnly.UseVisualStyleBackColor = true;
+            this.ckRateOnly.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            // 
             // rb4
             // 
             this.rb4.Appearance = System.Windows.Forms.Appearance.Button;
             this.rb4.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rb4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rb4.Location = new System.Drawing.Point(139, 28);
+            this.rb4.Location = new System.Drawing.Point(139, 77);
             this.rb4.Name = "rb4";
             this.rb4.Size = new System.Drawing.Size(68, 37);
             this.rb4.TabIndex = 346;
@@ -284,7 +299,7 @@
             this.rb8.Appearance = System.Windows.Forms.Appearance.Button;
             this.rb8.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rb8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rb8.Location = new System.Drawing.Point(213, 28);
+            this.rb8.Location = new System.Drawing.Point(213, 77);
             this.rb8.Name = "rb8";
             this.rb8.Size = new System.Drawing.Size(68, 37);
             this.rb8.TabIndex = 347;
@@ -298,7 +313,7 @@
             this.rb12.Appearance = System.Windows.Forms.Appearance.Button;
             this.rb12.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rb12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rb12.Location = new System.Drawing.Point(287, 28);
+            this.rb12.Location = new System.Drawing.Point(287, 77);
             this.rb12.Name = "rb12";
             this.rb12.Size = new System.Drawing.Size(68, 37);
             this.rb12.TabIndex = 348;
@@ -312,7 +327,7 @@
             this.rb16.Appearance = System.Windows.Forms.Appearance.Button;
             this.rb16.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rb16.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rb16.Location = new System.Drawing.Point(361, 28);
+            this.rb16.Location = new System.Drawing.Point(361, 77);
             this.rb16.Name = "rb16";
             this.rb16.Size = new System.Drawing.Size(68, 37);
             this.rb16.TabIndex = 349;
@@ -320,22 +335,7 @@
             this.rb16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rb16.UseVisualStyleBackColor = true;
             this.rb16.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            //
-            // ckRateOnly
-            //
-            this.ckRateOnly.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckRateOnly.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRateOnly.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckRateOnly.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateOnly.Location = new System.Drawing.Point(8, 77);
-            this.ckRateOnly.Name = "ckRateOnly";
-            this.ckRateOnly.Size = new System.Drawing.Size(199, 37);
-            this.ckRateOnly.TabIndex = 350;
-            this.ckRateOnly.Text = "Rate Only";
-            this.ckRateOnly.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRateOnly.UseVisualStyleBackColor = true;
-            this.ckRateOnly.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            //
+            // 
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);

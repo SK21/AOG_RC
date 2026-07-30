@@ -1,4 +1,4 @@
-using RateController.Classes;
+﻿using RateController.Classes;
 using RateController.Language;
 using System;
 using System.Drawing;
@@ -14,8 +14,7 @@ namespace RateController
             SwIDs.sw8, SwIDs.sw9, SwIDs.sw10, SwIDs.sw11,
             SwIDs.sw12,SwIDs.sw13,SwIDs.sw14, SwIDs.sw15
         };
-        private Button[] _switchButtons = new Button[0];
-        private Color ColorOff = Color.Silver;
+        private RoundedButton[] _switchButtons = new RoundedButton[0];
         private Point DownHome;
         private Form FormToTrack = null;
         private int FullWidth;
@@ -34,6 +33,11 @@ namespace RateController
             FullWidth = this.ClientSize.Width;
             UpHome = btnUp.Location;
             DownHome = btnDown.Location;
+
+            // drawn triangles rather than font glyphs, so they sit exactly centred and follow
+            // the theme (RoundedButton fills them with ForeColor)
+            btnUp.Symbol = ButtonSymbol.Up;
+            btnDown.Symbol = ButtonSymbol.Down;
         }
 
         private bool IsPinned => this.Owner != null && FormToTrack == this.Owner;
@@ -41,7 +45,7 @@ namespace RateController
         public void CreateSwitchButtons()
         {
             foreach (Button b in _switchButtons) Controls.Remove(b);
-            _switchButtons = new Button[0];
+            _switchButtons = new RoundedButton[0];
 
             const int btnW = 64, btnH = 46, startX = 12, startY = 68, spacingX = 78, spacingY = 57;
 
@@ -68,11 +72,12 @@ namespace RateController
                 btnDown.Location = DownHome;
 
                 int count = Props.SwitchCount;
-                _switchButtons = new Button[count];
+                _switchButtons = new RoundedButton[count];
 
                 for (int i = 0; i < count; i++)
                 {
-                    Button btn = new Button();
+                    RoundedButton btn = new RoundedButton();
+                    btn.CornerRadius = 8;
                     btn.Size = new Size(btnW, btnH);
                     btn.Location = new Point(startX + (i % 4) * spacingX, startY + (i / 4) * spacingY);
                     btn.Text = (i + 1).ToString();
@@ -389,14 +394,27 @@ namespace RateController
         private void SetColor()
         {
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
-            ColorOff = Properties.Settings.Default.MainBackColour;
 
             foreach (Control c in this.Controls)
             {
-                if (c is Button) c.ForeColor = Properties.Settings.Default.MainForeColour;
+                if (c is Button) c.ForeColor = Properties.Settings.Default.DisplayForeColour;
             }
             UpdateForm();
             this.Invalidate();   // repaint the border
+        }
+
+        private void SetSwitchColor(Button btn, bool IsOn)
+        {
+            // off leaves BackColor unset so it inherits the themed form background, the same way
+            // btnUnits on the main form does
+            if (IsOn)
+            {
+                btn.BackColor = Core.Tls.SwitchOnColor();
+            }
+            else
+            {
+                btn.ResetBackColor();
+            }
         }
 
         private void SetLanguage()
@@ -482,17 +500,17 @@ namespace RateController
         {
             btnPrime.Enabled = !Props.MasterMaintained && Props.Speed_KMH < 0.1;
 
-            btnPrime.BackColor = Core.SectionControl.PrimeOn ? Color.LightGreen : ColorOff;
-            btnMaster.BackColor = Core.SwitchBox.MasterOn ? Color.LightGreen : ColorOff;
+            SetSwitchColor(btnPrime, Core.SectionControl.PrimeOn);
+            SetSwitchColor(btnMaster, Core.SwitchBox.MasterOn);
 
-            btnUp.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateUp) ? Color.LightGreen : Color.Transparent;
-            btnDown.BackColor = Core.SwitchBox.SwitchIsOn(SwIDs.RateDown) ? Color.LightGreen : Color.Transparent;
+            SetSwitchColor(btnUp, Core.SwitchBox.SwitchIsOn(SwIDs.RateUp));
+            SetSwitchColor(btnDown, Core.SwitchBox.SwitchIsOn(SwIDs.RateDown));
 
             for (int i = 0; i < _switchButtons.Length; i++)
-                _switchButtons[i].BackColor = Core.SwitchBox.SwitchIsOn(SwIdMap[i]) ? Color.LightGreen : ColorOff;
+                SetSwitchColor(_switchButtons[i], Core.SwitchBox.SwitchIsOn(SwIdMap[i]));
 
-            btnAutoSection.BackColor = Core.SwitchBox.AutoSectionOn ? Color.LightGreen : ColorOff;
-            btnAutoRate.BackColor = Core.SwitchBox.AutoRateOn ? Color.LightGreen : ColorOff;
+            SetSwitchColor(btnAutoSection, Core.SwitchBox.AutoSectionOn);
+            SetSwitchColor(btnAutoRate, Core.SwitchBox.AutoRateOn);
         }
     }
 }

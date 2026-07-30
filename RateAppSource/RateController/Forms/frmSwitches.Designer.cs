@@ -30,18 +30,20 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSwitches));
-            this.btnMaster = new System.Windows.Forms.Button();
-            this.btnPrime = new System.Windows.Forms.Button();
+            this.btnMaster = new RateController.Classes.RoundedButton();
+            this.btnPrime = new RateController.Classes.RoundedButton();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnDown = new System.Windows.Forms.Button();
-            this.btnUp = new System.Windows.Forms.Button();
-            this.btnAutoRate = new System.Windows.Forms.Button();
-            this.btnAutoSection = new System.Windows.Forms.Button();
+            this.btnDown = new RateController.Classes.RoundedButton();
+            this.btnUp = new RateController.Classes.RoundedButton();
+            this.btnAutoRate = new RateController.Classes.RoundedButton();
+            this.btnAutoSection = new RateController.Classes.RoundedButton();
             this.SuspendLayout();
             // 
             // btnMaster
             // 
-            this.btnMaster.BackColor = System.Drawing.Color.LightGreen;
+            this.btnMaster.CornerRadius = 8;
+            this.btnMaster.FlatAppearance.BorderSize = 0;
+            this.btnMaster.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMaster.Location = new System.Drawing.Point(12, 12);
             this.btnMaster.Name = "btnMaster";
             this.btnMaster.Size = new System.Drawing.Size(64, 46);
@@ -56,6 +58,9 @@
             //
             // btnPrime
             // 
+            this.btnPrime.CornerRadius = 8;
+            this.btnPrime.FlatAppearance.BorderSize = 0;
+            this.btnPrime.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrime.Location = new System.Drawing.Point(90, 12);
             this.btnPrime.Name = "btnPrime";
             this.btnPrime.Size = new System.Drawing.Size(64, 46);
@@ -74,17 +79,15 @@
             // 
             // btnDown
             // 
-            this.btnDown.BackColor = System.Drawing.Color.Transparent;
+            this.btnDown.CornerRadius = 8;
             this.btnDown.FlatAppearance.BorderSize = 0;
             this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDown.Image = global::RateController.Properties.Resources.RateDown;
             this.btnDown.Location = new System.Drawing.Point(246, 12);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(64, 46);
             this.btnDown.TabIndex = 166;
-            this.btnDown.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnDown.UseVisualStyleBackColor = false;
+            this.btnDown.UseVisualStyleBackColor = true;
             this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
             this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
             this.btnDown.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
@@ -93,16 +96,15 @@
             // 
             // btnUp
             // 
-            this.btnUp.BackColor = System.Drawing.Color.Transparent;
+            this.btnUp.CornerRadius = 8;
             this.btnUp.FlatAppearance.BorderSize = 0;
             this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUp.Image = global::RateController.Properties.Resources.RateUp;
             this.btnUp.Location = new System.Drawing.Point(168, 12);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(64, 46);
             this.btnUp.TabIndex = 165;
-            this.btnUp.UseVisualStyleBackColor = false;
+            this.btnUp.UseVisualStyleBackColor = true;
             this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
             this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button_MouseDown);
             this.btnUp.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button_MouseMove);
@@ -111,6 +113,9 @@
             // 
             // btnAutoRate
             // 
+            this.btnAutoRate.CornerRadius = 8;
+            this.btnAutoRate.FlatAppearance.BorderSize = 0;
+            this.btnAutoRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAutoRate.Location = new System.Drawing.Point(12, 184);
             this.btnAutoRate.Name = "btnAutoRate";
             this.btnAutoRate.Size = new System.Drawing.Size(142, 46);
@@ -124,6 +129,9 @@
             // 
             // btnAutoSection
             // 
+            this.btnAutoSection.CornerRadius = 8;
+            this.btnAutoSection.FlatAppearance.BorderSize = 0;
+            this.btnAutoSection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAutoSection.Location = new System.Drawing.Point(168, 184);
             this.btnAutoSection.Name = "btnAutoSection";
             this.btnAutoSection.Size = new System.Drawing.Size(142, 46);
@@ -167,12 +175,12 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnDown;
-        private System.Windows.Forms.Button btnUp;
-        private System.Windows.Forms.Button btnPrime;
+        private Classes.RoundedButton btnDown;
+        private Classes.RoundedButton btnUp;
+        private Classes.RoundedButton btnPrime;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button btnMaster;
-        private System.Windows.Forms.Button btnAutoRate;
-        private System.Windows.Forms.Button btnAutoSection;
+        private Classes.RoundedButton btnMaster;
+        private Classes.RoundedButton btnAutoRate;
+        private Classes.RoundedButton btnAutoSection;
     }
 }
