@@ -46,6 +46,7 @@
             this.rb8 = new System.Windows.Forms.RadioButton();
             this.rb12 = new System.Windows.Forms.RadioButton();
             this.rb16 = new System.Windows.Forms.RadioButton();
+            this.ckRateOnly = new System.Windows.Forms.CheckBox();
             this.gbAutoSwitch.SuspendLayout();
             this.gbMasterMode.SuspendLayout();
             this.gbMasterType.SuspendLayout();
@@ -251,13 +252,14 @@
             // gbOnScreenSwitches
             // 
             this.gbOnScreenSwitches.Controls.Add(this.ckOnScreen);
+            this.gbOnScreenSwitches.Controls.Add(this.ckRateOnly);
             this.gbOnScreenSwitches.Controls.Add(this.rb4);
             this.gbOnScreenSwitches.Controls.Add(this.rb8);
             this.gbOnScreenSwitches.Controls.Add(this.rb12);
             this.gbOnScreenSwitches.Controls.Add(this.rb16);
             this.gbOnScreenSwitches.Location = new System.Drawing.Point(40, 446);
             this.gbOnScreenSwitches.Name = "gbOnScreenSwitches";
-            this.gbOnScreenSwitches.Size = new System.Drawing.Size(454, 83);
+            this.gbOnScreenSwitches.Size = new System.Drawing.Size(454, 132);
             this.gbOnScreenSwitches.TabIndex = 345;
             this.gbOnScreenSwitches.TabStop = false;
             this.gbOnScreenSwitches.Text = "On-Screen Switches";
@@ -318,7 +320,22 @@
             this.rb16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rb16.UseVisualStyleBackColor = true;
             this.rb16.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
-            // 
+            //
+            // ckRateOnly
+            //
+            this.ckRateOnly.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckRateOnly.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRateOnly.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckRateOnly.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckRateOnly.Location = new System.Drawing.Point(8, 77);
+            this.ckRateOnly.Name = "ckRateOnly";
+            this.ckRateOnly.Size = new System.Drawing.Size(199, 37);
+            this.ckRateOnly.TabIndex = 350;
+            this.ckRateOnly.Text = "Rate Only";
+            this.ckRateOnly.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckRateOnly.UseVisualStyleBackColor = true;
+            this.ckRateOnly.CheckedChanged += new System.EventHandler(this.ckDualAuto_CheckedChanged);
+            //
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -367,5 +384,6 @@
         private System.Windows.Forms.RadioButton rb8;
         private System.Windows.Forms.RadioButton rb12;
         private System.Windows.Forms.RadioButton rb16;
+        private System.Windows.Forms.CheckBox ckRateOnly;
     }
 }

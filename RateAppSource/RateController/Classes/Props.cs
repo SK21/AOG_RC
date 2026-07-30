@@ -429,6 +429,13 @@ namespace RateController.Classes
             set { SetAppProp("SwitchCount", value.ToString()); }
         }
 
+        public static bool RateSwitchesOnly
+        {
+            // show only the rate up/down buttons on the on-screen switch box
+            get { return bool.TryParse(GetAppProp("RateSwitchesOnly"), out bool v) ? v : false; }
+            set { SetAppProp("RateSwitchesOnly", value.ToString()); }
+        }
+
         public static double SimSpeed_KMH
         {
             get { return cSimSpeed; }

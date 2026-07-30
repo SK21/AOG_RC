@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -431,6 +431,9 @@
   </data>
   <data name="lgRateMap" xml:space="preserve">
     <value>Map</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Rate Only</value>
   </data>
   <data name="lgRelay" xml:space="preserve">
     <value>Relay</value>

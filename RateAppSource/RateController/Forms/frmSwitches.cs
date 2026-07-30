@@ -21,10 +21,18 @@ namespace RateController
         private int mouseY = 0;
         private int windowLeft = 0;
         private int windowTop = 0;
+        private int FullWidth;
+        private Point UpHome;
+        private Point DownHome;
 
         public frmSwitches()
         {
             InitializeComponent();
+
+            // designer layout, restored when not in rate-only mode
+            FullWidth = this.ClientSize.Width;
+            UpHome = btnUp.Location;
+            DownHome = btnDown.Location;
         }
 
         public void SetDescriptions()
@@ -36,29 +44,49 @@ namespace RateController
         public void CreateSwitchButtons()
         {
             foreach (Button b in _switchButtons) Controls.Remove(b);
-
-            int count = Props.SwitchCount;
-            _switchButtons = new Button[count];
+            _switchButtons = new Button[0];
 
             const int btnW = 64, btnH = 46, startX = 12, startY = 68, spacingX = 78, spacingY = 57;
 
-            for (int i = 0; i < count; i++)
-            {
-                Button btn = new Button();
-                btn.Size = new Size(btnW, btnH);
-                btn.Location = new Point(startX + (i % 4) * spacingX, startY + (i / 4) * spacingY);
-                btn.Text = (i + 1).ToString();
-                btn.Tag = i;
-                btn.Click += SwitchButton_Click;
-                _switchButtons[i] = btn;
-                Controls.Add(btn);
-            }
+            bool RateOnly = Props.RateSwitchesOnly;
+            btnMaster.Visible = !RateOnly;
+            btnPrime.Visible = !RateOnly;
+            btnAutoRate.Visible = !RateOnly;
+            btnAutoSection.Visible = !RateOnly;
 
-            int rows = count / 4;
-            int autoY = startY + rows * spacingY + 11;
-            btnAutoRate.Location = new Point(startX, autoY);
-            btnAutoSection.Location = new Point(startX + 2 * spacingX, autoY);
-            this.ClientSize = new Size(this.ClientSize.Width, autoY + btnH + 10);
+            if (RateOnly)
+            {
+                // rate up/down only, moved into the top left corner
+                btnUp.Location = new Point(startX, 12);
+                btnDown.Location = new Point(startX + spacingX, 12);
+                this.ClientSize = new Size(startX + spacingX + btnW + startX, 12 + btnH + 12);
+            }
+            else
+            {
+                btnUp.Location = UpHome;
+                btnDown.Location = DownHome;
+
+                int count = Props.SwitchCount;
+                _switchButtons = new Button[count];
+
+                for (int i = 0; i < count; i++)
+                {
+                    Button btn = new Button();
+                    btn.Size = new Size(btnW, btnH);
+                    btn.Location = new Point(startX + (i % 4) * spacingX, startY + (i / 4) * spacingY);
+                    btn.Text = (i + 1).ToString();
+                    btn.Tag = i;
+                    btn.Click += SwitchButton_Click;
+                    _switchButtons[i] = btn;
+                    Controls.Add(btn);
+                }
+
+                int rows = count / 4;
+                int autoY = startY + rows * spacingY + 11;
+                btnAutoRate.Location = new Point(startX, autoY);
+                btnAutoSection.Location = new Point(startX + 2 * spacingX, autoY);
+                this.ClientSize = new Size(FullWidth, autoY + btnH + 10);
+            }
         }
 
         private void SwitchButton_Click(object sender, EventArgs e)

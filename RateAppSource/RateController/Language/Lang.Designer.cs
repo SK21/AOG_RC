@@ -1067,7 +1067,16 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgRateMap", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rate Only.
+        /// </summary>
+        internal static string lgRateOnly {
+            get {
+                return ResourceManager.GetString("lgRateOnly", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Relay.
         /// </summary>

@@ -31,6 +31,7 @@ namespace RateController.Menu
             try
             {
                 Props.MasterMaintained = rbMaintained.Checked;
+                Props.RateSwitchesOnly = ckRateOnly.Checked;   // set before ShowSwitches, the form reads it when it opens
                 Props.ShowSwitches = ckOnScreen.Checked;
                 int newCount = rb4.Checked ? 4 : rb12.Checked ? 12 : rb16.Checked ? 16 : 8;
                 if (newCount < Props.SwitchCount)
@@ -80,9 +81,15 @@ namespace RateController.Menu
 
         private void ckDualAuto_CheckedChanged(object sender, EventArgs e)
         {
-            if (!Initializing)
-                rb4.Enabled = rb8.Enabled = rb12.Enabled = rb16.Enabled = ckOnScreen.Checked;
+            if (!Initializing) SetControlStates();
             SetButtons(true);
+        }
+
+        private void SetControlStates()
+        {
+            // switch count only applies when the numbered switches are shown
+            ckRateOnly.Enabled = ckOnScreen.Checked;
+            rb4.Enabled = rb8.Enabled = rb12.Enabled = rb16.Enabled = ckOnScreen.Checked && !ckRateOnly.Checked;
         }
 
 
@@ -149,6 +156,7 @@ namespace RateController.Menu
             gbAutoSwitch.Text = Lang.lgAutoSwitch;
             ckSections.Text = Lang.lgSections;
             ckRate.Text = Lang.lgRate;
+            ckRateOnly.Text = Lang.lgRateOnly;
             rbMasterAll.Text = Lang.lgMasterAll;
             rbMasterOverride.Text = Lang.lgMasterOverride;
         }
@@ -167,11 +175,12 @@ namespace RateController.Menu
             }
 
             ckOnScreen.Checked = Props.ShowSwitches;
+            ckRateOnly.Checked = Props.RateSwitchesOnly;
             rb4.Checked = Props.SwitchCount == 4;
             rb8.Checked = Props.SwitchCount == 8;
             rb12.Checked = Props.SwitchCount == 12;
             rb16.Checked = Props.SwitchCount == 16;
-            rb4.Enabled = rb8.Enabled = rb12.Enabled = rb16.Enabled = ckOnScreen.Checked;
+            SetControlStates();
             ckWorkSwitch.Checked = Core.SwitchBox.WorkSwitchEnabled;
             ckRate.Checked = Core.SwitchBox.AutoRateEnabled;
             ckSections.Checked = Core.SwitchBox.AutoSectionEnabled;
