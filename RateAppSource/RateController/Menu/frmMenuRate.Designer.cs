@@ -50,6 +50,8 @@
             this.lbAltRate = new System.Windows.Forms.Label();
             this.lbProduct = new System.Windows.Forms.Label();
             this.pnlFan = new System.Windows.Forms.Panel();
+            this.lbShowFan = new System.Windows.Forms.Label();
+            this.ckShowFan = new System.Windows.Forms.CheckBox();
             this.lbFanErrorValue = new System.Windows.Forms.Label();
             this.lbFanError = new System.Windows.Forms.Label();
             this.lbFanRPMvalue = new System.Windows.Forms.Label();
@@ -309,6 +311,8 @@
             // 
             // pnlFan
             // 
+            this.pnlFan.Controls.Add(this.lbShowFan);
+            this.pnlFan.Controls.Add(this.ckShowFan);
             this.pnlFan.Controls.Add(this.lbFanErrorValue);
             this.pnlFan.Controls.Add(this.lbFanError);
             this.pnlFan.Controls.Add(this.lbFanRPMvalue);
@@ -319,8 +323,34 @@
             this.pnlFan.Controls.Add(this.tbTargetRPM);
             this.pnlFan.Location = new System.Drawing.Point(730, 61);
             this.pnlFan.Name = "pnlFan";
-            this.pnlFan.Size = new System.Drawing.Size(396, 180);
+            this.pnlFan.Size = new System.Drawing.Size(396, 260);
             this.pnlFan.TabIndex = 163;
+            // 
+            // lbShowFan
+            // 
+            this.lbShowFan.AutoSize = true;
+            this.lbShowFan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbShowFan.Location = new System.Drawing.Point(42, 200);
+            this.lbShowFan.Name = "lbShowFan";
+            this.lbShowFan.Size = new System.Drawing.Size(106, 23);
+            this.lbShowFan.TabIndex = 199;
+            this.lbShowFan.Text = "Fan Display";
+            // 
+            // ckShowFan
+            // 
+            this.ckShowFan.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckShowFan.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckShowFan.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckShowFan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckShowFan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckShowFan.Location = new System.Drawing.Point(245, 194);
+            this.ckShowFan.Name = "ckShowFan";
+            this.ckShowFan.Size = new System.Drawing.Size(102, 34);
+            this.ckShowFan.TabIndex = 198;
+            this.ckShowFan.Text = "Show";
+            this.ckShowFan.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckShowFan.UseVisualStyleBackColor = true;
+            this.ckShowFan.CheckedChanged += new System.EventHandler(this.ckShowFan_CheckedChanged);
             // 
             // lbFanErrorValue
             // 
@@ -558,6 +588,8 @@
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.Panel pnlFan;
         private System.Windows.Forms.Label lbFanErrorValue;
+        private System.Windows.Forms.CheckBox ckShowFan;
+        private System.Windows.Forms.Label lbShowFan;
         private System.Windows.Forms.Label lbFanError;
         private System.Windows.Forms.Label lbFanRPMvalue;
         private System.Windows.Forms.Label lbFanRPM;

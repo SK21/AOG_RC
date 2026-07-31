@@ -98,6 +98,10 @@ namespace RateController.Classes
             if (FileOpened)
             {
                 SafeEvent.Raise(ProfileChanged);
+
+                // The new profile brings its own product Enabled flags, which decide
+                // whether a fan display window should be up.
+                Props.DisplayFans();
             }
             else
             {
@@ -194,6 +198,7 @@ namespace RateController.Classes
 
                 Props.DisplayPressure();
                 Props.DisplayRate();
+                Props.DisplayFans();
                 //Props.DisplayMapPreview();
 
                 MainTimer = new System.Timers.Timer(1000);

@@ -48,6 +48,7 @@ namespace RateController.Menu
                     if (double.TryParse(tbTargetRPM.Text, out var rpm)) MainMenu.CurrentProduct.RateSet = rpm;
                     if (double.TryParse(tbCountsRPM.Text, out double cnts)) MainMenu.CurrentProduct.MeterCal = cnts;
                     MainMenu.CurrentProduct.CoverageUnits = 2;   // minutes
+                    Props.SetShowFanDisplay(MainMenu.CurrentProduct.ID, ckShowFan.Checked);
                 }
                 else
                 {
@@ -435,6 +436,11 @@ namespace RateController.Menu
             }
         }
 
+        private void ckShowFan_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateFans();
@@ -471,6 +477,7 @@ namespace RateController.Menu
                 {
                     tbTargetRPM.Text = MainMenu.CurrentProduct.RateSet.ToString("N1");
                     tbCountsRPM.Text = MainMenu.CurrentProduct.MeterCal.ToString("N3");
+                    ckShowFan.Checked = Props.GetShowFanDisplay(MainMenu.CurrentProduct.ID);
                     UpdateFans();
                 }
                 else

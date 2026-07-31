@@ -101,6 +101,7 @@ namespace RateController.Classes
         private static bool cResumeAfterPrime;
         private static int cSensorSettingsMaxID = -1;
         private static bool cShowCanDiagnostics = false;
+        private static bool[] cShowFanDisplay = new bool[MaxProducts];
         private static bool cShowPressure;
         private static bool[] cShowScale = new bool[4];
         private static bool cShowSwitches;
@@ -889,6 +890,29 @@ namespace RateController.Classes
             }
         }
 
+        // One display window per fan, each keyed by its product ID so they get separate
+        // registry entries and separate saved screen positions. A disabled fan gets no
+        // window whatever its checkbox says, so this is called from every point that can
+        // change either input: startup, the Settings page enable toggle, and a profile
+        // change (which reloads every product's Enabled flag).
+        public static void DisplayFans()
+        {
+            if (Core.Products != null)
+            {
+                for (int i = MaxProducts - 2; i < MaxProducts; i++)
+                {
+                    if (cShowFanDisplay[i] && Core.Products.Items[i].Enabled)
+                    {
+                        FormManager.ShowForm(new frmFanDisplay(i), i.ToString());
+                    }
+                    else
+                    {
+                        FormManager.CloseForm<frmFanDisplay>(i.ToString());
+                    }
+                }
+            }
+        }
+
         public static void DisplayPressure()
         {
             if (cShowPressure)
@@ -898,6 +922,23 @@ namespace RateController.Classes
             else
             {
                 FormManager.CloseForm<frmPressureDisplay>();
+            }
+        }
+
+        public static bool GetShowFanDisplay(int ProductID)
+        {
+            bool Result = false;
+            if (ProductID >= 0 && ProductID < MaxProducts) Result = cShowFanDisplay[ProductID];
+            return Result;
+        }
+
+        public static void SetShowFanDisplay(int ProductID, bool Show)
+        {
+            if (ProductID >= 0 && ProductID < MaxProducts)
+            {
+                cShowFanDisplay[ProductID] = Show;
+                SetAppProp("ShowFanDisplay" + ProductID.ToString(), Show.ToString());
+                DisplayFans();
             }
         }
 
@@ -1254,6 +1295,11 @@ namespace RateController.Classes
             cCanEnabled = bool.TryParse(GetAppProp("CanEnabled"), out bool ibe) ? ibe : false;
             cUseMetric = bool.TryParse(GetAppProp("UseMetric"), out bool mt) ? mt : false;
             cShowPressure = bool.TryParse(GetAppProp("ShowPressure"), out bool sp) ? sp : false;
+
+            for (int i = MaxProducts - 2; i < MaxProducts; i++)
+            {
+                cShowFanDisplay[i] = bool.TryParse(GetAppProp("ShowFanDisplay" + i.ToString()), out bool sf) ? sf : false;
+            }
             cShowSwitches = bool.TryParse(GetAppProp("ShowSwitches"), out bool ss) ? ss : false;
             cUseRateDisplay = bool.TryParse(GetAppProp("UseRateDisplay"), out bool rtd) ? rtd : false;
             cMapPreview = bool.TryParse(GetAppProp("MapPreview"), out bool mp) ? mp : false;

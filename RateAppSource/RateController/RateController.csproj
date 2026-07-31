@@ -182,6 +182,12 @@
     <Compile Include="Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmFanDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFanDisplay.Designer.cs">
+      <DependentUpon>frmFanDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmMsgBox.cs">
       <SubType>Form</SubType>
     </Compile>

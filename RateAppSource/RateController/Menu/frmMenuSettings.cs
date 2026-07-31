@@ -70,7 +70,11 @@ namespace RateController.Menu
                     Core.Products.SetEnabledDefault();
                     UpdateForm();
 
-                    if (EnabledChanged) MainMenu.RaiseEventProductEnabled();
+                    if (EnabledChanged)
+                    {
+                        MainMenu.RaiseEventProductEnabled();
+                        Props.DisplayFans();   // a disabled fan gets no display window
+                    }
                 }
                 else
                 {
