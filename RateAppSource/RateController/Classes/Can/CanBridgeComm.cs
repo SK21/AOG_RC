@@ -180,6 +180,7 @@ namespace RateController.Classes.Can
             InvokeOnMainForm(() =>
             {
                 if (Core.IsShuttingDown) return;
+                if (Props.ShowCanDiagnostics) Props.WriteActivityLog("CAN RX: PGN 32400");
                 foreach (clsProduct prod in Core.Products.Items)
                     prod.UDPcommFromArduino(e.Data, 32400);
             });
@@ -192,7 +193,10 @@ namespace RateController.Classes.Can
             InvokeOnMainForm(() =>
             {
                 if (!Core.IsShuttingDown)
+                {
+                    if (Props.ShowCanDiagnostics) Props.WriteActivityLog("CAN RX: PGN 32401");
                     Core.ModulesStatus.ParseByteData(e.Data);
+                }
             });
         }
 
@@ -203,7 +207,10 @@ namespace RateController.Classes.Can
             InvokeOnMainForm(() =>
             {
                 if (!Core.IsShuttingDown)
+                {
+                    if (Props.ShowCanDiagnostics) Props.WriteActivityLog("CAN RX: PGN 32403");
                     Core.ModulesBoardID.ParseByteData(e.Data);
+                }
             });
         }
 
