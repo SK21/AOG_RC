@@ -75,7 +75,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "30-Jul-2026";
+        private static string cAppDate = "02-Aug-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
@@ -101,14 +101,13 @@ namespace RateController.Classes
         private static bool cResumeAfterPrime;
         private static int cSensorSettingsMaxID = -1;
         private static bool cShowCanDiagnostics = false;
-        private static bool[] cShowFanDisplay = new bool[MaxProducts];
+        private static bool[] cShowDisplay = new bool[MaxProducts];
         private static bool cShowPressure;
         private static bool[] cShowScale = new bool[4];
         private static bool cShowSwitches;
         private static double cSimSpeed = 0;
         private static SpeedType cSpeedMode = SpeedType.GPS;
         private static bool cUseMetric;
-        private static bool cUseRateDisplay = false;
         private static bool cUseVariableRate = false;
         private static bool cUseZones = false;
         private static string[] LanguageIDs = new string[] { "en", "de", "hu", "nl", "pl", "ru", "fr", "lt" };
@@ -530,17 +529,6 @@ namespace RateController.Classes
             }
         }
 
-        public static bool UseRateDisplay
-        {
-            get { return cUseRateDisplay; }
-            set
-            {
-                cUseRateDisplay = value;
-                SetAppProp("UseRateDisplay", cUseRateDisplay.ToString());
-                DisplayRate();
-            }
-        }
-
         public static bool UseZones
         {
             get { return cUseZones; }
@@ -890,24 +878,26 @@ namespace RateController.Classes
             }
         }
 
-        // One display window per fan, each keyed by its product ID so they get separate
-        // registry entries and separate saved screen positions. A disabled fan gets no
-        // window whatever its checkbox says, so this is called from every point that can
-        // change either input: startup, the Settings page enable toggle, and a profile
-        // change (which reloads every product's Enabled flag).
-        public static void DisplayFans()
+        // One display window per product, each keyed by its product ID so they get
+        // separate registry entries and separate saved screen positions. The window
+        // shows a rate or, for the two fan slots, RPM - it works that out from the ID.
+        // A disabled product gets no window whatever its checkbox says, so this is
+        // called from every point that can change either input: startup, the Settings
+        // page enable toggle, and a profile change (which reloads every product's
+        // Enabled flag).
+        public static void DisplayProducts()
         {
             if (Core.Products != null)
             {
-                for (int i = MaxProducts - 2; i < MaxProducts; i++)
+                for (int i = 0; i < MaxProducts; i++)
                 {
-                    if (cShowFanDisplay[i] && Core.Products.Items[i].Enabled)
+                    if (cShowDisplay[i] && Core.Products.Items[i].Enabled)
                     {
-                        FormManager.ShowForm(new frmFanDisplay(i), i.ToString());
+                        FormManager.ShowForm(new frmProductDisplay(i), i.ToString());
                     }
                     else
                     {
-                        FormManager.CloseForm<frmFanDisplay>(i.ToString());
+                        FormManager.CloseForm<frmProductDisplay>(i.ToString());
                     }
                 }
             }
@@ -925,32 +915,20 @@ namespace RateController.Classes
             }
         }
 
-        public static bool GetShowFanDisplay(int ProductID)
+        public static bool GetShowDisplay(int ProductID)
         {
             bool Result = false;
-            if (ProductID >= 0 && ProductID < MaxProducts) Result = cShowFanDisplay[ProductID];
+            if (ProductID >= 0 && ProductID < MaxProducts) Result = cShowDisplay[ProductID];
             return Result;
         }
 
-        public static void SetShowFanDisplay(int ProductID, bool Show)
+        public static void SetShowDisplay(int ProductID, bool Show)
         {
             if (ProductID >= 0 && ProductID < MaxProducts)
             {
-                cShowFanDisplay[ProductID] = Show;
-                SetAppProp("ShowFanDisplay" + ProductID.ToString(), Show.ToString());
-                DisplayFans();
-            }
-        }
-
-        public static void DisplayRate()
-        {
-            if (cUseRateDisplay)
-            {
-                FormManager.ShowForm(new frmRate());
-            }
-            else
-            {
-                FormManager.CloseForm<frmRate>();
+                cShowDisplay[ProductID] = Show;
+                SetAppProp("ShowDisplay" + ProductID.ToString(), Show.ToString());
+                DisplayProducts();
             }
         }
 
@@ -1296,12 +1274,11 @@ namespace RateController.Classes
             cUseMetric = bool.TryParse(GetAppProp("UseMetric"), out bool mt) ? mt : false;
             cShowPressure = bool.TryParse(GetAppProp("ShowPressure"), out bool sp) ? sp : false;
 
-            for (int i = MaxProducts - 2; i < MaxProducts; i++)
+            for (int i = 0; i < MaxProducts; i++)
             {
-                cShowFanDisplay[i] = bool.TryParse(GetAppProp("ShowFanDisplay" + i.ToString()), out bool sf) ? sf : false;
+                cShowDisplay[i] = bool.TryParse(GetAppProp("ShowDisplay" + i.ToString()), out bool sf) ? sf : false;
             }
             cShowSwitches = bool.TryParse(GetAppProp("ShowSwitches"), out bool ss) ? ss : false;
-            cUseRateDisplay = bool.TryParse(GetAppProp("UseRateDisplay"), out bool rtd) ? rtd : false;
             cMapPreview = bool.TryParse(GetAppProp("MapPreview"), out bool mp) ? mp : false;
             cCurrentCanDriver = Enum.TryParse(GetAppProp("CanDriver"), out CanDriver dr) ? dr : CanDriver.SLCAN;
             cShowCanDiagnostics = bool.TryParse(GetAppProp("CanDiagnostics"), out bool di) ? di : false;

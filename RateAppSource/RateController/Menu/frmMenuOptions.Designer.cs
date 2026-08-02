@@ -30,7 +30,6 @@
         {
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.ckRateDisplay = new System.Windows.Forms.CheckBox();
             this.ckMetric = new System.Windows.Forms.CheckBox();
             this.rbAOG = new System.Windows.Forms.RadioButton();
             this.btnCal = new System.Windows.Forms.Button();
@@ -89,24 +88,9 @@
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // ckRateDisplay
-            // 
-            this.ckRateDisplay.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckRateDisplay.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckRateDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckRateDisplay.Location = new System.Drawing.Point(295, 498);
-            this.ckRateDisplay.Margin = new System.Windows.Forms.Padding(6);
-            this.ckRateDisplay.Name = "ckRateDisplay";
-            this.ckRateDisplay.Size = new System.Drawing.Size(192, 36);
-            this.ckRateDisplay.TabIndex = 334;
-            this.ckRateDisplay.Text = "Rate Display";
-            this.ckRateDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckRateDisplay.UseVisualStyleBackColor = true;
-            this.ckRateDisplay.CheckedChanged += new System.EventHandler(this.ckMetric_CheckedChanged);
-            // 
+            //
             // ckMetric
-            // 
+            //
             this.ckMetric.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
@@ -365,7 +349,6 @@
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.ckMetric);
-            this.Controls.Add(this.ckRateDisplay);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -387,7 +370,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.CheckBox ckMetric;
-        private System.Windows.Forms.CheckBox ckRateDisplay;
         private System.Windows.Forms.RadioButton rbAOG;
         private System.Windows.Forms.Button btnCal;
         private System.Windows.Forms.GroupBox groupBox1;

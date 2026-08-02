@@ -100,8 +100,8 @@ namespace RateController.Classes
                 SafeEvent.Raise(ProfileChanged);
 
                 // The new profile brings its own product Enabled flags, which decide
-                // whether a fan display window should be up.
-                Props.DisplayFans();
+                // whether a product display window should be up.
+                Props.DisplayProducts();
             }
             else
             {
@@ -197,8 +197,7 @@ namespace RateController.Classes
                 }
 
                 Props.DisplayPressure();
-                Props.DisplayRate();
-                Props.DisplayFans();
+                Props.DisplayProducts();
                 //Props.DisplayMapPreview();
 
                 MainTimer = new System.Timers.Timer(1000);

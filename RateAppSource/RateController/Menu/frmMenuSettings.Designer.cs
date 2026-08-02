@@ -53,6 +53,7 @@
             this.lbProduct = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ckEnabled = new System.Windows.Forms.CheckBox();
+            this.ckSeparateDisplay = new System.Windows.Forms.CheckBox();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.SuspendLayout();
@@ -93,7 +94,7 @@
             // 
             this.lbPercent.AutoSize = true;
             this.lbPercent.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPercent.Location = new System.Drawing.Point(351, 532);
+            this.lbPercent.Location = new System.Drawing.Point(488, 538);
             this.lbPercent.Name = "lbPercent";
             this.lbPercent.Size = new System.Drawing.Size(29, 23);
             this.lbPercent.TabIndex = 146;
@@ -103,7 +104,7 @@
             // 
             this.tbOffRate.Enabled = false;
             this.tbOffRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbOffRate.Location = new System.Drawing.Point(300, 529);
+            this.tbOffRate.Location = new System.Drawing.Point(437, 535);
             this.tbOffRate.MaxLength = 8;
             this.tbOffRate.Name = "tbOffRate";
             this.tbOffRate.Size = new System.Drawing.Size(45, 29);
@@ -121,7 +122,7 @@
             this.ckOffRate.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckOffRate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckOffRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckOffRate.Location = new System.Drawing.Point(151, 526);
+            this.ckOffRate.Location = new System.Drawing.Point(288, 532);
             this.ckOffRate.Name = "ckOffRate";
             this.ckOffRate.Size = new System.Drawing.Size(143, 34);
             this.ckOffRate.TabIndex = 144;
@@ -385,11 +386,28 @@
             this.ckEnabled.UseVisualStyleBackColor = true;
             this.ckEnabled.CheckedChanged += new System.EventHandler(this.ckEnabled_CheckedChanged);
             // 
+            // ckSeparateDisplay
+            // 
+            this.ckSeparateDisplay.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSeparateDisplay.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSeparateDisplay.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckSeparateDisplay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckSeparateDisplay.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckSeparateDisplay.Location = new System.Drawing.Point(78, 531);
+            this.ckSeparateDisplay.Name = "ckSeparateDisplay";
+            this.ckSeparateDisplay.Size = new System.Drawing.Size(162, 34);
+            this.ckSeparateDisplay.TabIndex = 334;
+            this.ckSeparateDisplay.Text = "Popup Display";
+            this.ckSeparateDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckSeparateDisplay.UseVisualStyleBackColor = true;
+            this.ckSeparateDisplay.CheckedChanged += new System.EventHandler(this.ckSeparateDisplay_CheckedChanged);
+            // 
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.ckSeparateDisplay);
             this.Controls.Add(this.ckEnabled);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
@@ -446,5 +464,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox ckEnabled;
         private System.Windows.Forms.Label lbUPMhint;
+        private System.Windows.Forms.CheckBox ckSeparateDisplay;
     }
 }

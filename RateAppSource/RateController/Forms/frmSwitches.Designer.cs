@@ -165,6 +165,7 @@
             this.Text = "Switches";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSwitches_Closed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmSwitches_FormClosing);
             this.Load += new System.EventHandler(this.frmSwitches_Load);
             this.LocationChanged += new System.EventHandler(this.frmSwitches_LocationChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mouseMove_MouseDown);

@@ -58,6 +58,7 @@ namespace RateController.Menu
                     }
 
                     Props.ShowScaleSet(Prd.ID, ckScale.Checked);
+                    Props.SetShowDisplay(Prd.ID, ckSeparateDisplay.Checked);
                     Prd.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) Prd.OffRateSetting = off;
                     Prd.UseMinUPMbySpeed = rbUPMSpeed.Checked;
@@ -73,7 +74,7 @@ namespace RateController.Menu
                     if (EnabledChanged)
                     {
                         MainMenu.RaiseEventProductEnabled();
-                        Props.DisplayFans();   // a disabled fan gets no display window
+                        Props.DisplayProducts();   // a disabled product gets no display window
                     }
                 }
                 else
@@ -107,6 +108,11 @@ namespace RateController.Menu
         private void ckEnabled_CheckedChanged(object sender, EventArgs e)
         {
             SetEnabled();
+            SetButtons(true);
+        }
+
+        private void ckSeparateDisplay_CheckedChanged(object sender, EventArgs e)
+        {
             SetButtons(true);
         }
 
@@ -289,6 +295,7 @@ namespace RateController.Menu
             tbOffRate.Enabled = Enabled;
             ckDefault.Enabled = Enabled;
             ckScale.Enabled = Enabled;
+            ckSeparateDisplay.Enabled = Enabled;
         }
 
         private void SetLanguage()
@@ -457,7 +464,9 @@ namespace RateController.Menu
                 ckDefault.Visible = false;
                 ckScale.Visible = false;
 
-                ckOffRate.Left = 180;
+                ckSeparateDisplay.Top = 290;
+
+                ckOffRate.Left = 288;
                 ckOffRate.Top = 290;
 
                 tbOffRate.Left = ckOffRate.Left + 149;
@@ -474,8 +483,10 @@ namespace RateController.Menu
                 ckDefault.Visible = true;
                 ckScale.Visible = true;
 
-                ckOffRate.Left = 151;
-                ckOffRate.Top = 526;
+                ckSeparateDisplay.Top = 532;
+
+                ckOffRate.Left = 288;
+                ckOffRate.Top = 532;
 
                 tbOffRate.Left = ckOffRate.Left + 149;
                 tbOffRate.Top = ckOffRate.Top + 3;
@@ -506,6 +517,10 @@ namespace RateController.Menu
             }
 
             ckDefault.Checked = (Props.DefaultProduct == MainMenu.CurrentProduct.ID);
+
+            // common to products and fans - the fans get an RPM window, the products a
+            // rate window, both opened by Props.DisplayProducts()
+            ckSeparateDisplay.Checked = Props.GetShowDisplay(MainMenu.CurrentProduct.ID);
 
             UpdateMinUPMhint();
 
