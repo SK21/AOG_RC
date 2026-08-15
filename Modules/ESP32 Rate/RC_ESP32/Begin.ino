@@ -240,16 +240,27 @@ void DoSetup()
 	AP += "_";
 	AP += suffix;
 
+	// Bring the hotspot up on the channel the station network was last found on.
+	// One radio serves both interfaces and they cannot sit on different channels,
+	// so joining a network on any other channel DRAGS the softAP across and
+	// disconnects everyone on it. Starting where the join will land makes that a
+	// non-event. Falls back to 6, which is what this always used to be.
+	uint8_t APchannel = 6;
+	if (MDLnetwork.StaChannelCache >= 1 && MDLnetwork.StaChannelCache <= 13)
+	{
+		APchannel = MDLnetwork.StaChannelCache;
+	}
+
 	WiFi.softAPConfig(AP_LocalIP, AP_GateWay, AP_Subnet);
 	if (strlen(MDL.APpassword) >= 8)
 	{
 		// WPA2-PSK
-		WiFi.softAP(AP.c_str(), MDL.APpassword, 6, false, 4);
+		WiFi.softAP(AP.c_str(), MDL.APpassword, APchannel, false, 4);
 	}
 	else
 	{
 		// Fallback: invalid WPA passphrase length -> force open
-		WiFi.softAP(AP.c_str(), nullptr, 6, false, 4);
+		WiFi.softAP(AP.c_str(), nullptr, APchannel, false, 4);
 	}
 
 	dnsServer.start(AP_DNS_PORT, "*", AP_LocalIP);
@@ -261,6 +272,8 @@ void DoSetup()
 	Serial.println(AP);
 	Serial.print("Settings Page IP: ");
 	Serial.println(AP_LocalIP);
+	Serial.print("Access Point channel: ");
+	Serial.println(APchannel);
 
 	// web server
 	Serial.println();
@@ -276,6 +289,13 @@ void DoSetup()
 	server.on("/fwlink", []() { server.send(200, "text/plain", "OK"); });
 	server.on("/hotspot-detect.html", HTTP_GET, []() { server.send(200, "text/html", "<html><body>Portal</body></html>"); });
 	server.on("/ncsi.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft NCSI"); });
+	// Windows 10's probe — /ncsi.txt above is the Windows 7/8 one. Without this
+	// the poll falls through to HandleRoot, Windows gets a page of HTML where it
+	// expects this exact string, decides the hotspot is a captive portal and
+	// launches the browser. Windows polls it for as long as a PC sits on the
+	// hotspot, so answering here also stops the page being rebuilt every time —
+	// that page build is one of the longer things loop() ever blocks on.
+	server.on("/connecttest.txt", HTTP_GET, []() { server.send(200, "text/plain", "Microsoft Connect Test"); });
 
 	// Register custom update page BEFORE ESP2SOTA so it takes priority (first registration wins)
 	server.on("/update", HTTP_GET, []() {
@@ -290,18 +310,8 @@ void DoSetup()
 
 	Serial.println("OTA started.");
 
-	// wifi client mode
-	if (MDLnetwork.WifiModeUseStation)
-	{
-		// connect to network
-		delay(1000);
-		WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
-		WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
-		WiFi.onEvent(WiFiStationDisconnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
-		WiFi.begin(MDLnetwork.SSID, MDLnetwork.Password);
-		Serial.println();
-		Serial.println("Connecting to wifi network ...");
-	}
+	// wifi client mode — see Wifi.ino
+	StartWifiStation();
 
 	delay(1500);
 
@@ -817,6 +827,12 @@ void LoadNetworks()
 	if (tmp.Identifier == 9876)
 	{
 		MDLnetwork = tmp;
+
+		// StaChannelCache was added to the end of this struct, so a record
+		// written before it existed leaves whatever EEPROM already held in that
+		// byte. Anything outside the 2.4 GHz channels means "nothing cached" —
+		// the first join then learns it for real.
+		if (MDLnetwork.StaChannelCache > 13) MDLnetwork.StaChannelCache = 0;
 	}
 	else
 	{
@@ -827,6 +843,7 @@ void LoadNetworks()
 		MDLnetwork.IP2 = 1;
 		MDLnetwork.IP3 = 50;
 		MDLnetwork.WifiModeUseStation = false;
+		MDLnetwork.StaChannelCache = 0;
 		strcpy(MDLnetwork.SSID, "Tractor");
 		strcpy(MDLnetwork.Password, "111222333");
 

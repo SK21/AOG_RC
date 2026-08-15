@@ -32,6 +32,7 @@
     <ClCompile Include="Relays.ino" />
     <ClCompile Include="Send.ino" />
     <ClCompile Include="WheelSpeed.ino" />
+    <ClCompile Include="Wifi.ino" />
     <ClCompile Include="PgUpdate.ino" />
   </ItemGroup>
   <ItemGroup>

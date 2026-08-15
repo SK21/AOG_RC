@@ -26,7 +26,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 28076;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 15086;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
@@ -116,9 +116,14 @@ struct ModuleNetwork
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
-	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station 
+	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station
 	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
 	char Password[ModStringLengths] = "111222333";
+	// Channel the network was last joined on. Lets a reconnect skip the full
+	// scan, and lets the softAP start where the join will land — see Wifi.ino.
+	// Appended at the end deliberately: an EEPROM record written before this
+	// field existed still loads, and LoadNetworks() clamps whatever lands here.
+	uint8_t StaChannelCache = 0;					// 0 = none cached yet
 };
 
 ModuleNetwork MDLnetwork;
@@ -260,41 +265,8 @@ float TimedCombo(byte, bool);	// function prototype
 void  ISR0();		// function prototype
 void  ISR1();
 
-uint8_t DisconnectCount = 0;
-
-void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-	Serial.print("Connected to '");
-	Serial.print(MDLnetwork.SSID);
-	Serial.println("'");
-}
-
-void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-	Serial.print("Network IP: ");
-	Serial.println(WiFi.localIP());
-	IPAddress Wifi_LocalIP = WiFi.localIP();
-	Wifi_DestinationIP = IPAddress(Wifi_LocalIP[0], Wifi_LocalIP[1], Wifi_LocalIP[2], 255);
-}
-
-void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
-{
-	Serial.println("Disconnected from WiFi access point");
-	Serial.print("WiFi lost connection. Reason: ");
-	Serial.println(info.wifi_sta_disconnected.reason);
-	Serial.print("Trying to Reconnect: ");
-	DisconnectCount++;
-	Serial.println(DisconnectCount);
-	WiFi.begin(MDLnetwork.SSID, MDLnetwork.Password);
-
-	if (DisconnectCount > 5)
-	{
-		// use AP mode only
-		MDLnetwork.WifiModeUseStation = false;
-		SaveNetworks();
-		ESP.restart();
-	}
-}
+// Station mode — the connect/disconnect handlers and the paced retry policy
+// that replaced the disconnect counter that used to live here — is in Wifi.ino.
 
 bool CalibrationOn[MaxProductCount] = { false };
 float WheelSpeed = 0;
@@ -350,6 +322,7 @@ void loop()
 {
 	dnsServer.processNextRequest();
 	server.handleClient();
+	ServiceWifiStation();	// paced station retry — see Wifi.ino; returns on a bool when connected
 	ReceiveUDP();
 	DoPID();
 
