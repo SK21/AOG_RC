@@ -160,7 +160,7 @@ namespace RateController.Menu
 
         private void tbOpacity_ValueChanged(object sender, EventArgs e)
         {
-            lbOpacity.Text = "Popup opacity: " + tbOpacity.Value.ToString() + "%";
+            lbOpacity.Text = "Window opacity: " + tbOpacity.Value.ToString() + "%";
             SetButtons(true);
         }
 
@@ -250,7 +250,7 @@ namespace RateController.Menu
             tbColourUser1.BackColor = Properties.Settings.Default.DisplayBackColourUser;
 
             tbOpacity.Value = Props.DisplayOpacity;
-            lbOpacity.Text = "Popup opacity: " + tbOpacity.Value.ToString() + "%";
+            lbOpacity.Text = "Window opacity: " + tbOpacity.Value.ToString() + "%";
 
             ColorChoice = ChoiceFromColours();
 

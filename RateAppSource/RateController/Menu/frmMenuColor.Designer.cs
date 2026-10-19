@@ -287,7 +287,7 @@
             this.lbOpacity.Name = "lbOpacity";
             this.lbOpacity.Size = new System.Drawing.Size(185, 24);
             this.lbOpacity.TabIndex = 30;
-            this.lbOpacity.Text = "Popup opacity: 100%";
+            this.lbOpacity.Text = "Window opacity: 100%";
             this.lbOpacity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tbOpacity
