@@ -308,6 +308,7 @@ namespace RateController.Menu
         {
             grpSensor.Text = Lang.lgSensorLocation;
             grpMinUPM.Text = Lang.lgMinUPM;
+            ckMinWhenStopped.Text = Lang.lgAllowStandstill;
             lbModuleID.Text = Lang.lgModuleID;
             lbSensorID.Text = Lang.lgSensorID;
             rbUPMFixed.Text = Lang.lgUPMFixed;
