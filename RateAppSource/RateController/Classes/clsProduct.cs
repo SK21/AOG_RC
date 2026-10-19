@@ -51,6 +51,7 @@ namespace RateController.Classes
         private double CurrentWorkedArea_Hc = 0;
         private bool cUseAltRate = false;
         private bool cUseMinUPMbySpeed = false;
+        private bool cMinUPMwhenStopped = false;
         private bool cUseOffRateAlarm;
         private PGN32502 SensorControlSettings;
         private Stopwatch UpdateStopWatch;
@@ -522,6 +523,13 @@ namespace RateController.Classes
             set { cUseMinUPMbySpeed = value; }
         }
 
+        // apply the minimum UPM floor while stationary (sections on, speed 0)
+        public bool MinUPMwhenStopped
+        {
+            get { return cMinUPMwhenStopped; }
+            set { cMinUPMwhenStopped = value; }
+        }
+
         public bool UseOffRateAlarm
         { get { return cUseOffRateAlarm; } set { cUseOffRateAlarm = value; } }
 
@@ -626,6 +634,7 @@ namespace RateController.Classes
             double.TryParse(Props.GetProp(IDname + "MinUPM"), out cMinUPM);
             double.TryParse(Props.GetProp(IDname + "MinUPMbySpeed"), out cMinUPMbySpeed);
             if (bool.TryParse(Props.GetProp(IDname + "UseMinUPMbySpeed"), out bool ms)) cUseMinUPMbySpeed = ms;
+            if (bool.TryParse(Props.GetProp(IDname + "MinUPMwhenStopped"), out bool mw)) cMinUPMwhenStopped = mw;
 
             tmp = 0;
             int.TryParse(Props.GetProp(IDname + "ManualPWM"), out tmp);
@@ -752,6 +761,15 @@ namespace RateController.Classes
         public double Pulses()
         {
             return cUnitsApplied * cMeterCal;
+        }
+
+        // true when the minimum-UPM floor should be applied: product is applying,
+        // or (optional) sections are on but the machine is stationary
+        public bool MinUPMfloorActive()
+        {
+            if (ProductOn(false)) return true;
+            return cMinUPMwhenStopped && ControlType != ControlTypeEnum.Fan
+                && RateSensorData.Connected() && Core.Sections.WorkingWidth(false) > 0;
         }
 
         public double PWM()
@@ -926,6 +944,7 @@ namespace RateController.Classes
             Props.SetProp(IDname + "MinUPM", cMinUPM.ToString());
             Props.SetProp(IDname + "MinUPMbySpeed", cMinUPMbySpeed.ToString());
             Props.SetProp(IDname + "UseMinUPMbySpeed", cUseMinUPMbySpeed.ToString());
+            Props.SetProp(IDname + "MinUPMwhenStopped", cMinUPMwhenStopped.ToString());
 
             Props.SetProp(IDname + "ManualPWM", cManualPWM.ToString());
 

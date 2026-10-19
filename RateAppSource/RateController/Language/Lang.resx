@@ -579,6 +579,9 @@
   <data name="lgWorkPin" xml:space="preserve">
     <value>Work Pin</value>
   </data>
+  <data name="lgAllowStandstill" xml:space="preserve">
+    <value>Allow Application at Standstill</value>
+  </data>
   <data name="lgWorkSwitch" xml:space="preserve">
     <value>Work Switch</value>
   </data>

@@ -540,6 +540,9 @@
   <data name="lgWorkPin" xml:space="preserve">
     <value>Munka Pin</value>
   </data>
+  <data name="lgAllowStandstill" xml:space="preserve">
+    <value>Kijuttatás engedélyezése álló helyzetben</value>
+  </data>
   <data name="lgWorkSwitch" xml:space="preserve">
     <value>Munkakapcsoló</value>
   </data>

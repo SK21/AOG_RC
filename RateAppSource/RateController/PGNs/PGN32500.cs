@@ -157,7 +157,7 @@ namespace RateController.PGNs
                         // only apply the minimum-UPM floor when product is actually applying
                         // (at least one section on with width); otherwise sections-off would
                         // command a non-zero target and wind the valve open
-                        if (Prod.ProductOn(false))
+                        if (Prod.MinUPMfloorActive())
                         {
                             double MinUPM = Prod.MinUPMinUse() * 1000.0;
                             if (RateSet < MinUPM) RateSet = MinUPM;

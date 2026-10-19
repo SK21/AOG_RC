@@ -62,6 +62,7 @@ namespace RateController.Menu
                     Prd.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) Prd.OffRateSetting = off;
                     Prd.UseMinUPMbySpeed = rbUPMSpeed.Checked;
+                    Prd.MinUPMwhenStopped = ckMinWhenStopped.Checked;
 
                     bool EnabledChanged = (Prd.Enabled != ckEnabled.Checked);
                     Prd.Enabled = ckEnabled.Checked;
@@ -108,6 +109,11 @@ namespace RateController.Menu
         private void ckEnabled_CheckedChanged(object sender, EventArgs e)
         {
             SetEnabled();
+            SetButtons(true);
+        }
+
+        private void ckMinWhenStopped_CheckedChanged(object sender, EventArgs e)
+        {
             SetButtons(true);
         }
 
@@ -302,6 +308,7 @@ namespace RateController.Menu
         {
             grpSensor.Text = Lang.lgSensorLocation;
             grpMinUPM.Text = Lang.lgMinUPM;
+            ckMinWhenStopped.Text = Lang.lgAllowStandstill;
             lbModuleID.Text = Lang.lgModuleID;
             lbSensorID.Text = Lang.lgSensorID;
             rbUPMFixed.Text = Lang.lgUPMFixed;
@@ -461,6 +468,7 @@ namespace RateController.Menu
                 // fans
                 lbProduct.Text = MainMenu.CurrentProduct.ProductName;
                 grpMinUPM.Visible = false;
+                ckMinWhenStopped.Visible = false;
                 ckDefault.Visible = false;
                 ckScale.Visible = false;
 
@@ -480,6 +488,7 @@ namespace RateController.Menu
                 // products
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
                 grpMinUPM.Visible = true;
+                ckMinWhenStopped.Visible = true;
                 ckDefault.Visible = true;
                 ckScale.Visible = true;
 
@@ -499,6 +508,7 @@ namespace RateController.Menu
 
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !MainMenu.CurrentProduct.UseMinUPMbySpeed;
+            ckMinWhenStopped.Checked = MainMenu.CurrentProduct.MinUPMwhenStopped;
             ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
             tbOffRate.Text = MainMenu.CurrentProduct.OffRateSetting.ToString("N0");
             tbMinUPM.Text = MainMenu.CurrentProduct.MinUPM.ToString("N1");
