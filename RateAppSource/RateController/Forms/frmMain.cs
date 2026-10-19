@@ -485,6 +485,7 @@ namespace RateController.Forms
         private void SetColors()
         {
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            Props.ApplyOpacity(this);
             foreach (Control c in this.Controls)
             {
                 if (c == barQuantity) continue;

@@ -515,6 +515,22 @@ namespace RateController.Classes
             }
         }
 
+        // opacity of the popup displays, percent (20-100)
+        public static int DisplayOpacity
+        {
+            get
+            {
+                int v = int.TryParse(GetAppProp("DisplayOpacity"), out int o) ? o : 100;
+                return Math.Max(20, Math.Min(100, v));
+            }
+            set { SetAppProp("DisplayOpacity", Math.Max(20, Math.Min(100, value)).ToString()); }
+        }
+
+        public static void ApplyOpacity(System.Windows.Forms.Form frm)
+        {
+            frm.Opacity = DisplayOpacity / 100.0;
+        }
+
         public static bool UseMetric
         {
             get { return cUseMetric; }

@@ -579,6 +579,9 @@
   <data name="lgWorkPin" xml:space="preserve">
     <value>Work Pin</value>
   </data>
+  <data name="lgWindowOpacity" xml:space="preserve">
+    <value>Window opacity</value>
+  </data>
   <data name="lgWorkSwitch" xml:space="preserve">
     <value>Work Switch</value>
   </data>
