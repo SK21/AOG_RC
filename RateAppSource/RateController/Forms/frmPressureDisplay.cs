@@ -113,6 +113,7 @@ namespace RateController
         {
             lbPressureValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            Props.ApplyOpacity(this);
         }
 
         private void SetForUnits()

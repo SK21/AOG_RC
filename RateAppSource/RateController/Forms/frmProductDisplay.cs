@@ -1,4 +1,4 @@
-using RateController.Classes;
+﻿using RateController.Classes;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -133,6 +133,7 @@ namespace RateController
             lbProductName.ForeColor = Properties.Settings.Default.DisplayForeColour;
             lbValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            Props.ApplyOpacity(this);
             this.Invalidate();   // repaint the border
         }
 

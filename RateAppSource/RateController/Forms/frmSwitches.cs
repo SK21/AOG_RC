@@ -274,6 +274,7 @@ namespace RateController
         private void SetColor()
         {
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            Props.ApplyOpacity(this);
 
             foreach (Control c in this.Controls)
             {

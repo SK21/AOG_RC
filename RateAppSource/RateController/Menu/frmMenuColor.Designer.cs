@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.lbOpacity = new System.Windows.Forms.Label();
+            this.tbOpacity = new System.Windows.Forms.TrackBar();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).BeginInit();
             this.panel1 = new System.Windows.Forms.Panel();
             this.rbBackColor = new System.Windows.Forms.RadioButton();
             this.rbForeColor = new System.Windows.Forms.RadioButton();
@@ -255,6 +258,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbOpacity);
+            this.Controls.Add(this.tbOpacity);
             this.Controls.Add(this.rbColour3);
             this.Controls.Add(this.tbColourDefault3);
             this.Controls.Add(this.btnCancel);
@@ -274,6 +279,31 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMenuColor_FormClosed);
             this.Load += new System.EventHandler(this.frmMenuColor_Load);
             this.panel1.ResumeLayout(false);
+            // 
+            // lbOpacity
+            // 
+            this.lbOpacity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOpacity.Location = new System.Drawing.Point(180, 588);
+            this.lbOpacity.Name = "lbOpacity";
+            this.lbOpacity.Size = new System.Drawing.Size(185, 24);
+            this.lbOpacity.TabIndex = 30;
+            this.lbOpacity.Text = "Popup opacity: 100%";
+            this.lbOpacity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tbOpacity
+            // 
+            this.tbOpacity.LargeChange = 10;
+            this.tbOpacity.Location = new System.Drawing.Point(180, 615);
+            this.tbOpacity.Maximum = 100;
+            this.tbOpacity.Minimum = 20;
+            this.tbOpacity.Name = "tbOpacity";
+            this.tbOpacity.Size = new System.Drawing.Size(185, 45);
+            this.tbOpacity.SmallChange = 5;
+            this.tbOpacity.TabIndex = 31;
+            this.tbOpacity.TickFrequency = 10;
+            this.tbOpacity.Value = 100;
+            this.tbOpacity.ValueChanged += new System.EventHandler(this.tbOpacity_ValueChanged);
+            ((System.ComponentModel.ISupportInitialize)(this.tbOpacity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -282,6 +312,8 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lbOpacity;
+        private System.Windows.Forms.TrackBar tbOpacity;
         private System.Windows.Forms.RadioButton rbBackColor;
         private System.Windows.Forms.RadioButton rbForeColor;
         private System.Windows.Forms.RadioButton rbColourUser;
