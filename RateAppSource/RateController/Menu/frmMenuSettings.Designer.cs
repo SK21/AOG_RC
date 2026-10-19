@@ -54,6 +54,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ckEnabled = new System.Windows.Forms.CheckBox();
             this.ckSeparateDisplay = new System.Windows.Forms.CheckBox();
+            this.ckMinWhenStopped = new System.Windows.Forms.CheckBox();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
             this.SuspendLayout();
@@ -65,7 +66,7 @@
             this.ckScale.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckScale.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckScale.Location = new System.Drawing.Point(288, 469);
+            this.ckScale.Location = new System.Drawing.Point(288, 490);
             this.ckScale.Name = "ckScale";
             this.ckScale.Size = new System.Drawing.Size(162, 34);
             this.ckScale.TabIndex = 149;
@@ -81,7 +82,7 @@
             this.ckDefault.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckDefault.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckDefault.Location = new System.Drawing.Point(78, 469);
+            this.ckDefault.Location = new System.Drawing.Point(78, 490);
             this.ckDefault.Name = "ckDefault";
             this.ckDefault.Size = new System.Drawing.Size(162, 34);
             this.ckDefault.TabIndex = 0;
@@ -133,6 +134,7 @@
             // 
             // grpMinUPM
             // 
+            this.grpMinUPM.Controls.Add(this.ckMinWhenStopped);
             this.grpMinUPM.Controls.Add(this.lbUPMhint);
             this.grpMinUPM.Controls.Add(this.tbUPMspeed);
             this.grpMinUPM.Controls.Add(this.rbUPMSpeed);
@@ -141,7 +143,7 @@
             this.grpMinUPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpMinUPM.Location = new System.Drawing.Point(86, 284);
             this.grpMinUPM.Name = "grpMinUPM";
-            this.grpMinUPM.Size = new System.Drawing.Size(354, 162);
+            this.grpMinUPM.Size = new System.Drawing.Size(354, 198);
             this.grpMinUPM.TabIndex = 142;
             this.grpMinUPM.TabStop = false;
             this.grpMinUPM.Text = "Minimum UPM";
@@ -386,6 +388,22 @@
             this.ckEnabled.UseVisualStyleBackColor = true;
             this.ckEnabled.CheckedChanged += new System.EventHandler(this.ckEnabled_CheckedChanged);
             // 
+            // ckMinWhenStopped
+            //
+            this.ckMinWhenStopped.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckMinWhenStopped.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMinWhenStopped.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckMinWhenStopped.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckMinWhenStopped.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckMinWhenStopped.Location = new System.Drawing.Point(18, 163);
+            this.ckMinWhenStopped.Name = "ckMinWhenStopped";
+            this.ckMinWhenStopped.Size = new System.Drawing.Size(318, 28);
+            this.ckMinWhenStopped.TabIndex = 335;
+            this.ckMinWhenStopped.Text = "Allow Application at Standstill";
+            this.ckMinWhenStopped.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckMinWhenStopped.UseVisualStyleBackColor = true;
+            this.ckMinWhenStopped.CheckedChanged += new System.EventHandler(this.ckMinWhenStopped_CheckedChanged);
+            //
             // ckSeparateDisplay
             // 
             this.ckSeparateDisplay.Appearance = System.Windows.Forms.Appearance.Button;
@@ -465,5 +483,6 @@
         private System.Windows.Forms.CheckBox ckEnabled;
         private System.Windows.Forms.Label lbUPMhint;
         private System.Windows.Forms.CheckBox ckSeparateDisplay;
+        private System.Windows.Forms.CheckBox ckMinWhenStopped;
     }
 }
