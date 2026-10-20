@@ -124,11 +124,20 @@ Kp = slider / 100           // 0-100 -> 0.00-1.00  (uniform, both transports)
 Ki = slider / 100
 
 // per-actuator scale constants (PID.ino):
-ValveKpScale = 1.0          // valve PWM is a positional drive-speed command recomputed each
-ValveKiScale = 0.1          // loop, so slider 100 = full authority at full error
+ValveKpScale = 1.2          // valve PWM is a positional drive-speed command recomputed each
+ValveKiScale = 0.14         // loop; valve gains multiply a fixed ValveGainBase = 255
 MotorKpScale = 0.1          // motor PWM accumulates ChangeAmount every loop (integrating),
 MotorKiScale = 0.01         // so it needs ~10x smaller per-loop gain for the same response
 ```
+
+**2026-10-20 — valve gains on a fixed 255 base.** The valve Kp term and per-loop integral step now
+multiply `ValveGainBase = 255` instead of `Authority` (MaxPWM − MinPWM). On a valve, MinPWM is a stiction
+offset added to the output and MaxPWM is a ceiling; neither is part of the flow response. Scaling by
+Authority meant raising MinPWM to beat stiction silently weakened both Gain and Integral (an NH3 timed
+combo valve with breakaway ≈63% PWM lost 43% of its gain going from Min 30 to Min 60). `Authority` still
+bounds the integral **total**. The scales put the Min 30% NH3 tune (Gain 85 / Integral 100 under the old
+scaling) at mid-slider 50 / 50. Existing valve tunes change strength by roughly
+`(Scale_new × 255) / (Scale_old × (MaxPWM − MinPWM))` and need re-tuning. The motor path is unchanged.
 
 The Ki scale is a further 10x finer than Kp on each path because conditional integration means the
 integral only trims near target, where `FracError` is small.

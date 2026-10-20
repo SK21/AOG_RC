@@ -13,20 +13,27 @@
 // PIDtime          time interval in ms the pid runs
 //
 // PID uses NORMALIZED (ratio) control: error as a fraction of a reference flow, output as a
-// fraction of PWM authority, so Kp/Ki are dimensionless. For the rationale (why this replaced
+// fraction of PWM (valves: fixed 255 base; motors: authority), so Kp/Ki are dimensionless. For the rationale (why this replaced
 // the old absolute-error/raw-PWM scheme), see:
 //   AOG_RC/RateAppSource/docs/PID_Normalized_Control_Rationale.md
 
 // Kp/Ki arrive as slider/100 (0.00-1.00). Each actuator type scales what slider 100 means.
 // These are scale alignment, NOT tuning constants: a valve PWM is a positional drive-speed
-// command recomputed each loop, so full slider = full authority at full error (scale 1.0);
+// command recomputed each loop, so slider 100 at full error asks for ~full PWM (scale 1.2 on a 255 base);
 // a motor PWM accumulates ChangeAmount every loop (integrating), so it needs ~10x smaller
 // per-loop gain for the same response. Ki is a further 10x finer than Kp on each path
 // because conditional integration only trims near target where FracError is small.
-const float ValveKpScale = 1.0;
-const float ValveKiScale = 0.1;
+const float ValveKpScale = 1.2;
+const float ValveKiScale = 0.14;
 const float MotorKpScale = 0.1;
 const float MotorKiScale = 0.01;
+
+// Valve gains use a fixed full-scale PWM base, not Authority (MaxPWM - MinPWM). On a valve,
+// MinPWM is a stiction offset added to the output and MaxPWM is a ceiling; neither is part of
+// the valve's flow response, so raising MinPWM to beat stiction must not weaken Kp/Ki.
+// Scales put a Min 30% NH3 tune (Gain 85, Integral 100 under the old Authority scaling) at
+// mid-slider 50/50. Authority still bounds the integral total.
+const float ValveGainBase = 255.0;
 
 bool PauseAdjust[MaxProductCount];
 uint32_t ComboTime[MaxProductCount];
@@ -82,7 +89,7 @@ void DoPID()
 float PIDvalve(byte ID)
 {
 	// Normalized PID: error is a fraction of a section-independent REFERENCE flow, output a
-	// fraction of PWM authority, so Kp/Ki are dimensionless and one UI scale fits any hardware.
+	// fraction of full-scale PWM (ValveGainBase), so Kp/Ki are dimensionless and independent of Min/Max PWM.
 	// Reference = peak target this run (NOT the live target): dividing by live target made loop
 	// gain ~1/target, so closing sections multiplied the gain and caused oscillation. Peak-target
 	// reference keeps gain constant as sections close while staying identical at full sections.
@@ -136,7 +143,7 @@ float PIDvalve(byte ID)
 				bool nearTarget = (fabsf(FracError) <= Sensor[ID].BrakePoint / 100.0);
 				if (nearTarget)
 				{
-					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * ValveKiScale * Authority, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
+					IntegralSum[ID] += constrain(FracError * Sensor[ID].Ki * ValveKiScale * ValveGainBase, -1 * Sensor[ID].MaxIntegral, Sensor[ID].MaxIntegral);	// MaxIntegral limits integral change per loop (PWM units)
 				}
 				IntegralSum[ID] *= (Sensor[ID].Ki > 0);	// zero out if not using integral
 				IntegralSum[ID] = constrain(IntegralSum[ID], -1 * Authority, Authority);  // total bounded by pwm range so integral can reach full authority (e.g. to free a stuck valve)
@@ -145,7 +152,7 @@ float PIDvalve(byte ID)
 				// from target, scaled down inside the brakepoint band.
 				float BrakeScale = nearTarget ? Sensor[ID].PIDslowAdjust / 100.0 : 1.0;
 
-				float ChangeAmount = FracError * Sensor[ID].Kp * ValveKpScale * BrakeScale * Authority + IntegralSum[ID];
+				float ChangeAmount = FracError * Sensor[ID].Kp * ValveKpScale * BrakeScale * ValveGainBase + IntegralSum[ID];
 				DiagChange[ID] = ChangeAmount;
 
 				if (fabsf(ChangeAmount) < 0.1)
