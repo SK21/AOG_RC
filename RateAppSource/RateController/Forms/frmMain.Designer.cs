@@ -336,6 +336,7 @@
             // 
             // lbProductName
             // 
+            this.lbProductName.AutoEllipsis = true;
             this.lbProductName.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbProductName.Location = new System.Drawing.Point(88, 75);
             this.lbProductName.Name = "lbProductName";
@@ -364,6 +365,7 @@
             // 
             // btAlarm
             // 
+            this.btAlarm.AutoEllipsis = true;
             this.btAlarm.BackColor = System.Drawing.Color.Red;
             this.btAlarm.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAlarm.ImageAlign = System.Drawing.ContentAlignment.TopCenter;

@@ -20,6 +20,7 @@ namespace RateController.Classes
     public class clsLatch
     {
         private static readonly List<clsLatch> Latches = new List<clsLatch>();
+        private static bool HoldFollowers = false;
 
         private readonly Form Frm;
         private bool IsManuallyMoved = false;
@@ -37,6 +38,32 @@ namespace RateController.Classes
         // can have a target it is not latched to - it stays a candidate until they overlap.
         public bool IsLatched
         { get { return Frm.Owner != null && Frm.Owner == Target; } }
+
+        // Moves a target without dragging the windows latched to it, for a target that
+        // changes shape around content that stays put on the screen - the main display
+        // collapsing or expanding. The followers keep their place and their offsets are
+        // re-read, so they move with the target again on its next move.
+        public static void MoveHostInPlace(Form Host, Point NewLocation)
+        {
+            try
+            {
+                HoldFollowers = true;
+                Host.Location = NewLocation;
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsLatch/MoveHostInPlace: " + ex.Message);
+            }
+            finally
+            {
+                HoldFollowers = false;
+            }
+
+            foreach (clsLatch Item in Latches)
+            {
+                if (Item.Target == Host && Item.IsLatched) Item.SetOffset();
+            }
+        }
 
         // Called on the form's MouseUp: the user has dropped it, so see what it landed on.
         public void Dropped()
@@ -341,7 +368,7 @@ namespace RateController.Classes
         {
             try
             {
-                if (Target != null && !Target.IsDisposed && IsLatched)
+                if (!HoldFollowers && Target != null && !Target.IsDisposed && IsLatched)
                 {
                     Point Desired = new Point(Target.Location.X + Offset.X,
                                               Target.Location.Y + Offset.Y);
