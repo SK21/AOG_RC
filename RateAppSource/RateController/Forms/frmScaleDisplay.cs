@@ -48,6 +48,7 @@ namespace RateController
         {
             lbValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            Props.ApplyOpacity(this);
         }
 
         private double CurrentAcres()
@@ -74,6 +75,7 @@ namespace RateController
             LoadData();
             lbValue.ForeColor = Properties.Settings.Default.DisplayForeColour;
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
+            Props.ApplyOpacity(this);
             UpdateForm();
         }
 

@@ -61,6 +61,7 @@ namespace RateController.Menu
                 Properties.Settings.Default.DisplayBackColourUser = tbColourUser1.BackColor;
 
                 Properties.Settings.Default.Save();
+                Props.DisplayOpacity = tbOpacity.Value;
                 Core.RaiseColorChanged();
 
                 SetButtons(false);
@@ -157,6 +158,12 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
+        private void tbOpacity_ValueChanged(object sender, EventArgs e)
+        {
+            lbOpacity.Text = Lang.lgWindowOpacity + ": " + tbOpacity.Value.ToString() + "%";
+            SetButtons(true);
+        }
+
         private void rbColour1_Click(object sender, EventArgs e)
         {
             SetButtons(true);
@@ -241,6 +248,9 @@ namespace RateController.Menu
             // set colours
             tbColourUser1.ForeColor = Properties.Settings.Default.DisplayForeColourUser;
             tbColourUser1.BackColor = Properties.Settings.Default.DisplayBackColourUser;
+
+            tbOpacity.Value = Props.DisplayOpacity;
+            lbOpacity.Text = Lang.lgWindowOpacity + ": " + tbOpacity.Value.ToString() + "%";
 
             ColorChoice = ChoiceFromColours();
 
