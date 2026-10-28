@@ -88,6 +88,7 @@ namespace RateController.Menu
                 }
 
                 Props.UseMetric = ckMetric.Checked;
+                Props.CompactDisplay = ckCompact.Checked;
 
                 if (WheelSpeedChanged)
                 {
@@ -385,6 +386,7 @@ namespace RateController.Menu
             }
 
             ckMetric.Checked = Props.UseMetric;
+            ckCompact.Checked = Props.CompactDisplay;
 
             SetBoxes();
 

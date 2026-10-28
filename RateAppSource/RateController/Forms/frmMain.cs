@@ -32,6 +32,33 @@ namespace RateController.Forms
 
         private bool ShowFans;
 
+        // the collapsed display keeps only the product name, the rates, quantity,
+        // area and the bar - the remaining controls are shifted to the top left
+        // corner of the small window, that is the right hand side of the normal
+        // layout
+
+        private const int CompactShiftX = 148;
+
+        private const int CompactShiftY = 66;
+
+        private const int CompactHeight = 219;
+
+        // gap either side of the product name and the alarm button, which are cut
+        // short to the space left of the bar in the collapsed display
+        private const int CompactTextMargin = 3;
+
+        private bool CompactMode;
+
+        private Rectangle FullNameBounds;
+
+        private Rectangle FullAlarmBounds;
+
+        private Control[] CompactMoved;
+
+        private Size FullClientSize;
+
+        private Point CompactTapStart;
+
         public frmMain()
         {
             InitializeComponent();
@@ -45,7 +72,9 @@ namespace RateController.Forms
 
             // Define the border color and thickness
             Color borderColor = Properties.Settings.Default.DisplayForeColour;
-            int borderWidth = 2;
+            // a wider pen is centred on the edge pixels, so half of it is cut off on the top
+            // and left but not on the right and bottom - 1 keeps all four sides the same
+            int borderWidth = 1;
 
             // Draw the border
             using (Pen pen = new Pen(borderColor, borderWidth))
@@ -143,6 +172,62 @@ namespace RateController.Forms
 
         #endregion Images
 
+        private void ApplyVisibility()
+        {
+            // quantity and area are not used with the fans
+            bool Products = !ShowFans;
+
+            lbProductName.Visible = Products;
+            lbQuantityAmount.Visible = Products;
+            lbQuantityType.Visible = Products;
+            lbCoverageAmount.Visible = Products;
+            lbCoverageType.Visible = Products;
+            barQuantity.Visible = Products;
+            btnResetQuantity.Visible = Products;
+            btnResetAcres.Visible = Products;
+
+            // the rest of the layout is hidden while the display is collapsed
+            bool Full = !CompactMode;
+
+            // the buttons that select the quantity and the area belong to the
+            // full products layout
+            btnQuantity.Visible = Products && Full;
+            btnCoverage.Visible = Products && Full;
+            prod1.Visible = Full;
+            prod2.Visible = Full;
+            prod3.Visible = Full;
+            prod4.Visible = Full;
+            prod5.Visible = Full;
+            Fans.Visible = Full;
+            pbAOGstatus.Visible = Full;
+            btnUnits.Visible = Full;
+            btnTarget.Visible = Full;
+            btnMaster.Visible = Full;
+            btnAuto.Visible = Full;
+            btnMinimize.Visible = Full;
+            btnMenu.Visible = Full;
+            btnVR.Visible = Full;
+            butPowerOff.Visible = Full;
+            UL1.Visible = Full;
+
+            // the alarm button is placed and shown by the flash timer
+            if (CompactMode) btAlarm.Visible = false;
+        }
+
+        private void CompactTap_MouseDown(object sender, MouseEventArgs e)
+        {
+            CompactTapStart = Location;
+        }
+
+        private void CompactTap_MouseUp(object sender, MouseEventArgs e)
+        {
+            // dragging moves the small display, only a tap brings the whole display back
+            if (CompactMode && Math.Abs(Left - CompactTapStart.X) < 5 && Math.Abs(Top - CompactTapStart.Y) < 5)
+            {
+                SetCompactDisplay(false);
+            }
+        }
+
         private void btAlarm_Click(object sender, EventArgs e)
         {
             Core.RCalarm.Silence();
@@ -184,8 +269,15 @@ namespace RateController.Forms
 
         private void btnMinimize_Click(object sender, EventArgs e)
         {
-            Minimize?.Invoke(this, EventArgs.Empty);
-            Core.SetMainDisplay(false);
+            if (Props.CompactDisplay)
+            {
+                SetCompactDisplay(!CompactMode);
+            }
+            else
+            {
+                Minimize?.Invoke(this, EventArgs.Empty);
+                Core.SetMainDisplay(false);
+            }
         }
 
         private void btnQuantity_Click(object sender, EventArgs e)
@@ -342,6 +434,10 @@ namespace RateController.Forms
                 Core.UpdateStatus -= Core_UpdateStatus;
                 Core.ColorChanged -= Core_ColorChanged;
                 Core.SwitchBox.SwitchPGNreceived -= SwitchBox_SwitchPGNreceived;
+
+                // save the position of the full display, not the collapsed one
+                if (CompactMode) Location = new Point(Left - CompactShiftX, Top - CompactShiftY);
+
                 Props.SaveFormLocation(this);
                 FlashTimer.Stop();
                 Props.SetAppProp("StartMinimized", MainMini.Visible.ToString());
@@ -367,6 +463,22 @@ namespace RateController.Forms
             ProductIcons[3] = prod4;
             ProductIcons[4] = prod5;
             ProductIcons[5] = Fans;
+
+            // controls that stay on the screen when the display is collapsed - the product
+            // name and the alarm button stay too, but are sized separately in SetCompactDisplay
+            CompactMoved = new Control[] { lbRateAmount, lbRateType, lbTargetAmount, lbTargetType,
+                                           lbQuantityAmount, lbQuantityType, lbCoverageAmount, lbCoverageType,
+                                           btnResetQuantity, btnResetAcres, barQuantity };
+
+            // a tap on any of these brings the whole display back
+            Control[] CompactTap = new Control[] { this, lbProductName,
+                                                   lbRateAmount, lbRateType, lbTargetAmount, lbTargetType,
+                                                   lbQuantityAmount, lbQuantityType, lbCoverageAmount, lbCoverageType };
+            foreach (Control c in CompactTap)
+            {
+                c.MouseDown += CompactTap_MouseDown;
+                c.MouseUp += CompactTap_MouseUp;
+            }
 
             // location is restored in Core.Initialize, before the floating display forms open
             SetColors();
@@ -482,6 +594,78 @@ namespace RateController.Forms
             UpdateForm();
         }
 
+        /// <summary>
+        /// Makes the display smaller - only the product name, the rates, the quantity,
+        /// the area and the bar stay on the screen, everything else is hidden. The
+        /// remaining controls keep their place on the screen, the window is shrunk
+        /// to the right hand side of the normal layout.
+        /// </summary>
+        private void SetCompactDisplay(bool Compact)
+        {
+            if (CompactMode != Compact)
+            {
+                // the fan display has no quantity, area or bar, so show the products
+                if (Compact && ShowFans)
+                {
+                    SwitchDisplay(false);
+                    UpdateForm();
+                }
+
+                CompactMode = Compact;
+
+                if (Compact)
+                {
+                    FullClientSize = ClientSize;
+
+                    foreach (Control c in CompactMoved)
+                    {
+                        c.Location = new Point(c.Left - CompactShiftX, c.Top - CompactShiftY);
+                    }
+
+                    // the product name and the alarm button are wider than the small window,
+                    // so they get the space left of the bar and are cut short with an ellipsis
+                    FullNameBounds = lbProductName.Bounds;
+                    FullAlarmBounds = btAlarm.Bounds;
+                    int TextWidth = barQuantity.Left - 2 * CompactTextMargin;
+                    lbProductName.Bounds = new Rectangle(CompactTextMargin, FullNameBounds.Top - CompactShiftY, TextWidth, FullNameBounds.Height);
+                    btAlarm.Bounds = new Rectangle(CompactTextMargin, FullAlarmBounds.Top - CompactShiftY, TextWidth, FullAlarmBounds.Height);
+
+                    // the small window is the right hand side of the normal layout, so the bar
+                    // keeps the same gap to the right edge as in the full display
+                    ClientSize = new Size(FullClientSize.Width - CompactShiftX, CompactHeight);
+
+                    // the remaining controls stay where they are on the screen, and so do
+                    // the windows latched to the display
+                    clsLatch.MoveHostInPlace(this, new Point(Left + CompactShiftX, Top + CompactShiftY));
+                }
+                else
+                {
+                    ClientSize = FullClientSize;
+
+                    foreach (Control c in CompactMoved)
+                    {
+                        c.Location = new Point(c.Left + CompactShiftX, c.Top + CompactShiftY);
+                    }
+
+                    lbProductName.Bounds = FullNameBounds;
+                    btAlarm.Bounds = FullAlarmBounds;
+
+                    // the small display may have been dragged, so open where it is,
+                    // but keep the whole display on the screen
+                    Rectangle wa = Screen.FromControl(this).WorkingArea;
+                    int newLeft = Math.Max(wa.Left, Math.Min(wa.Right - Width, Left - CompactShiftX));
+                    int newTop = Math.Max(wa.Top, Math.Min(wa.Bottom - Height, Top - CompactShiftY));
+                    clsLatch.MoveHostInPlace(this, new Point(newLeft, newTop));
+                }
+
+                ApplyVisibility();
+
+                // shrinking the window does not repaint it, so the border would be missing
+                // along the new right and bottom edges
+                Invalidate();
+            }
+        }
+
         private void SetColors()
         {
             this.BackColor = Properties.Settings.Default.DisplayBackColour;
@@ -571,17 +755,7 @@ namespace RateController.Forms
             if (ShowFans != DisplayFans)
             {
                 ShowFans = DisplayFans;
-
-                btnQuantity.Visible = !ShowFans;
-                btnCoverage.Visible = !ShowFans;
-                lbCoverageAmount.Visible = !ShowFans;
-                lbCoverageType.Visible = !ShowFans;
-                lbQuantityAmount.Visible = !ShowFans;
-                lbQuantityType.Visible = !ShowFans;
-                lbProductName.Visible = !ShowFans;
-                barQuantity.Visible = !ShowFans;
-                btnResetAcres.Visible = !ShowFans;
-                btnResetQuantity.Visible = !ShowFans;
+                ApplyVisibility();
 
                 if (ShowFans)
                 {
