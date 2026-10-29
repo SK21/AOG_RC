@@ -215,7 +215,14 @@ namespace RateController.Classes
                 ForceOff = !Props.ResumeAfterPrime;
                 if (!Props.ResumeAfterPrime)
                 {
-                    Core.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+                    if (Core.SwitchBox.RemoteActive)
+                    {
+                        Core.SwitchBox.RemotePrimeEnded();      // not a cab press, keep the phone in control
+                    }
+                    else
+                    {
+                        Core.vSwitchBox.PressSwitch(SwIDs.MasterOff);
+                    }
                 }
             }
         }

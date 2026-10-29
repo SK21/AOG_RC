@@ -449,6 +449,17 @@ namespace RateController.Classes
             set { SetAppProp("RateSwitchesOnly", value.ToString()); }
         }
 
+        public static int WebServerPort
+        {
+            // phone remote switches page
+            get
+            {
+                int p = int.TryParse(GetAppProp("WebServerPort"), out int v) ? v : 8080;
+                return (p >= 1024 && p <= 65535) ? p : 8080;
+            }
+            set { SetAppProp("WebServerPort", value.ToString()); }
+        }
+
         public static double SimSpeed_KMH
         {
             get { return cSimSpeed; }

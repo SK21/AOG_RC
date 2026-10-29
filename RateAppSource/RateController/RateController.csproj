@@ -138,7 +138,9 @@
     <Compile Include="Classes\clsSensorSettings.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsVersionChecker.cs" />
+    <Compile Include="Classes\clsQrCode.cs" />
     <Compile Include="Classes\clsVirtualSwitchBox.cs" />
+    <Compile Include="Classes\clsWebServer.cs" />
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
     <Compile Include="Classes\Can\CanBridgeComm.cs" />

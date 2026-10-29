@@ -68,12 +68,46 @@ updating is a separate in-app feature (below).
 
 ### Remote switches page
 
-- Master + section buttons, plain HTML like the ESP32 page.
-- Presses feed the **same path as the on-screen switch panel** (sections, not relay numbers),
-  so the app sends its normal PGNs → works on Teensy, ESP32 and Nano with **no firmware change**.
-- **Dead-man timeout** like the ESP32 (30 s without a press → release remote control), so a
-  dropped phone connection can't leave sections running.
+- Master + section buttons only, plain HTML like the ESP32 page. Rate up/down and the auto
+  buttons stay with the switchbox/app.
+- Presses act on **sections, not relay numbers**, so the app sends its normal PGNs → works on
+  Teensy, ESP32 and Nano with **no firmware change**.
+- **Not** via the on-screen panel's path: `clsVirtualSwitchBox.SendPGN()` drops presses whenever
+  `Core.SwitchBox.RealConnected()` (real PGN 32618 within 4 s), and `PGN32618.ParseByteData()`
+  overwrites all of `SW[]` on every packet. With a switchbox on the hub (the forum user's setup)
+  the page would silently do nothing. See *Switchbox reconciliation* below.
+- **Dead-man timeout** (30 s without a press) — see below for what expiry does.
+- The page polls a small status endpoint: live section/master states and a banner
+  ("Remote in control" / "Cab switchbox took control").
 - Unlike the RC15 page, requires the tablet + app running.
+
+### Switchbox reconciliation
+
+The two sources differ in kind: switchbox section switches are **maintained** (position = state,
+resent every packet), master is **momentary edges** (a level if `MasterMaintained`); the page
+has toggle buttons with no physical position. Level merging fails — OR can't turn off a section
+that is physically on, AND can't turn on one that is physically off.
+
+Model: **remote takeover with cab priority.**
+
+1. **Split state in `PGN32618`.** The real box writes a *physical* array; a separate *remote*
+   array holds page state. `SectionSwitchOn()` returns remote while a session is active, else
+   physical. Downstream (`clsSectionControl`, relays, PGN 32501) unchanged. (Same split would also
+   let the on-screen panel coexist with a real box — optional.)
+2. **First press starts a session, seeded** from the current physical sections + master, so
+   takeover changes nothing until a button is pressed.
+3. **Any physical change ends the session immediately** ("cab wins"). Detect *edges* — a bit
+   differing from the previous real packet — not levels, since the box resends continuously.
+   First packet after a reconnect is a baseline, not an edge. This also handles
+   `MasterMaintained` (resent level; only a flip counts).
+4. **Master is edge-merged:** an on/off from either source takes effect, last edge wins.
+   Switchbox master-off is always honoured and ends the session.
+5. **Dead-man expiry → master off**, sections revert to physical. Unlike the ESP32 ("normal
+   control resumes"), resuming here would restore every switch position with master still on
+   while the operator is out of the cab. Operator re-presses master in the cab.
+
+Note: the RC15's own web page drives relays directly at the module, bypassing the app — it has
+the same conflict with a switchbox at module level. Out of scope here.
 
 ### Module firmware update — in the app, NOT on the web page
 
@@ -104,7 +138,10 @@ App ──▶ Teensy : PGN 32800 + hex records over UDP (port from PCBsetup frmF
 
 ## Open questions
 
-- Port number and whether to add a simple PIN/password (anyone on the hotspot could switch sections).
+- Port number and whether to add a simple PIN/password (anyone on the hotspot could take over
+  section control, not just press buttons).
+- Takeover/timeout policy: confirm 30 s dead-man and master-off on expiry; whether the on-screen
+  panel should use the same physical/remote split.
 - Does ESP32 `/update` accept the upload from the Ethernet side as well as its softAP? (Verify.)
 - Some phones can't be hotspot and WiFi client at the same time — fine here, the phone is
   only ever the hotspot.

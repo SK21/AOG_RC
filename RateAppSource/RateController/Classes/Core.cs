@@ -37,6 +37,7 @@ namespace RateController.Classes
         public static UDPComm UDPaog;
         public static UDPComm UDPmodules;
         public static clsVirtualSwitchBox vSwitchBox;
+        public static clsWebServer WebServer;
         public static PGN32504 WheelSpeed;
         public static clsZones Zones;
         public static bool IsRestarting { get; private set; }
@@ -79,6 +80,7 @@ namespace RateController.Classes
                 SafeTry(() => UDPmodules.Stop());
 
                 SafeTry(() => CanBridgeComm?.Stop());
+                SafeTry(() => WebServer?.Stop());
 
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => Sections.Save());
@@ -195,6 +197,9 @@ namespace RateController.Classes
                 {
                     CanBridgeComm.Start(Props.CurrentCanDriver, Props.CanPort);
                 }
+
+                WebServer = new clsWebServer();
+                WebServer.Start(Props.WebServerPort);   // phone remote switches, failure is logged only
 
                 Props.DisplayPressure();
                 Props.DisplayProducts();

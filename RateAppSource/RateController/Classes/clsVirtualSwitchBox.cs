@@ -124,11 +124,13 @@ namespace RateController.Classes
                     PGNdata[2] = Core.Tls.BitSet(PGNdata[2], 1);
                     PGNdata[2] = Core.Tls.BitClear(PGNdata[2], 2);
                     if (FromMain) SetSectionsSwitchesMain();
+                    ReleaseTimer.Enabled = true;    // pulse, like a momentary switch
                     break;
 
                 case SwIDs.MasterOff:
                     PGNdata[2] = Core.Tls.BitClear(PGNdata[2], 1);
                     PGNdata[2] = Core.Tls.BitSet(PGNdata[2], 2);
+                    ReleaseTimer.Enabled = true;    // pulse, like a momentary switch
                     break;
 
                 case SwIDs.RateUp:
