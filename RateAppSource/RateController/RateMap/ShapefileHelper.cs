@@ -6,6 +6,7 @@ using RateController.Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -235,7 +236,7 @@ namespace RateController.RateMap
 
                     foreach (var k in rates.Keys.ToList())
                     {
-                        if (feature.Attributes.Exists(k)) rates[k] = Convert.ToDouble(feature.Attributes[k]);
+                        if (feature.Attributes.Exists(k)) rates[k] = Convert.ToDouble(feature.Attributes[k], CultureInfo.InvariantCulture);     // a text field holds a dot decimal whatever the language
                     }
 
                     if (feature.Attributes.Exists(ZoneFields.Color)) color = ColorTranslator.FromHtml(feature.Attributes[ZoneFields.Color].ToString());
@@ -250,7 +251,7 @@ namespace RateController.RateMap
                     foreach (var k in rates.Keys.ToList())
                     {
                         string mappedField = mapping.ContainsKey(k) ? mapping[k] : k;
-                        if (feature.Attributes.Exists(mappedField)) rates[k] = Convert.ToDouble(feature.Attributes[mappedField]);
+                        if (feature.Attributes.Exists(mappedField)) rates[k] = Convert.ToDouble(feature.Attributes[mappedField], CultureInfo.InvariantCulture);
                     }
 
                     // Map the color
