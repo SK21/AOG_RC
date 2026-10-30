@@ -131,6 +131,7 @@ namespace RateController.Classes
                     Prd.Save();
                 }
             }
+            RecoverCalibration();
             SetEnabledDefault();
         }
 
@@ -407,6 +408,32 @@ namespace RateController.Classes
                 }
                 LastSave = DateTime.Now;
             }
+        }
+
+        private void RecoverCalibration()
+        {
+            // a recovery record still present means calibration was interrupted (power loss, crash) with
+            // the product saved in calibration settings; put back its originals as RestoreState would have
+            string Restored = "";
+            for (int i = 0; i < cProducts.Count; i++)
+            {
+                string Key = clsCalibrate.RestoreKeyFor(i);
+                string[] Parts = Props.GetProp(Key).Split('|');
+                if (Parts.Length == 3 && Enum.TryParse(Parts[0], out ApplicationMode am)
+                    && bool.TryParse(Parts[1], out bool en) && bool.TryParse(Parts[2], out bool al))
+                {
+                    clsProduct Prd = cProducts[i];
+                    Prd.AppMode = am;
+                    Prd.Enabled = en;
+                    Prd.UseOffRateAlarm = al;
+                    Prd.ManualPWM = 0;
+                    Prd.Save();
+                    Props.SetProp(Key, "");
+                    Restored += (Restored == "" ? "" : ", ") + (i + 1).ToString();
+                    Props.WriteErrorLog("clsProducts/RecoverCalibration: product " + (i + 1).ToString() + " restored after an interrupted calibration");
+                }
+            }
+            if (Restored != "") Props.ShowMessage("Product " + Restored + " restored after an interrupted calibration.", "Calibrate", 10000);
         }
 
         private void UpdateStatus()

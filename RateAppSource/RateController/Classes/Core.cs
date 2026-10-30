@@ -82,6 +82,7 @@ namespace RateController.Classes
 
                 SafeTry(() => CanBridgeComm?.Stop());
                 SafeTry(() => WebServer?.Stop());
+                SafeTry(() => CalSession?.Close());     // restores calibrating products before the app saves and exits
 
                 SafeTry(() => SafeEvent.Raise(AppExit));
                 SafeTry(() => Sections.Save());
@@ -153,6 +154,14 @@ namespace RateController.Classes
                 Products = new clsProducts();
                 Products.Load();
                 CalSession = new clsCalibrationSession();
+
+                // speed source left on simulated by an interrupted calibration run
+                if (Enum.TryParse(Props.GetAppProp(clsCalibrationSession.SpeedRestoreKey), out SpeedType StartSpeed))
+                {
+                    Props.SpeedMode = StartSpeed;
+                    Props.SetAppProp(clsCalibrationSession.SpeedRestoreKey, "");
+                    Props.WriteErrorLog("Core/Initialize: speed source restored after an interrupted calibration");
+                }
 
                 RelayObjects = new clsRelays();
 

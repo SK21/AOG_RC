@@ -472,28 +472,29 @@
             //
             // lbHotspot
             //
-            this.lbHotspot.Location = new System.Drawing.Point(262, 398);
+            this.lbHotspot.Location = new System.Drawing.Point(262, 400);
             this.lbHotspot.Name = "lbHotspot";
-            this.lbHotspot.Size = new System.Drawing.Size(236, 24);
+            this.lbHotspot.Size = new System.Drawing.Size(236, 45);
             this.lbHotspot.TabIndex = 398;
             this.lbHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             //
             // lbHotspotNet
             //
             this.lbHotspotNet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHotspotNet.Location = new System.Drawing.Point(10, 455);
+            this.lbHotspotNet.Location = new System.Drawing.Point(10, 449);
             this.lbHotspotNet.Name = "lbHotspotNet";
-            this.lbHotspotNet.Size = new System.Drawing.Size(488, 60);
+            this.lbHotspotNet.Size = new System.Drawing.Size(488, 44);
             this.lbHotspotNet.TabIndex = 399;
             //
             // lnkHotspot
             //
-            this.lnkHotspot.Location = new System.Drawing.Point(262, 422);
+            this.lnkHotspot.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkHotspot.Location = new System.Drawing.Point(10, 500);
             this.lnkHotspot.Name = "lnkHotspot";
-            this.lnkHotspot.Size = new System.Drawing.Size(236, 24);
+            this.lnkHotspot.Size = new System.Drawing.Size(488, 24);
             this.lnkHotspot.TabIndex = 400;
             this.lnkHotspot.TabStop = true;
-            this.lnkHotspot.Text = "Hotspot settings";
+            this.lnkHotspot.Text = "If necessary, turn off Power saving in Hotspot settings";
             this.lnkHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lnkHotspot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbPhoneHelp_LinkClicked);
             //

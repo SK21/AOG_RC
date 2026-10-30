@@ -412,8 +412,12 @@ namespace RateController.Menu
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            UpdateForm();
-            if (!cEdited) SetButtons();
+            // refresh only without unsaved edits: UpdateForm writes the saved values back into the boxes
+            if (!cEdited)
+            {
+                UpdateForm();
+                SetButtons();
+            }
         }
 
         private void UpdateForm()

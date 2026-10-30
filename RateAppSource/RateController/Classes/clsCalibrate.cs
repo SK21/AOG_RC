@@ -48,6 +48,15 @@ namespace RateController.Classes
         }
         public clsProduct Product { get { return cProduct; } }
 
+        public static string RestoreKeyFor(int ProductID)
+        {
+            // profile prop holding a calibrating product's original AppMode|Enabled|OffRateAlarm
+            return "CalRestore" + ProductID.ToString();
+        }
+
+        private string RestoreKey
+        { get { return RestoreKeyFor(cID); } }
+
         public event EventHandler CalFinished;
 
         public double BaseRate
@@ -165,7 +174,9 @@ namespace RateController.Classes
 
         public void Close()
         {
-            RestoreState();
+            // only a product powered on for calibration had its state changed; restoring the others
+            // would overwrite changes made since the session opened (e.g. product enabled elsewhere)
+            if (cPowerOn) RestoreState();
             cTimer.Enabled = false;
             cTimer = null;
         }
@@ -217,6 +228,7 @@ namespace RateController.Classes
                 cProduct.UseOffRateAlarm = AlarmStart;
                 cProduct.ManualPWM = 0;
                 cProduct.Save();
+                Props.SetProp(RestoreKey, "");      // restored cleanly
             }
 
             cRunning = false;
@@ -240,6 +252,10 @@ namespace RateController.Classes
                 ApplicationModeStart = cProduct.AppMode;
                 ProductEnabledStart = cProduct.Enabled;
                 AlarmStart = cProduct.UseOffRateAlarm;
+
+                // recovery record, written to disk before any calibration value can be saved.
+                // still present at the next load means calibration was interrupted (power loss, crash)
+                Props.SetProp(RestoreKey, ApplicationModeStart.ToString() + "|" + ProductEnabledStart.ToString() + "|" + AlarmStart.ToString());
 
                 cProduct.AppMode = ApplicationMode.ConstantUPM;
                 cProduct.Enabled = false;

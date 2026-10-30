@@ -12,6 +12,7 @@ namespace RateController.Classes
         // products are prepared while either one uses it and restored when both are done.
         // a run started from the phone stops if the page goes quiet (dead-man).
 
+        public const string SpeedRestoreKey = "CalSpeedRestore";     // app prop, original speed source while a run is active
         private const int WebIdleSeconds = 120;
         private const int WebRunSeconds = 5;
         private clsCalibrates cCals;
@@ -110,6 +111,7 @@ namespace RateController.Classes
                 }
                 else
                 {
+                    Props.SetAppProp(SpeedRestoreKey, StartSim.ToString());   // interrupted run restores this at the next start
                     Props.SpeedMode = SpeedType.Simulated;
                     cCals.Running(true);
                     Props.RateCalibrationOn = true;
@@ -127,6 +129,7 @@ namespace RateController.Classes
             if (cCals != null)
             {
                 Props.SpeedMode = StartSim;
+                Props.SetAppProp(SpeedRestoreKey, "");
                 cCals.Running(false);
                 Props.RateCalibrationOn = false;
                 cWebOwned = false;

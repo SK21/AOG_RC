@@ -183,10 +183,12 @@ namespace RateController.Menu
             Font urlFont = lbPhoneUrl.Font;
             Font helpFont = lbPhoneHelp.Font;
             Font netFont = lbHotspotNet.Font;
+            Font hintFont = lnkHotspot.Font;
             MainMenu.StyleControls(this);
             lbPhoneUrl.Font = urlFont;
             lbPhoneHelp.Font = helpFont;
             lbHotspotNet.Font = netFont;
+            lnkHotspot.Font = hintFont;
             SetPhoneLinks();
 
             SetLanguage();
@@ -319,8 +321,10 @@ namespace RateController.Menu
             int Start = lbPhoneHelp.Text.IndexOf("WiFi settings");
             if (Start >= 0) lbPhoneHelp.Links.Add(Start, "WiFi settings".Length, "ms-settings:network-wifi");
 
+            // power saving turns the hotspot off after 5 min with no devices, it can only be changed in windows
             lnkHotspot.Links.Clear();
-            lnkHotspot.Links.Add(0, lnkHotspot.Text.Length, "ms-settings:network-mobilehotspot");
+            Start = lnkHotspot.Text.IndexOf("Hotspot settings");
+            if (Start >= 0) lnkHotspot.Links.Add(Start, "Hotspot settings".Length, "ms-settings:network-mobilehotspot");
 
             // theme text colour, the underline marks the links (default blue is unreadable on dark)
             foreach (LinkLabel Lnk in new LinkLabel[] { lbPhoneHelp, lnkHotspot })

@@ -24,6 +24,7 @@ namespace RateController.Classes
         // Windows Mobile Hotspot through its WinRT api in a hidden powershell, no admin needed.
         // ACTION is status, start or stop. prints state|result|ssid|passphrase
         private const string HotspotScript = @"$ErrorActionPreference='Stop'
+$ProgressPreference='SilentlyContinue'
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
 $null=[Windows.Networking.Connectivity.NetworkInformation,Windows.Networking.Connectivity,ContentType=WindowsRuntime]
 $null=[Windows.Networking.NetworkOperators.NetworkOperatorTetheringManager,Windows.Networking.NetworkOperators,ContentType=WindowsRuntime]
@@ -135,10 +136,8 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             try
             {
                 string Rule = "advfirewall firewall {0} rule name=\"" + HotspotRule + "\"";
-                // also turns off Windows' hotspot power saving (off after 5 min with no devices), same prompt
                 string Args = "/c netsh " + string.Format(Rule, "delete") + " & netsh " + string.Format(Rule, "add")
-                    + " dir=in action=allow protocol=TCP localport=" + cPort.ToString() + " profile=public remoteip=192.168.137.0/24"
-                    + " & reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\icssvc\\Settings\" /v PeerlessTimeoutEnabled /t REG_DWORD /d 0 /f";
+                    + " dir=in action=allow protocol=TCP localport=" + cPort.ToString() + " profile=public remoteip=192.168.137.0/24";
                 ProcessStartInfo Info = new ProcessStartInfo("cmd.exe", Args);
                 Info.UseShellExecute = true;
                 Info.Verb = "runas";
@@ -719,7 +718,8 @@ function save(){var x='';F.forEach(function(f){x+='&'+f+'='+encodeURIComponent(q
 function cancel(){dirty=false;poll();}
 function pick(i){if(!dirty){P=i;poll();}}
 F.forEach(function(f){q(f).oninput=function(){dirty=true;q('save').disabled=false;q('cancel').disabled=false;};});
-F.forEach(function(f){q(f).onfocus=function(){var e=this;setTimeout(function(){e.setSelectionRange(0,e.value.length);},0);};});
+F.forEach(function(f){var e=q(f);e.onfocus=function(){e.placeholder=e.value;e.value='';};e.onblur=function(){if(e.value==='')e.value=e.placeholder;e.placeholder='';};});
+function fill(id,v){if(!dirty&&document.activeElement!==q(id))q(id).value=v;}
 function show(s){
  document.body.style.background=s.back;document.body.style.color=s.fore;on=s.on;P=s.p;
  var pr=q('prods'),i,b;
@@ -733,7 +733,7 @@ function show(s){
  q('start').style.background=s.running?on:'transparent';q('start').disabled=s.running;q('stop').disabled=!s.running;
  q('pulses').textContent=s.pulses;q('hz').textContent=s.hz.toFixed(1);q('expected').textContent=s.expected.toFixed(1);
  q('su').textContent='Speed ('+s.units+')';q('pwmrow').style.display=s.motor?'':'none';
- if(!dirty){q('s').value=s.speed.toFixed(1);q('b').value=s.baseRate.toFixed(1);q('m').value=s.meterCal.toFixed(1);q('me').value=s.measured.toFixed(1);q('w').value=s.pwm;}
+ fill('s',s.speed.toFixed(1));fill('b',s.baseRate.toFixed(1));fill('m',s.meterCal.toFixed(1));fill('me',s.measured.toFixed(1));fill('w',s.pwm);
  q('s').disabled=!s.speedEdit;q('b').disabled=!s.baseEdit;q('m').disabled=!s.baseEdit;q('me').disabled=!s.measEdit;q('w').disabled=!s.pwmEdit;
  q('save').disabled=!dirty||s.running;q('cancel').disabled=!dirty;
 }
