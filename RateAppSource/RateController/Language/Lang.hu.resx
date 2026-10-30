@@ -618,4 +618,141 @@
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>Szerkesztendő modul</value>
   </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>Telefonos oldal címe</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Csatlakoztassa a telefont és a tabletet ugyanahhoz a hálózathoz: a telefon hotspotjához, egy WiFi routerhez vagy a tablet saját hotspotjához (jelölje be lent a Tablet hotspotot, majd mentsen).
+2. Telefonos hotspot vagy router: miután a tablet csatlakozott, nyissa meg: {0}, koppintson a hálózatra, és állítsa Magánhálózatra.
+3. Olvassa be a kódot a telefon kamerájával. A kódra koppintva a következő cím jelenik meg.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>WiFi beállítások</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>Hotspot beállítások</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>Ha szükséges, kapcsolja ki az Energiatakarékosságot itt: {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>Tablet hotspot</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>Kompakt kijelző</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Nem fut, a(z) {0} port valószínűleg foglalt.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Csatlakoztassa a tabletet és a telefont ugyanahhoz a hálózathoz, majd nyissa meg újra ezt a fület.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} / {1}, koppintson a következőhöz)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>A tűzfal nem engedélyezett. Windows rendszergazdai jogosultság szükséges.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>Indítás...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>Leállítás...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>Ellenőrzés...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>Be</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>Ki</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>tűzfal nem engedélyezett</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>Ki, az újraindítások sikertelenek</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Jelszó</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows: {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>A(z) {0}. anyag visszaállítva egy megszakadt kalibrálás után.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Indítás előtt adjon meg PWM értéket.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Adagoló kalibráció beállítása.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Kalibrációs sebesség beállítása.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Adja meg a mért mennyiséget.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>Az 1. lépés kész a(z) {0}. anyagnál. Futtassa újra, és mérje meg a kijuttatott mennyiséget.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Előbb kapcsolja be egy anyag Power gombját.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Mentve.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Csak olvasható profil, nincs mentve.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>Menü</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>Kapcsolódás...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>Nincs kapcsolat</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Távvezérlés aktív, {0} mp</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>A fülke kapcsolódoboza átvette az irányítást</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Időtúllépés, főelzáró ki</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>A fülke irányít</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Az auto szakaszok be vannak kapcsolva - az AOG vezérli a szakaszokat</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>Sebesség nincs rögzítve</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>Leállít</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Dózis teszt, a végén nyomja meg a Leállít gombot</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>hagyja nyitva ezt az oldalt</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Az utolsó futás leállt: megszakadt a kapcsolat a telefonnal</value>
+  </data>
 </root>

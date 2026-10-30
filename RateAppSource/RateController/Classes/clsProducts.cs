@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.Language;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -433,7 +434,7 @@ namespace RateController.Classes
                     Props.WriteErrorLog("clsProducts/RecoverCalibration: product " + (i + 1).ToString() + " restored after an interrupted calibration");
                 }
             }
-            if (Restored != "") Props.ShowMessage("Product " + Restored + " restored after an interrupted calibration.", "Calibrate", 10000);
+            if (Restored != "") Props.ShowMessage(string.Format(Lang.lgCalRestored, Restored), Lang.lgCalibrate, 10000);
         }
 
         private void UpdateStatus()

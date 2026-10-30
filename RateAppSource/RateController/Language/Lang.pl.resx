@@ -220,7 +220,7 @@
     <value>Ilość zmierzona</value>
   </data>
   <data name="lgMeterSet" xml:space="preserve">
-    <value>Metryczne</value>
+    <value>Dozownik ustawiony</value>
   </data>
   <data name="lgMetric" xml:space="preserve">
     <value>Jednostki metryczne</value>
@@ -614,5 +614,142 @@
   </data>
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>Moduł do edycji</value>
+  </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>Adres strony telefonu</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Połącz telefon i tablet z tą samą siecią: hotspotem telefonu, routerem WiFi lub hotspotem tabletu (zaznacz poniżej Hotspot tabletu i zapisz).
+2. Hotspot telefonu lub router: gdy tablet się połączy, otwórz {0}, dotknij sieci i ustaw ją jako Prywatną.
+3. Zeskanuj kod aparatem telefonu. Dotknij kodu, aby pokazać następny adres.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>Ustawienia WiFi</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>Ustawienia hotspotu</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>W razie potrzeby wyłącz oszczędzanie energii w: {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>Hotspot tabletu</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>Widok kompaktowy</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Nie działa, port {0} może być zajęty.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Połącz tablet i telefon z tą samą siecią, a następnie ponownie otwórz tę kartę.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} z {1}, dotknij, aby zobaczyć następny)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>Zapora sieciowa nie zezwala. Wymagane są uprawnienia administratora Windows.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>Uruchamianie...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>Zatrzymywanie...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>Sprawdzanie...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>Wł.</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>Wył.</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>zapora sieciowa nie zezwala</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>Wył., ponowne uruchomienia nieudane</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows: {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>Produkt {0} przywrócony po przerwanej kalibracji.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Przed startem wprowadź wartość PWM.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Ustawianie kalibracji dozownika.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Ustawianie prędkości kalibracji.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Wprowadź zmierzoną ilość.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>Krok 1 zakończony dla produktu {0}. Uruchom ponownie i zmierz wysianą ilość.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Najpierw włącz zasilanie produktu.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Zapisano.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Profil tylko do odczytu, nie zapisano.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>Łączenie...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>Brak połączenia</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Sterowanie zdalne, {0} s</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>Pulpit w kabinie przejął sterowanie</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Upłynął czas, główny wyłączony</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>Sterowanie z kabiny</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Sekcja auto włączona - AOG steruje sekcjami</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>Dozownik nieustawiony</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Test dawki, po zakończeniu naciśnij Stop</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>nie zamykaj tej strony</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Ostatni przebieg zatrzymany: utracono połączenie z telefonem</value>
   </data>
 </root>

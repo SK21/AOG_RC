@@ -615,4 +615,141 @@
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>Redaguojamas modulis</value>
   </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>Telefonas</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>Telefono puslapio adresas</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Prijunkite telefoną ir planšetę prie to paties tinklo: telefono prieigos taško, WiFi maršrutizatoriaus arba planšetės prieigos taško (pažymėkite žemiau Planšetės prieigos taškas ir išsaugokite).
+2. Telefono prieigos taškas arba maršrutizatorius: kai planšetė prisijungs, atidarykite {0}, bakstelėkite tinklą ir nustatykite Privatus.
+3. Nuskaitykite kodą telefono kamera. Bakstelėkite kodą, kad būtų rodomas kitas adresas.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>WiFi nustatymai</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>Prieigos taško nustatymai</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>Jei reikia, išjunkite energijos taupymą: {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>Planšetės prieigos taškas</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>Kompaktiškas ekranas</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Neveikia, prievadas {0} gali būti užimtas.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Prijunkite planšetę ir telefoną prie to paties tinklo, tada vėl atidarykite šį skirtuką.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} iš {1}, bakstelėkite kitam)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>Ugniasienė neleista. Reikia Windows administratoriaus teisių.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>Paleidžiama...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>Stabdoma...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>Tikrinama...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>Įjungta</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>Išjungta</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>ugniasienė neleista</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>Išjungta, nepavyko paleisti iš naujo</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Slaptažodis</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows: {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>Produktas {0} atkurtas po nutrauktos kalibracijos.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Prieš paleisdami įveskite PWM reikšmę.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Nustatoma dozatoriaus kalibracija.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Nustatomas kalibravimo greitis.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Įveskite išmatuotą kiekį.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>1 žingsnis produktui {0} baigtas. Paleiskite dar kartą ir išmatuokite išbertą kiekį.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Pirmiausia įjunkite produktą.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Išsaugota.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Profilis tik skaitymui, neišsaugota.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>Meniu</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>Jungiamasi...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>Nėra ryšio</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Valdoma nuotoliniu būdu, {0} s</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>Kabinos pultas perėmė valdymą</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Baigėsi laikas, pagrindinis išjungtas</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>Valdoma iš kabinos</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Auto sekcija įjungta - sekcijas valdo AOG</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>Dozatorius nesureguliuotas</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>Išsaugoti</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>Atšaukti</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Tikrinama norma, baigę paspauskite Stop</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>laikykite šį puslapį atidarytą</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Paskutinis paleidimas sustabdytas: nutrūko ryšys su telefonu</value>
+  </data>
 </root>

@@ -1,3 +1,4 @@
+using RateController.Language;
 using RateController.PGNs;
 using System;
 using System.Collections.Generic;
@@ -283,6 +284,38 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             return sb.ToString();
         }
 
+        private static string Localize(string Page)
+        {
+            // pages carry var T=__T__; the words in the tablet's current language
+            return Page.Replace("__T__", PageWords());
+        }
+
+        private static string PageWords()
+        {
+            string[,] Words = {
+                { "switches", Lang.lgSwitches }, { "calibrate", Lang.lgCalibrate }, { "menu", Lang.lgMenu },
+                { "autoRate", Lang.lgAutoRate }, { "autoSection", Lang.lgAutoSection },
+                { "connecting", Lang.lgConnecting }, { "noConnection", Lang.lgNoConnection },
+                { "remote", Lang.lgRemoteInControl }, { "cabTook", Lang.lgCabTookControl }, { "timedOut", Lang.lgRemoteTimedOut },
+                { "cabIn", Lang.lgCabInControl }, { "autoWarn", Lang.lgAutoSectionWarning },
+                { "power", Lang.lgPower }, { "start", Lang.lgStart }, { "stop", Lang.lgStop },
+                { "meterSet", Lang.lgMeterSet }, { "meterNotSet", Lang.lgMeterNotSet },
+                { "pulses", Lang.lgPulses }, { "speed", Lang.lgSpeed }, { "baseRate", Lang.lgBaseRate }, { "meterCal", Lang.lgCalFactor },
+                { "expected", Lang.lgExpectedAmount }, { "measured", Lang.lgMeasuredAmount }, { "pwm", Lang.lgPWM },
+                { "save", Lang.lgSave }, { "cancel", Lang.lgCancel },
+                { "testing", Lang.lgCalTesting }, { "settingSpeed", Lang.lgCalSettingSpeed }, { "keepOpen", Lang.lgKeepPageOpen },
+                { "phoneLost", Lang.lgCalPhoneLost } };
+
+            StringBuilder sb = new StringBuilder("{");
+            for (int i = 0; i < Words.GetLength(0); i++)
+            {
+                if (i > 0) sb.Append(",");
+                // < escaped so a translation can never close the script tag
+                sb.Append("\"").Append(Words[i, 0]).Append("\":\"").Append(Esc(Words[i, 1]).Replace("<", "\\u003c")).Append("\"");
+            }
+            return sb.Append("}").ToString();
+        }
+
         private static string Num(double Value)
         {
             // json number, invariant culture
@@ -340,12 +373,12 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
 
                 case "start":
                     cCalMsg = CS.Start(P, true);
-                    if (!CS.IsRunning() && cCalMsg == "") cCalMsg = "Turn on Power for a product first.";
+                    if (!CS.IsRunning() && cCalMsg == "") cCalMsg = Lang.lgCalPowerFirst;
                     break;
 
                 case "stop":
                     CS.Stop();
-                    cCalMsg = Cal.Locked ? "Enter measured amount." : "";
+                    cCalMsg = Cal.Locked ? Lang.lgCalEnterMeasured : "";
                     break;
 
                 case "save":
@@ -358,7 +391,7 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
                         if (QueryNumber(Q, "me", out double me)) Cal.MeasuredAmount = me;
                         if (QueryNumber(Q, "w", out double w)) Cal.CalPWM = (int)Math.Round(w);
                         CS.Cals.Save();
-                        cCalMsg = Props.ReadOnly ? "Read-only profile, not saved." : "Saved.";
+                        cCalMsg = Props.ReadOnly ? Lang.lgReadOnlyNotSaved : Lang.lgSaved;
                     }
                     break;
             }
@@ -367,7 +400,7 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
 
         private void CalSession_StepOneComplete(object sender, int ID)
         {
-            cCalMsg = "Step 1 complete for product " + (ID + 1).ToString() + ". Run again and measure the output.";
+            cCalMsg = string.Format(Lang.lgCalStep1Done, ID + 1);
         }
 
         private string CalStatus(Dictionary<string, string> Q)
@@ -410,7 +443,7 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             sb.Append(",\"meterCal\":").Append(Num(Cal.MeterCal));
             sb.Append(",\"baseRate\":").Append(Num(Prd.RateSet));
             sb.Append(",\"speed\":").Append(Num(Speed));
-            sb.Append(",\"units\":\"").Append(Props.UseMetric ? "KMH" : "MPH").Append("\"");
+            sb.Append(",\"units\":\"").Append(Esc(Props.UseMetric ? Lang.lgSpeedKMH : Lang.lgSpeedMPH)).Append("\"");
             sb.Append(",\"powerEdit\":").Append(Js(!Running));
             sb.Append(",\"lockEdit\":").Append(Js(!Running && Cal.PowerOn));
             sb.Append(",\"speedEdit\":").Append(Js(!Running));
@@ -468,15 +501,15 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
                     }
                     else if (Method == "GET" && Path == "/")
                     {
-                        Send(Stream, "200 OK", "text/html; charset=utf-8", MenuPage);
+                        Send(Stream, "200 OK", "text/html; charset=utf-8", OnUI(() => Localize(MenuPage)));
                     }
                     else if (Method == "GET" && Path == "/switches")
                     {
-                        Send(Stream, "200 OK", "text/html; charset=utf-8", SwitchesPage);
+                        Send(Stream, "200 OK", "text/html; charset=utf-8", OnUI(() => Localize(SwitchesPage)));
                     }
                     else if (Method == "GET" && Path == "/cal")
                     {
-                        Send(Stream, "200 OK", "text/html; charset=utf-8", CalPage);
+                        Send(Stream, "200 OK", "text/html; charset=utf-8", OnUI(() => Localize(CalPage)));
                     }
                     else if (Method == "GET" && Path.StartsWith("/calstatus"))
                     {
@@ -691,25 +724,28 @@ td{padding:4px 0}
 td+td{text-align:right}
 input{width:7em;font-size:18px;text-align:right;padding:4px;border-radius:4px;border:1px solid;background:transparent;color:inherit}
 </style></head><body>
-<h1>RateController Calibration</h1>
+<h1>RateController <span data-t='calibrate'>Calibration</span></h1>
 <div id='prods'></div>
 <div id='name'></div>
-<div id='msg'>Connecting...</div><div id='warn'></div>
-<div class='row'><button id='power' onclick=""act('power')"">Power</button><button id='lock' onclick=""act('lock')"">Lock</button></div>
-<div class='row'><button id='start' onclick=""act('start')"">Start</button><button id='stop' onclick=""act('stop')"">Stop</button></div>
+<div id='msg' data-t='connecting'>Connecting...</div><div id='warn'></div>
+<div class='row'><button id='power' onclick=""act('power')"" data-t='power'>Power</button><button id='lock' onclick=""act('lock')"">Lock</button></div>
+<div class='row'><button id='start' onclick=""act('start')"" data-t='start'>Start</button><button id='stop' onclick=""act('stop')"" data-t='stop'>Stop</button></div>
 <table>
-<tr><td>Pulses</td><td id='pulses'></td></tr>
+<tr><td data-t='pulses'>Pulses</td><td id='pulses'></td></tr>
 <tr><td>Hz</td><td id='hz'></td></tr>
 <tr><td id='su'>Speed</td><td><input id='s' inputmode='decimal'></td></tr>
-<tr><td>Base Rate</td><td><input id='b' inputmode='decimal'></td></tr>
-<tr><td>Meter Cal</td><td><input id='m' inputmode='decimal'></td></tr>
-<tr><td>Expected</td><td id='expected'></td></tr>
-<tr><td>Measured</td><td><input id='me' inputmode='decimal'></td></tr>
-<tr id='pwmrow'><td>PWM</td><td><input id='w' inputmode='numeric'></td></tr>
+<tr><td data-t='baseRate'>Base Rate</td><td><input id='b' inputmode='decimal'></td></tr>
+<tr><td data-t='meterCal'>Meter Cal</td><td><input id='m' inputmode='decimal'></td></tr>
+<tr><td data-t='expected'>Expected</td><td id='expected'></td></tr>
+<tr><td data-t='measured'>Measured</td><td><input id='me' inputmode='decimal'></td></tr>
+<tr id='pwmrow'><td data-t='pwm'>PWM</td><td><input id='w' inputmode='numeric'></td></tr>
 </table>
-<div class='row'><button id='cancel' onclick='cancel()'>Cancel</button><button id='save' onclick='save()'>Save</button></div>
-<a id='back' href='/'>&#8249; Menu</a>
+<div class='row'><button id='cancel' onclick='cancel()' data-t='cancel'>Cancel</button><button id='save' onclick='save()' data-t='save'>Save</button></div>
+<a id='back' href='/'>&#8249; <span data-t='menu'>Menu</span></a>
 <script>
+var T=__T__;
+var tr=document.querySelectorAll('[data-t]');for(var i=0;i<tr.length;i++)tr[i].textContent=T[tr[i].getAttribute('data-t')];
+document.title='RateController - '+T.calibrate;
 var P=-1,dirty=false,on='#90ee90',built=0,F=['s','b','m','me','w'];
 function q(id){return document.getElementById(id)}
 function get(url,opt){return fetch(url,opt).then(function(r){return r.json()}).then(show)}
@@ -726,18 +762,18 @@ function show(s){
  if(built!=s.powers.length){pr.innerHTML='';for(i=0;i<s.powers.length;i++){b=document.createElement('button');b.textContent=i+1;b.id='p'+i;b.onclick=(function(n){return function(){pick(n)}})(i);pr.appendChild(b);}built=s.powers.length;}
  for(i=0;i<s.powers.length;i++){b=q('p'+i);b.style.background=s.powers[i]?on:'transparent';b.className=(i==s.p)?'sel':'';b.disabled=dirty;}
  q('name').textContent=s.name;
- q('msg').textContent=s.running?(s.locked?'Testing rate, press Stop when done':'Setting calibration speed')+(s.webOwned?' - keep this page open':''):s.msg;
- q('warn').textContent=s.phoneLost?'Last run stopped: phone connection lost':'';
+ q('msg').textContent=s.running?(s.locked?T.testing:T.settingSpeed.replace(/\.$/,''))+(s.webOwned?' - '+T.keepOpen:''):s.msg;
+ q('warn').textContent=s.phoneLost?T.phoneLost:'';
  q('power').style.background=s.power?on:'transparent';q('power').disabled=!s.powerEdit;
- q('lock').textContent=s.locked?'Meter set':'Meter not set';q('lock').style.background=s.locked?on:'transparent';q('lock').disabled=!s.lockEdit;
+ q('lock').textContent=s.locked?T.meterSet:T.meterNotSet;q('lock').style.background=s.locked?on:'transparent';q('lock').disabled=!s.lockEdit;
  q('start').style.background=s.running?on:'transparent';q('start').disabled=s.running;q('stop').disabled=!s.running;
  q('pulses').textContent=s.pulses;q('hz').textContent=s.hz.toFixed(1);q('expected').textContent=s.expected.toFixed(1);
- q('su').textContent='Speed ('+s.units+')';q('pwmrow').style.display=s.motor?'':'none';
+ q('su').textContent=T.speed+' ('+s.units+')';q('pwmrow').style.display=s.motor?'':'none';
  fill('s',s.speed.toFixed(1));fill('b',s.baseRate.toFixed(1));fill('m',s.meterCal.toFixed(1));fill('me',s.measured.toFixed(1));fill('w',s.pwm);
  q('s').disabled=!s.speedEdit;q('b').disabled=!s.baseEdit;q('m').disabled=!s.baseEdit;q('me').disabled=!s.measEdit;q('w').disabled=!s.pwmEdit;
  q('save').disabled=!dirty||s.running;q('cancel').disabled=!dirty;
 }
-function poll(){if(document.hidden)return;get('/calstatus?p='+P).catch(function(){q('msg').textContent='No connection';});}
+function poll(){if(document.hidden)return;get('/calstatus?p='+P).catch(function(){q('msg').textContent=T.noConnection;});}
 setInterval(poll,1000);poll();
 </script></body></html>";
 
@@ -750,9 +786,11 @@ h1{font-size:26px;margin:8px 0 24px;text-align:center}
 a{display:block;font-size:24px;padding:24px 0;margin:0 0 16px;border:1px solid;border-radius:8px;text-align:center;text-decoration:none;color:inherit}
 </style></head><body>
 <h1>RateController</h1>
-<a href='/switches'>Switches</a>
-<a href='/cal'>Calibration</a>
+<a href='/switches' data-t='switches'>Switches</a>
+<a href='/cal' data-t='calibrate'>Calibration</a>
 <script>
+var T=__T__;
+var tr=document.querySelectorAll('[data-t]');for(var i=0;i<tr.length;i++)tr[i].textContent=T[tr[i].getAttribute('data-t')];
 fetch('/status').then(function(r){return r.json()}).then(function(s){document.body.style.background=s.back;document.body.style.color=s.fore;}).catch(function(){});
 </script></body></html>";
 
@@ -770,11 +808,14 @@ button:disabled{opacity:.35}
 .wide{grid-column:span 2}
 #back{display:block;width:60%;margin:16px auto 0;padding:16px 0;font-size:22px;text-align:center;border:1px solid;border-radius:8px;color:inherit;text-decoration:none}
 </style></head><body>
-<h1>RateController Switches</h1>
-<div id='msg'>Connecting...</div><div id='warn'></div>
+<h1>RateController <span data-t='switches'>Switches</span></h1>
+<div id='msg' data-t='connecting'>Connecting...</div><div id='warn'></div>
 <div id='pad'></div>
-<a id='back' href='/'>&#8249; Menu</a>
+<a id='back' href='/'>&#8249; <span data-t='menu'>Menu</span></a>
 <script>
+var T=__T__;
+var tr=document.querySelectorAll('[data-t]');for(var i=0;i<tr.length;i++)tr[i].textContent=T[tr[i].getAttribute('data-t')];
+document.title='RateController - '+T.switches;
 var on='#90ee90',built=-1,timer=null;
 function post(id){return fetch('/press?id='+id,{method:'POST',headers:{'X-RC':'1'}}).then(function(r){return r.json()}).then(show).catch(function(){});}
 function btn(label,id,cls){var b=document.createElement('button');b.textContent=label;b.id='b_'+id;if(cls)b.className=cls;b.onclick=function(){post(id)};return b;}
@@ -786,7 +827,7 @@ document.addEventListener('visibilitychange',stop);
 function build(n){var p=document.getElementById('pad');p.innerHTML='';
  p.appendChild(btn('MST','master'));p.appendChild(btn('PRM','prime'));p.appendChild(rate('\u25B2','up'));p.appendChild(rate('\u25BC','down'));
  for(var i=0;i<n;i++)p.appendChild(btn(String(i+1),String(i)));
- p.appendChild(btn('Auto Rate','autorate','wide'));p.appendChild(btn('Auto Section','autosection','wide'));built=n;}
+ p.appendChild(btn(T.autoRate,'autorate','wide'));p.appendChild(btn(T.autoSection,'autosection','wide'));built=n;}
 function lit(id,v){var b=document.getElementById('b_'+id);if(b)b.style.background=v?on:'transparent';}
 function show(s){
  document.body.style.background=s.back;document.body.style.color=s.fore;on=s.on;
@@ -794,10 +835,10 @@ function show(s){
  lit('master',s.master);lit('prime',s.prime);lit('up',s.up);lit('down',s.down);lit('autorate',s.autoRate);lit('autosection',s.autoSection);
  document.getElementById('b_prime').disabled=!s.primeEnabled;
  for(var i=0;i<s.switches.length;i++)lit(String(i),s.switches[i]);
- document.getElementById('msg').textContent=s.remote?'Remote in control, '+s.secondsLeft+' s':(s.ended=='Cab'?'Cab switchbox took control':(s.ended=='Timeout'?'Timed out, master off':'Cab in control'));
- document.getElementById('warn').textContent=(s.autoSection&&s.aog)?'Auto section is on - AOG controls sections':'';
+ document.getElementById('msg').textContent=s.remote?T.remote.replace('{0}',s.secondsLeft):(s.ended=='Cab'?T.cabTook:(s.ended=='Timeout'?T.timedOut:T.cabIn));
+ document.getElementById('warn').textContent=(s.autoSection&&s.aog)?T.autoWarn:'';
 }
-function poll(){fetch('/status').then(function(r){return r.json()}).then(show).catch(function(){document.getElementById('msg').textContent='No connection';});}
+function poll(){fetch('/status').then(function(r){return r.json()}).then(show).catch(function(){document.getElementById('msg').textContent=T.noConnection;});}
 setInterval(poll,1000);poll();
 </script></body></html>";
     }

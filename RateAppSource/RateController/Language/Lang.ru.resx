@@ -615,4 +615,141 @@
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>Модуль для редактирования</value>
   </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>Адрес страницы телефона</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Подключите телефон и планшет к одной сети: точке доступа телефона, WiFi-роутеру или собственной точке доступа планшета (отметьте ниже Точка доступа планшета и сохраните).
+2. Точка доступа телефона или роутер: после подключения планшета откройте {0}, нажмите на сеть и выберите Частная.
+3. Отсканируйте код камерой телефона. Нажмите на код, чтобы показать следующий адрес.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>Параметры WiFi</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>Параметры точки доступа</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>При необходимости отключите энергосбережение в разделе {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>Точка доступа планшета</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>Компактный вид</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Не работает, порт {0} может быть занят.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Подключите планшет и телефон к одной сети, затем снова откройте эту вкладку.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} из {1}, нажмите для следующего)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>Брандмауэр не разрешён. Нужны права администратора Windows.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>Запуск...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>Остановка...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>Проверка...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>Вкл.</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>Выкл.</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>брандмауэр не разрешён</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>Выкл., перезапуски не удались</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows: {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>Продукт {0} восстановлен после прерванной калибровки.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Перед запуском введите значение PWM.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Настройка калибровки дозатора.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Настройка скорости калибровки.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Введите измеренное количество.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>Шаг 1 для продукта {0} завершён. Запустите снова и измерьте выданное количество.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Сначала включите питание продукта.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Сохранено.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Профиль только для чтения, не сохранено.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>Меню</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>Подключение...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>Нет связи</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Дистанционное управление, {0} с</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>Пульт в кабине взял управление</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Время истекло, главный выключен</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>Управление из кабины</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Авто секция включена - секциями управляет AOG</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>Дозатор не настроен</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>Стоп</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Проверка расхода, по окончании нажмите Стоп</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>не закрывайте эту страницу</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Последний запуск остановлен: потеряна связь с телефоном</value>
+  </data>
 </root>

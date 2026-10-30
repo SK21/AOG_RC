@@ -1,3 +1,4 @@
+using RateController.Language;
 using System;
 using System.Windows.Forms;
 
@@ -107,7 +108,7 @@ namespace RateController.Classes
 
                 if (PWMmissing)
                 {
-                    Result = "Enter a PWM value before starting.";
+                    Result = Lang.lgCalEnterPWM;
                 }
                 else
                 {
@@ -118,7 +119,7 @@ namespace RateController.Classes
                     cWebOwned = FromWeb;
                     cStopReason = CalStopReasons.None;
                     if (FromWeb) WebLastSeen = DateTime.Now;
-                    Result = cCals.Item(ProductID).Locked ? "Setting meter cal." : "Setting calibration speed.";
+                    Result = cCals.Item(ProductID).Locked ? Lang.lgCalSettingMeterCal : Lang.lgCalSettingSpeed;
                 }
             }
             return Result;

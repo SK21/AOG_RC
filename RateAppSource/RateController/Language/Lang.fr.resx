@@ -271,7 +271,7 @@
     <value>Esclave</value>
   </data>
   <data name="lgSpeed" xml:space="preserve">
-    <value>Avancer</value>
+    <value>Vitesse</value>
   </data>
   <data name="lgStandard" xml:space="preserve">
     <value>Standard</value>
@@ -614,5 +614,142 @@
   </data>
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>Module à modifier</value>
+  </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>Téléphone</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>Adresse de la page téléphone</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Connectez le téléphone et la tablette au même réseau : le point d'accès du téléphone, un routeur WiFi ou le point d'accès de la tablette (cochez Point d'accès tablette ci-dessous et enregistrez).
+2. Point d'accès du téléphone ou routeur : une fois la tablette connectée, ouvrez {0}, touchez le réseau et réglez-le sur Privé.
+3. Scannez le code avec l'appareil photo du téléphone. Touchez le code pour afficher l'adresse suivante.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>Paramètres WiFi</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>Paramètres du point d'accès</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>Si nécessaire, désactivez l'économie d'énergie dans {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>Point d'accès tablette</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>Affichage compact</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Arrêté, le port {0} est peut-être déjà utilisé.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Connectez la tablette et le téléphone au même réseau, puis rouvrez cet onglet.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} sur {1}, touchez pour la suivante)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>Pare-feu non autorisé. Les droits d'administrateur Windows sont nécessaires.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>Démarrage...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>Arrêt...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>Vérification...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>pare-feu non autorisé</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>Désactivé, redémarrages échoués</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows : {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>Produit {0} restauré après une calibration interrompue.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Entrez une valeur PWM avant de démarrer.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Réglage de l'étalonnage du doseur.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Réglage de la vitesse de calibration.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Entrez la quantité mesurée.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>Étape 1 terminée pour le produit {0}. Relancez et mesurez la quantité distribuée.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Activez d'abord la puissance d'un produit.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Enregistré.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Profil en lecture seule, non enregistré.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>Connexion...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>Pas de connexion</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Contrôle à distance, {0} s</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>Le boîtier en cabine a repris le contrôle</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Délai dépassé, maître coupé</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>Contrôle en cabine</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Section auto activée - AOG contrôle les sections</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>Doseur non réglé</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Test de dose, appuyez sur Stop une fois terminé</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>gardez cette page ouverte</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Dernier essai arrêté : connexion au téléphone perdue</value>
   </data>
 </root>

@@ -615,4 +615,141 @@
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>te bewerken module</value>
   </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>telefoon</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>adres telefoonpagina</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Verbind de telefoon en de tablet met hetzelfde netwerk: de hotspot van de telefoon, een wifi-router of de eigen hotspot van de tablet (vink hieronder tablet hotspot aan en sla op).
+2. Hotspot van de telefoon of router: open, zodra de tablet verbonden is, {0}, tik op het netwerk en zet het op Privé.
+3. Scan de code met de camera van de telefoon. Tik op de code voor het volgende adres.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>wifi-instellingen</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>hotspot-instellingen</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>Zet zo nodig energiebesparing uit in {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>tablet hotspot</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>compacte weergave</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Niet actief, poort {0} is mogelijk in gebruik.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Verbind de tablet en de telefoon met hetzelfde netwerk en open dit tabblad opnieuw.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} van {1}, tik voor volgende)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>Firewall niet toegestaan. Windows-beheerdersrechten zijn nodig.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>starten...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>stoppen...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>controleren...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>aan</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>uit</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>firewall niet toegestaan</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>uit, herstarten mislukt</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>wachtwoord</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows: {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>Product {0} hersteld na een onderbroken kalibratie.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Voer een PWM-waarde in voor het starten.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Doseerderkalibratie wordt ingesteld.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Kalibratiesnelheid wordt ingesteld.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Voer de gemeten hoeveelheid in.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>Stap 1 klaar voor product {0}. Start opnieuw en meet de afgegeven hoeveelheid.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Zet eerst aan/uit van een product aan.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Opgeslagen.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Alleen-lezen profiel, niet opgeslagen.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>menu</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>verbinden...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>geen verbinding</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Op afstand bediend, {0} s</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>Schakelkast in de cabine heeft de bediening overgenomen</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Tijd verstreken, master uit</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>Bediening vanuit de cabine</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Auto sectie staat aan - AOG bedient de secties</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>doseerder niet ingesteld</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>stop</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>opslaan</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>annuleren</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Dosering testen, druk op stop als u klaar bent</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>houd deze pagina open</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Laatste run gestopt: verbinding met telefoon verbroken</value>
+  </data>
 </root>

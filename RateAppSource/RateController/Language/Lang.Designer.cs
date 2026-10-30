@@ -1571,5 +1571,410 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgZoneAttributes", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone.
+        /// </summary>
+        internal static string lgPhone {
+            get {
+                return ResourceManager.GetString("lgPhone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone page address.
+        /// </summary>
+        internal static string lgPhoneAddress {
+            get {
+                return ResourceManager.GetString("lgPhoneAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. Put the phone and the tablet on the same network: the phone's hotspot, a WiFi router, or the tablet's own hotspot (check Tablet Hotspot below and Save).....
+        /// </summary>
+        internal static string lgPhoneHelp {
+            get {
+                return ResourceManager.GetString("lgPhoneHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WiFi settings.
+        /// </summary>
+        internal static string lgWifiSettings {
+            get {
+                return ResourceManager.GetString("lgWifiSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hotspot settings.
+        /// </summary>
+        internal static string lgHotspotSettings {
+            get {
+                return ResourceManager.GetString("lgHotspotSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If necessary, turn off Power saving in {0}.
+        /// </summary>
+        internal static string lgPowerSavingHint {
+            get {
+                return ResourceManager.GetString("lgPowerSavingHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tablet Hotspot.
+        /// </summary>
+        internal static string lgTabletHotspot {
+            get {
+                return ResourceManager.GetString("lgTabletHotspot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compact Display.
+        /// </summary>
+        internal static string lgCompactDisplay {
+            get {
+                return ResourceManager.GetString("lgCompactDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not running, port {0} may be in use..
+        /// </summary>
+        internal static string lgServerNotRunning {
+            get {
+                return ResourceManager.GetString("lgServerNotRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect the tablet and the phone to the same network, then reopen this tab..
+        /// </summary>
+        internal static string lgPhoneNoNetwork {
+            get {
+                return ResourceManager.GetString("lgPhoneNoNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ({0} of {1}, tap for next).
+        /// </summary>
+        internal static string lgTapForNext {
+            get {
+                return ResourceManager.GetString("lgTapForNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firewall not allowed. Windows administrator permission is needed..
+        /// </summary>
+        internal static string lgFirewallNotAllowed {
+            get {
+                return ResourceManager.GetString("lgFirewallNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting....
+        /// </summary>
+        internal static string lgStarting {
+            get {
+                return ResourceManager.GetString("lgStarting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopping....
+        /// </summary>
+        internal static string lgStopping {
+            get {
+                return ResourceManager.GetString("lgStopping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking....
+        /// </summary>
+        internal static string lgChecking {
+            get {
+                return ResourceManager.GetString("lgChecking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On.
+        /// </summary>
+        internal static string lgOn {
+            get {
+                return ResourceManager.GetString("lgOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off.
+        /// </summary>
+        internal static string lgOff {
+            get {
+                return ResourceManager.GetString("lgOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to firewall not allowed.
+        /// </summary>
+        internal static string lgFirewallBlocked {
+            get {
+                return ResourceManager.GetString("lgFirewallBlocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off, restarts failed.
+        /// </summary>
+        internal static string lgRestartsFailed {
+            get {
+                return ResourceManager.GetString("lgRestartsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string lgPassword {
+            get {
+                return ResourceManager.GetString("lgPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows: {0}.
+        /// </summary>
+        internal static string lgWindowsReason {
+            get {
+                return ResourceManager.GetString("lgWindowsReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product {0} restored after an interrupted calibration..
+        /// </summary>
+        internal static string lgCalRestored {
+            get {
+                return ResourceManager.GetString("lgCalRestored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a PWM value before starting..
+        /// </summary>
+        internal static string lgCalEnterPWM {
+            get {
+                return ResourceManager.GetString("lgCalEnterPWM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting meter cal..
+        /// </summary>
+        internal static string lgCalSettingMeterCal {
+            get {
+                return ResourceManager.GetString("lgCalSettingMeterCal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting calibration speed..
+        /// </summary>
+        internal static string lgCalSettingSpeed {
+            get {
+                return ResourceManager.GetString("lgCalSettingSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter measured amount..
+        /// </summary>
+        internal static string lgCalEnterMeasured {
+            get {
+                return ResourceManager.GetString("lgCalEnterMeasured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step 1 complete for product {0}. Run again and measure the output..
+        /// </summary>
+        internal static string lgCalStep1Done {
+            get {
+                return ResourceManager.GetString("lgCalStep1Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turn on Power for a product first..
+        /// </summary>
+        internal static string lgCalPowerFirst {
+            get {
+                return ResourceManager.GetString("lgCalPowerFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved..
+        /// </summary>
+        internal static string lgSaved {
+            get {
+                return ResourceManager.GetString("lgSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read-only profile, not saved..
+        /// </summary>
+        internal static string lgReadOnlyNotSaved {
+            get {
+                return ResourceManager.GetString("lgReadOnlyNotSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menu.
+        /// </summary>
+        internal static string lgMenu {
+            get {
+                return ResourceManager.GetString("lgMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting....
+        /// </summary>
+        internal static string lgConnecting {
+            get {
+                return ResourceManager.GetString("lgConnecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No connection.
+        /// </summary>
+        internal static string lgNoConnection {
+            get {
+                return ResourceManager.GetString("lgNoConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote in control, {0} s.
+        /// </summary>
+        internal static string lgRemoteInControl {
+            get {
+                return ResourceManager.GetString("lgRemoteInControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cab switchbox took control.
+        /// </summary>
+        internal static string lgCabTookControl {
+            get {
+                return ResourceManager.GetString("lgCabTookControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timed out, master off.
+        /// </summary>
+        internal static string lgRemoteTimedOut {
+            get {
+                return ResourceManager.GetString("lgRemoteTimedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cab in control.
+        /// </summary>
+        internal static string lgCabInControl {
+            get {
+                return ResourceManager.GetString("lgCabInControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto section is on - AOG controls sections.
+        /// </summary>
+        internal static string lgAutoSectionWarning {
+            get {
+                return ResourceManager.GetString("lgAutoSectionWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meter not set.
+        /// </summary>
+        internal static string lgMeterNotSet {
+            get {
+                return ResourceManager.GetString("lgMeterNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        internal static string lgStop {
+            get {
+                return ResourceManager.GetString("lgStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string lgSave {
+            get {
+                return ResourceManager.GetString("lgSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string lgCancel {
+            get {
+                return ResourceManager.GetString("lgCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Testing rate, press Stop when done.
+        /// </summary>
+        internal static string lgCalTesting {
+            get {
+                return ResourceManager.GetString("lgCalTesting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to keep this page open.
+        /// </summary>
+        internal static string lgKeepPageOpen {
+            get {
+                return ResourceManager.GetString("lgKeepPageOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last run stopped: phone connection lost.
+        /// </summary>
+        internal static string lgCalPhoneLost {
+            get {
+                return ResourceManager.GetString("lgCalPhoneLost", resourceCulture);
+            }
+        }
     }
 }

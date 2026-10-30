@@ -56,15 +56,15 @@ namespace RateController.Menu
                 // firewall rule and power saving need admin, only asked when the rule is missing
                 if (Core.WebServer.IsRunning && !Core.WebServer.HotspotAllowed() && !Core.WebServer.AllowHotspot())
                 {
-                    Props.ShowMessage("Firewall not allowed. Windows administrator permission is needed.", "Phone", 5000);
+                    Props.ShowMessage(Lang.lgFirewallNotAllowed, Lang.lgPhone, 5000);
                 }
-                lbHotspot.Text = "Starting...";
+                lbHotspot.Text = Lang.lgStarting;
                 Core.WebServer.HotspotWatchReset();
                 Core.WebServer.HotspotAsync("start", HotspotDone);
             }
             else
             {
-                lbHotspot.Text = "Stopping...";
+                lbHotspot.Text = Lang.lgStopping;
                 Core.WebServer.HotspotAsync("stop", HotspotDone);
             }
         }
@@ -150,18 +150,18 @@ namespace RateController.Menu
             pbPhoneQR.Image = null;
             if (!Core.WebServer.IsRunning)
             {
-                lbPhoneUrl.Text = "Not running, port " + Props.WebServerPort.ToString() + " may be in use.";
+                lbPhoneUrl.Text = string.Format(Lang.lgServerNotRunning, Props.WebServerPort);
             }
             else if (PhoneList.Count == 0)
             {
-                lbPhoneUrl.Text = "Connect the tablet and the phone to the same network, then reopen this tab.";
+                lbPhoneUrl.Text = Lang.lgPhoneNoNetwork;
             }
             else
             {
                 string Url = PhoneList[PhoneIndex];
                 pbPhoneQR.Image = clsQrCode.Create(Url, 6);
                 lbPhoneUrl.Text = Url.Substring("http://".Length);
-                if (PhoneList.Count > 1) lbPhoneUrl.Text += "\n(" + (PhoneIndex + 1).ToString() + " of " + PhoneList.Count.ToString() + ", tap for next)";
+                if (PhoneList.Count > 1) lbPhoneUrl.Text += "\n" + string.Format(Lang.lgTapForNext, PhoneIndex + 1, PhoneList.Count);
             }
         }
 
@@ -189,9 +189,9 @@ namespace RateController.Menu
             lbPhoneHelp.Font = helpFont;
             lbHotspotNet.Font = netFont;
             lnkHotspot.Font = hintFont;
-            SetPhoneLinks();
 
             SetLanguage();
+            SetPhoneLinks();    // after SetLanguage: finds the translated link words
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             lbPulses.Font = new Font(lbPulses.Font.FontFamily, 12f, lbPulses.Font.Style,
@@ -316,15 +316,15 @@ namespace RateController.Menu
 
         private void SetPhoneLinks()
         {
-            // windows settings pages, the help link found by its words so a reworded text still links
+            // windows settings pages, each link found by its (translated) words in the text
             lbPhoneHelp.Links.Clear();
-            int Start = lbPhoneHelp.Text.IndexOf("WiFi settings");
-            if (Start >= 0) lbPhoneHelp.Links.Add(Start, "WiFi settings".Length, "ms-settings:network-wifi");
+            int Start = lbPhoneHelp.Text.IndexOf(Lang.lgWifiSettings);
+            if (Start >= 0) lbPhoneHelp.Links.Add(Start, Lang.lgWifiSettings.Length, "ms-settings:network-wifi");
 
             // power saving turns the hotspot off after 5 min with no devices, it can only be changed in windows
             lnkHotspot.Links.Clear();
-            Start = lnkHotspot.Text.IndexOf("Hotspot settings");
-            if (Start >= 0) lnkHotspot.Links.Add(Start, "Hotspot settings".Length, "ms-settings:network-mobilehotspot");
+            Start = lnkHotspot.Text.IndexOf(Lang.lgHotspotSettings);
+            if (Start >= 0) lnkHotspot.Links.Add(Start, Lang.lgHotspotSettings.Length, "ms-settings:network-mobilehotspot");
 
             // theme text colour, the underline marks the links (default blue is unreadable on dark)
             foreach (LinkLabel Lnk in new LinkLabel[] { lbPhoneHelp, lnkHotspot })
@@ -338,18 +338,21 @@ namespace RateController.Menu
         private void ShowHotspot()
         {
             string State = Core.WebServer.HotspotState;
-            string Text = Core.WebServer.HotspotBusy ? "Checking..." : State;
-            if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", firewall not allowed";
-            if (Core.WebServer.HotspotGaveUp && ckHotspot.Checked) Text = "Off, restarts failed";
+            string Text = State;      // InTransition / Unknown shown as Windows reports them
+            if (State == "On") Text = Lang.lgOn;
+            else if (State == "Off") Text = Lang.lgOff;
+            if (Core.WebServer.HotspotBusy) Text = Lang.lgChecking;
+            if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", " + Lang.lgFirewallBlocked;
+            if (Core.WebServer.HotspotGaveUp && ckHotspot.Checked) Text = Lang.lgRestartsFailed;
             lbHotspot.Text = Text;
 
             if (State == "On")
             {
-                lbHotspotNet.Text = "Network: " + Core.WebServer.HotspotSsid + "\nPassword: " + Core.WebServer.HotspotPassword;
+                lbHotspotNet.Text = Lang.lgNetwork + ": " + Core.WebServer.HotspotSsid + "\n" + Lang.lgPassword + ": " + Core.WebServer.HotspotPassword;
             }
             else if (Core.WebServer.HotspotResult != "" && Core.WebServer.HotspotResult != "Success")
             {
-                lbHotspotNet.Text = "Windows: " + Core.WebServer.HotspotResult;      // e.g. WiFiDeviceOff
+                lbHotspotNet.Text = string.Format(Lang.lgWindowsReason, Core.WebServer.HotspotResult);      // e.g. WiFiDeviceOff
             }
             else
             {
@@ -387,6 +390,13 @@ namespace RateController.Menu
         {
             ckMetric.Text = Lang.lgMetric;
             rbSimulated.Text = Lang.lgSimulateSpeed;
+            ckCompact.Text = Lang.lgCompactDisplay;
+            tabPage1.Text = Lang.lgSpeed;
+            tabPage2.Text = Lang.lgPhone;
+            lbPhone.Text = Lang.lgPhoneAddress;
+            ckHotspot.Text = Lang.lgTabletHotspot;
+            lbPhoneHelp.Text = string.Format(Lang.lgPhoneHelp, Lang.lgWifiSettings);
+            lnkHotspot.Text = string.Format(Lang.lgPowerSavingHint, Lang.lgHotspotSettings);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)

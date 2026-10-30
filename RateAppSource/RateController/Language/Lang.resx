@@ -621,4 +621,141 @@
   <data name="lgModuleToEdit" xml:space="preserve">
     <value>Module to edit</value>
   </data>
+  <data name="lgPhone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="lgPhoneAddress" xml:space="preserve">
+    <value>Phone page address</value>
+  </data>
+  <data name="lgPhoneHelp" xml:space="preserve">
+    <value>1. Put the phone and the tablet on the same network: the phone's hotspot, a WiFi router, or the tablet's own hotspot (check Tablet Hotspot below and Save).
+2. Phone hotspot or router: once the tablet is connected, open {0}, tap the network and set it to Private.
+3. Scan the code with the phone's camera. Tap the code to show the next address.</value>
+  </data>
+  <data name="lgWifiSettings" xml:space="preserve">
+    <value>WiFi settings</value>
+  </data>
+  <data name="lgHotspotSettings" xml:space="preserve">
+    <value>Hotspot settings</value>
+  </data>
+  <data name="lgPowerSavingHint" xml:space="preserve">
+    <value>If necessary, turn off Power saving in {0}</value>
+  </data>
+  <data name="lgTabletHotspot" xml:space="preserve">
+    <value>Tablet Hotspot</value>
+  </data>
+  <data name="lgCompactDisplay" xml:space="preserve">
+    <value>Compact Display</value>
+  </data>
+  <data name="lgServerNotRunning" xml:space="preserve">
+    <value>Not running, port {0} may be in use.</value>
+  </data>
+  <data name="lgPhoneNoNetwork" xml:space="preserve">
+    <value>Connect the tablet and the phone to the same network, then reopen this tab.</value>
+  </data>
+  <data name="lgTapForNext" xml:space="preserve">
+    <value>({0} of {1}, tap for next)</value>
+  </data>
+  <data name="lgFirewallNotAllowed" xml:space="preserve">
+    <value>Firewall not allowed. Windows administrator permission is needed.</value>
+  </data>
+  <data name="lgStarting" xml:space="preserve">
+    <value>Starting...</value>
+  </data>
+  <data name="lgStopping" xml:space="preserve">
+    <value>Stopping...</value>
+  </data>
+  <data name="lgChecking" xml:space="preserve">
+    <value>Checking...</value>
+  </data>
+  <data name="lgOn" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="lgOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="lgFirewallBlocked" xml:space="preserve">
+    <value>firewall not allowed</value>
+  </data>
+  <data name="lgRestartsFailed" xml:space="preserve">
+    <value>Off, restarts failed</value>
+  </data>
+  <data name="lgPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="lgWindowsReason" xml:space="preserve">
+    <value>Windows: {0}</value>
+  </data>
+  <data name="lgCalRestored" xml:space="preserve">
+    <value>Product {0} restored after an interrupted calibration.</value>
+  </data>
+  <data name="lgCalEnterPWM" xml:space="preserve">
+    <value>Enter a PWM value before starting.</value>
+  </data>
+  <data name="lgCalSettingMeterCal" xml:space="preserve">
+    <value>Setting meter cal.</value>
+  </data>
+  <data name="lgCalSettingSpeed" xml:space="preserve">
+    <value>Setting calibration speed.</value>
+  </data>
+  <data name="lgCalEnterMeasured" xml:space="preserve">
+    <value>Enter measured amount.</value>
+  </data>
+  <data name="lgCalStep1Done" xml:space="preserve">
+    <value>Step 1 complete for product {0}. Run again and measure the output.</value>
+  </data>
+  <data name="lgCalPowerFirst" xml:space="preserve">
+    <value>Turn on Power for a product first.</value>
+  </data>
+  <data name="lgSaved" xml:space="preserve">
+    <value>Saved.</value>
+  </data>
+  <data name="lgReadOnlyNotSaved" xml:space="preserve">
+    <value>Read-only profile, not saved.</value>
+  </data>
+  <data name="lgMenu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="lgConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="lgNoConnection" xml:space="preserve">
+    <value>No connection</value>
+  </data>
+  <data name="lgRemoteInControl" xml:space="preserve">
+    <value>Remote in control, {0} s</value>
+  </data>
+  <data name="lgCabTookControl" xml:space="preserve">
+    <value>Cab switchbox took control</value>
+  </data>
+  <data name="lgRemoteTimedOut" xml:space="preserve">
+    <value>Timed out, master off</value>
+  </data>
+  <data name="lgCabInControl" xml:space="preserve">
+    <value>Cab in control</value>
+  </data>
+  <data name="lgAutoSectionWarning" xml:space="preserve">
+    <value>Auto section is on - AOG controls sections</value>
+  </data>
+  <data name="lgMeterNotSet" xml:space="preserve">
+    <value>Meter not set</value>
+  </data>
+  <data name="lgStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="lgSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="lgCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="lgCalTesting" xml:space="preserve">
+    <value>Testing rate, press Stop when done</value>
+  </data>
+  <data name="lgKeepPageOpen" xml:space="preserve">
+    <value>keep this page open</value>
+  </data>
+  <data name="lgCalPhoneLost" xml:space="preserve">
+    <value>Last run stopped: phone connection lost</value>
+  </data>
 </root>

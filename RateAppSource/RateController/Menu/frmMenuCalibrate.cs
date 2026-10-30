@@ -43,7 +43,7 @@ namespace RateController.Menu
             UpdateForm();
             if (Cal.Locked)
             {
-                Props.ShowMessage("Enter measured amount.", "Calibrate", 5000);
+                Props.ShowMessage(Lang.lgCalEnterMeasured, "Calibrate", 5000);
             }
         }
 
