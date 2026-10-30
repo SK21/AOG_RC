@@ -47,7 +47,7 @@ namespace RateController.PGNs
         private const byte HeaderLo = 106;
         private const byte MinByteCount = 6;
         private const int RemoteRateHoldMs = 750;
-        private const int RemoteTimeoutSeconds = 30;
+        private const int RemoteTimeoutSeconds = 120;
         private bool cAutoRateEnabled = false;
         private bool cAutoSectionEnabled = false;
         private UInt16 cInoID;

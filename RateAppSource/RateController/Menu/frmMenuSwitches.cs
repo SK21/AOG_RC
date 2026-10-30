@@ -98,6 +98,7 @@ namespace RateController.Menu
 
         private void frmMenuSwitches_FormClosed(object sender, FormClosedEventArgs e)
         {
+            MainMenu.MenuMoved -= MainMenu_MenuMoved;
             pbPhoneQR.Image?.Dispose();
             Props.SaveFormLocation(this);
         }

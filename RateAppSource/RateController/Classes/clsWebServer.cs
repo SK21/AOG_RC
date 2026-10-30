@@ -2,6 +2,7 @@ using RateController.PGNs;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -110,50 +111,71 @@ namespace RateController.Classes
 
         private void HandleClient(TcpClient Client)
         {
+            // runs on a pool thread so an idle connection can't hold up other requests
             using (Client)
             {
-                NetworkStream Stream = Client.GetStream();
-                Stream.ReadTimeout = 2000;
-
-                // request line + headers only, presses carry no body
-                byte[] Buffer = new byte[4096];
-                int Count = 0;
-                bool Open = true;
-                string Request = "";
-                while (Open && Count < Buffer.Length && !Request.Contains("\r\n\r\n"))
+                try
                 {
-                    int n = Stream.Read(Buffer, Count, Buffer.Length - Count);
-                    if (n == 0)
+                    NetworkStream Stream = Client.GetStream();
+                    Stream.ReadTimeout = 2000;
+
+                    // request line + headers only, presses carry no body
+                    byte[] Buffer = new byte[4096];
+                    int Count = 0;
+                    bool Open = true;
+                    string Request = "";
+                    while (Open && Count < Buffer.Length && !Request.Contains("\r\n\r\n"))
                     {
-                        Open = false;
+                        int n = Stream.Read(Buffer, Count, Buffer.Length - Count);
+                        if (n == 0)
+                        {
+                            Open = false;
+                        }
+                        else
+                        {
+                            Count += n;
+                            Request = Encoding.ASCII.GetString(Buffer, 0, Count);
+                        }
+                    }
+
+                    string[] Parts = Request.Split(' ');
+                    string Method = Parts.Length > 1 ? Parts[0] : "";
+                    string Path = Parts.Length > 1 ? Parts[1] : "";
+
+                    if (Request == "")
+                    {
+                        // connection opened and closed with nothing sent, no reply
+                    }
+                    else if (Method == "GET" && Path == "/")
+                    {
+                        Send(Stream, "200 OK", "text/html; charset=utf-8", Page);
+                    }
+                    else if (Method == "GET" && Path == "/status")
+                    {
+                        Send(Stream, "200 OK", "application/json", OnUI(StatusJson));
+                    }
+                    else if (Method == "POST" && Path.StartsWith("/press?id=") && Request.IndexOf("\r\nX-RC:", StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        // presses need the page's custom header, another site can't add it without a CORS preflight
+                        Send(Stream, "403 Forbidden", "text/plain", "Forbidden");
+                    }
+                    else if (Method == "POST" && Path.StartsWith("/press?id="))
+                    {
+                        string ID = Path.Substring("/press?id=".Length);
+                        Send(Stream, "200 OK", "application/json", OnUI(() => Press(ID)));
                     }
                     else
                     {
-                        Count += n;
-                        Request = Encoding.ASCII.GetString(Buffer, 0, Count);
+                        Send(Stream, "404 Not Found", "text/plain", "Not found");
                     }
                 }
-
-                string[] Parts = Request.Split(' ');
-                string Method = Parts.Length > 1 ? Parts[0] : "";
-                string Path = Parts.Length > 1 ? Parts[1] : "";
-
-                if (Method == "GET" && Path == "/")
+                catch (IOException)
                 {
-                    Send(Stream, "200 OK", "text/html; charset=utf-8", Page);
+                    // idle preconnect timed out or the phone dropped the connection, normal
                 }
-                else if (Method == "GET" && Path == "/status")
+                catch (Exception ex)
                 {
-                    Send(Stream, "200 OK", "application/json", OnUI(StatusJson));
-                }
-                else if (Method == "POST" && Path.StartsWith("/press?id="))
-                {
-                    string ID = Path.Substring("/press?id=".Length);
-                    Send(Stream, "200 OK", "application/json", OnUI(() => Press(ID)));
-                }
-                else
-                {
-                    Send(Stream, "404 Not Found", "text/plain", "Not found");
+                    Props.WriteErrorLog("clsWebServer/HandleClient: " + ex.Message);
                 }
             }
         }
@@ -164,7 +186,8 @@ namespace RateController.Classes
             {
                 try
                 {
-                    HandleClient(Listener.AcceptTcpClient());
+                    TcpClient Client = Listener.AcceptTcpClient();
+                    ThreadPool.QueueUserWorkItem(o => HandleClient(Client));
                 }
                 catch (Exception ex)
                 {
@@ -282,7 +305,7 @@ button:disabled{opacity:.35}
 <div id='pad'></div>
 <script>
 var on='#90ee90',built=-1,timer=null;
-function post(id){return fetch('/press?id='+id,{method:'POST'}).then(function(r){return r.json()}).then(show).catch(function(){});}
+function post(id){return fetch('/press?id='+id,{method:'POST',headers:{'X-RC':'1'}}).then(function(r){return r.json()}).then(show).catch(function(){});}
 function btn(label,id,cls){var b=document.createElement('button');b.textContent=label;b.id='b_'+id;if(cls)b.className=cls;b.onclick=function(){post(id)};return b;}
 function rate(label,id){var b=document.createElement('button');b.textContent=label;b.id='b_'+id;
  b.onpointerdown=function(e){e.preventDefault();stop();post(id);timer=setInterval(function(){post(id+'rep')},250);};
