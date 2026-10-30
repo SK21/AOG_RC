@@ -47,14 +47,10 @@
             this.rb8 = new System.Windows.Forms.RadioButton();
             this.rb12 = new System.Windows.Forms.RadioButton();
             this.rb16 = new System.Windows.Forms.RadioButton();
-            this.pbPhoneQR = new System.Windows.Forms.PictureBox();
-            this.lbPhone = new System.Windows.Forms.Label();
-            this.lbPhoneUrl = new System.Windows.Forms.Label();
             this.gbAutoSwitch.SuspendLayout();
             this.gbMasterMode.SuspendLayout();
             this.gbMasterType.SuspendLayout();
             this.gbOnScreenSwitches.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbPhoneQR)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -99,7 +95,7 @@
             this.ckWorkSwitch.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckWorkSwitch.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckWorkSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckWorkSwitch.Location = new System.Drawing.Point(310, 243);
+            this.ckWorkSwitch.Location = new System.Drawing.Point(310, 333);
             this.ckWorkSwitch.Name = "ckWorkSwitch";
             this.ckWorkSwitch.Size = new System.Drawing.Size(170, 37);
             this.ckWorkSwitch.TabIndex = 338;
@@ -112,7 +108,7 @@
             // 
             this.gbAutoSwitch.Controls.Add(this.ckRate);
             this.gbAutoSwitch.Controls.Add(this.ckSections);
-            this.gbAutoSwitch.Location = new System.Drawing.Point(294, 12);
+            this.gbAutoSwitch.Location = new System.Drawing.Point(294, 85);
             this.gbAutoSwitch.Name = "gbAutoSwitch";
             this.gbAutoSwitch.Size = new System.Drawing.Size(200, 151);
             this.gbAutoSwitch.TabIndex = 340;
@@ -158,7 +154,7 @@
             // 
             this.gbMasterMode.Controls.Add(this.rbMasterOverride);
             this.gbMasterMode.Controls.Add(this.rbMasterAll);
-            this.gbMasterMode.Location = new System.Drawing.Point(40, 181);
+            this.gbMasterMode.Location = new System.Drawing.Point(40, 271);
             this.gbMasterMode.Name = "gbMasterMode";
             this.gbMasterMode.Size = new System.Drawing.Size(200, 157);
             this.gbMasterMode.TabIndex = 342;
@@ -200,7 +196,7 @@
             // 
             this.gbMasterType.Controls.Add(this.rbMaintained);
             this.gbMasterType.Controls.Add(this.rbMomentary);
-            this.gbMasterType.Location = new System.Drawing.Point(40, 12);
+            this.gbMasterType.Location = new System.Drawing.Point(40, 85);
             this.gbMasterType.Name = "gbMasterType";
             this.gbMasterType.Size = new System.Drawing.Size(200, 151);
             this.gbMasterType.TabIndex = 343;
@@ -261,7 +257,7 @@
             this.gbOnScreenSwitches.Controls.Add(this.rb8);
             this.gbOnScreenSwitches.Controls.Add(this.rb12);
             this.gbOnScreenSwitches.Controls.Add(this.rb16);
-            this.gbOnScreenSwitches.Location = new System.Drawing.Point(40, 356);
+            this.gbOnScreenSwitches.Location = new System.Drawing.Point(40, 446);
             this.gbOnScreenSwitches.Name = "gbOnScreenSwitches";
             this.gbOnScreenSwitches.Size = new System.Drawing.Size(454, 132);
             this.gbOnScreenSwitches.TabIndex = 345;
@@ -340,40 +336,11 @@
             this.rb16.UseVisualStyleBackColor = true;
             this.rb16.Click += new System.EventHandler(this.ckDualAuto_CheckedChanged);
             // 
-            // pbPhoneQR
-            // 
-            this.pbPhoneQR.Location = new System.Drawing.Point(40, 506);
-            this.pbPhoneQR.Name = "pbPhoneQR";
-            this.pbPhoneQR.Size = new System.Drawing.Size(148, 148);
-            this.pbPhoneQR.TabIndex = 352;
-            this.pbPhoneQR.TabStop = false;
-            this.pbPhoneQR.Click += new System.EventHandler(this.pbPhoneQR_Click);
-            // 
-            // lbPhone
-            // 
-            this.lbPhone.Location = new System.Drawing.Point(200, 506);
-            this.lbPhone.Name = "lbPhone";
-            this.lbPhone.Size = new System.Drawing.Size(235, 30);
-            this.lbPhone.TabIndex = 353;
-            this.lbPhone.Text = "Phone Remote Switches";
-            // 
-            // lbPhoneUrl
-            // 
-            this.lbPhoneUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPhoneUrl.Location = new System.Drawing.Point(200, 540);
-            this.lbPhoneUrl.Name = "lbPhoneUrl";
-            this.lbPhoneUrl.Size = new System.Drawing.Size(175, 110);
-            this.lbPhoneUrl.TabIndex = 354;
-            this.lbPhoneUrl.Click += new System.EventHandler(this.pbPhoneQR_Click);
-            // 
             // frmMenuSwitches
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
-            this.Controls.Add(this.lbPhoneUrl);
-            this.Controls.Add(this.lbPhone);
-            this.Controls.Add(this.pbPhoneQR);
             this.Controls.Add(this.gbOnScreenSwitches);
             this.Controls.Add(this.gbMasterType);
             this.Controls.Add(this.gbMasterMode);
@@ -393,7 +360,6 @@
             this.gbMasterMode.ResumeLayout(false);
             this.gbMasterType.ResumeLayout(false);
             this.gbOnScreenSwitches.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbPhoneQR)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -419,8 +385,5 @@
         private System.Windows.Forms.RadioButton rb12;
         private System.Windows.Forms.RadioButton rb16;
         private System.Windows.Forms.CheckBox ckRateOnly;
-        private System.Windows.Forms.PictureBox pbPhoneQR;
-        private System.Windows.Forms.Label lbPhone;
-        private System.Windows.Forms.Label lbPhoneUrl;
     }
 }

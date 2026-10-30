@@ -2,6 +2,7 @@
 using RateController.Classes;
 using RateController.Language;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -13,6 +14,9 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
+        private int HotspotTicks = 0;
+        private int PhoneIndex = 0;
+        private List<string> PhoneList = new List<string>();
         private bool WheelSpeedChanged = false;
 
         public frmMenuOptions(frmMenu menu)
@@ -43,6 +47,26 @@ namespace RateController.Menu
             SetButtons(false);
             WheelSpeedChanged = false;
             butUpdateModules.Enabled = rbWheel.Checked;
+        }
+
+        private void ApplyHotspot()
+        {
+            if (ckHotspot.Checked)
+            {
+                // firewall rule and power saving need admin, only asked when the rule is missing
+                if (Core.WebServer.IsRunning && !Core.WebServer.HotspotAllowed() && !Core.WebServer.AllowHotspot())
+                {
+                    Props.ShowMessage("Firewall not allowed. Windows administrator permission is needed.", "Phone", 5000);
+                }
+                lbHotspot.Text = "Starting...";
+                Core.WebServer.HotspotWatchReset();
+                Core.WebServer.HotspotAsync("start", HotspotDone);
+            }
+            else
+            {
+                lbHotspot.Text = "Stopping...";
+                Core.WebServer.HotspotAsync("stop", HotspotDone);
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -90,6 +114,10 @@ namespace RateController.Menu
                 Props.UseMetric = ckMetric.Checked;
                 Props.CompactDisplay = ckCompact.Checked;
 
+                bool HotspotChanged = ckHotspot.Checked != Props.TabletHotspot;
+                Props.TabletHotspot = ckHotspot.Checked;
+                if (HotspotChanged) ApplyHotspot();
+
                 if (WheelSpeedChanged)
                 {
                     Core.WheelSpeed.Send();
@@ -116,8 +144,32 @@ namespace RateController.Menu
             SetButtons(true);
         }
 
+        private void DrawPhone()
+        {
+            pbPhoneQR.Image?.Dispose();
+            pbPhoneQR.Image = null;
+            if (!Core.WebServer.IsRunning)
+            {
+                lbPhoneUrl.Text = "Not running, port " + Props.WebServerPort.ToString() + " may be in use.";
+            }
+            else if (PhoneList.Count == 0)
+            {
+                lbPhoneUrl.Text = "Connect the tablet and the phone to the same network, then reopen this tab.";
+            }
+            else
+            {
+                string Url = PhoneList[PhoneIndex];
+                pbPhoneQR.Image = clsQrCode.Create(Url, 6);
+                lbPhoneUrl.Text = Url.Substring("http://".Length);
+                if (PhoneList.Count > 1) lbPhoneUrl.Text += "\n(" + (PhoneIndex + 1).ToString() + " of " + PhoneList.Count.ToString() + ", tap for next)";
+            }
+        }
+
         private void frmMenuDisplay_FormClosed(object sender, FormClosedEventArgs e)
         {
+            tmrPhone.Enabled = false;
+            MainMenu.MenuMoved -= MainMenu_MenuMoved;
+            pbPhoneQR.Image?.Dispose();
             Props.SaveFormLocation(this);
         }
 
@@ -127,12 +179,26 @@ namespace RateController.Menu
 
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
+            // StyleControls restyles every label's font; keep the phone tab's smaller designer fonts
+            Font urlFont = lbPhoneUrl.Font;
+            Font helpFont = lbPhoneHelp.Font;
+            Font netFont = lbHotspotNet.Font;
             MainMenu.StyleControls(this);
+            lbPhoneUrl.Font = urlFont;
+            lbPhoneHelp.Font = helpFont;
+            lbHotspotNet.Font = netFont;
+            SetPhoneLinks();
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             lbPulses.Font = new Font(lbPulses.Font.FontFamily, 12f, lbPulses.Font.Style,
                                 lbPulses.Font.Unit, lbPulses.Font.GdiCharSet, lbPulses.Font.GdiVerticalFont);
+
+            tabControl1.SizeMode = TabSizeMode.Fixed;
+            tabControl1.ItemSize = new Size((tabControl1.Width - 4) / tabControl1.TabCount, tabControl1.ItemSize.Height);
+            foreach (TabPage tp in tabControl1.TabPages)
+                tp.BackColor = this.BackColor;
 
             PositionForm();
             SetBoxes();
@@ -144,9 +210,47 @@ namespace RateController.Menu
             Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
+        private void HotspotDone()
+        {
+            // the hotspot adds or removes 192.168.137.1, so the address list is refreshed too
+            if (!IsDisposed)
+            {
+                ShowHotspot();
+                ShowPhone();
+            }
+        }
+
+        private void HotspotStatusDone()
+        {
+            // periodic check, status only so a tapped-to address isn't reset
+            if (!IsDisposed) ShowHotspot();
+        }
+
+        private void lbPhoneHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start((string)e.Link.LinkData);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuOptions/lbPhoneHelp_LinkClicked: " + ex.Message);
+            }
+        }
+
         private void MainMenu_MenuMoved(object sender, EventArgs e)
         {
             PositionForm();
+        }
+
+        private void pbPhoneQR_Click(object sender, EventArgs e)
+        {
+            // more than one network, show the next address
+            if (PhoneList.Count > 1)
+            {
+                PhoneIndex = (PhoneIndex + 1) % PhoneList.Count;
+                DrawPhone();
+            }
         }
 
         private void PositionForm()
@@ -208,6 +312,55 @@ namespace RateController.Menu
             }
         }
 
+        private void SetPhoneLinks()
+        {
+            // windows settings pages, the help link found by its words so a reworded text still links
+            lbPhoneHelp.Links.Clear();
+            int Start = lbPhoneHelp.Text.IndexOf("WiFi settings");
+            if (Start >= 0) lbPhoneHelp.Links.Add(Start, "WiFi settings".Length, "ms-settings:network-wifi");
+
+            lnkHotspot.Links.Clear();
+            lnkHotspot.Links.Add(0, lnkHotspot.Text.Length, "ms-settings:network-mobilehotspot");
+
+            // theme text colour, the underline marks the links (default blue is unreadable on dark)
+            foreach (LinkLabel Lnk in new LinkLabel[] { lbPhoneHelp, lnkHotspot })
+            {
+                Lnk.LinkColor = Lnk.ForeColor;
+                Lnk.ActiveLinkColor = Lnk.ForeColor;
+                Lnk.VisitedLinkColor = Lnk.ForeColor;
+            }
+        }
+
+        private void ShowHotspot()
+        {
+            string State = Core.WebServer.HotspotState;
+            string Text = Core.WebServer.HotspotBusy ? "Checking..." : State;
+            if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", firewall not allowed";
+            if (Core.WebServer.HotspotGaveUp && ckHotspot.Checked) Text = "Off, restarts failed";
+            lbHotspot.Text = Text;
+
+            if (State == "On")
+            {
+                lbHotspotNet.Text = "Network: " + Core.WebServer.HotspotSsid + "\nPassword: " + Core.WebServer.HotspotPassword;
+            }
+            else if (Core.WebServer.HotspotResult != "" && Core.WebServer.HotspotResult != "Success")
+            {
+                lbHotspotNet.Text = "Windows: " + Core.WebServer.HotspotResult;      // e.g. WiFiDeviceOff
+            }
+            else
+            {
+                lbHotspotNet.Text = "";
+            }
+        }
+
+        private void ShowPhone()
+        {
+            PhoneList = new List<string>();
+            if (Core.WebServer.IsRunning) PhoneList = Core.WebServer.PhoneUrls();
+            PhoneIndex = 0;
+            DrawPhone();
+        }
+
         private void Setting_Changed(object sender, EventArgs e)
         {
             // SetButtons already ignores changes made while the form is loading
@@ -230,6 +383,39 @@ namespace RateController.Menu
         {
             ckMetric.Text = Lang.lgMetric;
             rbSimulated.Text = Lang.lgSimulateSpeed;
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // refreshed on every visit: the hotspot may have been started since the page opened
+            tmrPhone.Enabled = (tabControl1.SelectedTab == tabPage2);
+            if (tabControl1.SelectedTab == tabPage2)
+            {
+                ShowPhone();
+                ShowHotspot();
+                Core.WebServer.HotspotAsync("status", HotspotDone);     // catches changes made in Windows settings
+            }
+        }
+
+        private void tmrPhone_Tick(object sender, EventArgs e)
+        {
+            // adapters come up a few seconds after the hotspot reports On, and networks change
+            List<string> Now = Core.WebServer.IsRunning ? Core.WebServer.PhoneUrls() : new List<string>();
+            if (string.Join(",", Now) != string.Join(",", PhoneList))
+            {
+                // networks changed, back to the most likely address
+                PhoneList = Now;
+                PhoneIndex = 0;
+                DrawPhone();
+            }
+
+            // hotspot state every 6 s (each check is a short powershell), catches changes made in windows
+            HotspotTicks++;
+            if (HotspotTicks >= 3 && !Core.WebServer.HotspotBusy)
+            {
+                HotspotTicks = 0;
+                Core.WebServer.HotspotAsync("status", HotspotStatusDone);
+            }
         }
 
         private void tbSimSpeed_Enter(object sender, EventArgs e)
@@ -387,6 +573,7 @@ namespace RateController.Menu
 
             ckMetric.Checked = Props.UseMetric;
             ckCompact.Checked = Props.CompactDisplay;
+            ckHotspot.Checked = Props.TabletHotspot;
 
             SetBoxes();
 

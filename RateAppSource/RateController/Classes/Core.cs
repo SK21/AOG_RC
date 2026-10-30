@@ -12,6 +12,7 @@ namespace RateController.Classes
     {
         public static PGN229 AOGsections;
         public static PGN254 AutoSteerPGN;
+        public static clsCalibrationSession CalSession;
         public static CanBridgeComm CanBridgeComm;
         public static PGN208 GPS;
         public static PGN238 MachineConfig;
@@ -93,6 +94,7 @@ namespace RateController.Classes
 
         public static void ChangeProfile(string NewProfile)
         {
+            CalSession?.Close();    // restore calibrating products into the profile they came from
             bool FileOpened = false;
             FileOpened = OpenFile(NewProfile);
             if (!FileOpened) FileOpened = OpenFile(Props.ProfilesFolder + "\\Default\\Default.rcs");
@@ -150,6 +152,7 @@ namespace RateController.Classes
 
                 Products = new clsProducts();
                 Products.Load();
+                CalSession = new clsCalibrationSession();
 
                 RelayObjects = new clsRelays();
 
@@ -200,6 +203,7 @@ namespace RateController.Classes
 
                 WebServer = new clsWebServer();
                 WebServer.Start(Props.WebServerPort);   // phone remote switches, failure is logged only
+                if (Props.TabletHotspot) WebServer.HotspotAsync("start", null);     // Windows doesn't keep it across a reboot, watchdog keeps it on
 
                 Props.DisplayPressure();
                 Props.DisplayProducts();

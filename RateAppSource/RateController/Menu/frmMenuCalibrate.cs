@@ -17,7 +17,6 @@ namespace RateController.Menu
         private bool Initializing = false;
         private frmMenu MainMenu;
         private clsProduct Prd;
-        private SpeedType StartSim;
 
         public frmMenuCalibrate(frmMenu menu)
         {
@@ -29,53 +28,18 @@ namespace RateController.Menu
         {
             // btnCalStop needs to be next in tab order
             // after btnCalStart to receive the focus
-            if (Cals.ReadyToCalibrate())
+            string Msg = Core.CalSession.Start(CurrentProduct, false);
+            if (Core.CalSession.IsRunning())
             {
-                // a locked motor/fan with no PWM would run with the motor stopped
-                bool PWMmissing = false;
-                foreach (clsCalibrate cl in Cals.Items)
-                {
-                    if (cl.PowerOn && cl.Locked && cl.CalPWM == 0)
-                    {
-                        switch (cl.Product.ControlType)
-                        {
-                            case ControlTypeEnum.Motor:
-                            case ControlTypeEnum.MotorWeights:
-                            case ControlTypeEnum.Fan:
-                                PWMmissing = true;
-                                break;
-                        }
-                    }
-                }
-
-                if (PWMmissing)
-                {
-                    Props.ShowMessage("Enter a PWM value before starting.", "Calibrate", 5000);
-                }
-                else
-                {
-                    Props.SpeedMode = SpeedType.Simulated;
-                    pbRunning.Value = 0;
-                    Cals.Running(true);
-                    SetButtons();
-                    Props.RateCalibrationOn = true;
-                    timer1.Enabled = true;
-                    if (Cal.Locked)
-                    {
-                        Props.ShowMessage("Setting meter cal.", "Calibrate", 5000);
-                    }
-                    else
-                    {
-                        Props.ShowMessage("Setting calibration speed.", "Calibrate", 5000);
-                    }
-                }
+                pbRunning.Value = 0;
+                SetButtons();
             }
+            if (Msg != "") Props.ShowMessage(Msg, "Calibrate", 5000);
         }
 
         private void btnCalStop_Click(object sender, EventArgs e)
         {
             StopCal();
-            timer1.Enabled = false;
             UpdateForm();
             if (Cal.Locked)
             {
@@ -165,16 +129,12 @@ namespace RateController.Menu
             UpdateForm();
         }
 
-        private void Cal_CalFinished(object sender, EventArgs e)
+        private void CalSession_StepOneComplete(object sender, int ID)
         {
-            int count = 0;
-            foreach (clsCalibrate cl in Cals.Items)
-            {
-                if (cl.Running) count++;
-            }
-            if (count == 1) StopCal();
+            SetButtons();
+            UpdateForm();
             Props.ShowMessage("Step 1 complete: Meter speed / flow rate has been set for Product "
-                 + (CurrentProduct + 1).ToString()
+                 + (ID + 1).ToString()
                  + ".\n\nProceed to Step 2: Run the calibration again and measure the product output to calculate the final meter calibration."
              );
         }
@@ -207,10 +167,10 @@ namespace RateController.Menu
         private void frmMenuCalibrate_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer1.Enabled = false;
+            MainMenu.MenuMoved -= MainMenu_MenuMoved;
             Props.SaveFormLocation(this);
-            Props.SpeedMode = StartSim;
-            Cal.CalFinished -= Cal_CalFinished;
-            Cals.Close();
+            Core.CalSession.StepOneComplete -= CalSession_StepOneComplete;
+            Core.CalSession.FormClosed();
         }
 
         private void frmMenuCalibrate_Load(object sender, EventArgs e)
@@ -258,16 +218,15 @@ namespace RateController.Menu
                 lbSpeed.Text = "KMH";
             }
 
-            StartSim = Props.SpeedMode;
-
-            Cals = new clsCalibrates();
-            Cals.Load();
+            Core.CalSession.FormOpened();
+            Cals = Core.CalSession.Cals;
 
             ChangeProduct(Props.CurrentProduct);
-            Cal.CalFinished += Cal_CalFinished;
+            Core.CalSession.StepOneComplete += CalSession_StepOneComplete;
 
             SetButtons();
             UpdateForm();
+            timer1.Enabled = true;      // also shows runs started or stopped from the phone
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -332,10 +291,8 @@ namespace RateController.Menu
 
         private void StopCal()
         {
-            Props.SpeedMode = StartSim;
-            Cals.Running(false);
+            Core.CalSession.Stop();
             SetButtons();
-            Props.RateCalibrationOn = false;
         }
 
         private void tbBaseRate_Enter(object sender, EventArgs e)
@@ -456,6 +413,7 @@ namespace RateController.Menu
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateForm();
+            if (!cEdited) SetButtons();
         }
 
         private void UpdateForm()

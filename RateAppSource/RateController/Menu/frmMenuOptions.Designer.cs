@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.ckMetric = new System.Windows.Forms.CheckBox();
@@ -49,7 +50,23 @@
             this.tbWheelModule = new System.Windows.Forms.TextBox();
             this.lbSimUnits = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pbPhoneQR = new System.Windows.Forms.PictureBox();
+            this.lbPhone = new System.Windows.Forms.Label();
+            this.lbPhoneUrl = new System.Windows.Forms.Label();
+            this.lbPhoneHelp = new System.Windows.Forms.LinkLabel();
+            this.ckHotspot = new System.Windows.Forms.CheckBox();
+            this.lbHotspot = new System.Windows.Forms.Label();
+            this.lbHotspotNet = new System.Windows.Forms.Label();
+            this.lnkHotspot = new System.Windows.Forms.LinkLabel();
+            this.tmrPhone = new System.Windows.Forms.Timer(this.components);
             this.groupBox2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPhoneQR)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -96,7 +113,7 @@
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckMetric.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckMetric.Location = new System.Drawing.Point(40, 498);
+            this.ckMetric.Location = new System.Drawing.Point(40, 465);
             this.ckMetric.Margin = new System.Windows.Forms.Padding(6);
             this.ckMetric.Name = "ckMetric";
             this.ckMetric.Size = new System.Drawing.Size(192, 36);
@@ -112,7 +129,7 @@
             this.ckCompact.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckCompact.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckCompact.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckCompact.Location = new System.Drawing.Point(296, 498);
+            this.ckCompact.Location = new System.Drawing.Point(296, 465);
             this.ckCompact.Margin = new System.Windows.Forms.Padding(6);
             this.ckCompact.Name = "ckCompact";
             this.ckCompact.Size = new System.Drawing.Size(192, 36);
@@ -351,22 +368,146 @@
             this.groupBox2.Controls.Add(this.butUpdateModules);
             this.groupBox2.Controls.Add(this.rbSimulated);
             this.groupBox2.Controls.Add(this.tbWheelPin);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(516, 444);
+            this.groupBox2.Size = new System.Drawing.Size(502, 444);
             this.groupBox2.TabIndex = 391;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Speed Source";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
-            // 
+            //
+            // tabControl1
+            //
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(12, 29);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(516, 561);
+            this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
+            this.tabControl1.TabIndex = 392;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            //
+            // tabPage1
+            //
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Controls.Add(this.ckMetric);
+            this.tabPage1.Controls.Add(this.ckCompact);
+            this.tabPage1.Location = new System.Drawing.Point(4, 33);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(508, 524);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Speed";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            //
+            // tabPage2
+            //
+            this.tabPage2.Controls.Add(this.pbPhoneQR);
+            this.tabPage2.Controls.Add(this.lbPhone);
+            this.tabPage2.Controls.Add(this.lbPhoneUrl);
+            this.tabPage2.Controls.Add(this.lbPhoneHelp);
+            this.tabPage2.Controls.Add(this.ckHotspot);
+            this.tabPage2.Controls.Add(this.lbHotspot);
+            this.tabPage2.Controls.Add(this.lbHotspotNet);
+            this.tabPage2.Controls.Add(this.lnkHotspot);
+            this.tabPage2.Location = new System.Drawing.Point(4, 33);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(508, 524);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Phone";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            //
+            // pbPhoneQR
+            //
+            this.pbPhoneQR.Location = new System.Drawing.Point(10, 10);
+            this.pbPhoneQR.Name = "pbPhoneQR";
+            this.pbPhoneQR.Size = new System.Drawing.Size(222, 222);     // 37 modules x 6 px
+            this.pbPhoneQR.TabIndex = 393;
+            this.pbPhoneQR.TabStop = false;
+            this.pbPhoneQR.Click += new System.EventHandler(this.pbPhoneQR_Click);
+            //
+            // lbPhone
+            //
+            this.lbPhone.Location = new System.Drawing.Point(244, 10);
+            this.lbPhone.Name = "lbPhone";
+            this.lbPhone.Size = new System.Drawing.Size(258, 30);
+            this.lbPhone.TabIndex = 394;
+            this.lbPhone.Text = "Phone page address";
+            //
+            // lbPhoneUrl
+            //
+            this.lbPhoneUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPhoneUrl.Location = new System.Drawing.Point(244, 44);
+            this.lbPhoneUrl.Name = "lbPhoneUrl";
+            this.lbPhoneUrl.Size = new System.Drawing.Size(258, 120);
+            this.lbPhoneUrl.TabIndex = 395;
+            this.lbPhoneUrl.Click += new System.EventHandler(this.pbPhoneQR_Click);
+            //
+            // lbPhoneHelp
+            //
+            this.lbPhoneHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPhoneHelp.Location = new System.Drawing.Point(10, 242);
+            this.lbPhoneHelp.Name = "lbPhoneHelp";
+            this.lbPhoneHelp.Size = new System.Drawing.Size(488, 150);
+            this.lbPhoneHelp.TabIndex = 396;
+            this.lbPhoneHelp.Text = "1. Put the phone and the tablet on the same network: the phone\'s hotspot, a WiFi router, or the tablet\'s own hotspot (check Tablet Hotspot below and Save).\r\n2. Phone hotspot or router: once the tablet is connected, open WiFi settings, tap the network and set it to Private.\r\n3. Scan the code with the phone\'s camera. Tap the code to show the next address.";
+            this.lbPhoneHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbPhoneHelp_LinkClicked);
+            //
+            // ckHotspot
+            //
+            this.ckHotspot.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckHotspot.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckHotspot.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckHotspot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckHotspot.Location = new System.Drawing.Point(10, 400);
+            this.ckHotspot.Name = "ckHotspot";
+            this.ckHotspot.Size = new System.Drawing.Size(240, 45);
+            this.ckHotspot.TabIndex = 397;
+            this.ckHotspot.Text = "Tablet Hotspot";
+            this.ckHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckHotspot.UseVisualStyleBackColor = true;
+            this.ckHotspot.CheckedChanged += new System.EventHandler(this.Setting_Changed);
+            //
+            // lbHotspot
+            //
+            this.lbHotspot.Location = new System.Drawing.Point(262, 398);
+            this.lbHotspot.Name = "lbHotspot";
+            this.lbHotspot.Size = new System.Drawing.Size(236, 24);
+            this.lbHotspot.TabIndex = 398;
+            this.lbHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // lbHotspotNet
+            //
+            this.lbHotspotNet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHotspotNet.Location = new System.Drawing.Point(10, 455);
+            this.lbHotspotNet.Name = "lbHotspotNet";
+            this.lbHotspotNet.Size = new System.Drawing.Size(488, 60);
+            this.lbHotspotNet.TabIndex = 399;
+            //
+            // lnkHotspot
+            //
+            this.lnkHotspot.Location = new System.Drawing.Point(262, 422);
+            this.lnkHotspot.Name = "lnkHotspot";
+            this.lnkHotspot.Size = new System.Drawing.Size(236, 24);
+            this.lnkHotspot.TabIndex = 400;
+            this.lnkHotspot.TabStop = true;
+            this.lnkHotspot.Text = "Hotspot settings";
+            this.lnkHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lnkHotspot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbPhoneHelp_LinkClicked);
+            //
+            // tmrPhone
+            //
+            this.tmrPhone.Interval = 2000;
+            this.tmrPhone.Tick += new System.EventHandler(this.tmrPhone_Tick);
+            //
             // frmMenuOptions
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.ckMetric);
-            this.Controls.Add(this.ckCompact);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -379,6 +520,10 @@
             this.Load += new System.EventHandler(this.frmMenuDisplay_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbPhoneQR)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -406,5 +551,17 @@
         private System.Windows.Forms.TextBox tbWheelModule;
         private System.Windows.Forms.Label lbSimUnits;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.PictureBox pbPhoneQR;
+        private System.Windows.Forms.Label lbPhone;
+        private System.Windows.Forms.Label lbPhoneUrl;
+        private System.Windows.Forms.LinkLabel lbPhoneHelp;
+        private System.Windows.Forms.CheckBox ckHotspot;
+        private System.Windows.Forms.Label lbHotspot;
+        private System.Windows.Forms.Label lbHotspotNet;
+        private System.Windows.Forms.LinkLabel lnkHotspot;
+        private System.Windows.Forms.Timer tmrPhone;
     }
 }

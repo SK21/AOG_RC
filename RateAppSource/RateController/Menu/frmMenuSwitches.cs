@@ -1,7 +1,6 @@
 ﻿using RateController.Classes;
 using RateController.Language;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -12,8 +11,6 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
-        private int PhoneIndex = 0;
-        private List<string> PhoneList = new List<string>();
 
         public frmMenuSwitches(frmMenu menu)
         {
@@ -99,7 +96,6 @@ namespace RateController.Menu
         private void frmMenuSwitches_FormClosed(object sender, FormClosedEventArgs e)
         {
             MainMenu.MenuMoved -= MainMenu_MenuMoved;
-            pbPhoneQR.Image?.Dispose();
             Props.SaveFormLocation(this);
         }
 
@@ -110,19 +106,12 @@ namespace RateController.Menu
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
-
-            // StyleControls restyles every label's font; keep the address label's
-            // smaller designer font so the address fits beside the QR code.
-            Font urlFont = lbPhoneUrl.Font;
             MainMenu.StyleControls(this);
-            lbPhoneUrl.Font = urlFont;
-
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
             UpdateForm();
-            ShowPhone();
         }
 
         private void groupBox2_Paint(object sender, PaintEventArgs e)
@@ -139,45 +128,6 @@ namespace RateController.Menu
         {
             this.Top = MainMenu.Top + SubMenuLayout.TopOffset;
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
-        }
-
-        private void DrawPhone()
-        {
-            pbPhoneQR.Image?.Dispose();
-            pbPhoneQR.Image = null;
-            if (!Core.WebServer.IsRunning)
-            {
-                lbPhoneUrl.Text = "Not running, port " + Props.WebServerPort.ToString() + " may be in use.";
-            }
-            else if (PhoneList.Count == 0)
-            {
-                lbPhoneUrl.Text = "Connect the tablet to the phone's hotspot, then reopen this page.";
-            }
-            else
-            {
-                string Url = PhoneList[PhoneIndex];
-                pbPhoneQR.Image = clsQrCode.Create(Url, 4);
-                lbPhoneUrl.Text = Url.Substring("http://".Length);
-                if (PhoneList.Count > 1) lbPhoneUrl.Text += "\n(" + (PhoneIndex + 1).ToString() + " of " + PhoneList.Count.ToString() + ", tap for next)";
-            }
-        }
-
-        private void pbPhoneQR_Click(object sender, EventArgs e)
-        {
-            // more than one network, show the next address
-            if (PhoneList.Count > 1)
-            {
-                PhoneIndex = (PhoneIndex + 1) % PhoneList.Count;
-                DrawPhone();
-            }
-        }
-
-        private void ShowPhone()
-        {
-            PhoneList = new List<string>();
-            if (Core.WebServer.IsRunning) PhoneList = Core.WebServer.PhoneUrls();
-            PhoneIndex = 0;
-            DrawPhone();
         }
 
         private void SetButtons(bool Edited)

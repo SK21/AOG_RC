@@ -449,6 +449,13 @@ namespace RateController.Classes
             set { SetAppProp("RateSwitchesOnly", value.ToString()); }
         }
 
+        public static bool TabletHotspot
+        {
+            // start the Windows Mobile Hotspot with the app, for the phone page
+            get { return bool.TryParse(GetAppProp("TabletHotspot"), out bool v) ? v : false; }
+            set { SetAppProp("TabletHotspot", value.ToString()); }
+        }
+
         public static int WebServerPort
         {
             // phone remote switches page
