@@ -48,7 +48,7 @@ namespace RateController.Classes
         #region private variables
 
         private static DateTime cStartTime;
-        private static System.Timers.Timer MainTimer;
+        private static System.Windows.Forms.Timer MainTimer;
 
         #endregion private variables
 
@@ -218,9 +218,10 @@ namespace RateController.Classes
                 Props.DisplayProducts();
                 //Props.DisplayMapPreview();
 
-                MainTimer = new System.Timers.Timer(1000);
-                MainTimer.Elapsed += MainTimer_Elapsed;
-                MainTimer.AutoReset = true;
+                // UI thread timer: product updates and saves must not run alongside received packets and edits
+                MainTimer = new System.Windows.Forms.Timer();
+                MainTimer.Interval = 1000;
+                MainTimer.Tick += MainTimer_Tick;
                 MainTimer.Enabled = true;
 
                 Props.WriteActivityLog("Started", true);
@@ -409,7 +410,7 @@ namespace RateController.Classes
             Props.WriteActivityLog(mes);
         }
 
-        private static void MainTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private static void MainTimer_Tick(object sender, EventArgs e)
         {
             RateAdjustController.Update();
             SafeEvent.Raise(UpdateStatus);
