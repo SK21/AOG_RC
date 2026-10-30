@@ -1119,7 +1119,8 @@ namespace RateController.Classes
 
                 // update worked area
                 cHectaresPerMinute = Core.Sections.HectaresPerMinute;
-                CurrentWorkedArea_Hc = cHectaresPerMinute * CurrentMinutes;
+                // priming is parked, no ground covered. flow, quantity and time coverage still count
+                CurrentWorkedArea_Hc = Core.SectionControl.PrimeOn ? 0 : cHectaresPerMinute * CurrentMinutes;
                 cSessionTotalHectares += CurrentWorkedArea_Hc;
 
                 //coverage
