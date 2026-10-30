@@ -44,6 +44,7 @@ namespace RateController.Classes
             cTimer.Tick += CTimer_Tick;
 
             cCalPWM = int.TryParse(Props.GetProp(cProduct.ProductName + "_CalPWM"), out int pwm) ? pwm : 0;
+            cLocked = bool.TryParse(Props.GetProp(cProduct.ProductName + "_CalLocked"), out bool lk) && lk;   // meter set, kept between sessions
             cBaseRate = cProduct.RateSet;
         }
         public clsProduct Product { get { return cProduct; } }
@@ -206,6 +207,7 @@ namespace RateController.Classes
             if (!Props.ReadOnly)
             {
                 Props.SetProp(cProduct.ProductName + "_CalPWM", cCalPWM.ToString());
+                Props.SetProp(cProduct.ProductName + "_CalLocked", cLocked.ToString());     // meter set, kept between sessions
 
                 if (cPowerOn) cProduct.RateSet = cBaseRate;     // base rate box, only when calibrating this product
                 cMeterCal = NewMeterCal;
