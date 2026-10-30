@@ -451,6 +451,7 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             sb.Append(",\"units\":\"").Append(Esc(Props.UseMetric ? Lang.lgSpeedKMH : Lang.lgSpeedMPH)).Append("\"");
             sb.Append(",\"powerEdit\":").Append(Js(!Running));
             sb.Append(",\"lockEdit\":").Append(Js(!Running && Cal.PowerOn));
+            sb.Append(",\"startEdit\":").Append(Js(!Running && Cal.PowerOn));     // only an enabled product can be powered on
             sb.Append(",\"speedEdit\":").Append(Js(!Running));
             sb.Append(",\"baseEdit\":").Append(Js(!Running && Cal.PowerOn && !Cal.Locked));
             sb.Append(",\"measEdit\":").Append(Js(!Running && Cal.PowerOn && Cal.Locked && Cal.TestingRate));
@@ -736,13 +737,13 @@ input{width:7em;font-size:18px;text-align:right;padding:4px;border-radius:4px;bo
 <div class='row'><button id='power' onclick=""act('power')"" data-t='power'>Power</button><button id='lock' onclick=""act('lock')"">Lock</button></div>
 <div class='row'><button id='start' onclick=""act('start')"" data-t='start'>Start</button><button id='stop' onclick=""act('stop')"" data-t='stop'>Stop</button></div>
 <table>
-<tr><td data-t='pulses'>Pulses</td><td id='pulses'></td></tr>
 <tr><td>Hz</td><td id='hz'></td></tr>
-<tr><td id='su'>Speed</td><td><input id='s' inputmode='decimal'></td></tr>
+<tr><td data-t='pulses'>Pulses</td><td id='pulses'></td></tr>
 <tr><td data-t='baseRate'>Base Rate</td><td><input id='b' inputmode='decimal'></td></tr>
 <tr><td data-t='meterCal'>Meter Cal</td><td><input id='m' inputmode='decimal'></td></tr>
-<tr><td data-t='expected'>Expected</td><td id='expected'></td></tr>
 <tr><td data-t='measured'>Measured</td><td><input id='me' inputmode='decimal'></td></tr>
+<tr><td data-t='expected'>Expected</td><td id='expected'></td></tr>
+<tr><td id='su'>Speed</td><td><input id='s' inputmode='decimal'></td></tr>
 <tr id='pwmrow'><td data-t='pwm'>PWM</td><td><input id='w' inputmode='numeric'></td></tr>
 </table>
 <div class='row'><button id='cancel' onclick='cancel()' data-t='cancel'>Cancel</button><button id='save' onclick='save()' data-t='save'>Save</button></div>
@@ -771,7 +772,7 @@ function show(s){
  q('warn').textContent=s.phoneLost?T.phoneLost:'';
  q('power').style.background=s.power?on:'transparent';q('power').disabled=!s.powerEdit;
  q('lock').textContent=s.locked?T.meterSet:T.meterNotSet;q('lock').style.background=s.locked?on:'transparent';q('lock').disabled=!s.lockEdit;
- q('start').style.background=s.running?on:'transparent';q('start').disabled=s.running;q('stop').disabled=!s.running;
+ q('start').style.background=s.running?on:'transparent';q('start').disabled=!s.startEdit;q('stop').disabled=!s.running;
  q('pulses').textContent=s.pulses;q('hz').textContent=s.hz.toFixed(1);q('expected').textContent=s.expected.toFixed(1);
  q('su').textContent=T.speed+' ('+s.units+')';q('pwmrow').style.display=s.motor?'':'none';
  fill('s',s.speed.toFixed(1));fill('b',s.baseRate.toFixed(1));fill('m',s.meterCal.toFixed(1));fill('me',s.measured.toFixed(1));fill('w',s.pwm);

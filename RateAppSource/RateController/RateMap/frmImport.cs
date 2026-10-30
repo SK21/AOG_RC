@@ -76,8 +76,8 @@ namespace RateController.Forms
                 double minZoneHa = Props.UseMetric ? enteredArea : enteredArea * 0.404686;
                 double.TryParse(tbStep.Text, out double minRateStep);
                 Props.SetProp("ImportNumZones", tbNumZones.Text);
-                Props.SetProp("ImportMinRateStep", tbStep.Text);
-                Props.SetProp("ImportMinZoneSize", tbMinZoneSize.Text);
+                Props.SetProp("ImportMinRateStep", Props.NumberText(minRateStep));
+                Props.SetProp("ImportMinZoneSize", Props.NumberText(enteredArea));
 
                 string primaryProduct = ZoneFields.Products[Math.Max(0, Math.Min(ZoneFields.Products.Length - 1, cboProduct.SelectedIndex))];
                 var inputZones = _mapZones;
@@ -178,8 +178,8 @@ namespace RateController.Forms
             lbArea.Text = Props.UseMetric ? "Ha" : "Ac";
             lbAreaStep.Text = lbArea.Text;
             tbNumZones.Text = Props.GetProp("ImportNumZones").Length > 0 ? Props.GetProp("ImportNumZones") : "8";
-            tbStep.Text = Props.GetProp("ImportMinRateStep").Length > 0 ? Props.GetProp("ImportMinRateStep") : "5";
-            tbMinZoneSize.Text = Props.GetProp("ImportMinZoneSize").Length > 0 ? Props.GetProp("ImportMinZoneSize") : "0";
+            tbStep.Text = (Props.TryParseNumber(Props.GetProp("ImportMinRateStep"), out double st) ? st : 5).ToString();
+            tbMinZoneSize.Text = (Props.TryParseNumber(Props.GetProp("ImportMinZoneSize"), out double mz) ? mz : 0).ToString();
             cboProduct.Items.AddRange(new object[] { "A", "B", "C", "D", "E" });
             cboProduct.SelectedIndex = 0;
             SetLanguage();

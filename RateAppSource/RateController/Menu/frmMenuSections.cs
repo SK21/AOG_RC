@@ -55,7 +55,7 @@ namespace RateController.Menu
 
                 if (double.TryParse(tbDefaultWidth.Text, out double dw))
                 {
-                    Props.SetProp("SectionDefaultWidth", dw.ToString());
+                    Props.SetProp("SectionDefaultWidth", Props.NumberText(dw));
                     DefaultWidth = dw;
                 }
 
@@ -302,7 +302,7 @@ namespace RateController.Menu
             int.TryParse(Props.GetProp("SectionsPerZone"), out SectionsPerZone);
             if (SectionsPerZone < 1) SectionsPerZone = 1;
             DefaultWidth = 300;
-            if (Double.TryParse(Props.GetProp("SectionDefaultWidth"), out double dw)) DefaultWidth = dw;
+            if (Props.TryParseNumber(Props.GetProp("SectionDefaultWidth"), out double dw)) DefaultWidth = dw;
             UpdateForm();
         }
 

@@ -44,7 +44,7 @@ namespace RateController.PGNs
                 if (value >= 0 && value <= 0xffffff)
                 {
                     cWheelCal = value;
-                    Props.SetAppProp("WheelCal", cWheelCal.ToString());
+                    Props.SetAppProp("WheelCal", Props.NumberText(cWheelCal));
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace RateController.PGNs
         {
             cWheelModule = int.TryParse(Props.GetAppProp("WheelModule"), out int wm) ? wm : 0;
             cWheelPin = int.TryParse(Props.GetAppProp("WheelPin"), out int wp) ? wp : 0;
-            cWheelCal = double.TryParse(Props.GetAppProp("WheelCal"), out double wc) ? wc : 1;
+            cWheelCal = Props.TryParseNumber(Props.GetAppProp("WheelCal"), out double wc) ? wc : 1;
         }
     }
 }

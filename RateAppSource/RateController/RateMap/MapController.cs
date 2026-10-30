@@ -276,8 +276,8 @@ namespace RateController.RateMap
             try
             {
                 Core.AppExit -= Core_AppExit;
-                Props.SetProp("LastMapLat", gmap.Position.Lat.ToString("N10"));
-                Props.SetProp("LastMapLng", gmap.Position.Lng.ToString("N10"));
+                Props.SetProp("LastMapLat", Props.NumberText(gmap.Position.Lat));
+                Props.SetProp("LastMapLng", Props.NumberText(gmap.Position.Lng));
 
                 UpdateTimer?.Stop();
                 UpdateTimer.Tick -= UpdateTimer_Tick;
@@ -813,8 +813,8 @@ namespace RateController.RateMap
 
             double Lat = 0;
             double Lng = TimeZoneInfo.Local.BaseUtcOffset.TotalHours * 15.0;    // estimated longitude
-            if (double.TryParse(Props.GetProp("LastMapLat"), out double latpos)) Lat = latpos;
-            if (double.TryParse(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
+            if (Props.TryParseNumber(Props.GetProp("LastMapLat"), out double latpos)) Lat = latpos;
+            if (Props.TryParseNumber(Props.GetProp("LastMapLng"), out double lngpos)) Lng = lngpos;
 
             if (cShowTiles)
             {

@@ -61,7 +61,7 @@ namespace RateController.Forms
 
         private void frmSpeedCal_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Props.SetProp("SpeedCalDistance", DistanceToTravel.ToString());
+            Props.SetProp("SpeedCalDistance", Props.NumberText(DistanceToTravel));
             Props.SaveFormLocation(this);
         }
 
@@ -69,7 +69,7 @@ namespace RateController.Forms
         {
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
-            if (double.TryParse(Props.GetProp("SpeedCalDistance"), out double di)) DistanceToTravel = di;
+            if (Props.TryParseNumber(Props.GetProp("SpeedCalDistance"), out double di)) DistanceToTravel = di;
 
             // Make Enter/ESC map to OK/Cancel
             this.AcceptButton = btnOK;

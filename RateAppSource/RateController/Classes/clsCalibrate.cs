@@ -24,6 +24,7 @@ namespace RateController.Classes
         private double NewMeterCal;
         private bool ProductEnabledStart;
         private double PulseCountStart;
+        private double RunMeterCal;     // cal factor at run start, a later cal change can't rescale the count
         private int SetCount;
 
         public clsCalibrate(int ID)
@@ -33,7 +34,8 @@ namespace RateController.Classes
             cProduct = Core.Products.Item(cID);
             cProduct.CalibrateOjbect = this;
             cMeterCal = cProduct.MeterCal;
-            PulseCountStart = cProduct.Pulses();
+            RunMeterCal = cProduct.MeterCal;
+            PulseCountStart = cProduct.Pulses(RunMeterCal);
 
             ApplicationModeStart = cProduct.AppMode;
             ProductEnabledStart = cProduct.Enabled;
@@ -163,7 +165,8 @@ namespace RateController.Classes
                         {
                             // calibration started
                             cRunning = true;
-                            PulseCountStart = cProduct.Pulses();
+                            RunMeterCal = cProduct.MeterCal;
+                            PulseCountStart = cProduct.Pulses(RunMeterCal);
                             cProduct.Enabled = true;
                             cTestingRate = cLocked;
                         }
@@ -300,7 +303,7 @@ namespace RateController.Classes
             if (cPowerOn)
             {
                 cTimer.Enabled = cRunning;
-                cPulseCount = (int)Math.Round(cProduct.Pulses() - PulseCountStart);    // difference in double, the pulse total can exceed int
+                cPulseCount = (int)Math.Round(cProduct.Pulses(RunMeterCal) - PulseCountStart);    // difference in double, the pulse total can exceed int
 
                 if (cLocked)
                 {

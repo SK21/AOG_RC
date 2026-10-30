@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -342,7 +343,7 @@ namespace RateController.Classes
                 if (value >= 0 && value <= 300)
                 {
                     cPrimeTime = value;
-                    SetProp("PrimeTime", cPrimeTime.ToString());
+                    SetProp("PrimeTime", NumberText(cPrimeTime));
                 }
             }
         }
@@ -475,7 +476,7 @@ namespace RateController.Classes
                 if (value >= 0 && value < 40)
                 {
                     cSimSpeed = value;
-                    SetAppProp("SimSpeed", cSimSpeed.ToString());
+                    SetAppProp("SimSpeed", NumberText(cSimSpeed));
                 }
             }
         }
@@ -1066,6 +1067,29 @@ namespace RateController.Classes
             return cProps.TryGetValue(key, out var value) ? value : string.Empty;
         }
 
+        public static string NumberText(double Value)
+        {
+            // decimal settings are saved invariant (dot decimal) so a language change can't misread them
+            return Value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static string NumberText(float Value)
+        {
+            return Value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static bool TryParseNumber(string Text, out double Value)
+        {
+            // also reads a comma decimal, from files saved in a comma-decimal language before saves were invariant.
+            // a saved number never has group separators, so a comma can only be the decimal mark
+            return double.TryParse((Text ?? "").Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out Value);
+        }
+
+        public static bool TryParseNumber(string Text, out float Value)
+        {
+            return float.TryParse((Text ?? "").Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out Value);
+        }
+
         public static string GetModuleDescription(int ModuleID)
         {
             string Result = "";
@@ -1288,7 +1312,7 @@ namespace RateController.Classes
             CurrentProduct = cDefaultProduct;
 
             cPrimeDelay = int.TryParse(GetProp("PrimeDelay"), out int pd) ? pd : 3;
-            cPrimeTime = int.TryParse(GetProp("PrimeTime"), out int pt) ? pt : 5;
+            cPrimeTime = TryParseNumber(GetProp("PrimeTime"), out double pt) ? pt : 5;
             cResumeAfterPrime = bool.TryParse(GetProp("ResumeAfterPrime"), out bool rp) ? rp : false;
             cUseZones = bool.TryParse(GetProp("UseZones"), out bool uz) ? uz : false;
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;
@@ -1306,16 +1330,16 @@ namespace RateController.Classes
             for (int i = 0; i < 40; i++)
             {
                 string key = "PressureCal_" + i.ToString();
-                PressureCals[i] = double.TryParse(GetProp(key), out double pc) ? pc : 0;
+                PressureCals[i] = TryParseNumber(GetProp(key), out double pc) ? pc : 0;
             }
 
             for (int i = 0; i < MaxModules; i++)
             {
-                MaxPressure[i] = double.TryParse(GetProp("MaxPressure_" + i.ToString()), out double maxp) ? maxp : 0;
+                MaxPressure[i] = TryParseNumber(GetProp("MaxPressure_" + i.ToString()), out double maxp) ? maxp : 0;
             }
 
             // application properties
-            cSimSpeed = double.TryParse(GetAppProp("SimSpeed"), out double spd) ? spd : 8;
+            cSimSpeed = TryParseNumber(GetAppProp("SimSpeed"), out double spd) ? spd : 8;
             cSpeedMode = Enum.TryParse(GetAppProp("SpeedMode"), out SpeedType spt) ? spt : SpeedType.GPS;
             cCanEnabled = bool.TryParse(GetAppProp("CanEnabled"), out bool ibe) ? ibe : false;
             cCompactDisplay = bool.TryParse(GetAppProp("CompactDisplay"), out bool cd) ? cd : false;
@@ -1458,7 +1482,7 @@ namespace RateController.Classes
             if (ModuleID >= 0 && ModuleID < MaxModules && NewMax >= 0 && NewMax < 100000)
             {
                 MaxPressure[ModuleID] = NewMax;
-                SetProp("MaxPressure_" + ModuleID, NewMax.ToString());
+                SetProp("MaxPressure_" + ModuleID, NumberText(NewMax));
             }
         }
 
@@ -1466,7 +1490,7 @@ namespace RateController.Classes
         {
             PressureCals[Index] = Value;
             string key = "PressureCal_" + Index.ToString();
-            SetProp(key, Value.ToString());
+            SetProp(key, NumberText(Value));
         }
 
         public static void SetProp(string key, string value, bool IgnoreReadOnly = false)

@@ -104,7 +104,7 @@ namespace RateController.RateMap
                     cLookAheadSeconds = value;
                     for (int i = 0; i < cLookAheadSeconds.Count(); i++)
                     {
-                        Props.SetProp("LookAhead" + i.ToString(), cLookAheadSeconds[i].ToString());
+                        Props.SetProp("LookAhead" + i.ToString(), Props.NumberText(cLookAheadSeconds[i]));
                     }
                 }
             }
@@ -1009,7 +1009,7 @@ namespace RateController.RateMap
             double tme = 0;
             for (int i = 0; i < cLookAheadSeconds.Count(); i++)
             {
-                cLookAheadSeconds[i] = double.TryParse(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 1;
+                cLookAheadSeconds[i] = Props.TryParseNumber(Props.GetProp("LookAhead" + i.ToString()), out tme) ? tme : 1;
             }
         }
 

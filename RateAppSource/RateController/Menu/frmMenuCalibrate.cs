@@ -262,7 +262,7 @@ namespace RateController.Menu
                     btnCancel.Enabled = false;
                     btnOK.Enabled = false;
                     btnCalStop.Enabled = Cal.Running;
-                    btnCalStart.Enabled = !Cal.Running;
+                    btnCalStart.Enabled = !Cal.Running && Cal.PowerOn;     // only an enabled product can be powered on
                     button1.Enabled = true;
                     button2.Enabled = true;
                     button3.Enabled = true;

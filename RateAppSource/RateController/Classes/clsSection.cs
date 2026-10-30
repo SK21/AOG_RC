@@ -117,7 +117,7 @@ namespace RateController.Classes
         public void Load()
         {
             bool.TryParse(Props.GetProp(Name + "_enabled"), out cEnabled);
-            float.TryParse(Props.GetProp(Name + "_width"), out cWidth);
+            Props.TryParseNumber(Props.GetProp(Name + "_width"), out cWidth);
             int.TryParse(Props.GetProp(Name + "_SwitchID"), out cSwitchID);
         }
 
@@ -126,7 +126,7 @@ namespace RateController.Classes
             if (cEdited)
             {
                 Props.SetProp(Name + "_enabled", cEnabled.ToString());
-                Props.SetProp(Name + "_width", cWidth.ToString());
+                Props.SetProp(Name + "_width", Props.NumberText(cWidth));
                 Props.SetProp(Name + "_SwitchID", cSwitchID.ToString());
                 cEdited = false;
             }

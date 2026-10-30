@@ -118,7 +118,7 @@ namespace RateController.Classes
 
         public void Load()
         {
-            float.TryParse(Props.GetProp(Name + "_width"), out cWidth);
+            Props.TryParseNumber(Props.GetProp(Name + "_width"), out cWidth);
             int.TryParse(Props.GetProp(Name + "_SwitchID"), out cSwitchID);
             int.TryParse(Props.GetProp(Name + "_Start"), out SecStart);
             int.TryParse(Props.GetProp(Name + "_End"), out SecEnd);
@@ -130,7 +130,7 @@ namespace RateController.Classes
             {
                 if (IsValid())
                 {
-                    Props.SetProp(Name + "_width", cWidth.ToString());
+                    Props.SetProp(Name + "_width", Props.NumberText(cWidth));
                     Props.SetProp(Name + "_SwitchID", cSwitchID.ToString());
                     Props.SetProp(Name + "_Start", SecStart.ToString());
                     Props.SetProp(Name + "_End", SecEnd.ToString());
