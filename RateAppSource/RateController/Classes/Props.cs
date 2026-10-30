@@ -75,11 +75,11 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "15-Aug-2026";
+        private static string cAppDate = "30-Oct-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";
-        private static string cAppVersion = "4.3.6";
+        private static string cAppVersion = "4.3.7";
         private static bool cCanEnabled = false;
         private static string cCanPort = "COM7";
         private static bool cCompactDisplay = false;
