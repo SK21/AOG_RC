@@ -192,6 +192,10 @@ namespace RateController
                             Core.SwitchBox.ParseByteData(Data);
                             break;
 
+                        case 32296:
+                            Core.ScaleIndicator.ParseByteData(Data);
+                            break;
+
                         case 33152: // AOG, 0x81, 0x80
                             switch (Data[3])
                             {

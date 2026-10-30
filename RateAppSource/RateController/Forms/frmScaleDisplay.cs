@@ -162,6 +162,14 @@ namespace RateController
             }
         }
 
+        private string Units()
+        {
+            // the indicator's own units, a generic indicator reports none
+            string Result = Core.ScaleIndicator.Units(cProductID);
+            if (Result.Length > 0) Result = " " + Result;
+            return Result;
+        }
+
         private string Prd()
         {
             return (cProductID + 1).ToString();
@@ -184,34 +192,41 @@ namespace RateController
         {
             try
             {
-                switch (cDisplayMode)
+                if (!Core.ScaleIndicator.Connected(cProductID))
                 {
-                    case 1:
-                        // applied
-                        lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + "\n(Applied " + Prd() + ")";
-                        break;
+                    lbValue.Text = "----\n(Scale " + Prd() + ")";
+                }
+                else
+                {
+                    switch (cDisplayMode)
+                    {
+                        case 1:
+                            // applied
+                            lbValue.Text = (StartingWeight - NetWeight()).ToString("N1") + Units() + "\n(Applied " + Prd() + ")";
+                            break;
 
-                    case 2:
-                        // acres
-                        lbValue.Text = (StartingAcres - CurrentAcres()).ToString("N1") + "\n(Area " + Prd() + ")";
-                        break;
+                        case 2:
+                            // acres
+                            lbValue.Text = (CurrentAcres() - StartingAcres).ToString("N1") + "\n(Area " + Prd() + ")";
+                            break;
 
-                    case 3:
-                        // rate
-                        double Applied = StartingWeight - NetWeight();
-                        double Area = StartingAcres - CurrentAcres();
-                        double Rate = 0;
-                        if (Area > 0)
-                        {
-                            Rate = Applied / Area;
-                        }
-                        lbValue.Text = Rate.ToString("N1") + "\n(Rate " + Prd() + ")";
-                        break;
+                        case 3:
+                            // rate
+                            double Applied = StartingWeight - NetWeight();
+                            double Area = CurrentAcres() - StartingAcres;     // coverage counts up, weight counts down
+                            double Rate = 0;
+                            if (Area > 0)
+                            {
+                                Rate = Applied / Area;
+                            }
+                            lbValue.Text = Rate.ToString("N1") + "\n(Rate " + Prd() + ")";
+                            break;
 
-                    default:
-                        // weight
-                        lbValue.Text = NetWeight().ToString("N1") + "\n(Weight " + Prd() + ")";
-                        break;
+                        default:
+                            // weight
+                            lbValue.Text = NetWeight().ToString("N1") + Units() + "\n(Weight " + Prd() + ")";
+                            break;
+                    }
                 }
             }
             catch (Exception ex)

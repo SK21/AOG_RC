@@ -80,15 +80,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CheckShield.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="__vm\.ScaleIndicator.vsarduino.h" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>$(ProjectDir)..\ScaleIndicator;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\libraries\SoftwareSerial\src;$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino;$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\eightanaloginputs;$(ProjectDir)..\..\..\..\..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\..\..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include-fixed;$(ProjectDir)..\..\..\..\..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\libraries\SoftwareSerial\src</IncludePath>
-    <RemoteCCompileToolExe>$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\bin\avr-g++</RemoteCCompileToolExe>
-    <RemoteCppCompileToolExe>$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\bin\avr-g++</RemoteCppCompileToolExe>
+    <IncludePath>$(ProjectDir)..\ScaleIndicator;D:\Sync\Documents\Arduino\libraries\EtherCard\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\7.3.0\include;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\7.3.0\include-fixed;c:\program files (x86)\arduino\hardware\tools\avr\avr\include;D:\Sync\Documents\Arduino\libraries\EtherCard\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src</IncludePath>
+    <RemoteCCompileToolExe>C:\Program Files (x86)\Arduino\hardware\tools\avr\bin\avr-g++</RemoteCCompileToolExe>
+    <RemoteCppCompileToolExe>C:\Program Files (x86)\Arduino\hardware\tools\avr\bin\avr-g++</RemoteCppCompileToolExe>
     <ValidateArchitecture>false</ValidateArchitecture>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -107,13 +113,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\ScaleIndicator;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\libraries\SoftwareSerial\src;$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino;$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\eightanaloginputs;$(ProjectDir)..\..\..\..\..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\..\..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include-fixed;$(ProjectDir)..\..\..\..\..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\libraries\SoftwareSerial\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <GccToolChain>$(ProjectDir)..\..\..\..\..\..\..\..\..\\Users\\coxda\\AppData\\Local\\arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\bin\avr-g++</GccToolChain>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\ScaleIndicator;D:\Sync\Documents\Arduino\libraries\EtherCard\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\7.3.0\include;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\7.3.0\include-fixed;c:\program files (x86)\arduino\hardware\tools\avr\avr\include;D:\Sync\Documents\Arduino\libraries\EtherCard\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SoftwareSerial\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GccToolChain>C:\Program Files (x86)\Arduino\hardware\tools\avr\bin\avr-g++</GccToolChain>
       <CppLanguageStandard>gnu++11</CppLanguageStandard>
       <CLanguageStandard>gnu11</CLanguageStandard>
       <CAdditionalWarning />
       <CppAdditionalWarning />
-      <ForcedIncludeFiles>$(ProjectDir)..\..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\osqpjdds.xje\Micro Platforms\default\vm-intelli-pre.h;$(ProjectDir)..\..\..\..\..\..\..\AppData\Local\Temp\VMBuilds\ScaleIndicator\nano_atmega328old\Debug\.vmintelli\3417912b4b31e9e888114d5d08a3c8ce\vm-intelli-gcc-defines.h;$(ProjectDir)..\..\..\..\..\..\..\..\..\program files\microsoft visual studio\2022\community\common7\ide\extensions\osqpjdds.xje\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.ScaleIndicator.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>c:\program files\microsoft visual studio\18\community\common7\ide\extensions\ar2twp2j.msb\Micro Platforms\default\vm-intelli-pre.h;C:\Users\CoxDa\AppData\Local\Temp\VMBuilds\ScaleIndicator\nano_atmega328old\Debug\.vmintelli\368a8f6abad6c6a34c502f2c451fb77c\vm-intelli-gcc-defines.h;c:\program files\microsoft visual studio\18\community\common7\ide\extensions\ar2twp2j.msb\Micro Platforms\default\vm-intelli-post.h;$(ProjectDir)__vm\.ScaleIndicator.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <UndefineAllPreprocessorDefinitions>true</UndefineAllPreprocessorDefinitions>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>_VMICRO_INTELLISENSE;__AVR_atmega328p__;__AVR_ATmega328P__;__AVR_ATmega328p__;F_CPU=16000000L;ARDUINO=108019;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;%(PreprocessorDefinitions)</PreprocessorDefinitions>

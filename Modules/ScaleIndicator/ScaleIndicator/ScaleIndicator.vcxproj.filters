@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ScaleIndicator.ino" />
+    <ClCompile Include="CheckShield.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.ScaleIndicator.vsarduino.h">
