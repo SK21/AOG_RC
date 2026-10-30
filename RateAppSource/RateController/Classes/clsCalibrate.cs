@@ -23,7 +23,7 @@ namespace RateController.Classes
         private Timer cTimer = new Timer();
         private double NewMeterCal;
         private bool ProductEnabledStart;
-        private int PulseCountStart;
+        private double PulseCountStart;
         private int SetCount;
 
         public clsCalibrate(int ID)
@@ -33,7 +33,7 @@ namespace RateController.Classes
             cProduct = Core.Products.Item(cID);
             cProduct.CalibrateOjbect = this;
             cMeterCal = cProduct.MeterCal;
-            PulseCountStart = (int)cProduct.Pulses();
+            PulseCountStart = cProduct.Pulses();
 
             ApplicationModeStart = cProduct.AppMode;
             ProductEnabledStart = cProduct.Enabled;
@@ -132,10 +132,20 @@ namespace RateController.Classes
             get { return cPowerOn; }
             set
             {
-                cPowerOn = value;
-                SetRunState(cPowerOn);
+                // only an enabled product can be powered on, a disabled one's module/sensor IDs aren't checked
+                if (!value || cProduct.Enabled)
+                {
+                    cPowerOn = value;
+                    SetRunState(cPowerOn);
+                }
             }
         }
+
+        public bool OriginalEnabled
+        { get { return ProductEnabledStart; } }
+
+        public bool OriginalOffRateAlarm
+        { get { return AlarmStart; } }
 
         public int PulseCount
         { get { return cPulseCount; } }
@@ -153,7 +163,7 @@ namespace RateController.Classes
                         {
                             // calibration started
                             cRunning = true;
-                            PulseCountStart = (int)cProduct.Pulses();
+                            PulseCountStart = cProduct.Pulses();
                             cProduct.Enabled = true;
                             cTestingRate = cLocked;
                         }
@@ -178,6 +188,7 @@ namespace RateController.Classes
             // only a product powered on for calibration had its state changed; restoring the others
             // would overwrite changes made since the session opened (e.g. product enabled elsewhere)
             if (cPowerOn) RestoreState();
+            cPowerOn = false;       // product keeps this object after the session closes
             cTimer.Enabled = false;
             cTimer = null;
         }
@@ -200,6 +211,14 @@ namespace RateController.Classes
                 }
             }
             return Result;
+        }
+
+        public void SetOriginal(bool Enabled, bool OffRateAlarm)
+        {
+            // settings page edits while powered on for calibration, applied when the product is restored
+            ProductEnabledStart = Enabled;
+            AlarmStart = OffRateAlarm;
+            WriteRestoreRecord();
         }
 
         public void Save()
@@ -257,7 +276,7 @@ namespace RateController.Classes
 
                 // recovery record, written to disk before any calibration value can be saved.
                 // still present at the next load means calibration was interrupted (power loss, crash)
-                Props.SetProp(RestoreKey, ApplicationModeStart.ToString() + "|" + ProductEnabledStart.ToString() + "|" + AlarmStart.ToString());
+                WriteRestoreRecord();
 
                 cProduct.AppMode = ApplicationMode.ConstantUPM;
                 cProduct.Enabled = false;
@@ -271,12 +290,17 @@ namespace RateController.Classes
             }
         }
 
+        private void WriteRestoreRecord()
+        {
+            Props.SetProp(RestoreKey, ApplicationModeStart.ToString() + "|" + ProductEnabledStart.ToString() + "|" + AlarmStart.ToString());
+        }
+
         private void Update()
         {
             if (cPowerOn)
             {
                 cTimer.Enabled = cRunning;
-                cPulseCount = (int)(cProduct.Pulses() - PulseCountStart);
+                cPulseCount = (int)Math.Round(cProduct.Pulses() - PulseCountStart);    // difference in double, the pulse total can exceed int
 
                 if (cLocked)
                 {

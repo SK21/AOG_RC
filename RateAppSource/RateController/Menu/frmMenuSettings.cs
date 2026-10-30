@@ -59,12 +59,23 @@ namespace RateController.Menu
 
                     Props.ShowScaleSet(Prd.ID, ckScale.Checked);
                     Props.SetShowDisplay(Prd.ID, ckSeparateDisplay.Checked);
-                    Prd.UseOffRateAlarm = ckOffRate.Checked;
                     if (byte.TryParse(tbOffRate.Text, out byte off)) Prd.OffRateSetting = off;
                     Prd.UseMinUPMbySpeed = rbUPMSpeed.Checked;
 
-                    bool EnabledChanged = (Prd.Enabled != ckEnabled.Checked);
-                    Prd.Enabled = ckEnabled.Checked;
+                    bool EnabledChanged;
+                    clsCalibrate Cal = Prd.CalibrateOjbect;
+                    if (Cal?.PowerOn == true)
+                    {
+                        // calibration controls the live product, keep the edits for when it is restored
+                        EnabledChanged = (Cal.OriginalEnabled != ckEnabled.Checked);
+                        Cal.SetOriginal(ckEnabled.Checked, ckOffRate.Checked);
+                    }
+                    else
+                    {
+                        EnabledChanged = (Prd.Enabled != ckEnabled.Checked);
+                        Prd.UseOffRateAlarm = ckOffRate.Checked;
+                        Prd.Enabled = ckEnabled.Checked;
+                    }
 
                     Prd.Save();
                     SetButtons(false);
@@ -453,7 +464,9 @@ namespace RateController.Menu
             Initializing = true;
 
             if (!MainMenu.CurrentProduct.Enabled) Core.Products.SetEnabledDefault();
-            ckEnabled.Checked = MainMenu.CurrentProduct.Enabled;
+            clsCalibrate Cal = MainMenu.CurrentProduct.CalibrateOjbect;
+            bool Calibrating = Cal?.PowerOn == true;     // show the settings it will be restored to
+            ckEnabled.Checked = Calibrating ? Cal.OriginalEnabled : MainMenu.CurrentProduct.Enabled;
 
             SetModuleIndicator();
             if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
@@ -499,13 +512,12 @@ namespace RateController.Menu
 
             rbUPMSpeed.Checked = MainMenu.CurrentProduct.UseMinUPMbySpeed;
             rbUPMFixed.Checked = !MainMenu.CurrentProduct.UseMinUPMbySpeed;
-            ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
+            ckOffRate.Checked = Calibrating ? Cal.OriginalOffRateAlarm : MainMenu.CurrentProduct.UseOffRateAlarm;
             tbOffRate.Text = MainMenu.CurrentProduct.OffRateSetting.ToString("N0");
             tbMinUPM.Text = MainMenu.CurrentProduct.MinUPM.ToString("N1");
             tbUPMspeed.Text = MainMenu.CurrentProduct.MinUPMbySpeed.ToString("N1");
-            ckOffRate.Checked = MainMenu.CurrentProduct.UseOffRateAlarm;
 
-            if (MainMenu.CurrentProduct.Enabled)
+            if (ckEnabled.Checked)
             {
                 tbConID.Text = MainMenu.CurrentProduct.ModuleID.ToString();
                 tbSenID.Text = MainMenu.CurrentProduct.SensorID.ToString();

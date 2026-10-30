@@ -704,6 +704,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>Step 1 complete for product {0}. Run again and measure the output.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Enable the product in Settings first.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Turn on Power for a product first.</value>
   </data>

@@ -94,6 +94,7 @@ namespace RateController.Menu
 
         private void btnPower_Click(object sender, EventArgs e)
         {
+            if (!Cal.PowerOn && !Cal.Product.Enabled) Props.ShowMessage(Lang.lgCalEnableFirst, "Calibrate", 5000);
             Cal.PowerOn = !Cal.PowerOn;
             UpdateForm();
             UpdateProductButtons();

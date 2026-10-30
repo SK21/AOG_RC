@@ -1816,6 +1816,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable the product in Settings first..
+        /// </summary>
+        internal static string lgCalEnableFirst {
+            get {
+                return ResourceManager.GetString("lgCalEnableFirst", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Turn on Power for a product first..
         /// </summary>
         internal static string lgCalPowerFirst {

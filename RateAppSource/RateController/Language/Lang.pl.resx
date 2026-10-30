@@ -698,6 +698,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>Krok 1 zakończony dla produktu {0}. Uruchom ponownie i zmierz wysianą ilość.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Najpierw włącz produkt w Ustawieniach.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Najpierw włącz zasilanie produktu.</value>
   </data>

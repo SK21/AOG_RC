@@ -361,10 +361,15 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             int P = CalProduct(Q);
             clsCalibrate Cal = CS.Cals.Item(P);
             bool Running = CS.IsRunning();
+            cCalMsg = "";       // a message lasts until the next press (product pick included)
             switch (Q.TryGetValue("id", out string ID) ? ID : "")
             {
                 case "power":
-                    if (!Running) Cal.PowerOn = !Cal.PowerOn;
+                    if (!Running)
+                    {
+                        if (!Cal.PowerOn && !Cal.Product.Enabled) cCalMsg = Lang.lgCalEnableFirst;
+                        Cal.PowerOn = !Cal.PowerOn;
+                    }
                     break;
 
                 case "lock":
@@ -752,7 +757,7 @@ function get(url,opt){return fetch(url,opt).then(function(r){return r.json()}).t
 function act(id,extra){get('/calpress?id='+id+'&p='+P+(extra||''),{method:'POST',headers:{'X-RC':'1'}}).catch(function(){});}
 function save(){var x='';F.forEach(function(f){x+='&'+f+'='+encodeURIComponent(q(f).value)});dirty=false;act('save',x);}
 function cancel(){dirty=false;poll();}
-function pick(i){if(!dirty){P=i;poll();}}
+function pick(i){if(!dirty){P=i;act('pick');poll();}}
 F.forEach(function(f){q(f).oninput=function(){dirty=true;q('save').disabled=false;q('cancel').disabled=false;};});
 F.forEach(function(f){var e=q(f);e.onfocus=function(){e.placeholder=e.value;e.value='';};e.onblur=function(){if(e.value==='')e.value=e.placeholder;e.placeholder='';};});
 function fill(id,v){if(!dirty&&document.activeElement!==q(id))q(id).value=v;}

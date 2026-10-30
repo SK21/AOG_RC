@@ -701,6 +701,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>Az 1. lépés kész a(z) {0}. anyagnál. Futtassa újra, és mérje meg a kijuttatott mennyiséget.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Előbb engedélyezze a terméket a Beállításokban.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Előbb kapcsolja be egy anyag Power gombját.</value>
   </data>

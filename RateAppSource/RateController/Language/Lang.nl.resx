@@ -698,6 +698,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>Stap 1 klaar voor product {0}. Start opnieuw en meet de afgegeven hoeveelheid.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Schakel eerst het product in bij Instellingen.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Zet eerst aan/uit van een product aan.</value>
   </data>

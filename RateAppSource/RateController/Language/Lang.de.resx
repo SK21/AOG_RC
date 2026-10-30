@@ -699,6 +699,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>Schritt 1 für Produkt {0} abgeschlossen. Erneut starten und die Ausbringmenge messen.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Zuerst das Produkt in den Einstellungen aktivieren.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Zuerst Ein/Aus für ein Produkt einschalten.</value>
   </data>

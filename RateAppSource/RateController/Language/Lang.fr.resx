@@ -698,6 +698,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>Étape 1 terminée pour le produit {0}. Relancez et mesurez la quantité distribuée.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Activez d'abord le produit dans Réglages.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Activez d'abord la puissance d'un produit.</value>
   </data>

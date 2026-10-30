@@ -698,6 +698,9 @@
   <data name="lgCalStep1Done" xml:space="preserve">
     <value>1 žingsnis produktui {0} baigtas. Paleiskite dar kartą ir išmatuokite išbertą kiekį.</value>
   </data>
+  <data name="lgCalEnableFirst" xml:space="preserve">
+    <value>Pirmiausia įjunkite produktą nustatymuose.</value>
+  </data>
   <data name="lgCalPowerFirst" xml:space="preserve">
     <value>Pirmiausia įjunkite produktą.</value>
   </data>
