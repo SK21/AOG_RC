@@ -6,6 +6,9 @@ namespace RateController.PGNs
     public enum RemoteEndReasons
     { None, Cab, Timeout }
 
+    public enum RemoteSources
+    { Phone, Screen }
+
     public class PGN32618
     {
         // to Rate Controller from arduino switch box
@@ -60,7 +63,9 @@ namespace RateController.PGNs
         private RemoteEndReasons cRemoteEndReason = RemoteEndReasons.None;
         private bool cRemoteForcedOff = false;
         private bool cRemoteMaster = false;
+        private bool cRemotePhone = false;          // the phone has pressed this session, dead-man timer runs
         private int cRemoteRateDir = 0;          // 1 up, -1 down, 0 none
+        private RemoteSources cRemoteRateSource = RemoteSources.Phone;
         private bool cWorkSwitchEnabled = false;
         private byte[][] LastData = new byte[2][];          // bytes 2-4 of last packet, 0 real, 1 virtual
         private DateTime[] LastDataTime = new DateTime[2];
@@ -163,12 +168,15 @@ namespace RateController.PGNs
         public RemoteEndReasons RemoteEndReason
         { get { return cRemoteEndReason; } }
 
+        public bool RemotePhoneActive
+        { get { return cRemoteActive && cRemotePhone; } }
+
         public int RemoteSecondsLeft
         {
             get
             {
                 int Result = 0;
-                if (cRemoteActive) Result = Math.Max(0, RemoteTimeoutSeconds - (int)(DateTime.Now - RemoteLastPress).TotalSeconds);
+                if (cRemoteActive && cRemotePhone) Result = Math.Max(0, RemoteTimeoutSeconds - (int)(DateTime.Now - RemoteLastPress).TotalSeconds);
                 return Result;
             }
         }
@@ -221,7 +229,14 @@ namespace RateController.PGNs
 
             if (Data[0] == HeaderLo && Data[1] == HeaderHi && Data.Length >= MinByteCount && Core.Tls.GoodCRC(Data))
             {
-                if (RealSwitchBox) ReceivedReal = DateTime.Now;
+                if (RealSwitchBox)
+                {
+                    // switchbox plugged back in: hold the switch states in use until a cab switch
+                    // moves, the same handover as an on-screen press. The first switchbox since
+                    // app start isn't held, so its physical positions apply.
+                    if (ReceivedReal != DateTime.MinValue && !RealConnected() && !cRemoteActive) StartRemote(RemoteSources.Screen);
+                    ReceivedReal = DateTime.Now;
+                }
 
                 CheckCabChanges(Data, RealSwitchBox ? 0 : 1);
 
@@ -302,30 +317,32 @@ namespace RateController.PGNs
 
         public bool RealConnected()
         {
-            return (DateTime.Now - ReceivedReal).TotalSeconds < 4;
+            // shorter than Connected() so the virtual switchbox takes over before Connected()
+            // can drop out, which would force master on (PGN32500)
+            return (DateTime.Now - ReceivedReal).TotalSeconds < 3;
         }
 
-        public void RemoteAutoRatePressed()
+        public void RemoteAutoRatePressed(RemoteSources Source = RemoteSources.Phone)
         {
-            StartRemote();
+            StartRemote(Source);
             cRemoteAutoRate = !cRemoteAutoRate;
             SW[(int)SwIDs.AutoRate] = cRemoteAutoRate;
             SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
         }
 
-        public void RemoteAutoSectionPressed()
+        public void RemoteAutoSectionPressed(RemoteSources Source = RemoteSources.Phone)
         {
             // web page auto section, lets the operator turn auto off from the boom
-            StartRemote();
+            StartRemote(Source);
             cRemoteAutoSection = !cRemoteAutoSection;
             SW[(int)SwIDs.AutoSection] = cRemoteAutoSection;
             SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
         }
 
-        public void RemoteMasterPressed()
+        public void RemoteMasterPressed(RemoteSources Source = RemoteSources.Phone)
         {
             // web page master, toggles against the effective master state
-            StartRemote();
+            StartRemote(Source);
             cRemoteMaster = !cMasterOn;
             cMasterOn = cRemoteMaster;
             SW[1] = cRemoteMaster;
@@ -339,12 +356,12 @@ namespace RateController.PGNs
             }
         }
 
-        public void RemotePrimePressed()
+        public void RemotePrimePressed(RemoteSources Source = RemoteSources.Phone)
         {
             // same as the on-screen PRM button: master on and prime, momentary master and stopped only
             if (!Props.MasterMaintained && Props.Speed_KMH < 0.1)
             {
-                StartRemote();
+                StartRemote(Source);
                 cRemoteMaster = true;
                 cMasterOn = true;
                 SW[1] = true;
@@ -363,22 +380,24 @@ namespace RateController.PGNs
             SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
         }
 
-        public void RemoteRateHold(int Direction)
+        public void RemoteRateHold(int Direction, RemoteSources Source = RemoteSources.Phone)
         {
             // 1 up, -1 down, 0 release. The page repeats a held press every 250 ms;
             // a hold not repeated within RemoteRateHoldMs is released (dropped phone).
-            StartRemote();
+            // The on-screen buttons send a real release, so their hold doesn't expire.
+            StartRemote(Source);
             cRemoteRateDir = Direction;
+            cRemoteRateSource = Source;
             RemoteRateTime = DateTime.Now;
             ApplyRemoteRate();
             SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
         }
 
-        public void RemoteSectionPressed(int ID)
+        public void RemoteSectionPressed(int ID, RemoteSources Source = RemoteSources.Phone)
         {
             if ((ID >= 0) && (ID <= 15))
             {
-                StartRemote();
+                StartRemote(Source);
                 RemoteSW[ID] = !RemoteSW[ID];
                 SW[ID + (int)SwIDs.sw0] = RemoteSW[ID];
                 SwitchPGNreceived?.Invoke(this, EventArgs.Empty);
@@ -435,7 +454,7 @@ namespace RateController.PGNs
 
         private void ApplyRemoteRate()
         {
-            if ((DateTime.Now - RemoteRateTime).TotalMilliseconds > RemoteRateHoldMs) cRemoteRateDir = 0;
+            if (cRemoteRateSource == RemoteSources.Phone && (DateTime.Now - RemoteRateTime).TotalMilliseconds > RemoteRateHoldMs) cRemoteRateDir = 0;
             cRateUp = cRemoteRateDir > 0;
             cRateDown = cRemoteRateDir < 0;
             SW[3] = cRateUp;
@@ -464,6 +483,7 @@ namespace RateController.PGNs
         private void EndRemote(RemoteEndReasons Reason)
         {
             cRemoteActive = false;
+            cRemotePhone = false;
             cRemoteEndReason = Reason;
             RemoteTimer.Stop();
 
@@ -505,7 +525,7 @@ namespace RateController.PGNs
             }
         }
 
-        private void StartRemote()
+        private void StartRemote(RemoteSources Source)
         {
             if (!cRemoteActive)
             {
@@ -522,9 +542,12 @@ namespace RateController.PGNs
                 cRemoteEndReason = RemoteEndReasons.None;
                 cRemoteForcedOff = false;
             }
+            if (Source == RemoteSources.Phone) cRemotePhone = true;
+
+            // dead-man only once the phone is involved, an on-screen press means someone is in the cab
             RemoteLastPress = DateTime.Now;
             RemoteTimer.Stop();
-            RemoteTimer.Start();
+            if (cRemotePhone) RemoteTimer.Start();
         }
     }
 }

@@ -646,9 +646,9 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
                 case "down": SB.RemoteRateHold(-1); break;
 
                 // held repeats and release never restart a session the cab ended
-                case "uprep": if (SB.RemoteActive) SB.RemoteRateHold(1); break;
-                case "downrep": if (SB.RemoteActive) SB.RemoteRateHold(-1); break;
-                case "release": if (SB.RemoteActive) SB.RemoteRateHold(0); break;
+                case "uprep": if (SB.RemotePhoneActive) SB.RemoteRateHold(1); break;
+                case "downrep": if (SB.RemotePhoneActive) SB.RemoteRateHold(-1); break;
+                case "release": if (SB.RemotePhoneActive) SB.RemoteRateHold(0); break;
 
                 default:
                     if (int.TryParse(ID, out int Sw) && Sw >= 0 && Sw < Props.SwitchCount) SB.RemoteSectionPressed(Sw);
@@ -693,7 +693,7 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             sb.Append(",\"autoRate\":").Append(Js(SB.AutoRateOn));
             sb.Append(",\"autoSection\":").Append(Js(SB.AutoSectionOn));
             sb.Append(",\"aog\":").Append(Js(Core.AutoSteerPGN.Connected()));
-            sb.Append(",\"remote\":").Append(Js(SB.RemoteActive));
+            sb.Append(",\"remote\":").Append(Js(SB.RemotePhoneActive));
             sb.Append(",\"secondsLeft\":").Append(SB.RemoteSecondsLeft);
             sb.Append(",\"ended\":\"").Append(SB.RemoteEndReason.ToString()).Append("\"");
             sb.Append(",\"back\":\"").Append(Hex(Properties.Settings.Default.DisplayBackColour)).Append("\"");

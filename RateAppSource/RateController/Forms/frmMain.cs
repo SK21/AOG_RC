@@ -235,8 +235,8 @@ namespace RateController.Forms
 
         private void btnAuto_Click(object sender, EventArgs e)
         {
-            Core.vSwitchBox.PressSwitch(SwIDs.AutoRate, true);
-            if (Core.vSwitchBox.AutoRateOn != Core.vSwitchBox.AutoSectionOn) Core.vSwitchBox.PressSwitch(SwIDs.AutoSection, true);
+            Core.vSwitchBox.ScreenPress(SwIDs.AutoRate, true);
+            if (Core.vSwitchBox.AutoRateOn != Core.vSwitchBox.AutoSectionOn) Core.vSwitchBox.ScreenPress(SwIDs.AutoSection, true);
             UpdateSwitches();
         }
 

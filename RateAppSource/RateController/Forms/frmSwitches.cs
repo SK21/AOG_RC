@@ -118,12 +118,12 @@ namespace RateController
 
         private void btnAutoRate_Click(object sender, EventArgs e)
         {
-            Core.vSwitchBox.PressSwitch(SwIDs.AutoRate);
+            Core.vSwitchBox.ScreenPress(SwIDs.AutoRate);
         }
 
         private void btnAutoSection_Click(object sender, EventArgs e)
         {
-            Core.vSwitchBox.PressSwitch(SwIDs.AutoSection);
+            Core.vSwitchBox.ScreenPress(SwIDs.AutoSection);
         }
 
         // The buttons cover nearly the whole panel, so the right button drags it from anywhere.
@@ -328,7 +328,7 @@ namespace RateController
         private void SwitchButton_Click(object sender, EventArgs e)
         {
             int idx = (int)((Button)sender).Tag;
-            if (idx < SwIdMap.Length) Core.vSwitchBox.PressSwitch(SwIdMap[idx]);
+            if (idx < SwIdMap.Length) Core.vSwitchBox.ScreenPress(SwIdMap[idx]);
         }
 
         private void timer1_Tick(object sender, EventArgs e)

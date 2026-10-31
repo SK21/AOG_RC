@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RateController.PGNs;
+using System;
 
 namespace RateController.Classes
 {
@@ -29,6 +30,7 @@ namespace RateController.Classes
         private bool RateUpIsPressed = false;
         private System.Windows.Forms.Timer ReleaseTimer = new System.Windows.Forms.Timer();
         private System.Windows.Forms.Timer SendTimer = new System.Windows.Forms.Timer();
+        private bool WasRealConnected = false;
 
         public clsVirtualSwitchBox()
         {
@@ -49,12 +51,12 @@ namespace RateController.Classes
 
         public bool AutoRateOn
         {
-            get { return cAutoRate; }
+            get { return Core.SwitchBox.RealConnected() ? Core.SwitchBox.SwitchIsOn(SwIDs.AutoRate) : cAutoRate; }
         }
 
         public bool AutoSectionOn
         {
-            get { return cAutoSection; }
+            get { return Core.SwitchBox.RealConnected() ? Core.SwitchBox.SwitchIsOn(SwIDs.AutoSection) : cAutoSection; }
         }
 
         public bool UsefrmSwitches
@@ -68,16 +70,24 @@ namespace RateController.Classes
 
         public void MasterPressed(bool FromMain = false)
         {
-            if (Core.SwitchBox.MasterOn)
+            if (Core.SwitchBox.RealConnected())
             {
-                PressSwitch(SwIDs.MasterOff, FromMain);
+                // a real switchbox is connected, take over like the phone page until a cab switch moves
+                Core.SwitchBox.RemoteMasterPressed(RemoteSources.Screen);
             }
             else
             {
-                PressSwitch(SwIDs.MasterOn, FromMain);
+                if (Core.SwitchBox.MasterOn)
+                {
+                    PressSwitch(SwIDs.MasterOff, FromMain);
+                }
+                else
+                {
+                    PressSwitch(SwIDs.MasterOn, FromMain);
+                }
+                MasterIsPressed = true;
+                ReleaseTimer.Enabled = true;
             }
-            MasterIsPressed = true;
-            ReleaseTimer.Enabled = true;
         }
 
         public void MasterReleased()
@@ -184,19 +194,33 @@ namespace RateController.Classes
 
         public void PrimePressed()
         {
-            PressSwitch(SwIDs.MasterOn);
-            ReleaseTimer.Enabled = true;
-            Core.SectionControl.StartPrime();
+            if (Core.SwitchBox.RealConnected())
+            {
+                Core.SwitchBox.RemotePrimePressed(RemoteSources.Screen);
+            }
+            else
+            {
+                PressSwitch(SwIDs.MasterOn);
+                ReleaseTimer.Enabled = true;
+                Core.SectionControl.StartPrime();
+            }
         }
 
         public void RateDownPressed()
         {
-            RateDownIsPressed = true;
-            PressSwitch(SwIDs.RateDown);
-            SendTimer.Stop();   // reset to prevent double send
-            SendTimer.Start();
-            SendPGN();
-            ReleaseTimer.Enabled = true;
+            if (Core.SwitchBox.RealConnected())
+            {
+                Core.SwitchBox.RemoteRateHold(-1, RemoteSources.Screen);
+            }
+            else
+            {
+                RateDownIsPressed = true;
+                PressSwitch(SwIDs.RateDown);
+                SendTimer.Stop();   // reset to prevent double send
+                SendTimer.Start();
+                SendPGN();
+                ReleaseTimer.Enabled = true;
+            }
         }
 
         public void RateDownReleased()
@@ -205,16 +229,26 @@ namespace RateController.Classes
             PGNdata[2] = Core.Tls.BitClear(PGNdata[2], 4);
             PGNdata[5] = Core.Tls.CRC(PGNdata, 5);
             SendPGN();
+
+            // never restarts a session the cab ended during the hold
+            if (Core.SwitchBox.RemoteActive) Core.SwitchBox.RemoteRateHold(0, RemoteSources.Screen);
         }
 
         public void RateUpPressed()
         {
-            RateUpIsPressed = true;
-            PressSwitch(SwIDs.RateUp);
-            SendTimer.Stop();   // reset to prevent double send
-            SendTimer.Start();
-            SendPGN();
-            ReleaseTimer.Enabled = true;
+            if (Core.SwitchBox.RealConnected())
+            {
+                Core.SwitchBox.RemoteRateHold(1, RemoteSources.Screen);
+            }
+            else
+            {
+                RateUpIsPressed = true;
+                PressSwitch(SwIDs.RateUp);
+                SendTimer.Stop();   // reset to prevent double send
+                SendTimer.Start();
+                SendPGN();
+                ReleaseTimer.Enabled = true;
+            }
         }
 
         public void RateUpReleased()
@@ -223,6 +257,35 @@ namespace RateController.Classes
             PGNdata[2] = Core.Tls.BitClear(PGNdata[2], 3);
             PGNdata[5] = Core.Tls.CRC(PGNdata, 5);
             SendPGN();
+
+            if (Core.SwitchBox.RemoteActive) Core.SwitchBox.RemoteRateHold(0, RemoteSources.Screen);
+        }
+
+        public void ScreenPress(SwIDs ID, bool FromMain = false)
+        {
+            // on-screen auto and section buttons. With a real switchbox connected the virtual
+            // packet isn't sent, so these take over like the phone page until a cab switch moves.
+            if (Core.SwitchBox.RealConnected())
+            {
+                switch (ID)
+                {
+                    case SwIDs.AutoRate:
+                        Core.SwitchBox.RemoteAutoRatePressed(RemoteSources.Screen);
+                        break;
+
+                    case SwIDs.AutoSection:
+                        Core.SwitchBox.RemoteAutoSectionPressed(RemoteSources.Screen);
+                        break;
+
+                    default:
+                        if (ID >= SwIDs.sw0 && ID <= SwIDs.sw15) Core.SwitchBox.RemoteSectionPressed(ID - SwIDs.sw0, RemoteSources.Screen);
+                        break;
+                }
+            }
+            else
+            {
+                PressSwitch(ID, FromMain);
+            }
         }
 
         private void Core_AppExit(object sender, EventArgs e)
@@ -250,7 +313,44 @@ namespace RateController.Classes
 
         private void SendTimer_Tick(object sender, EventArgs e)
         {
+            bool RealConnected = Core.SwitchBox.RealConnected();
+            if (WasRealConnected && !RealConnected) SyncFromSwitchBox();
+            WasRealConnected = RealConnected;
             SendPGN();
+        }
+
+        private void SyncFromSwitchBox()
+        {
+            // the real switchbox dropped out, carry on from the switch states in use instead of
+            // the states this box last had before the switchbox connected
+            PGNdata[3] = 0;
+            PGNdata[4] = 0;
+            for (int i = 0; i < Props.MaxSwitches; i++)
+            {
+                cSwitch[i] = Core.SwitchBox.SwitchIsOn(SwIDs.sw0 + i);
+                if (cSwitch[i])
+                {
+                    if (i < 8)
+                    {
+                        PGNdata[3] = Core.Tls.BitSet(PGNdata[3], i);
+                    }
+                    else
+                    {
+                        PGNdata[4] = Core.Tls.BitSet(PGNdata[4], i - 8);
+                    }
+                }
+            }
+
+            cAutoSection = Core.SwitchBox.SwitchIsOn(SwIDs.AutoSection);
+            cAutoRate = Core.SwitchBox.SwitchIsOn(SwIDs.AutoRate);
+
+            // rate up and rate down are momentary, leave them released. A momentary master is
+            // left released too, a maintained master is read as a level so it is kept.
+            PGNdata[2] = 0;
+            if (Props.MasterMaintained && Core.SwitchBox.MasterOn) PGNdata[2] = Core.Tls.BitSet(PGNdata[2], 1);
+            if (cAutoSection) PGNdata[2] = Core.Tls.BitSet(PGNdata[2], 5);
+            if (cAutoRate) PGNdata[2] = Core.Tls.BitSet(PGNdata[2], 6);
+            PGNdata[5] = Core.Tls.CRC(PGNdata, 5);
         }
 
         private void SetSectionsSwitchesMain()
