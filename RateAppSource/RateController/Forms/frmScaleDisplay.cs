@@ -128,14 +128,21 @@ namespace RateController
             if (Props.TryParseNumber(Props.GetProp("Scale_Tare" + cProductID.ToString()), out double ta)) TareWeight = ta;
         }
 
+        private bool IsDrag(object sender, MouseEventArgs e)
+        {
+            // a left click on the icon changes the display mode, so the icon drags with the
+            // right button only. The background drags with either.
+            return e.Button == MouseButtons.Right || (e.Button == MouseButtons.Left && sender == this);
+        }
+
         private void mouseMove_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) MouseDownLocation = e.Location;
+            if (IsDrag(sender, e)) MouseDownLocation = e.Location;
         }
 
         private void mouseMove_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right || e.Button == MouseButtons.Left)
+            if (IsDrag(sender, e))
             {
                 this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
             }
