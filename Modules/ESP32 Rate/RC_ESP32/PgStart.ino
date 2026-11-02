@@ -130,6 +130,17 @@ String GetPage0()
 	st += "";
 	st += "    <h1 align=center>RC_ESP32";
 	st += "    </h1>";
+	st += "    <p style='margin:0 0 6px 0; font-size:20px;'>";
+	if (MDL.ID == NewModuleID)
+	{
+		st += "Module ID: not set (new board)";
+	}
+	else
+	{
+		st += "Module ID: ";
+		st += String(MDL.ID);
+	}
+	st += "</p>";
 	st += "    <p style='margin:0 0 12px 0; color:#666; font-size:14px;'>";
 	st += fwVer;
 	st += "</p>";

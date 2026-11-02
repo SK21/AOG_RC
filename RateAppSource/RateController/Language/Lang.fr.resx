@@ -619,11 +619,13 @@
     <value>Téléphone</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>Adresse de la page téléphone</value>
+    <value>Accès téléphone pour interrupteurs à distance et étalonnage</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Connectez le téléphone et la tablette au même réseau : le point d'accès du téléphone, un routeur WiFi ou le point d'accès de la tablette (cochez Point d'accès tablette ci-dessous et enregistrez).
+    <value>1. Connectez le téléphone et la tablette au même réseau : le point d'accès du téléphone, un routeur WiFi ou le point d'accès de la tablette.
+
 2. Point d'accès du téléphone ou routeur : une fois la tablette connectée, ouvrez {0}, touchez le réseau et réglez-le sur Privé.
+
 3. Scannez le code avec l'appareil photo du téléphone. Touchez le code pour afficher l'adresse suivante.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">

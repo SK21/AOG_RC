@@ -44,11 +44,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.cbEthernet = new System.Windows.Forms.ComboBox();
-            this.lbSubnet = new System.Windows.Forms.Label();
             this.btnSendSubnet = new System.Windows.Forms.Button();
             this.btnRescan = new System.Windows.Forms.Button();
             this.lbIP = new System.Windows.Forms.Label();
-            this.lbModuleIP = new System.Windows.Forms.Label();
+            this.lbSteps = new System.Windows.Forms.Label();
+            this.lbRefresh = new System.Windows.Forms.Label();
+            this.lbSend = new System.Windows.Forms.Label();
+            this.lbHeard = new System.Windows.Forms.Label();
             this.ckEthernet = new System.Windows.Forms.CheckBox();
             this.ckDiagnostics = new System.Windows.Forms.CheckBox();
             this.ckCanBus = new System.Windows.Forms.CheckBox();
@@ -56,11 +58,12 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.ckHotspot = new System.Windows.Forms.CheckBox();
-            this.lbHotspot = new System.Windows.Forms.Label();
+            this.rbHotspot = new System.Windows.Forms.RadioButton();
+            this.rbPcWifi = new System.Windows.Forms.RadioButton();
             this.lnkHotspot = new System.Windows.Forms.LinkLabel();
             this.lbWifiNetwork = new System.Windows.Forms.Label();
-            this.cbWifiTarget = new System.Windows.Forms.ComboBox();
+            this.lbWifiTarget = new System.Windows.Forms.Label();
+            this.lbModulesHeading = new System.Windows.Forms.Label();
             this.lbWifiKey = new System.Windows.Forms.Label();
             this.tbWifiKey = new System.Windows.Forms.TextBox();
             this.lbModuleKey = new System.Windows.Forms.Label();
@@ -269,29 +272,19 @@
             this.cbEthernet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEthernet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbEthernet.FormattingEnabled = true;
-            this.cbEthernet.Location = new System.Drawing.Point(252, 231);
+            this.cbEthernet.Location = new System.Drawing.Point(130, 197);
             this.cbEthernet.Name = "cbEthernet";
-            this.cbEthernet.Size = new System.Drawing.Size(157, 32);
+            this.cbEthernet.Size = new System.Drawing.Size(358, 32);
             this.cbEthernet.TabIndex = 349;
-            this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
-            // 
-            // lbSubnet
-            // 
-            this.lbSubnet.AutoSize = true;
-            this.lbSubnet.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSubnet.Location = new System.Drawing.Point(83, 191);
-            this.lbSubnet.Name = "lbSubnet";
-            this.lbSubnet.Size = new System.Drawing.Size(149, 24);
-            this.lbSubnet.TabIndex = 350;
-            this.lbSubnet.Text = "Selected Subnet";
-            // 
+            this.cbEthernet.SelectedIndexChanged += new System.EventHandler(this.cbEthernet_SelectedIndexChanged);
+            //
             // btnSendSubnet
             // 
             this.btnSendSubnet.BackColor = System.Drawing.Color.Transparent;
             this.btnSendSubnet.FlatAppearance.BorderSize = 0;
             this.btnSendSubnet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSendSubnet.Image = global::RateController.Properties.Resources.Update4;
-            this.btnSendSubnet.Location = new System.Drawing.Point(276, 287);
+            this.btnSendSubnet.Location = new System.Drawing.Point(276, 305);
             this.btnSendSubnet.Name = "btnSendSubnet";
             this.btnSendSubnet.Size = new System.Drawing.Size(72, 72);
             this.btnSendSubnet.TabIndex = 348;
@@ -307,7 +300,7 @@
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
             this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(154, 287);
+            this.btnRescan.Location = new System.Drawing.Point(154, 305);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(72, 72);
             this.btnRescan.TabIndex = 347;
@@ -319,21 +312,49 @@
             // 
             this.lbIP.AutoSize = true;
             this.lbIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIP.Location = new System.Drawing.Point(83, 234);
+            this.lbIP.Location = new System.Drawing.Point(20, 201);
             this.lbIP.Name = "lbIP";
             this.lbIP.Size = new System.Drawing.Size(76, 24);
             this.lbIP.TabIndex = 352;
-            this.lbIP.Text = "Local IP";
+            this.lbIP.Text = "Adapter";
             // 
-            // lbModuleIP
+            // lbSteps
             // 
-            this.lbModuleIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleIP.Location = new System.Drawing.Point(248, 191);
-            this.lbModuleIP.Name = "lbModuleIP";
-            this.lbModuleIP.Size = new System.Drawing.Size(161, 24);
-            this.lbModuleIP.TabIndex = 351;
-            this.lbModuleIP.Text = "192.168.100.100";
-            this.lbModuleIP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbSteps.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSteps.Location = new System.Drawing.Point(20, 119);
+            this.lbSteps.Name = "lbSteps";
+            this.lbSteps.Size = new System.Drawing.Size(468, 66);
+            this.lbSteps.TabIndex = 353;
+            this.lbSteps.Text = "1. Select the adapter the module is plugged into, then Save.\r\n2. Press Send. The module restarts.\r\n3. It is counted below once it is heard.";
+            // 
+            // lbRefresh
+            // 
+            this.lbRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRefresh.Location = new System.Drawing.Point(130, 379);
+            this.lbRefresh.Name = "lbRefresh";
+            this.lbRefresh.Size = new System.Drawing.Size(120, 22);
+            this.lbRefresh.TabIndex = 355;
+            this.lbRefresh.Text = "Refresh";
+            this.lbRefresh.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lbSend
+            // 
+            this.lbSend.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSend.Location = new System.Drawing.Point(252, 379);
+            this.lbSend.Name = "lbSend";
+            this.lbSend.Size = new System.Drawing.Size(120, 22);
+            this.lbSend.TabIndex = 356;
+            this.lbSend.Text = "Send";
+            this.lbSend.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lbHeard
+            // 
+            this.lbHeard.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbHeard.Location = new System.Drawing.Point(20, 241);
+            this.lbHeard.Name = "lbHeard";
+            this.lbHeard.Size = new System.Drawing.Size(468, 48);
+            this.lbHeard.TabIndex = 354;
+            this.lbHeard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ckEthernet
             // 
@@ -343,7 +364,7 @@
             this.ckEthernet.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckEthernet.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckEthernet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckEthernet.Location = new System.Drawing.Point(159, 129);
+            this.ckEthernet.Location = new System.Drawing.Point(158, 69);
             this.ckEthernet.Margin = new System.Windows.Forms.Padding(6);
             this.ckEthernet.Name = "ckEthernet";
             this.ckEthernet.Size = new System.Drawing.Size(192, 36);
@@ -406,11 +427,13 @@
             // 
             this.tabPage1.Controls.Add(this.cbEthernet);
             this.tabPage1.Controls.Add(this.ckEthernet);
-            this.tabPage1.Controls.Add(this.lbSubnet);
-            this.tabPage1.Controls.Add(this.lbModuleIP);
             this.tabPage1.Controls.Add(this.btnSendSubnet);
             this.tabPage1.Controls.Add(this.lbIP);
             this.tabPage1.Controls.Add(this.btnRescan);
+            this.tabPage1.Controls.Add(this.lbSteps);
+            this.tabPage1.Controls.Add(this.lbRefresh);
+            this.tabPage1.Controls.Add(this.lbSend);
+            this.tabPage1.Controls.Add(this.lbHeard);
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -421,11 +444,12 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.ckHotspot);
-            this.tabPage3.Controls.Add(this.lbHotspot);
+            this.tabPage3.Controls.Add(this.rbHotspot);
+            this.tabPage3.Controls.Add(this.rbPcWifi);
             this.tabPage3.Controls.Add(this.lnkHotspot);
             this.tabPage3.Controls.Add(this.lbWifiNetwork);
-            this.tabPage3.Controls.Add(this.cbWifiTarget);
+            this.tabPage3.Controls.Add(this.lbWifiTarget);
+            this.tabPage3.Controls.Add(this.lbModulesHeading);
             this.tabPage3.Controls.Add(this.lbWifiKey);
             this.tabPage3.Controls.Add(this.tbWifiKey);
             this.tabPage3.Controls.Add(this.lbModuleKey);
@@ -448,35 +472,31 @@
             this.tabPage3.Text = "WiFi";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // ckHotspot
+            // rbHotspot
             // 
-            this.ckHotspot.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckHotspot.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckHotspot.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckHotspot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckHotspot.Location = new System.Drawing.Point(20, 12);
-            this.ckHotspot.Margin = new System.Windows.Forms.Padding(6);
-            this.ckHotspot.Name = "ckHotspot";
-            this.ckHotspot.Size = new System.Drawing.Size(192, 36);
-            this.ckHotspot.TabIndex = 12;
-            this.ckHotspot.Text = "Tablet Hotspot";
-            this.ckHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckHotspot.UseVisualStyleBackColor = true;
-            this.ckHotspot.CheckedChanged += new System.EventHandler(this.ckHotspot_CheckedChanged);
+            this.rbHotspot.Location = new System.Drawing.Point(20, 12);
+            this.rbHotspot.Name = "rbHotspot";
+            this.rbHotspot.Size = new System.Drawing.Size(210, 32);
+            this.rbHotspot.TabIndex = 12;
+            this.rbHotspot.TabStop = true;
+            this.rbHotspot.Text = "Tablet hotspot";
+            this.rbHotspot.UseVisualStyleBackColor = true;
+            this.rbHotspot.CheckedChanged += new System.EventHandler(this.rbHotspot_CheckedChanged);
             // 
-            // lbHotspot
+            // rbPcWifi
             // 
-            this.lbHotspot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHotspot.Location = new System.Drawing.Point(226, 18);
-            this.lbHotspot.Name = "lbHotspot";
-            this.lbHotspot.Size = new System.Drawing.Size(262, 24);
-            this.lbHotspot.TabIndex = 13;
-            this.lbHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.rbPcWifi.Location = new System.Drawing.Point(240, 12);
+            this.rbPcWifi.Name = "rbPcWifi";
+            this.rbPcWifi.Size = new System.Drawing.Size(248, 32);
+            this.rbPcWifi.TabIndex = 13;
+            this.rbPcWifi.TabStop = true;
+            this.rbPcWifi.Text = "Current WiFi Network";
+            this.rbPcWifi.UseVisualStyleBackColor = true;
             // 
             // lnkHotspot
             // 
             this.lnkHotspot.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkHotspot.Location = new System.Drawing.Point(20, 54);
+            this.lnkHotspot.Location = new System.Drawing.Point(20, 50);
             this.lnkHotspot.Name = "lnkHotspot";
             this.lnkHotspot.Size = new System.Drawing.Size(468, 24);
             this.lnkHotspot.TabIndex = 14;
@@ -489,37 +509,46 @@
             // 
             this.lbWifiNetwork.AutoSize = true;
             this.lbWifiNetwork.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWifiNetwork.Location = new System.Drawing.Point(20, 92);
+            this.lbWifiNetwork.Location = new System.Drawing.Point(20, 86);
             this.lbWifiNetwork.Name = "lbWifiNetwork";
             this.lbWifiNetwork.Size = new System.Drawing.Size(79, 24);
             this.lbWifiNetwork.TabIndex = 0;
             this.lbWifiNetwork.Text = "Network";
             // 
-            // cbWifiTarget
+            // lbWifiTarget
             // 
-            this.cbWifiTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbWifiTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbWifiTarget.FormattingEnabled = true;
-            this.cbWifiTarget.Location = new System.Drawing.Point(190, 88);
-            this.cbWifiTarget.Name = "cbWifiTarget";
-            this.cbWifiTarget.Size = new System.Drawing.Size(298, 32);
-            this.cbWifiTarget.TabIndex = 1;
-            this.cbWifiTarget.SelectedIndexChanged += new System.EventHandler(this.cbWifiTarget_SelectedIndexChanged);
+            this.lbWifiTarget.AutoEllipsis = true;
+            this.lbWifiTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbWifiTarget.Location = new System.Drawing.Point(190, 86);
+            this.lbWifiTarget.Name = "lbWifiTarget";
+            this.lbWifiTarget.Size = new System.Drawing.Size(298, 24);
+            this.lbWifiTarget.TabIndex = 1;
+            this.lbWifiTarget.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lbModulesHeading
+            // 
+            this.lbModulesHeading.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.lbModulesHeading.Location = new System.Drawing.Point(20, 190);
+            this.lbModulesHeading.Name = "lbModulesHeading";
+            this.lbModulesHeading.Size = new System.Drawing.Size(300, 20);
+            this.lbModulesHeading.TabIndex = 18;
+            this.lbModulesHeading.Text = "Discovered modules - select one";
+            this.lbModulesHeading.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lbWifiKey
             // 
             this.lbWifiKey.AutoSize = true;
             this.lbWifiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWifiKey.Location = new System.Drawing.Point(20, 134);
+            this.lbWifiKey.Location = new System.Drawing.Point(20, 124);
             this.lbWifiKey.Name = "lbWifiKey";
-            this.lbWifiKey.Size = new System.Drawing.Size(92, 24);
+            this.lbWifiKey.Size = new System.Drawing.Size(165, 24);
             this.lbWifiKey.TabIndex = 2;
-            this.lbWifiKey.Text = "Password";
+            this.lbWifiKey.Text = "Network password";
             // 
             // tbWifiKey
             // 
             this.tbWifiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbWifiKey.Location = new System.Drawing.Point(190, 130);
+            this.tbWifiKey.Location = new System.Drawing.Point(190, 120);
             this.tbWifiKey.Name = "tbWifiKey";
             this.tbWifiKey.Size = new System.Drawing.Size(298, 29);
             this.tbWifiKey.TabIndex = 3;
@@ -529,7 +558,7 @@
             // 
             this.lbModuleKey.AutoSize = true;
             this.lbModuleKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleKey.Location = new System.Drawing.Point(20, 174);
+            this.lbModuleKey.Location = new System.Drawing.Point(20, 160);
             this.lbModuleKey.Name = "lbModuleKey";
             this.lbModuleKey.Size = new System.Drawing.Size(161, 24);
             this.lbModuleKey.TabIndex = 4;
@@ -538,7 +567,7 @@
             // tbModuleKey
             // 
             this.tbModuleKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbModuleKey.Location = new System.Drawing.Point(190, 170);
+            this.tbModuleKey.Location = new System.Drawing.Point(190, 156);
             this.tbModuleKey.Name = "tbModuleKey";
             this.tbModuleKey.Size = new System.Drawing.Size(298, 29);
             this.tbModuleKey.TabIndex = 5;
@@ -549,7 +578,7 @@
             this.lstModules.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstModules.FormattingEnabled = true;
             this.lstModules.ItemHeight = 24;
-            this.lstModules.Location = new System.Drawing.Point(20, 210);
+            this.lstModules.Location = new System.Drawing.Point(20, 212);
             this.lstModules.Name = "lstModules";
             this.lstModules.Size = new System.Drawing.Size(300, 100);
             this.lstModules.TabIndex = 6;
@@ -559,18 +588,19 @@
             // 
             this.lbWifiModuleID.AutoSize = true;
             this.lbWifiModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbWifiModuleID.Location = new System.Drawing.Point(330, 212);
+            this.lbWifiModuleID.Location = new System.Drawing.Point(330, 214);
             this.lbWifiModuleID.Name = "lbWifiModuleID";
-            this.lbWifiModuleID.Size = new System.Drawing.Size(96, 24);
+            this.lbWifiModuleID.Size = new System.Drawing.Size(175, 24);
             this.lbWifiModuleID.TabIndex = 15;
-            this.lbWifiModuleID.Text = "Module ID";
+            this.lbWifiModuleID.Text = "Selected Module ID";
+            this.lbWifiModuleID.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cbWifiModuleID
             // 
             this.cbWifiModuleID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbWifiModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbWifiModuleID.FormattingEnabled = true;
-            this.cbWifiModuleID.Location = new System.Drawing.Point(330, 244);
+            this.cbWifiModuleID.Location = new System.Drawing.Point(330, 246);
             this.cbWifiModuleID.Name = "cbWifiModuleID";
             this.cbWifiModuleID.Size = new System.Drawing.Size(158, 32);
             this.cbWifiModuleID.TabIndex = 16;
@@ -580,7 +610,7 @@
             // lnkModuleIP
             // 
             this.lnkModuleIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkModuleIP.Location = new System.Drawing.Point(330, 282);
+            this.lnkModuleIP.Location = new System.Drawing.Point(330, 284);
             this.lnkModuleIP.Name = "lnkModuleIP";
             this.lnkModuleIP.Size = new System.Drawing.Size(158, 24);
             this.lnkModuleIP.TabIndex = 17;
@@ -729,11 +759,13 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox ckEthernet;
         private System.Windows.Forms.ComboBox cbEthernet;
-        private System.Windows.Forms.Label lbSubnet;
         private System.Windows.Forms.Button btnSendSubnet;
         private System.Windows.Forms.Button btnRescan;
         private System.Windows.Forms.Label lbIP;
-        private System.Windows.Forms.Label lbModuleIP;
+        private System.Windows.Forms.Label lbSteps;
+        private System.Windows.Forms.Label lbRefresh;
+        private System.Windows.Forms.Label lbSend;
+        private System.Windows.Forms.Label lbHeard;
         private System.Windows.Forms.CheckBox ckCanBus;
         private System.Windows.Forms.CheckBox ckDiagnostics;
         private System.Windows.Forms.Timer timer1;
@@ -742,10 +774,11 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label lbWifiNetwork;
-        private System.Windows.Forms.CheckBox ckHotspot;
-        private System.Windows.Forms.Label lbHotspot;
+        private System.Windows.Forms.RadioButton rbHotspot;
+        private System.Windows.Forms.RadioButton rbPcWifi;
         private System.Windows.Forms.LinkLabel lnkHotspot;
-        private System.Windows.Forms.ComboBox cbWifiTarget;
+        private System.Windows.Forms.Label lbWifiTarget;
+        private System.Windows.Forms.Label lbModulesHeading;
         private System.Windows.Forms.Label lbWifiModuleID;
         private System.Windows.Forms.ComboBox cbWifiModuleID;
         private System.Windows.Forms.LinkLabel lnkModuleIP;

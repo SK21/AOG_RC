@@ -16,6 +16,10 @@ namespace RateController.Menu
         private const string HotspotCommPrefix = "Change it on ";
 
         private bool cEdited;
+        private bool cFirewallChecking = false;     // hotspot firewall check running (CheckFirewall)
+        private bool cFirewallOk = true;            // hotspot firewall rules, from the last background check
+        private bool cFirewallRecheck = false;      // another check was asked for while one was running
+        private string cLastHotspotState = "";      // "" = check the firewall again when the hotspot shows On
         private bool Initializing = false;
         private frmMenu MainMenu;
         private int HotspotTicks = 0;
@@ -331,7 +335,9 @@ namespace RateController.Menu
             if (State == "On") Text = Lang.lgOn;
             else if (State == "Off") Text = Lang.lgOff;
             if (Core.WebServer.HotspotBusy) Text = Lang.lgChecking;
-            if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", " + Lang.lgFirewallBlocked;
+            if (State == "On" && cLastHotspotState != "On") CheckFirewall();     // result comes back through ShowHotspot
+            cLastHotspotState = State;
+            if (State == "On" && !cFirewallOk) Text += ", " + Lang.lgFirewallBlocked;
             if (Core.WebServer.HotspotFailing && Props.TabletHotspot) Text = Lang.lgRestartsFailed;
             lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Text + ". " + HotspotCommPrefix + HotspotCommLink;
             SetHotspotCommLink();
@@ -347,6 +353,48 @@ namespace RateController.Menu
             else
             {
                 lbHotspotNet.Text = "";
+            }
+        }
+
+        private void CheckFirewall()
+        {
+            // the firewall note on the hotspot line. HotspotAllowed runs two netsh and walks every
+            // firewall rule (most of a second), so off the UI thread, and only on a tab visit or
+            // the hotspot coming on - not on every status refresh
+            if (cFirewallChecking)
+            {
+                cFirewallRecheck = true;
+            }
+            else
+            {
+                cFirewallChecking = true;
+                System.Threading.ThreadPool.QueueUserWorkItem(o =>
+                {
+                    bool Ok = Core.WebServer.HotspotAllowed();
+                    try
+                    {
+                        if (!IsDisposed && IsHandleCreated) BeginInvoke((Action)(() => FirewallChecked(Ok)));
+                    }
+                    catch (Exception)
+                    {
+                        // form closing
+                    }
+                });
+            }
+        }
+
+        private void FirewallChecked(bool Ok)
+        {
+            if (!IsDisposed)
+            {
+                cFirewallChecking = false;
+                cFirewallOk = Ok;
+                if (cFirewallRecheck)
+                {
+                    cFirewallRecheck = false;
+                    CheckFirewall();
+                }
+                ShowHotspot();
             }
         }
 
@@ -403,6 +451,7 @@ namespace RateController.Menu
             if (tabControl1.SelectedTab == tabPage2)
             {
                 ShowPhone();
+                cLastHotspotState = "";     // firewall checked again on each visit
                 ShowHotspot();
                 Core.WebServer.HotspotAsync("status", HotspotDone);     // catches changes made in Windows settings
             }

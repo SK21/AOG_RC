@@ -51,10 +51,13 @@ namespace RateController.PGNs
                     {
                         foreach (var info in nic.GetIPProperties().UnicastAddresses)
                         {
-                            // Only InterNetwork and not loopback which have a subnetmask
+                            // Only InterNetwork and not loopback which have a subnetmask.
+                            // Not the tablet hotspot: only WiFi modules are on it, whose address
+                            // comes from the hotspot, and an ESP32 restarts on this PGN
                             if (info.Address.AddressFamily == AddressFamily.InterNetwork &&
                                 !IPAddress.IsLoopback(info.Address) &&
-                                info.IPv4Mask != null)
+                                info.IPv4Mask != null &&
+                                !UDPComm.IsTabletHotspot(nic, info.Address))
                             {
                                 Socket scanSocket;
                                 try

@@ -622,11 +622,13 @@
     <value>Telefon</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>Telefonos oldal címe</value>
+    <value>Telefonos hozzáférés a távoli kapcsolókhoz és a kalibráláshoz</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Csatlakoztassa a telefont és a tabletet ugyanahhoz a hálózathoz: a telefon hotspotjához, egy WiFi routerhez vagy a tablet saját hotspotjához (jelölje be lent a Tablet hotspotot, majd mentsen).
+    <value>1. Csatlakoztassa a telefont és a tabletet ugyanahhoz a hálózathoz: a telefon hotspotjához, egy WiFi routerhez vagy a tablet saját hotspotjához.
+
 2. Telefonos hotspot vagy router: miután a tablet csatlakozott, nyissa meg: {0}, koppintson a hálózatra, és állítsa Magánhálózatra.
+
 3. Olvassa be a kódot a telefon kamerájával. A kódra koppintva a következő cím jelenik meg.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">

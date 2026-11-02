@@ -619,11 +619,13 @@
     <value>Telefonas</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>Telefono puslapio adresas</value>
+    <value>Prieiga telefonu nuotoliniams jungikliams ir kalibravimui</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Prijunkite telefoną ir planšetę prie to paties tinklo: telefono prieigos taško, WiFi maršrutizatoriaus arba planšetės prieigos taško (pažymėkite žemiau Planšetės prieigos taškas ir išsaugokite).
+    <value>1. Prijunkite telefoną ir planšetę prie to paties tinklo: telefono prieigos taško, WiFi maršrutizatoriaus arba planšetės prieigos taško.
+
 2. Telefono prieigos taškas arba maršrutizatorius: kai planšetė prisijungs, atidarykite {0}, bakstelėkite tinklą ir nustatykite Privatus.
+
 3. Nuskaitykite kodą telefono kamera. Bakstelėkite kodą, kad būtų rodomas kitas adresas.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">

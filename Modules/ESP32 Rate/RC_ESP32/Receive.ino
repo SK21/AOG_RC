@@ -12,7 +12,7 @@ void ReceiveUDP()
             {
                 byte Data[MaxReadBuffer];
                 UDP_Ethernet.read(Data, MaxReadBuffer);
-                ReadPGNs(Data, len);
+                ReadPGNs(Data, len, false);
             }
         }
     }
@@ -22,11 +22,11 @@ void ReceiveUDP()
     {
         byte Data[MaxReadBuffer];
         UDP_Wifi.read(Data, MaxReadBuffer);
-        ReadPGNs(Data, len);
+        ReadPGNs(Data, len, true);
     }
 }
 
-void ReadPGNs(byte data[], uint16_t len)
+void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
 {
     byte PGNlength;
     uint16_t PGN = data[1] << 8 | data[0];
@@ -232,8 +232,11 @@ void ReadPGNs(byte data[], uint16_t len)
         //4     IP 2
         //5     CRC
 
+        // Ethernet only: the subnet set here is the Ethernet chip's. Over WiFi the address
+        // comes from the network joined, and the app's subnet broadcast goes out every
+        // adapter, so acting on it would restart every WiFi-connected board for nothing.
         PGNlength = 6;
-        if (len > PGNlength - 1)
+        if (len > PGNlength - 1 && !FromWifi)
         {
             if (GoodCRC(data, PGNlength))
             {

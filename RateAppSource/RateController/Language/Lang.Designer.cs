@@ -1582,7 +1582,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Phone page address.
+        ///   Looks up a localized string similar to Phone Access for remote switches and calibration.
         /// </summary>
         internal static string lgPhoneAddress {
             get {

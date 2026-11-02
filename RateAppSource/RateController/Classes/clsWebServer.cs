@@ -397,8 +397,11 @@ Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$b
         public List<string> PhoneUrls()
         {
             // addresses a phone could reach, most likely first: the tablet's own hotspot,
-            // then WiFi (the phone's hotspot), then adapters with a gateway, then the rest,
-            // virtual adapters last. module network and link-local excluded
+            // then WiFi (the phone's hotspot, a router), then adapters with a gateway, then the
+            // rest, virtual adapters and wired addresses on the module subnet last (usually a
+            // switch only modules are on, but a router's LAN when the modules are on a router).
+            // A WiFi address is never moved down: the module subnet can be the router's network
+            // the tablet's WiFi is on too. Link-local excluded
             List<string>[] Ranked = { new List<string>(), new List<string>(), new List<string>(), new List<string>(), new List<string>() };
             string ModuleNet = Core.UDPmodules.SubNet + ".";
             try
@@ -426,9 +429,10 @@ Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$b
                         foreach (UnicastIPAddressInformation ip in IpProps.UnicastAddresses)
                         {
                             string Ip = ip.Address.ToString();
-                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork && !Ip.StartsWith(ModuleNet) && !Ip.StartsWith("169.254."))
+                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork && !Ip.StartsWith("169.254."))
                             {
-                                Ranked[Rank].Add("http://" + Ip + ":" + cPort.ToString());
+                                int R = (Ip.StartsWith(ModuleNet) && Rank >= 2) ? 4 : Rank;
+                                Ranked[R].Add("http://" + Ip + ":" + cPort.ToString());
                             }
                         }
                     }
@@ -439,8 +443,18 @@ Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$b
                 Props.WriteErrorLog("clsWebServer/PhoneUrls: " + ex.Message);
             }
 
+            // one address per subnet, the best ranked: a tablet on a router by WiFi and by cable
+            // has two addresses on one network, and a phone there reaches it through either
             List<string> Result = new List<string>();
-            foreach (List<string> r in Ranked) Result.AddRange(r);
+            HashSet<string> Subnets = new HashSet<string>();
+            foreach (List<string> r in Ranked)
+            {
+                foreach (string Url in r)
+                {
+                    string Host = Url.Substring(7, Url.LastIndexOf(':') - 7);      // after http://
+                    if (Subnets.Add(Host.Substring(0, Host.LastIndexOf('.')))) Result.Add(Url);
+                }
+            }
             return Result;
         }
 

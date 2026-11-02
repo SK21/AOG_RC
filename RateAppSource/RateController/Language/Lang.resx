@@ -625,11 +625,13 @@
     <value>Phone</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>Phone page address</value>
+    <value>Phone Access for remote switches and calibration</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Put the phone and the tablet on the same network: the phone's hotspot, a WiFi router, or the tablet's own hotspot (check Tablet Hotspot below and Save).
+    <value>1. Put the phone and the tablet on the same network: the phone's hotspot, a WiFi router, or the tablet's own hotspot.
+
 2. Phone hotspot or router: once the tablet is connected, open {0}, tap the network and set it to Private.
+
 3. Scan the code with the phone's camera. Tap the code to show the next address.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">

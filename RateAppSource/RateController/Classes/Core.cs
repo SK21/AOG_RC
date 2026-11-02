@@ -357,9 +357,27 @@ namespace RateController.Classes
             }
         }
 
+        public static string CommModeNote { get; private set; } = "";      // what UseCanComm told the module, for the caller's message
+
+        private static void SendCommMode(byte Mode)
+        {
+            // Only the Teensy firmware has CAN (the comm mode byte); Nano and ESP32 boards ignore
+            // it but still validate the whole 32700 pin set, so the app's saved pins could get
+            // it rejected for nothing. The app holds one module config, the module selected on
+            // Config, so only that module can be told - another Teensy would get its pins.
+            byte id = ModuleConfig.GetData()[2];
+            if (ModulesStatus.Connected(id) && ModulesStatus.ModuleType(id) == (int)ModuleTypes.Teensy_Rate)
+            {
+                ModuleConfig.Send(Mode);
+                CommModeNote = "Comm change sent to Teensy module " + id + ".";
+            }
+            // nothing sent, nothing to report
+        }
+
         public static int UseCanComm(bool enable)
         {
             int Result = -1;
+            CommModeNote = "";
 
             // The module's CommMode is just Props.CanEnabled - the CAN driver and COM port
             // are app side only and mean nothing to it. So the config is sent ONLY when the
@@ -380,7 +398,7 @@ namespace RateController.Classes
                 bool started = Core.CanBridgeComm?.Start(Props.CurrentCanDriver, Props.CanPort) ?? false;
                 if (started)
                 {
-                    if (!WasCan) ModuleConfig.Send(1);
+                    if (!WasCan) SendCommMode(1);
                     Props.CanEnabled = true;
                     Props.ShowMessage("CAN Bridge started.", "Help", 10000);
                     Result = 1;
@@ -394,11 +412,10 @@ namespace RateController.Classes
             if (Result != 1)
             {
                 // use Ethernet
-                if (WasCan) ModuleConfig.Send(0);
+                if (WasCan) SendCommMode(0);
                 if (Props.CanEnabled)
                 {
-                    CanBridgeComm?.Stop();
-                    Props.ShowMessage("CAN Bridge stopped.", "Help", 10000);
+                    CanBridgeComm?.Stop();      // no message: switching to Ethernet only reports a Teensy that was changed
                     Props.CanEnabled = false;
                 }
                 Result += 1;

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuOptions));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.ckMetric = new System.Windows.Forms.CheckBox();
@@ -104,9 +105,9 @@
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnOK.UseVisualStyleBackColor = false;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            //
+            // 
             // ckMetric
-            //
+            // 
             this.ckMetric.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckMetric.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckMetric.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
@@ -122,7 +123,7 @@
             this.ckMetric.CheckedChanged += new System.EventHandler(this.ckMetric_CheckedChanged);
             // 
             // ckCompact
-            //
+            // 
             this.ckCompact.Appearance = System.Windows.Forms.Appearance.Button;
             this.ckCompact.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckCompact.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
@@ -373,9 +374,9 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Speed Source";
             this.groupBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.groupBox2_Paint);
-            //
+            // 
             // tabControl1
-            //
+            // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(12, 29);
@@ -385,9 +386,9 @@
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tabControl1.TabIndex = 392;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            //
+            // 
             // tabPage1
-            //
+            // 
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.ckMetric);
             this.tabPage1.Controls.Add(this.ckCompact);
@@ -398,9 +399,9 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Speed";
             this.tabPage1.UseVisualStyleBackColor = true;
-            //
+            // 
             // tabPage2
-            //
+            // 
             this.tabPage2.Controls.Add(this.pbPhoneQR);
             this.tabPage2.Controls.Add(this.lbPhone);
             this.tabPage2.Controls.Add(this.lbPhoneUrl);
@@ -414,69 +415,72 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Phone";
             this.tabPage2.UseVisualStyleBackColor = true;
-            //
+            // 
             // pbPhoneQR
-            //
+            // 
             this.pbPhoneQR.Location = new System.Drawing.Point(10, 10);
             this.pbPhoneQR.Name = "pbPhoneQR";
-            this.pbPhoneQR.Size = new System.Drawing.Size(222, 222);     // 37 modules x 6 px
+            this.pbPhoneQR.Size = new System.Drawing.Size(222, 222);
             this.pbPhoneQR.TabIndex = 393;
             this.pbPhoneQR.TabStop = false;
             this.pbPhoneQR.Click += new System.EventHandler(this.pbPhoneQR_Click);
-            //
+            // 
             // lbPhone
-            //
+            // 
             this.lbPhone.Location = new System.Drawing.Point(244, 10);
             this.lbPhone.Name = "lbPhone";
-            this.lbPhone.Size = new System.Drawing.Size(258, 30);
+            this.lbPhone.Size = new System.Drawing.Size(258, 58);
             this.lbPhone.TabIndex = 394;
-            this.lbPhone.Text = "Phone page address";
-            //
+            this.lbPhone.Text = "Phone Access for remote switches and calibration";
+            this.lbPhone.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lbPhoneUrl
-            //
+            // 
             this.lbPhoneUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPhoneUrl.Location = new System.Drawing.Point(244, 44);
+            this.lbPhoneUrl.Location = new System.Drawing.Point(244, 68);
             this.lbPhoneUrl.Name = "lbPhoneUrl";
             this.lbPhoneUrl.Size = new System.Drawing.Size(258, 120);
             this.lbPhoneUrl.TabIndex = 395;
+            this.lbPhoneUrl.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.lbPhoneUrl.Click += new System.EventHandler(this.pbPhoneQR_Click);
-            //
+            // 
             // lbPhoneHelp
-            //
+            // 
             this.lbPhoneHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPhoneHelp.Location = new System.Drawing.Point(10, 242);
+            this.lbPhoneHelp.Location = new System.Drawing.Point(10, 236);
             this.lbPhoneHelp.Name = "lbPhoneHelp";
-            this.lbPhoneHelp.Size = new System.Drawing.Size(488, 150);
+            this.lbPhoneHelp.Size = new System.Drawing.Size(488, 200);
             this.lbPhoneHelp.TabIndex = 396;
-            this.lbPhoneHelp.Text = "1. Put the phone and the tablet on the same network: the phone\'s hotspot, a WiFi router, or the tablet\'s own hotspot (check Tablet Hotspot below and Save).\r\n2. Phone hotspot or router: once the tablet is connected, open WiFi settings, tap the network and set it to Private.\r\n3. Scan the code with the phone\'s camera. Tap the code to show the next address.";
+            this.lbPhoneHelp.TabStop = true;
+            this.lbPhoneHelp.Text = resources.GetString("lbPhoneHelp.Text");
             this.lbPhoneHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbPhoneHelp_LinkClicked);
-            //
+            // 
             // lnkHotspotComm
-            //
-            this.lnkHotspotComm.Location = new System.Drawing.Point(10, 400);
+            // 
+            this.lnkHotspotComm.Location = new System.Drawing.Point(10, 438);
             this.lnkHotspotComm.Name = "lnkHotspotComm";
-            this.lnkHotspotComm.Size = new System.Drawing.Size(488, 45);
+            this.lnkHotspotComm.Size = new System.Drawing.Size(488, 44);
             this.lnkHotspotComm.TabIndex = 397;
             this.lnkHotspotComm.TabStop = true;
             this.lnkHotspotComm.Text = "Tablet Hotspot: Off. Change it on Comm → WiFi";
             this.lnkHotspotComm.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lnkHotspotComm.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkHotspotComm_LinkClicked);
-            //
+            // 
             // lbHotspotNet
-            //
+            // 
             this.lbHotspotNet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbHotspotNet.Location = new System.Drawing.Point(10, 449);
+            this.lbHotspotNet.Location = new System.Drawing.Point(10, 484);
             this.lbHotspotNet.Name = "lbHotspotNet";
-            this.lbHotspotNet.Size = new System.Drawing.Size(488, 44);
+            this.lbHotspotNet.Size = new System.Drawing.Size(488, 40);
             this.lbHotspotNet.TabIndex = 399;
-            //
+            // 
             // tmrPhone
-            //
+            // 
             this.tmrPhone.Interval = 2000;
             this.tmrPhone.Tick += new System.EventHandler(this.tmrPhone_Tick);
-            //
+            // 
             // frmMenuOptions
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);

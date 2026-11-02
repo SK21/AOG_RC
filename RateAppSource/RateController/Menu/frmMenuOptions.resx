@@ -117,4 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lbPhoneHelp.Text" xml:space="preserve">
+    <value>1. Put the phone and the tablet on the same network: the phone's hotspot, a WiFi router, or the tablet's own hotspot.
+
+2. Phone hotspot or router: once the tablet is connected, open WiFi settings, tap the network and set it to Private.
+
+3. Scan the code with the phone's camera. Tap the code to show the next address.</value>
+  </data>
+  <metadata name="tmrPhone.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

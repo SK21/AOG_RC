@@ -619,11 +619,13 @@
     <value>telefoon</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>adres telefoonpagina</value>
+    <value>Telefoontoegang voor schakelaars op afstand en kalibratie</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Verbind de telefoon en de tablet met hetzelfde netwerk: de hotspot van de telefoon, een wifi-router of de eigen hotspot van de tablet (vink hieronder tablet hotspot aan en sla op).
+    <value>1. Verbind de telefoon en de tablet met hetzelfde netwerk: de hotspot van de telefoon, een wifi-router of de eigen hotspot van de tablet.
+
 2. Hotspot van de telefoon of router: open, zodra de tablet verbonden is, {0}, tik op het netwerk en zet het op Privé.
+
 3. Scan de code met de camera van de telefoon. Tik op de code voor het volgende adres.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">

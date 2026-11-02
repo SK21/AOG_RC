@@ -619,11 +619,13 @@
     <value>Telefon</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>Adres strony telefonu</value>
+    <value>Dostęp z telefonu do zdalnych przełączników i kalibracji</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Połącz telefon i tablet z tą samą siecią: hotspotem telefonu, routerem WiFi lub hotspotem tabletu (zaznacz poniżej Hotspot tabletu i zapisz).
+    <value>1. Połącz telefon i tablet z tą samą siecią: hotspotem telefonu, routerem WiFi lub hotspotem tabletu.
+
 2. Hotspot telefonu lub router: gdy tablet się połączy, otwórz {0}, dotknij sieci i ustaw ją jako Prywatną.
+
 3. Zeskanuj kod aparatem telefonu. Dotknij kodu, aby pokazać następny adres.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">

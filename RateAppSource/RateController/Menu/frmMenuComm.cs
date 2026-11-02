@@ -29,6 +29,12 @@ namespace RateController.Menu
 
         private bool BandTold = false;
         private bool cEdited;
+        private bool cFirewallAsking = false;       // module-data firewall check running (AskFirewallOnce)
+        private bool cFirewallChecking = false;     // hotspot firewall check running (CheckFirewall)
+        private bool cFirewallOk = true;            // hotspot firewall rules, from the last background check
+        private bool cFirewallRecheck = false;      // another check was asked for while one was running
+        private string cLastHotspotState = "";      // "" = check the firewall again when the hotspot shows On
+        private WifiTarget cTarget;                 // network the module will join, null = none available
         private int HotspotTicks = 0;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -67,6 +73,18 @@ namespace RateController.Menu
             }
         }
 
+        private sealed class AdapterItem
+        {
+            public string IP;       // this PC's address on the adapter
+            public string Name;     // Windows adapter name, e.g. Ethernet 2
+            public string Subnet;   // a.b.c
+
+            public override string ToString()
+            {
+                return Name + " (" + Subnet + ".x)";
+            }
+        }
+
         private sealed class WifiTarget
         {
             public bool Hotspot;    // this tablet's own hotspot, else this PC's WiFi
@@ -94,7 +112,7 @@ namespace RateController.Menu
         private void btnOK_Click(object sender, System.EventArgs e)
         {
             // Ethernet settings
-            Core.UDPmodules.NetworkEP = cbEthernet.Text;
+            if (cbEthernet.SelectedItem is AdapterItem Adapter) Core.UDPmodules.NetworkEP = Adapter.IP;
 
             // CAN settings
             bool CanSettingsChanged = false;
@@ -150,21 +168,22 @@ namespace RateController.Menu
                         break;
 
                     default:
-                        Mes = "Ethernet enabled.";
+                        // Ethernet: only a Teensy that was switched is worth a message
+                        Mes = "";
                         break;
                 }
 
                 if (ModeChanged)
                 {
                     Core.ModuleConfig.Save();
-                    Mes = "Comm change sent to module. " + Mes;
+                    if (Core.CommModeNote != "") Mes = (Core.CommModeNote + " " + Mes).Trim();
                 }
-                Props.ShowMessage(Mes, "Config", 10000);
+                if (Mes != "") Props.ShowMessage(Mes, "Config", 10000);
             }
 
             // tablet hotspot (moved here from Options -> Phone)
-            bool HotspotChanged = ckHotspot.Checked != Props.TabletHotspot;
-            Props.TabletHotspot = ckHotspot.Checked;
+            bool HotspotChanged = rbHotspot.Checked != Props.TabletHotspot;
+            Props.TabletHotspot = rbHotspot.Checked;
             if (HotspotChanged) ApplyHotspot();
 
             SetButtons(false);
@@ -173,20 +192,20 @@ namespace RateController.Menu
 
         private void ApplyHotspot()
         {
-            if (ckHotspot.Checked)
+            if (rbHotspot.Checked)
             {
                 // firewall rules need admin, only asked when a rule is missing
                 if (Core.WebServer.IsRunning && !Core.WebServer.HotspotAllowed() && !Core.WebServer.AllowHotspot())
                 {
                     Props.ShowMessage(Lang.lgFirewallNotAllowed, Lang.lgPhone, 5000);
                 }
-                lbHotspot.Text = Lang.lgStarting;
+                lbWifiTarget.Text = Lang.lgStarting;
+                cLastHotspotState = "";     // the rules may have just been added: check again once On
                 Core.WebServer.HotspotWatchReset();
                 Core.WebServer.HotspotAsync("start", HotspotDone);
             }
             else
             {
-                lbHotspot.Text = Lang.lgStopping;
                 Core.WebServer.HotspotAsync("stop", HotspotDone);
             }
         }
@@ -200,7 +219,7 @@ namespace RateController.Menu
         {
             try
             {
-                WifiTarget Target = cbWifiTarget.SelectedItem as WifiTarget;
+                WifiTarget Target = cTarget;
                 ModuleItem Module = lstModules.SelectedItem as ModuleItem;
                 ModuleIDItem NewID = cbWifiModuleID.SelectedItem as ModuleIDItem;
                 string Blocked = ModuleProvisioner.BlockedReason();
@@ -280,28 +299,27 @@ namespace RateController.Menu
             }
         }
 
-        private void cbWifiTarget_SelectedIndexChanged(object sender, EventArgs e)
+        private void TargetChanged()
         {
             // password box follows the target: the hotspot's password is known, a WiFi
             // network's is typed, prefilled only when the saved one belongs to that network
-            WifiTarget Target = cbWifiTarget.SelectedItem as WifiTarget;
-            if (Target != null && !Target.Hotspot)
+            if (cTarget != null && !cTarget.Hotspot)
             {
-                tbWifiKey.Text = (WifiStore.HomeSsid == Target.Ssid) ? WifiStore.HomeKey : "";
+                tbWifiKey.Text = (WifiStore.HomeSsid == cTarget.Ssid) ? WifiStore.HomeKey : "";
             }
             else
             {
                 tbWifiKey.Text = "";
             }
-            ShowBand();
-            EnableWifi();
         }
 
-        private void ckHotspot_CheckedChanged(object sender, EventArgs e)
+        private void rbHotspot_CheckedChanged(object sender, EventArgs e)
         {
+            // fires for both radio buttons (one turns off as the other turns on).
+            // The hotspot itself starts/stops on Save
             SetButtons(true);
-            ShowHotspot();      // the state line is blank while unticked
-            ReadWifiNetwork();  // and the hotspot leaves (or rejoins) the network list
+            SetHint();
+            ReadWifiNetwork();
         }
 
         private bool Confirm(string Message)
@@ -416,10 +434,10 @@ namespace RateController.Menu
         private void EnableWifi()
         {
             bool Running = Provisioner != null;
-            WifiTarget Target = cbWifiTarget.SelectedItem as WifiTarget;
+            WifiTarget Target = cTarget;
 
-            ckHotspot.Enabled = !Running;
-            cbWifiTarget.Enabled = !Running;
+            rbHotspot.Enabled = !Running;
+            rbPcWifi.Enabled = !Running;
             tbWifiKey.Enabled = !Running && Target != null && !Target.Hotspot;
             tbModuleKey.Enabled = !Running;
             cbWifiModuleID.Enabled = !Running;
@@ -432,7 +450,6 @@ namespace RateController.Menu
         {
             if (!IsDisposed)
             {
-                ShowHotspot();
                 ReadWifiNetwork();
                 if (Provisioner == null)
                 {
@@ -454,21 +471,65 @@ namespace RateController.Menu
         }
 
         // Asked once per app session on a WiFi tab visit (after a failed setup it is always asked).
-        // Each check starts a short netsh, so it runs on tab visits and after setup, not on the timer
+        // The check runs netsh and walks every firewall rule, so it runs off the UI thread
         private static bool FirewallAsked = false;
 
         private void AskFirewallOnce()
         {
-            if (!FirewallAsked && !Core.WebServer.ModuleDataAllowed())
+            if (!FirewallAsked && !cFirewallAsking)
             {
-                FirewallAsked = true;
-                OfferModuleDataFix();
+                cFirewallAsking = true;
+                ThreadPool.QueueUserWorkItem(o =>
+                {
+                    bool Ok = Core.WebServer.ModuleDataAllowed();
+                    Post(() =>
+                    {
+                        cFirewallAsking = false;
+                        if (!Ok && !FirewallAsked)
+                        {
+                            FirewallAsked = true;
+                            OfferModuleDataFix();
+                        }
+                    });
+                });
             }
+        }
+
+        private void CheckFirewall()
+        {
+            // the hotspot firewall note on the Network line. HotspotAllowed runs two netsh and
+            // walks every firewall rule (most of a second), so off the UI thread, and only when
+            // it can have changed: tab visit, hotspot coming on, rules just allowed
+            if (cFirewallChecking)
+            {
+                cFirewallRecheck = true;
+            }
+            else
+            {
+                cFirewallChecking = true;
+                ThreadPool.QueueUserWorkItem(o =>
+                {
+                    bool Ok = Core.WebServer.HotspotAllowed();
+                    Post(() => FirewallChecked(Ok));
+                });
+            }
+        }
+
+        private void FirewallChecked(bool Ok)
+        {
+            cFirewallChecking = false;
+            cFirewallOk = Ok;
+            if (cFirewallRecheck)
+            {
+                cFirewallRecheck = false;
+                CheckFirewall();
+            }
+            ShowTarget();
         }
 
         private void OfferModuleDataFix()
         {
-            WifiTarget Target = cbWifiTarget.SelectedItem as WifiTarget;
+            WifiTarget Target = cTarget;
             string Network = (Target != null && Target.Ssid != "") ? Target.Ssid : "this network";
             using (frmMsgBox Box = new frmMsgBox("Windows Firewall may be blocking module data on "
                 + Network + ".\r\n\r\nAllow it now? Windows will ask for permission.", "WiFi", false, true))
@@ -478,6 +539,7 @@ namespace RateController.Menu
                 {
                     bool Ok = Core.WebServer.AllowModuleData();
                     Log(Ok ? "Firewall now allows module data." : "Firewall not changed.");
+                    CheckFirewall();    // it can also lift a block on this exe
                 }
             }
         }
@@ -591,36 +653,31 @@ namespace RateController.Menu
                         }
                     }
 
-                    List<WifiTarget> Targets = new List<WifiTarget>();
+                    // the radio buttons choose the kind: the tablet hotspot (RateController keeps it
+                    // up while chosen) or whatever network this PC is connected to in Windows
+                    WifiTarget Target = null;
                     string HotspotSsid = Core.WebServer.HotspotSsid;
-                    // the hotspot is a target only while Tablet Hotspot is ticked (RateController keeps it up)
-                    if (ckHotspot.Checked && Core.WebServer.HotspotState == "On" && HotspotSsid != "") Targets.Add(new WifiTarget { Hotspot = true, Ssid = HotspotSsid });
-                    if (PcSsid != "" && PcSsid != HotspotSsid) Targets.Add(new WifiTarget { Hotspot = false, Ssid = PcSsid });
-
-                    string Now = string.Join("|", Targets);
-                    string Shown = "";
-                    foreach (object O in cbWifiTarget.Items) Shown += (Shown == "" ? "" : "|") + O.ToString();
-                    if (Now != Shown)
+                    if (rbHotspot.Checked)
                     {
-                        WifiTarget Old = cbWifiTarget.SelectedItem as WifiTarget;
-                        cbWifiTarget.Items.Clear();
-                        foreach (WifiTarget T in Targets) cbWifiTarget.Items.Add(T);
-
-                        // keep the kind chosen before, else the hotspot when Tablet Hotspot is on
-                        bool WantHotspot = Old != null ? Old.Hotspot : Props.TabletHotspot;
-                        int Pick = -1;
-                        for (int i = 0; i < Targets.Count; i++)
-                        {
-                            if (Pick < 0 && Targets[i].Hotspot == WantHotspot) Pick = i;
-                        }
-                        if (Pick < 0 && Targets.Count > 0) Pick = 0;
-                        cbWifiTarget.SelectedIndex = Pick;
-                        if (Pick < 0) cbWifiTarget_SelectedIndexChanged(cbWifiTarget, EventArgs.Empty);
+                        if (Core.WebServer.HotspotState == "On" && HotspotSsid != "") Target = new WifiTarget { Hotspot = true, Ssid = HotspotSsid };
+                    }
+                    else if (PcSsid != "" && PcSsid != HotspotSsid)
+                    {
+                        Target = new WifiTarget { Hotspot = false, Ssid = PcSsid };
                     }
 
-                    if (Targets.Count == 0 && Now != Shown) Log("No WiFi network: turn on the tablet hotspot, or connect this PC to WiFi.");
-                    if (WifiAdapter == null && Now != Shown) Log("No WiFi adapter found on this PC.");
+                    // only on a change, so a periodic refresh doesn't wipe a typed password
+                    string Now = Target == null ? "" : Target.ToString();
+                    string Shown = cTarget == null ? "" : cTarget.ToString();
+                    if (Now != Shown)
+                    {
+                        cTarget = Target;
+                        TargetChanged();
+                        if (Target == null && rbPcWifi.Checked) Log("This PC is not on a WiFi network. Connect it in Windows WiFi settings, or choose Tablet Hotspot.");
+                        if (WifiAdapter == null) Log("No WiFi adapter found on this PC.");
+                    }
                 }
+                ShowTarget();
                 ShowBand();
                 EnableWifi();
             }
@@ -636,12 +693,27 @@ namespace RateController.Menu
             tabControl1.SelectedTab = tabPage3;
         }
 
-        private void SetHotspotLink()
+        private void SetHint()
         {
-            // power saving turns the hotspot off after 5 min with no devices, it can only be changed in windows
+            // hotspot: power saving turns it off after 5 min with no devices, only changeable in windows.
+            // This PC's WiFi: the PC is put on the network in windows, the module then gets the same one
+            string LinkText;
+            string Url;
+            if (rbHotspot.Checked)
+            {
+                LinkText = Lang.lgHotspotSettings;
+                Url = "ms-settings:network-mobilehotspot";
+                lnkHotspot.Text = string.Format(Lang.lgPowerSavingHint, LinkText);
+            }
+            else
+            {
+                LinkText = "WiFi settings";
+                Url = "ms-settings:network-wifi";
+                lnkHotspot.Text = "Connect this PC to the network in " + LinkText + " first";
+            }
             lnkHotspot.Links.Clear();
-            int Start = lnkHotspot.Text.IndexOf(Lang.lgHotspotSettings);
-            if (Start >= 0) lnkHotspot.Links.Add(Start, Lang.lgHotspotSettings.Length, "ms-settings:network-mobilehotspot");
+            int Start = lnkHotspot.Text.IndexOf(LinkText);
+            if (Start >= 0) lnkHotspot.Links.Add(Start, LinkText.Length, Url);
 
             // theme text colour, the underline marks the link (default blue is unreadable on dark)
             lnkHotspot.LinkColor = lnkHotspot.ForeColor;
@@ -656,7 +728,7 @@ namespace RateController.Menu
         {
             // the ESP32 radio is 2.4 GHz only
             string Text = "";
-            WifiTarget Target = cbWifiTarget.SelectedItem as WifiTarget;
+            WifiTarget Target = cTarget;
             if (Target != null && Target.Hotspot)
             {
                 string Band = Core.WebServer.HotspotBand;
@@ -686,17 +758,29 @@ namespace RateController.Menu
             lbHotspotBand.Text = Text;
         }
 
-        private void ShowHotspot()
+        private void ShowTarget()
         {
-            string State = Core.WebServer.HotspotState;
-            string Text = State;      // InTransition / Unknown shown as Windows reports them
-            if (State == "On") Text = Lang.lgOn;
-            else if (State == "Off") Text = Lang.lgOff;
-            if (Core.WebServer.HotspotBusy) Text = Lang.lgChecking;
-            if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", " + Lang.lgFirewallBlocked;
-            if (Core.WebServer.HotspotFailing && ckHotspot.Checked) Text = Lang.lgRestartsFailed;
-            if (!ckHotspot.Checked) Text = "";      // not managed by RateController: no state shown
-            lbHotspot.Text = Text;
+            // the network the module will join: the hotspot name with its state, or this PC's network
+            string Text;
+            if (rbHotspot.Checked)
+            {
+                string State = Core.WebServer.HotspotState;
+                string StateText = State;      // InTransition / Unknown shown as Windows reports them
+                if (State == "On") StateText = Lang.lgOn;
+                else if (State == "Off") StateText = Lang.lgOff;
+                if (Core.WebServer.HotspotBusy) StateText = Lang.lgChecking;
+                if (State == "On" && cLastHotspotState != "On") CheckFirewall();     // result comes back through ShowTarget
+                cLastHotspotState = State;
+                if (State == "On" && !cFirewallOk) StateText += ", " + Lang.lgFirewallBlocked;
+                if (Core.WebServer.HotspotFailing) StateText = Lang.lgRestartsFailed;
+                string Ssid = Core.WebServer.HotspotSsid;
+                Text = (Ssid != "" ? Ssid + " - " : "") + StateText;
+            }
+            else
+            {
+                Text = cTarget != null ? cTarget.Ssid : "Not connected";
+            }
+            lbWifiTarget.Text = Text;
         }
 
         private void ShowModules(List<Wlan.Network> Nets, HashSet<string> Stale)
@@ -745,7 +829,7 @@ namespace RateController.Menu
                 {
                     // a scan takes a few seconds in the driver
                     WifiScanning = true;
-                    Log("Scanning for networks ...");
+                    Log("Scanning for modules ...");
                     EnableWifi();
                     Guid G = WifiAdapter.Guid;
                     ThreadPool.QueueUserWorkItem(o =>
@@ -841,7 +925,6 @@ namespace RateController.Menu
                 // joined but nothing arrived: offer the firewall fix straight away
                 OfferModuleDataFix();
             }
-            ShowHotspot();
             ReadWifiNetwork();
             FillModuleIDs(R.Outcome == ProvisionOutcome.Success);    // after a success, on to the next free ID
 
@@ -864,21 +947,41 @@ namespace RateController.Menu
         {
             try
             {
-                // set app subnet
-                Core.UDPmodules.NetworkEP = cbEthernet.Text;
-                PGN32503 SetSubnet = new PGN32503();
-                if (SetSubnet.Send(Core.UDPmodules.NetworkEP))
+                // the app's subnet follows the adapter, and the modules are told to move to it
+                AdapterItem Adapter = cbEthernet.SelectedItem as AdapterItem;
+                if (Adapter == null)
                 {
-                    Props.ShowMessage("New Subnet address sent.", "Subnet", 10000);
+                    Props.ShowMessage("Select the adapter the modules are plugged into first.", "Subnet", 10000);
                 }
                 else
                 {
-                    Props.ShowMessage("New Subnet address not sent.", "Subnet", 10000);
+                    Core.UDPmodules.NetworkEP = Adapter.IP;
+                    PGN32503 SetSubnet = new PGN32503();
+                    if (SetSubnet.Send(Core.UDPmodules.NetworkEP))
+                    {
+                        Props.ShowMessage("New Subnet address sent.", "Subnet", 10000);
+                    }
+                    else
+                    {
+                        Props.ShowMessage("New Subnet address not sent.", "Subnet", 10000);
+                    }
+                    ShowSubnets();
                 }
             }
             catch (Exception ex)
             {
                 Props.ShowMessage(ex.Message, "frmMenuComm/btnSendSubnet", 15000, true);
+            }
+        }
+
+        private void cbEthernet_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // a new adapter is saved first, then sent: Send stays off until Save (or Cancel)
+            if (!Initializing)
+            {
+                SetButtons(true);
+                btnSendSubnet.Enabled = false;
+                lbSend.Enabled = false;
             }
         }
 
@@ -919,14 +1022,18 @@ namespace RateController.Menu
             Font BandFont = lbHotspotBand.Font;
             Font LogFont = tbWifiLog.Font;
             Font IPFont = lnkModuleIP.Font;
+            Font HeadingFont = lbModulesHeading.Font;
+            Font SmallFont = lbSteps.Font;      // Ethernet tab's 12 pt text
             MainMenu.StyleControls(this);
             lnkModuleIP.Font = IPFont;
+            lbModulesHeading.Font = HeadingFont;
+            foreach (Label Lb in new Label[] { lbSteps, lbHeard, lbRefresh, lbSend }) Lb.Font = SmallFont;
             lnkHotspot.Font = HintFont;
             lbHotspotBand.Font = BandFont;
             tbWifiLog.Font = LogFont;
 
             SetLanguage();
-            SetHotspotLink();   // after SetLanguage: finds the translated link words
+            SetHint();          // after SetLanguage: finds the translated link words
             tbModuleKey.Text = WifiStore.ModuleKey;
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
@@ -949,24 +1056,44 @@ namespace RateController.Menu
 
         private void LoadCombo()
         {
-            // https://stackoverflow.com/questions/6803073/get-local-ip-address
+            // wired adapters only, by name: Send moves the modules on the cable to the chosen
+            // adapter's subnet, so a WiFi address (tablet hotspot, PC WiFi) would strand them.
+            // Link-local 169.254 = no address set on the adapter, not a usable subnet
             try
             {
                 cbEthernet.Items.Clear();
-                foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+                int Pick = -1;
+                foreach (NetworkInterface Nic in NetworkInterface.GetAllNetworkInterfaces())
                 {
-                    if ((item.NetworkInterfaceType == NetworkInterfaceType.Ethernet || item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211) && item.OperationalStatus == OperationalStatus.Up)
+                    NetworkInterfaceType Kind = Nic.NetworkInterfaceType;
+                    if (Nic.OperationalStatus == OperationalStatus.Up && Kind != NetworkInterfaceType.Wireless80211
+                        && Kind != NetworkInterfaceType.Loopback && Kind != NetworkInterfaceType.Tunnel)
                     {
-                        foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                        foreach (UnicastIPAddressInformation Info in Nic.GetIPProperties().UnicastAddresses)
                         {
-                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                            byte[] B = Info.Address.GetAddressBytes();
+                            if (Info.Address.AddressFamily == AddressFamily.InterNetwork && !(B[0] == 169 && B[1] == 254)
+                                && !UDPComm.IsTabletHotspot(Nic, Info.Address))
                             {
-                                cbEthernet.Items.Add(ip.Address.ToString());
+                                AdapterItem Item = new AdapterItem { Name = Nic.Name, IP = Info.Address.ToString(), Subnet = B[0] + "." + B[1] + "." + B[2] };
+                                cbEthernet.Items.Add(Item);
+                                if (Item.Subnet == Core.UDPmodules.SubNet) Pick = cbEthernet.Items.Count - 1;
                             }
                         }
                     }
                 }
-                cbEthernet.SelectedIndex = cbEthernet.FindString(SubAddress(Core.UDPmodules.NetworkEP));
+                // the saved subnet is on no adapter of this PC (new install, adapter changed):
+                // switch to one that is. The adapter modules are heard on first, else the first
+                if (Pick < 0 && cbEthernet.Items.Count > 0)
+                {
+                    Pick = 0;
+                    for (int i = cbEthernet.Items.Count - 1; i >= 0; i--)
+                    {
+                        if (ModulesOn(((AdapterItem)cbEthernet.Items[i]).Subnet) > 0) Pick = i;
+                    }
+                    Core.UDPmodules.NetworkEP = ((AdapterItem)cbEthernet.Items[Pick]).IP;
+                }
+                cbEthernet.SelectedIndex = Pick;
             }
             catch (Exception ex)
             {
@@ -1038,31 +1165,18 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            ckHotspot.Text = Lang.lgTabletHotspot;
-            lnkHotspot.Text = string.Format(Lang.lgPowerSavingHint, Lang.lgHotspotSettings);
-        }
-
-        private string SubAddress(string Address)
-        {
-            IPAddress IP;
-            string[] data;
-            string Result = "";
-
-            if (IPAddress.TryParse(Address, out IP))
-            {
-                data = Address.Split('.');
-                Result = data[0] + "." + data[1] + "." + data[2] + ".";
-            }
-            return Result;
+            rbHotspot.Text = Lang.lgTabletHotspot;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (tabControl1.SelectedTab == tabPage1) ShowSubnets();
+
             // refreshed on every visit: the hotspot or the PC's WiFi may have changed since
             if (tabControl1.SelectedTab == tabPage3)
             {
                 HotspotTicks = 0;
-                ShowHotspot();
+                cLastHotspotState = "";     // firewall checked again on each visit
                 ReadWifiNetwork();
                 FillModuleIDs(false);
                 if (!Core.WebServer.HotspotBusy) Core.WebServer.HotspotAsync("status", HotspotDone);     // catches changes made in Windows settings
@@ -1073,8 +1187,46 @@ namespace RateController.Menu
             }
         }
 
+        private int ModulesOn(string Subnet)
+        {
+            // connected modules last heard from an address on Subnet (a.b.c)
+            int Count = 0;
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                if (Core.ModulesStatus.Connected(i) && Core.UDPmodules.ModuleIP(i).StartsWith(Subnet + ".")) Count++;
+            }
+            return Count;
+        }
+
+        private void ShowSubnets()
+        {
+            // one status line for the selected (always sent to) subnet: no adapter of this PC on
+            // it (LoadCombo has already switched to one if any wired adapter has an address),
+            // or how many connected modules are on it
+            string Sub = Core.UDPmodules.SubNet;
+            bool HasAdapter = UDPComm.AdapterName(Sub) != "";
+            int Count = ModulesOn(Sub);
+            string Status;
+            if (!HasAdapter)
+            {
+                Status = "No wired adapter on " + Sub + ". Connect the cable, then press Refresh.";
+            }
+            else if (Count > 0)
+            {
+                Status = "Modules on this adapter: " + Count;
+            }
+            else
+            {
+                Status = "No modules heard on this adapter. Press Send to put them on it.";
+            }
+            if (lbHeard.Text != Status) lbHeard.Text = Status;
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
+            // Ethernet tab: subnets modules are heard on, every 2 s
+            if (tabControl1.SelectedTab == tabPage1 && DateTime.Now.Second % 2 == 0) ShowSubnets();
+
             // WiFi tab: hotspot state every 6 s (each check is a short powershell)
             if (tabControl1.SelectedTab == tabPage3)
             {
@@ -1111,7 +1263,9 @@ namespace RateController.Menu
             try
             {
                 LoadCombo();
-                lbModuleIP.Text = Core.UDPmodules.SubNet;
+                ShowSubnets();
+                btnSendSubnet.Enabled = true;       // the dropdown shows the saved adapter again
+                lbSend.Enabled = true;
 
                 if (Props.CanEnabled)
                 {
@@ -1138,7 +1292,14 @@ namespace RateController.Menu
                 }
 
                 ckDiagnostics.Checked = Props.ShowCanDiagnostics;
-                ckHotspot.Checked = Props.TabletHotspot;
+                if (Props.TabletHotspot)
+                {
+                    rbHotspot.Checked = true;
+                }
+                else
+                {
+                    rbPcWifi.Checked = true;
+                }
 
                 RefreshComPorts();
                 gbxPort.Enabled = rbAdapter1.Checked; // enable for SLCAN

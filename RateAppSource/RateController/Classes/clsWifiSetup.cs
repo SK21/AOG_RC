@@ -930,6 +930,24 @@ namespace RateController.Classes
         {
             var result = new ProvisionResult();
 
+            // 0 ── hotspot mode: the band may have been changed in Windows since the hotspot was
+            // started. On 5 GHz the radio can't also join the module's 2.4 GHz hotspot, so the
+            // join below times out. "start" forces 2.4 GHz (restarting the hotspot when needed)
+            // and does nothing to a hotspot already on 2.4 GHz. The name/password are read again
+            // in case they were changed in Windows too.
+            if (req.TabletHotspot)
+            {
+                bool WasOn = Core.WebServer.HotspotRun("start");
+                if (!Core.WebServer.HotspotIs24GHz && Core.WebServer.HotspotBand != "")
+                    Say("  the tablet hotspot could not be set to 2.4 GHz (" + Core.WebServer.HotspotBand + "), the module may not join it");
+                if (WasOn && Core.WebServer.HotspotSsid != "")
+                {
+                    req.HomeSsid = Core.WebServer.HotspotSsid;
+                    req.HomeKey = Core.WebServer.HotspotPassword;
+                }
+                if (_cancel) return CancelAway(req);
+            }
+
             // 1 ── onto the module's hotspot
             Say("Joining " + req.ModuleSsid + " ...");
             string note;

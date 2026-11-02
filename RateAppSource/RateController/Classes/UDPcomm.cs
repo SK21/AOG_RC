@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,6 +74,45 @@ namespace RateController
 
         public string SubNet
         { get { return cSubNet; } }
+
+        public static string AdapterName(string Subnet)
+        {
+            // the PC adapter with an IPv4 address on Subnet (a.b.c), "Tablet hotspot" for the
+            // Windows mobile hotspot, "" when no adapter that is up is on it
+            string Result = "";
+            try
+            {
+                foreach (NetworkInterface Nic in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (Result == "" && Nic.OperationalStatus == OperationalStatus.Up && Nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                    {
+                        foreach (UnicastIPAddressInformation Info in Nic.GetIPProperties().UnicastAddresses)
+                        {
+                            if (Result == "" && Info.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                byte[] B = Info.Address.GetAddressBytes();
+                                if (B[0] + "." + B[1] + "." + B[2] == Subnet)
+                                {
+                                    Result = IsTabletHotspot(Nic, Info.Address) ? "Tablet hotspot" : Nic.Name;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("UDPComm/AdapterName: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public static bool IsTabletHotspot(NetworkInterface Nic, IPAddress Address)
+        {
+            // the Windows mobile hotspot runs on a Wi-Fi Direct virtual adapter at 192.168.137.1
+            return Nic.Description.IndexOf("Wi-Fi Direct Virtual", StringComparison.OrdinalIgnoreCase) >= 0
+                || Address.ToString() == "192.168.137.1";
+        }
 
         public string ModuleIP(int ID)
         {

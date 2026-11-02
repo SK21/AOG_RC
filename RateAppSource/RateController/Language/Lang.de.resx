@@ -620,11 +620,13 @@
     <value>Telefon</value>
   </data>
   <data name="lgPhoneAddress" xml:space="preserve">
-    <value>Adresse der Telefonseite</value>
+    <value>Telefonzugriff für Fernschalter und Kalibrierung</value>
   </data>
   <data name="lgPhoneHelp" xml:space="preserve">
-    <value>1. Telefon und Tablet mit demselben Netzwerk verbinden: Hotspot des Telefons, WLAN-Router oder eigener Hotspot des Tablets (unten Tablet-Hotspot aktivieren und Speichern).
+    <value>1. Telefon und Tablet mit demselben Netzwerk verbinden: Hotspot des Telefons, WLAN-Router oder eigener Hotspot des Tablets.
+
 2. Telefon-Hotspot oder Router: sobald das Tablet verbunden ist, {0} öffnen, das Netzwerk antippen und auf Privat stellen.
+
 3. Den Code mit der Kamera des Telefons scannen. Den Code antippen, um die nächste Adresse anzuzeigen.</value>
   </data>
   <data name="lgWifiSettings" xml:space="preserve">
