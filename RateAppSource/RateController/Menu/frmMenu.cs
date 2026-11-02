@@ -184,8 +184,12 @@ namespace RateController
             ModuleDefaultsSet?.Invoke(this, EventArgs.Empty);
         }
 
+        // saved changes not yet sent to the module (the Send button is highlighted)
+        public bool ChangesWaitingToSend { get; private set; }
+
         public void HighlightUpdateButton(bool Highlight = true)
         {
+            ChangesWaitingToSend = Highlight;
             if (Highlight)
             {
                 butUpdateModules.FlatAppearance.BorderSize = 4;
@@ -1011,77 +1015,123 @@ namespace RateController
         {
             byte ModuleID = Core.ModuleConfig.GetData()[2];
 
-            // a pending ID assignment (saved on the Config page) sends 32700 with
-            // bit 6 set: the board adopts byte 2 instead of filtering on it, so
-            // every board that hears it takes the ID - allow at most one connected
-            bool AssignID = (Props.GetProp("ModuleConfig_AssignPending") == "True");
-            bool OkToSend = true;
-            if (AssignID)
+            // 32700 restarts the module immediately on receipt, so the board label
+            // (32506) and sensor pins (32507) must go out before it or they would
+            // arrive during the reboot and be lost
+            SendPendingDescription(ModuleID, ModuleID);
+            Core.SensorPins.Send();
+            Core.ModuleConfig.Send();
+
+            Props.ShowMessage("Settings sent to module", "Config", 10000);
+            HighlightUpdateButton(false);
+        }
+
+        // The Config page's ID change, sent as soon as the user confirms it (OK on the
+        // confirmation box). 32700 with bit 6 set makes the board adopt byte 2 instead of
+        // filtering on it, so every board that hears it takes the ID: exactly one board may
+        // be connected. Returns false with nothing sent (the module ID stays as it was)
+        // when that isn't the case.
+        public bool AssignModuleID(byte NewID)
+        {
+            bool Result = false;
+            byte OldID = Core.ModuleConfig.GetData()[2];
+
+            int connected = 0;
+            int boardID = -1;       // the ID the one connected board answers to now
+            int dupID = -1;
+            string diag = "";       // DIAGNOSTIC (duplicate-ID test)
+            for (int i = 0; i < Props.MaxModules; i++)
             {
-                int connected = 0;
-                int dupID = -1;
-                for (int i = 0; i < Props.MaxModules; i++)
+                if (Core.ModulesStatus.Connected(i))
                 {
-                    if (Core.ModulesStatus.Connected(i)) connected++;
-                    if (Core.DuplicateModule(i)) dupID = i;
+                    connected++;
+                    boardID = i;
+                    diag += " [ID " + i.ToString() + " type " + Core.ModulesStatus.ModuleType(i).ToString()
+                        + "/" + Core.ModulesStatus.InoID(i).ToString() + " '" + Core.ModulesBoardID.BoardLabel(i) + "']";
                 }
-
-                // an unassigned board takes the ID too, but has no module slot to count
-                bool newBoard = Core.ModulesStatus.NewBoardConnected();
-                if (newBoard) connected++;
-
-                if (connected > 1)
+                if (Core.DuplicateModule(i))
                 {
-                    OkToSend = false;
-                    Props.ShowMessage("Module ID assignment needs only one board connected. "
-                        + connected.ToString() + " boards are connected"
-                        + (newBoard ? ", including a new board (" + Core.ModulesStatus.NewBoardDescription() + ")" : "")
-                        + ".", "Config", 15000);
-                }
-                else if (dupID >= 0)
-                {
-                    // two boards with the same ID count as one connected module -
-                    // their alternating board labels give them away
-                    OkToSend = false;
-                    Props.ShowMessage("Two boards are answering as module " + dupID.ToString()
-                        + ". Disconnect one before assigning an ID.", "Config", 15000);
+                    dupID = i;
+                    diag += " [DUP ID " + i.ToString() + ": 32403 " + Core.ModulesBoardID.DuplicateID(i).ToString()
+                        + ", 32401 " + Core.ModulesStatus.DuplicateID(i).ToString() + "]";
                 }
             }
 
-            if (OkToSend)
+            // an unassigned board takes the ID too, but has no module slot to count
+            bool newBoard = Core.ModulesStatus.NewBoardConnected();
+            if (newBoard)
             {
-                // 32700 restarts the module immediately on receipt, so the board label
-                // (32506) and sensor pins (32507) must go out before it or they would
-                // arrive during the reboot and be lost
-                string desc = Props.GetModuleDescription(ModuleID).Trim();
-                if (desc.Length > 0)
+                connected++;
+                boardID = Props.NewModuleID;
+                diag += " [new board ID 25: " + Core.ModulesStatus.NewBoardDescription() + "]";
+            }
+            Props.WriteActivityLog("DupID assign check: " + OldID.ToString() + " -> " + NewID.ToString()
+                + ", connected " + connected.ToString() + ":" + diag, false, true);
+
+            if (connected == 0)
+            {
+                Props.ShowMessage("No board is connected. Connect the one board that should get ID "
+                    + NewID.ToString() + ".", "Config", 15000);
+            }
+            else if (connected > 1)
+            {
+                Props.ShowMessage("Module ID assignment needs only one board connected. "
+                    + connected.ToString() + " boards are connected"
+                    + (newBoard ? ", including a new board (" + Core.ModulesStatus.NewBoardDescription() + ")" : "")
+                    + ".", "Config", 15000);
+            }
+            else if (dupID >= 0)
+            {
+                // two boards with the same ID count as one connected module -
+                // their alternating labels / board types give them away
+                Props.ShowMessage("Two boards are answering as module " + dupID.ToString()
+                    + ". Disconnect one before assigning an ID.", "Config", 15000);
+            }
+            else
+            {
+                // Everything for this module goes in this one Send. Name and sensor pins
+                // are addressed to the ID the board answers to now, so it takes them;
+                // 32700 goes last and gives it the new ID (it restarts on receipt).
+                // 32507 packs the module ID in 4 bits, so an unassigned board (25) can't
+                // be sent pins until it has its ID - Send stays highlighted for that.
+                SendPendingDescription(OldID, (byte)boardID);
+
+                bool PinsSent = (boardID <= 15);
+                if (PinsSent) Core.SensorPins.Send((byte)boardID);
+
+                Core.ModuleConfig.ModuleID = NewID;
+                Core.ModuleConfig.Save();
+                Core.ModuleConfig.Send(null, true);
+                Core.ModulesBoardID.ExpectLabelChange(NewID);
+
+                if (PinsSent)
                 {
-                    new PGNs.PGN32506().Send(ModuleID, desc);
-
-                    // reflect the sent label in the cache so the Boards page doesn't
-                    // show the old value until the module reports back (~2 s later)
-                    Core.ModulesBoardID.SetLabel(ModuleID, desc);
-                }
-
-                Core.SensorPins.Send();
-                Core.ModuleConfig.Send(null, AssignID);
-
-                if (AssignID)
-                {
-                    // 32506/32507 above were addressed to the new ID, so the board
-                    // (still on its old ID) dropped them - a second Send after it
-                    // reconnects delivers them
-                    Props.SetProp("ModuleConfig_AssignPending", "False");
-                    Props.ShowMessage("Module ID sent. Press Send again after the module reconnects"
-                        + " so the description and sensor pins reach it.", "Config", 15000);
+                    Props.ShowMessage("Module ID " + NewID.ToString() + " sent. The board restarts and reconnects as module "
+                        + NewID.ToString() + ".", "Config", 15000);
                 }
                 else
                 {
-                    Props.ShowMessage("Settings sent to module", "Config", 10000);
+                    Props.ShowMessage("Module ID " + NewID.ToString() + " sent. The board restarts and reconnects as module "
+                        + NewID.ToString() + ". Press Send once it has reconnected to give it its sensor pins.", "Config", 15000);
                 }
-
-                HighlightUpdateButton(false);
+                HighlightUpdateButton(!PinsSent);
+                Result = true;
             }
+            return Result;
+        }
+
+        // A typed board name is sent once, with the first Send after it was saved, and then
+        // cleared. ForModule: the module it was typed for. ToModule: the ID the board
+        // answers to now (the same, except during an ID assignment).
+        private void SendPendingDescription(byte ForModule, byte ToModule)
+        {
+            string desc = Props.PendingModuleDescription(ForModule);
+            if (desc.Length > 0)
+            {
+                new PGNs.PGN32506().Send(ToModule, desc);
+                Core.ModulesBoardID.ExpectLabelChange(ToModule);
+            }
+            Props.ClearPendingModuleDescription();
         }
 
         private void ShowPressureSend(string Name)

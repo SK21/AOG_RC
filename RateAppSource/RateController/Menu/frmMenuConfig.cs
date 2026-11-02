@@ -14,6 +14,9 @@ namespace RateController.Menu
         private frmMenu MainMenu;
         private Timer cModuleTimer;
         private Color cModuleColor;
+        private bool cRefusing = false;     // a New ID refusal message is queued
+
+        private const string SendFirstMessage = "Send the saved changes before changing the ID.";
 
         public frmMenuConfig(frmMenu menu)
         {
@@ -32,46 +35,67 @@ namespace RateController.Menu
         {
             try
             {
-                // tbModuleID is live (applied on change), not part of Save
-
-                // A new ID makes the next Send an ID assignment (PGN 32700 bit 6): the
-                // board adopts byte 2 instead of filtering on it, so only one board may
-                // be connected. The flag is read and cleared by butUpdateModules.
-                // Saving without a new ID cancels any pending assignment, so byte 2
-                // goes back to being a filter.
-                if (byte.TryParse(tbNewID.Text, out byte newID))
+                // cbModuleID is live (applied on change), not part of Save
+                byte oldID = Core.ModuleConfig.GetData()[2];
+                bool idChange = byte.TryParse(tbNewID.Text, out byte newID) && newID != oldID;
+                if (idChange && MainMenu.ChangesWaitingToSend)
                 {
-                    Core.ModuleConfig.ModuleID = newID;
-                    Props.SetProp("ModuleConfig_AssignPending", "True");
+                    // another page was saved after the New ID was entered: those changes
+                    // go out on a normal Send first, then the ID can be changed
+                    Props.ShowMessage(SendFirstMessage, "Config", 10000);
+                }
+                else if (idChange)
+                {
+                    // An ID change is its own step: the rest of the page is locked while
+                    // a New ID is entered, and it is sent as soon as it is confirmed.
+                    // Cancel, or a refused send, leaves the module ID as it was.
+                    string msg = "Change module " + oldID.ToString() + " to ID " + newID.ToString() + "?\n\n"
+                        + "OK sends the new ID to the board now. The board restarts and reconnects as module "
+                        + newID.ToString() + ", keeping its settings.\n\n"
+                        + "Only that one board can be connected while the ID is sent - every board that "
+                        + "hears it would take the new ID.\n\n"
+                        + "Cancel keeps ID " + oldID.ToString() + ".";
+
+                    bool confirmed;
+                    using (var Hlp = new frmMsgBox(msg, "Change Module ID"))
+                    {
+                        Hlp.TopMost = true;
+                        Hlp.ShowDialog(this);
+                        confirmed = Hlp.Result;
+                    }
+
+                    bool assigned = confirmed && MainMenu.AssignModuleID(newID);
+
+                    SetButtons(false);
+                    UpdateForm();
+                    if (assigned) MainMenu.DefaultsSet();   // every module page now edits the new ID
                 }
                 else
                 {
-                    Props.SetProp("ModuleConfig_AssignPending", "False");
+                    // the board name is sent once with the next Send, then cleared
+                    string desc = tbNewDescription.Text.Trim();
+                    if (desc.Length > 0)
+                    {
+                        Props.SetPendingModuleDescription(oldID, desc);
+                    }
+
+                    if (byte.TryParse(tbSensorCount.Text, out byte ct)) Core.ModuleConfig.SensorCount = ct;
+                    Core.ModuleConfig.InvertRelay = ckRelayOn.Checked;
+                    Core.ModuleConfig.InvertFlow = ckFlowOn.Checked;
+                    Core.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
+                    Core.ModuleConfig.OnboardRelayType = (byte)cbOnboardRelays.SelectedIndex;
+                    Core.ModuleConfig.RemoteRelayType = (byte)cbRemoteRelays.SelectedIndex;
+
+                    Core.ModuleConfig.Save();
+
+                    SetButtons(false);
+                    UpdateForm();
+
+                    // refresh the other open module pages too - the Pins page row
+                    // count follows the sensor count saved here
+                    MainMenu.DefaultsSet();
+                    MainMenu.HighlightUpdateButton();
                 }
-
-                // description belongs to the module the board is about to be
-                string desc = tbNewDescription.Text.Trim();
-                if (desc.Length > 0)
-                {
-                    Props.SetModuleDescription(Core.ModuleConfig.GetData()[2], desc);
-                }
-
-                if (byte.TryParse(tbSensorCount.Text, out byte ct)) Core.ModuleConfig.SensorCount = ct;
-                Core.ModuleConfig.InvertRelay = ckRelayOn.Checked;
-                Core.ModuleConfig.InvertFlow = ckFlowOn.Checked;
-                Core.ModuleConfig.ADS1115enabled = ckADS1115enabled.Checked;
-                Core.ModuleConfig.OnboardRelayType = (byte)cbOnboardRelays.SelectedIndex;
-                Core.ModuleConfig.RemoteRelayType = (byte)cbRemoteRelays.SelectedIndex;
-
-                Core.ModuleConfig.Save();
-
-                SetButtons(false);
-                UpdateForm();
-
-                // refresh the other open module pages too - the Pins page row
-                // count follows the sensor count saved here
-                MainMenu.DefaultsSet();
-                MainMenu.HighlightUpdateButton();
             }
             catch (Exception ex)
             {
@@ -159,11 +183,23 @@ namespace RateController.Menu
             Color fore = dup ? Color.Red : cModuleColor;
             if (lbModule.ForeColor != fore) lbModule.ForeColor = fore;
 
+            // board type as the module reports it (PGN 32401), only while it is reporting
+            string typeName = "";
+            if (Core.ModulesStatus.Connected(id))
+            {
+                typeName = Enum.GetName(typeof(ModuleTypes), Core.ModulesStatus.ModuleType(id)) ?? "";
+                if (typeName == ModuleTypes.unknown.ToString()) typeName = "";
+                typeName = typeName.Replace('_', ' ');
+            }
+            if (lbModuleType.Text != typeName) lbModuleType.Text = typeName;
+            bool showType = typeName.Length > 0;
+            if (lbModuleType.Visible != showType) lbModuleType.Visible = showType;
+
             // an unassigned board (ID 25) is reporting: say so, and how to give it an ID
             bool newBoard = Core.ModulesStatus.NewBoardConnected();
             if (newBoard)
             {
-                string nb = "New board: " + Core.ModulesStatus.NewBoardType() + ". Set a New ID, then Send.";
+                string nb = "New board: " + Core.ModulesStatus.NewBoardType() + ". Set a New ID, then Save.";
                 if (lbNewBoard.Text != nb) lbNewBoard.Text = nb;
             }
             if (lbNewBoard.Visible != newBoard) lbNewBoard.Visible = newBoard;
@@ -224,6 +260,34 @@ namespace RateController.Menu
         private void Setting_Changed(object sender, EventArgs e)
         {
             SetButtons(true);
+            if (sender == tbNewID) SetIDLock(tbNewID.Text.Length > 0);
+        }
+
+        // While a New ID is entered nothing else on the page can change: the ID change
+        // is sent on its own when it is confirmed. Clearing the box (Cancel) unlocks.
+        private void SetIDLock(bool Locked)
+        {
+            bool enabled = !Locked;
+            cbModuleID.Enabled = enabled;
+            tbNewDescription.Enabled = enabled;
+            tbSensorCount.Enabled = enabled;
+            cbOnboardRelays.Enabled = enabled;
+            cbRemoteRelays.Enabled = enabled;
+            ckRelayOn.Enabled = enabled;
+            ckFlowOn.Enabled = enabled;
+            ckADS1115enabled.Enabled = enabled;
+            btnRescan.Enabled = enabled;
+        }
+
+        // true when this page or any other open module page holds unsaved edits
+        private bool AnyPageEdited()
+        {
+            bool edited = false;
+            foreach (Form frm in MainMenu.OwnedForms)
+            {
+                if (frm.Tag is bool b && b) edited = true;
+            }
+            return edited;
         }
 
         private void cbModuleID_SelectedIndexChanged(object sender, EventArgs e)
@@ -238,13 +302,7 @@ namespace RateController.Menu
                 byte current = Core.ModuleConfig.GetData()[2];
                 if (id != current)
                 {
-                    bool edited = false;
-                    foreach (Form frm in MainMenu.OwnedForms)
-                    {
-                        if (frm.Tag is bool b && b) edited = true;
-                    }
-
-                    if (edited)
+                    if (AnyPageEdited())
                     {
                         Props.ShowMessage("Save or cancel the pending changes first.", "Config", 10000);
                         Initializing = true;
@@ -253,11 +311,8 @@ namespace RateController.Menu
                     }
                     else
                     {
-                        // a pending ID assignment belonged to the previous target -
-                        // cancel it so byte 2 is a plain filter for the new one
                         Core.ModuleConfig.ModuleID = id;
                         Core.ModuleConfig.Save();
-                        Props.SetProp("ModuleConfig_AssignPending", "False");
                         MainMenu.DefaultsSet();
                     }
                 }
@@ -284,14 +339,48 @@ namespace RateController.Menu
 
         private void tbNewID_Enter(object sender, EventArgs e)
         {
-            double temp;
-            double.TryParse(tbNewID.Text, out temp);
-            using (var form = new FormNumeric(0, Props.MaxModules - 1, temp))
+            // an ID change is sent on its own, so it can't start while other changes
+            // are waiting to be saved (they would be locked out, not sent) or sent
+            // (a pin the board rejects would reject the ID with it)
+            string refusal = "";
+            if (tbNewID.Text.Length == 0 && AnyPageEdited())
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                refusal = "Save or cancel the pending changes first.";
+            }
+            else if (tbNewID.Text.Length == 0 && MainMenu.ChangesWaitingToSend)
+            {
+                refusal = SendFirstMessage;
+            }
+
+            if (refusal.Length > 0)
+            {
+                // Focus must be off the box before the message: the message window takes
+                // focus, and when focus comes back to tbNewID this Enter runs again (a
+                // second message). Changing focus inside Enter doesn't stick, so the move
+                // and the message run after this event; cRefusing drops a repeat Enter
+                // that arrives before then.
+                if (!cRefusing)
                 {
-                    tbNewID.Text = form.ReturnValue.ToString("N0");
+                    cRefusing = true;
+                    BeginInvoke((Action)(() =>
+                    {
+                        cbModuleID.Focus();
+                        Props.ShowMessage(refusal, "Config", 10000);
+                        cRefusing = false;
+                    }));
+                }
+            }
+            else
+            {
+                double temp;
+                double.TryParse(tbNewID.Text, out temp);
+                using (var form = new FormNumeric(0, Props.MaxModules - 1, temp))
+                {
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbNewID.Text = form.ReturnValue.ToString("N0");
+                    }
                 }
             }
         }
@@ -339,6 +428,7 @@ namespace RateController.Menu
                 Props.WriteErrorLog("frmMenuConfig/UpdateForm: " + ex.Message);
             }
             Initializing = false;
+            SetIDLock(false);   // New ID was just cleared
         }
 
         private void lbModuleID_Click(object sender, EventArgs e)

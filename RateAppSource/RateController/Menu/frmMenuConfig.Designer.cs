@@ -50,6 +50,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.gbLine = new System.Windows.Forms.GroupBox();
             this.lbNewBoard = new System.Windows.Forms.Label();
+            this.lbModuleType = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -328,11 +329,23 @@
             this.lbNewBoard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbNewBoard.Visible = false;
             //
+            // lbModuleType
+            //
+            this.lbModuleType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModuleType.Location = new System.Drawing.Point(59, 46);
+            this.lbModuleType.Name = "lbModuleType";
+            this.lbModuleType.Size = new System.Drawing.Size(403, 24);
+            this.lbModuleType.TabIndex = 257;
+            this.lbModuleType.Text = "Module type";
+            this.lbModuleType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbModuleType.Visible = false;
+            //
             // frmMenuConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbModuleType);
             this.Controls.Add(this.lbNewBoard);
             this.Controls.Add(this.gbLine);
             this.Controls.Add(this.tbNewDescription);
@@ -388,5 +401,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox gbLine;
         private System.Windows.Forms.Label lbNewBoard;
+        private System.Windows.Forms.Label lbModuleType;
     }
 }

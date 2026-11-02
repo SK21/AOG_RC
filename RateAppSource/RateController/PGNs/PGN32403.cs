@@ -20,6 +20,7 @@ namespace RateController.PGNs
         private string[] cBoardLabel;
         private DateTime[] cReceiveTime;
         private DateTime[] cDuplicateTime;
+        private DateTime[] cDupLogTime;     // DIAGNOSTIC (duplicate-ID test)
         private bool[] cLabelFromModule;
 
         public PGN32403()
@@ -27,6 +28,7 @@ namespace RateController.PGNs
             cBoardLabel = new string[Props.MaxModules];
             cReceiveTime = new DateTime[Props.MaxModules];
             cDuplicateTime = new DateTime[Props.MaxModules];
+            cDupLogTime = new DateTime[Props.MaxModules];
             cLabelFromModule = new bool[Props.MaxModules];
             for (int i = 0; i < Props.MaxModules; i++) cBoardLabel[i] = "";
         }
@@ -38,23 +40,13 @@ namespace RateController.PGNs
             return Result;
         }
 
-        // Optimistically set the cached label after the app sends a new one (PGN 32506), so the
-        // read-back reflects it immediately instead of showing the stale value until the module
-        // reports back. Normalized to match exactly what the module will store and report.
-        public void SetLabel(int Module, string Label)
+        // Called after the app sends a new label (PGN 32506): the module's next report will
+        // legitimately differ from the last one, so it must not be compared (no false
+        // duplicate alarm). Nothing is cached - only what the module reports is shown.
+        public void ExpectLabelChange(int Module)
         {
             if (Module >= 0 && Module < Props.MaxModules)
             {
-                if (Label == null) Label = "";
-                StringBuilder sb = new StringBuilder(16);
-                for (int i = 0; i < 16 && i < Label.Length; i++)
-                {
-                    char ch = Label[i];
-                    if (ch < 32 || ch >= 127) break;   // sent as a 0 byte -> module truncates here
-                    sb.Append(ch);
-                }
-                cBoardLabel[Module] = sb.ToString().Trim();
-                cReceiveTime[Module] = DateTime.Now;
                 cLabelFromModule[Module] = false;
             }
         }
@@ -80,9 +72,9 @@ namespace RateController.PGNs
 
                         // Two boards sharing an ID reveal themselves by their reports
                         // flip-flopping between two different labels within the ~2 s
-                        // report cycle. Only module reports are compared (not the
-                        // optimistic SetLabel cache), so the old label read back right
-                        // after the app sends a new one is not a false alarm. Empty
+                        // report cycle. The first report after the app sends a new
+                        // label is not compared (ExpectLabelChange), so a rename is
+                        // not a false alarm. Empty
                         // labels are skipped - old firmware without the MAC fallback
                         // reports blank and two blanks are indistinguishable.
                         if (cLabelFromModule[ModuleID] && label.Length > 0
@@ -90,6 +82,15 @@ namespace RateController.PGNs
                             && (DateTime.Now - cReceiveTime[ModuleID]).TotalSeconds < 6)
                         {
                             cDuplicateTime[ModuleID] = DateTime.Now;
+
+                            // DIAGNOSTIC (duplicate-ID test): what conflicted, max once per 5 s per module
+                            if ((DateTime.Now - cDupLogTime[ModuleID]).TotalSeconds > 5)
+                            {
+                                cDupLogTime[ModuleID] = DateTime.Now;
+                                Props.WriteActivityLog("DupID 32403: module " + ModuleID.ToString()
+                                    + " label '" + cBoardLabel[ModuleID] + "' -> '" + label + "', "
+                                    + (DateTime.Now - cReceiveTime[ModuleID]).TotalMilliseconds.ToString("N0") + " ms apart", false, true);
+                            }
                         }
 
                         cBoardLabel[ModuleID] = label;

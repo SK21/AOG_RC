@@ -126,14 +126,16 @@ namespace RateController.PGNs
             }
         }
 
-        public void Send()
+        // ToModule: the ID the board answers to now, when that differs from the module
+        // config's target (an ID assignment sends the pins to the board's old ID first)
+        public void Send(byte? ToModule = null)
         {
             try
             {
                 // target module and sensor count come from the module config,
                 // the single source for which module is being configured
                 byte[] config = Core.ModuleConfig.GetData();
-                byte ModuleID = config[2];
+                byte ModuleID = ToModule ?? config[2];
                 int SensorCount = config[3];
                 if (SensorCount > MaxSensors) SensorCount = MaxSensors;
 

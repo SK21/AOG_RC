@@ -1091,34 +1091,33 @@ namespace RateController.Classes
             return float.TryParse((Text ?? "").Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out Value);
         }
 
-        public static string GetModuleDescription(int ModuleID)
+        // The board name is a one-time send, not a stored setting: the board keeps its own
+        // copy (EEPROM) and reports it, so the app holds a typed name only until the next
+        // Send delivers it. Kept with the module ID it was typed for, so it can't reach a
+        // different board if the module being edited changes before Send.
+        public static string PendingModuleDescription(int ModuleID)
         {
             string Result = "";
-            if (ModuleID >= 0 && ModuleID < MaxModules)
+            if (GetProp("ModuleConfig_PendingDescriptionID") == ModuleID.ToString())
             {
-                Result = GetProp("ModuleDescription_" + ModuleID.ToString());
-                if (Result.Length == 0)
-                {
-                    // migrate the pre-per-module single value to the module being
-                    // configured, the one the old value was in use for
-                    string Legacy = GetProp("ModuleDescription");
-                    if (Legacy.Length > 0)
-                    {
-                        SetProp("ModuleDescription_" + ModuleID.ToString(), Legacy);
-                        SetProp("ModuleDescription", "");
-                        Result = Legacy;
-                    }
-                }
+                Result = GetProp("ModuleConfig_PendingDescription").Trim();
             }
             return Result;
         }
 
-        public static void SetModuleDescription(int ModuleID, string Description)
+        public static void SetPendingModuleDescription(int ModuleID, string Description)
         {
             if (ModuleID >= 0 && ModuleID < MaxModules && Description != null)
             {
-                SetProp("ModuleDescription_" + ModuleID.ToString(), Description);
+                SetProp("ModuleConfig_PendingDescription", Description);
+                SetProp("ModuleConfig_PendingDescriptionID", ModuleID.ToString());
             }
+        }
+
+        public static void ClearPendingModuleDescription()
+        {
+            SetProp("ModuleConfig_PendingDescription", "");
+            SetProp("ModuleConfig_PendingDescriptionID", "");
         }
 
         public static bool IsFormNameValid(string formName)

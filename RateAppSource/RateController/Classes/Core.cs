@@ -308,12 +308,15 @@ namespace RateController.Classes
         public static string ModuleConfigDescription()
         {
             // identifies which module the config pages (Config/Comm/Pins/Relay Pins/Valves)
-            // are editing: ID, board label when the module has reported one (falling
-            // back to the locally saved description), connection state
+            // are editing: ID, board label while the module is reporting one, connection state
             byte id = ModuleConfig.GetData()[2];
             string Result = "Module " + id.ToString();
-            string label = ModulesBoardID.BoardLabel(id);
-            if (label.Length == 0) label = Props.GetModuleDescription(id);
+            // only what the board itself is reporting now (its description, or its MAC label):
+            // the cache keeps the last board's label after an ID change, a board that sends
+            // none (Nano) never replaces it, and the app's saved description belongs to the
+            // ID number, not the board - so nothing received means nothing shown
+            string label = "";
+            if (ModulesBoardID.Received(id)) label = ModulesBoardID.BoardLabel(id);
             if (label.Length > 0) Result += " - " + label;
             if (ModulesStatus.Connected(id))
             {

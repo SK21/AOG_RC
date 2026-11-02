@@ -351,6 +351,23 @@ namespace RateController.Menu
             ShowModuleIP();
         }
 
+        // The user picked an ID: highlight that module's hotspot if it's in the list. User
+        // picks only (not SelectedIndexChanged) - the app moves this box itself (connected-mark
+        // refresh, next free ID after a new board is picked), and that must not take the
+        // highlight off a new board. No hotspot for the ID: the list is left as it is.
+        private void cbWifiModuleID_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (Provisioner == null && cbWifiModuleID.SelectedItem is ModuleIDItem Sel)
+            {
+                int Match = -1;
+                for (int i = 0; i < lstModules.Items.Count && Match < 0; i++)
+                {
+                    if (lstModules.Items[i] is ModuleItem M && M.NameID == Sel.ID) Match = i;
+                }
+                if (Match >= 0 && lstModules.SelectedIndex != Match) lstModules.SelectedIndex = Match;
+            }
+        }
+
         private void lnkModuleIP_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try

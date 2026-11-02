@@ -575,6 +575,7 @@
             this.cbWifiModuleID.Size = new System.Drawing.Size(158, 32);
             this.cbWifiModuleID.TabIndex = 16;
             this.cbWifiModuleID.SelectedIndexChanged += new System.EventHandler(this.cbWifiModuleID_SelectedIndexChanged);
+            this.cbWifiModuleID.SelectionChangeCommitted += new System.EventHandler(this.cbWifiModuleID_SelectionChangeCommitted);
             // 
             // lnkModuleIP
             // 
