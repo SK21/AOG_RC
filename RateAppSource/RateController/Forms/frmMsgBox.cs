@@ -12,6 +12,7 @@ namespace RateController
         {
             InitializeComponent();
             this.Text = Title;
+            label1.MaximumSize = new System.Drawing.Size(panel1.Width - 25, 0);    // wrap long lines instead of scrolling sideways
             label1.Text = Message;
             if (Shrink)
             {

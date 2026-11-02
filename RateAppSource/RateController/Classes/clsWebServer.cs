@@ -24,6 +24,7 @@ namespace RateController.Classes
 
         private const string HotspotRule = "RateController phone hotspot";
         private const string ModuleHotspotRule = "RateController module hotspot";
+        private const string ModuleDataRule = "RateController module data";
         private const int ModulePort = 29999;       // module data in, same as UDPmodules in Core.cs
 
         // Windows Mobile Hotspot through its WinRT api in a hidden powershell, no admin needed.
@@ -216,6 +217,51 @@ Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$b
                 Props.WriteErrorLog("clsWebServer/AllowHotspot: " + ex.Message);
             }
             return Result;
+        }
+
+        public bool AllowModuleData()
+        {
+            // Module data (UDP 29999) from devices on whatever network this PC is on: a phone's
+            // hotspot or a router counts as Public on Windows and its subnet isn't known in advance
+            // (192.168.43.x, 172.20.10.x ...), so the rule uses localsubnet. One admin prompt; the
+            // exe's own Public Block rule, if the first-run prompt left one, is flipped too.
+            bool Result = false;
+            try
+            {
+                string Rule = "advfirewall firewall {0} rule name=\"" + ModuleDataRule + "\"";
+                string Args = "/c netsh " + string.Format(Rule, "delete") + " & netsh " + string.Format(Rule, "add")
+                    + " dir=in action=allow protocol=UDP localport=" + ModulePort.ToString()
+                    + " profile=public,private remoteip=localsubnet";
+                if (ExeBlockedOnPublic())
+                {
+                    Args += " & netsh advfirewall firewall set rule name=all dir=in profile=public program=\""
+                        + System.Windows.Forms.Application.ExecutablePath + "\" new action=allow";
+                }
+                ProcessStartInfo Info = new ProcessStartInfo("cmd.exe", Args);
+                Info.UseShellExecute = true;
+                Info.Verb = "runas";
+                Info.WindowStyle = ProcessWindowStyle.Hidden;
+                using (Process P = Process.Start(Info))
+                {
+                    P.WaitForExit(15000);
+                }
+                Result = ModuleDataAllowed();
+            }
+            catch (Win32Exception)
+            {
+                // admin prompt declined
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsWebServer/AllowModuleData: " + ex.Message);
+            }
+            return Result;
+        }
+
+        // module data allowed in from the local network; reading the rules needs no admin
+        public bool ModuleDataAllowed()
+        {
+            return FirewallRuleExists(ModuleDataRule) && !ExeBlockedOnPublic();
         }
 
         public void HotspotWatchReset()

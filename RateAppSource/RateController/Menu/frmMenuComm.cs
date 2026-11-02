@@ -120,6 +120,11 @@ namespace RateController.Menu
                 Props.CanPort = cbComPort.SelectedItem.ToString();
             }
 
+            // driver / COM port changes only matter while CAN is in use; with Ethernet they're
+            // just saved (a new install's default COM7 isn't on most PCs, so the dropdown's
+            // first port looked like a change and restarted comms with an "Ethernet enabled" popup)
+            if (!ckCanBus.Checked && !Props.CanEnabled) CanSettingsChanged = false;
+
             // Check if diagnostics setting changed
             bool diagnosticsChanged = Props.ShowCanDiagnostics != ckDiagnostics.Checked;
             if (diagnosticsChanged) Props.ShowCanDiagnostics = ckDiagnostics.Checked;
@@ -295,6 +300,8 @@ namespace RateController.Menu
         private void ckHotspot_CheckedChanged(object sender, EventArgs e)
         {
             SetButtons(true);
+            ShowHotspot();      // the state line is blank while unticked
+            ReadWifiNetwork();  // and the hotspot leaves (or rejoins) the network list
         }
 
         private bool Confirm(string Message)
@@ -429,6 +436,46 @@ namespace RateController.Menu
             }
         }
 
+        // Asked once per app session on a WiFi tab visit (after a failed setup it is always asked).
+        // Each check starts a short netsh, so it runs on tab visits and after setup, not on the timer
+        private static bool FirewallAsked = false;
+
+        private void AskFirewallOnce()
+        {
+            if (!FirewallAsked && !Core.WebServer.ModuleDataAllowed())
+            {
+                FirewallAsked = true;
+                OfferModuleDataFix();
+            }
+        }
+
+        private void OfferModuleDataFix()
+        {
+            WifiTarget Target = cbWifiTarget.SelectedItem as WifiTarget;
+            string Network = (Target != null && Target.Ssid != "") ? Target.Ssid : "this network";
+            using (frmMsgBox Box = new frmMsgBox("Windows Firewall may be blocking module data on "
+                + Network + ".\r\n\r\nAllow it now? Windows will ask for permission.", "WiFi", false, true))
+            {
+                Box.ShowDialog(this);
+                if (Box.Result)
+                {
+                    bool Ok = Core.WebServer.AllowModuleData();
+                    Log(Ok ? "Firewall now allows module data." : "Firewall not changed.");
+                }
+            }
+        }
+
+        private void btnWifiLog_Click(object sender, EventArgs e)
+        {
+            // the log box is small; show the whole log in a larger, scrolling window
+            string Text = tbWifiLog.Text.Trim();
+            if (Text == "") Text = "The log is empty.";
+            using (frmMsgBox Box = new frmMsgBox(Text, "WiFi Log", false, false))
+            {
+                Box.ShowDialog(this);
+            }
+        }
+
         private void Log(string Text)
         {
             if (!IsDisposed) tbWifiLog.AppendText(Text + Environment.NewLine);
@@ -457,6 +504,11 @@ namespace RateController.Menu
                 {
                     // an assigned module's hotspot: set it up again under the same ID
                     SelectModuleID(Item.NameID);
+                }
+                else if (Item != null && Item.NameID == Props.NewModuleID)
+                {
+                    // a new board: back to the lowest free ID, not one left from an earlier pick
+                    FillModuleIDs(true);
                 }
             }
             EnableWifi();
@@ -524,7 +576,8 @@ namespace RateController.Menu
 
                     List<WifiTarget> Targets = new List<WifiTarget>();
                     string HotspotSsid = Core.WebServer.HotspotSsid;
-                    if (Core.WebServer.HotspotState == "On" && HotspotSsid != "") Targets.Add(new WifiTarget { Hotspot = true, Ssid = HotspotSsid });
+                    // the hotspot is a target only while Tablet Hotspot is ticked (RateController keeps it up)
+                    if (ckHotspot.Checked && Core.WebServer.HotspotState == "On" && HotspotSsid != "") Targets.Add(new WifiTarget { Hotspot = true, Ssid = HotspotSsid });
                     if (PcSsid != "" && PcSsid != HotspotSsid) Targets.Add(new WifiTarget { Hotspot = false, Ssid = PcSsid });
 
                     string Now = string.Join("|", Targets);
@@ -625,6 +678,7 @@ namespace RateController.Menu
             if (Core.WebServer.HotspotBusy) Text = Lang.lgChecking;
             if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", " + Lang.lgFirewallBlocked;
             if (Core.WebServer.HotspotFailing && ckHotspot.Checked) Text = Lang.lgRestartsFailed;
+            if (!ckHotspot.Checked) Text = "";      // not managed by RateController: no state shown
             lbHotspot.Text = Text;
         }
 
@@ -765,6 +819,11 @@ namespace RateController.Menu
                     break;
             }
             Log(Text);
+            if (R.Outcome == ProvisionOutcome.NoPackets && !Core.WebServer.ModuleDataAllowed())
+            {
+                // joined but nothing arrived: offer the firewall fix straight away
+                OfferModuleDataFix();
+            }
             ShowHotspot();
             ReadWifiNetwork();
             FillModuleIDs(R.Outcome == ProvisionOutcome.Success);    // after a success, on to the next free ID
@@ -991,6 +1050,9 @@ namespace RateController.Menu
                 FillModuleIDs(false);
                 if (!Core.WebServer.HotspotBusy) Core.WebServer.HotspotAsync("status", HotspotDone);     // catches changes made in Windows settings
                 if (lstModules.Items.Count == 0) StartScan();
+
+                // after the tab has painted, so the question doesn't open over a half-drawn page
+                if (IsHandleCreated) BeginInvoke((Action)AskFirewallOnce);
             }
         }
 
