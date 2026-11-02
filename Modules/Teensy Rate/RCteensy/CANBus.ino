@@ -762,8 +762,10 @@ void CANBus_SendModuleStatus() {
 void CANBus_SendModuleIdent() {
 	uint8_t data[8];
 
-	// Byte 0: ModuleId | SensorCount
-	data[0] = (MDL.ID & 0x0F) | ((MDL.SensorCount & 0x0F) << 4);
+	// Byte 0: ModuleId | SensorCount. An unassigned board (ID above 15) reports module 15,
+	// which apps before ID 25 ignore (they handle modules 0-7); byte 4 carries the full ID.
+	uint8_t mod = (MDL.ID <= 15) ? MDL.ID : 0x0F;
+	data[0] = mod | ((MDL.SensorCount & 0x0F) << 4);
 
 	// Byte 1: Module type
 	data[1] = InoType;
@@ -772,8 +774,8 @@ void CANBus_SendModuleIdent() {
 	data[2] = InoID & 0xFF;
 	data[3] = (InoID >> 8) & 0xFF;
 
-	// Bytes 4-7: Reserved
-	data[4] = 0;
+	// Byte 4: full module ID (25 = unassigned). Bytes 5-7: reserved
+	data[4] = MDL.ID;
 	data[5] = 0;
 	data[6] = 0;
 	data[7] = 0;
@@ -830,8 +832,13 @@ void CANBus_Update() {
 		}
 	}
 
+	// An unassigned board (NewModuleID) can't be identified in these frames: each packs the
+	// module ID into 4 bits, so 25 would arrive as module 9. It sends only the
+	// identification frame, marked as new (see CANBus_SendModuleIdent).
+	bool Assigned = (MDL.ID <= 15);
+
 	// Send sensor data at same rate as UDP (SendTime = 200ms)
-	if (millis() - lastSensorSend >= SendTime) {
+	if (Assigned && millis() - lastSensorSend >= SendTime) {
 		lastSensorSend = millis();
 		for (int i = 0; i < MDL.SensorCount; i++) {
 			CANBus_SendSensorRateQty(i);
@@ -840,7 +847,7 @@ void CANBus_Update() {
 	}
 
 	// Send status at same rate as sensor data (SendTime = 200ms)
-	if (millis() - lastStatusSend >= SendTime) {
+	if (Assigned && millis() - lastStatusSend >= SendTime) {
 		lastStatusSend = millis();
 		CANBus_SendModuleStatus();
 	}
@@ -852,7 +859,7 @@ void CANBus_Update() {
 	}
 
 	// Send board label every 2 s (static; mirrors the UDP PGN 32403 report)
-	if (millis() - lastBoardIdSend >= 2000) {
+	if (Assigned && millis() - lastBoardIdSend >= 2000) {
 		lastBoardIdSend = millis();
 		CANBus_SendBoardLabel();
 	}

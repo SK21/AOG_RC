@@ -11,6 +11,10 @@ namespace RateController.Menu
 {
     public partial class frmMenuOptions : Form
     {
+        // English for now, Lang keys in the translation pass
+        private const string HotspotCommLink = "Comm → WiFi";
+        private const string HotspotCommPrefix = "Change it on ";
+
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -47,26 +51,6 @@ namespace RateController.Menu
             SetButtons(false);
             WheelSpeedChanged = false;
             butUpdateModules.Enabled = rbWheel.Checked;
-        }
-
-        private void ApplyHotspot()
-        {
-            if (ckHotspot.Checked)
-            {
-                // firewall rule and power saving need admin, only asked when the rule is missing
-                if (Core.WebServer.IsRunning && !Core.WebServer.HotspotAllowed() && !Core.WebServer.AllowHotspot())
-                {
-                    Props.ShowMessage(Lang.lgFirewallNotAllowed, Lang.lgPhone, 5000);
-                }
-                lbHotspot.Text = Lang.lgStarting;
-                Core.WebServer.HotspotWatchReset();
-                Core.WebServer.HotspotAsync("start", HotspotDone);
-            }
-            else
-            {
-                lbHotspot.Text = Lang.lgStopping;
-                Core.WebServer.HotspotAsync("stop", HotspotDone);
-            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -113,10 +97,6 @@ namespace RateController.Menu
 
                 Props.UseMetric = ckMetric.Checked;
                 Props.CompactDisplay = ckCompact.Checked;
-
-                bool HotspotChanged = ckHotspot.Checked != Props.TabletHotspot;
-                Props.TabletHotspot = ckHotspot.Checked;
-                if (HotspotChanged) ApplyHotspot();
 
                 if (WheelSpeedChanged)
                 {
@@ -183,12 +163,10 @@ namespace RateController.Menu
             Font urlFont = lbPhoneUrl.Font;
             Font helpFont = lbPhoneHelp.Font;
             Font netFont = lbHotspotNet.Font;
-            Font hintFont = lnkHotspot.Font;
             MainMenu.StyleControls(this);
             lbPhoneUrl.Font = urlFont;
             lbPhoneHelp.Font = helpFont;
             lbHotspotNet.Font = netFont;
-            lnkHotspot.Font = hintFont;
 
             SetLanguage();
             SetPhoneLinks();    // after SetLanguage: finds the translated link words
@@ -237,6 +215,20 @@ namespace RateController.Menu
             catch (Exception ex)
             {
                 Props.WriteErrorLog("frmMenuOptions/lbPhoneHelp_LinkClicked: " + ex.Message);
+            }
+        }
+
+        private void lnkHotspotComm_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // the Tablet Hotspot toggle lives on Comm -> WiFi. The switch closes this form, so it
+            // runs after this handler returns
+            if (cEdited)
+            {
+                Props.ShowMessage("Save or cancel the changes on this page first.", Lang.lgPhone, 5000);
+            }
+            else
+            {
+                MainMenu.BeginInvoke((Action)MainMenu.ShowCommWifi);
             }
         }
 
@@ -321,13 +313,10 @@ namespace RateController.Menu
             int Start = lbPhoneHelp.Text.IndexOf(Lang.lgWifiSettings);
             if (Start >= 0) lbPhoneHelp.Links.Add(Start, Lang.lgWifiSettings.Length, "ms-settings:network-wifi");
 
-            // power saving turns the hotspot off after 5 min with no devices, it can only be changed in windows
-            lnkHotspot.Links.Clear();
-            Start = lnkHotspot.Text.IndexOf(Lang.lgHotspotSettings);
-            if (Start >= 0) lnkHotspot.Links.Add(Start, Lang.lgHotspotSettings.Length, "ms-settings:network-mobilehotspot");
+            SetHotspotCommLink();
 
             // theme text colour, the underline marks the links (default blue is unreadable on dark)
-            foreach (LinkLabel Lnk in new LinkLabel[] { lbPhoneHelp, lnkHotspot })
+            foreach (LinkLabel Lnk in new LinkLabel[] { lbPhoneHelp, lnkHotspotComm })
             {
                 Lnk.LinkColor = Lnk.ForeColor;
                 Lnk.ActiveLinkColor = Lnk.ForeColor;
@@ -343,8 +332,9 @@ namespace RateController.Menu
             else if (State == "Off") Text = Lang.lgOff;
             if (Core.WebServer.HotspotBusy) Text = Lang.lgChecking;
             if (State == "On" && !Core.WebServer.HotspotAllowed()) Text += ", " + Lang.lgFirewallBlocked;
-            if (Core.WebServer.HotspotGaveUp && ckHotspot.Checked) Text = Lang.lgRestartsFailed;
-            lbHotspot.Text = Text;
+            if (Core.WebServer.HotspotFailing && Props.TabletHotspot) Text = Lang.lgRestartsFailed;
+            lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Text + ". " + HotspotCommPrefix + HotspotCommLink;
+            SetHotspotCommLink();
 
             if (State == "On")
             {
@@ -358,6 +348,14 @@ namespace RateController.Menu
             {
                 lbHotspotNet.Text = "";
             }
+        }
+
+        private void SetHotspotCommLink()
+        {
+            // the "Comm -> WiFi" words open that page (step 9: move to Lang keys)
+            lnkHotspotComm.Links.Clear();
+            int Start = lnkHotspotComm.Text.IndexOf(HotspotCommLink);
+            if (Start >= 0) lnkHotspotComm.Links.Add(Start, HotspotCommLink.Length);
         }
 
         private void ShowPhone()
@@ -394,9 +392,8 @@ namespace RateController.Menu
             tabPage1.Text = Lang.lgSpeed;
             tabPage2.Text = Lang.lgPhone;
             lbPhone.Text = Lang.lgPhoneAddress;
-            ckHotspot.Text = Lang.lgTabletHotspot;
             lbPhoneHelp.Text = string.Format(Lang.lgPhoneHelp, Lang.lgWifiSettings);
-            lnkHotspot.Text = string.Format(Lang.lgPowerSavingHint, Lang.lgHotspotSettings);
+            lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Lang.lgChecking + ". " + HotspotCommPrefix + HotspotCommLink;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -587,7 +584,6 @@ namespace RateController.Menu
 
             ckMetric.Checked = Props.UseMetric;
             ckCompact.Checked = Props.CompactDisplay;
-            ckHotspot.Checked = Props.TabletHotspot;
 
             SetBoxes();
 

@@ -230,13 +230,17 @@ void DoSetup()
 	IPAddress AP_GateWay = AP_LocalIP;
 	IPAddress AP_Subnet(255, 255, 255, 0);
 
+	// hotspot name: APname + "_" + ID + "_" + the chip MAC's last 3 bytes, e.g. RateModule_25_123456.
+	// getEfuseMac() holds the MAC's first byte lowest, so bytes 3-5 (the board's own part,
+	// after the 3-byte maker code) are bits 24-47. The old low 32 bits were the maker code
+	// plus a single board byte.
 	uint64_t mac = ESP.getEfuseMac();
-	uint32_t low32 = (uint32_t)(mac & 0xFFFFFFFF);
-
-	char suffix[9]; // 8 hex + null
-	sprintf(suffix, "%08X", low32);
+	char suffix[7]; // 6 hex + null
+	sprintf(suffix, "%02X%02X%02X", (uint8_t)(mac >> 24), (uint8_t)(mac >> 32), (uint8_t)(mac >> 40));
 
 	String AP = MDL.APname;
+	AP += "_";
+	AP += String(MDL.ID);
 	AP += "_";
 	AP += suffix;
 
@@ -616,8 +620,24 @@ void LoadData()
 
 	if (!IsValid)
 	{
+		// The module ID survives a defaults reload, the way MDLnetwork (WiFi credentials)
+		// already does. A firmware update changes InoID, which lands here, and without this
+		// every module came back as ID 0 with its credentials intact: straight back onto the
+		// network as a duplicate of module 0. Read from the old record's position — ID must
+		// stay the FIRST field of ModuleConfig (EEPROM 23). Blank flash reads 0xFF and an
+		// unassigned board stores NewModuleID (25), both above 15, so those boards start
+		// (or stay) at NewModuleID.
+		uint8_t KeptID;
+		EEPROM.get(23, KeptID);
+
 		Serial.println("Stored settings not valid.");
 		LoadDefaults();
+		if (KeptID <= 15)
+		{
+			MDL.ID = KeptID;
+			Serial.print("Module ID kept: ");
+			Serial.println(KeptID);
+		}
 		SaveData();
 		GoodPins=true;
 	}
@@ -690,7 +710,7 @@ void LoadDefaults()
 	}
 
 	// module settings
-	MDL.ID = 0;
+	MDL.ID = NewModuleID;
 	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;

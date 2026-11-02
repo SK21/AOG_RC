@@ -60,6 +60,7 @@ namespace RateController.Classes
     public static class Props
     {
         public static readonly int MaxModules = 8;
+        public const byte NewModuleID = 25;     // firmware ID of an unassigned board (above every real ID 0-15; must match the firmwares' NewModuleID)
         public static readonly int MaxProducts = 7;
         public static readonly int MaxRelays = 16;
         public static readonly int MaxSections = 128;

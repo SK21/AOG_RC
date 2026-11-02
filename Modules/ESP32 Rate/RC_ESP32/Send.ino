@@ -25,70 +25,76 @@ void SendComm()
 
 		byte Data[20];
 
-		for (int i = 0; i < MDL.SensorCount; i++)
+		// an unassigned board (NewModuleID) sends no product reports: its ID doesn't fit the
+		// 4-bit module field and 25 would read as module 9. 32401 and 32403 below carry the
+		// full ID, so the app still sees the board.
+		if (MDL.ID <= 15)
 		{
-			Data[0] = 144;
-			Data[1] = 126;
-			Data[2] = BuildModSenID(MDL.ID, i);
-
-			// rate applied, 1000 X actual
-			uint32_t Applied = Sensor[i].UPM * 1000;
-			Data[3] = Applied;
-			Data[4] = Applied >> 8;
-			Data[5] = Applied >> 16;
-
-			// accumulated quantity, 10 X actual
-			if (Sensor[i].MeterCal > 0)
+			for (int i = 0; i < MDL.SensorCount; i++)
 			{
-				uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
-				Data[6] = Units;
-				Data[7] = Units >> 8;
-				Data[8] = Units >> 16;
-			}
-			else
-			{
-				Data[6] = 0;
-				Data[7] = 0;
-				Data[8] = 0;
-			}
+				Data[0] = 144;
+				Data[1] = 126;
+				Data[2] = BuildModSenID(MDL.ID, i);
 
-			//PWM
-			Data[9] = (int)Sensor[i].PWM;
-			Data[10] = (int)Sensor[i].PWM >> 8;
+				// rate applied, 1000 X actual
+				uint32_t Applied = Sensor[i].UPM * 1000;
+				Data[3] = Applied;
+				Data[4] = Applied >> 8;
+				Data[5] = Applied >> 16;
 
-
-			// status
-			Data[11] = 0;
-			if (SensorConnected[i]) Data[11] |= 0b00000001;
-			if (BinEmpty[i]) Data[11] |= 0b00000010;
-
-			// Hz
-			uint16_t Hz = Sensor[i].Hz * 10;
-			Data[12] = Hz;
-			Data[13] = Hz >> 8;
-
-			// crc
-			Data[14] = CRC(Data, 14, 0);
-			bool Sent = false;
-
-			// ethernet
-			if (ChipFound)
-			{
-				if (Ethernet.linkStatus() == LinkON)
+				// accumulated quantity, 10 X actual
+				if (Sensor[i].MeterCal > 0)
 				{
-					UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
-					UDP_Ethernet.write(Data, 15);
-					UDP_Ethernet.endPacket();
-					Sent = true;
+					uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
+					Data[6] = Units;
+					Data[7] = Units >> 8;
+					Data[8] = Units >> 16;
 				}
-			}
+				else
+				{
+					Data[6] = 0;
+					Data[7] = 0;
+					Data[8] = 0;
+				}
 
-			// wifi
-			if (!Sent)
-			{
-				UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
-				UDP_Wifi.write(Data, 15);
-				UDP_Wifi.endPacket();
+				//PWM
+				Data[9] = (int)Sensor[i].PWM;
+				Data[10] = (int)Sensor[i].PWM >> 8;
+
+
+				// status
+				Data[11] = 0;
+				if (SensorConnected[i]) Data[11] |= 0b00000001;
+				if (BinEmpty[i]) Data[11] |= 0b00000010;
+
+				// Hz
+				uint16_t Hz = Sensor[i].Hz * 10;
+				Data[12] = Hz;
+				Data[13] = Hz >> 8;
+
+				// crc
+				Data[14] = CRC(Data, 14, 0);
+				bool Sent = false;
+
+				// ethernet
+				if (ChipFound)
+				{
+					if (Ethernet.linkStatus() == LinkON)
+					{
+						UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
+						UDP_Ethernet.write(Data, 15);
+						UDP_Ethernet.endPacket();
+						Sent = true;
+					}
+				}
+
+				// wifi
+				if (!Sent)
+				{
+					UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
+					UDP_Wifi.write(Data, 15);
+					UDP_Wifi.endPacket();
+				}
 			}
 		}
 
@@ -282,8 +288,9 @@ void SendPIDlog()
 	//25    CRC
 
 	// gate on the flag only - the per-packet code below picks ethernet or wifi
-	// (the Teensy version gates on ethernet link because it has no other transport)
-	if (PidLogEnabled)
+	// (the Teensy version gates on ethernet link because it has no other transport).
+	// Not from an unassigned board: Mod/Sen packing would report ID 25 as module 9
+	if (PidLogEnabled && MDL.ID <= 15)
 	{
 		byte Data[26];
 

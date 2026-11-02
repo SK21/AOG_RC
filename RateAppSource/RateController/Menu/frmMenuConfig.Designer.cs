@@ -49,6 +49,7 @@
             this.tbNewDescription = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.gbLine = new System.Windows.Forms.GroupBox();
+            this.lbNewBoard = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -314,12 +315,25 @@
             this.gbLine.Size = new System.Drawing.Size(403, 5);
             this.gbLine.TabIndex = 255;
             this.gbLine.TabStop = false;
-            // 
+            //
+            // lbNewBoard
+            //
+            this.lbNewBoard.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbNewBoard.ForeColor = System.Drawing.Color.Blue;
+            this.lbNewBoard.Location = new System.Drawing.Point(57, 148);
+            this.lbNewBoard.Name = "lbNewBoard";
+            this.lbNewBoard.Size = new System.Drawing.Size(403, 26);
+            this.lbNewBoard.TabIndex = 256;
+            this.lbNewBoard.Text = "New board";
+            this.lbNewBoard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbNewBoard.Visible = false;
+            //
             // frmMenuConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbNewBoard);
             this.Controls.Add(this.gbLine);
             this.Controls.Add(this.tbNewDescription);
             this.Controls.Add(this.label2);
@@ -373,5 +387,6 @@
         private System.Windows.Forms.TextBox tbNewDescription;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox gbLine;
+        private System.Windows.Forms.Label lbNewBoard;
     }
 }

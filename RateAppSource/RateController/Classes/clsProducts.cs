@@ -444,7 +444,9 @@ namespace RateController.Classes
                 clsProduct pd = Item(i);
                 ProductState NewState;
 
-                if (!pd.Enabled && pd.CalibrateOjbect?.PowerOn == false)
+                // disabled and not calibrating (calibration itself disables the product while
+                // it runs); no calibration object counts as not calibrating
+                if (!pd.Enabled && !(pd.CalibrateOjbect?.PowerOn ?? false))
                 {
                     NewState = ProductState.Off;
                 }

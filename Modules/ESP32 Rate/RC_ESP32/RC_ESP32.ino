@@ -26,10 +26,11 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 20106;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 2116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
+const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+200 / 25+50 still make valid addresses
 
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
@@ -87,7 +88,7 @@ enum ControlType
 struct ModuleConfig	// about 130 bytes
 {
 	// RC15
-	uint8_t ID = 0;
+	uint8_t ID = NewModuleID;		// keep FIRST: LoadData() reads it from EEPROM 23 to keep the ID across a defaults reload
 	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction

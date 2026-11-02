@@ -51,6 +51,12 @@ namespace RateController.PGNs
         private DateTime[] ReceiveTime;
         private DateTime[] cDuplicateTime;
 
+        // an unassigned board (Props.NewModuleID) has no slot in the per-module arrays;
+        // its reports are kept here so the app can see it and count it before an assign
+        private DateTime cNewBoardTime = DateTime.MinValue;
+        private UInt16 cNewBoardType;
+        private UInt16 cNewBoardInoID;
+
         public PGN32401()
         {
             cInoID = new ushort[Props.MaxModules];
@@ -90,6 +96,24 @@ namespace RateController.PGNs
             return (ValidID(Module) && (DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4);
         }
 
+        // a board at the unassigned ID is reporting (same 4 s freshness as Connected)
+        public bool NewBoardConnected()
+        {
+            return (DateTime.Now - cNewBoardTime).TotalSeconds < 4;
+        }
+
+        // e.g. "Teensy_Rate, firmware 02-Nov-2026", for messages
+        public string NewBoardDescription()
+        {
+            return NewBoardType() + ", firmware " + Props.ParseDate(cNewBoardInoID.ToString());
+        }
+
+        // e.g. "Teensy_Rate", for the Config page status line
+        public string NewBoardType()
+        {
+            return Enum.GetName(typeof(ModuleTypes), cNewBoardType) ?? "unknown";
+        }
+
         // Latched for a while after the last conflicting report so the warning is
         // stable; clears itself once one of the boards is disconnected.
         public bool DuplicateID(int Module)
@@ -109,6 +133,12 @@ namespace RateController.PGNs
         public bool ConfigRejected(int Module)
         {
             return (ValidID(Module) && cConfigRejected[Module]);
+        }
+
+        // status bit 4: the module is talking over Ethernet (an ESP32's web page is WiFi only)
+        public bool EthernetConnected(int Module)
+        {
+            return (ValidID(Module) && cEthernetConnected[Module]);
         }
 
         public bool Is3Wire(int Module)
@@ -190,6 +220,13 @@ namespace RateController.PGNs
                         cConfigRejected[ModuleID] = ((Data[13] & 0b10000000) == 0b10000000);
 
                         ReceiveTime[ModuleID] = DateTime.Now;
+                        Result = true;
+                    }
+                    else if (ModuleID == Props.NewModuleID)
+                    {
+                        cNewBoardType = Data[10];
+                        cNewBoardInoID = (ushort)(Data[11] | Data[12] << 8);
+                        cNewBoardTime = DateTime.Now;
                         Result = true;
                     }
                 }

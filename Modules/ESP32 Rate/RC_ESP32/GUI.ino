@@ -102,6 +102,25 @@ void handleCredentials()
 		MDLnetwork.StaChannelCache = 0;
 	}
 
+	// Module ID (modid). Sent only by the app's module WiFi setup, never by this page's own
+	// form, so a phone user's save leaves the ID alone. A new board's default is 0, and
+	// joining a network where module 0 already runs would make two boards answer to every
+	// module-0 command; setting it here, in the same visit, means it arrives unique.
+	// 0..15 is the nibble BuildModSenID() packs; anything else is ignored.
+	bool idChanged = false;
+	if (server.hasArg("modid"))
+	{
+		String idArg = server.arg("modid");
+		idArg.trim();
+		int newID = idArg.toInt();
+		bool numeric = idArg.length() > 0 && (idArg == "0" || newID != 0);
+		if (numeric && newID >= 0 && newID <= 15 && newID != MDL.ID)
+		{
+			MDL.ID = (uint8_t)newID;
+			idChanged = true;
+		}
+	}
+
 	server.send(200, "text/html", GetPage0());
 
 	bool stationChanged =
@@ -113,9 +132,11 @@ void handleCredentials()
 	bool apChanged = (String(MDL.APpassword) != OldAPPassword);
 
 	if (stationChanged) SaveNetworks();
-	if (apChanged) SaveData();
+	if (apChanged || idChanged) SaveData();
 
-	if (stationChanged || apChanged)
+	// a new ID also needs the restart: Ethernet IP (ID + 50), hotspot subnet (ID + 200)
+	// and every packet's ID byte are set at boot
+	if (stationChanged || apChanged || idChanged)
 	{
 		delay(3000);
 		ESP.restart();

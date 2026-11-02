@@ -384,8 +384,16 @@ namespace RateController.Forms
 
         private void Fans_Click(object sender, EventArgs e)
         {
-            SwitchDisplay(true);
-            UpdateForm();
+            // the fan view shows both fans (products 6 and 7); open it while either is enabled
+            if (Usable(5) || Usable(6))
+            {
+                SwitchDisplay(true);
+                UpdateForm();
+            }
+            else
+            {
+                Props.ShowMessage("Fans are disabled.", "Products", 5000);
+            }
         }
 
         private void UnderlineProduct()
@@ -559,39 +567,46 @@ namespace RateController.Forms
             if (e.Button == MouseButtons.Right) this.Location = new Point(this.Left + e.X - MouseDownLocation.X, this.Top + e.Y - MouseDownLocation.Y);
         }
 
+        // a disabled product can't be picked on the main page, so the Target, Reset area and
+        // Reset quantity buttons never act on it
+        private void PickProduct(int ID)
+        {
+            clsProduct Prd = Core.Products.Item(ID);
+            if (Usable(ID))
+            {
+                Props.CurrentProduct = ID;
+                SwitchDisplay(false);
+                UpdateForm();
+            }
+            else
+            {
+                Props.ShowMessage(Prd.ProductName + " is disabled.", "Products", 5000);
+            }
+        }
+
         private void prod1_Click(object sender, EventArgs e)
         {
-            Props.CurrentProduct = 0;
-            SwitchDisplay(false);
-            UpdateForm();
+            PickProduct(0);
         }
 
         private void prod2_Click(object sender, EventArgs e)
         {
-            Props.CurrentProduct = 1;
-            SwitchDisplay(false);
-            UpdateForm();
+            PickProduct(1);
         }
 
         private void prod3_Click(object sender, EventArgs e)
         {
-            Props.CurrentProduct = 2;
-            SwitchDisplay(false);
-            UpdateForm();
+            PickProduct(2);
         }
 
         private void prod4_Click(object sender, EventArgs e)
         {
-            Props.CurrentProduct = 3;
-            SwitchDisplay(false);
-            UpdateForm();
+            PickProduct(3);
         }
 
         private void Prod5_Click(object sender, EventArgs e)
         {
-            Props.CurrentProduct = 4;
-            SwitchDisplay(false);
-            UpdateForm();
+            PickProduct(4);
         }
 
         /// <summary>
@@ -781,8 +796,38 @@ namespace RateController.Forms
             btnUnits.ForeColor = btnTarget.ForeColor;
         }
 
+        // enabled, or being calibrated (a running calibration disables its product itself)
+        private bool Usable(int ID)
+        {
+            clsProduct Prd = Core.Products.Item(ID);
+            return Prd.Enabled || (Prd.CalibrateOjbect?.PowerOn ?? false);
+        }
+
+        // the shown product (or both fans) may have been disabled on the Products page:
+        // move to the first enabled product so no main-page button acts on a disabled one
+        private void KeepEnabledProduct()
+        {
+            bool FansOff = !Usable(5) && !Usable(6);
+            bool Current = ShowFans ? !FansOff : Usable(Props.CurrentProduct);
+            if (!Current)
+            {
+                int First = -1;
+                for (int i = 0; i < 5 && First < 0; i++)
+                {
+                    if (Usable(i)) First = i;
+                }
+                if (First >= 0)
+                {
+                    Props.CurrentProduct = First;
+                    SwitchDisplay(false);
+                }
+            }
+        }
+
         private void UpdateForm()
         {
+            KeepEnabledProduct();
+
             if (ShowFans)
             {
                 UpdateFans();

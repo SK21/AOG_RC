@@ -158,6 +158,15 @@ namespace RateController.Menu
             if (lbModule.Text != text) lbModule.Text = text;
             Color fore = dup ? Color.Red : cModuleColor;
             if (lbModule.ForeColor != fore) lbModule.ForeColor = fore;
+
+            // an unassigned board (ID 25) is reporting: say so, and how to give it an ID
+            bool newBoard = Core.ModulesStatus.NewBoardConnected();
+            if (newBoard)
+            {
+                string nb = "New board: " + Core.ModulesStatus.NewBoardType() + ". Set a New ID, then Send.";
+                if (lbNewBoard.Text != nb) lbNewBoard.Text = nb;
+            }
+            if (lbNewBoard.Visible != newBoard) lbNewBoard.Visible = newBoard;
         }
 
         private void groupBox1_Paint(object sender, PaintEventArgs e)

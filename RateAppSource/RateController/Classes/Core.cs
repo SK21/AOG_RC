@@ -190,7 +190,7 @@ namespace RateController.Classes
                 Props.JobCollector.Enabled = true;
 
                 UDPaog = new UDPComm(MainForm, 17777, 15555, 1460, "UDPaog", "127.255.255.255");        // AOG
-                UDPmodules = new UDPComm(MainForm, 29999, 28888, 1480, "UDPmodules");                   // arduino
+                UDPmodules = new UDPComm(MainForm, 29999, 28888, 1480, "UDPmodules", "", true);         // arduino, also sends to subnets modules are heard on
                 CanBridgeComm = new CanBridgeComm();
 
                 UDPmodules.Start();

@@ -12,7 +12,15 @@ namespace RateController
 {
     public class UDPComm
     {
+        // learned subnets: a subnet modules were heard on drops out this long after the last packet
+        private const int LearnedExpirySec = 30;
+
         private readonly frmMain mf;
+        private readonly Dictionary<string, DateTime> cLearned = new Dictionary<string, DateTime>();   // x.y.z.255 -> last heard (UTC), socket thread writes
+        private readonly bool cLearnSubnets;
+        private readonly HashSet<string> cLearnedLogged = new HashSet<string>();    // what the log last reported, send side only
+        private readonly object LearnedLock = new object();
+        private readonly Dictionary<int, string> cModuleIP = new Dictionary<int, string>();      // module ID -> last sender address of its PGN 32401
         private byte[] buffer = new byte[1024];
         private string cConnectionName;
         private string cLog;
@@ -26,9 +34,13 @@ namespace RateController
         private volatile bool Running = false;
         private Socket sendSocket;
 
-        public UDPComm(frmMain CallingForm, int ReceivePort, int SendToPort, int SendFromPort, string ConnectionName, string DestinationEndPoint = "")
+        public UDPComm(frmMain CallingForm, int ReceivePort, int SendToPort, int SendFromPort, string ConnectionName, string DestinationEndPoint = "", bool LearnSubnets = false)
         {
+            // LearnSubnets: also send to every subnet data has arrived from recently, not just the
+            // selected one. Modules on the tablet hotspot (192.168.137.x) or the PC's WiFi are heard
+            // through the any-address receive socket but were never sent to
             mf = CallingForm;
+            cLearnSubnets = LearnSubnets;
             cReceivePort = ReceivePort;
             cSendToPort = SendToPort;
             cSendFromPort = SendFromPort;
@@ -62,6 +74,18 @@ namespace RateController
         public string SubNet
         { get { return cSubNet; } }
 
+        public string ModuleIP(int ID)
+        {
+            // where module ID's status packets last came from, "" if never heard (LearnSubnets only).
+            // Not aged: callers check Core.ModulesStatus.Connected first
+            string Result = "";
+            lock (LearnedLock)
+            {
+                if (cModuleIP.TryGetValue(ID, out string IP)) Result = IP;
+            }
+            return Result;
+        }
+
         public string Log()
         {
             return cLog;
@@ -81,6 +105,16 @@ namespace RateController
                         // network
                         IPEndPoint EndPt = new IPEndPoint(cNetworkEP, cSendToPort);
                         sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, EndPt, new AsyncCallback(HandleSend), null);
+
+                        // other subnets modules are heard on (tablet hotspot, PC WiFi, second adapter)
+                        if (cLearnSubnets)
+                        {
+                            foreach (IPAddress Learned in LearnedTargets())
+                            {
+                                IPEndPoint Ep = new IPEndPoint(Learned, cSendToPort);
+                                sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, Ep, new AsyncCallback(HandleSend), null);
+                            }
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -256,6 +290,63 @@ namespace RateController
             }
         }
 
+        private void Learn(IPAddress Sender)
+        {
+            // socket thread. The sender's /24 broadcast, same convention as NetworkEP.
+            // Loopback and link-local (no DHCP) are skipped
+            byte[] B = Sender.GetAddressBytes();
+            if (B.Length == 4 && !IPAddress.IsLoopback(Sender) && !(B[0] == 169 && B[1] == 254))
+            {
+                string Bc = B[0] + "." + B[1] + "." + B[2] + ".255";
+                lock (LearnedLock)
+                {
+                    cLearned[Bc] = DateTime.UtcNow;
+                }
+            }
+        }
+
+        private List<IPAddress> LearnedTargets()
+        {
+            // learned subnets heard from within LearnedExpirySec, the selected one excluded (it is
+            // always sent to). Expired ones are dropped. Changes are written to the Ethernet log
+            List<IPAddress> Result = new List<IPAddress>();
+            List<string> Live = new List<string>();
+            string Selected = cNetworkEP.ToString();
+            lock (LearnedLock)
+            {
+                List<string> Expired = new List<string>();
+                foreach (KeyValuePair<string, DateTime> Kv in cLearned)
+                {
+                    if ((DateTime.UtcNow - Kv.Value).TotalSeconds > LearnedExpirySec)
+                    {
+                        Expired.Add(Kv.Key);
+                    }
+                    else if (Kv.Key != Selected)
+                    {
+                        Live.Add(Kv.Key);
+                    }
+                }
+                foreach (string K in Expired) cLearned.Remove(K);
+            }
+
+            foreach (string K in Live)
+            {
+                Result.Add(IPAddress.Parse(K));
+                if (cLearnedLogged.Add(K)) AddToLog("+ subnet " + K);
+            }
+            List<string> Gone = new List<string>();
+            foreach (string K in cLearnedLogged)
+            {
+                if (!Live.Contains(K)) Gone.Add(K);
+            }
+            foreach (string K in Gone)
+            {
+                cLearnedLogged.Remove(K);
+                AddToLog("- subnet " + K + " (no module " + LearnedExpirySec + " s)");
+            }
+            return Result;
+        }
+
         private void Receive(IAsyncResult asyncResult)
         {
             if (Running)
@@ -276,6 +367,19 @@ namespace RateController
                         localMsg = new byte[msgLen];
                         Array.Copy(buffer, localMsg, msgLen);
                         port = ((IPEndPoint)epSender).Port;
+                        if (cLearnSubnets)
+                        {
+                            Learn(((IPEndPoint)epSender).Address);
+
+                            // PGN 32401 module status, byte 2 = raw module ID: remember where it lives
+                            if (msgLen > 2 && localMsg[0] == 145 && localMsg[1] == 126)
+                            {
+                                lock (LearnedLock)
+                                {
+                                    cModuleIP[localMsg[2]] = ((IPEndPoint)epSender).Address.ToString();
+                                }
+                            }
+                        }
                     }
 
                     // Listen for more connections again...

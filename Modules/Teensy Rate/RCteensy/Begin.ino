@@ -449,8 +449,22 @@ void LoadData()
 
 	if (!IsValid)
 	{
+		// The module ID survives a defaults reload. A firmware update changes InoID, which
+		// lands here, and without this every module came back as a new board. Read from the
+		// old record's position — ID must stay the FIRST field of ModuleConfig (EEPROM 23).
+		// Blank EEPROM reads 0xFF and an unassigned board stores NewModuleID (25), both above
+		// 15, so those boards start (or stay) at NewModuleID.
+		uint8_t KeptID;
+		EEPROM.get(23, KeptID);
+
 		Serial.println("Stored settings not valid.");
 		LoadDefaults();
+		if (KeptID <= 15)
+		{
+			MDL.ID = KeptID;
+			Serial.print("Module ID kept: ");
+			Serial.println(KeptID);
+		}
 		SaveData();
 		GoodPins=true;
 	}
@@ -521,7 +535,7 @@ void LoadDefaults()
 	}
 
 	// module settings
-	MDL.ID = 0;
+	MDL.ID = NewModuleID;
 	MDL.SensorCount = 1;
 	MDL.InvertRelay = true;
 	MDL.InvertFlow = true;

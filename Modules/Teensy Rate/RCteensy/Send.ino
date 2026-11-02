@@ -25,56 +25,62 @@ void SendComm()
 
         byte Data[20];
 
-        for (int i = 0; i < MDL.SensorCount; i++)
+        // an unassigned board (NewModuleID) sends no product reports: its ID doesn't fit the
+        // 4-bit module field and 25 would read as module 9. 32401 and 32403 below carry the
+        // full ID, so the app still sees the board.
+        if (MDL.ID <= 15)
         {
-            Data[0] = 144;
-            Data[1] = 126;
-            Data[2] = BuildModSenID(MDL.ID, i);
-
-            // rate applied, 1000 X actual
-            uint32_t Applied = Sensor[i].UPM * 1000;
-            Data[3] = Applied;
-            Data[4] = Applied >> 8;
-            Data[5] = Applied >> 16;
-
-            // accumulated quantity, 10 X actual
-            if (Sensor[i].MeterCal > 0)
+            for (int i = 0; i < MDL.SensorCount; i++)
             {
-                uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
-                Data[6] = Units;
-                Data[7] = Units >> 8;
-                Data[8] = Units >> 16;
-            }
-            else
-            {
-                Data[6] = 0;
-                Data[7] = 0;
-                Data[8] = 0;
-            }
+                Data[0] = 144;
+                Data[1] = 126;
+                Data[2] = BuildModSenID(MDL.ID, i);
 
-            //PWM
-            Data[9] = (int)Sensor[i].PWM;
-            Data[10] = (int)Sensor[i].PWM >> 8;
+                // rate applied, 1000 X actual
+                uint32_t Applied = Sensor[i].UPM * 1000;
+                Data[3] = Applied;
+                Data[4] = Applied >> 8;
+                Data[5] = Applied >> 16;
 
-            // status
-            Data[11] = 0;
-            if (SensorConnected[i]) Data[11] |= 0b00000001;
-            if (BinEmpty[i]) Data[11] |= 0b00000010;
+                // accumulated quantity, 10 X actual
+                if (Sensor[i].MeterCal > 0)
+                {
+                    uint32_t Units = Sensor[i].TotalPulses * 10.0 / Sensor[i].MeterCal;
+                    Data[6] = Units;
+                    Data[7] = Units >> 8;
+                    Data[8] = Units >> 16;
+                }
+                else
+                {
+                    Data[6] = 0;
+                    Data[7] = 0;
+                    Data[8] = 0;
+                }
 
-            // Hz
-            uint16_t Hz = Sensor[i].Hz * 10;
-            Data[12] = Hz;
-            Data[13] = Hz >> 8;
+                //PWM
+                Data[9] = (int)Sensor[i].PWM;
+                Data[10] = (int)Sensor[i].PWM >> 8;
 
-            // crc
-            Data[14] = CRC(Data, 14, 0);
+                // status
+                Data[11] = 0;
+                if (SensorConnected[i]) Data[11] |= 0b00000001;
+                if (BinEmpty[i]) Data[11] |= 0b00000010;
 
-            if (Ethernet.linkStatus() == LinkON)
-            {
-                // send ethernet
-                UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 15);
-                UDPcomm.endPacket();
+                // Hz
+                uint16_t Hz = Sensor[i].Hz * 10;
+                Data[12] = Hz;
+                Data[13] = Hz >> 8;
+
+                // crc
+                Data[14] = CRC(Data, 14, 0);
+
+                if (Ethernet.linkStatus() == LinkON)
+                {
+                    // send ethernet
+                    UDPcomm.beginPacket(DestinationIP, DestinationPort);
+                    UDPcomm.write(Data, 15);
+                    UDPcomm.endPacket();
+                }
             }
         }
 
@@ -219,7 +225,8 @@ void SendPIDlog()
     //24    InoID Hi
     //25    CRC
 
-    if (PidLogEnabled && Ethernet.linkStatus() == LinkON)
+    // not from an unassigned board: Mod/Sen packing would report ID 25 as module 9
+    if (PidLogEnabled && Ethernet.linkStatus() == LinkON && MDL.ID <= 15)
     {
         byte Data[26];
 

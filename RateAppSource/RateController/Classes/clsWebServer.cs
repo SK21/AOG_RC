@@ -1,6 +1,7 @@
 using RateController.Language;
 using RateController.PGNs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -21,9 +23,18 @@ namespace RateController.Classes
         // all app state is read/written on the UI thread via Core.MainForm.Invoke
 
         private const string HotspotRule = "RateController phone hotspot";
+        private const string ModuleHotspotRule = "RateController module hotspot";
+        private const int ModulePort = 29999;       // module data in, same as UDPmodules in Core.cs
 
         // Windows Mobile Hotspot through its WinRT api in a hidden powershell, no admin needed.
-        // ACTION is status, start or stop. prints state|result|ssid|passphrase
+        // ACTION is status, start or stop. prints state|result|band|bandnote|ssid|passphrase
+        //   result    last start/stop: Success or Windows' reason, '' if nothing was done
+        //   band      Auto, TwoPointFourGigahertz, FiveGigahertz, or '' if Windows has no Band
+        //   bandnote  '' nothing changed, Set, Unsupported, or Error: <message>
+        // On start the band is forced to 2.4 GHz when supported (the ESP32 radio is 2.4 GHz only,
+        // and Windows may otherwise put the hotspot on 5 GHz). Done on every start so a user who
+        // sets Windows back to "Any available" doesn't end up with modules that can't see it.
+        // A hotspot that was already On is restarted so the new band takes effect.
         private const string HotspotScript = @"$ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
@@ -34,23 +45,45 @@ $N=[Windows.Networking.Connectivity.NetworkInformation]
 $p=$N::GetInternetConnectionProfile()
 if(-not $p){$p=$N::GetConnectionProfiles()|Where-Object{$T::GetTetheringCapabilityFromConnectionProfile($_) -eq 'Enabled'}|Select-Object -First 1}
 $m=$T::CreateFromConnectionProfile($p)
+$ext=[System.WindowsRuntimeSystemExtensions].GetMethods()|Where-Object{$_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1}
+$aw=($ext|Where-Object{$_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'})[0].MakeGenericMethod([Windows.Networking.NetworkOperators.NetworkOperatorTetheringOperationResult])
+$aa=($ext|Where-Object{$_.GetParameters()[0].ParameterType.Name -eq 'IAsyncAction'})[0]
+function Op($o){$t=$aw.Invoke($null,@($o));$null=$t.Wait(30000);[string]$t.Result.Status}
 $r=''
+$bn=''
 $s=[string]$m.TetheringOperationalState
-if(('ACTION' -eq 'start' -and $s -ne 'On') -or ('ACTION' -eq 'stop' -and $s -ne 'Off')){
-$aw=([System.WindowsRuntimeSystemExtensions].GetMethods()|Where-Object{$_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'})[0].MakeGenericMethod([Windows.Networking.NetworkOperators.NetworkOperatorTetheringOperationResult])
-if('ACTION' -eq 'start'){$op=$m.StartTetheringAsync()}else{$op=$m.StopTetheringAsync()}
-$t=$aw.Invoke($null,@($op))
-$null=$t.Wait(30000)
-$r=[string]$t.Result.Status
-}
+if('ACTION' -eq 'start'){
+try{
 $c=$m.GetCurrentAccessPointConfiguration()
-Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Passphrase)";
+if($c.PSObject.Properties['Band']){
+if($c.IsBandSupported('TwoPointFourGigahertz')){
+if([string]$c.Band -ne 'TwoPointFourGigahertz'){
+$c.Band='TwoPointFourGigahertz'
+$t=$aa.Invoke($null,@($m.ConfigureAccessPointAsync($c)))
+$null=$t.Wait(30000)
+$bn='Set'
+if($s -eq 'On'){$r=Op $m.StopTetheringAsync();$s='Off'}
+}
+}else{$bn='Unsupported'}
+}
+}catch{$bn='Error: '+($_.Exception.Message -replace '[|\r\n]',' ')}
+if($s -ne 'On'){$r=Op $m.StartTetheringAsync()}
+}
+if('ACTION' -eq 'stop' -and $s -ne 'Off'){$r=Op $m.StopTetheringAsync()}
+$c=$m.GetCurrentAccessPointConfiguration()
+$b=''
+if($c.PSObject.Properties['Band']){$b=[string]$c.Band}
+Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$bn,$c.Ssid,$c.Passphrase)";
 
-        private const int HotspotMaxRestarts = 3;
+        private const int HotspotMaxRestarts = 3;       // quick restarts, one per 30 s watchdog tick
+        private const int HotspotSlowTicks = 10;        // then one every 10 ticks = 5 min, indefinitely
         private string cCalMsg = "";
         private int cHotspotRestarts = 0;
+        private int cHotspotSlowTicks = 0;
         private System.Windows.Forms.Timer HotspotWatch = new System.Windows.Forms.Timer();
-        private bool cHotspotBusy = false;
+        private string cHotspotBand = "";          // as Windows reports it
+        private string cHotspotBandNote = "";      // last start's band change
+        private int cHotspotPending = 0;            // calls in flight; may overlap (watchdog status + setup start)
         private string cHotspotPassword = "";
         private string cHotspotResult = "";
         private string cHotspotSsid = "";
@@ -70,11 +103,25 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             HotspotWatch.Enabled = true;
         }
 
-        public bool HotspotGaveUp
-        { get { return cHotspotRestarts >= HotspotMaxRestarts && cHotspotState == "Off"; } }
+        public bool HotspotFailing
+        { get { return cHotspotRestarts >= HotspotMaxRestarts && cHotspotState == "Off"; } }   // quick restarts used up, slow retry running
+
+        // module WiFi setup takes the WiFi adapter to a module's own hotspot, which knocks the
+        // tablet hotspot off. A watchdog restart then would fail or pull the PC off the module
+        // mid-run, so setup pauses the watchdog and restarts the hotspot itself afterwards
+        public bool HotspotPaused { get; set; }
+
+        public string HotspotBand
+        { get { return cHotspotBand; } }       // Auto, TwoPointFourGigahertz, FiveGigahertz, or ''
+
+        public string HotspotBandNote
+        { get { return cHotspotBandNote; } }   // '', Set, Unsupported, or Error: ...
 
         public bool HotspotBusy
-        { get { return cHotspotBusy; } }
+        { get { return cHotspotPending > 0; } }
+
+        public bool HotspotIs24GHz
+        { get { return cHotspotBand == "TwoPointFourGigahertz"; } }
 
         public string HotspotPassword
         { get { return cHotspotPassword; } }
@@ -133,12 +180,23 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             // firewall rule for phones on the tablet's Windows Mobile Hotspot (always 192.168.137.x).
             // its network has no profile so it counts as Public and can't be set to Private.
             // port based so upgrades and folder moves keep working. Windows asks for admin.
+            // One prompt covers both rules: TCP for the phone pages, UDP for module data. If the
+            // Windows first-run prompt left a Block rule on this exe for Public (Public unticked),
+            // that block beats any Allow, so this exe's own Public rules are flipped to Allow too.
             bool Result = false;
             try
             {
                 string Rule = "advfirewall firewall {0} rule name=\"" + HotspotRule + "\"";
+                string ModRule = "advfirewall firewall {0} rule name=\"" + ModuleHotspotRule + "\"";
                 string Args = "/c netsh " + string.Format(Rule, "delete") + " & netsh " + string.Format(Rule, "add")
-                    + " dir=in action=allow protocol=TCP localport=" + cPort.ToString() + " profile=public remoteip=192.168.137.0/24";
+                    + " dir=in action=allow protocol=TCP localport=" + cPort.ToString() + " profile=public remoteip=192.168.137.0/24"
+                    + " & netsh " + string.Format(ModRule, "delete") + " & netsh " + string.Format(ModRule, "add")
+                    + " dir=in action=allow protocol=UDP localport=" + ModulePort.ToString() + " profile=public remoteip=192.168.137.0/24";
+                if (ExeBlockedOnPublic())
+                {
+                    Args += " & netsh advfirewall firewall set rule name=all dir=in profile=public program=\""
+                        + System.Windows.Forms.Application.ExecutablePath + "\" new action=allow";
+                }
                 ProcessStartInfo Info = new ProcessStartInfo("cmd.exe", Args);
                 Info.UseShellExecute = true;
                 Info.Verb = "runas";
@@ -164,25 +222,21 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
         {
             // a deliberate start (Save, app start) gets fresh restart attempts
             cHotspotRestarts = 0;
+            cHotspotSlowTicks = 0;
         }
 
         public void HotspotAsync(string Action, Action Done)
         {
-            // status, start or stop on a pool thread (2-5 s); results and Done on the UI thread
-            cHotspotBusy = true;
+            // status, start or stop on a pool thread (2-5 s, longer for a band change);
+            // results and Done on the UI thread
+            Interlocked.Increment(ref cHotspotPending);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                string[] Parts = RunHotspot(Action).Split(new char[] { '|' }, 4);
+                string Output = RunHotspot(Action);
                 Action Apply = () =>
                 {
-                    cHotspotState = Parts.Length == 4 && Parts[0] != "" ? Parts[0] : "Unknown";
-                    if (Parts.Length == 4)
-                    {
-                        if (Parts[1] != "") cHotspotResult = Parts[1];
-                        cHotspotSsid = Parts[2];
-                        cHotspotPassword = Parts[3];
-                    }
-                    cHotspotBusy = false;
+                    ApplyHotspot(Output, Action);
+                    Interlocked.Decrement(ref cHotspotPending);
                     Done?.Invoke();
                 };
                 try
@@ -191,10 +245,34 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
                 }
                 catch (Exception ex)
                 {
-                    cHotspotBusy = false;
+                    Interlocked.Decrement(ref cHotspotPending);
                     Props.WriteErrorLog("clsWebServer/HotspotAsync: " + ex.Message);
                 }
             });
+        }
+
+        public bool HotspotRun(string Action)
+        {
+            // synchronous version for callers already on a worker thread (module WiFi setup).
+            // Never call from the UI thread: the result is applied there through Invoke.
+            // Returns whether the hotspot ended up On
+            bool Result = false;
+            Interlocked.Increment(ref cHotspotPending);
+            try
+            {
+                string Output = RunHotspot(Action);
+                Core.MainForm.Invoke((Action)(() => ApplyHotspot(Output, Action)));
+                Result = cHotspotState == "On";
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsWebServer/HotspotRun: " + ex.Message);
+            }
+            finally
+            {
+                Interlocked.Decrement(ref cHotspotPending);
+            }
+            return Result;
         }
 
         public bool HotspotAllowed()
@@ -203,22 +281,71 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
             bool Result = false;
             try
             {
-                ProcessStartInfo Info = new ProcessStartInfo("netsh", "advfirewall firewall show rule name=\"" + HotspotRule + "\"");
-                Info.UseShellExecute = false;
-                Info.CreateNoWindow = true;
-                Info.RedirectStandardOutput = true;
-                using (Process P = Process.Start(Info))
-                {
-                    P.StandardOutput.ReadToEnd();
-                    P.WaitForExit(5000);
-                    Result = P.ExitCode == 0;
-                }
+                // phone pages (TCP) and module data (UDP) from the tablet hotspot, and no block on this exe
+                Result = FirewallRuleExists(HotspotRule) && FirewallRuleExists(ModuleHotspotRule) && !ExeBlockedOnPublic();
             }
             catch (Exception ex)
             {
                 Props.WriteErrorLog("clsWebServer/HotspotAllowed: " + ex.Message);
             }
             return Result;
+        }
+
+        private bool FirewallRuleExists(string Name)
+        {
+            // netsh exits 1 when the rule isn't there; the exit code isn't localized
+            bool Result = false;
+            ProcessStartInfo Info = new ProcessStartInfo("netsh", "advfirewall firewall show rule name=\"" + Name + "\"");
+            Info.UseShellExecute = false;
+            Info.CreateNoWindow = true;
+            Info.RedirectStandardOutput = true;
+            using (Process P = Process.Start(Info))
+            {
+                P.StandardOutput.ReadToEnd();
+                P.WaitForExit(5000);
+                Result = P.ExitCode == 0;
+            }
+            return Result;
+        }
+
+        private bool ExeBlockedOnPublic()
+        {
+            // An enabled inbound Block rule aimed at this exe that covers Public: what Windows'
+            // first-run prompt leaves when Public is unticked. It beats any Allow rule. Read through
+            // HNetCfg.FwPolicy2 (no admin, not localized like netsh). A generic block on something
+            // else isn't ours to touch, so only rules naming this exe count.
+            const int PublicProfile = 4;
+            const int DirIn = 1;
+            const int ActionBlock = 0;
+            bool Result = false;
+            try
+            {
+                string ExePath = System.Windows.Forms.Application.ExecutablePath;
+                Type T = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+                object Policy = Activator.CreateInstance(T);
+                object Rules = FwGet(Policy, "Rules");
+                foreach (object R in (IEnumerable)Rules)
+                {
+                    if (!Result && (bool)FwGet(R, "Enabled")
+                        && (int)FwGet(R, "Direction") == DirIn
+                        && ((int)FwGet(R, "Profiles") & PublicProfile) != 0
+                        && (int)FwGet(R, "Action") == ActionBlock
+                        && string.Equals(FwGet(R, "ApplicationName") as string ?? "", ExePath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsWebServer/ExeBlockedOnPublic: " + ex.Message);
+            }
+            return Result;
+        }
+
+        private static object FwGet(object Com, string Name)
+        {
+            return Com.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, Com, null);
         }
 
         public List<string> PhoneUrls()
@@ -585,23 +712,64 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
 
         private void HotspotWatch_Tick(object sender, EventArgs e)
         {
-            if (Props.TabletHotspot && !cHotspotBusy) HotspotAsync("status", HotspotWatchDone);
+            if (Props.TabletHotspot && !HotspotPaused && !HotspotBusy) HotspotAsync("status", HotspotWatchDone);
         }
 
         private void HotspotWatchDone()
         {
-            // up to HotspotMaxRestarts tries after the hotspot is seen off, reset once it's seen on.
+            // HotspotMaxRestarts quick restarts (30 s apart) once the hotspot is seen off, then one
+            // every HotspotSlowTicks (5 min) for as long as Tablet Hotspot is checked. Never gives up:
+            // Windows power saving turns the hotspot off after 5 min with no device, which is normal
+            // while a module is unplugged or out of range. Reset once it's seen on.
             // Unknown (the check itself failed) isn't counted
             if (cHotspotState == "On")
             {
                 cHotspotRestarts = 0;
+                cHotspotSlowTicks = 0;
             }
-            else if (cHotspotState == "Off" && Props.TabletHotspot && cHotspotRestarts < HotspotMaxRestarts)
+            else if (cHotspotState == "Off" && Props.TabletHotspot && !HotspotPaused)
             {
-                cHotspotRestarts++;
-                Props.WriteErrorLog("clsWebServer/HotspotWatch: hotspot off, restart " + cHotspotRestarts.ToString() + " of " + HotspotMaxRestarts.ToString()
-                    + (cHotspotResult != "" && cHotspotResult != "Success" ? ", last: " + cHotspotResult : ""));
-                HotspotAsync("start", null);
+                string Last = cHotspotResult != "" && cHotspotResult != "Success" ? ", last: " + cHotspotResult : "";
+                if (cHotspotRestarts < HotspotMaxRestarts)
+                {
+                    cHotspotRestarts++;
+                    Props.WriteErrorLog("clsWebServer/HotspotWatch: hotspot off, restart " + cHotspotRestarts.ToString() + " of " + HotspotMaxRestarts.ToString() + Last);
+                    HotspotAsync("start", null);
+                }
+                else
+                {
+                    cHotspotSlowTicks++;
+                    if (cHotspotSlowTicks >= HotspotSlowTicks)
+                    {
+                        cHotspotSlowTicks = 0;
+                        Props.WriteErrorLog("clsWebServer/HotspotWatch: hotspot still off, slow retry" + Last);
+                        HotspotAsync("start", null);
+                    }
+                }
+            }
+        }
+
+        private void ApplyHotspot(string Output, string Action)
+        {
+            // UI thread only. Output is state|result|band|bandnote|ssid|passphrase
+            string[] Parts = Output.Split(new char[] { '|' }, 6);
+            if (Parts.Length == 6 && Parts[0] != "")
+            {
+                cHotspotState = Parts[0];
+                if (Parts[1] != "") cHotspotResult = Parts[1];
+                cHotspotBand = Parts[2];
+                if (Parts[3] != "")
+                {
+                    cHotspotBandNote = Parts[3];
+                    if (cHotspotBandNote != "Set") Props.WriteErrorLog("clsWebServer/HotspotBand: " + cHotspotBandNote + " (band " + cHotspotBand + ")");
+                }
+                cHotspotSsid = Parts[4];
+                cHotspotPassword = Parts[5];
+            }
+            else
+            {
+                cHotspotState = "Unknown";
+                Props.WriteErrorLog("clsWebServer/Hotspot " + Action + ": unexpected output '" + Output + "'");
             }
         }
 
@@ -619,11 +787,13 @@ Write-Output ('{0}|{1}|{2}|{3}' -f $m.TetheringOperationalState,$r,$c.Ssid,$c.Pa
                 Info.RedirectStandardError = true;
                 using (Process P = Process.Start(Info))
                 {
+                    // stderr read on its own task so a full pipe can't deadlock stdout
+                    var ErrTask = P.StandardError.ReadToEndAsync();
                     string Output = P.StandardOutput.ReadToEnd();
-                    string Errors = P.StandardError.ReadToEnd();
-                    P.WaitForExit(40000);
+                    P.WaitForExit(90000);      // a band change is configure + stop + start, up to 30 s each
                     Result = Output.Trim();
-                    if (Errors.Trim() != "") Props.WriteErrorLog("clsWebServer/RunHotspot " + Action + ": " + Errors.Trim());
+                    string Errors = ErrTask.Result.Trim();
+                    if (Errors != "") Props.WriteErrorLog("clsWebServer/RunHotspot " + Action + ": " + Errors);
                 }
             }
             catch (Exception ex)

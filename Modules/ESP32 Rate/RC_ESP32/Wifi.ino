@@ -28,13 +28,29 @@
 // hotspot airtime as one dropped UDP packet. A full scan costs ten times that,
 // so it is rationed separately below and suppressed entirely while anyone is
 // actually using the portal.
-const uint32_t StaRetryFastMs  = 10000;		// first failures, nobody on the hotspot
-const uint32_t StaRetrySlowMs  = 60000;		// persistent failure, nobody on the hotspot
+//
+// Idle hotspot (nobody associated) — revised 2026-11-01 for the tablet hotspot,
+// ported from YieldFlo. The August timings backed off to one attempt a minute after
+// 30 s, and scanned only every 5th attempt. With the tablet as the network, nobody
+// is ever on this hotspot, so that rationing protected no one and cost up to a
+// minute after every outage (a module WiFi setup run, an app or PC restart), and
+// minutes more when the tablet's hotspot came back on a different channel. Now:
+// fast for the first two minutes after the link is lost or the module boots — when
+// a reconnect is most likely to succeed — then a steady slower pace, never giving
+// up. Off-air time is the cost: someone joining this hotspot while the station is
+// searching can land in a gap and fail. A full scan (~2 s) is the big gap, so full
+// scans come no more than once every 15 s. That is ~13% off-air at worst in the
+// fast window, under 10% after it.
+const uint32_t StaFastWindowMs     = 120000;	// fast pace this long after link loss / boot
+const uint32_t StaRetryFastMs      = 5000;		// idle, fast window, channel cached (full scan every 3rd = 15 s)
+const uint32_t StaRetrySlowMs      = 15000;		// idle, after the fast window, channel cached
+const uint32_t StaRetryScanFastMs  = 15000;		// idle, fast window, nothing cached (all full scans)
+const uint32_t StaRetryScanSlowMs  = 30000;		// idle, after the fast window, nothing cached
+const uint8_t  StaScanEveryFast    = 3;			// full scan every Nth attempt in the fast window
+const uint8_t  StaScanEverySlow    = 4;			// and after it (once a minute at StaRetrySlowMs)
 const uint32_t StaRetryBusyMs  = 120000;	// a client is associated but not using the portal
 const uint32_t StaRetryScanOnlyMs = 300000;	// client associated AND no channel cached, so every
 											// attempt is necessarily the expensive kind
-const uint8_t  StaFastAttempts = 3;			// attempts at the fast interval before backing off
-const uint8_t  StaScanEveryN   = 5;			// full scan every Nth attempt while the hotspot is idle
 const uint32_t StaScanEarnedMs = 1800000;	// 30 min of failed directed attempts earns one full scan
 const uint32_t PortalActiveMs  = 60000;		// the portal counts as in use this long after a request
 
@@ -50,7 +66,7 @@ const uint8_t  StaAuthFailLimit = 3;		// consecutive auth failures before believ
 
 bool     StaConnected = false;			// GOT_IP seen and not yet followed by a disconnect
 uint32_t StaLastAttemptMs = 0;			// millis() of the last WiFi.begin()
-uint32_t StaRetryMs = StaRetryFastMs;	// current retry interval
+uint32_t StaDownSinceMs = 0;			// millis() the link was lost / station started — starts the fast window
 uint8_t  StaFailCount = 0;				// consecutive failed attempts
 uint8_t  StaSinceScan = 0;				// directed attempts since the last full scan
 uint32_t StaDirectedFailMs = 0;			// millis() directed-only failures began; 0 = not failing
@@ -64,6 +80,8 @@ uint8_t  StaAuthFailCount = 0;			// consecutive credential rejections
 bool     StaAuthSuspect = false;		// the password is being refused — back off, and say so
 bool     StaAttemptPending = false;		// a WiFi.begin() is in flight; times the off-channel window
 uint32_t LastPortalMs = 0;				// millis() of the last real portal page request; 0 = never
+const uint8_t StaLogAttempts = 3;		// attempts printed in full; after that retries continue silently
+uint8_t  StaLogCount = 0;				// attempts printed since the last success or Retry press
 
 // The two codes that actually mean the PSK was rejected: the router refused the
 // association outright (202), or the 4-way handshake never completed (15).
@@ -112,6 +130,7 @@ void StartWifiStation()
 	StaChannel = MDLnetwork.StaChannelCache;
 
 	StaLastAttemptMs = millis();
+	StaDownSinceMs = StaLastAttemptMs;		// boot opens the fast window
 	StaAttemptPending = true;
 	WiFi.begin(MDLnetwork.SSID, MDLnetwork.Password);
 	Serial.println();
@@ -165,12 +184,12 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
 
 	StaConnected = true;
 	StaFailCount = 0;
-	StaRetryMs = StaRetryFastMs;
 	StaSinceScan = 0;
 	StaDirectedFailMs = 0;
 	StaAuthFailCount = 0;
 	StaAuthSuspect = false;
 	StaAttemptPending = false;
+	StaLogCount = 0;		// a later dropout prints its first attempts again
 
 	// Cache where this network actually lives. The next reconnect can then skip
 	// the scan entirely — the difference between ~300 ms and ~2 s of the hotspot
@@ -190,6 +209,11 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 	// itself is paced from loop() by ServiceWifiStation(). Nothing here blocks
 	// event dispatch and nothing here touches flash, and nothing here restarts
 	// the module.
+	//
+	// Losing a working link opens the fast window. A failed attempt while already
+	// down does not — otherwise the window would never close.
+	bool wasConnected = StaConnected;	// read before it's cleared below
+	if (StaConnected) StaDownSinceMs = millis();
 	StaConnected = false;
 
 	uint8_t reason = info.wifi_sta_disconnected.reason;
@@ -208,22 +232,27 @@ void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 		StaAuthSuspect = false;
 	}
 
-	Serial.print("WiFi lost connection. Reason: ");
-	Serial.print(reason);
-	if (authFail) Serial.print(" (auth)");
-
-	// Time from WiFi.begin() to the verdict — this is the window the radio spent
-	// off the softAP's channel, and the number every pacing decision in this file
-	// was sized against. Printed only when an attempt was actually in flight, so
-	// a beacon timeout on a healthy link does not report a meaningless duration.
-	if (StaAttemptPending)
+	// A working link that dropped is always reported; a failed attempt only while
+	// attempts are still being printed (see StaLogAttempts in ServiceWifiStation)
+	if (wasConnected || StaLogCount <= StaLogAttempts)
 	{
-		StaAttemptPending = false;
-		Serial.print(" after ");
-		Serial.print(millis() - StaLastAttemptMs);
-		Serial.print(" ms");
+		Serial.print("WiFi lost connection. Reason: ");
+		Serial.print(reason);
+		if (authFail) Serial.print(" (auth)");
+
+		// Time from WiFi.begin() to the verdict — this is the window the radio spent
+		// off the softAP's channel, and the number every pacing decision in this file
+		// was sized against. Printed only when an attempt was actually in flight, so
+		// a beacon timeout on a healthy link does not report a meaningless duration.
+		if (StaAttemptPending)
+		{
+			Serial.print(" after ");
+			Serial.print(millis() - StaLastAttemptMs);
+			Serial.print(" ms");
+		}
+		Serial.println();
 	}
-	Serial.println();
+	StaAttemptPending = false;
 
 	// The station's subnet broadcast died with the link, so sending there is a
 	// black hole. Put the destination back on the module's own AP subnet and a
@@ -252,11 +281,13 @@ void NotePortalRequest()
 void RequestNetworkRetry()
 {
 	StaForceScan = true;
+	StaDownSinceMs = millis();		// and the fast pace again, as after a fresh loss
 
 	// A deliberate press earns a clean slate — the user may have just fixed
 	// something at the router end that this side cannot see.
 	StaAuthFailCount = 0;
 	StaAuthSuspect = false;
+	StaLogCount = 0;			// and the attempts are printed again
 }
 
 // True once the network has refused our password often enough to believe it.
@@ -324,12 +355,14 @@ void ServiceWifiStation()
 	// Not an exotic state either — it is what a mistyped SSID leaves behind, or
 	// ticking the box before the shed router is switched on.
 	bool canDirect = (StaChannel != 0);
+	bool fastWindow = (now - StaDownSinceMs) < StaFastWindowMs;
 
 	uint32_t interval;
 	if (StaAuthSuspect)                interval = StaRetryAuthMs;
 	else if (clientOnAp && !canDirect) interval = StaRetryScanOnlyMs;
 	else if (clientOnAp)               interval = StaRetryBusyMs;
-	else                               interval = StaRetryMs;
+	else if (!canDirect)               interval = fastWindow ? StaRetryScanFastMs : StaRetryScanSlowMs;
+	else                               interval = fastWindow ? StaRetryFastMs : StaRetrySlowMs;
 
 	if (!forced && (now - StaLastAttemptMs) < interval) return;
 
@@ -342,7 +375,7 @@ void ServiceWifiStation()
 	if (forced)          fullScan = true;		// user asked — find it wherever it moved to
 	else if (!canDirect) fullScan = true;		// nothing cached, no cheaper option exists
 	else if (clientOnAp) fullScan = (StaDirectedFailMs != 0 && (now - StaDirectedFailMs) >= StaScanEarnedMs);
-	else                 fullScan = (StaSinceScan >= StaScanEveryN);
+	else                 fullScan = (StaSinceScan + 1 >= (fastWindow ? StaScanEveryFast : StaScanEverySlow));
 
 	StaLastAttemptMs = now;
 	StaForceScan = false;
@@ -359,25 +392,29 @@ void ServiceWifiStation()
 		if (StaDirectedFailMs == 0) StaDirectedFailMs = now;
 	}
 
-	// Back off once the quick retries have not worked. The fast interval exists
-	// to ride out a router reboot or a brief drop out of range; past that, the
-	// network is genuinely absent and there is no reason to keep paying for it.
-	// Only applies when the hotspot is idle — StaRetryBusyMs governs otherwise.
-	StaRetryMs = (StaFailCount >= StaFastAttempts) ? StaRetrySlowMs : StaRetryFastMs;
-
-	Serial.print("WiFi retry #");
-	Serial.print(StaFailCount);
-	if (fullScan)
+	// The first StaLogAttempts retries are printed, then one notice, then nothing until
+	// a success or a Retry press resets StaLogCount — the retries themselves never stop
+	if (StaLogCount < StaLogAttempts)
 	{
-		Serial.print(" full scan");
+		Serial.print("WiFi retry #");
+		Serial.print(StaFailCount);
+		if (fullScan)
+		{
+			Serial.print(" full scan");
+		}
+		else
+		{
+			Serial.print(" directed ch");
+			Serial.print(StaChannel);
+		}
+		Serial.print(clientOnAp ? ", hotspot busy" : ", hotspot idle");
+		Serial.println(StaAuthSuspect ? ", password refused" : "");
 	}
-	else
+	else if (StaLogCount == StaLogAttempts)
 	{
-		Serial.print(" directed ch");
-		Serial.print(StaChannel);
+		Serial.println("WiFi still not connected - retrying without further messages");
 	}
-	Serial.print(clientOnAp ? ", hotspot busy" : ", hotspot idle");
-	Serial.println(StaAuthSuspect ? ", password refused" : "");
+	if (StaLogCount <= StaLogAttempts) StaLogCount++;
 
 	StaAttemptPending = true;
 	if (fullScan) WiFi.begin(MDLnetwork.SSID, MDLnetwork.Password);

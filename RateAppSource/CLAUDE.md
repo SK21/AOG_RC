@@ -92,6 +92,13 @@ Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF). Bo
 - module → RC: **0xFF14/0xFF15/0xFF16** → PGN 32403 (assembled on 0xFF16)
 - Stored in a dedicated EEPROM slot (offset 3) that **survives a firmware reflash** (unlike settings).
 
+### Unassigned boards (ID 25)
+- New/blank boards start at **ID 25** (`NewModuleID`, all 3 firmwares; app `Props.NewModuleID`). A firmware update keeps the stored ID when it is 0-15 (`LoadData()` ID-keep reads EEPROM 23; `ModuleConfig.ID` must stay the first field).
+- At 25 a board sends only PGN 32401 (+ 32403 on Teensy/ESP32); per-product PGNs (32400, 32402) are suppressed because Mod/Sen packing would read 25 as module 9.
+- CAN (Teensy): only 0xFF08 is sent, low nibble = 15, **byte 4 = full ID** (always sent; >15 = unassigned). `CanFrameTranslator` turns that into a 32401 from ID 25 instead of a module-15 entry.
+- App: `PGN32401.NewBoardConnected()`; the 32700 bit-6 assign guard counts a new board as connected; Config page shows `lbNewBoard`.
+- ESP32 hotspot name: `APname_<ID>_<MAC bytes 3-5 hex>`, e.g. `RateModule_25_123456`; the WiFi list on Comm reads the ID from the name.
+
 ### Gateway PGNs
 | PGN | Direction | Description |
 |-----|-----------|-------------|

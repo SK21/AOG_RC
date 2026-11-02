@@ -111,79 +111,89 @@ namespace RateController.Classes.Can
 
             byte pgnLow = ps;
             int moduleId = frame.Data[0] & 0x0F;
-            var state = GetOrCreateState(moduleId);
-
-            switch (pgnLow)
+            // An unassigned Teensy (Props.NewModuleID) sends only 0xFF08, with module 15 in the
+            // low nibble and its full ID in byte 4. It's reported as a 32401 from that ID
+            // instead of as module 15, so no module-15 entry or "connected" event is created.
+            if (pgnLow == 0x08 && frame.Dlc >= 5 && frame.Data[4] > 15)
             {
-                case 0x00:  // 0xFF00 — Sensor Rate/Quantity
-                    if (frame.Dlc >= 8)
-                    {
-                        state.Last0xFF00 = CloneData(frame.Data, 8);
-                        TryAssemble32400(state);
-                    }
-                    break;
+                Report32401NewBoard(frame.Data);
+            }
+            else
+            {
+                var state = GetOrCreateState(moduleId);
 
-                case 0x01:  // 0xFF01 — Sensor PWM/Hz
-                    if (frame.Dlc >= 8)
-                    {
-                        state.Last0xFF01 = CloneData(frame.Data, 8);
-                        TryAssemble32400(state);
-                    }
-                    break;
-
-                case 0x02:  // 0xFF02 — Module Status
-                    if (frame.Dlc >= 6)
-                    {
-                        state.Last0xFF02 = CloneData(frame.Data, 8);
-                        TryAssemble32401(state);
-                    }
-                    break;
-
-                case 0x08:  // 0xFF08 — Module Identification
-                    if (frame.Dlc >= 4)
-                    {
-                        bool firstTime = !state.WasConnected;
-                        state.Last0xFF08 = CloneData(frame.Data, 8);
-                        state.Last0xFF08Time = DateTime.Now;
-                        if (firstTime)
+                switch (pgnLow)
+                {
+                    case 0x00:  // 0xFF00 — Sensor Rate/Quantity
+                        if (frame.Dlc >= 8)
                         {
-                            state.WasConnected = true;
-                            ModuleConnected?.Invoke(this, moduleId);
+                            state.Last0xFF00 = CloneData(frame.Data, 8);
+                            TryAssemble32400(state);
                         }
-                        // Do NOT call TryAssemble32401 here — 0xFF08 is a 500ms heartbeat
-                        // and would cause spurious short elapsed times when it interleaves
-                        // with the 200ms 0xFF02 cycle. Assembly is driven by 0xFF02 only.
-                    }
-                    break;
+                        break;
 
-                case 0x09:  // 0xFF09 — Wheel Counts (24-bit, calibration mode)
-                    if (frame.Dlc >= 4)
-                        state.Last0xFF09 = CloneData(frame.Data, 8);
-                    break;
+                    case 0x01:  // 0xFF01 — Sensor PWM/Hz
+                        if (frame.Dlc >= 8)
+                        {
+                            state.Last0xFF01 = CloneData(frame.Data, 8);
+                            TryAssemble32400(state);
+                        }
+                        break;
 
-                case 0x14:  // 0xFF14 — Board label report part 1
-                    if (frame.Dlc >= 8)
-                    {
-                        state.Last0xFF14 = CloneData(frame.Data, 8);
-                        TryAssemble32403(state);
-                    }
-                    break;
+                    case 0x02:  // 0xFF02 — Module Status
+                        if (frame.Dlc >= 6)
+                        {
+                            state.Last0xFF02 = CloneData(frame.Data, 8);
+                            TryAssemble32401(state);
+                        }
+                        break;
 
-                case 0x15:  // 0xFF15 — Board label report part 2
-                    if (frame.Dlc >= 8)
-                    {
-                        state.Last0xFF15 = CloneData(frame.Data, 8);
-                        TryAssemble32403(state);
-                    }
-                    break;
+                    case 0x08:  // 0xFF08 — Module Identification
+                        if (frame.Dlc >= 4)
+                        {
+                            bool firstTime = !state.WasConnected;
+                            state.Last0xFF08 = CloneData(frame.Data, 8);
+                            state.Last0xFF08Time = DateTime.Now;
+                            if (firstTime)
+                            {
+                                state.WasConnected = true;
+                                ModuleConnected?.Invoke(this, moduleId);
+                            }
+                            // Do NOT call TryAssemble32401 here — 0xFF08 is a 500ms heartbeat
+                            // and would cause spurious short elapsed times when it interleaves
+                            // with the 200ms 0xFF02 cycle. Assembly is driven by 0xFF02 only.
+                        }
+                        break;
 
-                case 0x16:  // 0xFF16 — Board label report part 3 (assemble)
-                    if (frame.Dlc >= 3)
-                    {
-                        state.Last0xFF16 = CloneData(frame.Data, 8);
-                        TryAssemble32403(state);
-                    }
-                    break;
+                    case 0x09:  // 0xFF09 — Wheel Counts (24-bit, calibration mode)
+                        if (frame.Dlc >= 4)
+                            state.Last0xFF09 = CloneData(frame.Data, 8);
+                        break;
+
+                    case 0x14:  // 0xFF14 — Board label report part 1
+                        if (frame.Dlc >= 8)
+                        {
+                            state.Last0xFF14 = CloneData(frame.Data, 8);
+                            TryAssemble32403(state);
+                        }
+                        break;
+
+                    case 0x15:  // 0xFF15 — Board label report part 2
+                        if (frame.Dlc >= 8)
+                        {
+                            state.Last0xFF15 = CloneData(frame.Data, 8);
+                            TryAssemble32403(state);
+                        }
+                        break;
+
+                    case 0x16:  // 0xFF16 — Board label report part 3 (assemble)
+                        if (frame.Dlc >= 3)
+                        {
+                            state.Last0xFF16 = CloneData(frame.Data, 8);
+                            TryAssemble32403(state);
+                        }
+                        break;
+                }
             }
         }
 
@@ -284,6 +294,20 @@ namespace RateController.Classes.Can
 
             pgn[14] = CalcCrc(pgn, 14);
 
+            PGN32401Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
+        }
+
+        private void Report32401NewBoard(byte[] f08)
+        {
+            // only the ID, board type and firmware are known; the rest stays 0
+            var pgn = new byte[15];
+            pgn[0] = 0x91;
+            pgn[1] = 0x7E;
+            pgn[2] = f08[4];    // full ID (25)
+            pgn[10] = f08[1];   // inoType
+            pgn[11] = f08[2];   // inoId lo
+            pgn[12] = f08[3];   // inoId hi
+            pgn[14] = CalcCrc(pgn, 14);
             PGN32401Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }
 

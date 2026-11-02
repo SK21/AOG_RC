@@ -603,6 +603,32 @@ namespace RateController
             }
         }
 
+        public void ShowCommWifi()
+        {
+            // from the link on Options -> Phone. One group is open at a time (shared Expanded):
+            // collapse File first, which closes Options, then expand Modules, which opens Comm.
+            // The handlers are called directly, PerformClick ignores a hidden button. If a form
+            // refused to close, Expanded stays set and nothing more is done
+            try
+            {
+                if (Expanded && butComm.Visible)
+                {
+                    butComm_Click(butComm, EventArgs.Empty);
+                }
+                else
+                {
+                    if (Expanded && butProfiles.Visible) butFile_Click(butFile, EventArgs.Empty);
+                    if (!Expanded) butModules_Click(butModules, EventArgs.Empty);
+                }
+
+                if (Props.IsFormOpen("frmMenuComm") is frmMenuComm Comm) Comm.SelectWifiTab();
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenu/ShowCommWifi: " + ex.Message);
+            }
+        }
+
         private void butModules_Click(object sender, EventArgs e)
         {
             if (ClosedOwned())
@@ -999,11 +1025,18 @@ namespace RateController
                     if (Core.ModulesStatus.Connected(i)) connected++;
                     if (Core.DuplicateModule(i)) dupID = i;
                 }
+
+                // an unassigned board takes the ID too, but has no module slot to count
+                bool newBoard = Core.ModulesStatus.NewBoardConnected();
+                if (newBoard) connected++;
+
                 if (connected > 1)
                 {
                     OkToSend = false;
                     Props.ShowMessage("Module ID assignment needs only one board connected. "
-                        + connected.ToString() + " modules are connected.", "Config", 15000);
+                        + connected.ToString() + " boards are connected"
+                        + (newBoard ? ", including a new board (" + Core.ModulesStatus.NewBoardDescription() + ")" : "")
+                        + ".", "Config", 15000);
                 }
                 else if (dupID >= 0)
                 {

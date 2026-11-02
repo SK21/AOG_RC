@@ -15,8 +15,9 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 20106;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 2116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 
 #define NC 0xFF		// Pins not connected
 #define ModStringLengths 15
@@ -65,7 +66,7 @@ enum ControlType
 struct ModuleConfig
 {
 	// RC11-2
-	uint8_t ID = 0;
+	uint8_t ID = NewModuleID;		// keep FIRST: LoadData() reads it from EEPROM 23 to keep the ID across a defaults reload
 	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction

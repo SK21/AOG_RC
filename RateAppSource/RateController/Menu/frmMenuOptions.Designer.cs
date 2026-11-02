@@ -57,10 +57,8 @@
             this.lbPhone = new System.Windows.Forms.Label();
             this.lbPhoneUrl = new System.Windows.Forms.Label();
             this.lbPhoneHelp = new System.Windows.Forms.LinkLabel();
-            this.ckHotspot = new System.Windows.Forms.CheckBox();
-            this.lbHotspot = new System.Windows.Forms.Label();
+            this.lnkHotspotComm = new System.Windows.Forms.LinkLabel();
             this.lbHotspotNet = new System.Windows.Forms.Label();
-            this.lnkHotspot = new System.Windows.Forms.LinkLabel();
             this.tmrPhone = new System.Windows.Forms.Timer(this.components);
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -407,10 +405,8 @@
             this.tabPage2.Controls.Add(this.lbPhone);
             this.tabPage2.Controls.Add(this.lbPhoneUrl);
             this.tabPage2.Controls.Add(this.lbPhoneHelp);
-            this.tabPage2.Controls.Add(this.ckHotspot);
-            this.tabPage2.Controls.Add(this.lbHotspot);
+            this.tabPage2.Controls.Add(this.lnkHotspotComm);
             this.tabPage2.Controls.Add(this.lbHotspotNet);
-            this.tabPage2.Controls.Add(this.lnkHotspot);
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -455,28 +451,16 @@
             this.lbPhoneHelp.Text = "1. Put the phone and the tablet on the same network: the phone\'s hotspot, a WiFi router, or the tablet\'s own hotspot (check Tablet Hotspot below and Save).\r\n2. Phone hotspot or router: once the tablet is connected, open WiFi settings, tap the network and set it to Private.\r\n3. Scan the code with the phone\'s camera. Tap the code to show the next address.";
             this.lbPhoneHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbPhoneHelp_LinkClicked);
             //
-            // ckHotspot
+            // lnkHotspotComm
             //
-            this.ckHotspot.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckHotspot.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckHotspot.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckHotspot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckHotspot.Location = new System.Drawing.Point(10, 400);
-            this.ckHotspot.Name = "ckHotspot";
-            this.ckHotspot.Size = new System.Drawing.Size(240, 45);
-            this.ckHotspot.TabIndex = 397;
-            this.ckHotspot.Text = "Tablet Hotspot";
-            this.ckHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckHotspot.UseVisualStyleBackColor = true;
-            this.ckHotspot.CheckedChanged += new System.EventHandler(this.Setting_Changed);
-            //
-            // lbHotspot
-            //
-            this.lbHotspot.Location = new System.Drawing.Point(262, 400);
-            this.lbHotspot.Name = "lbHotspot";
-            this.lbHotspot.Size = new System.Drawing.Size(236, 45);
-            this.lbHotspot.TabIndex = 398;
-            this.lbHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lnkHotspotComm.Location = new System.Drawing.Point(10, 400);
+            this.lnkHotspotComm.Name = "lnkHotspotComm";
+            this.lnkHotspotComm.Size = new System.Drawing.Size(488, 45);
+            this.lnkHotspotComm.TabIndex = 397;
+            this.lnkHotspotComm.TabStop = true;
+            this.lnkHotspotComm.Text = "Tablet Hotspot: Off. Change it on Comm → WiFi";
+            this.lnkHotspotComm.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lnkHotspotComm.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkHotspotComm_LinkClicked);
             //
             // lbHotspotNet
             //
@@ -485,18 +469,6 @@
             this.lbHotspotNet.Name = "lbHotspotNet";
             this.lbHotspotNet.Size = new System.Drawing.Size(488, 44);
             this.lbHotspotNet.TabIndex = 399;
-            //
-            // lnkHotspot
-            //
-            this.lnkHotspot.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkHotspot.Location = new System.Drawing.Point(10, 500);
-            this.lnkHotspot.Name = "lnkHotspot";
-            this.lnkHotspot.Size = new System.Drawing.Size(488, 24);
-            this.lnkHotspot.TabIndex = 400;
-            this.lnkHotspot.TabStop = true;
-            this.lnkHotspot.Text = "If necessary, turn off Power saving in Hotspot settings";
-            this.lnkHotspot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lnkHotspot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbPhoneHelp_LinkClicked);
             //
             // tmrPhone
             //
@@ -559,10 +531,8 @@
         private System.Windows.Forms.Label lbPhone;
         private System.Windows.Forms.Label lbPhoneUrl;
         private System.Windows.Forms.LinkLabel lbPhoneHelp;
-        private System.Windows.Forms.CheckBox ckHotspot;
-        private System.Windows.Forms.Label lbHotspot;
+        private System.Windows.Forms.LinkLabel lnkHotspotComm;
         private System.Windows.Forms.Label lbHotspotNet;
-        private System.Windows.Forms.LinkLabel lnkHotspot;
         private System.Windows.Forms.Timer tmrPhone;
     }
 }
