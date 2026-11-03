@@ -31,7 +31,7 @@ namespace RateController.Forms
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (cModuleID < Props.MaxModules)
+            if (cModuleID < Props.MaxModules - 1)
             {
                 cModuleID++;
                 UpdateForm();
@@ -56,7 +56,7 @@ namespace RateController.Forms
             VC = new clsVersionChecker();
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
-            cModuleID = Core.Products.Item(Props.CurrentProduct).ModuleID;
+            cModuleID = Core.ModulesStatus.ConnectedModuleOr(Core.Products.Item(Props.CurrentProduct).ModuleID);
             SetLanguage();
             UpdateForm();
             timer1.Enabled = true;

@@ -96,6 +96,26 @@ namespace RateController.PGNs
             return (ValidID(Module) && (DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4);
         }
 
+        // Preferred if it is reporting, else the lowest connected module, else Preferred.
+        // Used to open the Help/Version pages on a module that has data.
+        public int ConnectedModuleOr(int Preferred)
+        {
+            int Result = Preferred;
+            if (!Connected(Preferred))
+            {
+                bool Found = false;
+                for (int i = 0; i < Props.MaxModules && !Found; i++)
+                {
+                    if (Connected(i))
+                    {
+                        Result = i;
+                        Found = true;
+                    }
+                }
+            }
+            return Result;
+        }
+
         // a board at the unassigned ID is reporting (same 4 s freshness as Connected)
         public bool NewBoardConnected()
         {

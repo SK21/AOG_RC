@@ -47,7 +47,7 @@ namespace RateController.Menu
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (cModuleID < Props.MaxModules)
+            if (cModuleID < Props.MaxModules - 1)
             {
                 cModuleID++;
                 UpdateForm();
@@ -148,7 +148,7 @@ namespace RateController.Menu
             lbLon.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             lbLat.Font = new System.Drawing.Font("Tahoma", 14, System.Drawing.FontStyle.Bold);
             ModuleIndicator.BackColor = this.BackColor;
-            cModuleID = Core.Products.Item(Props.CurrentProduct).ModuleID;
+            cModuleID = Core.ModulesStatus.ConnectedModuleOr(Core.Products.Item(Props.CurrentProduct).ModuleID);
 
             // reflect persisted state; setting Checked fires CheckedChanged, which syncs PidLogger
             ckPidLog.Checked = Props.LogPID;
