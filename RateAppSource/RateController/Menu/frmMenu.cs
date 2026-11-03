@@ -1039,22 +1039,14 @@ namespace RateController
             int connected = 0;
             int boardID = -1;       // the ID the one connected board answers to now
             int dupID = -1;
-            string diag = "";       // DIAGNOSTIC (duplicate-ID test)
             for (int i = 0; i < Props.MaxModules; i++)
             {
                 if (Core.ModulesStatus.Connected(i))
                 {
                     connected++;
                     boardID = i;
-                    diag += " [ID " + i.ToString() + " type " + Core.ModulesStatus.ModuleType(i).ToString()
-                        + "/" + Core.ModulesStatus.InoID(i).ToString() + " '" + Core.ModulesBoardID.BoardLabel(i) + "']";
                 }
-                if (Core.DuplicateModule(i))
-                {
-                    dupID = i;
-                    diag += " [DUP ID " + i.ToString() + ": 32403 " + Core.ModulesBoardID.DuplicateID(i).ToString()
-                        + ", 32401 " + Core.ModulesStatus.DuplicateID(i).ToString() + "]";
-                }
+                if (Core.DuplicateModule(i)) dupID = i;
             }
 
             // an unassigned board takes the ID too, but has no module slot to count
@@ -1063,29 +1055,24 @@ namespace RateController
             {
                 connected++;
                 boardID = Props.NewModuleID;
-                diag += " [new board ID 25: " + Core.ModulesStatus.NewBoardDescription() + "]";
             }
-            Props.WriteActivityLog("DupID assign check: " + OldID.ToString() + " -> " + NewID.ToString()
-                + ", connected " + connected.ToString() + ":" + diag, false, true);
 
             if (connected == 0)
             {
-                Props.ShowMessage("No board is connected. Connect the one board that should get ID "
-                    + NewID.ToString() + ".", "Config", 15000);
+                Props.ShowMessage(string.Format(Lang.lgNoBoardConnected, NewID), "Config", 15000);
             }
             else if (connected > 1)
             {
-                Props.ShowMessage("Module ID assignment needs only one board connected. "
-                    + connected.ToString() + " boards are connected"
-                    + (newBoard ? ", including a new board (" + Core.ModulesStatus.NewBoardDescription() + ")" : "")
-                    + ".", "Config", 15000);
+                string msg = newBoard
+                    ? string.Format(Lang.lgOneBoardOnlyNew, connected, Core.ModulesStatus.NewBoardDescription())
+                    : string.Format(Lang.lgOneBoardOnly, connected);
+                Props.ShowMessage(msg, "Config", 15000);
             }
             else if (dupID >= 0)
             {
                 // two boards with the same ID count as one connected module -
                 // their alternating labels / board types give them away
-                Props.ShowMessage("Two boards are answering as module " + dupID.ToString()
-                    + ". Disconnect one before assigning an ID.", "Config", 15000);
+                Props.ShowMessage(string.Format(Lang.lgDupDisconnect, dupID), "Config", 15000);
             }
             else
             {
@@ -1104,16 +1091,9 @@ namespace RateController
                 Core.ModuleConfig.Send(null, true);
                 Core.ModulesBoardID.ExpectLabelChange(NewID);
 
-                if (PinsSent)
-                {
-                    Props.ShowMessage("Module ID " + NewID.ToString() + " sent. The board restarts and reconnects as module "
-                        + NewID.ToString() + ".", "Config", 15000);
-                }
-                else
-                {
-                    Props.ShowMessage("Module ID " + NewID.ToString() + " sent. The board restarts and reconnects as module "
-                        + NewID.ToString() + ". Press Send once it has reconnected to give it its sensor pins.", "Config", 15000);
-                }
+                string sent = string.Format(Lang.lgIDSent, NewID);
+                if (!PinsSent) sent += " " + Lang.lgSendPinsAfter;
+                Props.ShowMessage(sent, "Config", 15000);
                 HighlightUpdateButton(!PinsSent);
                 Result = true;
             }

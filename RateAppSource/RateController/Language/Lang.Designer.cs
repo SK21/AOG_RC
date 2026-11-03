@@ -1985,5 +1985,338 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgCalPhoneLost", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adapter.
+        /// </summary>
+        internal static string lgAdapter {
+            get {
+                return ResourceManager.GetString("lgAdapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. Select the adapter the module is plugged into, then Save. 2. Press Send. The [rest of string was truncated].
+        /// </summary>
+        internal static string lgEthernetSteps {
+            get {
+                return ResourceManager.GetString("lgEthernetSteps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        internal static string lgRefresh {
+            get {
+                return ResourceManager.GetString("lgRefresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No wired adapter on {0}. Connect the cable, then press Refresh..
+        /// </summary>
+        internal static string lgNoWiredAdapter {
+            get {
+                return ResourceManager.GetString("lgNoWiredAdapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modules on this adapter: {0}.
+        /// </summary>
+        internal static string lgModulesOnAdapter {
+            get {
+                return ResourceManager.GetString("lgModulesOnAdapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No modules heard on this adapter. Press Send to put them on it..
+        /// </summary>
+        internal static string lgNoModulesOnAdapter {
+            get {
+                return ResourceManager.GetString("lgNoModulesOnAdapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the adapter the modules are plugged into first..
+        /// </summary>
+        internal static string lgSelectAdapterFirst {
+            get {
+                return ResourceManager.GetString("lgSelectAdapterFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current WiFi Network.
+        /// </summary>
+        internal static string lgCurrentWifiNetwork {
+            get {
+                return ResourceManager.GetString("lgCurrentWifiNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discovered modules - select one.
+        /// </summary>
+        internal static string lgDiscoveredModules {
+            get {
+                return ResourceManager.GetString("lgDiscoveredModules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network password.
+        /// </summary>
+        internal static string lgNetworkPassword {
+            get {
+                return ResourceManager.GetString("lgNetworkPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module Password.
+        /// </summary>
+        internal static string lgModulePassword {
+            get {
+                return ResourceManager.GetString("lgModulePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Module ID.
+        /// </summary>
+        internal static string lgSelectedModuleID {
+            get {
+                return ResourceManager.GetString("lgSelectedModuleID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Up.
+        /// </summary>
+        internal static string lgSetUp {
+            get {
+                return ResourceManager.GetString("lgSetUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect this PC to the network in {0} first.
+        /// </summary>
+        internal static string lgConnectPcFirst {
+            get {
+                return ResourceManager.GetString("lgConnectPcFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not connected.
+        /// </summary>
+        internal static string lgNotConnected {
+            get {
+                return ResourceManager.GetString("lgNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hotspot band: {0}.
+        /// </summary>
+        internal static string lgHotspotBand {
+            get {
+                return ResourceManager.GetString("lgHotspotBand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows can't set 2.4 GHz on this adapter.
+        /// </summary>
+        internal static string lgBandUnsupported {
+            get {
+                return ResourceManager.GetString("lgBandUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to not reported by Windows.
+        /// </summary>
+        internal static string lgBandNotReported {
+            get {
+                return ResourceManager.GetString("lgBandNotReported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (set to 2.4 GHz on next start).
+        /// </summary>
+        internal static string lgBandNextStart {
+            get {
+                return ResourceManager.GetString("lgBandNextStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This PC's WiFi is on 5 GHz.
+        /// </summary>
+        internal static string lgPc5GHz {
+            get {
+                return ResourceManager.GetString("lgPc5GHz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the module needs its 2.4 GHz band.
+        /// </summary>
+        internal static string lgModuleNeeds24 {
+            get {
+                return ResourceManager.GetString("lgModuleNeeds24", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Module ID.
+        /// </summary>
+        internal static string lgNewModuleID {
+            get {
+                return ResourceManager.GetString("lgNewModuleID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Board Description.
+        /// </summary>
+        internal static string lgNewBoardDescription {
+            get {
+                return ResourceManager.GetString("lgNewBoardDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two boards are answering as module {0}!.
+        /// </summary>
+        internal static string lgTwoBoardsAnswering {
+            get {
+                return ResourceManager.GetString("lgTwoBoardsAnswering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two boards are answering as module {0}. Disconnect one before assigning an ID..
+        /// </summary>
+        internal static string lgDupDisconnect {
+            get {
+                return ResourceManager.GetString("lgDupDisconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New board: {0}. Set a New ID, then Save..
+        /// </summary>
+        internal static string lgNewBoardLine {
+            get {
+                return ResourceManager.GetString("lgNewBoardLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected.
+        /// </summary>
+        internal static string lgConnected {
+            get {
+                return ResourceManager.GetString("lgConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save or cancel the pending changes first..
+        /// </summary>
+        internal static string lgSaveOrCancelFirst {
+            get {
+                return ResourceManager.GetString("lgSaveOrCancelFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send the saved changes before changing the ID..
+        /// </summary>
+        internal static string lgSendBeforeIDChange {
+            get {
+                return ResourceManager.GetString("lgSendBeforeIDChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Module ID.
+        /// </summary>
+        internal static string lgChangeModuleID {
+            get {
+                return ResourceManager.GetString("lgChangeModuleID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change module {0} to ID {1}?  OK sends the new ID to the board now. The board re[rest of string was truncated].
+        /// </summary>
+        internal static string lgChangeIDConfirm {
+            get {
+                return ResourceManager.GetString("lgChangeIDConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No board is connected. Connect the one board that should get ID {0}..
+        /// </summary>
+        internal static string lgNoBoardConnected {
+            get {
+                return ResourceManager.GetString("lgNoBoardConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module ID assignment needs only one board connected. {0} boards are connected..
+        /// </summary>
+        internal static string lgOneBoardOnly {
+            get {
+                return ResourceManager.GetString("lgOneBoardOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module ID assignment needs only one board connected. {0} boards are connected, i[rest of string was truncated].
+        /// </summary>
+        internal static string lgOneBoardOnlyNew {
+            get {
+                return ResourceManager.GetString("lgOneBoardOnlyNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module ID {0} sent. The board restarts and reconnects as module {0}..
+        /// </summary>
+        internal static string lgIDSent {
+            get {
+                return ResourceManager.GetString("lgIDSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press Send once it has reconnected to give it its sensor pins..
+        /// </summary>
+        internal static string lgSendPinsAfter {
+            get {
+                return ResourceManager.GetString("lgSendPinsAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change it on {0}.
+        /// </summary>
+        internal static string lgChangeItOn {
+            get {
+                return ResourceManager.GetString("lgChangeItOn", resourceCulture);
+            }
+        }
     }
 }

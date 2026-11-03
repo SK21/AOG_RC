@@ -757,4 +757,123 @@
   <data name="lgCalPhoneLost" xml:space="preserve">
     <value>Ostatni przebieg zatrzymany: utracono połączenie z telefonem</value>
   </data>
+  <data name="lgAdapter" xml:space="preserve">
+    <value>Karta sieciowa</value>
+  </data>
+  <data name="lgEthernetSteps" xml:space="preserve">
+    <value>1. Wybierz kartę sieciową, do której podłączony jest moduł, potem Zapisz.
+2. Naciśnij Wyślij. Moduł uruchomi się ponownie.
+3. Gdy zostanie wykryty, pojawi się w liczniku poniżej.</value>
+  </data>
+  <data name="lgRefresh" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="lgNoWiredAdapter" xml:space="preserve">
+    <value>Brak przewodowej karty sieciowej w {0}. Podłącz kabel i naciśnij Odśwież.</value>
+  </data>
+  <data name="lgModulesOnAdapter" xml:space="preserve">
+    <value>Moduły na tej karcie: {0}</value>
+  </data>
+  <data name="lgNoModulesOnAdapter" xml:space="preserve">
+    <value>Nie wykryto modułów na tej karcie. Naciśnij Wyślij, aby je na nią przenieść.</value>
+  </data>
+  <data name="lgSelectAdapterFirst" xml:space="preserve">
+    <value>Najpierw wybierz kartę sieciową, do której podłączone są moduły.</value>
+  </data>
+  <data name="lgCurrentWifiNetwork" xml:space="preserve">
+    <value>Bieżąca sieć WiFi</value>
+  </data>
+  <data name="lgDiscoveredModules" xml:space="preserve">
+    <value>Znalezione moduły - wybierz jeden</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Hasło sieci</value>
+  </data>
+  <data name="lgModulePassword" xml:space="preserve">
+    <value>Hasło modułu</value>
+  </data>
+  <data name="lgSelectedModuleID" xml:space="preserve">
+    <value>ID wybranego modułu</value>
+  </data>
+  <data name="lgSetUp" xml:space="preserve">
+    <value>Skonfiguruj</value>
+  </data>
+  <data name="lgConnectPcFirst" xml:space="preserve">
+    <value>Najpierw połącz ten komputer z siecią w {0}</value>
+  </data>
+  <data name="lgNotConnected" xml:space="preserve">
+    <value>Nie połączono</value>
+  </data>
+  <data name="lgHotspotBand" xml:space="preserve">
+    <value>Pasmo hotspotu: {0}</value>
+  </data>
+  <data name="lgBandUnsupported" xml:space="preserve">
+    <value>Windows nie może ustawić 2,4 GHz na tej karcie</value>
+  </data>
+  <data name="lgBandNotReported" xml:space="preserve">
+    <value>nie zgłoszone przez Windows</value>
+  </data>
+  <data name="lgBandNextStart" xml:space="preserve">
+    <value>{0} (przy następnym uruchomieniu ustawione na 2,4 GHz)</value>
+  </data>
+  <data name="lgPc5GHz" xml:space="preserve">
+    <value>WiFi tego komputera działa w 5 GHz</value>
+  </data>
+  <data name="lgModuleNeeds24" xml:space="preserve">
+    <value>moduł potrzebuje pasma 2,4 GHz</value>
+  </data>
+  <data name="lgNewModuleID" xml:space="preserve">
+    <value>Nowe ID modułu</value>
+  </data>
+  <data name="lgNewBoardDescription" xml:space="preserve">
+    <value>Nowy opis płytki</value>
+  </data>
+  <data name="lgTwoBoardsAnswering" xml:space="preserve">
+    <value>Dwie płytki odpowiadają jako moduł {0}!</value>
+  </data>
+  <data name="lgDupDisconnect" xml:space="preserve">
+    <value>Dwie płytki odpowiadają jako moduł {0}. Odłącz jedną przed przypisaniem ID.</value>
+  </data>
+  <data name="lgNewBoardLine" xml:space="preserve">
+    <value>Nowa płytka: {0}. Ustaw nowe ID, potem Zapisz.</value>
+  </data>
+  <data name="lgConnected" xml:space="preserve">
+    <value>Połączono</value>
+  </data>
+  <data name="lgSaveOrCancelFirst" xml:space="preserve">
+    <value>Najpierw zapisz lub anuluj oczekujące zmiany.</value>
+  </data>
+  <data name="lgSendBeforeIDChange" xml:space="preserve">
+    <value>Wyślij zapisane zmiany przed zmianą ID.</value>
+  </data>
+  <data name="lgChangeModuleID" xml:space="preserve">
+    <value>Zmień ID modułu</value>
+  </data>
+  <data name="lgChangeIDConfirm" xml:space="preserve">
+    <value>Zmienić moduł {0} na ID {1}?
+
+OK wysyła teraz nowe ID do płytki. Płytka uruchomi się ponownie i połączy jako moduł {1}, zachowując swoje ustawienia.
+
+Podczas wysyłania ID może być podłączona tylko ta jedna płytka - każda płytka, która je odbierze, przyjmie nowe ID.
+
+Anuluj zachowuje ID {0}.</value>
+  </data>
+  <data name="lgNoBoardConnected" xml:space="preserve">
+    <value>Żadna płytka nie jest podłączona. Podłącz tę jedną płytkę, która ma otrzymać ID {0}.</value>
+  </data>
+  <data name="lgOneBoardOnly" xml:space="preserve">
+    <value>Przypisanie ID modułu wymaga podłączenia tylko jednej płytki. Podłączonych płytek: {0}.</value>
+  </data>
+  <data name="lgOneBoardOnlyNew" xml:space="preserve">
+    <value>Przypisanie ID modułu wymaga podłączenia tylko jednej płytki. Podłączonych płytek: {0}, w tym nowa płytka ({1}).</value>
+  </data>
+  <data name="lgIDSent" xml:space="preserve">
+    <value>Wysłano ID modułu {0}. Płytka uruchomi się ponownie i połączy jako moduł {0}.</value>
+  </data>
+  <data name="lgSendPinsAfter" xml:space="preserve">
+    <value>Po ponownym połączeniu naciśnij Wyślij, aby przekazać piny czujników.</value>
+  </data>
+  <data name="lgChangeItOn" xml:space="preserve">
+    <value>Zmień w {0}</value>
+  </data>
 </root>

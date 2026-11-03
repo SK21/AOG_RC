@@ -12,8 +12,8 @@ namespace RateController.Menu
     public partial class frmMenuOptions : Form
     {
         // English for now, Lang keys in the translation pass
-        private const string HotspotCommLink = "Comm → WiFi";
-        private const string HotspotCommPrefix = "Change it on ";
+        private static string HotspotCommLink => Lang.lgCommMenu + " → WiFi";
+        private static string HotspotCommText => string.Format(Lang.lgChangeItOn, HotspotCommLink);
 
         private bool cEdited;
         private bool cFirewallChecking = false;     // hotspot firewall check running (CheckFirewall)
@@ -339,7 +339,7 @@ namespace RateController.Menu
             cLastHotspotState = State;
             if (State == "On" && !cFirewallOk) Text += ", " + Lang.lgFirewallBlocked;
             if (Core.WebServer.HotspotFailing && Props.TabletHotspot) Text = Lang.lgRestartsFailed;
-            lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Text + ". " + HotspotCommPrefix + HotspotCommLink;
+            lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Text + ". " + HotspotCommText;
             SetHotspotCommLink();
 
             if (State == "On")
@@ -400,7 +400,7 @@ namespace RateController.Menu
 
         private void SetHotspotCommLink()
         {
-            // the "Comm -> WiFi" words open that page (step 9: move to Lang keys)
+            // the "Comm -> WiFi" words open that page
             lnkHotspotComm.Links.Clear();
             int Start = lnkHotspotComm.Text.IndexOf(HotspotCommLink);
             if (Start >= 0) lnkHotspotComm.Links.Add(Start, HotspotCommLink.Length);
@@ -441,7 +441,7 @@ namespace RateController.Menu
             tabPage2.Text = Lang.lgPhone;
             lbPhone.Text = Lang.lgPhoneAddress;
             lbPhoneHelp.Text = string.Format(Lang.lgPhoneHelp, Lang.lgWifiSettings);
-            lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Lang.lgChecking + ". " + HotspotCommPrefix + HotspotCommLink;
+            lnkHotspotComm.Text = Lang.lgTabletHotspot + ": " + Lang.lgChecking + ". " + HotspotCommText;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)

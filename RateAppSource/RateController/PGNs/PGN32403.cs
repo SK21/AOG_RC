@@ -20,7 +20,6 @@ namespace RateController.PGNs
         private string[] cBoardLabel;
         private DateTime[] cReceiveTime;
         private DateTime[] cDuplicateTime;
-        private DateTime[] cDupLogTime;     // DIAGNOSTIC (duplicate-ID test)
         private bool[] cLabelFromModule;
 
         public PGN32403()
@@ -28,7 +27,6 @@ namespace RateController.PGNs
             cBoardLabel = new string[Props.MaxModules];
             cReceiveTime = new DateTime[Props.MaxModules];
             cDuplicateTime = new DateTime[Props.MaxModules];
-            cDupLogTime = new DateTime[Props.MaxModules];
             cLabelFromModule = new bool[Props.MaxModules];
             for (int i = 0; i < Props.MaxModules; i++) cBoardLabel[i] = "";
         }
@@ -82,15 +80,6 @@ namespace RateController.PGNs
                             && (DateTime.Now - cReceiveTime[ModuleID]).TotalSeconds < 6)
                         {
                             cDuplicateTime[ModuleID] = DateTime.Now;
-
-                            // DIAGNOSTIC (duplicate-ID test): what conflicted, max once per 5 s per module
-                            if ((DateTime.Now - cDupLogTime[ModuleID]).TotalSeconds > 5)
-                            {
-                                cDupLogTime[ModuleID] = DateTime.Now;
-                                Props.WriteActivityLog("DupID 32403: module " + ModuleID.ToString()
-                                    + " label '" + cBoardLabel[ModuleID] + "' -> '" + label + "', "
-                                    + (DateTime.Now - cReceiveTime[ModuleID]).TotalMilliseconds.ToString("N0") + " ms apart", false, true);
-                            }
                         }
 
                         cBoardLabel[ModuleID] = label;

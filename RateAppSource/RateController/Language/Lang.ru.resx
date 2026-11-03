@@ -757,4 +757,123 @@
   <data name="lgCalPhoneLost" xml:space="preserve">
     <value>Последний запуск остановлен: потеряна связь с телефоном</value>
   </data>
+  <data name="lgAdapter" xml:space="preserve">
+    <value>Адаптер</value>
+  </data>
+  <data name="lgEthernetSteps" xml:space="preserve">
+    <value>1. Выберите адаптер, к которому подключён модуль, затем Сохранить.
+2. Нажмите Отправить. Модуль перезагрузится.
+3. Как только он будет обнаружен, он появится в счётчике ниже.</value>
+  </data>
+  <data name="lgRefresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="lgNoWiredAdapter" xml:space="preserve">
+    <value>Нет проводного адаптера в {0}. Подключите кабель и нажмите Обновить.</value>
+  </data>
+  <data name="lgModulesOnAdapter" xml:space="preserve">
+    <value>Модулей на этом адаптере: {0}</value>
+  </data>
+  <data name="lgNoModulesOnAdapter" xml:space="preserve">
+    <value>На этом адаптере модули не обнаружены. Нажмите Отправить, чтобы перевести их на него.</value>
+  </data>
+  <data name="lgSelectAdapterFirst" xml:space="preserve">
+    <value>Сначала выберите адаптер, к которому подключены модули.</value>
+  </data>
+  <data name="lgCurrentWifiNetwork" xml:space="preserve">
+    <value>Текущая сеть WiFi</value>
+  </data>
+  <data name="lgDiscoveredModules" xml:space="preserve">
+    <value>Найденные модули - выберите один</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Пароль сети</value>
+  </data>
+  <data name="lgModulePassword" xml:space="preserve">
+    <value>Пароль модуля</value>
+  </data>
+  <data name="lgSelectedModuleID" xml:space="preserve">
+    <value>ID выбранного модуля</value>
+  </data>
+  <data name="lgSetUp" xml:space="preserve">
+    <value>Настроить</value>
+  </data>
+  <data name="lgConnectPcFirst" xml:space="preserve">
+    <value>Сначала подключите этот ПК к сети в {0}</value>
+  </data>
+  <data name="lgNotConnected" xml:space="preserve">
+    <value>Не подключено</value>
+  </data>
+  <data name="lgHotspotBand" xml:space="preserve">
+    <value>Диапазон точки доступа: {0}</value>
+  </data>
+  <data name="lgBandUnsupported" xml:space="preserve">
+    <value>Windows не может установить 2,4 ГГц на этом адаптере</value>
+  </data>
+  <data name="lgBandNotReported" xml:space="preserve">
+    <value>не сообщается Windows</value>
+  </data>
+  <data name="lgBandNextStart" xml:space="preserve">
+    <value>{0} (при следующем запуске будет 2,4 ГГц)</value>
+  </data>
+  <data name="lgPc5GHz" xml:space="preserve">
+    <value>WiFi этого ПК работает на 5 ГГц</value>
+  </data>
+  <data name="lgModuleNeeds24" xml:space="preserve">
+    <value>модулю нужен диапазон 2,4 ГГц</value>
+  </data>
+  <data name="lgNewModuleID" xml:space="preserve">
+    <value>Новый ID модуля</value>
+  </data>
+  <data name="lgNewBoardDescription" xml:space="preserve">
+    <value>Новое описание платы</value>
+  </data>
+  <data name="lgTwoBoardsAnswering" xml:space="preserve">
+    <value>Две платы отвечают как модуль {0}!</value>
+  </data>
+  <data name="lgDupDisconnect" xml:space="preserve">
+    <value>Две платы отвечают как модуль {0}. Отключите одну перед назначением ID.</value>
+  </data>
+  <data name="lgNewBoardLine" xml:space="preserve">
+    <value>Новая плата: {0}. Задайте новый ID, затем Сохранить.</value>
+  </data>
+  <data name="lgConnected" xml:space="preserve">
+    <value>Подключено</value>
+  </data>
+  <data name="lgSaveOrCancelFirst" xml:space="preserve">
+    <value>Сначала сохраните или отмените ожидающие изменения.</value>
+  </data>
+  <data name="lgSendBeforeIDChange" xml:space="preserve">
+    <value>Отправьте сохранённые изменения перед сменой ID.</value>
+  </data>
+  <data name="lgChangeModuleID" xml:space="preserve">
+    <value>Изменить ID модуля</value>
+  </data>
+  <data name="lgChangeIDConfirm" xml:space="preserve">
+    <value>Изменить модуль {0} на ID {1}?
+
+OK сейчас отправит новый ID на плату. Плата перезагрузится и снова подключится как модуль {1}, сохранив свои настройки.
+
+При отправке ID должна быть подключена только эта плата - любая плата, получившая его, примет новый ID.
+
+Отмена оставляет ID {0}.</value>
+  </data>
+  <data name="lgNoBoardConnected" xml:space="preserve">
+    <value>Нет подключённых плат. Подключите одну плату, которая должна получить ID {0}.</value>
+  </data>
+  <data name="lgOneBoardOnly" xml:space="preserve">
+    <value>Для назначения ID модуля должна быть подключена только одна плата. Подключено плат: {0}.</value>
+  </data>
+  <data name="lgOneBoardOnlyNew" xml:space="preserve">
+    <value>Для назначения ID модуля должна быть подключена только одна плата. Подключено плат: {0}, включая новую плату ({1}).</value>
+  </data>
+  <data name="lgIDSent" xml:space="preserve">
+    <value>ID модуля {0} отправлен. Плата перезагрузится и снова подключится как модуль {0}.</value>
+  </data>
+  <data name="lgSendPinsAfter" xml:space="preserve">
+    <value>После переподключения нажмите Отправить, чтобы передать ей выводы датчиков.</value>
+  </data>
+  <data name="lgChangeItOn" xml:space="preserve">
+    <value>Изменить: {0}</value>
+  </data>
 </root>

@@ -763,4 +763,123 @@
   <data name="lgCalPhoneLost" xml:space="preserve">
     <value>Last run stopped: phone connection lost</value>
   </data>
+  <data name="lgAdapter" xml:space="preserve">
+    <value>Adapter</value>
+  </data>
+  <data name="lgEthernetSteps" xml:space="preserve">
+    <value>1. Select the adapter the module is plugged into, then Save.
+2. Press Send. The module restarts.
+3. It is counted below once it is heard.</value>
+  </data>
+  <data name="lgRefresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="lgNoWiredAdapter" xml:space="preserve">
+    <value>No wired adapter on {0}. Connect the cable, then press Refresh.</value>
+  </data>
+  <data name="lgModulesOnAdapter" xml:space="preserve">
+    <value>Modules on this adapter: {0}</value>
+  </data>
+  <data name="lgNoModulesOnAdapter" xml:space="preserve">
+    <value>No modules heard on this adapter. Press Send to put them on it.</value>
+  </data>
+  <data name="lgSelectAdapterFirst" xml:space="preserve">
+    <value>Select the adapter the modules are plugged into first.</value>
+  </data>
+  <data name="lgCurrentWifiNetwork" xml:space="preserve">
+    <value>Current WiFi Network</value>
+  </data>
+  <data name="lgDiscoveredModules" xml:space="preserve">
+    <value>Discovered modules - select one</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Network password</value>
+  </data>
+  <data name="lgModulePassword" xml:space="preserve">
+    <value>Module Password</value>
+  </data>
+  <data name="lgSelectedModuleID" xml:space="preserve">
+    <value>Selected Module ID</value>
+  </data>
+  <data name="lgSetUp" xml:space="preserve">
+    <value>Set Up</value>
+  </data>
+  <data name="lgConnectPcFirst" xml:space="preserve">
+    <value>Connect this PC to the network in {0} first</value>
+  </data>
+  <data name="lgNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="lgHotspotBand" xml:space="preserve">
+    <value>Hotspot band: {0}</value>
+  </data>
+  <data name="lgBandUnsupported" xml:space="preserve">
+    <value>Windows can't set 2.4 GHz on this adapter</value>
+  </data>
+  <data name="lgBandNotReported" xml:space="preserve">
+    <value>not reported by Windows</value>
+  </data>
+  <data name="lgBandNextStart" xml:space="preserve">
+    <value>{0} (set to 2.4 GHz on next start)</value>
+  </data>
+  <data name="lgPc5GHz" xml:space="preserve">
+    <value>This PC's WiFi is on 5 GHz</value>
+  </data>
+  <data name="lgModuleNeeds24" xml:space="preserve">
+    <value>the module needs its 2.4 GHz band</value>
+  </data>
+  <data name="lgNewModuleID" xml:space="preserve">
+    <value>New Module ID</value>
+  </data>
+  <data name="lgNewBoardDescription" xml:space="preserve">
+    <value>New Board Description</value>
+  </data>
+  <data name="lgTwoBoardsAnswering" xml:space="preserve">
+    <value>Two boards are answering as module {0}!</value>
+  </data>
+  <data name="lgDupDisconnect" xml:space="preserve">
+    <value>Two boards are answering as module {0}. Disconnect one before assigning an ID.</value>
+  </data>
+  <data name="lgNewBoardLine" xml:space="preserve">
+    <value>New board: {0}. Set a New ID, then Save.</value>
+  </data>
+  <data name="lgConnected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="lgSaveOrCancelFirst" xml:space="preserve">
+    <value>Save or cancel the pending changes first.</value>
+  </data>
+  <data name="lgSendBeforeIDChange" xml:space="preserve">
+    <value>Send the saved changes before changing the ID.</value>
+  </data>
+  <data name="lgChangeModuleID" xml:space="preserve">
+    <value>Change Module ID</value>
+  </data>
+  <data name="lgChangeIDConfirm" xml:space="preserve">
+    <value>Change module {0} to ID {1}?
+
+OK sends the new ID to the board now. The board restarts and reconnects as module {1}, keeping its settings.
+
+Only that one board can be connected while the ID is sent - every board that hears it would take the new ID.
+
+Cancel keeps ID {0}.</value>
+  </data>
+  <data name="lgNoBoardConnected" xml:space="preserve">
+    <value>No board is connected. Connect the one board that should get ID {0}.</value>
+  </data>
+  <data name="lgOneBoardOnly" xml:space="preserve">
+    <value>Module ID assignment needs only one board connected. {0} boards are connected.</value>
+  </data>
+  <data name="lgOneBoardOnlyNew" xml:space="preserve">
+    <value>Module ID assignment needs only one board connected. {0} boards are connected, including a new board ({1}).</value>
+  </data>
+  <data name="lgIDSent" xml:space="preserve">
+    <value>Module ID {0} sent. The board restarts and reconnects as module {0}.</value>
+  </data>
+  <data name="lgSendPinsAfter" xml:space="preserve">
+    <value>Press Send once it has reconnected to give it its sensor pins.</value>
+  </data>
+  <data name="lgChangeItOn" xml:space="preserve">
+    <value>Change it on {0}</value>
+  </data>
 </root>

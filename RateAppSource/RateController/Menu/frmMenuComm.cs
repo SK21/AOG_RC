@@ -69,7 +69,7 @@ namespace RateController.Menu
 
             public override string ToString()
             {
-                return ID + (Connected ? " (Connected)" : "");
+                return ID + (Connected ? " (" + Lang.lgConnected + ")" : "");
             }
         }
 
@@ -707,9 +707,9 @@ namespace RateController.Menu
             }
             else
             {
-                LinkText = "WiFi settings";
+                LinkText = Lang.lgWifiSettings;
                 Url = "ms-settings:network-wifi";
-                lnkHotspot.Text = "Connect this PC to the network in " + LinkText + " first";
+                lnkHotspot.Text = string.Format(Lang.lgConnectPcFirst, LinkText);
             }
             lnkHotspot.Links.Clear();
             int Start = lnkHotspot.Text.IndexOf(LinkText);
@@ -732,16 +732,16 @@ namespace RateController.Menu
             if (Target != null && Target.Hotspot)
             {
                 string Band = Core.WebServer.HotspotBand;
-                if (Core.WebServer.HotspotIs24GHz) Text = "Hotspot band: 2.4 GHz";
-                else if (Core.WebServer.HotspotBandNote == "Unsupported") Text = "Hotspot band: Windows can't set 2.4 GHz on this adapter";
-                else if (Band == "") Text = "Hotspot band: not reported by Windows";
-                else Text = "Hotspot band: " + Band + " (set to 2.4 GHz on next start)";
+                if (Core.WebServer.HotspotIs24GHz) Text = string.Format(Lang.lgHotspotBand, "2.4 GHz");
+                else if (Core.WebServer.HotspotBandNote == "Unsupported") Text = string.Format(Lang.lgHotspotBand, Lang.lgBandUnsupported);
+                else if (Band == "") Text = string.Format(Lang.lgHotspotBand, Lang.lgBandNotReported);
+                else Text = string.Format(Lang.lgHotspotBand, string.Format(Lang.lgBandNextStart, Band));
             }
 
             if (PcChannel > 14)
             {
-                Text += (Text == "" ? "" : ". ") + "This PC's WiFi is on 5 GHz";
-                if (Target != null && !Target.Hotspot) Text += ", the module needs its 2.4 GHz band";
+                Text += (Text == "" ? "" : ". ") + Lang.lgPc5GHz;
+                if (Target != null && !Target.Hotspot) Text += ", " + Lang.lgModuleNeeds24;
                 if (!BandTold || PcChannelSsid != PcSsid)
                 {
                     BandTold = true;
@@ -778,7 +778,7 @@ namespace RateController.Menu
             }
             else
             {
-                Text = cTarget != null ? cTarget.Ssid : "Not connected";
+                Text = cTarget != null ? cTarget.Ssid : Lang.lgNotConnected;
             }
             lbWifiTarget.Text = Text;
         }
@@ -951,7 +951,7 @@ namespace RateController.Menu
                 AdapterItem Adapter = cbEthernet.SelectedItem as AdapterItem;
                 if (Adapter == null)
                 {
-                    Props.ShowMessage("Select the adapter the modules are plugged into first.", "Subnet", 10000);
+                    Props.ShowMessage(Lang.lgSelectAdapterFirst, "Subnet", 10000);
                 }
                 else
                 {
@@ -1166,6 +1166,21 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             rbHotspot.Text = Lang.lgTabletHotspot;
+            rbPcWifi.Text = Lang.lgCurrentWifiNetwork;
+            lbWifiNetwork.Text = Lang.lgNetwork;
+            lbModulesHeading.Text = Lang.lgDiscoveredModules;
+            lbWifiKey.Text = Lang.lgNetworkPassword;
+            lbModuleKey.Text = Lang.lgModulePassword;
+            lbWifiModuleID.Text = Lang.lgSelectedModuleID;
+            btnWifiSetup.Text = Lang.lgSetUp;
+            btnWifiStop.Text = Lang.lgCancel;
+
+            lbIP.Text = Lang.lgAdapter;
+            lbSteps.Text = Lang.lgEthernetSteps;
+            lbRefresh.Text = Lang.lgRefresh;
+            lbSend.Text = Lang.lgSend;
+            ckEthernet.Text = Lang.lgEnabled;
+            ckCanBus.Text = Lang.lgEnabled;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1209,15 +1224,15 @@ namespace RateController.Menu
             string Status;
             if (!HasAdapter)
             {
-                Status = "No wired adapter on " + Sub + ". Connect the cable, then press Refresh.";
+                Status = string.Format(Lang.lgNoWiredAdapter, Sub);
             }
             else if (Count > 0)
             {
-                Status = "Modules on this adapter: " + Count;
+                Status = string.Format(Lang.lgModulesOnAdapter, Count);
             }
             else
             {
-                Status = "No modules heard on this adapter. Press Send to put them on it.";
+                Status = Lang.lgNoModulesOnAdapter;
             }
             if (lbHeard.Text != Status) lbHeard.Text = Status;
         }

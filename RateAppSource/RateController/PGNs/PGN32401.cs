@@ -50,7 +50,6 @@ namespace RateController.PGNs
         private Stopwatch[] PGNstopWatch;
         private DateTime[] ReceiveTime;
         private DateTime[] cDuplicateTime;
-        private DateTime[] cDupLogTime;     // DIAGNOSTIC (duplicate-ID test)
 
         // an unassigned board (Props.NewModuleID) has no slot in the per-module arrays;
         // its reports are kept here so the app can see it and count it before an assign
@@ -74,7 +73,6 @@ namespace RateController.PGNs
             cWheelCounts = new ushort[Props.MaxModules];
             cElapsedTime = new double[Props.MaxModules];
             cDuplicateTime = new DateTime[Props.MaxModules];
-            cDupLogTime = new DateTime[Props.MaxModules];
 
             PGNstopWatch = new Stopwatch[Props.MaxModules];
             for (int i = 0; i < Props.MaxModules; i++)
@@ -204,16 +202,6 @@ namespace RateController.PGNs
                             && (cInoType[ModuleID] != Data[10] || cInoID[ModuleID] != inoID))
                         {
                             cDuplicateTime[ModuleID] = DateTime.Now;
-
-                            // DIAGNOSTIC (duplicate-ID test): what conflicted, max once per 5 s per module
-                            if ((DateTime.Now - cDupLogTime[ModuleID]).TotalSeconds > 5)
-                            {
-                                cDupLogTime[ModuleID] = DateTime.Now;
-                                Props.WriteActivityLog("DupID 32401: module " + ModuleID.ToString()
-                                    + " type " + cInoType[ModuleID].ToString() + "/" + cInoID[ModuleID].ToString()
-                                    + " -> type " + Data[10].ToString() + "/" + inoID.ToString()
-                                    + ", " + (DateTime.Now - ReceiveTime[ModuleID]).TotalMilliseconds.ToString("N0") + " ms apart", false, true);
-                            }
                         }
 
                         cInoType[ModuleID] = Data[10];

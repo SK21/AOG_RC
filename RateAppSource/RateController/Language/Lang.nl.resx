@@ -757,4 +757,123 @@
   <data name="lgCalPhoneLost" xml:space="preserve">
     <value>Laatste run gestopt: verbinding met telefoon verbroken</value>
   </data>
+  <data name="lgAdapter" xml:space="preserve">
+    <value>adapter</value>
+  </data>
+  <data name="lgEthernetSteps" xml:space="preserve">
+    <value>1. Kies de adapter waarop de module is aangesloten en klik op opslaan.
+2. Druk op verzenden. De module herstart.
+3. Zodra hij wordt gehoord, wordt hij hieronder geteld.</value>
+  </data>
+  <data name="lgRefresh" xml:space="preserve">
+    <value>vernieuwen</value>
+  </data>
+  <data name="lgNoWiredAdapter" xml:space="preserve">
+    <value>Geen bekabelde adapter op {0}. Sluit de kabel aan en druk op vernieuwen.</value>
+  </data>
+  <data name="lgModulesOnAdapter" xml:space="preserve">
+    <value>Modules op deze adapter: {0}</value>
+  </data>
+  <data name="lgNoModulesOnAdapter" xml:space="preserve">
+    <value>Geen modules gehoord op deze adapter. Druk op verzenden om ze erop te zetten.</value>
+  </data>
+  <data name="lgSelectAdapterFirst" xml:space="preserve">
+    <value>Kies eerst de adapter waarop de modules zijn aangesloten.</value>
+  </data>
+  <data name="lgCurrentWifiNetwork" xml:space="preserve">
+    <value>huidig wifi-netwerk</value>
+  </data>
+  <data name="lgDiscoveredModules" xml:space="preserve">
+    <value>gevonden modules - kies er een</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>netwerkwachtwoord</value>
+  </data>
+  <data name="lgModulePassword" xml:space="preserve">
+    <value>modulewachtwoord</value>
+  </data>
+  <data name="lgSelectedModuleID" xml:space="preserve">
+    <value>ID voor gekozen module</value>
+  </data>
+  <data name="lgSetUp" xml:space="preserve">
+    <value>instellen</value>
+  </data>
+  <data name="lgConnectPcFirst" xml:space="preserve">
+    <value>Verbind deze pc eerst met het netwerk via {0}</value>
+  </data>
+  <data name="lgNotConnected" xml:space="preserve">
+    <value>niet verbonden</value>
+  </data>
+  <data name="lgHotspotBand" xml:space="preserve">
+    <value>Hotspotband: {0}</value>
+  </data>
+  <data name="lgBandUnsupported" xml:space="preserve">
+    <value>Windows kan 2,4 GHz niet instellen op deze adapter</value>
+  </data>
+  <data name="lgBandNotReported" xml:space="preserve">
+    <value>niet gemeld door Windows</value>
+  </data>
+  <data name="lgBandNextStart" xml:space="preserve">
+    <value>{0} (bij volgende start op 2,4 GHz gezet)</value>
+  </data>
+  <data name="lgPc5GHz" xml:space="preserve">
+    <value>De wifi van deze pc staat op 5 GHz</value>
+  </data>
+  <data name="lgModuleNeeds24" xml:space="preserve">
+    <value>de module heeft de 2,4 GHz-band nodig</value>
+  </data>
+  <data name="lgNewModuleID" xml:space="preserve">
+    <value>nieuwe module-ID</value>
+  </data>
+  <data name="lgNewBoardDescription" xml:space="preserve">
+    <value>nieuwe printplaatomschrijving</value>
+  </data>
+  <data name="lgTwoBoardsAnswering" xml:space="preserve">
+    <value>Twee printplaten antwoorden als module {0}!</value>
+  </data>
+  <data name="lgDupDisconnect" xml:space="preserve">
+    <value>Twee printplaten antwoorden als module {0}. Koppel er een los voordat u een ID toewijst.</value>
+  </data>
+  <data name="lgNewBoardLine" xml:space="preserve">
+    <value>Nieuwe printplaat: {0}. Stel een nieuwe ID in en klik op opslaan.</value>
+  </data>
+  <data name="lgConnected" xml:space="preserve">
+    <value>verbonden</value>
+  </data>
+  <data name="lgSaveOrCancelFirst" xml:space="preserve">
+    <value>Sla eerst de openstaande wijzigingen op of annuleer ze.</value>
+  </data>
+  <data name="lgSendBeforeIDChange" xml:space="preserve">
+    <value>Verzend de opgeslagen wijzigingen voordat u de ID wijzigt.</value>
+  </data>
+  <data name="lgChangeModuleID" xml:space="preserve">
+    <value>Module-ID wijzigen</value>
+  </data>
+  <data name="lgChangeIDConfirm" xml:space="preserve">
+    <value>Module {0} wijzigen naar ID {1}?
+
+OK verzendt de nieuwe ID nu naar de printplaat. De printplaat herstart en maakt opnieuw verbinding als module {1}, met behoud van de instellingen.
+
+Alleen die ene printplaat mag verbonden zijn terwijl de ID wordt verzonden - elke printplaat die hem hoort, zou de nieuwe ID overnemen.
+
+Annuleren behoudt ID {0}.</value>
+  </data>
+  <data name="lgNoBoardConnected" xml:space="preserve">
+    <value>Geen printplaat verbonden. Sluit de ene printplaat aan die ID {0} moet krijgen.</value>
+  </data>
+  <data name="lgOneBoardOnly" xml:space="preserve">
+    <value>Voor het toewijzen van een module-ID mag maar één printplaat verbonden zijn. Er zijn {0} printplaten verbonden.</value>
+  </data>
+  <data name="lgOneBoardOnlyNew" xml:space="preserve">
+    <value>Voor het toewijzen van een module-ID mag maar één printplaat verbonden zijn. Er zijn {0} printplaten verbonden, waaronder een nieuwe printplaat ({1}).</value>
+  </data>
+  <data name="lgIDSent" xml:space="preserve">
+    <value>Module-ID {0} verzonden. De printplaat herstart en maakt opnieuw verbinding als module {0}.</value>
+  </data>
+  <data name="lgSendPinsAfter" xml:space="preserve">
+    <value>Druk na het opnieuw verbinden op verzenden om de sensorpinnen te geven.</value>
+  </data>
+  <data name="lgChangeItOn" xml:space="preserve">
+    <value>Wijzigen via {0}</value>
+  </data>
 </root>

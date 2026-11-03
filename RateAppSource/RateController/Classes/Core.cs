@@ -1,5 +1,6 @@
 ﻿using RateController.Classes.Can;
 using RateController.Forms;
+using RateController.Language;
 using RateController.PGNs;
 using RateController.RateMap;
 using System;
@@ -318,14 +319,7 @@ namespace RateController.Classes
             string label = "";
             if (ModulesBoardID.Received(id)) label = ModulesBoardID.BoardLabel(id);
             if (label.Length > 0) Result += " - " + label;
-            if (ModulesStatus.Connected(id))
-            {
-                Result += "  (Connected)";
-            }
-            else
-            {
-                Result += "  (not connected)";
-            }
+            Result += "  (" + (ModulesStatus.Connected(id) ? Lang.lgConnected : Lang.lgNotConnected) + ")";
             return Result;
         }
 

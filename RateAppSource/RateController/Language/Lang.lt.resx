@@ -757,4 +757,123 @@
   <data name="lgCalPhoneLost" xml:space="preserve">
     <value>Paskutinis paleidimas sustabdytas: nutrūko ryšys su telefonu</value>
   </data>
+  <data name="lgAdapter" xml:space="preserve">
+    <value>Adapteris</value>
+  </data>
+  <data name="lgEthernetSteps" xml:space="preserve">
+    <value>1. Pasirinkite adapterį, prie kurio prijungtas modulis, tada Išsaugoti.
+2. Paspauskite Siųsti. Modulis paleidžiamas iš naujo.
+3. Kai tik jis girdimas, jis įskaičiuojamas žemiau.</value>
+  </data>
+  <data name="lgRefresh" xml:space="preserve">
+    <value>Atnaujinti</value>
+  </data>
+  <data name="lgNoWiredAdapter" xml:space="preserve">
+    <value>Tinkle {0} nėra laidinio adapterio. Prijunkite kabelį ir paspauskite Atnaujinti.</value>
+  </data>
+  <data name="lgModulesOnAdapter" xml:space="preserve">
+    <value>Moduliai šiame adapteryje: {0}</value>
+  </data>
+  <data name="lgNoModulesOnAdapter" xml:space="preserve">
+    <value>Šiame adapteryje negirdėti jokie moduliai. Paspauskite Siųsti, kad jie būtų perkelti į jį.</value>
+  </data>
+  <data name="lgSelectAdapterFirst" xml:space="preserve">
+    <value>Pirmiausia pasirinkite adapterį, prie kurio prijungti moduliai.</value>
+  </data>
+  <data name="lgCurrentWifiNetwork" xml:space="preserve">
+    <value>Dabartinis WiFi tinklas</value>
+  </data>
+  <data name="lgDiscoveredModules" xml:space="preserve">
+    <value>Rasti moduliai - pasirinkite vieną</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Tinklo slaptažodis</value>
+  </data>
+  <data name="lgModulePassword" xml:space="preserve">
+    <value>Modulio slaptažodis</value>
+  </data>
+  <data name="lgSelectedModuleID" xml:space="preserve">
+    <value>Pasirinkto modulio ID</value>
+  </data>
+  <data name="lgSetUp" xml:space="preserve">
+    <value>Nustatyti</value>
+  </data>
+  <data name="lgConnectPcFirst" xml:space="preserve">
+    <value>Pirmiausia prijunkite šį kompiuterį prie tinklo per {0}</value>
+  </data>
+  <data name="lgNotConnected" xml:space="preserve">
+    <value>Neprijungta</value>
+  </data>
+  <data name="lgHotspotBand" xml:space="preserve">
+    <value>Prieigos taško dažnis: {0}</value>
+  </data>
+  <data name="lgBandUnsupported" xml:space="preserve">
+    <value>Windows negali nustatyti 2,4 GHz šiame adapteryje</value>
+  </data>
+  <data name="lgBandNotReported" xml:space="preserve">
+    <value>Windows nepraneša</value>
+  </data>
+  <data name="lgBandNextStart" xml:space="preserve">
+    <value>{0} (kito paleidimo metu bus nustatyta 2,4 GHz)</value>
+  </data>
+  <data name="lgPc5GHz" xml:space="preserve">
+    <value>Šio kompiuterio WiFi veikia 5 GHz</value>
+  </data>
+  <data name="lgModuleNeeds24" xml:space="preserve">
+    <value>moduliui reikia 2,4 GHz dažnio</value>
+  </data>
+  <data name="lgNewModuleID" xml:space="preserve">
+    <value>Naujas modulio ID</value>
+  </data>
+  <data name="lgNewBoardDescription" xml:space="preserve">
+    <value>Naujas plokštės aprašymas</value>
+  </data>
+  <data name="lgTwoBoardsAnswering" xml:space="preserve">
+    <value>Dvi plokštės atsako kaip modulis {0}!</value>
+  </data>
+  <data name="lgDupDisconnect" xml:space="preserve">
+    <value>Dvi plokštės atsako kaip modulis {0}. Prieš priskirdami ID, atjunkite vieną.</value>
+  </data>
+  <data name="lgNewBoardLine" xml:space="preserve">
+    <value>Nauja plokštė: {0}. Nustatykite naują ID, tada Išsaugoti.</value>
+  </data>
+  <data name="lgConnected" xml:space="preserve">
+    <value>Prijungta</value>
+  </data>
+  <data name="lgSaveOrCancelFirst" xml:space="preserve">
+    <value>Pirmiausia išsaugokite arba atšaukite laukiančius pakeitimus.</value>
+  </data>
+  <data name="lgSendBeforeIDChange" xml:space="preserve">
+    <value>Prieš keisdami ID, išsiųskite išsaugotus pakeitimus.</value>
+  </data>
+  <data name="lgChangeModuleID" xml:space="preserve">
+    <value>Keisti modulio ID</value>
+  </data>
+  <data name="lgChangeIDConfirm" xml:space="preserve">
+    <value>Pakeisti modulio {0} ID į {1}?
+
+OK dabar išsiunčia naują ID plokštei. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {1}, išsaugodama savo nustatymus.
+
+Siunčiant ID gali būti prijungta tik ši viena plokštė - kiekviena ją girdinti plokštė perimtų naują ID.
+
+Atšaukti palieka ID {0}.</value>
+  </data>
+  <data name="lgNoBoardConnected" xml:space="preserve">
+    <value>Neprijungta jokia plokštė. Prijunkite vienintelę plokštę, kuri turi gauti ID {0}.</value>
+  </data>
+  <data name="lgOneBoardOnly" xml:space="preserve">
+    <value>Priskiriant modulio ID turi būti prijungta tik viena plokštė. Prijungta plokščių: {0}.</value>
+  </data>
+  <data name="lgOneBoardOnlyNew" xml:space="preserve">
+    <value>Priskiriant modulio ID turi būti prijungta tik viena plokštė. Prijungta plokščių: {0}, įskaitant naują plokštę ({1}).</value>
+  </data>
+  <data name="lgIDSent" xml:space="preserve">
+    <value>Modulio ID {0} išsiųstas. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {0}.</value>
+  </data>
+  <data name="lgSendPinsAfter" xml:space="preserve">
+    <value>Kai ji vėl prisijungs, paspauskite Siųsti, kad gautų jutiklių kontaktus.</value>
+  </data>
+  <data name="lgChangeItOn" xml:space="preserve">
+    <value>Pakeisti galima {0}</value>
+  </data>
 </root>

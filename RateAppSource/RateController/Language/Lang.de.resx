@@ -758,4 +758,123 @@
   <data name="lgCalPhoneLost" xml:space="preserve">
     <value>Letzter Lauf gestoppt: Verbindung zum Telefon verloren</value>
   </data>
+  <data name="lgAdapter" xml:space="preserve">
+    <value>Adapter</value>
+  </data>
+  <data name="lgEthernetSteps" xml:space="preserve">
+    <value>1. Den Adapter wählen, an dem das Modul angeschlossen ist, dann Speichern.
+2. Senden drücken. Das Modul startet neu.
+3. Sobald es gehört wird, wird es unten gezählt.</value>
+  </data>
+  <data name="lgRefresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="lgNoWiredAdapter" xml:space="preserve">
+    <value>Kein kabelgebundener Adapter in {0}. Kabel anschließen, dann Aktualisieren drücken.</value>
+  </data>
+  <data name="lgModulesOnAdapter" xml:space="preserve">
+    <value>Module an diesem Adapter: {0}</value>
+  </data>
+  <data name="lgNoModulesOnAdapter" xml:space="preserve">
+    <value>Keine Module an diesem Adapter gehört. Senden drücken, um sie darauf zu setzen.</value>
+  </data>
+  <data name="lgSelectAdapterFirst" xml:space="preserve">
+    <value>Zuerst den Adapter wählen, an dem die Module angeschlossen sind.</value>
+  </data>
+  <data name="lgCurrentWifiNetwork" xml:space="preserve">
+    <value>Aktuelles WLAN</value>
+  </data>
+  <data name="lgDiscoveredModules" xml:space="preserve">
+    <value>Gefundene Module - eines wählen</value>
+  </data>
+  <data name="lgNetworkPassword" xml:space="preserve">
+    <value>Netzwerkpasswort</value>
+  </data>
+  <data name="lgModulePassword" xml:space="preserve">
+    <value>Modulpasswort</value>
+  </data>
+  <data name="lgSelectedModuleID" xml:space="preserve">
+    <value>ID für das Modul</value>
+  </data>
+  <data name="lgSetUp" xml:space="preserve">
+    <value>Einrichten</value>
+  </data>
+  <data name="lgConnectPcFirst" xml:space="preserve">
+    <value>Diesen PC zuerst unter {0} mit dem Netzwerk verbinden</value>
+  </data>
+  <data name="lgNotConnected" xml:space="preserve">
+    <value>Nicht verbunden</value>
+  </data>
+  <data name="lgHotspotBand" xml:space="preserve">
+    <value>Hotspot-Band: {0}</value>
+  </data>
+  <data name="lgBandUnsupported" xml:space="preserve">
+    <value>Windows kann an diesem Adapter kein 2,4 GHz einstellen</value>
+  </data>
+  <data name="lgBandNotReported" xml:space="preserve">
+    <value>von Windows nicht gemeldet</value>
+  </data>
+  <data name="lgBandNextStart" xml:space="preserve">
+    <value>{0} (beim nächsten Start auf 2,4 GHz gesetzt)</value>
+  </data>
+  <data name="lgPc5GHz" xml:space="preserve">
+    <value>Das WLAN dieses PCs ist auf 5 GHz</value>
+  </data>
+  <data name="lgModuleNeeds24" xml:space="preserve">
+    <value>das Modul braucht das 2,4-GHz-Band</value>
+  </data>
+  <data name="lgNewModuleID" xml:space="preserve">
+    <value>Neue Modul-ID</value>
+  </data>
+  <data name="lgNewBoardDescription" xml:space="preserve">
+    <value>Neue Platinenbeschreibung</value>
+  </data>
+  <data name="lgTwoBoardsAnswering" xml:space="preserve">
+    <value>Zwei Platinen antworten als Modul {0}!</value>
+  </data>
+  <data name="lgDupDisconnect" xml:space="preserve">
+    <value>Zwei Platinen antworten als Modul {0}. Vor dem Zuweisen einer ID eine trennen.</value>
+  </data>
+  <data name="lgNewBoardLine" xml:space="preserve">
+    <value>Neue Platine: {0}. Neue ID eingeben, dann Speichern.</value>
+  </data>
+  <data name="lgConnected" xml:space="preserve">
+    <value>Verbunden</value>
+  </data>
+  <data name="lgSaveOrCancelFirst" xml:space="preserve">
+    <value>Zuerst die offenen Änderungen speichern oder verwerfen.</value>
+  </data>
+  <data name="lgSendBeforeIDChange" xml:space="preserve">
+    <value>Die gespeicherten Änderungen vor dem ID-Wechsel senden.</value>
+  </data>
+  <data name="lgChangeModuleID" xml:space="preserve">
+    <value>Modul-ID ändern</value>
+  </data>
+  <data name="lgChangeIDConfirm" xml:space="preserve">
+    <value>Modul {0} auf ID {1} ändern?
+
+OK sendet die neue ID jetzt an die Platine. Die Platine startet neu und verbindet sich als Modul {1}, ihre Einstellungen bleiben erhalten.
+
+Nur diese eine Platine darf beim Senden der ID verbunden sein - jede Platine, die sie hört, würde die neue ID übernehmen.
+
+Abbrechen behält ID {0}.</value>
+  </data>
+  <data name="lgNoBoardConnected" xml:space="preserve">
+    <value>Keine Platine verbunden. Die eine Platine anschließen, die ID {0} bekommen soll.</value>
+  </data>
+  <data name="lgOneBoardOnly" xml:space="preserve">
+    <value>Für die Zuweisung der Modul-ID darf nur eine Platine verbunden sein. {0} Platinen sind verbunden.</value>
+  </data>
+  <data name="lgOneBoardOnlyNew" xml:space="preserve">
+    <value>Für die Zuweisung der Modul-ID darf nur eine Platine verbunden sein. {0} Platinen sind verbunden, darunter eine neue Platine ({1}).</value>
+  </data>
+  <data name="lgIDSent" xml:space="preserve">
+    <value>Modul-ID {0} gesendet. Die Platine startet neu und verbindet sich als Modul {0}.</value>
+  </data>
+  <data name="lgSendPinsAfter" xml:space="preserve">
+    <value>Nach dem Neuverbinden Senden drücken, um ihr die Sensor-Pins zu geben.</value>
+  </data>
+  <data name="lgChangeItOn" xml:space="preserve">
+    <value>Änderbar unter {0}</value>
+  </data>
 </root>

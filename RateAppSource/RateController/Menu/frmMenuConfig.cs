@@ -16,7 +16,7 @@ namespace RateController.Menu
         private Color cModuleColor;
         private bool cRefusing = false;     // a New ID refusal message is queued
 
-        private const string SendFirstMessage = "Send the saved changes before changing the ID.";
+        private static string SendFirstMessage => Lang.lgSendBeforeIDChange;
 
         public frmMenuConfig(frmMenu menu)
         {
@@ -49,15 +49,10 @@ namespace RateController.Menu
                     // An ID change is its own step: the rest of the page is locked while
                     // a New ID is entered, and it is sent as soon as it is confirmed.
                     // Cancel, or a refused send, leaves the module ID as it was.
-                    string msg = "Change module " + oldID.ToString() + " to ID " + newID.ToString() + "?\n\n"
-                        + "OK sends the new ID to the board now. The board restarts and reconnects as module "
-                        + newID.ToString() + ", keeping its settings.\n\n"
-                        + "Only that one board can be connected while the ID is sent - every board that "
-                        + "hears it would take the new ID.\n\n"
-                        + "Cancel keeps ID " + oldID.ToString() + ".";
+                    string msg = string.Format(Lang.lgChangeIDConfirm, oldID, newID).Replace("\r\n", "\n");
 
                     bool confirmed;
-                    using (var Hlp = new frmMsgBox(msg, "Change Module ID"))
+                    using (var Hlp = new frmMsgBox(msg, Lang.lgChangeModuleID))
                     {
                         Hlp.TopMost = true;
                         Hlp.ShowDialog(this);
@@ -172,7 +167,7 @@ namespace RateController.Menu
             string text;
             if (dup)
             {
-                text = "Two boards are answering as module " + id.ToString() + "!";
+                text = string.Format(Lang.lgTwoBoardsAnswering, id);
             }
             else
             {
@@ -199,7 +194,7 @@ namespace RateController.Menu
             bool newBoard = Core.ModulesStatus.NewBoardConnected();
             if (newBoard)
             {
-                string nb = "New board: " + Core.ModulesStatus.NewBoardType() + ". Set a New ID, then Save.";
+                string nb = string.Format(Lang.lgNewBoardLine, Core.ModulesStatus.NewBoardType());
                 if (lbNewBoard.Text != nb) lbNewBoard.Text = nb;
             }
             if (lbNewBoard.Visible != newBoard) lbNewBoard.Visible = newBoard;
@@ -255,6 +250,8 @@ namespace RateController.Menu
             lbRemoteRelay.Text = Lang.lgRemoteRelayControl;
             ckRelayOn.Text = Lang.lgInvertRelays;
             ckFlowOn.Text = Lang.lgInvertFlow;
+            label1.Text = Lang.lgNewModuleID;
+            label2.Text = Lang.lgNewBoardDescription;
         }
 
         private void Setting_Changed(object sender, EventArgs e)
@@ -304,7 +301,7 @@ namespace RateController.Menu
                 {
                     if (AnyPageEdited())
                     {
-                        Props.ShowMessage("Save or cancel the pending changes first.", "Config", 10000);
+                        Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Config", 10000);
                         Initializing = true;
                         cbModuleID.SelectedIndex = current;
                         Initializing = false;
@@ -330,7 +327,7 @@ namespace RateController.Menu
                 Initializing = true;
                 for (int i = 0; i < cbModuleID.Items.Count; i++)
                 {
-                    string text = i.ToString() + (Core.ModulesStatus.Connected(i) ? "  (Connected)" : "  (not connected)");
+                    string text = i.ToString() + "  (" + (Core.ModulesStatus.Connected(i) ? Lang.lgConnected : Lang.lgNotConnected) + ")";
                     if ((string)cbModuleID.Items[i] != text) cbModuleID.Items[i] = text;
                 }
                 Initializing = wasInitializing;
@@ -345,7 +342,7 @@ namespace RateController.Menu
             string refusal = "";
             if (tbNewID.Text.Length == 0 && AnyPageEdited())
             {
-                refusal = "Save or cancel the pending changes first.";
+                refusal = Lang.lgSaveOrCancelFirst;
             }
             else if (tbNewID.Text.Length == 0 && MainMenu.ChangesWaitingToSend)
             {
