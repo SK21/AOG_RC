@@ -48,6 +48,22 @@ namespace RateController.Menu
         private Wlan.Adapter WifiAdapter;
         private bool WifiScanning = false;
 
+        private static bool SameModuleHotspot(string A, string B)
+        {
+            // true when A and B are the same module's hotspot: identical, or both RateModule names
+            // with the same suffix after the last '_' (MAC bytes), which an ID change keeps
+            bool Result = string.Equals(A, B, StringComparison.OrdinalIgnoreCase);
+            if (!Result && A != null && B != null
+                && A.StartsWith(ModulePrefix, StringComparison.OrdinalIgnoreCase)
+                && B.StartsWith(ModulePrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                string SA = A.Substring(A.LastIndexOf('_') + 1);
+                string SB = B.Substring(B.LastIndexOf('_') + 1);
+                Result = SA.Length > 0 && string.Equals(SA, SB, StringComparison.OrdinalIgnoreCase);
+            }
+            return Result;
+        }
+
         private sealed class ModuleItem
         {
             public string Ssid;
@@ -240,6 +256,18 @@ namespace RateController.Menu
                 else if (Target.Hotspot && Core.WebServer.HotspotState != "On")
                 {
                     Log("The tablet hotspot is not on. The module would have nothing to join.");
+                }
+                else if (!Target.Hotspot && SameModuleHotspot(Target.Ssid, Module.Ssid))
+                {
+                    Log(Module.Ssid + " can't join its own hotspot. Connect this PC to the network the module should join first.");
+                }
+                else if (ModuleProvisioner.CredentialTooLong(
+                    Target.Hotspot ? Core.WebServer.HotspotSsid : Target.Ssid,
+                    Target.Hotspot ? Core.WebServer.HotspotPassword : tbWifiKey.Text) != "")
+                {
+                    Log(ModuleProvisioner.CredentialTooLong(
+                        Target.Hotspot ? Core.WebServer.HotspotSsid : Target.Ssid,
+                        Target.Hotspot ? Core.WebServer.HotspotPassword : tbWifiKey.Text));
                 }
                 else
                 {

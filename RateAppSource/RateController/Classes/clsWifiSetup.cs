@@ -831,6 +831,30 @@ namespace RateController.Classes
 
     public sealed class ModuleProvisioner
     {
+        // RC_ESP32 keeps the network name and password in char[ModStringLengths] (15) and cuts
+        // anything longer silently, so at most 14 UTF-8 bytes each. A curly ’ (iPhone default
+        // names) is 3 bytes: "iPhone’s test" is 15 and would be stored as "iPhone’s tes"
+        public const int MaxCredentialBytes = 14;
+
+        // "" when Ssid and Key fit the module, else the reason to show
+        public static string CredentialTooLong(string Ssid, string Key)
+        {
+            string Result = "";
+            int SsidBytes = Encoding.UTF8.GetByteCount(Ssid ?? "");
+            int KeyBytes = Encoding.UTF8.GetByteCount(Key ?? "");
+            if (SsidBytes > MaxCredentialBytes)
+            {
+                Result = "The network name '" + Ssid + "' is " + SsidBytes + " bytes; the module holds "
+                    + MaxCredentialBytes + ". Use a shorter name (a curly ’ counts as 3).";
+            }
+            else if (KeyBytes > MaxCredentialBytes)
+            {
+                Result = "The network password is " + KeyBytes + " characters; the module holds "
+                    + MaxCredentialBytes + ". Use a shorter password.";
+            }
+            return Result;
+        }
+
         // Timings. The hotspot join is the slow one: the module's radio is shared between its
         // hotspot and its own station attempts, so it can be briefly deaf when we knock.
         private const int JoinTimeoutMs = 25000;
@@ -862,6 +886,11 @@ namespace RateController.Classes
 
         // module IDs connected when the run started; success is a new one appearing
         private bool[] _connectedAtStart = new bool[Props.MaxModules];
+
+        // a.b.c of the module hotspot the PC joined for this run, "" until known. A module that
+        // failed to join the target keeps sending on its own hotspot (Wifi.ino), which the PC
+        // hears while it is there; that must not count as the module arriving on the target
+        private string _moduleApSubnet = "";
 
         public ModuleProvisioner(Action<string> progress) { _say = progress; }
 
@@ -974,6 +1003,8 @@ namespace RateController.Classes
                 return result;
             }
             Say("  module at " + gw);
+            byte[] G = gw.GetAddressBytes();
+            _moduleApSubnet = G[0] + "." + G[1] + "." + G[2];
             if (_cancel) return CancelAway(req);
 
             // 2 ── find the target network's 2.4 GHz channel, from here, because the driver will
@@ -1027,7 +1058,8 @@ namespace RateController.Classes
                 result.Detail = error;
                 return result;
             }
-            Say("  saved, the module is restarting");
+            // the reply is the same page either way; the module restarts only if a setting changed
+            Say("  saved (the module restarts if anything changed)");
 
             // 4 ── back. Runs even when cancelled: the details are already sent, so the only
             // thing left to undo is the PC's trip.
@@ -1109,6 +1141,23 @@ namespace RateController.Classes
             return Result;
         }
 
+        private bool OnOwnHotspot(int ID)
+        {
+            // true when module ID's latest status came from the module's own hotspot: the one the
+            // PC joined for this run, or 192.168.(ID+200) after an ID change renamed it. Only the
+            // module being set up is judged, so a module joining ANOTHER module's hotspot still
+            // passes. No sender recorded (e.g. CAN) = not on its hotspot
+            bool Result = false;
+            string IP = Core.UDPmodules == null ? "" : Core.UDPmodules.ModuleIP(ID);
+            if (IP != "")
+            {
+                int Dot = IP.LastIndexOf('.');
+                string Subnet = Dot > 0 ? IP.Substring(0, Dot) : "";
+                Result = (Subnet == _moduleApSubnet) || (Subnet == "192.168." + (ID + 200));
+            }
+            return Result;
+        }
+
         private static bool[] ConnectedNow()
         {
             // UI thread
@@ -1149,13 +1198,13 @@ namespace RateController.Classes
                 {
                     if (WantID >= 0 && WantID < Now.Length)
                     {
-                        if (Now[WantID] && (!WasConnected || waited > IgnoreMs)) Result = WantID;
+                        if (Now[WantID] && (!WasConnected || waited > IgnoreMs) && !OnOwnHotspot(WantID)) Result = WantID;
                     }
                     else
                     {
                         for (int i = 0; i < Props.MaxModules && Result < 0; i++)
                         {
-                            if (Now[i] && !_connectedAtStart[i]) Result = i;
+                            if (Now[i] && !_connectedAtStart[i] && !OnOwnHotspot(i)) Result = i;
                         }
                     }
                 }

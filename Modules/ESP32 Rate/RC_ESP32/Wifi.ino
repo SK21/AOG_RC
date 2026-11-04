@@ -179,8 +179,14 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
 {
 	Serial.print("Network IP: ");
 	Serial.println(WiFi.localIP());
+	// subnet broadcast from the real mask, not an assumed /24: an iPhone hotspot is
+	// 172.20.10.0/28, where .255 is off-subnet and goes to the phone as gateway (dropped)
 	IPAddress Wifi_LocalIP = WiFi.localIP();
-	Wifi_DestinationIP = IPAddress(Wifi_LocalIP[0], Wifi_LocalIP[1], Wifi_LocalIP[2], 255);
+	IPAddress Wifi_Mask = WiFi.subnetMask();
+	for (int i = 0; i < 4; i++)
+	{
+		Wifi_DestinationIP[i] = Wifi_LocalIP[i] | (uint8_t)~Wifi_Mask[i];
+	}
 
 	StaConnected = true;
 	StaFailCount = 0;

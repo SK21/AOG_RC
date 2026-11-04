@@ -17,7 +17,8 @@ namespace RateController
         private const int LearnedExpirySec = 30;
 
         private readonly frmMain mf;
-        private readonly Dictionary<string, DateTime> cLearned = new Dictionary<string, DateTime>();   // x.y.z.255 -> last heard (UTC), socket thread writes
+        private readonly Dictionary<string, DateTime> cLearned = new Dictionary<string, DateTime>();   // subnet broadcast -> last heard (UTC), socket thread writes
+        private readonly Dictionary<string, string> cBroadcastOf = new Dictionary<string, string>();  // sender address -> its subnet broadcast (BroadcastFor), under LearnedLock
         private readonly bool cLearnSubnets;
         private readonly HashSet<string> cLearnedLogged = new HashSet<string>();    // what the log last reported, send side only
         private readonly object LearnedLock = new object();
@@ -65,7 +66,7 @@ namespace RateController
                 if (IPAddress.TryParse(value, out _))
                 {
                     data = value.Split('.');
-                    cNetworkEP = IPAddress.Parse(data[0] + "." + data[1] + "." + data[2] + ".255");
+                    cNetworkEP = BroadcastFor(IPAddress.Parse(value));
                     Props.SetProp("EndPoint_" + cConnectionName, value);
                     cSubNet = data[0].ToString() + "." + data[1].ToString() + "." + data[2].ToString();
                 }
@@ -103,6 +104,45 @@ namespace RateController
             catch (Exception ex)
             {
                 Props.WriteErrorLog("UDPComm/AdapterName: " + ex.Message);
+            }
+            return Result;
+        }
+
+        public static IPAddress BroadcastFor(IPAddress Address)
+        {
+            // subnet broadcast for Address, from the mask of the PC adapter on its a.b.c (same
+            // match as AdapterName). An iPhone hotspot is 172.20.10.0/28, broadcast .15, where
+            // a.b.c.255 is off-subnet and is dropped by the phone. No adapter: a.b.c.255 as before
+            byte[] A = Address.GetAddressBytes();
+            IPAddress Result = IPAddress.Parse(A[0] + "." + A[1] + "." + A[2] + ".255");
+            try
+            {
+                bool Found = false;
+                foreach (NetworkInterface Nic in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (!Found && Nic.OperationalStatus == OperationalStatus.Up && Nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                    {
+                        foreach (UnicastIPAddressInformation Info in Nic.GetIPProperties().UnicastAddresses)
+                        {
+                            if (!Found && Info.Address.AddressFamily == AddressFamily.InterNetwork && Info.IPv4Mask != null)
+                            {
+                                byte[] L = Info.Address.GetAddressBytes();
+                                byte[] M = Info.IPv4Mask.GetAddressBytes();
+                                if (L[0] == A[0] && L[1] == A[1] && L[2] == A[2] && M.Length == 4)
+                                {
+                                    byte[] B = new byte[4];
+                                    for (int i = 0; i < 4; i++) B[i] = (byte)(L[i] | ~M[i]);
+                                    Result = new IPAddress(B);
+                                    Found = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("UDPComm/BroadcastFor: " + ex.Message);
             }
             return Result;
         }
@@ -332,12 +372,26 @@ namespace RateController
 
         private void Learn(IPAddress Sender)
         {
-            // socket thread. The sender's /24 broadcast, same convention as NetworkEP.
+            // socket thread. The sender's subnet broadcast (BroadcastFor, same as NetworkEP),
+            // cached per sender so adapters are not enumerated on every packet.
             // Loopback and link-local (no DHCP) are skipped
             byte[] B = Sender.GetAddressBytes();
             if (B.Length == 4 && !IPAddress.IsLoopback(Sender) && !(B[0] == 169 && B[1] == 254))
             {
-                string Bc = B[0] + "." + B[1] + "." + B[2] + ".255";
+                string Key = Sender.ToString();
+                string Bc;
+                lock (LearnedLock)
+                {
+                    cBroadcastOf.TryGetValue(Key, out Bc);
+                }
+                if (Bc == null)
+                {
+                    Bc = BroadcastFor(Sender).ToString();
+                    lock (LearnedLock)
+                    {
+                        cBroadcastOf[Key] = Bc;
+                    }
+                }
                 lock (LearnedLock)
                 {
                     cLearned[Bc] = DateTime.UtcNow;
