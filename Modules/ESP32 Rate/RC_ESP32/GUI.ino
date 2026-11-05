@@ -54,7 +54,7 @@ void handleCredentials()
 	uint8_t OldChannel = MDLnetwork.StaChannelCache;
 	String OldSSID = String(MDLnetwork.SSID);
 	String OldPassword = String(MDLnetwork.Password);
-	String OldAPPassword = String(MDL.APpassword);
+	String OldAPPassword = String(MDLnetwork.APpassword);
 
 	String newSSID = server.arg("prop1");
 	newSSID.trim();
@@ -68,8 +68,8 @@ void handleCredentials()
 		newAPPassword = server.arg("prop3");
 		newAPPassword.trim();
 
-		// Enforce max length 
-		const size_t kMaxApLen = 10;
+		// WPA2 maximum; the field holds 63 + null
+		const size_t kMaxApLen = PasswordLength - 1;
 		if (newAPPassword.length() > kMaxApLen)
 		{
 			newAPPassword.remove(kMaxApLen); 
@@ -83,7 +83,7 @@ void handleCredentials()
 	// Apply AP password if provided (including empty -> open network)
 	if (server.hasArg("prop3"))
 	{
-		newAPPassword.toCharArray(MDL.APpassword, sizeof(MDL.APpassword));
+		newAPPassword.toCharArray(MDLnetwork.APpassword, sizeof(MDLnetwork.APpassword));
 	}
 
 	// Channel cache. The scan already knows where the chosen network lives, so
@@ -129,10 +129,10 @@ void handleCredentials()
 		(String(MDLnetwork.Password) != OldPassword) ||
 		(MDLnetwork.StaChannelCache != OldChannel);
 
-	bool apChanged = (String(MDL.APpassword) != OldAPPassword);
+	bool apChanged = (String(MDLnetwork.APpassword) != OldAPPassword);
 
-	if (stationChanged) SaveNetworks();
-	if (apChanged || idChanged) SaveData();
+	// network, hotspot password and ID are all in the identity record
+	if (stationChanged || apChanged || idChanged) SaveIdentity();
 
 	// a new ID also needs the restart: Ethernet IP (ID + 50), hotspot subnet (ID + 200)
 	// and every packet's ID byte are set at boot

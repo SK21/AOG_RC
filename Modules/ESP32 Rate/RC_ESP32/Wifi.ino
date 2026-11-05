@@ -137,11 +137,10 @@ void StartWifiStation()
 	Serial.println("Connecting to wifi network ...");
 }
 
-// Store the cached channel, and ONLY that byte. Calling SaveNetworks() here
-// would write the entire ModuleNetwork struct, WifiModeUseStation included —
-// and this whole rework exists because the firmware has no business persisting
-// that field on its own. Called from loop(), not from the event handler, so the
-// flash write never stalls event dispatch.
+// Store the cached channel. It lives in the identity record, so the whole record is
+// rewritten (its CRC covers every byte); everything else in it already matches what is
+// stored, because each other change to those fields saves and restarts at once.
+// Called from loop(), not from the event handler, so the flash write never stalls event dispatch.
 //
 // Once per boot, and no more. EEPROM.commit() erases and rewrites a whole flash
 // sector, and two access points sharing one SSID on different channels — the
@@ -160,8 +159,7 @@ void PersistStaChannel()
 
 	StaChannelStored = true;
 	MDLnetwork.StaChannelCache = StaChannel;
-	EEPROM.put(168 + offsetof(ModuleNetwork, StaChannelCache), MDLnetwork.StaChannelCache);
-	EEPROM.commit();
+	SaveIdentity();
 	Serial.print("Stored network channel ");
 	Serial.println(StaChannel);
 }

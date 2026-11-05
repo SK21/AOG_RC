@@ -37,8 +37,6 @@ void DoSetup()
 	// eeprom
 	EEPROM.begin(EEPROM_SIZE);
 	LoadData();
-	LoadNetworks();
-	LoadBoardID();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -238,7 +236,7 @@ void DoSetup()
 	char suffix[7]; // 6 hex + null
 	sprintf(suffix, "%02X%02X%02X", (uint8_t)(mac >> 24), (uint8_t)(mac >> 32), (uint8_t)(mac >> 40));
 
-	String AP = MDL.APname;
+	String AP = APname;
 	AP += "_";
 	AP += String(MDL.ID);
 	AP += "_";
@@ -256,10 +254,10 @@ void DoSetup()
 	}
 
 	WiFi.softAPConfig(AP_LocalIP, AP_GateWay, AP_Subnet);
-	if (strlen(MDL.APpassword) >= 8)
+	if (strlen(MDLnetwork.APpassword) >= 8)
 	{
 		// WPA2-PSK
-		WiFi.softAP(AP.c_str(), MDL.APpassword, APchannel, false, 4);
+		WiFi.softAP(AP.c_str(), MDLnetwork.APpassword, APchannel, false, 4);
 	}
 	else
 	{
@@ -590,70 +588,100 @@ void InitializeRelays(uint8_t Control, int8_t End)
 	}
 }
 
-// eeprom map:
-// ID			0-1
-// module type	2
-// board label	3-22
-// module data	23-147
-// network		168-232
-// sensors 1-6	253 + i*124, ~106 bytes each (6th ends at ~979; EEPROM_SIZE is 1024)
+// eeprom map (slot constants and header layout in RC_ESP32.ino):
+//   identity      0-255         ID, board label, network, hotspot password. Kept across firmware updates
+//   module data   256-319       ModuleConfig
+//   sensors 1-6   320 + i*112   stored part of SensorConfig (before UPM); sensor 6 ends at 991
+//   free          992-1023
+// Each slot: 5-byte header (magic, InoType, version, CRC16), then the data.
+
+// ── EEPROM records ── header layout and slots in RC_ESP32.ino
+uint16_t Crc16(uint16_t crc, const uint8_t* data, uint16_t len)
+{
+	// CRC-16/CCITT-FALSE, start with 0xFFFF
+	for (uint16_t i = 0; i < len; i++)
+	{
+		crc ^= (uint16_t)data[i] << 8;
+		for (uint8_t b = 0; b < 8; b++) crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : (crc << 1);
+	}
+	return crc;
+}
+
+void WriteRecord(uint16_t Addr, uint8_t Magic, uint8_t Version, const void* Data, uint16_t Len)
+{
+	// no commit here: the caller commits once after all its records
+	uint8_t Hdr[3] = { Magic, InoType, Version };
+	uint16_t Crc = Crc16(Crc16(0xFFFF, Hdr, 3), (const uint8_t*)Data, Len);
+	for (uint8_t i = 0; i < 3; i++) EEPROM.write(Addr + i, Hdr[i]);
+	EEPROM.write(Addr + 3, Crc & 0xFF);
+	EEPROM.write(Addr + 4, Crc >> 8);
+	for (uint16_t i = 0; i < Len; i++) EEPROM.write(Addr + RecordHeaderSize + i, ((const uint8_t*)Data)[i]);
+}
+
+bool ReadRecord(uint16_t Addr, uint8_t Magic, uint8_t Version, void* Data, uint16_t Len)
+{
+	// true and Data filled only if magic, InoType, version and CRC all match.
+	// On false Data is untouched, so it keeps the defaults already in it
+	bool Result = false;
+	uint8_t Hdr[3];
+	for (uint8_t i = 0; i < 3; i++) Hdr[i] = EEPROM.read(Addr + i);
+	if (Hdr[0] == Magic && Hdr[1] == InoType && Hdr[2] == Version && Len <= EE_IdentitySize)
+	{
+		uint8_t Buf[EE_IdentitySize];		// the largest slot
+		for (uint16_t i = 0; i < Len; i++) Buf[i] = EEPROM.read(Addr + RecordHeaderSize + i);
+		uint16_t Stored = EEPROM.read(Addr + 3) | (EEPROM.read(Addr + 4) << 8);
+		if (Crc16(Crc16(0xFFFF, Hdr, 3), Buf, Len) == Stored)
+		{
+			memcpy(Data, Buf, Len);
+			Result = true;
+		}
+	}
+	return Result;
+}
 
 void LoadData()
 {
-	bool IsValid = false;
-	int16_t StoredID;
-	int8_t StoredType;
-	EEPROM.get(0, StoredID);
-	EEPROM.get(2, StoredType);
-	if (StoredID == InoID && StoredType == InoType)
-	{
-		// load stored data
-		Serial.println("Loading stored settings.");
-		EEPROM.get(23, MDL);
+	// Each record loads on its own: a missing or bad one keeps its defaults, the others are
+	// kept. Identity goes last because it sets MDL.ID, which LoadDefaults() resets
+	LoadDefaults();
 
-		for (int i = 0; i < MaxProductCount; i++)
+	bool ConfigOK = ReadRecord(EE_Config, ConfigMagic, ConfigVersion, &MDL, sizeof(MDL));
+	if (!ConfigOK) Serial.println("Module settings not stored, using defaults.");
+
+	bool SensorsOK = true;
+	for (int i = 0; i < MaxProductCount; i++)
+	{
+		if (!ReadRecord(EE_Sensor + i * EE_SensorStep, SensorMagic, SensorVersion, &Sensor[i], SensorStoredBytes))
 		{
-			EEPROM.get(253 + i * 124, Sensor[i]);
+			SensorsOK = false;
+			Serial.print("Sensor ");
+			Serial.print(i + 1);
+			Serial.println(" settings not stored, using defaults.");
 		}
-		IsValid = ValidData();
 	}
 
-	if (!IsValid)
+	if (!ValidData())
 	{
-		// The module ID survives a defaults reload, the way MDLnetwork (WiFi credentials)
-		// already does. A firmware update changes InoID, which lands here, and without this
-		// every module came back as ID 0 with its credentials intact: straight back onto the
-		// network as a duplicate of module 0. Read from the old record's position — ID must
-		// stay the FIRST field of ModuleConfig (EEPROM 23). Blank flash reads 0xFF and an
-		// unassigned board stores NewModuleID (25), both above 15, so those boards start
-		// (or stay) at NewModuleID.
-		uint8_t KeptID;
-		EEPROM.get(23, KeptID);
-
-		Serial.println("Stored settings not valid.");
+		Serial.println("Stored pin settings not valid, using defaults.");
 		LoadDefaults();
-		if (KeptID <= 15)
-		{
-			MDL.ID = KeptID;
-			Serial.print("Module ID kept: ");
-			Serial.println(KeptID);
-		}
-		SaveData();
-		GoodPins=true;
+		ConfigOK = false;
+		GoodPins = true;
 	}
+
+	bool IdentityOK = LoadIdentity();
+
+	if (!ConfigOK || !SensorsOK || !IdentityOK) SaveData();
 }
 
 void SaveData()
 {
 	Serial.println("Updating stored settings.");
-	EEPROM.put(0, InoID);
-	EEPROM.put(2, InoType);
-	EEPROM.put(23, MDL);
-
+	WriteRecord(EE_Config, ConfigMagic, ConfigVersion, &MDL, sizeof(MDL));
 	for (int i = 0; i < MaxProductCount; i++)
 	{
-		EEPROM.put(253 + i * 124, Sensor[i]);
+		WriteRecord(EE_Sensor + i * EE_SensorStep, SensorMagic, SensorVersion, &Sensor[i], SensorStoredBytes);
 	}
+	WriteIdentity();
 	EEPROM.commit();
 }
 
@@ -840,69 +868,46 @@ bool ValidData()
 	return Result;
 }
 
-void LoadNetworks()
+bool LoadIdentity()
 {
-	ModuleNetwork tmp;
-	EEPROM.get(168, tmp);
-	if (tmp.Identifier == 9876)
+	ModuleIdentity Id;
+	bool Result = ReadRecord(EE_Identity, IdentityMagic, IdentityVersion, &Id, sizeof(Id));
+	if (Result)
 	{
-		MDLnetwork = tmp;
-
-		// StaChannelCache was added to the end of this struct, so a record
-		// written before it existed leaves whatever EEPROM already held in that
-		// byte. Anything outside the 2.4 GHz channels means "nothing cached" —
-		// the first join then learns it for real.
+		MDL.ID = Id.ID;
+		memcpy(MDLboard.Text, Id.Label, sizeof(MDLboard.Text));
+		MDLnetwork = Id.Network;
 		if (MDLnetwork.StaChannelCache > 13) MDLnetwork.StaChannelCache = 0;
 	}
 	else
 	{
-		// load network defaults
-		MDLnetwork.Identifier = 9876;
-		MDLnetwork.IP0 = 192;
-		MDLnetwork.IP1 = 168;
-		MDLnetwork.IP2 = 1;
-		MDLnetwork.IP3 = 50;
-		MDLnetwork.WifiModeUseStation = false;
-		MDLnetwork.StaChannelCache = 0;
-		strcpy(MDLnetwork.SSID, "Tractor");
-		strcpy(MDLnetwork.Password, "111222333");
-
-		SaveNetworks();
-	}
-}
-
-void SaveNetworks()
-{
-	EEPROM.put(168, MDLnetwork);
-	EEPROM.commit();
-}
-
-void LoadBoardID()
-{
-	// Independent EEPROM slot, NOT guarded by InoID, so the board label survives a firmware
-	// reflash / LoadDefaults (it identifies the hardware, not the settings). SaveData()
-	// only writes offsets 0/2/23/253+, never the 3-22 region, so this is left untouched there.
-	BoardLabel tmp;
-	EEPROM.get(EE_BoardID, tmp);
-	if (tmp.Identifier == BoardIDMagic)
-	{
-		MDLboard = tmp;
-	}
-	else
-	{
-		// uninitialized EEPROM -> start with an empty label
-		MDLboard.Identifier = BoardIDMagic;
+		Serial.println("Module identity not stored, using defaults.");
+		MDL.ID = NewModuleID;
 		memset(MDLboard.Text, 0, sizeof(MDLboard.Text));
-		SaveBoardID();
+		MDLnetwork = ModuleNetwork();		// the struct's own defaults
 	}
+	return Result;
 }
 
-void SaveBoardID()
+void WriteIdentity()
 {
-	MDLboard.Identifier = BoardIDMagic;
-	EEPROM.put(EE_BoardID, MDLboard);
+	// no commit: SaveData() and SaveIdentity() commit
+	ModuleIdentity Id;
+	Id.ID = MDL.ID;
+	memcpy(Id.Label, MDLboard.Text, sizeof(Id.Label));
+	Id.Network = MDLnetwork;
+	WriteRecord(EE_Identity, IdentityMagic, IdentityVersion, &Id, sizeof(Id));
+}
+
+void SaveIdentity()
+{
+	WriteIdentity();
 	EEPROM.commit();
 }
+
+// callers kept: the network and the board label are both in the identity record
+void SaveNetworks() { SaveIdentity(); }
+void SaveBoardID() { SaveIdentity(); }
 
 void ChipMAC(uint8_t* mac)
 {

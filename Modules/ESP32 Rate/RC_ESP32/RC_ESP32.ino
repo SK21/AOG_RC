@@ -4,9 +4,8 @@
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_GenericDevice.h>
 #include <Adafruit_BusIO_Register.h>
-#include <index_html.h>
-#include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
-#include <PCF8574.h>		// https://github.com/RobTillaart/PCF8574
+#include "PCA95x5_RC.h"					// modified from https://github.com/hideakitai/PCA95x5
+#include <PCF8574.h>					// https://github.com/RobTillaart/PCF8574
 #include "ESP2SOTA_RC/ESP2SOTA_RC.h"	// modified from https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
@@ -26,14 +25,17 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 4116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 5116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
+								// resets stored settings — bump a record's version below for that
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+200 / 25+50 still make valid addresses
 
 #define NC 0xFF		// Pins not connected
-#define ModStringLengths 15
+#define SsidLength 33			// 32 bytes + null, the 802.11 maximum
+#define PasswordLength 64		// 63 bytes + null, the WPA2 passphrase maximum
+const char APname[] = "RateModule";	// hotspot name prefix; "_" + ID + "_" + MAC suffix is added (Begin.ino)
 
 const uint32_t FlowTimeout = 4000;
 const uint8_t MinMedianSamples = 7;		// floor: take at least this many pulses for the
@@ -67,9 +69,29 @@ const uint8_t MaxProductCount = 2;
 const int MaxSampleSize = 11;
 #endif
 
-const uint16_t EEPROM_SIZE = 1024;	// sensor slots run 253 + i*124; the 6th ends at ~979,
-									// so 512 silently dropped sensors 2-5 (ESP32 EEPROM
-									// bounds-checks and no-ops writes past the size)
+const uint16_t EEPROM_SIZE = 1024;	// ESP32 EEPROM bounds-checks and no-ops writes past the size
+
+// EEPROM records. Each slot holds a 5-byte header, then the data:
+//   0 magic (which record)  1 InoType (which firmware wrote it)  2 layout version  3-4 CRC16
+// A record loads only if all of these match, else that record alone gets defaults. InoType
+// catches data left by other firmware on the same chip (Nano SwitchBox, Teensy AutoSteer).
+// Change a record's layout or defaults -> bump its version; the other records are kept.
+const uint8_t RecordHeaderSize = 5;
+
+const uint16_t EE_Identity = 0;			// 0-255: ID, board label, network, AP password. Kept across updates
+const uint16_t EE_IdentitySize = 256;
+const uint8_t IdentityMagic = 0xA1;
+const uint8_t IdentityVersion = 1;
+
+const uint16_t EE_Config = 256;			// 256-319: ModuleConfig
+const uint16_t EE_ConfigSize = 64;
+const uint8_t ConfigMagic = 0xA2;
+const uint8_t ConfigVersion = 1;
+
+const uint16_t EE_Sensor = 320;			// 320 + i*112: stored part of SensorConfig, sensor 6 ends at 991
+const uint16_t EE_SensorStep = 112;
+const uint8_t SensorMagic = 0xA3;
+const uint8_t SensorVersion = 1;
 const uint8_t W5500_SS = 5;		// W5500 SPI SS
 
 // servo driver
@@ -85,18 +107,16 @@ enum ControlType
 	TimedCombo_ct = 5
 };
 
-struct ModuleConfig	// about 130 bytes
+struct ModuleConfig	// about 38 bytes
 {
 	// RC15
-	uint8_t ID = NewModuleID;		// keep FIRST: LoadData() reads it from EEPROM 23 to keep the ID across a defaults reload
+	uint8_t ID = NewModuleID;		// stored in the identity record, which is loaded last and sets this
 	uint8_t SensorCount = 1;        // up to 2 sensors, if 0 rate control will be disabled
 	bool InvertRelay = true;	    // value that turns on relays
 	bool InvertFlow = true;			// sets on value for flow valve or sets motor direction
 	uint8_t RelayControlPins[16] = { 8,9,10,11,12,25,26,27,NC,NC,NC,NC,NC,NC,NC,NC };		// pin numbers when GPIOs are used for relay control (1), default RC11
 	uint8_t OnboardRelayControl = 5;		// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
 	uint8_t RemoteRelayControl = 0;			// 0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
-	char APname[ModStringLengths] = "RateModule";
-	char APpassword[ModStringLengths] = "";
 	uint8_t WorkPin = NC;
 	bool WorkPinIsMomentary = false;
 	bool InvertWork = false;		// true for NO work switch sensor
@@ -110,52 +130,49 @@ struct ModuleConfig	// about 130 bytes
 
 ModuleConfig MDL;
 
-struct ModuleNetwork
+struct ModuleNetwork	// stored in the identity record
 {
-	uint16_t Identifier = 9876;
 	uint8_t IP0 = 192;
 	uint8_t IP1 = 168;
 	uint8_t IP2 = 1;
 	uint8_t IP3 = 50;
 	bool WifiModeUseStation = false;				// false - AP mode, true - AP + Station
-	char SSID[ModStringLengths] = "Tractor";		// name of network ESP32 connects to
-	char Password[ModStringLengths] = "111222333";
+	char SSID[SsidLength] = "Tractor";				// name of network ESP32 connects to
+	char Password[PasswordLength] = "111222333";
 	// Channel the network was last joined on. Lets a reconnect skip the full
 	// scan, and lets the softAP start where the join will land — see Wifi.ino.
-	// Appended at the end deliberately: an EEPROM record written before this
-	// field existed still loads, and LoadNetworks() clamps whatever lands here.
 	uint8_t StaChannelCache = 0;					// 0 = none cached yet
+	char APpassword[PasswordLength] = "";			// module hotspot; under 8 characters = open
 };
 
 ModuleNetwork MDLnetwork;
 
 // Board label: a user-entered text description stored on the module to identify the
-// physical board/PCB ("RC12-3", etc). Kept in its own EEPROM slot (like
-// ModuleNetwork) so it SURVIVES a firmware reflash / default reload - it describes the
-// hardware, not the settings. See PID_Normalized_Control_Rationale.md neighbours in docs.
+// physical board/PCB ("RC12-3", etc). Stored in the identity record, so it survives
+// a firmware update - it describes the hardware, not the settings.
 struct BoardLabel
 {
-	uint16_t Identifier;	// magic to detect an initialized slot
 	char Text[16];			// up to 16 chars; app 0-pads short strings
 };
 BoardLabel MDLboard;
-const int EE_BoardID = 3;			// free EEPROM region 3-22 (between InoType@2 and MDL@23)
-const uint16_t BoardIDMagic = 4321;	// marks an initialized board label slot
 
-struct SensorConfig	// about 104 bytes
+// What the identity record stores: kept across firmware updates
+struct ModuleIdentity
 {
+	uint8_t ID;
+	char Label[16];
+	ModuleNetwork Network;
+};
+static_assert(RecordHeaderSize + sizeof(ModuleIdentity) <= EE_IdentitySize, "ModuleIdentity overflows its EEPROM slot");
+
+struct SensorConfig
+{
+	// stored: everything before UPM (SensorStoredBytes)
 	uint8_t FlowPin;
 	uint8_t IN1;
 	uint8_t IN2;
-	float UPM;				// sent as upm X 1000
-	float PWM;
-	uint32_t CommTime;
 	byte ControlType;		// 0 standard, 1 combo close, 2 motor, 3 -, 4 fan, 5 timed combo
-	uint32_t TotalPulses;
-	float TargetUPM;
 	float MeterCal;
-	int16_t ManualAdjust;
-	float Hz;
 	uint8_t MaxPWM;
 	uint8_t MinPWM;
 	float Kp;
@@ -174,7 +191,22 @@ struct SensorConfig	// about 104 bytes
 	byte SampleWindow;	// flow window in centiseconds (x10 ms)
 	uint8_t BinPin;		// bin level sensor (digital), NC = no bin alarm
 	bool BinInvert;		// invert bin sensor reading
+
+	// live values, not stored
+	float UPM;				// sent as upm X 1000
+	float PWM;
+	uint32_t CommTime;
+	uint32_t TotalPulses;
+	float TargetUPM;
+	int16_t ManualAdjust;
+	float Hz;
 };
+
+const uint16_t SensorStoredBytes = offsetof(SensorConfig, UPM);
+
+static_assert(RecordHeaderSize + sizeof(ModuleConfig) <= EE_ConfigSize, "ModuleConfig overflows its EEPROM slot");
+static_assert(RecordHeaderSize + SensorStoredBytes <= EE_SensorStep, "SensorConfig overflows its EEPROM slot");
+static_assert(EE_Sensor + MaxProductCount * EE_SensorStep <= EEPROM_SIZE, "sensor slots overflow EEPROM_SIZE");
 
 SensorConfig Sensor[MaxProductCount];
 bool SensorConnected[MaxProductCount];

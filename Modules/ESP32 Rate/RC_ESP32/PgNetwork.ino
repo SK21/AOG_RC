@@ -243,11 +243,11 @@ String GetPage2()
     st += "      <table class='center'>";
     st += "        <tr>";
     st += "          <td class='label-col'><span class='label-normal'>Network</span></td>";
-    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ssid' size='20' name='prop1' value='" + HtmlEscape(ssidValue) + "'></div></td>";
+    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ssid' size='20' maxlength='32' name='prop1' value='" + HtmlEscape(ssidValue) + "'></div></td>";
     st += "        </tr>";
     st += "        <tr>";
     st += "          <td class='label-col'><span class='label-normal'>Password</span></td>";
-    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='pass' size='20' name='prop2' value='" + HtmlEscape(String(MDLnetwork.Password)) + "'></div></td>";
+    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='pass' size='20' maxlength='63' name='prop2' value='" + HtmlEscape(String(MDLnetwork.Password)) + "'></div></td>";
     st += "        </tr>";
     st += "        <tr>";
     st += "          <td class='label-col'><span class='label-normal'>Use this Network</span></td>";
@@ -299,10 +299,10 @@ String GetPage2()
     st += "        <tr><td colspan='2' style='text-align:center; padding:0;'><h1 class='subhead'>Hotspot</h1></td></tr>";
     st += "        <tr>";
     st += "          <td class='label-col'><span class='label-normal'>Password</span></td>";
-    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ap_pass' size='20' name='prop3' value='" + HtmlEscape(String(MDL.APpassword)) + "'></div></td>";
+    st += "          <td class='input-col'><div class='control-width'><input class='InputCell' id='ap_pass' size='20' maxlength='63' name='prop3' value='" + HtmlEscape(String(MDLnetwork.APpassword)) + "'></div></td>";
     st += "        </tr>";
     st += "        <tr>";
-    st += "          <td colspan='2'><div class='control-width'><div class='hint'>Module Access Point. Use 8 to 10 characters. Leave empty for an open hotspot.</div></div></td>";
+    st += "          <td colspan='2'><div class='control-width'><div class='hint'>Module Access Point. Use 8 to 63 characters. Leave empty for an open hotspot.</div></div></td>";
     st += "        </tr>";
     st += "      </table>";
     st += "";
