@@ -1,5 +1,5 @@
 #include "ESP2SOTA_RC.h"
-#include "index_html.h"
+#include "ESP2SOTA_RC_index_html.h"
 //Class constructor
 ESP2SOTAClass::ESP2SOTAClass(){
 

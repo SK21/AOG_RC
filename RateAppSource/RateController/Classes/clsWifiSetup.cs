@@ -831,10 +831,11 @@ namespace RateController.Classes
 
     public sealed class ModuleProvisioner
     {
-        // RC_ESP32 keeps the network name and password in char[ModStringLengths] (15) and cuts
-        // anything longer silently, so at most 14 UTF-8 bytes each. A curly ’ (iPhone default
-        // names) is 3 bytes: "iPhone’s test" is 15 and would be stored as "iPhone’s tes"
-        public const int MaxCredentialBytes = 14;
+        // RC_ESP32 keeps the network name in char[33] and the password in char[64] (5116 and
+        // later), the 802.11 / WPA2 maximums. Counted in UTF-8 bytes: a curly ’ (iPhone default
+        // names) is 3. Older firmware held 14 and cut longer ones silently: update it
+        public const int MaxSsidBytes = 32;
+        public const int MaxKeyBytes = 63;
 
         // "" when Ssid and Key fit the module, else the reason to show
         public static string CredentialTooLong(string Ssid, string Key)
@@ -842,15 +843,15 @@ namespace RateController.Classes
             string Result = "";
             int SsidBytes = Encoding.UTF8.GetByteCount(Ssid ?? "");
             int KeyBytes = Encoding.UTF8.GetByteCount(Key ?? "");
-            if (SsidBytes > MaxCredentialBytes)
+            if (SsidBytes > MaxSsidBytes)
             {
                 Result = "The network name '" + Ssid + "' is " + SsidBytes + " bytes; the module holds "
-                    + MaxCredentialBytes + ". Use a shorter name (a curly ’ counts as 3).";
+                    + MaxSsidBytes + ". Use a shorter name (a curly ’ counts as 3).";
             }
-            else if (KeyBytes > MaxCredentialBytes)
+            else if (KeyBytes > MaxKeyBytes)
             {
                 Result = "The network password is " + KeyBytes + " characters; the module holds "
-                    + MaxCredentialBytes + ". Use a shorter password.";
+                    + MaxKeyBytes + ". Use a shorter password.";
             }
             return Result;
         }

@@ -6,7 +6,7 @@
 #include <Adafruit_BusIO_Register.h>
 #include "PCA95x5_RC.h"					// modified from https://github.com/hideakitai/PCA95x5
 #include <PCF8574.h>					// https://github.com/RobTillaart/PCF8574
-#include "ESP2SOTA_RC/ESP2SOTA_RC.h"	// modified from https://github.com/pangodream/ESP2SOTA
+#include "ESP2SOTA_RC.h"				// modified from https://github.com/pangodream/ESP2SOTA
 
 #include <WiFi.h>
 #include <WebServer.h>
