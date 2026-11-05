@@ -383,6 +383,27 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
         }
         break;
 
+    case 32508:
+        // assign module ID by MAC, RC to module
+        //0     HeaderLo    252
+        //1     HeaderHi    126
+        //2-7   MAC         acted on only by the board with this MAC
+        //8     new module ID 0-15
+        //9     CRC
+        PGNlength = 10;
+        if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= 15)
+        {
+            uint8_t mac[6];
+            ChipMAC(mac);
+            if (memcmp(data + 2, mac, 6) == 0)
+            {
+                MDL.ID = data[8];
+                SaveIdentity();     // the ID lives in the identity record
+                ESP.restart();      // IPs, hotspot subnet and every packet's ID are set at boot
+            }
+        }
+        break;
+
     case 32700:
         // module config
         //0     HeaderLo    188
@@ -392,13 +413,11 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
         //4     commands
         //      bit 0 - Invert relay control
         //      bit 1 - Invert flow control
-        //      bit 2 - 
+        //      bit 2 -
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
         //      bit 5 - ADS1115 enabled
-        //      bit 6 - assign module ID: adopt data[2] as the new ID (only one
-        //              board connected); clear = data[2] is a filter, config is
-        //              for that module only
+        //      bit 6 - reserved (was assign ID, replaced by PGN 32508)
         //5	    onboard relay control type		0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
         //6	    remote relay control type		0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017, 5 - PCA9685, 6 - PCF8574
         //7	    Sensor 0, Flow pin
@@ -417,11 +436,9 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
 
         if (len > PGNlength - 1)
         {
-            // bit 6 set = ID assignment, adopt data[2] unconditionally (commissioning,
-            // one board connected); clear = data[2] must match our ID (normal update,
-            // multi-board safe). MDL.ID = data[2] below is a no-op in filtered mode.
-            bool AssignID = ((data[4] & 64) == 64);
-            if (GoodCRC(data, PGNlength) && (AssignID || data[2] == MDL.ID))
+            // config for this module only: data[2] must match our ID. The ID itself
+            // changes only by PGN 32508 (by MAC) or the web page.
+            if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
             {
                 bool PinsOK = PinAllowed(data[7]) && OutputPinAllowed(data[8]) && OutputPinAllowed(data[9])
                     && PinAllowed(data[10]) && OutputPinAllowed(data[11]) && OutputPinAllowed(data[12])
@@ -442,7 +459,6 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
 
                 if (PinsOK)
                 {
-                    MDL.ID = data[2];
                     MDL.SensorCount = data[3];
 
                     byte tmp = data[4];

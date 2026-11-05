@@ -17,7 +17,7 @@ namespace RateController.PGNs
         //      bit 3 - work pin is momentary
         //      bit 4 - Is3Wire valve
         //      bit 5 - ADS1115 enabled
-        //      bit 6 - assign module ID: board adopts byte 2 as its new ID
+        //      bit 6 - reserved (was assign ID, replaced by PGN 32508), always sent clear
         //              (only one board may be connected); clear = byte 2 is a
         //              filter, board applies config only when it matches its ID
         //      bit 7 - invert work switch (NO sensor)
@@ -277,7 +277,7 @@ namespace RateController.PGNs
             }
         }
 
-        public void Send(byte? commMode = null, bool assignID = false)
+        public void Send(byte? commMode = null)
         {
             // sensor 0/1 pins mirror the sensor-pins config (PGN 32507) so firmware
             // that only reads 32700 stays in sync with the pins grid. Only slots below
@@ -297,16 +297,8 @@ namespace RateController.PGNs
                 }
             }
 
-            // bit 6 is per-send, not part of the saved config - written both ways
-            // so a normal send can never carry a leftover assign bit
-            if (assignID)
-            {
-                cData[4] = (byte)(cData[4] | 0b0100_0000);
-            }
-            else
-            {
-                cData[4] = (byte)(cData[4] & 0b1011_1111);
-            }
+            // bit 6 (old assign ID) is never sent set, even from an old saved config
+            cData[4] = (byte)(cData[4] & 0b1011_1111);
 
             cData[31] = commMode ?? (Props.CanEnabled ? (byte)1 : (byte)0);
             cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);

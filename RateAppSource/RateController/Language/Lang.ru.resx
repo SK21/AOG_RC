@@ -831,9 +831,6 @@
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Две платы отвечают как модуль {0}!</value>
   </data>
-  <data name="lgDupDisconnect" xml:space="preserve">
-    <value>Две платы отвечают как модуль {0}. Отключите одну перед назначением ID.</value>
-  </data>
   <data name="lgNewBoardLine" xml:space="preserve">
     <value>Новая плата: {0}. Задайте новый ID, затем Сохранить.</value>
   </data>
@@ -858,22 +855,31 @@ OK сейчас отправит новый ID на плату. Плата пе�
 
 Отмена оставляет ID {0}.</value>
   </data>
-  <data name="lgNoBoardConnected" xml:space="preserve">
-    <value>Нет подключённых плат. Подключите одну плату, которая должна получить ID {0}.</value>
-  </data>
-  <data name="lgOneBoardOnly" xml:space="preserve">
-    <value>Для назначения ID модуля должна быть подключена только одна плата. Подключено плат: {0}.</value>
-  </data>
-  <data name="lgOneBoardOnlyNew" xml:space="preserve">
-    <value>Для назначения ID модуля должна быть подключена только одна плата. Подключено плат: {0}, включая новую плату ({1}).</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
     <value>ID модуля {0} отправлен. Плата перезагрузится и снова подключится как модуль {0}.</value>
   </data>
   <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>После переподключения нажмите Отправить, чтобы передать ей выводы датчиков.</value>
+    <value>После переподключения нажмите Отправить, чтобы передать ей настройки.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Изменить: {0}</value>
+  </data>
+  <data name="lgFirmwareUpdateRequired" xml:space="preserve">
+    <value>Требуется обновление ПО</value>
+  </data>
+  <data name="lgUpdateFirmware" xml:space="preserve">
+    <value>Обновить ПО</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Плата</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Новая</value>
+  </data>
+  <data name="lgNoBoardFound" xml:space="preserve">
+    <value>Плата для модуля {0} не найдена.</value>
+  </data>
+  <data name="lgChooseBoard" xml:space="preserve">
+    <value>Выберите плату в списке плат.</value>
   </data>
 </root>

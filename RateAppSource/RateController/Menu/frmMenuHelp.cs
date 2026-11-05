@@ -213,7 +213,7 @@ namespace RateController.Menu
             }
             else
             {
-                lbInoID.Text = Core.ModulesStatus.ModuleVersion(cModuleID);
+                lbInoID.Text = Core.ModulesBoardID.ModuleVersion(cModuleID);
                 lbTime.Text = (Core.ModulesStatus.ElapsedTime(cModuleID) / 1000.0).ToString("N3");
             }
 

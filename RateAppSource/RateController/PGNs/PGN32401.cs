@@ -6,7 +6,7 @@ namespace RateController.PGNs
 {
     public class PGN32401
     {
-        //PGN32401, module info from module to RC
+        //PGN32401, module status from module to RC
         //0     145
         //1     126
         //2     module ID
@@ -17,10 +17,7 @@ namespace RateController.PGNs
         //7     wheel count Lo
         //8     wheel count mid
         //9     wheel count Hi
-        //10    InoType
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
+        //10    status
         //      bit 0   work switch
         //      bit 1   wifi rssi < -80
         //      bit 2	wifi rssi < -70
@@ -29,17 +26,16 @@ namespace RateController.PGNs
         //      bit 5   good pin configuration
         //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
         //      bit 7   config rejected (2 s after a discarded 32507/32700)
-        //14    CRC
+        //11    CRC
+        // Board type and firmware are in PGN 32403. The old 15-byte report (old firmware) is ignored.
 
-        private const byte cByteCount = 15;
+        private const byte cByteCount = 12;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
         private double[] cElapsedTime;
         private bool[] cConfigRejected;
         private bool[] cEthernetConnected;
         private bool[] cGoodPins;
-        private UInt16[] cInoID;
-        private UInt16[] cInoType;
         private bool[] cIs3Wire;
         private double[] cPressureReading;
         private UInt16[] cWheelCounts;
@@ -49,17 +45,9 @@ namespace RateController.PGNs
         private ModuleStatus[] LastStatus;
         private Stopwatch[] PGNstopWatch;
         private DateTime[] ReceiveTime;
-        private DateTime[] cDuplicateTime;
-
-        // an unassigned board (Props.NewModuleID) has no slot in the per-module arrays;
-        // its reports are kept here so the app can see it and count it before an assign
-        private DateTime cNewBoardTime = DateTime.MinValue;
-        private UInt16 cNewBoardType;
-        private UInt16 cNewBoardInoID;
 
         public PGN32401()
         {
-            cInoID = new ushort[Props.MaxModules];
             cWorkSwitch = new bool[Props.MaxModules];
             cPressureReading = new double[Props.MaxModules];
             ReceiveTime = new DateTime[Props.MaxModules];
@@ -68,11 +56,9 @@ namespace RateController.PGNs
             cGoodPins = new bool[Props.MaxModules];
             cConfigRejected = new bool[Props.MaxModules];
 
-            cInoType = new ushort[Props.MaxModules];
             cWheelSpeed = new double[Props.MaxModules];
             cWheelCounts = new ushort[Props.MaxModules];
             cElapsedTime = new double[Props.MaxModules];
-            cDuplicateTime = new DateTime[Props.MaxModules];
 
             PGNstopWatch = new Stopwatch[Props.MaxModules];
             for (int i = 0; i < Props.MaxModules; i++)
@@ -93,7 +79,9 @@ namespace RateController.PGNs
 
         public bool Connected(int Module)
         {
-            return (ValidID(Module) && (DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4);
+            // status counts only for a board the identity list accepts (PGN 32403, §5)
+            return (ValidID(Module) && (DateTime.Now - ReceiveTime[Module]).TotalSeconds < 4
+                && Core.ModulesBoardID.Accepted(Module));
         }
 
         // Preferred if it is reporting, else the lowest connected module, else Preferred.
@@ -114,31 +102,6 @@ namespace RateController.PGNs
                 }
             }
             return Result;
-        }
-
-        // a board at the unassigned ID is reporting (same 4 s freshness as Connected)
-        public bool NewBoardConnected()
-        {
-            return (DateTime.Now - cNewBoardTime).TotalSeconds < 4;
-        }
-
-        // e.g. "Teensy_Rate, firmware 02-Nov-2026", for messages
-        public string NewBoardDescription()
-        {
-            return NewBoardType() + ", firmware " + Props.ParseDate(cNewBoardInoID.ToString());
-        }
-
-        // e.g. "Teensy_Rate", for the Config page status line
-        public string NewBoardType()
-        {
-            return Enum.GetName(typeof(ModuleTypes), cNewBoardType) ?? "unknown";
-        }
-
-        // Latched for a while after the last conflicting report so the warning is
-        // stable; clears itself once one of the boards is disconnected.
-        public bool DuplicateID(int Module)
-        {
-            return (ValidID(Module) && (DateTime.Now - cDuplicateTime[Module]).TotalSeconds < 15);
         }
 
         public double ElapsedTime(int ModuleID)
@@ -171,33 +134,12 @@ namespace RateController.PGNs
             return (ValidID(ModuleID) && (DateTime.Now - ReceiveTime[ModuleID]).TotalSeconds < 4);
         }
 
-        public UInt16 InoID(int Module)
-        {
-            UInt16 Result = 0;
-            if (ValidID(Module)) Result = cInoID[Module];
-            return Result;
-        }
-
-        public UInt16 ModuleType(int Module)
-        {
-            UInt16 Result = 0;
-            if (ValidID(Module)) Result = cInoType[Module];
-            return Result;
-        }
-
-        public string ModuleVersion(int Module)
-        {
-            string Result = "-";
-            if (ValidID(Module)) Result = Props.ParseDate(cInoID[Module].ToString());
-            return Result;
-        }
-
         public bool ParseByteData(byte[] Data)
         {
             bool Result = false;
             try
             {
-                if (Data[1] == HeaderHi && Data[0] == HeaderLo && Data.Length >= cByteCount && Core.Tls.GoodCRC(Data))
+                if (Data.Length == cByteCount && Data[1] == HeaderHi && Data[0] == HeaderLo && Core.Tls.GoodCRC(Data))
                 {
                     byte ModuleID = Data[2];
                     if (ModuleID < Props.MaxModules)
@@ -212,41 +154,20 @@ namespace RateController.PGNs
 
                         cWheelCounts[ModuleID] = (ushort)(Data[7] | Data[8] << 8 | Data[9] << 16);
 
-                        // Two boards sharing an ID reveal themselves when reports alternate
-                        // between different board types or firmware versions within the
-                        // 200 ms status cycle (catches pairs that send no board label, e.g.
-                        // a Nano). A legitimate change needs a reflash, which takes the
-                        // board offline far longer than the freshness gate.
-                        ushort inoID = (ushort)(Data[11] | Data[12] << 8);
-                        if ((DateTime.Now - ReceiveTime[ModuleID]).TotalSeconds < 2
-                            && (cInoType[ModuleID] != Data[10] || cInoID[ModuleID] != inoID))
-                        {
-                            cDuplicateTime[ModuleID] = DateTime.Now;
-                        }
-
-                        cInoType[ModuleID] = Data[10];
-                        cInoID[ModuleID] = inoID;
-                        cWorkSwitch[ModuleID] = ((Data[13] & 0b00000001) == 0b00000001);
+                        cWorkSwitch[ModuleID] = ((Data[10] & 0b00000001) == 0b00000001);
 
                         // wifi strength
                         cWifiSignal[ModuleID] = 0;
-                        if ((Data[13] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
-                        if ((Data[13] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
-                        if ((Data[13] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
+                        if ((Data[10] & 0b00000010) == 0b00000010) cWifiSignal[ModuleID] = 1;
+                        if ((Data[10] & 0b00000100) == 0b00000100) cWifiSignal[ModuleID] = 2;
+                        if ((Data[10] & 0b00001000) == 0b00001000) cWifiSignal[ModuleID] = 3;
 
-                        cEthernetConnected[ModuleID] = ((Data[13] & 0b00010000) == 0b00010000);
-                        cGoodPins[ModuleID] = ((Data[13] & 0b00100000) == 0b00100000);
-                        cIs3Wire[ModuleID] = ((Data[13] & 0b01000000) == 0b01000000);
-                        cConfigRejected[ModuleID] = ((Data[13] & 0b10000000) == 0b10000000);
+                        cEthernetConnected[ModuleID] = ((Data[10] & 0b00010000) == 0b00010000);
+                        cGoodPins[ModuleID] = ((Data[10] & 0b00100000) == 0b00100000);
+                        cIs3Wire[ModuleID] = ((Data[10] & 0b01000000) == 0b01000000);
+                        cConfigRejected[ModuleID] = ((Data[10] & 0b10000000) == 0b10000000);
 
                         ReceiveTime[ModuleID] = DateTime.Now;
-                        Result = true;
-                    }
-                    else if (ModuleID == Props.NewModuleID)
-                    {
-                        cNewBoardType = Data[10];
-                        cNewBoardInoID = (ushort)(Data[11] | Data[12] << 8);
-                        cNewBoardTime = DateTime.Now;
                         Result = true;
                     }
                 }

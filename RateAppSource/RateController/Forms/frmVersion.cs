@@ -82,11 +82,11 @@ namespace RateController.Forms
             lbAppLatest.Text = VC.RCappLatest;
             lbMod.Text = cModuleID.ToString("N0");
 
-            if (Core.ModulesStatus.Connected(cModuleID) && Core.ModulesStatus.ModuleType(cModuleID) > 0)
+            if (Core.ModulesStatus.Connected(cModuleID) && Core.ModulesBoardID.ModuleType(cModuleID) > 0)
             {
-                lbModule.Text = Enum.GetName(typeof(ModuleTypes), Core.ModulesStatus.ModuleType(cModuleID));
-                lbModuleCurrent.Text = Core.ModulesStatus.ModuleVersion(cModuleID);
-                lbModuleLatest.Text = VC.ModuleVersion(Core.ModulesStatus.ModuleType(cModuleID));
+                lbModule.Text = Enum.GetName(typeof(ModuleTypes), Core.ModulesBoardID.ModuleType(cModuleID));
+                lbModuleCurrent.Text = Core.ModulesBoardID.ModuleVersion(cModuleID);
+                lbModuleLatest.Text = VC.ModuleVersion(Core.ModulesBoardID.ModuleType(cModuleID));
             }
             else
             {

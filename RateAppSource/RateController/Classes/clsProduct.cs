@@ -1073,7 +1073,8 @@ namespace RateController.Classes
                     switch (PGN)
                     {
                         case 32400:
-                            if (RateSensorData.ParseByteData(data)) UpdateUnitsApplied();
+                            // only from a board the identity list accepts (PGN 32403, §5)
+                            if (Core.ModulesBoardID.Accepted(cModuleID) && RateSensorData.ParseByteData(data)) UpdateUnitsApplied();
                             break;
                     }
                 }

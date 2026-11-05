@@ -319,16 +319,16 @@ namespace RateController.Classes
             string label = "";
             if (ModulesBoardID.Received(id)) label = ModulesBoardID.BoardLabel(id);
             if (label.Length > 0) Result += " - " + label;
-            Result += "  (" + (ModulesStatus.Connected(id) ? Lang.lgConnected : Lang.lgNotConnected) + ")";
+            string state = ModulesBoardID.Rejected(id) ? Lang.lgFirmwareUpdateRequired
+                : ModulesStatus.Connected(id) ? Lang.lgConnected : Lang.lgNotConnected;
+            Result += "  (" + state + ")";
             return Result;
         }
 
         public static bool DuplicateModule(int moduleID)
         {
-            // two boards answering as one ID reveal themselves by alternating board
-            // labels (PGN 32403) or alternating board type / firmware version
-            // (PGN 32401 - catches boards that send no label, e.g. a Nano)
-            return ModulesBoardID.DuplicateID(moduleID) || ModulesStatus.DuplicateID(moduleID);
+            // two boards with different MACs report this ID (PGN 32403)
+            return ModulesBoardID.DuplicateID(moduleID);
         }
 
         public static int MaxSensorsForModule(int moduleID)
@@ -338,7 +338,7 @@ namespace RateController.Classes
             // is connected or flashed. Safe for old firmware: every firmware clamps
             // SensorCount to its own MaxProductCount at boot.
             int Result = 6;
-            if (ModulesStatus.ModuleType(moduleID) == 2) Result = 2;
+            if (ModulesBoardID.ModuleType(moduleID) == 2) Result = 2;
             return Result;
         }
 
@@ -360,7 +360,7 @@ namespace RateController.Classes
             // it rejected for nothing. The app holds one module config, the module selected on
             // Config, so only that module can be told - another Teensy would get its pins.
             byte id = ModuleConfig.GetData()[2];
-            if (ModulesStatus.Connected(id) && ModulesStatus.ModuleType(id) == (int)ModuleTypes.Teensy_Rate)
+            if (ModulesStatus.Connected(id) && ModulesBoardID.ModuleType(id) == (int)ModuleTypes.Teensy_Rate)
             {
                 ModuleConfig.Send(Mode);
                 CommModeNote = "Comm change sent to Teensy module " + id + ".";

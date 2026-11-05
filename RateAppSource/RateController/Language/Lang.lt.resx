@@ -831,9 +831,6 @@
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Dvi plokštės atsako kaip modulis {0}!</value>
   </data>
-  <data name="lgDupDisconnect" xml:space="preserve">
-    <value>Dvi plokštės atsako kaip modulis {0}. Prieš priskirdami ID, atjunkite vieną.</value>
-  </data>
   <data name="lgNewBoardLine" xml:space="preserve">
     <value>Nauja plokštė: {0}. Nustatykite naują ID, tada Išsaugoti.</value>
   </data>
@@ -858,22 +855,31 @@ Siunčiant ID gali būti prijungta tik ši viena plokštė - kiekviena ją girdi
 
 Atšaukti palieka ID {0}.</value>
   </data>
-  <data name="lgNoBoardConnected" xml:space="preserve">
-    <value>Neprijungta jokia plokštė. Prijunkite vienintelę plokštę, kuri turi gauti ID {0}.</value>
-  </data>
-  <data name="lgOneBoardOnly" xml:space="preserve">
-    <value>Priskiriant modulio ID turi būti prijungta tik viena plokštė. Prijungta plokščių: {0}.</value>
-  </data>
-  <data name="lgOneBoardOnlyNew" xml:space="preserve">
-    <value>Priskiriant modulio ID turi būti prijungta tik viena plokštė. Prijungta plokščių: {0}, įskaitant naują plokštę ({1}).</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
     <value>Modulio ID {0} išsiųstas. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {0}.</value>
   </data>
   <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Kai ji vėl prisijungs, paspauskite Siųsti, kad gautų jutiklių kontaktus.</value>
+    <value>Kai ji vėl prisijungs, paspauskite Siųsti, kad gautų nustatymus.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Pakeisti galima {0}</value>
+  </data>
+  <data name="lgFirmwareUpdateRequired" xml:space="preserve">
+    <value>Reikia atnaujinti PĮ</value>
+  </data>
+  <data name="lgUpdateFirmware" xml:space="preserve">
+    <value>Atnaujinti PĮ</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Plokštė</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Nauja</value>
+  </data>
+  <data name="lgNoBoardFound" xml:space="preserve">
+    <value>Moduliui {0} plokštė nerasta.</value>
+  </data>
+  <data name="lgChooseBoard" xml:space="preserve">
+    <value>Pasirinkite plokštę plokščių sąraše.</value>
   </data>
 </root>

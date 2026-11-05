@@ -837,9 +837,6 @@
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Two boards are answering as module {0}!</value>
   </data>
-  <data name="lgDupDisconnect" xml:space="preserve">
-    <value>Two boards are answering as module {0}. Disconnect one before assigning an ID.</value>
-  </data>
   <data name="lgNewBoardLine" xml:space="preserve">
     <value>New board: {0}. Set a New ID, then Save.</value>
   </data>
@@ -864,22 +861,31 @@ Only that one board can be connected while the ID is sent - every board that hea
 
 Cancel keeps ID {0}.</value>
   </data>
-  <data name="lgNoBoardConnected" xml:space="preserve">
-    <value>No board is connected. Connect the one board that should get ID {0}.</value>
-  </data>
-  <data name="lgOneBoardOnly" xml:space="preserve">
-    <value>Module ID assignment needs only one board connected. {0} boards are connected.</value>
-  </data>
-  <data name="lgOneBoardOnlyNew" xml:space="preserve">
-    <value>Module ID assignment needs only one board connected. {0} boards are connected, including a new board ({1}).</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
     <value>Module ID {0} sent. The board restarts and reconnects as module {0}.</value>
   </data>
   <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Press Send once it has reconnected to give it its sensor pins.</value>
+    <value>Press Send once it has reconnected to give it its settings.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Change it on {0}</value>
+  </data>
+  <data name="lgFirmwareUpdateRequired" xml:space="preserve">
+    <value>Firmware update required</value>
+  </data>
+  <data name="lgUpdateFirmware" xml:space="preserve">
+    <value>Update firmware</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="lgNoBoardFound" xml:space="preserve">
+    <value>No board found for module {0}.</value>
+  </data>
+  <data name="lgChooseBoard" xml:space="preserve">
+    <value>Choose the board in the Board list.</value>
   </data>
 </root>

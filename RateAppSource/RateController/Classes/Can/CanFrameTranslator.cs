@@ -62,7 +62,7 @@ namespace RateController.Classes.Can
         /// <summary>Raised when PGN 32400 (sensor data) is assembled from 0xFF00+0xFF01.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32400Ready;
 
-        /// <summary>Raised when PGN 32401 (module status) is assembled from 0xFF02+0xFF08.</summary>
+        /// <summary>Raised when PGN 32401 (module status) is assembled from 0xFF02.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32401Ready;
 
         /// <summary>Raised when PGN 32403 (board label) is assembled from 0xFF14+0xFF15+0xFF16.</summary>
@@ -112,11 +112,10 @@ namespace RateController.Classes.Can
             byte pgnLow = ps;
             int moduleId = frame.Data[0] & 0x0F;
             // An unassigned Teensy (Props.NewModuleID) sends only 0xFF08, with module 15 in the
-            // low nibble and its full ID in byte 4. It's reported as a 32401 from that ID
-            // instead of as module 15, so no module-15 entry or "connected" event is created.
+            // low nibble and its full ID in byte 4. It's dropped here so no module-15 entry or
+            // "connected" event is created. Its identity comes via 0xFF18 -> PGN 32403.
             if (pgnLow == 0x08 && frame.Dlc >= 5 && frame.Data[4] > 15)
             {
-                Report32401NewBoard(frame.Data);
             }
             else
             {
@@ -236,29 +235,27 @@ namespace RateController.Classes.Can
 
         private void TryAssemble32401(ModuleState state)
         {
-            if (state.Last0xFF02 == null || state.Last0xFF08 == null) return;
+            if (state.Last0xFF02 == null) return;
 
             byte[] f02 = state.Last0xFF02;
-            byte[] f08 = state.Last0xFF08;
             byte[] f09 = state.Last0xFF09;  // may be null
 
-            // PGN 32401 (15 bytes): header 0x91 0x7E
+            // PGN 32401 (12 bytes): header 0x91 0x7E
             //  [2]    moduleId         ← f02[0] & 0x0F
             //  [3-4]  pressure         ← f02[2-3]
             //  [5-6]  wheelSpeed       ← f02[4-5]
             //  [7-9]  wheelCounts      ← f09[1-3] if available, else f02[6-7] + 0
-            //  [10]   inoType          ← f08[1]
-            //  [11-12]inoId            ← f08[2-3]
-            //  [13]   status           ← reassembled from f02 bits
-            //  [14]   CRC
+            //  [10]   status           ← reassembled from f02 bits
+            //  [11]   CRC
+            // Board type and firmware go in PGN 32403, not here.
             //
             // Status byte reassembly from 0xFF02:
-            //   f02[0] bit4 = workSwitch    → pgn[13] bit0
-            //   f02[1] bits0-2 = wifiRSSI  → pgn[13] bits1-3
-            //   f02[0] bit5 = ethernetConn → pgn[13] bit4
-            //   f02[0] bit6 = goodPinCfg   → pgn[13] bit5
-            //   f02[0] bit7 = configRejected → pgn[13] bit7
-            var pgn = new byte[15];
+            //   f02[0] bit4 = workSwitch    → pgn[10] bit0
+            //   f02[1] bits0-2 = wifiRSSI  → pgn[10] bits1-3
+            //   f02[0] bit5 = ethernetConn → pgn[10] bit4
+            //   f02[0] bit6 = goodPinCfg   → pgn[10] bit5
+            //   f02[0] bit7 = configRejected → pgn[10] bit7
+            var pgn = new byte[12];
             pgn[0] = 0x91;
             pgn[1] = 0x7E;
             pgn[2] = (byte)(f02[0] & 0x0F);
@@ -280,34 +277,16 @@ namespace RateController.Classes.Can
                 pgn[9] = 0;
             }
 
-            pgn[10] = f08.Length > 1 ? f08[1] : (byte)0;
-            pgn[11] = f08.Length > 2 ? f08[2] : (byte)0;
-            pgn[12] = f08.Length > 3 ? f08[3] : (byte)0;
-
             byte status = 0;
             if ((f02[0] & 0x10) != 0) status |= 0x01;
             status |= (byte)(((f02.Length > 1 ? f02[1] : 0) & 0x07) << 1);
             if ((f02[0] & 0x20) != 0) status |= 0x10;
             if ((f02[0] & 0x40) != 0) status |= 0x20;
             if ((f02[0] & 0x80) != 0) status |= 0x80;
-            pgn[13] = status;
+            pgn[10] = status;
 
-            pgn[14] = CalcCrc(pgn, 14);
+            pgn[11] = CalcCrc(pgn, 11);
 
-            PGN32401Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
-        }
-
-        private void Report32401NewBoard(byte[] f08)
-        {
-            // only the ID, board type and firmware are known; the rest stays 0
-            var pgn = new byte[15];
-            pgn[0] = 0x91;
-            pgn[1] = 0x7E;
-            pgn[2] = f08[4];    // full ID (25)
-            pgn[10] = f08[1];   // inoType
-            pgn[11] = f08[2];   // inoId lo
-            pgn[12] = f08[3];   // inoId hi
-            pgn[14] = CalcCrc(pgn, 14);
             PGN32401Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }
 

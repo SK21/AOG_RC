@@ -39,6 +39,8 @@
             this.tbSensorCount = new System.Windows.Forms.TextBox();
             this.lbSensorCount = new System.Windows.Forms.Label();
             this.cbModuleID = new System.Windows.Forms.ComboBox();
+            this.cbBoard = new System.Windows.Forms.ComboBox();
+            this.lbBoard = new System.Windows.Forms.Label();
             this.lbModuleID = new System.Windows.Forms.Label();
             this.btnRescan = new System.Windows.Forms.Button();
             this.lbRemoteRelay = new System.Windows.Forms.Label();
@@ -108,7 +110,7 @@
             // 
             this.lbRelay.AutoSize = true;
             this.lbRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRelay.Location = new System.Drawing.Point(55, 377);
+            this.lbRelay.Location = new System.Drawing.Point(55, 392);
             this.lbRelay.Name = "lbRelay";
             this.lbRelay.Size = new System.Drawing.Size(202, 24);
             this.lbRelay.TabIndex = 174;
@@ -127,7 +129,7 @@
             "MCP23017",
             "PCA9685",
             "PCF8574"});
-            this.cbOnboardRelays.Location = new System.Drawing.Point(266, 373);
+            this.cbOnboardRelays.Location = new System.Drawing.Point(266, 388);
             this.cbOnboardRelays.Name = "cbOnboardRelays";
             this.cbOnboardRelays.Size = new System.Drawing.Size(192, 32);
             this.cbOnboardRelays.TabIndex = 173;
@@ -167,7 +169,7 @@
             // tbSensorCount
             // 
             this.tbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSensorCount.Location = new System.Drawing.Point(266, 310);
+            this.tbSensorCount.Location = new System.Drawing.Point(266, 336);
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 168;
@@ -180,7 +182,7 @@
             // 
             this.lbSensorCount.AutoSize = true;
             this.lbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorCount.Location = new System.Drawing.Point(55, 312);
+            this.lbSensorCount.Location = new System.Drawing.Point(55, 338);
             this.lbSensorCount.Name = "lbSensorCount";
             this.lbSensorCount.Size = new System.Drawing.Size(125, 24);
             this.lbSensorCount.TabIndex = 167;
@@ -268,7 +270,7 @@
             // tbNewID
             // 
             this.tbNewID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbNewID.Location = new System.Drawing.Point(266, 180);
+            this.tbNewID.Location = new System.Drawing.Point(266, 232);
             this.tbNewID.Name = "tbNewID";
             this.tbNewID.Size = new System.Drawing.Size(58, 29);
             this.tbNewID.TabIndex = 252;
@@ -277,11 +279,32 @@
             this.tbNewID.TextChanged += new System.EventHandler(this.Setting_Changed);
             this.tbNewID.Enter += new System.EventHandler(this.tbNewID_Enter);
             // 
+            // cbBoard
+            // 
+            this.cbBoard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBoard.DropDownWidth = 420;
+            this.cbBoard.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbBoard.Location = new System.Drawing.Point(150, 178);
+            this.cbBoard.Name = "cbBoard";
+            this.cbBoard.Size = new System.Drawing.Size(308, 32);
+            this.cbBoard.TabIndex = 252;
+            this.cbBoard.TabStop = false;
+            // 
+            // lbBoard
+            // 
+            this.lbBoard.AutoSize = true;
+            this.lbBoard.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbBoard.Location = new System.Drawing.Point(55, 182);
+            this.lbBoard.Name = "lbBoard";
+            this.lbBoard.Size = new System.Drawing.Size(60, 24);
+            this.lbBoard.TabIndex = 253;
+            this.lbBoard.Text = "Board";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(55, 182);
+            this.label1.Location = new System.Drawing.Point(55, 234);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(140, 24);
             this.label1.TabIndex = 251;
@@ -290,7 +313,7 @@
             // tbNewDescription
             // 
             this.tbNewDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbNewDescription.Location = new System.Drawing.Point(266, 245);
+            this.tbNewDescription.Location = new System.Drawing.Point(266, 284);
             this.tbNewDescription.MaxLength = 16;
             this.tbNewDescription.Name = "tbNewDescription";
             this.tbNewDescription.Size = new System.Drawing.Size(192, 29);
@@ -303,7 +326,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(55, 247);
+            this.label2.Location = new System.Drawing.Point(55, 286);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(203, 24);
             this.label2.TabIndex = 253;
@@ -351,6 +374,8 @@
             this.Controls.Add(this.tbNewDescription);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tbNewID);
+            this.Controls.Add(this.cbBoard);
+            this.Controls.Add(this.lbBoard);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbModule);
             this.Controls.Add(this.lbRemoteRelay);
@@ -397,6 +422,8 @@
         private System.Windows.Forms.Label lbModule;
         private System.Windows.Forms.TextBox tbNewID;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbBoard;
+        private System.Windows.Forms.Label lbBoard;
         private System.Windows.Forms.TextBox tbNewDescription;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox gbLine;

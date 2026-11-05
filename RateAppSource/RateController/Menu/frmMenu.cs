@@ -1026,74 +1026,33 @@ namespace RateController
             HighlightUpdateButton(false);
         }
 
-        // The Config page's ID change, sent as soon as the user confirms it (OK on the
-        // confirmation box). 32700 with bit 6 set makes the board adopt byte 2 instead of
-        // filtering on it, so every board that hears it takes the ID: exactly one board may
-        // be connected. Returns false with nothing sent (the module ID stays as it was)
-        // when that isn't the case.
-        public bool AssignModuleID(byte NewID)
+        // The Config page's ID change, sent as soon as the user confirms it. PGN 32508 is
+        // addressed by MAC: only the board picked in the Board list takes the ID, so any number
+        // of other boards may stay connected. The board saves the ID and restarts; its settings
+        // go with the next Send. Returns false with nothing sent when that board has gone.
+        public bool AssignModuleID(byte NewID, ulong MAC)
         {
             bool Result = false;
             byte OldID = Core.ModuleConfig.GetData()[2];
 
-            int connected = 0;
-            int boardID = -1;       // the ID the one connected board answers to now
-            int dupID = -1;
-            for (int i = 0; i < Props.MaxModules; i++)
+            PGNs.BoardInfo target = Core.ModulesBoardID.LiveBoard(MAC);
+            if (target == null)
             {
-                if (Core.ModulesStatus.Connected(i))
-                {
-                    connected++;
-                    boardID = i;
-                }
-                if (Core.DuplicateModule(i)) dupID = i;
-            }
-
-            // an unassigned board takes the ID too, but has no module slot to count
-            bool newBoard = Core.ModulesStatus.NewBoardConnected();
-            if (newBoard)
-            {
-                connected++;
-                boardID = Props.NewModuleID;
-            }
-
-            if (connected == 0)
-            {
-                Props.ShowMessage(string.Format(Lang.lgNoBoardConnected, NewID), "Config", 15000);
-            }
-            else if (connected > 1)
-            {
-                string msg = newBoard
-                    ? string.Format(Lang.lgOneBoardOnlyNew, connected, Core.ModulesStatus.NewBoardDescription())
-                    : string.Format(Lang.lgOneBoardOnly, connected);
-                Props.ShowMessage(msg, "Config", 15000);
-            }
-            else if (dupID >= 0)
-            {
-                // two boards with the same ID count as one connected module -
-                // their alternating labels / board types give them away
-                Props.ShowMessage(string.Format(Lang.lgDupDisconnect, dupID), "Config", 15000);
+                Props.ShowMessage(Lang.lgChooseBoard, "Config", 15000);
             }
             else
             {
-                // Everything for this module goes in this one Send. Name and sensor pins
-                // are addressed to the ID the board answers to now, so it takes them;
-                // 32700 goes last and gives it the new ID (it restarts on receipt).
-                // 32507 packs the module ID in 4 bits, so an unassigned board (25) can't
-                // be sent pins until it has its ID - Send stays highlighted for that.
-                SendPendingDescription(OldID, (byte)boardID);
+                // a typed board name moves with the board, and goes out with the next Send
+                string desc = Props.PendingModuleDescription(OldID);
+                if (desc.Length > 0) Props.SetPendingModuleDescription(NewID, desc);
 
-                bool PinsSent = (boardID <= 15);
-                if (PinsSent) Core.SensorPins.Send((byte)boardID);
+                new PGNs.PGN32508().Send(target.MAC, NewID);
 
                 Core.ModuleConfig.ModuleID = NewID;
                 Core.ModuleConfig.Save();
-                Core.ModuleConfig.Send(null, true);
 
-                string sent = string.Format(Lang.lgIDSent, NewID);
-                if (!PinsSent) sent += " " + Lang.lgSendPinsAfter;
-                Props.ShowMessage(sent, "Config", 15000);
-                HighlightUpdateButton(!PinsSent);
+                Props.ShowMessage(string.Format(Lang.lgIDSent, NewID) + " " + Lang.lgSendPinsAfter, "Config", 15000);
+                HighlightUpdateButton(true);
                 Result = true;
             }
             return Result;

@@ -2,6 +2,7 @@
 using RateController.Classes;
 using RateController.Language;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace RateController.Menu
         private Timer cModuleTimer;
         private Color cModuleColor;
         private bool cRefusing = false;     // a New ID refusal message is queued
+        private readonly List<ulong> cBoardMACs = new List<ulong>();   // cbBoard item i = cBoardMACs[i]
 
         private static string SendFirstMessage => Lang.lgSendBeforeIDChange;
 
@@ -44,6 +46,13 @@ namespace RateController.Menu
                     // go out on a normal Send first, then the ID can be changed
                     Props.ShowMessage(SendFirstMessage, "Config", 10000);
                 }
+                else if (idChange && SelectedBoardMAC() == 0)
+                {
+                    // the board to move must be picked first: the app doesn't guess (§6).
+                    // The New ID stays entered so the board can be picked and OK pressed again.
+                    Props.ShowMessage(cbBoard.Items.Count == 0 ? string.Format(Lang.lgNoBoardFound, oldID)
+                        : Lang.lgChooseBoard, "Config", 10000);
+                }
                 else if (idChange)
                 {
                     // An ID change is its own step: the rest of the page is locked while
@@ -59,7 +68,7 @@ namespace RateController.Menu
                         confirmed = Hlp.Result;
                     }
 
-                    bool assigned = confirmed && MainMenu.AssignModuleID(newID);
+                    bool assigned = confirmed && MainMenu.AssignModuleID(newID, SelectedBoardMAC());
 
                     SetButtons(false);
                     UpdateForm();
@@ -146,6 +155,7 @@ namespace RateController.Menu
             }
             Initializing = false;
             RefreshModuleList();
+            RefreshBoardList();
 
             UpdateForm();
 
@@ -160,9 +170,12 @@ namespace RateController.Menu
         private void ModuleTimer_Tick(object sender, EventArgs e)
         {
             RefreshModuleList();
+            RefreshBoardList();
 
             byte id = Core.ModuleConfig.GetData()[2];
-            bool dup = Core.DuplicateModule(id);
+            // old firmware outranks a duplicate: nothing else can be done until it's updated
+            bool rejected = Core.ModulesBoardID.Rejected(id);
+            bool dup = !rejected && Core.DuplicateModule(id);
 
             string text;
             if (dup)
@@ -175,14 +188,14 @@ namespace RateController.Menu
             }
 
             if (lbModule.Text != text) lbModule.Text = text;
-            Color fore = dup ? Color.Red : cModuleColor;
+            Color fore = (dup || rejected) ? Color.Red : cModuleColor;
             if (lbModule.ForeColor != fore) lbModule.ForeColor = fore;
 
-            // board type as the module reports it (PGN 32401), only while it is reporting
+            // board type as the module reports it (PGN 32403), only while it is reporting
             string typeName = "";
             if (Core.ModulesStatus.Connected(id))
             {
-                typeName = Enum.GetName(typeof(ModuleTypes), Core.ModulesStatus.ModuleType(id)) ?? "";
+                typeName = Enum.GetName(typeof(ModuleTypes), Core.ModulesBoardID.ModuleType(id)) ?? "";
                 if (typeName == ModuleTypes.unknown.ToString()) typeName = "";
                 typeName = typeName.Replace('_', ' ');
             }
@@ -191,10 +204,12 @@ namespace RateController.Menu
             if (lbModuleType.Visible != showType) lbModuleType.Visible = showType;
 
             // an unassigned board (ID 25) is reporting: say so, and how to give it an ID
-            bool newBoard = Core.ModulesStatus.NewBoardConnected();
+            var newBoards = Core.ModulesBoardID.NewBoards();
+            bool newBoard = newBoards.Count > 0;
             if (newBoard)
             {
-                string nb = string.Format(Lang.lgNewBoardLine, Core.ModulesStatus.NewBoardType());
+                string type = Enum.GetName(typeof(ModuleTypes), newBoards[0].InoType) ?? "unknown";
+                string nb = string.Format(Lang.lgNewBoardLine, type);
                 if (lbNewBoard.Text != nb) lbNewBoard.Text = nb;
             }
             if (lbNewBoard.Visible != newBoard) lbNewBoard.Visible = newBoard;
@@ -252,6 +267,7 @@ namespace RateController.Menu
             ckFlowOn.Text = Lang.lgInvertFlow;
             label1.Text = Lang.lgNewModuleID;
             label2.Text = Lang.lgNewBoardDescription;
+            lbBoard.Text = Lang.lgBoard;
         }
 
         private void Setting_Changed(object sender, EventArgs e)
@@ -327,7 +343,9 @@ namespace RateController.Menu
                 Initializing = true;
                 for (int i = 0; i < cbModuleID.Items.Count; i++)
                 {
-                    string text = i.ToString() + "  (" + (Core.ModulesStatus.Connected(i) ? Lang.lgConnected : Lang.lgNotConnected) + ")";
+                    string state = Core.ModulesBoardID.Rejected(i) ? Lang.lgUpdateFirmware
+                        : Core.ModulesStatus.Connected(i) ? Lang.lgConnected : Lang.lgNotConnected;
+                    string text = i.ToString() + "  (" + state + ")";
                     if ((string)cbModuleID.Items[i] != text) cbModuleID.Items[i] = text;
                 }
                 Initializing = wasInitializing;
@@ -426,6 +444,61 @@ namespace RateController.Menu
             }
             Initializing = false;
             SetIDLock(false);   // New ID was just cleared
+            RefreshBoardList();
+        }
+
+        // boards that can take a new ID: those at the module being edited, then new boards.
+        // With exactly one it's picked; with more the user must choose (the app doesn't guess).
+        // Picking a board is not a settings change: no Save, no Send highlight.
+        private void RefreshBoardList()
+        {
+            if (cbBoard.DroppedDown) return;     // don't repaint under the finger
+
+            byte id = Core.ModuleConfig.GetData()[2];
+            var boards = Core.ModulesBoardID.BoardsAt(id);
+            boards.AddRange(Core.ModulesBoardID.NewBoards());
+
+            var macs = new List<ulong>();
+            var texts = new List<string>();
+            foreach (var Brd in boards)
+            {
+                string type = (Enum.GetName(typeof(ModuleTypes), Brd.InoType) ?? "").Replace('_', ' ');
+                string at = Brd.ID == Props.NewModuleID ? Lang.lgNew : Brd.ID.ToString();
+                string text = at + ": " + type + " " + Brd.ShortMAC;
+                if (Brd.Label.Length > 0) text += " " + Brd.Label;
+                macs.Add(Brd.MAC);
+                texts.Add(text);
+            }
+
+            bool changed = macs.Count != cBoardMACs.Count || texts.Count != cbBoard.Items.Count;
+            for (int i = 0; !changed && i < macs.Count; i++)
+            {
+                changed = macs[i] != cBoardMACs[i] || texts[i] != (string)cbBoard.Items[i];
+            }
+
+            if (changed)
+            {
+                ulong selected = SelectedBoardMAC();
+                cbBoard.BeginUpdate();
+                cbBoard.Items.Clear();
+                cBoardMACs.Clear();
+                for (int i = 0; i < macs.Count; i++)
+                {
+                    cbBoard.Items.Add(texts[i]);
+                    cBoardMACs.Add(macs[i]);
+                }
+                int keep = cBoardMACs.IndexOf(selected);
+                if (keep < 0 && cBoardMACs.Count == 1) keep = 0;    // only one choice: pick it
+                cbBoard.SelectedIndex = keep;
+                cbBoard.EndUpdate();
+            }
+        }
+
+        // the MAC of the board picked in the Board list, 0 when none
+        private ulong SelectedBoardMAC()
+        {
+            int i = cbBoard.SelectedIndex;
+            return (i >= 0 && i < cBoardMACs.Count) ? cBoardMACs[i] : 0;
         }
 
         private void lbModuleID_Click(object sender, EventArgs e)

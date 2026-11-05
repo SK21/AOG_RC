@@ -57,6 +57,9 @@ namespace RateController.PGNs
 
         public void Send()
         {
+            // old firmware at this module ID: send nothing, the board stops its PID (§5)
+            if (Core.ModulesBoardID.Rejected(Prod.ModuleID)) return;
+
             if (Prod.ModuleID >= 0 && Prod.SensorID >= 0)
             {
                 double Tmp = 0;

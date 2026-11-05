@@ -436,7 +436,7 @@ namespace RateController.Menu
             if (Sel != null && Core.ModulesStatus.Connected(Sel.ID))
             {
                 string IP = Core.UDPmodules.ModuleIP(Sel.ID);
-                if (Core.ModulesStatus.ModuleType(Sel.ID) != 4)
+                if (Core.ModulesBoardID.ModuleType(Sel.ID) != 4)
                 {
                     Text = "No web page";
                 }

@@ -103,9 +103,9 @@ void handleCredentials()
 	}
 
 	// Module ID (modid). Sent only by the app's module WiFi setup, never by this page's own
-	// form, so a phone user's save leaves the ID alone. A new board's default is 0, and
-	// joining a network where module 0 already runs would make two boards answer to every
-	// module-0 command; setting it here, in the same visit, means it arrives unique.
+	// form, so a phone user's save leaves the ID alone. A new board's default is 25
+	// (unassigned). Setting the ID here, in the same visit, means the board arrives with
+	// its own ID.
 	// 0..15 is the nibble BuildModSenID() packs; anything else is ignored.
 	bool idChanged = false;
 	if (server.hasArg("modid"))

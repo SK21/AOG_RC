@@ -2120,6 +2120,60 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgNotConnected", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Board
+        /// </summary>
+        internal static string lgBoard {
+            get {
+                return ResourceManager.GetString("lgBoard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New
+        /// </summary>
+        internal static string lgNew {
+            get {
+                return ResourceManager.GetString("lgNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No board found for module {0}.
+        /// </summary>
+        internal static string lgNoBoardFound {
+            get {
+                return ResourceManager.GetString("lgNoBoardFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the board in the Board list.
+        /// </summary>
+        internal static string lgChooseBoard {
+            get {
+                return ResourceManager.GetString("lgChooseBoard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware update required.
+        /// </summary>
+        internal static string lgFirmwareUpdateRequired {
+            get {
+                return ResourceManager.GetString("lgFirmwareUpdateRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update firmware.
+        /// </summary>
+        internal static string lgUpdateFirmware {
+            get {
+                return ResourceManager.GetString("lgUpdateFirmware", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Hotspot band: {0}.
@@ -2203,15 +2257,6 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Two boards are answering as module {0}. Disconnect one before assigning an ID..
-        /// </summary>
-        internal static string lgDupDisconnect {
-            get {
-                return ResourceManager.GetString("lgDupDisconnect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to New board: {0}. Set a New ID, then Save..
         /// </summary>
         internal static string lgNewBoardLine {
@@ -2262,33 +2307,6 @@ namespace RateController.Language {
         internal static string lgChangeIDConfirm {
             get {
                 return ResourceManager.GetString("lgChangeIDConfirm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No board is connected. Connect the one board that should get ID {0}..
-        /// </summary>
-        internal static string lgNoBoardConnected {
-            get {
-                return ResourceManager.GetString("lgNoBoardConnected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Module ID assignment needs only one board connected. {0} boards are connected..
-        /// </summary>
-        internal static string lgOneBoardOnly {
-            get {
-                return ResourceManager.GetString("lgOneBoardOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Module ID assignment needs only one board connected. {0} boards are connected, i[rest of string was truncated].
-        /// </summary>
-        internal static string lgOneBoardOnlyNew {
-            get {
-                return ResourceManager.GetString("lgOneBoardOnlyNew", resourceCulture);
             }
         }
         

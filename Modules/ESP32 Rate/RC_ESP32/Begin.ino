@@ -919,42 +919,5 @@ void ChipMAC(uint8_t* mac)
 	}
 }
 
-void EffectiveBoardLabel(uint8_t* out)
-{
-	// The stored label, or "MAC xxxxxxxxxxxx" from the chip's unique MAC when
-	// none is stored (runtime fallback, never written to EEPROM). Gives a fresh
-	// board a unique identity so RC can tell two boards with the same module ID
-	// apart. out must hold 16 bytes, 0-padded like the stored label.
-	bool empty = true;
-	for (byte i = 0; i < 16; i++)
-	{
-		if (MDLboard.Text[i] > 32 && MDLboard.Text[i] < 127)
-		{
-			empty = false;
-			break;
-		}
-	}
-
-	if (empty)
-	{
-		const char hex[] = "0123456789ABCDEF";
-		uint8_t mac[6];
-		ChipMAC(mac);
-		out[0] = 'M';
-		out[1] = 'A';
-		out[2] = 'C';
-		out[3] = ' ';
-		for (byte i = 0; i < 6; i++)
-		{
-			out[4 + i * 2] = hex[mac[i] >> 4];
-			out[5 + i * 2] = hex[mac[i] & 0x0F];
-		}
-	}
-	else
-	{
-		memcpy(out, MDLboard.Text, 16);
-	}
-}
-
 
 

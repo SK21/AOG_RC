@@ -832,9 +832,6 @@
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Zwei Platinen antworten als Modul {0}!</value>
   </data>
-  <data name="lgDupDisconnect" xml:space="preserve">
-    <value>Zwei Platinen antworten als Modul {0}. Vor dem Zuweisen einer ID eine trennen.</value>
-  </data>
   <data name="lgNewBoardLine" xml:space="preserve">
     <value>Neue Platine: {0}. Neue ID eingeben, dann Speichern.</value>
   </data>
@@ -859,22 +856,31 @@ Nur diese eine Platine darf beim Senden der ID verbunden sein - jede Platine, di
 
 Abbrechen behält ID {0}.</value>
   </data>
-  <data name="lgNoBoardConnected" xml:space="preserve">
-    <value>Keine Platine verbunden. Die eine Platine anschließen, die ID {0} bekommen soll.</value>
-  </data>
-  <data name="lgOneBoardOnly" xml:space="preserve">
-    <value>Für die Zuweisung der Modul-ID darf nur eine Platine verbunden sein. {0} Platinen sind verbunden.</value>
-  </data>
-  <data name="lgOneBoardOnlyNew" xml:space="preserve">
-    <value>Für die Zuweisung der Modul-ID darf nur eine Platine verbunden sein. {0} Platinen sind verbunden, darunter eine neue Platine ({1}).</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
     <value>Modul-ID {0} gesendet. Die Platine startet neu und verbindet sich als Modul {0}.</value>
   </data>
   <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Nach dem Neuverbinden Senden drücken, um ihr die Sensor-Pins zu geben.</value>
+    <value>Nach dem Neuverbinden Senden drücken, um ihr die Einstellungen zu geben.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Änderbar unter {0}</value>
+  </data>
+  <data name="lgFirmwareUpdateRequired" xml:space="preserve">
+    <value>Firmware-Update erforderlich</value>
+  </data>
+  <data name="lgUpdateFirmware" xml:space="preserve">
+    <value>Firmware akt.</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Platine</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="lgNoBoardFound" xml:space="preserve">
+    <value>Keine Platine für Modul {0} gefunden.</value>
+  </data>
+  <data name="lgChooseBoard" xml:space="preserve">
+    <value>Wählen Sie die Platine in der Platinenliste.</value>
   </data>
 </root>

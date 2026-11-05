@@ -834,9 +834,6 @@
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Két PCB válaszol {0}. modulként!</value>
   </data>
-  <data name="lgDupDisconnect" xml:space="preserve">
-    <value>Két PCB válaszol {0}. modulként. ID kiosztása előtt válasszon le egyet.</value>
-  </data>
   <data name="lgNewBoardLine" xml:space="preserve">
     <value>Új PCB: {0}. Adjon meg új ID-t, majd Mentés.</value>
   </data>
@@ -861,22 +858,31 @@ Az ID küldésekor csak ez az egy PCB lehet csatlakoztatva - minden PCB, amely h
 
 A Mégse megtartja a(z) {0} ID-t.</value>
   </data>
-  <data name="lgNoBoardConnected" xml:space="preserve">
-    <value>Nincs csatlakoztatott PCB. Csatlakoztassa azt az egy PCB-t, amely a(z) {0} ID-t kapja.</value>
-  </data>
-  <data name="lgOneBoardOnly" xml:space="preserve">
-    <value>A modul ID kiosztásához csak egy PCB lehet csatlakoztatva. {0} PCB csatlakozik.</value>
-  </data>
-  <data name="lgOneBoardOnlyNew" xml:space="preserve">
-    <value>A modul ID kiosztásához csak egy PCB lehet csatlakoztatva. {0} PCB csatlakozik, köztük egy új PCB ({1}).</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
     <value>{0} modul ID elküldve. A PCB újraindul, és {0}. modulként csatlakozik újra.</value>
   </data>
   <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Az újracsatlakozás után nyomja meg a Küld gombot az érzékelő lábak elküldéséhez.</value>
+    <value>Az újracsatlakozás után nyomja meg a Küld gombot a beállítások elküldéséhez.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Módosítás itt: {0}</value>
+  </data>
+  <data name="lgFirmwareUpdateRequired" xml:space="preserve">
+    <value>Firmware-frissítés szükséges</value>
+  </data>
+  <data name="lgUpdateFirmware" xml:space="preserve">
+    <value>FW frissítés</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Új</value>
+  </data>
+  <data name="lgNoBoardFound" xml:space="preserve">
+    <value>Nem található panel a(z) {0}. modulhoz.</value>
+  </data>
+  <data name="lgChooseBoard" xml:space="preserve">
+    <value>Válassza ki a panelt a panellistából.</value>
   </data>
 </root>

@@ -114,6 +114,14 @@ namespace RateController.PGNs
 
         public List<BoardInfo> NewBoards() => BoardsAt(Props.NewModuleID);
 
+        // the live board with this MAC, or null
+        public BoardInfo LiveBoard(ulong MAC)
+        {
+            BoardInfo Result = null;
+            if (cBoards.TryGetValue(MAC, out BoardInfo Brd) && Brd.Live) Result = Brd;
+            return Result;
+        }
+
         // old firmware reported at this ID in the last 5 s
         public bool Rejected(int ID)
         {

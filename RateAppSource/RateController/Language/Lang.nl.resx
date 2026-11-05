@@ -831,9 +831,6 @@
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Twee printplaten antwoorden als module {0}!</value>
   </data>
-  <data name="lgDupDisconnect" xml:space="preserve">
-    <value>Twee printplaten antwoorden als module {0}. Koppel er een los voordat u een ID toewijst.</value>
-  </data>
   <data name="lgNewBoardLine" xml:space="preserve">
     <value>Nieuwe printplaat: {0}. Stel een nieuwe ID in en klik op opslaan.</value>
   </data>
@@ -858,22 +855,31 @@ Alleen die ene printplaat mag verbonden zijn terwijl de ID wordt verzonden - elk
 
 Annuleren behoudt ID {0}.</value>
   </data>
-  <data name="lgNoBoardConnected" xml:space="preserve">
-    <value>Geen printplaat verbonden. Sluit de ene printplaat aan die ID {0} moet krijgen.</value>
-  </data>
-  <data name="lgOneBoardOnly" xml:space="preserve">
-    <value>Voor het toewijzen van een module-ID mag maar één printplaat verbonden zijn. Er zijn {0} printplaten verbonden.</value>
-  </data>
-  <data name="lgOneBoardOnlyNew" xml:space="preserve">
-    <value>Voor het toewijzen van een module-ID mag maar één printplaat verbonden zijn. Er zijn {0} printplaten verbonden, waaronder een nieuwe printplaat ({1}).</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
     <value>Module-ID {0} verzonden. De printplaat herstart en maakt opnieuw verbinding als module {0}.</value>
   </data>
   <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Druk na het opnieuw verbinden op verzenden om de sensorpinnen te geven.</value>
+    <value>Druk na het opnieuw verbinden op verzenden om de instellingen te geven.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Wijzigen via {0}</value>
+  </data>
+  <data name="lgFirmwareUpdateRequired" xml:space="preserve">
+    <value>Firmware-update vereist</value>
+  </data>
+  <data name="lgUpdateFirmware" xml:space="preserve">
+    <value>FW bijwerken</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="lgNew" xml:space="preserve">
+    <value>Nieuw</value>
+  </data>
+  <data name="lgNoBoardFound" xml:space="preserve">
+    <value>Geen board gevonden voor module {0}.</value>
+  </data>
+  <data name="lgChooseBoard" xml:space="preserve">
+    <value>Kies het board in de boardlijst.</value>
   </data>
 </root>

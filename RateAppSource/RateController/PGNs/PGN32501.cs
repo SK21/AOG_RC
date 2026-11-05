@@ -33,6 +33,9 @@ namespace RateController.PGNs
 
         public void Send()
         {
+            // old firmware at this module ID: send nothing (§5)
+            if (Core.ModulesBoardID.Rejected(cModuleID)) return;
+
             Array.Clear(cData, 0, cByteCount);
             cData[0] = 245;
             cData[1] = 126;
