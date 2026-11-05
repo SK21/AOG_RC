@@ -1089,7 +1089,6 @@ namespace RateController
                 Core.ModuleConfig.ModuleID = NewID;
                 Core.ModuleConfig.Save();
                 Core.ModuleConfig.Send(null, true);
-                Core.ModulesBoardID.ExpectLabelChange(NewID);
 
                 string sent = string.Format(Lang.lgIDSent, NewID);
                 if (!PinsSent) sent += " " + Lang.lgSendPinsAfter;
@@ -1109,7 +1108,6 @@ namespace RateController
             if (desc.Length > 0)
             {
                 new PGNs.PGN32506().Send(ToModule, desc);
-                Core.ModulesBoardID.ExpectLabelChange(ToModule);
             }
             Props.ClearPendingModuleDescription();
         }
