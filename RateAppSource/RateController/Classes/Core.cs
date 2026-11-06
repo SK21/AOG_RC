@@ -325,6 +325,96 @@ namespace RateController.Classes
             return Result;
         }
 
+        // A module is in use when a board is reporting at it, including a rejected (old
+        // firmware) board, which is still physically there. A board can only be assigned to
+        // a module that is not in use. A board that is powered off isn't seen (Phase 2 MAC map).
+        public static bool ModuleInUse(int moduleID)
+        {
+            return ModulesBoardID.BoardsAt(moduleID).Count > 0 || ModulesBoardID.Rejected(moduleID);
+        }
+
+        // in use, or the target of a pending ID change: no other board may be lined up for it
+        public static bool ModuleTaken(int moduleID)
+        {
+            PendingBoard p = PendingIDChange();
+            return ModuleInUse(moduleID) || (p != null && p.NewID == moduleID);
+        }
+
+        // The module offered for a new board: the lowest free module with enabled products
+        // (set up and waiting for a board), else the lowest free module. -1 when none is free.
+        public static int SuggestedModule()
+        {
+            int Result = -1;
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                if (!ModuleTaken(i) && Products.EnabledOnModule(i))
+                {
+                    Result = i;
+                    break;
+                }
+            }
+            if (Result < 0)
+            {
+                for (int i = 0; i < Props.MaxModules; i++)
+                {
+                    if (!ModuleTaken(i))
+                    {
+                        Result = i;
+                        break;
+                    }
+                }
+            }
+            return Result;
+        }
+
+        // Board changes saved on the Boards page and sent with the next Send, keyed by MAC.
+        // In memory only: dropped if the app closes before Send.
+        private static readonly Dictionary<ulong, PendingBoard> cPendingBoards = new Dictionary<ulong, PendingBoard>();
+
+        public static bool HasPendingBoards => cPendingBoards.Count > 0;
+
+        public static List<PendingBoard> PendingBoards() => new List<PendingBoard>(cPendingBoards.Values);
+
+        public static PendingBoard PendingFor(ulong MAC)
+        {
+            cPendingBoards.TryGetValue(MAC, out PendingBoard Result);
+            return Result;
+        }
+
+        // the one board waiting for a new ID (one per Send: Send gives settings to one module)
+        public static PendingBoard PendingIDChange()
+        {
+            PendingBoard Result = null;
+            foreach (PendingBoard p in cPendingBoards.Values)
+            {
+                if (p.NewID >= 0)
+                {
+                    Result = p;
+                    break;
+                }
+            }
+            return Result;
+        }
+
+        // NewID -1 = keep the board's ID; Description null = keep its description.
+        // Nothing left to change removes the entry.
+        public static void SetPending(ulong MAC, int NewID, string Description)
+        {
+            if (NewID < 0 && Description == null)
+            {
+                cPendingBoards.Remove(MAC);
+            }
+            else
+            {
+                cPendingBoards[MAC] = new PendingBoard { MAC = MAC, NewID = NewID, Description = Description };
+            }
+        }
+
+        public static void ClearPending(ulong MAC)
+        {
+            cPendingBoards.Remove(MAC);
+        }
+
         public static bool DuplicateModule(int moduleID)
         {
             // two boards with different MACs report this ID (PGN 32403)

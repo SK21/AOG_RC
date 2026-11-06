@@ -276,9 +276,6 @@
   <data name="lgBaseRate" xml:space="preserve">
     <value>basisdosering</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>printplaten</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>kalibratiefactor</value>
   </data>
@@ -822,17 +819,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>de module heeft de 2,4 GHz-band nodig</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>nieuwe module-ID</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>nieuwe printplaatomschrijving</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Twee printplaten antwoorden als module {0}!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Nieuwe printplaat: {0}. Stel een nieuwe ID in en klik op opslaan.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>verbonden</value>
@@ -840,26 +828,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Sla eerst de openstaande wijzigingen op of annuleer ze.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Verzend de opgeslagen wijzigingen voordat u de ID wijzigt.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Module-ID wijzigen</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Module {0} wijzigen naar ID {1}?
-
-OK verzendt de nieuwe ID nu naar de printplaat. De printplaat herstart en maakt opnieuw verbinding als module {1}, met behoud van de instellingen.
-
-Alleen die ene printplaat mag verbonden zijn terwijl de ID wordt verzonden - elke printplaat die hem hoort, zou de nieuwe ID overnemen.
-
-Annuleren behoudt ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>Module-ID {0} verzonden. De printplaat herstart en maakt opnieuw verbinding als module {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Druk na het opnieuw verbinden op verzenden om de instellingen te geven.</value>
+    <value>Module-ID {0} verzonden met de instellingen. Het board herstart en maakt opnieuw verbinding als module {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Wijzigen via {0}</value>
@@ -870,16 +840,59 @@ Annuleren behoudt ID {0}.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>FW bijwerken</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Board</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Nieuw</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Geen board gevonden voor module {0}.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>Module {0} heeft al een board.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Kies het board in de boardlijst.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>{0} toewijzen aan module {1}?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>{0} verplaatsen van module {1} naar module {2}?
+
+Module {1} heeft dan geen board.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Boards</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Module</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Nieuw</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Dubbel</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Omschrijving</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>De startconfiguratie {0} laden voor module {1}?
+
+Dit vervangt de pinnen en relaisinstellingen van de module.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Voorinstelling laden</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>Het board meldt zich niet meer.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, niet verzonden</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Niet verzonden</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Verzend eerst de openstaande modulewijziging.</value>
   </data>
 </root>

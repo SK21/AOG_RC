@@ -20,6 +20,19 @@ namespace RateController.PGNs
         // last 3 bytes, e.g. "…0B:B0:12": enough to tell boards apart on screen
         public string ShortMAC => "…" + ((MAC >> 16) & 0xFF).ToString("X2") + ":"
             + ((MAC >> 8) & 0xFF).ToString("X2") + ":" + (MAC & 0xFF).ToString("X2");
+
+        public string TypeName => (Enum.GetName(typeof(ModuleTypes), InoType) ?? "").Replace('_', ' ');
+
+        // the board as the user sees it: type, end of the MAC, and its label when it has one
+        public string Text => TypeName + " " + ShortMAC + (Label.Length > 0 ? " " + Label : "");
+    }
+
+    // a board change saved on the Boards page, sent with the next Send (Core.SetPending)
+    public class PendingBoard
+    {
+        public ulong MAC;
+        public int NewID = -1;              // -1 = keep the board's ID
+        public string Description = null;   // null = keep the board's description
     }
 
     public class PGN32403

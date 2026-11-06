@@ -345,9 +345,6 @@
   <data name="lgBackColor" xml:space="preserve">
     <value>Fond</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>Cartes</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Facteur de Cal.</value>
   </data>
@@ -822,17 +819,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>le module a besoin de la bande 2,4 GHz</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>Nouvel ID du module</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>Nouvelle description de la carte</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Deux cartes répondent comme module {0} !</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Nouvelle carte : {0}. Saisissez un nouvel ID, puis Enregistrer.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Connecté</value>
@@ -840,26 +828,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Enregistrez ou annulez d'abord les modifications en attente.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Envoyez les modifications enregistrées avant de changer l'ID.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Changer l'ID du module</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Passer le module {0} à l'ID {1} ?
-
-OK envoie maintenant le nouvel ID à la carte. La carte redémarre et se reconnecte comme module {1}, en gardant ses réglages.
-
-Seule cette carte peut être connectée pendant l'envoi de l'ID - toute carte qui le reçoit prendrait le nouvel ID.
-
-Annuler garde l'ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>ID du module {0} envoyé. La carte redémarre et se reconnecte comme module {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Appuyez sur Envoyer une fois reconnectée pour lui donner ses réglages.</value>
+    <value>ID du module {0} envoyé avec ses réglages. La carte redémarre et se reconnecte comme module {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>À modifier dans {0}</value>
@@ -870,16 +840,59 @@ Annuler garde l'ID {0}.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>MAJ firmware</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Carte</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Nouv.</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Aucune carte trouvée pour le module {0}.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>Le module {0} a déjà une carte.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Choisissez la carte dans la liste des cartes.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>Affecter {0} au module {1} ?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>Déplacer {0} du module {1} vers le module {2} ?
+
+Le module {1} n&apos;aura plus de carte.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Cartes</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Module</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Carte</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Nouvelle</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Doublon</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Charger la configuration de départ {0} pour le module {1} ?
+
+Cela remplace les broches et les réglages des relais du module.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Charger un préréglage</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>La carte ne répond plus.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, non envoyé</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Non envoyé</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Envoyez d&apos;abord le changement de module en attente.</value>
   </data>
 </root>

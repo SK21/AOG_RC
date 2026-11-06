@@ -24,6 +24,8 @@ namespace RateController
         private clsProduct cCurrentProduct;
         private string cLastScreen = "";
         private bool cMenuNetworkHasRan = false;
+        private Timer cNewBoardTimer;
+        private bool cNewBoardShown = false;     // the Boards button has the new-board border
         private bool Expanded = false;
         private bool LoadLast = false;
         private Point MouseDownLocation;
@@ -1011,64 +1013,123 @@ namespace RateController
             }
         }
 
+        // Send: board changes saved on the Boards page first, then the settings of the module
+        // being edited. A new ID (32508) defers the board's restart (~1.5 s), so the rest of
+        // this Send still reaches it at its new ID. 32700 restarts the module immediately on
+        // receipt, so the sensor pins (32507) must go out before it or they would be lost.
         private void SendModuleConfig()
         {
-            byte ModuleID = Core.ModuleConfig.GetData()[2];
+            PGNs.PendingBoard move = Core.PendingIDChange();
+            bool proceed = true;
+            string msg = "Settings sent to module";
 
-            // 32700 restarts the module immediately on receipt, so the board label
-            // (32506) and sensor pins (32507) must go out before it or they would
-            // arrive during the reboot and be lost
-            SendPendingDescription(ModuleID, ModuleID);
-            Core.SensorPins.Send();
-            Core.ModuleConfig.Send();
+            if (move != null)
+            {
+                PGNs.BoardInfo brd = Core.ModulesBoardID.LiveBoard(move.MAC);
+                if (brd == null || Core.ModuleInUse(move.NewID))
+                {
+                    // gone, or a board turned up at the target since Save: the module's
+                    // settings were meant for the moved board, so nothing is sent
+                    Props.ShowMessage(brd == null ? Lang.lgBoardGone
+                        : string.Format(Lang.lgModuleInUse, move.NewID), "Boards", 15000);
+                    Core.ClearPending(move.MAC);
+                    proceed = false;
+                }
+                else if (Core.ModuleConfig.GetData()[2] != move.NewID)
+                {
+                    // the pages moved to another module after Save: the settings to send
+                    // are the moved board's
+                    if (AnyPageEdited())
+                    {
+                        Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Boards", 10000);
+                        proceed = false;
+                    }
+                    else
+                    {
+                        Core.ModuleConfig.ModuleID = (byte)move.NewID;
+                        Core.ModuleConfig.Save();
+                        DefaultsSet();
+                    }
+                }
 
-            Props.ShowMessage("Settings sent to module", "Config", 10000);
-            HighlightUpdateButton(false);
+                if (proceed)
+                {
+                    new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID);
+                    msg = string.Format(Lang.lgIDSent, move.NewID);
+                }
+            }
+
+            if (proceed)
+            {
+                SendPendingDescriptions(move);
+                Core.SensorPins.Send();
+                Core.ModuleConfig.Send();
+
+                Props.ShowMessage(msg, "Config", 15000);
+                HighlightUpdateButton(false);
+            }
         }
 
-        // The Config page's ID change, sent as soon as the user confirms it. PGN 32508 is
-        // addressed by MAC: only the board picked in the Board list takes the ID, so any number
-        // of other boards may stay connected. The board saves the ID and restarts; its settings
-        // go with the next Send. Returns false with nothing sent when that board has gone.
-        public bool AssignModuleID(byte NewID, ulong MAC)
+        // 32506 to each board with a saved description: at its new ID for the board just
+        // moved (Move), else at its ID when that reaches only it (0-15, not a duplicate).
+        // Every pending change is cleared once this Send has gone.
+        private void SendPendingDescriptions(PGNs.PendingBoard Move)
         {
-            bool Result = false;
-            byte OldID = Core.ModuleConfig.GetData()[2];
-
-            PGNs.BoardInfo target = Core.ModulesBoardID.LiveBoard(MAC);
-            if (target == null)
+            foreach (PGNs.PendingBoard p in Core.PendingBoards())
             {
-                Props.ShowMessage(Lang.lgChooseBoard, "Config", 15000);
+                if (p.Description != null)
+                {
+                    int id = -1;
+                    if (Move != null && p.MAC == Move.MAC)
+                    {
+                        id = Move.NewID;
+                    }
+                    else
+                    {
+                        PGNs.BoardInfo brd = Core.ModulesBoardID.LiveBoard(p.MAC);
+                        if (brd != null && brd.ID < Props.MaxModules && !Core.ModulesBoardID.DuplicateID(brd.ID)) id = brd.ID;
+                    }
+                    if (id >= 0) new PGNs.PGN32506().Send(id, p.Description);
+                }
+                Core.ClearPending(p.MAC);
             }
-            else
-            {
-                // a typed board name moves with the board, and goes out with the next Send
-                string desc = Props.PendingModuleDescription(OldID);
-                if (desc.Length > 0) Props.SetPendingModuleDescription(NewID, desc);
-
-                new PGNs.PGN32508().Send(target.MAC, NewID);
-
-                Core.ModuleConfig.ModuleID = NewID;
-                Core.ModuleConfig.Save();
-
-                Props.ShowMessage(string.Format(Lang.lgIDSent, NewID) + " " + Lang.lgSendPinsAfter, "Config", 15000);
-                HighlightUpdateButton(true);
-                Result = true;
-            }
-            return Result;
         }
 
-        // A typed board name is sent once, with the first Send after it was saved, and then
-        // cleared. ForModule: the module it was typed for. ToModule: the ID the board
-        // answers to now (the same, except during an ID assignment).
-        private void SendPendingDescription(byte ForModule, byte ToModule)
+        // true when any open module page other than Except holds unsaved edits (each page
+        // keeps its edited state in Tag); a board change or a preset reloads them all
+        public bool AnyPageEdited(Form Except = null)
         {
-            string desc = Props.PendingModuleDescription(ForModule);
-            if (desc.Length > 0)
+            bool edited = false;
+            foreach (Form frm in OwnedForms)
             {
-                new PGNs.PGN32506().Send(ToModule, desc);
+                if (frm != Except && frm.Tag is bool b && b) edited = true;
             }
-            Props.ClearPendingModuleDescription();
+            return edited;
+        }
+
+        // While a new board (ID 25) is reporting, the Boards menu button gets an orange
+        // border so the user finds it from any page. Orange, not blue: blue marks the
+        // page that is open (HighlightButton), which clears every border on a page change,
+        // so this is put back on each tick.
+        private void NewBoardTimer_Tick(object sender, EventArgs e)
+        {
+            bool newBoard = Core.ModulesBoardID.NewBoards().Count > 0;
+            if (newBoard)
+            {
+                if (butNetwork.FlatAppearance.BorderSize != 4 || butNetwork.FlatAppearance.BorderColor != Color.DarkOrange)
+                {
+                    butNetwork.FlatAppearance.BorderSize = 4;
+                    butNetwork.FlatAppearance.BorderColor = Color.DarkOrange;
+                }
+            }
+            else if (cNewBoardShown)
+            {
+                // back to the page highlight if the Boards page is open, else none
+                bool open = cLastScreen == "frmMenuNetwork";
+                butNetwork.FlatAppearance.BorderSize = open ? 1 : 0;
+                butNetwork.FlatAppearance.BorderColor = Color.Blue;
+            }
+            cNewBoardShown = newBoard;
         }
 
         private void ShowPressureSend(string Name)
@@ -1161,6 +1222,12 @@ namespace RateController
 
         private void frmMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (cNewBoardTimer != null)
+            {
+                cNewBoardTimer.Stop();
+                cNewBoardTimer.Dispose();
+                cNewBoardTimer = null;
+            }
             Props.SaveFormLocation(this);
             if (cLastScreen != "" && cLastScreen != null) Props.SetProp("LastScreen", cLastScreen);
         }
@@ -1184,6 +1251,11 @@ namespace RateController
             Font ValFont = new Font(lbFileName.Font.FontFamily, 12, FontStyle.Regular);
             lbFileName.Font = ValFont;
             lbJob.Font = ValFont;
+
+            cNewBoardTimer = new Timer();
+            cNewBoardTimer.Interval = 1000;
+            cNewBoardTimer.Tick += NewBoardTimer_Tick;
+            cNewBoardTimer.Start();
         }
 
         private void frmMenu_LocationChanged(object sender, EventArgs e)

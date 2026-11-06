@@ -2122,38 +2122,11 @@ namespace RateController.Language {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Board
-        /// </summary>
-        internal static string lgBoard {
-            get {
-                return ResourceManager.GetString("lgBoard", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to New
         /// </summary>
         internal static string lgNew {
             get {
                 return ResourceManager.GetString("lgNew", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No board found for module {0}.
-        /// </summary>
-        internal static string lgNoBoardFound {
-            get {
-                return ResourceManager.GetString("lgNoBoardFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Choose the board in the Board list.
-        /// </summary>
-        internal static string lgChooseBoard {
-            get {
-                return ResourceManager.GetString("lgChooseBoard", resourceCulture);
             }
         }
         
@@ -2230,38 +2203,11 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New Module ID.
-        /// </summary>
-        internal static string lgNewModuleID {
-            get {
-                return ResourceManager.GetString("lgNewModuleID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to New Board Description.
-        /// </summary>
-        internal static string lgNewBoardDescription {
-            get {
-                return ResourceManager.GetString("lgNewBoardDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Two boards are answering as module {0}!.
         /// </summary>
         internal static string lgTwoBoardsAnswering {
             get {
                 return ResourceManager.GetString("lgTwoBoardsAnswering", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to New board: {0}. Set a New ID, then Save..
-        /// </summary>
-        internal static string lgNewBoardLine {
-            get {
-                return ResourceManager.GetString("lgNewBoardLine", resourceCulture);
             }
         }
         
@@ -2284,47 +2230,11 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Send the saved changes before changing the ID..
-        /// </summary>
-        internal static string lgSendBeforeIDChange {
-            get {
-                return ResourceManager.GetString("lgSendBeforeIDChange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change Module ID.
-        /// </summary>
-        internal static string lgChangeModuleID {
-            get {
-                return ResourceManager.GetString("lgChangeModuleID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change module {0} to ID {1}?  OK sends the new ID to the board now. The board re[rest of string was truncated].
-        /// </summary>
-        internal static string lgChangeIDConfirm {
-            get {
-                return ResourceManager.GetString("lgChangeIDConfirm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Module ID {0} sent. The board restarts and reconnects as module {0}..
+        ///   Looks up a localized string similar to Module ID {0} sent with its settings. The board restarts and reconnects as module {0}..
         /// </summary>
         internal static string lgIDSent {
             get {
                 return ResourceManager.GetString("lgIDSent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Press Send once it has reconnected to give it its sensor pins..
-        /// </summary>
-        internal static string lgSendPinsAfter {
-            get {
-                return ResourceManager.GetString("lgSendPinsAfter", resourceCulture);
             }
         }
         
@@ -2334,6 +2244,141 @@ namespace RateController.Language {
         internal static string lgChangeItOn {
             get {
                 return ResourceManager.GetString("lgChangeItOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module {0} already has a board..
+        /// </summary>
+        internal static string lgModuleInUse {
+            get {
+                return ResourceManager.GetString("lgModuleInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assign {0} to module {1}?.
+        /// </summary>
+        internal static string lgAssignBoardConfirm {
+            get {
+                return ResourceManager.GetString("lgAssignBoardConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move {0} from module {1} to module {2}?.
+        /// </summary>
+        internal static string lgMoveBoardConfirm {
+            get {
+                return ResourceManager.GetString("lgMoveBoardConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module.
+        /// </summary>
+        internal static string lgModule {
+            get {
+                return ResourceManager.GetString("lgModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Board.
+        /// </summary>
+        internal static string lgBoard {
+            get {
+                return ResourceManager.GetString("lgBoard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        internal static string lgState {
+            get {
+                return ResourceManager.GetString("lgState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        internal static string lgStateNew {
+            get {
+                return ResourceManager.GetString("lgStateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate.
+        /// </summary>
+        internal static string lgStateDuplicate {
+            get {
+                return ResourceManager.GetString("lgStateDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string lgDescription {
+            get {
+                return ResourceManager.GetString("lgDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load the {0} starting configuration for module {1}?.
+        /// </summary>
+        internal static string lgLoadPresetConfirm {
+            get {
+                return ResourceManager.GetString("lgLoadPresetConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load preset.
+        /// </summary>
+        internal static string lgLoadPresetChoose {
+            get {
+                return ResourceManager.GetString("lgLoadPresetChoose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board is no longer reporting..
+        /// </summary>
+        internal static string lgBoardGone {
+            get {
+                return ResourceManager.GetString("lgBoardGone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to → {0}, not sent.
+        /// </summary>
+        internal static string lgPendingModule {
+            get {
+                return ResourceManager.GetString("lgPendingModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not sent.
+        /// </summary>
+        internal static string lgPendingDescription {
+            get {
+                return ResourceManager.GetString("lgPendingDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send the pending module change first..
+        /// </summary>
+        internal static string lgSendPendingFirst {
+            get {
+                return ResourceManager.GetString("lgSendPendingFirst", resourceCulture);
             }
         }
     }

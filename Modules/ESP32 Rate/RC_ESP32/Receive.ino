@@ -399,7 +399,12 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
             {
                 MDL.ID = data[8];
                 SaveIdentity();     // the ID lives in the identity record
-                ESP.restart();      // IPs, hotspot subnet and every packet's ID are set at boot
+                // IPs, hotspot subnet and every packet's ID are set at boot, so restart -
+                // but shortly, not now: the rest of the same Send (32506, 32507, 32700)
+                // follows within milliseconds, addressed to the new ID. 32700 restarts at
+                // once; otherwise the deferred restart in loop() fires after RestartDelay
+                RestartPending = true;
+                RestartLastConfig = millis();
             }
         }
         break;

@@ -153,9 +153,6 @@
   <data name="lgBaseRate" xml:space="preserve">
     <value>Base Rate</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>Boards</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Meter Cal</value>
   </data>
@@ -828,17 +825,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>the module needs its 2.4 GHz band</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>New Module ID</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>New Board Description</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Two boards are answering as module {0}!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>New board: {0}. Set a New ID, then Save.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Connected</value>
@@ -846,26 +834,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Save or cancel the pending changes first.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Send the saved changes before changing the ID.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Change Module ID</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Change module {0} to ID {1}?
-
-OK sends the new ID to the board now. The board restarts and reconnects as module {1}, keeping its settings.
-
-Only that one board can be connected while the ID is sent - every board that hears it would take the new ID.
-
-Cancel keeps ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>Module ID {0} sent. The board restarts and reconnects as module {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Press Send once it has reconnected to give it its settings.</value>
+    <value>Module ID {0} sent with its settings. The board restarts and reconnects as module {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Change it on {0}</value>
@@ -876,16 +846,59 @@ Cancel keeps ID {0}.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>Update firmware</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Board</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>New</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>No board found for module {0}.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>Module {0} already has a board.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Choose the board in the Board list.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>Assign {0} to module {1}?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>Move {0} from module {1} to module {2}?
+
+Module {1} will have no board.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Boards</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Module</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Load the {0} starting configuration for module {1}?
+
+This replaces the module&apos;s pins and relay settings.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Load preset</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>The board is no longer reporting.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, not sent</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Not sent</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Send the pending module change first.</value>
   </data>
 </root>

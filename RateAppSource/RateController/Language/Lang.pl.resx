@@ -129,9 +129,6 @@
   <data name="lgBaseRate" xml:space="preserve">
     <value>Dawka Bazowa</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>Wersja PCB</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Współczynnik (impulsy/jednostka)</value>
   </data>
@@ -822,17 +819,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>moduł potrzebuje pasma 2,4 GHz</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>Nowe ID modułu</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>Nowy opis płytki</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Dwie płytki odpowiadają jako moduł {0}!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Nowa płytka: {0}. Ustaw nowe ID, potem Zapisz.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Połączono</value>
@@ -840,26 +828,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Najpierw zapisz lub anuluj oczekujące zmiany.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Wyślij zapisane zmiany przed zmianą ID.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Zmień ID modułu</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Zmienić moduł {0} na ID {1}?
-
-OK wysyła teraz nowe ID do płytki. Płytka uruchomi się ponownie i połączy jako moduł {1}, zachowując swoje ustawienia.
-
-Podczas wysyłania ID może być podłączona tylko ta jedna płytka - każda płytka, która je odbierze, przyjmie nowe ID.
-
-Anuluj zachowuje ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>Wysłano ID modułu {0}. Płytka uruchomi się ponownie i połączy jako moduł {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Po ponownym połączeniu naciśnij Wyślij, aby przekazać ustawienia.</value>
+    <value>Wysłano ID modułu {0} z ustawieniami. Płytka uruchomi się ponownie i połączy jako moduł {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Zmień w {0}</value>
@@ -870,16 +840,59 @@ Anuluj zachowuje ID {0}.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>Aktualizuj FW</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Płytka</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Nowa</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Nie znaleziono płytki dla modułu {0}.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>Moduł {0} ma już płytkę.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Wybierz płytkę z listy płytek.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>Przypisać {0} do modułu {1}?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>Przenieść {0} z modułu {1} do modułu {2}?
+
+Moduł {1} zostanie bez płytki.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Płytki</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Moduł</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Płytka</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>Stan</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Nowa</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Duplikat</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Wczytać konfigurację startową {0} dla modułu {1}?
+
+Zastąpi to piny i ustawienia przekaźników modułu.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Wczytaj ustawienia</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>Płytka już nie odpowiada.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, nie wysłano</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Nie wysłano</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Najpierw wyślij oczekującą zmianę modułu.</value>
   </data>
 </root>

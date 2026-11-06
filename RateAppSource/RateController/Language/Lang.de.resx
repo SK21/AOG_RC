@@ -280,9 +280,6 @@
   <data name="lgBaseRate" xml:space="preserve">
     <value>Basisrate</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>Platinen</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Kalibrierfaktor</value>
   </data>
@@ -823,17 +820,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>das Modul braucht das 2,4-GHz-Band</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>Neue Modul-ID</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>Neue Platinenbeschreibung</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Zwei Platinen antworten als Modul {0}!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Neue Platine: {0}. Neue ID eingeben, dann Speichern.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Verbunden</value>
@@ -841,26 +829,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Zuerst die offenen Änderungen speichern oder verwerfen.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Die gespeicherten Änderungen vor dem ID-Wechsel senden.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Modul-ID ändern</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Modul {0} auf ID {1} ändern?
-
-OK sendet die neue ID jetzt an die Platine. Die Platine startet neu und verbindet sich als Modul {1}, ihre Einstellungen bleiben erhalten.
-
-Nur diese eine Platine darf beim Senden der ID verbunden sein - jede Platine, die sie hört, würde die neue ID übernehmen.
-
-Abbrechen behält ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>Modul-ID {0} gesendet. Die Platine startet neu und verbindet sich als Modul {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Nach dem Neuverbinden Senden drücken, um ihr die Einstellungen zu geben.</value>
+    <value>Modul-ID {0} mit ihren Einstellungen gesendet. Die Platine startet neu und verbindet sich als Modul {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Änderbar unter {0}</value>
@@ -871,16 +841,59 @@ Abbrechen behält ID {0}.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>Firmware akt.</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Platine</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Neu</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Keine Platine für Modul {0} gefunden.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>Modul {0} hat bereits eine Platine.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Wählen Sie die Platine in der Platinenliste.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>{0} dem Modul {1} zuweisen?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>{0} von Modul {1} nach Modul {2} verschieben?
+
+Modul {1} hat dann keine Platine.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Platinen</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Modul</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Platine</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Doppelt</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Die Startkonfiguration {0} für Modul {1} laden?
+
+Dies ersetzt die Pins und Relaiseinstellungen des Moduls.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Vorlage laden</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>Die Platine meldet sich nicht mehr.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, nicht gesendet</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Nicht gesendet</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Zuerst die offene Moduländerung senden.</value>
   </data>
 </root>

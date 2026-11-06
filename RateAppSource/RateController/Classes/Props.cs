@@ -1091,35 +1091,6 @@ namespace RateController.Classes
             return float.TryParse((Text ?? "").Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out Value);
         }
 
-        // The board name is a one-time send, not a stored setting: the board keeps its own
-        // copy (EEPROM) and reports it, so the app holds a typed name only until the next
-        // Send delivers it. Kept with the module ID it was typed for, so it can't reach a
-        // different board if the module being edited changes before Send.
-        public static string PendingModuleDescription(int ModuleID)
-        {
-            string Result = "";
-            if (GetProp("ModuleConfig_PendingDescriptionID") == ModuleID.ToString())
-            {
-                Result = GetProp("ModuleConfig_PendingDescription").Trim();
-            }
-            return Result;
-        }
-
-        public static void SetPendingModuleDescription(int ModuleID, string Description)
-        {
-            if (ModuleID >= 0 && ModuleID < MaxModules && Description != null)
-            {
-                SetProp("ModuleConfig_PendingDescription", Description);
-                SetProp("ModuleConfig_PendingDescriptionID", ModuleID.ToString());
-            }
-        }
-
-        public static void ClearPendingModuleDescription()
-        {
-            SetProp("ModuleConfig_PendingDescription", "");
-            SetProp("ModuleConfig_PendingDescriptionID", "");
-        }
-
         public static bool IsFormNameValid(string formName)
         {
             bool Result = false;

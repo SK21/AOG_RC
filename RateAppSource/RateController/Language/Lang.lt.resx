@@ -129,9 +129,6 @@
   <data name="lgBaseRate" xml:space="preserve">
     <value>Norma</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>Plokštė</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Kal. Faktorius (Pulsai/Vnt)</value>
   </data>
@@ -822,17 +819,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>moduliui reikia 2,4 GHz dažnio</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>Naujas modulio ID</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>Naujas plokštės aprašymas</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Dvi plokštės atsako kaip modulis {0}!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Nauja plokštė: {0}. Nustatykite naują ID, tada Išsaugoti.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Prijungta</value>
@@ -840,26 +828,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Pirmiausia išsaugokite arba atšaukite laukiančius pakeitimus.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Prieš keisdami ID, išsiųskite išsaugotus pakeitimus.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Keisti modulio ID</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Pakeisti modulio {0} ID į {1}?
-
-OK dabar išsiunčia naują ID plokštei. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {1}, išsaugodama savo nustatymus.
-
-Siunčiant ID gali būti prijungta tik ši viena plokštė - kiekviena ją girdinti plokštė perimtų naują ID.
-
-Atšaukti palieka ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>Modulio ID {0} išsiųstas. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Kai ji vėl prisijungs, paspauskite Siųsti, kad gautų nustatymus.</value>
+    <value>Modulio ID {0} išsiųstas su nustatymais. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Pakeisti galima {0}</value>
@@ -870,16 +840,59 @@ Atšaukti palieka ID {0}.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>Atnaujinti PĮ</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Plokštė</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Nauja</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Moduliui {0} plokštė nerasta.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>Modulis {0} jau turi plokštę.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Pasirinkite plokštę plokščių sąraše.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>Priskirti {0} moduliui {1}?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>Perkelti {0} iš modulio {1} į modulį {2}?
+
+Modulis {1} liks be plokštės.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Plokštė</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Modulis</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Plokštė</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>Būsena</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Nauja</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Dubliuota</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Aprašymas</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Įkelti {0} pradinę konfigūraciją moduliui {1}?
+
+Tai pakeis modulio kontaktus ir relių nustatymus.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Įkelti šabloną</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>Plokštė nebeatsiliepia.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, neišsiųsta</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Neišsiųsta</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Pirmiausia išsiųskite laukiantį modulio pakeitimą.</value>
   </data>
 </root>

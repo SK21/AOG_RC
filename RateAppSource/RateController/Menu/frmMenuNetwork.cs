@@ -1,16 +1,40 @@
 ﻿using RateController.Classes;
+using RateController.Language;
 using RateController.PGNs;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
 {
+    // Boards page: every board the app hears (PGN 32403). The selected board's module and
+    // description are edited here; Save holds the change as pending (Core.SetPending) and
+    // highlights Send, and Send sends it (frmMenu.SendModuleConfig).
     public partial class frmMenuNetwork : Form
     {
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
+        private Timer cTimer;
+
+        // one list row: a live board (MAC > 0), or a module with old firmware (MAC 0)
+        private class Row
+        {
+            public ulong MAC;
+            public int ID;
+            public string Module;
+            public string Board;
+            public string State;
+            public Color Fore;
+            public string Key => MAC != 0 ? "M" + MAC.ToString() : "R" + ID.ToString();
+            public string Signature => Key + "|" + Module + "|" + Board + "|" + State + "|" + Fore.ToArgb();
+        }
+
+        private readonly List<Row> cRows = new List<Row>();
+        private readonly List<int> cModules = new List<int>();     // cbModule item i = cModules[i]
+        private string cSelectedKey = "";
+        private bool cRebuilding = false;
 
         public frmMenuNetwork(frmMenu menu)
         {
@@ -22,39 +46,105 @@ namespace RateController.Menu
         private void btnCancel_Click(object sender, EventArgs e)
         {
             SetButtons(false);
+            LoadSelected();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
             try
             {
-                // only load a preset when one was actually selected - the description
-                // alone also enables Save, and that must not reset the module config
-                if (rbNano.Checked)
+                BoardInfo Brd = SelectedBoard();
+                if (Brd == null)
                 {
-                    SetDefaults(0);
-                }
-                else if (rbESP32.Checked)
-                {
-                    SetDefaults(2);
-                }
-                else if (rbTeensy.Checked)
-                {
-                    SetDefaults(1);
+                    // gone since it was selected
+                    Props.ShowMessage(Lang.lgBoardGone, "Boards", 10000);
+                    SetButtons(false);
+                    LoadSelected();
+                    return;
                 }
 
-                SetButtons(false);
+                PendingBoard old = Core.PendingFor(Brd.MAC);
+                int newID = SelectedModule();
+                if (newID == Brd.ID) newID = -1;                    // back to its own module: no change
+
+                string desc = tbDescription.Enabled ? tbDescription.Text.Trim() : null;
+                if (desc != null && desc == Brd.Label) desc = null; // unchanged
+
+                bool idChange = newID >= 0 && (old == null || old.NewID != newID);
+                PendingBoard otherMove = Core.PendingIDChange();
+
+                if (idChange && otherMove != null && otherMove.MAC != Brd.MAC)
+                {
+                    // one ID change per Send: Send gives settings to one module
+                    Props.ShowMessage(Lang.lgSendPendingFirst, "Boards", 10000);
+                }
+                else if (idChange && MainMenu.AnyPageEdited(this))
+                {
+                    // the config pages move to the new module, which reloads them
+                    Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Boards", 10000);
+                }
+                else
+                {
+                    Core.SetPending(Brd.MAC, newID, desc);
+
+                    if (idChange)
+                    {
+                        // the next Send gives this module's settings to the board
+                        Core.ModuleConfig.ModuleID = (byte)newID;
+                        Core.ModuleConfig.Save();
+                        MainMenu.DefaultsSet();
+
+                        // a new board has no settings yet: offer the starting configuration
+                        // for its type. A moved board takes the module's existing settings.
+                        ModuleTypes type = (ModuleTypes)Brd.InoType;
+                        if (Brd.ID == Props.NewModuleID && clsPresets.Has(type)
+                            && Confirm(string.Format(Lang.lgLoadPresetConfirm, clsPresets.Name(type), newID)))
+                        {
+                            clsPresets.Load(type, MainMenu);
+                        }
+                    }
+
+                    SetButtons(false);
+                    if (Core.HasPendingBoards) MainMenu.HighlightUpdateButton();
+                    RefreshPage();
+                }
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("frmMenuNetwork/btnOk_Click: " + ex.Message);
+                Props.WriteErrorLog("frmMenuNetwork/btnOK_Click: " + ex.Message);
             }
         }
 
+        private bool Confirm(string Message)
+        {
+            bool Result;
+            using (var Hlp = new frmMsgBox(Message.Replace("\r\n", "\n"), Lang.lgBoards))
+            {
+                Hlp.TopMost = true;
+                Hlp.ShowDialog(this);
+                Result = Hlp.Result;
+            }
+            return Result;
+        }
+
+        private void Edit_Changed(object sender, EventArgs e)
+        {
+            if (!Initializing)
+            {
+                SetButtons(true);
+                UpdateDescriptionEnabled();
+            }
+        }
 
         private void frmMenuNetwork_FormClosed(object sender, FormClosedEventArgs e)
         {
             MainMenu.MenuMoved -= MainMenu_MenuMoved;
+            if (cTimer != null)
+            {
+                cTimer.Stop();
+                cTimer.Dispose();
+                cTimer = null;
+            }
             Props.SaveFormLocation(this);
         }
 
@@ -66,20 +156,100 @@ namespace RateController.Menu
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
 
-            // StyleControls restyles every label's font and colours; capture the hint
-            // label's designer formatting and restore it afterwards so the hint keeps its look.
-            Font exFont = lbExampleHint.Font;
-            Color exFore = lbExampleHint.ForeColor;
-
             MainMenu.StyleControls(this);
-
-            lbExampleHint.Font = exFont;
-            lbExampleHint.ForeColor = exFore;
+            lvBoards.BackColor = Properties.Settings.Default.MainBackColour;
+            lvBoards.ForeColor = Properties.Settings.Default.MainForeColour;
 
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
+
+            RefreshPage();
+
+            // boards come and go while the page is open (32403 every 2 s)
+            cTimer = new Timer();
+            cTimer.Interval = 1000;
+            cTimer.Tick += (s, a) => RefreshPage();
+            cTimer.Start();
+        }
+
+        // fills the Module list and Description box from the selected board (its pending
+        // change if it has one): the board's own module first, then the free modules
+        private void LoadSelected()
+        {
+            Initializing = true;
+            try
+            {
+                BoardInfo Brd = SelectedBoard();
+                PendingBoard p = Brd == null ? null : Core.PendingFor(Brd.MAC);
+
+                var modules = new List<int>();
+                int want = -1;
+                if (Brd != null)
+                {
+                    // the board's own module first; for a new board the suggested module
+                    // first instead, so picking it is one tap
+                    int first = Brd.ID < Props.MaxModules ? Brd.ID : Core.SuggestedModule();
+                    if (first >= 0) modules.Add(first);
+                    for (int i = 0; i < Props.MaxModules; i++)
+                    {
+                        // free, or the target already saved for this board
+                        if (i != first && i != Brd.ID && (!Core.ModuleTaken(i) || (p != null && p.NewID == i))) modules.Add(i);
+                    }
+                    // a new board starts blank: choosing its module is the edit that enables Save
+                    want = p != null && p.NewID >= 0 ? p.NewID
+                        : Brd.ID < Props.MaxModules ? Brd.ID : -1;
+                }
+
+                // redrawn only when something differs (this runs every second)
+                bool same = modules.Count == cModules.Count;
+                for (int i = 0; same && i < modules.Count; i++) same = modules[i] == cModules[i];
+                if (!same)
+                {
+                    cbModule.BeginUpdate();
+                    cbModule.Items.Clear();
+                    cModules.Clear();
+                    foreach (int m in modules)
+                    {
+                        cbModule.Items.Add(m.ToString());
+                        cModules.Add(m);
+                    }
+                    cbModule.EndUpdate();
+                }
+                int sel = cModules.IndexOf(want);
+                if (cbModule.SelectedIndex != sel) cbModule.SelectedIndex = sel;
+                bool cbOn = Brd != null && cModules.Count > 0;
+                if (cbModule.Enabled != cbOn) cbModule.Enabled = cbOn;
+
+                string text = p != null && p.Description != null ? p.Description : (Brd?.Label ?? "");
+                if (tbDescription.Text != text) tbDescription.Text = text;
+            }
+            finally
+            {
+                Initializing = false;
+            }
+            UpdateDescriptionEnabled();
+        }
+
+        private void lvBoards_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cRebuilding || Initializing) return;
+
+            string key = lvBoards.SelectedItems.Count > 0 ? (string)lvBoards.SelectedItems[0].Tag : "";
+            if (key == cSelectedKey) return;
+
+            if (cEdited)
+            {
+                // the edits belong to the board they were made for
+                Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Boards", 10000);
+                SelectKey(cSelectedKey);
+            }
+            else
+            {
+                cSelectedKey = key;
+                LoadSelected();
+            }
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -93,170 +263,178 @@ namespace RateController.Menu
             this.Left = MainMenu.Left + SubMenuLayout.LeftOffset;
         }
 
-        private void rbESP32_CheckedChanged(object sender, EventArgs e)
+        // assigned boards by module, then new boards; a module with old firmware gets a row
+        // of its own (its MAC isn't known). Saved, unsent changes show in State.
+        private List<Row> BuildRows()
         {
-            // Fires on uncheck too (SetButtons(false) clears the radios after
-            // Save/Cancel) - only a genuine selection marks the form edited.
-            // The description is left alone - it identifies the physical board,
-            // so the user fills it in themselves.
-            if (sender is RadioButton rb && rb.Checked)
+            var rows = new List<Row>();
+            for (int id = 0; id < Props.MaxModules; id++)
             {
-                SetButtons(true);
+                var boards = Core.ModulesBoardID.BoardsAt(id);
+                boards.Sort((a, b) => a.MAC.CompareTo(b.MAC));      // steady order for duplicates
+                bool dup = boards.Count > 1;
+                foreach (BoardInfo Brd in boards)
+                {
+                    rows.Add(BoardRow(Brd, id.ToString(),
+                        dup ? Lang.lgStateDuplicate : Lang.lgConnected, dup ? Color.Red : lvBoards.ForeColor));
+                }
+
+                if (Core.ModulesBoardID.Rejected(id))
+                {
+                    rows.Add(new Row
+                    {
+                        ID = id,
+                        Module = id.ToString(),
+                        Board = "—",
+                        State = Lang.lgUpdateFirmware,
+                        Fore = Color.Red
+                    });
+                }
             }
+
+            var newBoards = Core.ModulesBoardID.NewBoards();
+            newBoards.Sort((a, b) => a.MAC.CompareTo(b.MAC));
+            foreach (BoardInfo Brd in newBoards)
+            {
+                rows.Add(BoardRow(Brd, Lang.lgNew, Lang.lgStateNew, Color.Blue));
+            }
+            return rows;
+        }
+
+        private Row BoardRow(BoardInfo Brd, string Module, string State, Color Fore)
+        {
+            PendingBoard p = Core.PendingFor(Brd.MAC);
+            if (p != null)
+            {
+                State = p.NewID >= 0 ? string.Format(Lang.lgPendingModule, p.NewID) : Lang.lgPendingDescription;
+                Fore = Color.Blue;
+            }
+            return new Row { MAC = Brd.MAC, ID = Brd.ID, Module = Module, Board = Brd.Text, State = State, Fore = Fore };
+        }
+
+        private void RefreshPage()
+        {
+            RefreshRows();
+            if (!cEdited && !cbModule.DroppedDown)
+            {
+                // free modules change as boards come and go; edits in progress are left alone
+                LoadSelected();
+            }
+        }
+
+        // rebuilt only when something changed, keeping the selection (by MAC)
+        private void RefreshRows()
+        {
+            var rows = BuildRows();
+
+            bool changed = rows.Count != cRows.Count;
+            for (int i = 0; !changed && i < rows.Count; i++) changed = rows[i].Signature != cRows[i].Signature;
+
+            if (changed)
+            {
+                // clearing the list fires SelectedIndexChanged; don't let it drop the selection
+                cRebuilding = true;
+                lvBoards.BeginUpdate();
+                lvBoards.Items.Clear();
+                cRows.Clear();
+                foreach (Row r in rows)
+                {
+                    var item = new ListViewItem(new[] { r.Module, r.Board, r.State })
+                    {
+                        Tag = r.Key,
+                        ForeColor = r.Fore,
+                        UseItemStyleForSubItems = true
+                    };
+                    lvBoards.Items.Add(item);
+                    cRows.Add(r);
+                }
+                lvBoards.EndUpdate();
+
+                // keep the selected board; with nothing selected (or it went, and nothing is
+                // being edited), pick the first new board
+                string key = cSelectedKey;
+                if (cRows.FindIndex(r => r.Key == key) < 0 && !cEdited)
+                {
+                    int n = cRows.FindIndex(r => r.ID == Props.NewModuleID);
+                    key = n >= 0 ? cRows[n].Key : "";
+                }
+                SelectKey(key);
+                cRebuilding = false;
+
+                if (key != cSelectedKey && !cEdited)
+                {
+                    cSelectedKey = key;
+                    LoadSelected();
+                }
+            }
+        }
+
+        private void SelectKey(string Key)
+        {
+            bool was = cRebuilding;
+            cRebuilding = true;
+            int i = cRows.FindIndex(r => r.Key == Key);
+            if (i >= 0)
+            {
+                lvBoards.Items[i].Selected = true;
+                lvBoards.Items[i].Focused = true;
+            }
+            else
+            {
+                lvBoards.SelectedItems.Clear();
+            }
+            cRebuilding = was;
+        }
+
+        // the live board in the selected row, or null (none selected, gone, or an old-firmware row)
+        private BoardInfo SelectedBoard()
+        {
+            BoardInfo Result = null;
+            int i = cRows.FindIndex(r => r.Key == cSelectedKey);
+            if (i >= 0 && cRows[i].MAC != 0) Result = Core.ModulesBoardID.LiveBoard(cRows[i].MAC);
+            return Result;
+        }
+
+        private int SelectedModule()
+        {
+            int i = cbModule.SelectedIndex;
+            return (i >= 0 && i < cModules.Count) ? cModules[i] : -1;
         }
 
         private void SetButtons(bool Edited)
         {
             if (!Initializing)
             {
-                if (Edited)
-                {
-                    btnCancel.Enabled = true;
-                    btnOK.Enabled = true;
-                }
-                else
-                {
-                    btnCancel.Enabled = false;
-                    btnOK.Enabled = false;
-                    rbNano.Checked = false;
-                    rbTeensy.Checked = false;
-                    rbESP32.Checked = false;
-                }
-
+                btnCancel.Enabled = Edited;
+                btnOK.Enabled = Edited;
                 cEdited = Edited;
                 this.Tag = cEdited;
             }
         }
 
-        private void SetDefaults(int Brd)
-        {
-            PGN32700 Set = Core.ModuleConfig;
-            byte[] Pins = new byte[16];
-
-            for (int i = 0; i < 16; i++)
-            {
-                Pins[i] = 255;
-            }
-
-            // presets load a starting pin layout only - the target module ID
-            // (config byte 2) is left alone
-            switch (Brd)
-            {
-                case 1:
-                    // RC11-2, Teensy
-                    Set.SensorCount = 1;
-                    Set.OnboardRelayType = 1;
-                    Set.RemoteRelayType = 0;
-                    Set.InvertRelay = true;
-                    Set.InvertFlow = true;
-                    Set.Momentary = false;
-                    Set.ADS1115enabled = false;
-                    Set.Sensor0Flow = 28;
-                    Set.Sensor1Flow = 29;
-                    Set.Sensor0Dir = 37;
-                    Set.Sensor1Dir = 14;
-                    Set.Sensor0PWM = 36;
-                    Set.Sensor1PWM = 15;
-                    Set.WorkPin = 30;
-                    Set.PressurePin = 40;
-                    Set.ClientMode = false;
-                    Set.Is3Wire = true;
-
-                    Pins[0] = 8;    // relay 1
-                    Pins[1] = 9;
-                    Pins[2] = 10;
-                    Pins[3] = 11;
-                    Pins[4] = 12;
-                    Pins[5] = 25;
-                    Pins[6] = 26;
-                    Pins[7] = 27;
-                    break;
-
-                case 2:
-                    // RC15, ESP32
-                    Set.SensorCount = 1;
-                    Set.OnboardRelayType = 5;
-                    Set.RemoteRelayType = 0;
-                    Set.InvertRelay = true;
-                    Set.InvertFlow = true;
-                    Set.Momentary = false;
-                    Set.ADS1115enabled = true;
-                    Set.Sensor0Flow = 17;
-                    Set.Sensor1Flow = 16;
-                    Set.Sensor0Dir = 32;
-                    Set.Sensor1Dir = 25;
-                    Set.Sensor0PWM = 33;
-                    Set.Sensor1PWM = 26;
-                    Set.WorkPin = 255;
-                    Set.PressurePin = 255;
-                    Set.ClientMode = false;
-                    Set.Is3Wire = true;
-                    break;
-
-                default:
-                    // RC12-3, Nano
-                    Set.SensorCount = 1;
-                    Set.OnboardRelayType = 4;
-                    Set.RemoteRelayType = 0;
-                    Set.InvertRelay = true;
-                    Set.InvertFlow = true;
-                    Set.Momentary = false;
-                    Set.ADS1115enabled = false;
-                    Set.Sensor0Flow = 3;
-                    Set.Sensor1Flow = 2;
-                    Set.Sensor0Dir = 4;
-                    Set.Sensor1Dir = 6;
-                    Set.Sensor0PWM = 5;
-                    Set.Sensor1PWM = 9;
-                    Set.WorkPin = 15;
-                    Set.PressurePin = 14;
-                    Set.ClientMode = false;
-                    Set.Is3Wire = true;
-
-                    Pins[0] = 0;    // relay 1
-                    Pins[1] = 15;
-                    Pins[2] = 1;
-                    Pins[3] = 14;
-                    Pins[4] = 2;
-                    Pins[5] = 13;
-                    Pins[6] = 3;
-                    Pins[7] = 12;
-
-                    Pins[8] = 4;
-                    Pins[9] = 11;
-                    Pins[10] = 5;
-                    Pins[11] = 10;
-                    Pins[12] = 6;
-                    Pins[13] = 9;
-                    Pins[14] = 7;
-                    Pins[15] = 8;
-                    break;
-            }
-
-            Set.RelayPins(Pins);
-            Set.Save();
-
-            // the sensor-pins config (PGN 32507) is the source the 32700 mirror reads
-            // from at send, so board defaults must land there too; bin pins default off
-            Core.SensorPins.SetPins(0, Set.Sensor0Flow, Set.Sensor0Dir, Set.Sensor0PWM, 255, false);
-            Core.SensorPins.SetPins(1, Set.Sensor1Flow, Set.Sensor1Dir, Set.Sensor1PWM, 255, false);
-            for (int i = 2; i < PGN32507.MaxSensors; i++)
-            {
-                Core.SensorPins.SetPins(i, 255, 255, 255, 255, false);
-            }
-            Core.SensorPins.Save();
-
-            MainMenu.DefaultsSet();
-            MainMenu.HighlightUpdateButton();
-        }
-
         private void SetLanguage()
         {
+            chModule.Text = Lang.lgModule;
+            chBoard.Text = Lang.lgBoard;
+            chState.Text = Lang.lgState;
+            lbModule.Text = Lang.lgModule;
+            lbDescription.Text = Lang.lgDescription;
         }
 
-        private void groupBox1_Paint(object sender, PaintEventArgs e)
+        // 32506 is addressed by module ID: it reaches the board at 0-15 when no other board
+        // shares the ID, or at the new ID it is being given in the same Send. A new board
+        // with no module chosen, or a duplicate, can't take a description.
+        private void UpdateDescriptionEnabled()
         {
-            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
+            BoardInfo Brd = SelectedBoard();
+            bool enabled = false;
+            if (Brd != null)
+            {
+                bool moving = SelectedModule() >= 0 && SelectedModule() != Brd.ID;
+                bool reachable = Brd.ID < Props.MaxModules && !Core.ModulesBoardID.DuplicateID(Brd.ID);
+                enabled = moving || reachable;
+            }
+            if (tbDescription.Enabled != enabled) tbDescription.Enabled = enabled;
         }
     }
 }

@@ -153,9 +153,6 @@
   <data name="lgBaseRate" xml:space="preserve">
     <value>Alap Dózis</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>PCBk</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Kalibrációs szám</value>
   </data>
@@ -825,17 +822,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>a modulnak a 2,4 GHz-es sáv kell</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>Új modul ID</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>Új PCB leírás</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Két PCB válaszol {0}. modulként!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Új PCB: {0}. Adjon meg új ID-t, majd Mentés.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Csatlakoztatva</value>
@@ -843,26 +831,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Először mentse vagy vesse el a függő módosításokat.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Az ID módosítása előtt küldje el a mentett módosításokat.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Modul ID módosítása</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Módosítja a(z) {0}. modult {1} ID-re?
-
-Az OK most elküldi az új ID-t a PCB-nek. A PCB újraindul, és {1}. modulként csatlakozik újra, a beállításai megmaradnak.
-
-Az ID küldésekor csak ez az egy PCB lehet csatlakoztatva - minden PCB, amely hallja, átvenné az új ID-t.
-
-A Mégse megtartja a(z) {0} ID-t.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>{0} modul ID elküldve. A PCB újraindul, és {0}. modulként csatlakozik újra.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>Az újracsatlakozás után nyomja meg a Küld gombot a beállítások elküldéséhez.</value>
+    <value>{0} modul ID elküldve a beállításaival. A panel újraindul, és {0}. modulként csatlakozik újra.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Módosítás itt: {0}</value>
@@ -873,16 +843,59 @@ A Mégse megtartja a(z) {0} ID-t.</value>
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>FW frissítés</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Panel</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Új</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Nem található panel a(z) {0}. modulhoz.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>A(z) {0}. modulnak már van panelje.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Válassza ki a panelt a panellistából.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>{0} hozzárendelése a(z) {1}. modulhoz?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>{0} áthelyezése a(z) {1}. modulból a(z) {2}. modulba?
+
+A(z) {1}. modulnak nem lesz panelje.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>PCBk</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Modul</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Új</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Ismétlődő</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Leírás</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Betölti a(z) {0} kezdő konfigurációt a(z) {1}. modulhoz?
+
+Ez lecseréli a modul tűit és relébeállításait.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Előbeállítás betöltése</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>A panel már nem jelentkezik.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, nincs elküldve</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Nincs elküldve</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Előbb küldje el a függő modulváltozást.</value>
   </data>
 </root>

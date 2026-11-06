@@ -315,9 +315,6 @@
   <data name="lgBackColor" xml:space="preserve">
     <value>Фон</value>
   </data>
-  <data name="lgBoards" xml:space="preserve">
-    <value>Платы</value>
-  </data>
   <data name="lgCalFactor" xml:space="preserve">
     <value>Калибровка датчика</value>
   </data>
@@ -822,17 +819,8 @@
   <data name="lgModuleNeeds24" xml:space="preserve">
     <value>модулю нужен диапазон 2,4 ГГц</value>
   </data>
-  <data name="lgNewModuleID" xml:space="preserve">
-    <value>Новый ID модуля</value>
-  </data>
-  <data name="lgNewBoardDescription" xml:space="preserve">
-    <value>Новое описание платы</value>
-  </data>
   <data name="lgTwoBoardsAnswering" xml:space="preserve">
     <value>Две платы отвечают как модуль {0}!</value>
-  </data>
-  <data name="lgNewBoardLine" xml:space="preserve">
-    <value>Новая плата: {0}. Задайте новый ID, затем Сохранить.</value>
   </data>
   <data name="lgConnected" xml:space="preserve">
     <value>Подключено</value>
@@ -840,26 +828,8 @@
   <data name="lgSaveOrCancelFirst" xml:space="preserve">
     <value>Сначала сохраните или отмените ожидающие изменения.</value>
   </data>
-  <data name="lgSendBeforeIDChange" xml:space="preserve">
-    <value>Отправьте сохранённые изменения перед сменой ID.</value>
-  </data>
-  <data name="lgChangeModuleID" xml:space="preserve">
-    <value>Изменить ID модуля</value>
-  </data>
-  <data name="lgChangeIDConfirm" xml:space="preserve">
-    <value>Изменить модуль {0} на ID {1}?
-
-OK сейчас отправит новый ID на плату. Плата перезагрузится и снова подключится как модуль {1}, сохранив свои настройки.
-
-При отправке ID должна быть подключена только эта плата - любая плата, получившая его, примет новый ID.
-
-Отмена оставляет ID {0}.</value>
-  </data>
   <data name="lgIDSent" xml:space="preserve">
-    <value>ID модуля {0} отправлен. Плата перезагрузится и снова подключится как модуль {0}.</value>
-  </data>
-  <data name="lgSendPinsAfter" xml:space="preserve">
-    <value>После переподключения нажмите Отправить, чтобы передать ей настройки.</value>
+    <value>ID модуля {0} отправлен вместе с настройками. Плата перезагрузится и снова подключится как модуль {0}.</value>
   </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Изменить: {0}</value>
@@ -870,16 +840,59 @@ OK сейчас отправит новый ID на плату. Плата пе�
   <data name="lgUpdateFirmware" xml:space="preserve">
     <value>Обновить ПО</value>
   </data>
-  <data name="lgBoard" xml:space="preserve">
-    <value>Плата</value>
-  </data>
   <data name="lgNew" xml:space="preserve">
     <value>Новая</value>
   </data>
-  <data name="lgNoBoardFound" xml:space="preserve">
-    <value>Плата для модуля {0} не найдена.</value>
+  <data name="lgModuleInUse" xml:space="preserve">
+    <value>У модуля {0} уже есть плата.</value>
   </data>
-  <data name="lgChooseBoard" xml:space="preserve">
-    <value>Выберите плату в списке плат.</value>
+  <data name="lgAssignBoardConfirm" xml:space="preserve">
+    <value>Назначить {0} модулю {1}?</value>
+  </data>
+  <data name="lgMoveBoardConfirm" xml:space="preserve">
+    <value>Переместить {0} из модуля {1} в модуль {2}?
+
+У модуля {1} не будет платы.</value>
+  </data>
+  <data name="lgBoards" xml:space="preserve">
+    <value>Платы</value>
+  </data>
+  <data name="lgModule" xml:space="preserve">
+    <value>Модуль</value>
+  </data>
+  <data name="lgBoard" xml:space="preserve">
+    <value>Плата</value>
+  </data>
+  <data name="lgState" xml:space="preserve">
+    <value>Состояние</value>
+  </data>
+  <data name="lgStateNew" xml:space="preserve">
+    <value>Новая</value>
+  </data>
+  <data name="lgStateDuplicate" xml:space="preserve">
+    <value>Дубликат</value>
+  </data>
+  <data name="lgDescription" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="lgLoadPresetConfirm" xml:space="preserve">
+    <value>Загрузить начальную конфигурацию {0} для модуля {1}?
+
+Это заменит выводы и настройки реле модуля.</value>
+  </data>
+  <data name="lgLoadPresetChoose" xml:space="preserve">
+    <value>Загрузить шаблон</value>
+  </data>
+  <data name="lgBoardGone" xml:space="preserve">
+    <value>Плата больше не отвечает.</value>
+  </data>
+  <data name="lgPendingModule" xml:space="preserve">
+    <value>→ {0}, не отправлено</value>
+  </data>
+  <data name="lgPendingDescription" xml:space="preserve">
+    <value>Не отправлено</value>
+  </data>
+  <data name="lgSendPendingFirst" xml:space="preserve">
+    <value>Сначала отправьте ожидающее изменение модуля.</value>
   </data>
 </root>
