@@ -150,21 +150,25 @@ namespace RateController.Menu
 
         private void frmMenuNetwork_Load(object sender, EventArgs e)
         {
-            SubMenuLayout.SetFormLayout(this, MainMenu, null);
-            btnOK.Left = this.Width - 84;
-            btnOK.Top = this.Height - 84;
-            btnCancel.Left = btnOK.Left - 78;
+            SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
+            btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
 
             MainMenu.StyleControls(this);
             lvBoards.BackColor = Properties.Settings.Default.MainBackColour;
             lvBoards.ForeColor = Properties.Settings.Default.MainForeColour;
 
+            // theme text colour, the underline marks the link (default blue is unreadable on dark)
+            lnkWeb.LinkColor = lnkWeb.ForeColor;
+            lnkWeb.ActiveLinkColor = lnkWeb.ForeColor;
+            lnkWeb.VisitedLinkColor = lnkWeb.ForeColor;
+
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
 
+            FitLastColumn();
             RefreshPage();
 
             // boards come and go while the page is open (32403 every 2 s)
@@ -188,14 +192,10 @@ namespace RateController.Menu
                 int want = -1;
                 if (Brd != null)
                 {
-                    // the board's own module first; for a new board the suggested module
-                    // first instead, so picking it is one tap
-                    int first = Brd.ID < Props.MaxModules ? Brd.ID : Core.SuggestedModule();
-                    if (first >= 0) modules.Add(first);
                     for (int i = 0; i < Props.MaxModules; i++)
                     {
-                        // free, or the target already saved for this board
-                        if (i != first && i != Brd.ID && (!Core.ModuleTaken(i) || (p != null && p.NewID == i))) modules.Add(i);
+                        // in order: the board's own module, free modules, and the target already saved for this board
+                        if (i == Brd.ID || !Core.ModuleTaken(i) || (p != null && p.NewID == i)) modules.Add(i);
                     }
                     // a new board starts blank: choosing its module is the edit that enables Save
                     want = p != null && p.NewID >= 0 ? p.NewID
@@ -320,6 +320,55 @@ namespace RateController.Menu
                 // free modules change as boards come and go; edits in progress are left alone
                 LoadSelected();
             }
+            ShowWebLink();
+        }
+
+        // The selected board's web page, as on the Comm page's WiFi tab. Only an ESP32 has one,
+        // and only over WiFi: its Ethernet chip runs a separate stack with no web server. The
+        // module IP is known by module ID, so only an assigned board with no duplicate gets one.
+        private void ShowWebLink()
+        {
+            string Text = "";
+            string Url = "";
+            BoardInfo Brd = SelectedBoard();
+            if (Brd != null && Brd.InoType == (byte)ModuleTypes.ESP_Rate && Brd.ID < Props.MaxModules
+                && !Core.ModulesBoardID.DuplicateID(Brd.ID) && Core.ModulesStatus.Connected(Brd.ID))
+            {
+                if (Core.ModulesStatus.EthernetConnected(Brd.ID))
+                {
+                    Text = Lang.lgEthernetNoWebPage;
+                }
+                else
+                {
+                    string IP = Core.UDPmodules == null ? "" : Core.UDPmodules.ModuleIP(Brd.ID);
+                    if (IP != "")
+                    {
+                        Url = "http://" + IP + "/";
+                        Text = IP;
+                    }
+                }
+            }
+
+            if (lnkWeb.Text != Text || (lnkWeb.Links.Count > 0) != (Url != ""))
+            {
+                lnkWeb.Text = Text;
+                lnkWeb.Links.Clear();
+                if (Url != "") lnkWeb.Links.Add(0, Text.Length, Url);
+            }
+            bool show = Text != "";
+            if (lnkWeb.Visible != show) lnkWeb.Visible = show;
+        }
+
+        private void lnkWeb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (e.Link.LinkData is string Url) System.Diagnostics.Process.Start(Url);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuNetwork/lnkWeb_LinkClicked: " + ex.Message);
+            }
         }
 
         // rebuilt only when something changed, keeping the selection (by MAC)
@@ -349,6 +398,7 @@ namespace RateController.Menu
                     cRows.Add(r);
                 }
                 lvBoards.EndUpdate();
+                FitLastColumn();
 
                 // keep the selected board; with nothing selected (or it went, and nothing is
                 // being edited), pick the first new board
@@ -367,6 +417,14 @@ namespace RateController.Menu
                     LoadSelected();
                 }
             }
+        }
+
+        // State takes the rest of the list's width, so there is no blank strip on the right.
+        // ClientSize leaves out the scroll bar, which comes and goes with the row count.
+        private void FitLastColumn()
+        {
+            int w = lvBoards.ClientSize.Width - chModule.Width - chBoard.Width;
+            if (w > 0 && chState.Width != w) chState.Width = w;
         }
 
         private void SelectKey(string Key)

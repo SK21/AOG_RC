@@ -2255,6 +2255,15 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgModuleInUse", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ethernet, no web page.
+        /// </summary>
+        internal static string lgEthernetNoWebPage {
+            get {
+                return ResourceManager.GetString("lgEthernetNoWebPage", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Assign {0} to module {1}?.

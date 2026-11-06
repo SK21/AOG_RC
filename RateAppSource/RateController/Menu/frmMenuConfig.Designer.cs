@@ -59,7 +59,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(380, 603);
+            this.btnCancel.Location = new System.Drawing.Point(382, 603);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 1;
@@ -91,7 +91,7 @@
             this.ckADS1115enabled.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckADS1115enabled.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckADS1115enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckADS1115enabled.Location = new System.Drawing.Point(341, 396);
+            this.ckADS1115enabled.Location = new System.Drawing.Point(341, 393);
             this.ckADS1115enabled.Name = "ckADS1115enabled";
             this.ckADS1115enabled.Size = new System.Drawing.Size(117, 69);
             this.ckADS1115enabled.TabIndex = 175;
@@ -104,7 +104,7 @@
             // 
             this.lbRelay.AutoSize = true;
             this.lbRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRelay.Location = new System.Drawing.Point(55, 217);
+            this.lbRelay.Location = new System.Drawing.Point(55, 274);
             this.lbRelay.Name = "lbRelay";
             this.lbRelay.Size = new System.Drawing.Size(202, 24);
             this.lbRelay.TabIndex = 174;
@@ -123,7 +123,7 @@
             "MCP23017",
             "PCA9685",
             "PCF8574"});
-            this.cbOnboardRelays.Location = new System.Drawing.Point(266, 215);
+            this.cbOnboardRelays.Location = new System.Drawing.Point(266, 272);
             this.cbOnboardRelays.Name = "cbOnboardRelays";
             this.cbOnboardRelays.Size = new System.Drawing.Size(192, 32);
             this.cbOnboardRelays.TabIndex = 173;
@@ -136,7 +136,7 @@
             this.ckFlowOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckFlowOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckFlowOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckFlowOn.Location = new System.Drawing.Point(200, 396);
+            this.ckFlowOn.Location = new System.Drawing.Point(200, 393);
             this.ckFlowOn.Name = "ckFlowOn";
             this.ckFlowOn.Size = new System.Drawing.Size(117, 69);
             this.ckFlowOn.TabIndex = 170;
@@ -151,7 +151,7 @@
             this.ckRelayOn.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.ckRelayOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ckRelayOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckRelayOn.Location = new System.Drawing.Point(59, 396);
+            this.ckRelayOn.Location = new System.Drawing.Point(59, 393);
             this.ckRelayOn.Name = "ckRelayOn";
             this.ckRelayOn.Size = new System.Drawing.Size(117, 69);
             this.ckRelayOn.TabIndex = 169;
@@ -163,7 +163,7 @@
             // tbSensorCount
             // 
             this.tbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSensorCount.Location = new System.Drawing.Point(266, 163);
+            this.tbSensorCount.Location = new System.Drawing.Point(266, 220);
             this.tbSensorCount.Name = "tbSensorCount";
             this.tbSensorCount.Size = new System.Drawing.Size(58, 29);
             this.tbSensorCount.TabIndex = 168;
@@ -176,7 +176,7 @@
             // 
             this.lbSensorCount.AutoSize = true;
             this.lbSensorCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSensorCount.Location = new System.Drawing.Point(55, 165);
+            this.lbSensorCount.Location = new System.Drawing.Point(55, 222);
             this.lbSensorCount.Name = "lbSensorCount";
             this.lbSensorCount.Size = new System.Drawing.Size(125, 24);
             this.lbSensorCount.TabIndex = 167;
@@ -186,7 +186,7 @@
             // 
             this.cbModuleID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbModuleID.Location = new System.Drawing.Point(266, 81);
+            this.cbModuleID.Location = new System.Drawing.Point(266, 138);
             this.cbModuleID.Name = "cbModuleID";
             this.cbModuleID.Size = new System.Drawing.Size(192, 32);
             this.cbModuleID.TabIndex = 166;
@@ -197,7 +197,7 @@
             // 
             this.lbModuleID.AutoSize = true;
             this.lbModuleID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleID.Location = new System.Drawing.Point(55, 83);
+            this.lbModuleID.Location = new System.Drawing.Point(55, 140);
             this.lbModuleID.Name = "lbModuleID";
             this.lbModuleID.Size = new System.Drawing.Size(96, 24);
             this.lbModuleID.TabIndex = 165;
@@ -211,12 +211,10 @@
             this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
-            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(304, 608);
+            this.btnRescan.Location = new System.Drawing.Point(306, 603);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(70, 63);
             this.btnRescan.TabIndex = 219;
-            this.btnRescan.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnRescan.UseVisualStyleBackColor = false;
             this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
             // 
@@ -224,7 +222,7 @@
             // 
             this.btnPreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPreset.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPreset.Location = new System.Drawing.Point(59, 488);
+            this.btnPreset.Location = new System.Drawing.Point(59, 485);
             this.btnPreset.Name = "btnPreset";
             this.btnPreset.Size = new System.Drawing.Size(399, 40);
             this.btnPreset.TabIndex = 258;
@@ -237,7 +235,7 @@
             // 
             this.lbRemoteRelay.AutoSize = true;
             this.lbRemoteRelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRemoteRelay.Location = new System.Drawing.Point(55, 269);
+            this.lbRemoteRelay.Location = new System.Drawing.Point(55, 326);
             this.lbRemoteRelay.Name = "lbRemoteRelay";
             this.lbRemoteRelay.Size = new System.Drawing.Size(193, 24);
             this.lbRemoteRelay.TabIndex = 221;
@@ -256,7 +254,7 @@
             "MCP23017",
             "PCA9685",
             "PCF8574"});
-            this.cbRemoteRelays.Location = new System.Drawing.Point(266, 267);
+            this.cbRemoteRelays.Location = new System.Drawing.Point(266, 324);
             this.cbRemoteRelays.Name = "cbRemoteRelays";
             this.cbRemoteRelays.Size = new System.Drawing.Size(192, 32);
             this.cbRemoteRelays.TabIndex = 220;
@@ -266,7 +264,7 @@
             // lbModule
             // 
             this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModule.Location = new System.Drawing.Point(59, 18);
+            this.lbModule.Location = new System.Drawing.Point(59, 75);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(403, 24);
             this.lbModule.TabIndex = 250;
@@ -275,23 +273,23 @@
             // 
             // gbLine
             // 
-            this.gbLine.Location = new System.Drawing.Point(57, 138);
+            this.gbLine.Location = new System.Drawing.Point(57, 195);
             this.gbLine.Name = "gbLine";
             this.gbLine.Size = new System.Drawing.Size(403, 5);
             this.gbLine.TabIndex = 255;
             this.gbLine.TabStop = false;
-            //
+            // 
             // lbModuleType
-            //
+            // 
             this.lbModuleType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModuleType.Location = new System.Drawing.Point(59, 46);
+            this.lbModuleType.Location = new System.Drawing.Point(59, 103);
             this.lbModuleType.Name = "lbModuleType";
             this.lbModuleType.Size = new System.Drawing.Size(403, 24);
             this.lbModuleType.TabIndex = 257;
             this.lbModuleType.Text = "Module type";
             this.lbModuleType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbModuleType.Visible = false;
-            //
+            // 
             // frmMenuConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

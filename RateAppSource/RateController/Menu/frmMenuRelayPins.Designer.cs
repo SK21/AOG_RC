@@ -79,7 +79,7 @@
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
             this.btnCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnCancel.Location = new System.Drawing.Point(380, 603);
+            this.btnCancel.Location = new System.Drawing.Point(382, 603);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(70, 63);
             this.btnCancel.TabIndex = 156;
@@ -433,8 +433,7 @@
             this.btnRescan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRescan.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRescan.Image = ((System.Drawing.Image)(resources.GetObject("btnRescan.Image")));
-            this.btnRescan.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnRescan.Location = new System.Drawing.Point(304, 608);
+            this.btnRescan.Location = new System.Drawing.Point(306, 603);
             this.btnRescan.Name = "btnRescan";
             this.btnRescan.Size = new System.Drawing.Size(70, 63);
             this.btnRescan.TabIndex = 240;

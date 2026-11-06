@@ -846,6 +846,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>Modulis {0} jau turi plokštę.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, nėra tinklalapio</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>Priskirti {0} moduliui {1}?</value>
   </data>

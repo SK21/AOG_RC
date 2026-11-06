@@ -846,6 +846,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>У модуля {0} уже есть плата.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, нет веб-страницы</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>Назначить {0} модулю {1}?</value>
   </data>

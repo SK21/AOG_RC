@@ -846,6 +846,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>Module {0} heeft al een board.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, geen webpagina</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>{0} toewijzen aan module {1}?</value>
   </data>

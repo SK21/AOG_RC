@@ -849,6 +849,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>A(z) {0}. modulnak már van panelje.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, nincs weboldal</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>{0} hozzárendelése a(z) {1}. modulhoz?</value>
   </data>

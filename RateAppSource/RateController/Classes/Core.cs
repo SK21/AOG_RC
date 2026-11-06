@@ -340,33 +340,6 @@ namespace RateController.Classes
             return ModuleInUse(moduleID) || (p != null && p.NewID == moduleID);
         }
 
-        // The module offered for a new board: the lowest free module with enabled products
-        // (set up and waiting for a board), else the lowest free module. -1 when none is free.
-        public static int SuggestedModule()
-        {
-            int Result = -1;
-            for (int i = 0; i < Props.MaxModules; i++)
-            {
-                if (!ModuleTaken(i) && Products.EnabledOnModule(i))
-                {
-                    Result = i;
-                    break;
-                }
-            }
-            if (Result < 0)
-            {
-                for (int i = 0; i < Props.MaxModules; i++)
-                {
-                    if (!ModuleTaken(i))
-                    {
-                        Result = i;
-                        break;
-                    }
-                }
-            }
-            return Result;
-        }
-
         // Board changes saved on the Boards page and sent with the next Send, keyed by MAC.
         // In memory only: dropped if the app closes before Send.
         private static readonly Dictionary<ulong, PendingBoard> cPendingBoards = new Dictionary<ulong, PendingBoard>();

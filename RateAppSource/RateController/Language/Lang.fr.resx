@@ -846,6 +846,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>Le module {0} a déjà une carte.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, pas de page web</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>Affecter {0} au module {1} ?</value>
   </data>

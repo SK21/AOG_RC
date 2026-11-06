@@ -847,6 +847,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>Modul {0} hat bereits eine Platine.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, keine Webseite</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>{0} dem Modul {1} zuweisen?</value>
   </data>

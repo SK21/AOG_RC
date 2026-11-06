@@ -846,6 +846,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>Moduł {0} ma już płytkę.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, brak strony WWW</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>Przypisać {0} do modułu {1}?</value>
   </data>

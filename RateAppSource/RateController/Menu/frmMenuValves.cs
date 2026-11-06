@@ -48,10 +48,8 @@ namespace RateController.Menu
 
         private void frmMenuValves_Load(object sender, EventArgs e)
         {
-            SubMenuLayout.SetFormLayout(this, MainMenu, null);
-            btnOK.Left = this.Width - 84;
-            btnOK.Top = this.Height - 84;
-            btnCancel.Left = btnOK.Left - 78;
+            SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
+            btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
             MainMenu.StyleControls(this);
             lbModule.Font = new Font(lbModule.Font, FontStyle.Underline);

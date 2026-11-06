@@ -131,6 +131,8 @@ namespace RateController.Menu
 
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
+            btnRescan.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing;
+            btnRescan.Top = btnOK.Top;
             MainMenu.StyleControls(this);
 
             lbModule.Font = new Font(lbModule.Font, FontStyle.Underline);

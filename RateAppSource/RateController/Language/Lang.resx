@@ -852,6 +852,9 @@
   <data name="lgModuleInUse" xml:space="preserve">
     <value>Module {0} already has a board.</value>
   </data>
+  <data name="lgEthernetNoWebPage" xml:space="preserve">
+    <value>Ethernet, no web page</value>
+  </data>
   <data name="lgAssignBoardConfirm" xml:space="preserve">
     <value>Assign {0} to module {1}?</value>
   </data>

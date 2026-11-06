@@ -66,29 +66,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        // True when an enabled product uses the given module: the module is set up and
-        // waiting for a board, so it is the first choice for a new one (Config page)
-        public bool EnabledOnModule(int moduleID)
-        {
-            bool Result = false;
-            try
-            {
-                foreach (clsProduct P in cProducts)
-                {
-                    if (P.Enabled && P.ModuleID == moduleID)
-                    {
-                        Result = true;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Props.WriteErrorLog("clsProducts/EnabledOnModule: " + ex.Message);
-            }
-            return Result;
-        }
-
         // True when a product on the given module is actively calibrating (calibrate object
         // powered on). Scopes calibration behaviour (PGN32500 command bits, forced relays) to
         // the modules actually involved, so uninvolved modules run normally during calibration.
