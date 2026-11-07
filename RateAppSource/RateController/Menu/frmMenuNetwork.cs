@@ -71,6 +71,12 @@ namespace RateController.Menu
                 if (desc != null && desc == Brd.Label) desc = null; // unchanged
 
                 bool idChange = newID >= 0 && (old == null || old.NewID != newID);
+
+                // a saved move is being undone: the config pages go back to the board's own
+                // module. A new board (25) has no module of its own, so its pages stay put.
+                bool idRevert = newID < 0 && old != null && old.NewID >= 0;
+                bool pagesMove = idChange || (idRevert && Brd.ID <= 15);
+
                 PendingBoard otherMove = Core.PendingIDChange();
 
                 if (idChange && otherMove != null && otherMove.MAC != Brd.MAC)
@@ -78,7 +84,7 @@ namespace RateController.Menu
                     // one ID change per Send: Send gives settings to one module
                     Props.ShowMessage(Lang.lgSendPendingFirst, "Boards", 10000);
                 }
-                else if (idChange && MainMenu.AnyPageEdited(this))
+                else if (pagesMove && MainMenu.AnyPageEdited(this))
                 {
                     // the config pages move to the new module, which reloads them
                     Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Boards", 10000);
@@ -102,6 +108,12 @@ namespace RateController.Menu
                         {
                             clsPresets.Load(type, MainMenu);
                         }
+                    }
+                    else if (idRevert && Brd.ID <= 15)
+                    {
+                        Core.ModuleConfig.ModuleID = (byte)Brd.ID;
+                        Core.ModuleConfig.Save();
+                        MainMenu.DefaultsSet();
                     }
 
                     SetButtons(false);
