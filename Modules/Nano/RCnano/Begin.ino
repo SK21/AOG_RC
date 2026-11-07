@@ -448,10 +448,11 @@ void LoadDefaults()
 		Sensor[i].PulseSampleSize = 11;	// median pulse-count cap, max = MaxSampleSize (see Receive.ino byte 22 note)
 	}
 
-	// relay pins
+	// relay pins: MCP23017 map, RC12-3 (matches the app's Nano preset)
+	const uint8_t DefaultRelayPins[16] = { 0,15,1,14,2,13,3,12,4,11,5,10,6,9,7,8 };
 	for (int i = 0; i < 16; i++)
 	{
-		MDL.RelayControlPins[i] = NC;
+		MDL.RelayControlPins[i] = DefaultRelayPins[i];
 	}
 	MDL.ID = NewModuleID;
 	MDL.SensorCount = 1;
