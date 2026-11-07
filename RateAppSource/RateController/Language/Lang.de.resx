@@ -832,6 +832,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Modul-ID {0} mit ihren Einstellungen gesendet. Die Platine startet neu und verbindet sich als Modul {0}.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>Neue Platine gefunden: {0}. Als Modul {1} einrichten?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Änderbar unter {0}</value>
   </data>

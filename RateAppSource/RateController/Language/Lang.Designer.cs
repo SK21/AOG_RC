@@ -2239,6 +2239,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New board found: {0}. Set it up as module {1}?.
+        /// </summary>
+        internal static string lgNewBoardSetup {
+            get {
+                return ResourceManager.GetString("lgNewBoardSetup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change it on {0}.
         /// </summary>
         internal static string lgChangeItOn {

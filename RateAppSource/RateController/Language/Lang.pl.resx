@@ -831,6 +831,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Wysłano ID modułu {0} z ustawieniami. Płytka uruchomi się ponownie i połączy jako moduł {0}.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>Znaleziono nową płytkę: {0}. Skonfigurować ją jako moduł {1}?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Zmień w {0}</value>
   </data>

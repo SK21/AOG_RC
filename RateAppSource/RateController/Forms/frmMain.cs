@@ -3,6 +3,7 @@ using RateController.Language;
 using RateController.Menu;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -433,6 +434,46 @@ namespace RateController.Forms
         private void FlashTimer_Tick(object sender, EventArgs e)
         {
             ShowAlarmButton();
+            if (++cSetupTick >= 2)
+            {
+                cSetupTick = 0;
+                CheckNewBoardSetup();
+            }
+        }
+
+        private int cSetupTick = 0;
+        private bool cSetupPromptOpen = false;
+
+        // one install, one board: a single yes/no instead of the Boards page
+        // (design New_Board_Setup_Prompt.md). Checked every 1 s; the menu may be closed.
+        private void CheckNewBoardSetup()
+        {
+            if (cSetupPromptOpen) return;
+            PGNs.BoardInfo Brd = Core.NewBoardToSetUp();
+            if (Brd == null) return;
+
+            frmMenu Menu = Application.OpenForms.OfType<frmMenu>().FirstOrDefault();
+            if (Menu != null && Menu.AnyPageEdited()) return;   // asked again once saved or cancelled
+
+            cSetupPromptOpen = true;
+            try
+            {
+                Core.NewBoardSetupAsked(Brd.MAC);   // asked once per session, whatever the answer
+                using (var Hlp = new frmMsgBox(string.Format(Lang.lgNewBoardSetup, Brd.Text, 0), "Boards", true))
+                {
+                    Hlp.TopMost = true;
+                    Hlp.ShowDialog();
+                    if (Hlp.Result) Core.SetUpNewBoard(Brd, Menu);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMain/CheckNewBoardSetup: " + ex.Message);
+            }
+            finally
+            {
+                cSetupPromptOpen = false;
+            }
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)

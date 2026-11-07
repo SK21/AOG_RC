@@ -831,6 +831,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>ID du module {0} envoyé avec ses réglages. La carte redémarre et se reconnecte comme module {0}.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>Nouvelle carte détectée : {0}. La configurer comme module {1} ?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>À modifier dans {0}</value>
   </data>

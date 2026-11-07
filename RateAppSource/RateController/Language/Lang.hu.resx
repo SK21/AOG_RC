@@ -834,6 +834,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>{0} modul ID elküldve a beállításaival. A panel újraindul, és {0}. modulként csatlakozik újra.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>Új panel található: {0}. Beállítja {1}. modulként?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Módosítás itt: {0}</value>
   </data>

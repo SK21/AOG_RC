@@ -340,6 +340,52 @@ namespace RateController.Classes
             return ModuleInUse(moduleID) || (p != null && p.NewID == moduleID);
         }
 
+        // New board setup (design New_Board_Setup_Prompt.md): the one board a first install
+        // can set up with a yes/no. Only when the board list holds nothing but this new board.
+        // Boards already asked this session (Yes or No) are never asked twice. After Yes the
+        // board still reports at 25 until its deferred restart, and stays live for 5 s.
+        private static readonly HashSet<ulong> cSetupAsked = new HashSet<ulong>();
+
+        public static BoardInfo NewBoardToSetUp()
+        {
+            BoardInfo Result = null;
+            List<BoardInfo> nb = ModulesBoardID.NewBoards();
+            if (nb.Count == 1 && !HasPendingBoards && !cSetupAsked.Contains(nb[0].MAC)
+                && clsPresets.Has((ModuleTypes)nb[0].InoType))
+            {
+                bool other = false;
+                for (int id = 0; id < Props.MaxModules && !other; id++)
+                {
+                    other = ModulesBoardID.AnyLiveAt(id) || ModulesBoardID.Rejected(id);
+                }
+                if (!other) Result = nb[0];
+            }
+            return Result;
+        }
+
+        public static void NewBoardSetupAsked(ulong MAC) => cSetupAsked.Add(MAC);
+
+        // module 0, the board's preset, then the same sends as frmMenu.SendModuleConfig
+        public static void SetUpNewBoard(BoardInfo Brd, frmMenu Menu)
+        {
+            const byte Module = 0;
+            BoardInfo live = ModulesBoardID.LiveBoard(Brd.MAC);
+            if (live == null || ModuleInUse(Module))
+            {
+                Props.ShowMessage(live == null ? Lang.lgBoardGone
+                    : string.Format(Lang.lgModuleInUse, Module), "Boards", 15000);
+                return;
+            }
+            ModuleConfig.ModuleID = Module;
+            ModuleConfig.Save();
+            clsPresets.Load((ModuleTypes)live.InoType, Menu);
+            new PGN32508().Send(live.MAC, Module);
+            SensorPins.Send();
+            ModuleConfig.Send();
+            Menu?.HighlightUpdateButton(false);
+            Props.ShowMessage(string.Format(Lang.lgIDSent, Module), "Config", 15000);
+        }
+
         // Board changes saved on the Boards page and sent with the next Send, keyed by MAC.
         // In memory only: dropped if the app closes before Send.
         private static readonly Dictionary<ulong, PendingBoard> cPendingBoards = new Dictionary<ulong, PendingBoard>();

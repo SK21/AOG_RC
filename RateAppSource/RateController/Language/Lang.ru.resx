@@ -831,6 +831,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>ID модуля {0} отправлен вместе с настройками. Плата перезагрузится и снова подключится как модуль {0}.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>Найдена новая плата: {0}. Настроить её как модуль {1}?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Изменить: {0}</value>
   </data>

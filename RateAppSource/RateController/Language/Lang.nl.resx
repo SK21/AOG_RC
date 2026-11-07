@@ -831,6 +831,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Module-ID {0} verzonden met de instellingen. Het board herstart en maakt opnieuw verbinding als module {0}.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>Nieuw board gevonden: {0}. Instellen als module {1}?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Wijzigen via {0}</value>
   </data>

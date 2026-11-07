@@ -837,6 +837,9 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Module ID {0} sent with its settings. The board restarts and reconnects as module {0}.</value>
   </data>
+  <data name="lgNewBoardSetup" xml:space="preserve">
+    <value>New board found: {0}. Set it up as module {1}?</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Change it on {0}</value>
   </data>
