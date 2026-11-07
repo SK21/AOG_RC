@@ -453,13 +453,13 @@ void LoadData()
 		// lands here, and without this every module came back as a new board. Read from the
 		// old record's position — ID must stay the FIRST field of ModuleConfig (EEPROM 23).
 		// Blank EEPROM reads 0xFF and an unassigned board stores NewModuleID (25), both above
-		// 15, so those boards start (or stay) at NewModuleID.
+		// MaxModuleID, so those boards start (or stay) at NewModuleID.
 		uint8_t KeptID;
 		EEPROM.get(23, KeptID);
 
 		Serial.println("Stored settings not valid.");
 		LoadDefaults();
-		if (KeptID <= 15)
+		if (KeptID <= MaxModuleID)
 		{
 			MDL.ID = KeptID;
 			Serial.print("Module ID kept: ");
@@ -467,6 +467,15 @@ void LoadData()
 		}
 		SaveData();
 		GoodPins=true;
+	}
+
+	// an ID the app can't list or reassign (above MaxModuleID, other than NewModuleID)
+	// starts as a new board, so it shows on the Boards page and can be assigned
+	if (MDL.ID > MaxModuleID && MDL.ID != NewModuleID)
+	{
+		Serial.println("Module ID out of range, starting as a new board.");
+		MDL.ID = NewModuleID;
+		SaveData();
 	}
 }
 

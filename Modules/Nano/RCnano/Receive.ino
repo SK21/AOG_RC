@@ -310,10 +310,10 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//0     HeaderLo    252
 		//1     HeaderHi    126
 		//2-7   MAC         acted on only by the board with this MAC
-		//8     new module ID 0-15
+		//8     new module ID 0-7 (MaxModuleID)
 		//9     CRC
 		PGNlength = 10;
-		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= 15
+		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= MaxModuleID
 			&& memcmp(data + 2, BoardMAC, 6) == 0)
 		{
 			MDL.ID = data[8];

@@ -31,6 +31,7 @@ const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano R
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
 const uint8_t PCB_Type = 0;		// 0 - RC15
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+200 / 25+50 still make valid addresses
+const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
 
 #define NC 0xFF		// Pins not connected
 #define SsidLength 33			// 32 bytes + null, the 802.11 maximum

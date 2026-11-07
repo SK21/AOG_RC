@@ -556,10 +556,10 @@ void CANBus_HandleBoardLabel3(const CAN_message_t& msg) {
 
 //-----------------------------------------------------------------------------
 // Assign module ID by MAC (PGN 0xFF19, from PGN 32508).
-// buf[0] = new ID 0-15, buf[1..6] = MAC, buf[7] = 0. Only the board with this MAC acts.
+// buf[0] = new ID 0-7 (MaxModuleID), buf[1..6] = MAC, buf[7] = 0. Only the board with this MAC acts.
 //-----------------------------------------------------------------------------
 void CANBus_HandleAssignID(const CAN_message_t& msg) {
-	if (msg.len < 7 || msg.buf[0] > 15) return;
+	if (msg.len < 7 || msg.buf[0] > MaxModuleID) return;
 	uint8_t mac[6];
 	TeensyMAC(mac);
 	if (memcmp(msg.buf + 1, mac, 6) == 0) AssignModuleID(msg.buf[0]);

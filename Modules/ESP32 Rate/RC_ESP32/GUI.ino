@@ -106,7 +106,7 @@ void handleCredentials()
 	// form, so a phone user's save leaves the ID alone. A new board's default is 25
 	// (unassigned). Setting the ID here, in the same visit, means the board arrives with
 	// its own ID.
-	// 0..15 is the nibble BuildModSenID() packs; anything else is ignored.
+	// 0..MaxModuleID (the app's modules); anything else is ignored.
 	bool idChanged = false;
 	if (server.hasArg("modid"))
 	{
@@ -114,7 +114,7 @@ void handleCredentials()
 		idArg.trim();
 		int newID = idArg.toInt();
 		bool numeric = idArg.length() > 0 && (idArg == "0" || newID != 0);
-		if (numeric && newID >= 0 && newID <= 15 && newID != MDL.ID)
+		if (numeric && newID >= 0 && newID <= MaxModuleID && newID != MDL.ID)
 		{
 			MDL.ID = (uint8_t)newID;
 			idChanged = true;

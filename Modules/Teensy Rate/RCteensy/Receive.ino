@@ -376,10 +376,10 @@ void ReadPGNs(byte data[], uint16_t len)
 		//0     HeaderLo    252
 		//1     HeaderHi    126
 		//2-7   MAC         acted on only by the board with this MAC
-		//8     new module ID 0-15
+		//8     new module ID 0-7 (MaxModuleID)
 		//9     CRC
 		PGNlength = 10;
-		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= 15)
+		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= MaxModuleID)
 		{
 			uint8_t mac[6];
 			TeensyMAC(mac);

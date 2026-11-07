@@ -875,6 +875,13 @@ bool LoadIdentity()
 	if (Result)
 	{
 		MDL.ID = Id.ID;
+		if (MDL.ID > MaxModuleID && MDL.ID != NewModuleID)
+		{
+			// an ID the app can't list or reassign starts as a new board
+			Serial.println("Module ID out of range, starting as a new board.");
+			MDL.ID = NewModuleID;
+			Result = false;		// the caller saves again (Begin)
+		}
 		memcpy(MDLboard.Text, Id.Label, sizeof(MDLboard.Text));
 		MDLnetwork = Id.Network;
 		if (MDLnetwork.StaChannelCache > 13) MDLnetwork.StaChannelCache = 0;
