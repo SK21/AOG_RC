@@ -1022,6 +1022,27 @@ namespace RateController
             PGNs.PendingBoard move = Core.PendingIDChange();
             bool proceed = true;
             string msg = "Settings sent to module";
+            byte editID = Core.ModuleConfig.GetData()[2];
+
+            if (move == null)
+            {
+                // no board change: the module being edited must have an accepted board.
+                // Old firmware would apply 32507/32700 and restart while its rate commands
+                // are blocked (design §5 item 3); with no board the settings go nowhere.
+                // Nothing is sent, so pending descriptions are kept for the next Send.
+                if (Core.ModulesBoardID.Rejected(editID))
+                {
+                    Props.ShowMessage("Module " + editID.ToString() + ": " + Lang.lgFirmwareUpdateRequired,
+                        "Config", 15000);
+                    proceed = false;
+                }
+                else if (!Core.ModulesStatus.Connected(editID))
+                {
+                    Props.ShowMessage("Module " + editID.ToString() + ": " + Lang.lgNotConnected,
+                        "Config", 15000);
+                    proceed = false;
+                }
+            }
 
             if (move != null)
             {
