@@ -32,7 +32,7 @@ IsobusIdentity ISOBUSid;
 // Accumulation buffer for PGN 32700 module config received over CAN (4 × 8-byte frames)
 // cfgBuf[0..29] maps to PGN32700 bytes [2..31]: ModID, SensorCount, commands, relay types,
 //   sensor pins, relay pins [0-15], WorkPin, PressurePin, CommMode
-// No ModID identity check — mirrors the UDP handler which also applies unconditionally.
+// Applied only when cfgBuf[0] matches MDL.ID — mirrors the UDP handler.
 uint8_t cfgBuf[30];
 uint8_t cfgFrames = 0;  // bitmask: bit0=0xFF0C, bit1=0xFF0D, bit2=0xFF0E, bit3=0xFF0F
 
@@ -275,6 +275,10 @@ void CANBus_Receive() {
 
 		case 0xFF17:  // Sensor pins (from PGN 32507, one frame per sensor)
 			CANBus_HandleSensorPins(msg);
+			break;
+
+		case 0xFF19:  // Assign module ID by MAC (from PGN 32508)
+			CANBus_HandleAssignID(msg);
 			break;
 
 		}
@@ -547,6 +551,17 @@ void CANBus_HandleBoardLabel3(const CAN_message_t& msg) {
 }
 
 //-----------------------------------------------------------------------------
+// Assign module ID by MAC (PGN 0xFF19, from PGN 32508).
+// buf[0] = new ID 0-15, buf[1..6] = MAC, buf[7] = 0. Only the board with this MAC acts.
+//-----------------------------------------------------------------------------
+void CANBus_HandleAssignID(const CAN_message_t& msg) {
+	if (msg.len < 7 || msg.buf[0] > 15) return;
+	uint8_t mac[6];
+	TeensyMAC(mac);
+	if (memcmp(msg.buf + 1, mac, 6) == 0) AssignModuleID(msg.buf[0]);
+}
+
+//-----------------------------------------------------------------------------
 // Module config over CAN — 4-frame accumulation of PGN 32700
 // Frame layout (cfgBuf offset = PGN32700 byte - 2):
 //   0xFF0C → cfgBuf[0..7]  = pgnData[2..9]  (ModID, SensorCount, commands, relay types, Sensor0 pins)
@@ -554,8 +569,8 @@ void CANBus_HandleBoardLabel3(const CAN_message_t& msg) {
 //   0xFF0E → cfgBuf[16..23]= pgnData[18..25] (RelayPins[5-12])
 //   0xFF0F → cfgBuf[24..29]= pgnData[26..31] (RelayPins[13-15], WorkPin, PressurePin, CommMode)
 //            buf[6] = ModID (unused copy), buf[7] = 0
-// Command-byte (cfgBuf[2]) bit 6: set = adopt cfgBuf[0] as new ID, clear =
-// cfgBuf[0] is a filter (apply only when it matches MDL.ID).
+// cfgBuf[0] is a filter: the config applies only when it matches MDL.ID. The ID
+// itself changes only by 0xFF19 (by MAC).
 //-----------------------------------------------------------------------------
 
 void CANBus_HandleModuleConfig1(const CAN_message_t& msg) {
@@ -582,11 +597,8 @@ void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
 	if (cfgFrames != 0x0F) { cfgFrames = 0; return; }
 	cfgFrames = 0;
 
-	// Command-byte bit 6 set = ID assignment, adopt cfgBuf[0] unconditionally
-	// (commissioning, one board connected); clear = cfgBuf[0] must match our ID
-	// (normal update, multi-board safe). Mirrors the UDP handler in Receive.ino.
-	bool AssignID = ((cfgBuf[2] & 64) == 64);
-	if (!AssignID && cfgBuf[0] != MDL.ID) return;
+	// config for this module only (mirrors the UDP handler in Receive.ino)
+	if (cfgBuf[0] != MDL.ID) return;
 
 	// Validate pins before applying (mirrors the UDP 32700 handler) - a config
 	// that boot-time ValidData() would reject must not be saved at all
@@ -617,7 +629,6 @@ void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
 	}
 
 	// Apply config (mirrors UDP PGN 32700 handler in Receive.ino case 32700)
-	MDL.ID = cfgBuf[0];
 	MDL.SensorCount = cfgBuf[1];
 
 	uint8_t tmp = cfgBuf[2];
@@ -724,7 +735,7 @@ void CANBus_SendModuleStatus() {
 	if (Ethernet.linkStatus() == LinkON) data[0] |= 0x20;  // Ethernet connected
 	if (GoodPins) data[0] |= 0x40;  // Good pin config
 
-	// Config rejected (2 s window, then self-clears) - app maps to 32401 byte 13 bit 7
+	// Config rejected (2 s window, then self-clears) - app maps to 32401 byte 10 bit 7
 	if (ConfigRejected)
 	{
 		if (millis() - ConfigRejectedTime < ConfigRejectedReport)
@@ -784,15 +795,23 @@ void CANBus_SendModuleIdent() {
 }
 
 //-----------------------------------------------------------------------------
-// Send board label to RC (PGN 0xFF14/0xFF15/0xFF16 -> assembled as PGN 32403).
-// Each frame: data[0]=ModID (low nibble), data[1..7]=7 chars.
+// Send the identity report to RC: label frames 0xFF14/0xFF15/0xFF16, then 0xFF18,
+// assembled as the 29-byte PGN 32403 when 0xFF18 arrives (type and firmware come
+// from 0xFF08).
+// 0xFF14-16: data[0] = ModID (low nibble; 15 while unassigned, as in 0xFF08), data[1..7] = 7 chars.
+// 0xFF18:    data[0] = full module ID (25 = unassigned), data[1..6] = MAC, data[7] = 0.
 //-----------------------------------------------------------------------------
 void CANBus_SendBoardLabel() {
 	uint8_t data[8];
 	uint8_t label[16];
-	uint8_t mod = MDL.ID & 0x0F;
+	uint8_t mod = (MDL.ID <= 15) ? MDL.ID : 0x0F;
 
-	EffectiveBoardLabel(label);                  // stored label, or MAC fallback when none stored
+	// stored label, 0-padded (empty when none stored)
+	for (byte i = 0; i < 16; i++)
+	{
+		uint8_t c = (uint8_t)MDLboard.Text[i];
+		label[i] = (c >= 32 && c < 127) ? c : 0;
+	}
 
 	data[0] = mod;
 	memcpy(data + 1, label, 7);                  // chars 0-6
@@ -807,6 +826,11 @@ void CANBus_SendBoardLabel() {
 	data[2] = label[15];                         // char 15
 	data[3] = data[4] = data[5] = data[6] = data[7] = 0;
 	CANBus_SendProprietaryB(0x16, data, 8);
+
+	data[0] = MDL.ID;                            // full ID
+	TeensyMAC(data + 1);                         // MAC, bytes 1-6
+	data[7] = 0;
+	CANBus_SendProprietaryB(0x18, data, 8);
 }
 
 //-----------------------------------------------------------------------------
@@ -832,9 +856,10 @@ void CANBus_Update() {
 		}
 	}
 
-	// An unassigned board (NewModuleID) can't be identified in these frames: each packs the
-	// module ID into 4 bits, so 25 would arrive as module 9. It sends only the
-	// identification frame, marked as new (see CANBus_SendModuleIdent).
+	// An unassigned board (NewModuleID) can't be identified in the data frames: each packs
+	// the module ID into 4 bits, so 25 would arrive as module 9. It sends only the
+	// identification frame (0xFF08) and the identity report (0xFF14-16, 0xFF18), both of
+	// which carry the full ID.
 	bool Assigned = (MDL.ID <= 15);
 
 	// Send sensor data at same rate as UDP (SendTime = 200ms)
@@ -858,8 +883,11 @@ void CANBus_Update() {
 		CANBus_SendModuleIdent();
 	}
 
-	// Send board label every 2 s (static; mirrors the UDP PGN 32403 report)
-	if (Assigned && millis() - lastBoardIdSend >= 2000) {
+	// Send the identity report every 2 s, from the first update after boot (mirrors the
+	// UDP PGN 32403 report). Unassigned boards send it too: 0xFF18 carries the full ID.
+	static bool boardIdSent = false;
+	if (!boardIdSent || millis() - lastBoardIdSend >= 2000) {
+		boardIdSent = true;
 		lastBoardIdSend = millis();
 		CANBus_SendBoardLabel();
 	}

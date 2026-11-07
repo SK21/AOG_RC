@@ -12,6 +12,7 @@ void DoSetup()
 	// eeprom
 	LoadData();
 	LoadNetworks();
+	LoadMAC();
 
 	Serial.println("");
 	Serial.println(InoDescription);
@@ -64,7 +65,6 @@ void DoSetup()
 	Serial.println(F("Starting Ethernet ..."));
 	MDLnetwork.IP3 = MDL.ID + 50;
 	byte ArduinoIP[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, MDLnetwork.IP3 };
-	static uint8_t LocalMac[] = { 0x0A,0x0B,0x42,0x0C,0x0D,MDLnetwork.IP3 };
 	static byte gwip[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 1 };
 	static byte myDNS[] = { 8, 8, 8, 8 };
 	static byte mask[] = { 255, 255, 255, 0 };
@@ -77,7 +77,7 @@ void DoSetup()
 	ENCfound = ShieldFound();
 	if (ENCfound)
 	{
-		ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);
+		ether.begin(sizeof Ethernet::buffer, BoardMAC, selectPin);
 		Serial.println("");
 		Serial.println(F("Ethernet controller found."));
 		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
@@ -311,6 +311,7 @@ void DoSetup()
 // eeprom map:
 // ID			0-1
 // module type	2
+// board MAC	3-9 (marker + 6 bytes, kept through firmware updates)
 // module data	23-147
 // network		168-232
 // sensor 1		253-356
@@ -356,6 +357,36 @@ void LoadData()
 		}
 		SaveData();
 		GoodPins=true;
+	}
+}
+
+void LoadMAC()
+{
+	// The board's MAC, made once: 0A:0B:42 (locally administered) + 3 random bytes.
+	// Every Nano used to build the same MAC from its IP, so two new boards clashed on
+	// the network and couldn't be told apart.
+	if (EEPROM.read(EE_MAC) == MACMarker)
+	{
+		for (byte i = 0; i < 6; i++) BoardMAC[i] = EEPROM.read(EE_MAC + 1 + i);
+	}
+	else
+	{
+		// seed from the noise on the floating analog inputs A6/A7 and the boot time
+		uint32_t seed = micros();
+		for (byte i = 0; i < 32; i++)
+		{
+			seed = (seed << 1) ^ analogRead(A6) ^ ((uint32_t)analogRead(A7) << 5) ^ micros();
+		}
+		randomSeed(seed);
+
+		BoardMAC[0] = 0x0A;
+		BoardMAC[1] = 0x0B;
+		BoardMAC[2] = 0x42;
+		for (byte i = 3; i < 6; i++) BoardMAC[i] = random(256);
+
+		for (byte i = 0; i < 6; i++) EEPROM.update(EE_MAC + 1 + i, BoardMAC[i]);
+		EEPROM.update(EE_MAC, MACMarker);
+		Serial.println(F("New board MAC made."));
 	}
 }
 

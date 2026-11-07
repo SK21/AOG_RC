@@ -84,7 +84,7 @@ void SendComm()
             }
         }
 
-        //PGN32401, module info from module to RC
+        //PGN32401, module status from module to RC
         //0     145
         //1     126
         //2     module ID
@@ -95,10 +95,7 @@ void SendComm()
         //7     wheel count Lo
         //8     wheel count mid
         //9     wheel count Hi
-        //10    InoType
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
+        //10    status
         //      bit 0   work switch
         //      bit 1   wifi rssi < -80
         //      bit 2	wifi rssi < -70
@@ -107,7 +104,8 @@ void SendComm()
         //      bit 5   good pin configuration
         //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
         //      bit 7   bad config
-        //14    CRC
+        //11    CRC
+        // board type and firmware are in PGN 32403
 
         // Skip when ISOBUS active - Gateway forwards 0xFF02 as PGN 32401
         if (MDL.CommMode == 0)
@@ -132,17 +130,13 @@ void SendComm()
             Data[8] = WheelCounts >> 8;
             Data[9] = WheelCounts >> 16;
 
-            Data[10] = InoType;
-            Data[11] = (byte)InoID;
-            Data[12] = InoID >> 8;
-
             // status
-            Data[13] = 0;
-            if ((MDL.WorkPin != NC) && WorkPinOn()) Data[13] |= 0b00000001;
+            Data[10] = 0;
+            if ((MDL.WorkPin != NC) && WorkPinOn()) Data[10] |= 0b00000001;
 
-            if (Ethernet.linkStatus() == LinkON) Data[13] |= 0b00010000;
-            if (GoodPins) Data[13] |= 0b00100000;
-            if (MDL.Is3Wire) Data[13] |= 0b01000000;
+            if (Ethernet.linkStatus() == LinkON) Data[10] |= 0b00010000;
+            if (GoodPins) Data[10] |= 0b00100000;
+            if (MDL.Is3Wire) Data[10] |= 0b01000000;
 
             // config rejected: reported for ConfigRejectedReport ms after the
             // discarded packet, then self-clears
@@ -150,7 +144,7 @@ void SendComm()
             {
                 if (millis() - ConfigRejectedTime < ConfigRejectedReport)
                 {
-                    Data[13] |= 0b10000000;
+                    Data[10] |= 0b10000000;
                 }
                 else
                 {
@@ -158,37 +152,51 @@ void SendComm()
                 }
             }
 
-            Data[14] = CRC(Data, 14, 0);
+            Data[11] = CRC(Data, 11, 0);
 
             if (Ethernet.linkStatus() == LinkON)
             {
                 // send ethernet
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(Data, 15);
+                UDPcomm.write(Data, 12);
                 UDPcomm.endPacket();
             }
         }
 
-        // PGN32403, board ID label report from module to RC (slow cyclic - static label)
+        // PGN32403, identity report from module to RC: sent from the first cycle after boot, then every 2 s
         //0     HeaderLo    147
         //1     HeaderHi    126
-        //2     Module ID   0-7
-        //3-18  16 chars    board label, 0-padded
-        //19    CRC
+        //2     module ID   0-15, or 25 unassigned
+        //3-18  16 chars    board label, 0-padded (empty when none stored)
+        //19-24 MAC         the factory MAC from the chip's fuses
+        //25    InoType
+        //26    InoID lo
+        //27    InoID hi
+        //28    CRC
         static uint32_t BoardIDLast = 0;
-        if (millis() - BoardIDLast > 2000)
+        static bool BoardIDSent = false;
+        if (!BoardIDSent || millis() - BoardIDLast > 2000)
         {
+            BoardIDSent = true;
             BoardIDLast = millis();
-            byte B[20];
+            byte B[29];
             B[0] = 147;
             B[1] = 126;
             B[2] = MDL.ID;	// raw module ID, matching the module-level status report (PGN 32401)
-            EffectiveBoardLabel(B + 3);	// stored label, or MAC fallback when none stored
-            B[19] = CRC(B, 19, 0);
+            for (byte i = 0; i < 16; i++)
+            {
+                uint8_t c = (uint8_t)MDLboard.Text[i];
+                B[3 + i] = (c >= 32 && c < 127) ? c : 0;
+            }
+            TeensyMAC(B + 19);
+            B[25] = InoType;
+            B[26] = (byte)InoID;
+            B[27] = InoID >> 8;
+            B[28] = CRC(B, 28, 0);
             if (Ethernet.linkStatus() == LinkON)
             {
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
-                UDPcomm.write(B, 20);
+                UDPcomm.write(B, 29);
                 UDPcomm.endPacket();
             }
         }

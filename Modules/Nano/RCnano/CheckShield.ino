@@ -1,6 +1,6 @@
 
 // uses SPI.h 
-// use 'if(ShieldFound())' before 'ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);' to prevent hang
+// use 'if(ShieldFound())' before 'ether.begin(sizeof Ethernet::buffer, BoardMAC, selectPin);' to prevent hang
 
 #define ADDR_MASK        0x1F
 #define ENC28J60_SOFT_RESET          0xFF

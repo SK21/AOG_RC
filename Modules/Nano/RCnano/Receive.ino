@@ -296,12 +296,34 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 					else
 					{
 						// pins not usable on this board - discard the packet,
-						// report via PGN 32401 byte 13 bit 7 for the app to alert
+						// report via PGN 32401 byte 10 bit 7 for the app to alert
 						ConfigRejected = true;
 						ConfigRejectedTime = millis();
 					}
 				}
 			}
+		}
+		break;
+
+	case 32508:
+		// assign module ID by MAC, RC to module
+		//0     HeaderLo    252
+		//1     HeaderHi    126
+		//2-7   MAC         acted on only by the board with this MAC
+		//8     new module ID 0-15
+		//9     CRC
+		PGNlength = 10;
+		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= 15
+			&& memcmp(data + 2, BoardMAC, 6) == 0)
+		{
+			MDL.ID = data[8];
+			SaveData();
+			// the IP and every packet's ID are set at boot, so restart - but shortly, not
+			// now: the rest of the same Send (32507, 32700) follows within milliseconds,
+			// addressed to the new ID. 32700 restarts at once; otherwise the deferred
+			// restart in loop() fires after RestartDelay
+			RestartPending = true;
+			RestartLastConfig = millis();
 		}
 		break;
 
@@ -317,9 +339,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//      bit 2 - client mode
 		//      bit 3 - work pin is momentary
 		//      bit 4 - Is3Wire valve
-		//      bit 6 - assign module ID: adopt data[2] as the new ID (only one
-		//              board connected); clear = data[2] is a filter, config is
-		//              for that module only
+		//      bit 6 - reserved (was assign ID, replaced by PGN 32508)
 		//5	    relay control type   0 - no relays, 1 - GPIOs, 2 - PCA9555 8 relays, 3 - PCA9555 16 relays, 4 - MCP23017
 		//                           , 5 - PCA9685, 6 - PCF8574
 		//6	    wifi module serial port
@@ -339,11 +359,9 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
 		if (len > PGNlength - 1)
 		{
-			// bit 6 set = ID assignment, adopt data[2] unconditionally (commissioning,
-			// one board connected); clear = data[2] must match our ID (normal update,
-			// multi-board safe). MDL.ID = data[2] below is a no-op in filtered mode.
-			bool AssignID = ((data[4] & 64) == 64);
-			if (GoodCRC(data, PGNlength) && (AssignID || data[2] == MDL.ID))
+			// config for this module only: data[2] must match our ID. The ID itself
+			// changes only by PGN 32508 (by MAC).
+			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
 			{
 				bool PinsOK = PinAllowed(data[7]) && PinAllowed(data[8]) && PinAllowed(data[9])
 					&& PinAllowed(data[10]) && PinAllowed(data[11]) && PinAllowed(data[12])
@@ -364,7 +382,6 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 
 				if (PinsOK)
 				{
-					MDL.ID = data[2];
 					MDL.SensorCount = data[3];
 
 					byte tmp = data[4];
@@ -399,7 +416,7 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 				else
 				{
 					// pins not usable on this board - discard the config,
-					// report via PGN 32401 byte 13 bit 7 for the app to alert
+					// report via PGN 32401 byte 10 bit 7 for the app to alert
 					ConfigRejected = true;
 					ConfigRejectedTime = millis();
 				}

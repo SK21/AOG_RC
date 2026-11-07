@@ -24,11 +24,11 @@ void SendComm()
         //13    Hz Hi
         //14    CRC
 
-        byte Data[20];
+        byte Data[29];      // shared by every report below; 32403 is the longest
 
         // an unassigned board (NewModuleID) sends no product reports: its ID doesn't fit the
-        // 4-bit module field and 25 would read as module 9. 32401 below carries the full ID,
-        // so the app still sees the board.
+        // 4-bit module field and 25 would read as module 9. 32401 and 32403 below carry the
+        // full ID, so the app still sees the board.
         if (MDL.ID <= 15)
         {
             for (int i = 0; i < MDL.SensorCount; i++)
@@ -84,21 +84,18 @@ void SendComm()
             }
         }
 
-        //PGN32401, module info from module to RC
+        //PGN32401, module status from module to RC
         //0     145
         //1     126
         //2     module ID
-        //3     Pressure Lo 
+        //3     Pressure Lo
         //4     Pressure Hi
         //5     wheel speed Lo  actual * 10
         //6     wheel speed Hi
         //7     wheel count Lo
         //8     wheel count mid
         //9     wheel count Hi
-        //10    InoType
-        //11    InoID lo
-        //12    InoID hi
-        //13    status
+        //10    status
         //      bit 0   work switch
         //      bit 1   wifi rssi < -80
         //      bit 2	wifi rssi < -70
@@ -106,7 +103,9 @@ void SendComm()
         //      bit 4   ethernet connected
         //      bit 5   good pin configuration
         //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
-        //14    CRC
+        //      bit 7   bad config
+        //11    CRC
+        // board type and firmware are in PGN 32403
 
         Data[0] = 145;
         Data[1] = 126;
@@ -123,18 +122,14 @@ void SendComm()
         Data[8] = 0;
         Data[9] = 0;
 
-        Data[10] = InoType;
-        Data[11] = (byte)InoID;
-        Data[12] = InoID >> 8;
-
         // status
-        Data[13] = 0;
-        if ((MDL.WorkPin != NC) && WorkPinOn()) Data[13] |= 0b00000001;
+        Data[10] = 0;
+        if ((MDL.WorkPin != NC) && WorkPinOn()) Data[10] |= 0b00000001;
 
-        if (EthernetConnected()) Data[13] |= 0b00010000;
+        if (EthernetConnected()) Data[10] |= 0b00010000;
 
-        if (GoodPins) Data[13] |= 0b00100000;
-        if (MDL.Is3Wire) Data[13] |= 0b01000000;
+        if (GoodPins) Data[10] |= 0b00100000;
+        if (MDL.Is3Wire) Data[10] |= 0b01000000;
 
         // config rejected: reported for ConfigRejectedReport ms after the
         // discarded packet, then self-clears
@@ -142,7 +137,7 @@ void SendComm()
         {
             if (millis() - ConfigRejectedTime < ConfigRejectedReport)
             {
-                Data[13] |= 0b10000000;
+                Data[10] |= 0b10000000;
             }
             else
             {
@@ -150,12 +145,44 @@ void SendComm()
             }
         }
 
-        Data[14] = CRC(Data, 14, 0);
+        Data[11] = CRC(Data, 11, 0);
 
         if (EthernetConnected())
         {
             // send ethernet
-            ether.sendUdp(Data, 15, SourcePort, DestinationIP, DestinationPort);
+            ether.sendUdp(Data, 12, SourcePort, DestinationIP, DestinationPort);
+        }
+
+        // PGN32403, identity report from module to RC: sent from the first cycle after boot, then every 2 s
+        //0     HeaderLo    147
+        //1     HeaderHi    126
+        //2     module ID   0-15, or 25 unassigned
+        //3-18  16 chars    board label, 0-padded (always empty: the Nano stores no label)
+        //19-24 MAC         the board's stored MAC (LoadMAC)
+        //25    InoType
+        //26    InoID lo
+        //27    InoID hi
+        //28    CRC
+        static uint32_t BoardIDLast = 0;
+        static bool BoardIDSent = false;
+        if (!BoardIDSent || millis() - BoardIDLast > 2000)
+        {
+            BoardIDSent = true;
+            BoardIDLast = millis();
+            Data[0] = 147;
+            Data[1] = 126;
+            Data[2] = MDL.ID;
+            for (byte i = 3; i < 19; i++) Data[i] = 0;
+            for (byte i = 0; i < 6; i++) Data[19 + i] = BoardMAC[i];
+            Data[25] = InoType;
+            Data[26] = (byte)InoID;
+            Data[27] = InoID >> 8;
+            Data[28] = CRC(Data, 28, 0);
+
+            if (EthernetConnected())
+            {
+                ether.sendUdp(Data, 29, SourcePort, DestinationIP, DestinationPort);
+            }
         }
     }
 }

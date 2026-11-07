@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 2116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 6116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 
@@ -235,15 +235,16 @@ bool BinEmpty[MaxProductCount];
 uint32_t BinChangeTime[MaxProductCount];		// millis() when the raw reading last matched the debounced state
 const uint16_t BinDebounce = 2500;				// ms: raw state must persist this long before the reported state flips
 
-// Deferred restart for config that arrives as multiple packets (PGN 32507 / 0xFF17):
-// restarting on the first packet would drop the rest, so apply+save each one and
-// restart after the config stream has been quiet for RestartDelay
+// Deferred restart for config that arrives as multiple packets (PGN 32507 / 0xFF17), and
+// for an ID assigned by MAC (PGN 32508 / 0xFF19) so the rest of the same Send still
+// reaches the board: restarting on the first packet would drop the rest, so apply+save
+// each one and restart after the config stream has been quiet for RestartDelay
 bool RestartPending = false;
-uint32_t RestartLastConfig = 0;					// millis() of the last 32507 packet
+uint32_t RestartLastConfig = 0;					// millis() of the last 32507/32508 packet
 const uint16_t RestartDelay = 1500;
 
 // Config rejection: a received 32507/32700 with pins invalid for this board is
-// discarded; reported in PGN 32401 byte 13 bit 7 for 2 s so the app can alert
+// discarded; reported in PGN 32401 byte 10 bit 7 for 2 s so the app can alert
 bool ConfigRejected = false;
 uint32_t ConfigRejectedTime = 0;			// millis() of the rejected packet
 const uint16_t ConfigRejectedReport = 2000;	// ms: how long the status bit stays set
