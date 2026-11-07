@@ -96,8 +96,12 @@ bool CANBus_Begin() {
 	ISOBUS.setMaxMB(16);
 	ISOBUS.setMBFilter(ACCEPT_ALL);
 
-	// Set identity number from module ID
-	ISOBUSid.identityNumber = MDL.ID + 1000;
+	// Identity number from the board's factory MAC (low 21 bits), so every board has its
+	// own NAME and two boards at the same module ID (e.g. new boards at 25) don't both
+	// win an address claim and share one CAN source address
+	uint8_t mac[6];
+	TeensyMAC(mac);
+	ISOBUSid.identityNumber = ((uint32_t)(mac[3] & 0x1F) << 16) | ((uint32_t)mac[4] << 8) | mac[5];
 
 	return true;
 }

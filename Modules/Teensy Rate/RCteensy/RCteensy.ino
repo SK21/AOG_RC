@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 6116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 7116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 
