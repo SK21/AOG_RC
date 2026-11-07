@@ -1,69 +1,35 @@
 # AOG RateController Project Notes
 
-## Current Status (Feb 6, 2026)
-**ISOBUS Phase 1 COMPLETE** - Bidirectional communication with Teensy modules via proprietary PGNs.
-- Multi-driver support: SLCAN, InnoMaker USB2CAN, PCAN
-- UI configuration for driver selection, COM port, and diagnostics
-- Status indicators show actual ISOBUS module data flow
-- PGN traffic logging in Help form
+## Current Status (Nov 7, 2026)
+**Board identity by MAC — Phase 1 done on branch `Identity-fix`, pushed; bench test pending.**
+Boards are identified by MAC (PGN 32403), given their module ID by MAC (PGN 32508), and boards
+with old firmware are rejected. Firmware ×3 at InoID 7116. Phase 2 (per-PC MAC map) is deferred.
+Design and status: `D:\Sync\RATE CONTROL\Design Docs\Board_Identity_MAC.md` and `Outstanding_Items.md`.
 
-**Teensy TC Client Implementation IN PROGRESS** - ISO 11783-10 TC Client on Teensy modules.
-- DDOP (Device Description Object Pool) builder
-- Transport Protocol for multi-frame messages
-- TC Client state machine with Working Set Master, activation sequence
-- Process data exchange (setpoints, actual rates, section control)
-
-**Next Phase: TC Server Implementation** (Option A - Gateway as Translator)
-- Goal: Level 4 - RC as full Task Controller Server for external ISOBUS implements
-- Architecture: Gateway handles TC protocol, translates to/from RC
-- Teensy modules can use either proprietary messages or full TC Client
+**ISOBUS / Task Controller work** lives on the `RC-Isobus` branch, not here.
 
 ## Documentation
-- **TC Server Design:** `docs/TC_Server_Design.md` (architecture for standard ISOBUS compliance)
-- **ISOBUS Integration Design:** `docs/ISOBUS_Integration_Design.md` (Phase 1, ~2700 lines)
-- **Gateway Notes:** See separate Gateway repository
+- **Design docs:** `D:\Sync\RATE CONTROL\Design Docs\` (board identity, ESP32 EEPROM records, pressure gate, PID, ISOBUS)
+- **User manual and help pages:** `D:\Sync\RATE CONTROL\User Manual\` — PDF build steps in `Building the PDFs.md`
 
 ## Project Structure
 ```
 AOG_RC/
 ├── RateAppSource/           # RateController Windows app (C# WinForms)
-├── Modules/Teensy Rate/     # Teensy 4.1 rate module firmware
-│   └── RCteensy/
-│       ├── RCteensy.ino     # Main firmware
-│       ├── CANBus.ino       # ISOBUS CAN implementation
-│       ├── TCClient.ino     # TC Client state machine (ISO 11783-10)
-│       ├── DDOP.ino         # Device Description Object Pool builder
-│       ├── TP.ino           # Transport Protocol for multi-frame messages
-│       ├── TCDefs.h         # Shared TC/DDI definitions
-│       └── Send.ino         # UDP/Ethernet send
+├── Modules/
+│   ├── Teensy Rate/RCteensy/   # Teensy 4.1 rate firmware (UDP + CAN)
+│   ├── ESP32 Rate/RC_ESP32/    # ESP32 rate firmware (Ethernet + WiFi)
+│   ├── Nano/RCnano/            # Arduino Nano rate firmware (ENC28J60 Ethernet)
+│   └── EraseSettings/          # Testing tool: blanks EEPROM on Teensy/Nano
 └── RateControllerApp/       # Runtime output directory
 ```
 
-## IsobusGateway - MOVED TO SEPARATE REPOSITORY
-The IsobusGateway project has been moved to its own repository:
-**Location:** `F:\Documents\GitHub\RateControl\Gateway`
-
-The RateController project includes pre-built copies of:
-- `RateAppSource/RateController/IsobusGateway.exe`
-- `RateAppSource/RateController/gateway.json`
-
-These are copied to the output directory at build time. If modifying the gateway,
-rebuild from the Gateway repository and copy the updated exe.
-
 ## RateController App
 Windows application for agricultural rate control. Communicates with:
-- Rate control modules via UDP (Ethernet) or CAN (ISOBUS)
-- Teensy 4.1 modules with MCP2562 CAN transceiver
-- IsobusGateway for ISOBUS ↔ UDP translation
-
-## IsobusGateway
-**Now in separate repository:** `F:\Documents\GitHub\RateControl\Gateway`
-
-Key points:
-- Translates between RC UDP PGNs (32xxx) and ISOBUS proprietary PGNs (0xFFxx)
-- Uses AgIsoStack++ for ISOBUS protocol
-- Supports multiple CAN drivers: SLCAN, InnoMaker USB2CAN, PCAN
-- Configuration via gateway.json (auto-updated by RateController)
+- Rate control modules via UDP (Ethernet or WiFi)
+- Teensy 4.1 modules over CAN, through the app's own CAN link (`CanBridgeComm` +
+  `CanFrameTranslator`; SLCAN, InnoMaker USB2CAN, PCAN). The separate IsobusGateway (C++) was
+  replaced by this in Feb 2026 and is no longer used.
 
 ## UDP Protocol Summary
 
@@ -75,100 +41,80 @@ Key points:
 | 32502 | 24 | PID settings |
 | 32504 | 9 | Wheel speed config |
 | 32505 | 6 | Max pressure gate threshold (raw ADC) |
-| 32506 | 20 | Board ID label set (16-char description → module EEPROM) |
-| 32700 | 32 | Module config (pins, relay types, CommMode) |
+| 32506 | 20 | Board description set (16 chars → module EEPROM; Teensy/ESP32 only — the Nano stores none) |
+| 32508 | 10 | Assign module ID by MAC: [2-7] MAC, [8] new ID 0-7, [9] CRC. Only the matching board acts; it saves and restarts after ~1.5 s (deferred) so the rest of the same Send reaches it at its new ID |
+| 32700 | 32 | Module config (pins, relay types, CommMode). Bit 6 of the commands byte (old broadcast assign) is never sent and is ignored by firmware |
 
 ### Module → RC PGNs (data)
 | PGN | Size | Description |
 |-----|------|-------------|
 | 32400 | 15 | Sensor data (rate, qty, PWM, Hz) |
-| 32401 | 15 | Module status (pressure, wheel speed, flags) |
+| 32401 | 12 | Module status: [2] ID, [3-4] pressure, [5-6] wheel speed ×10, [7-9] wheel count, [10] status bits, [11] CRC. Status only — type/firmware moved to 32403 |
 | 32402 | 24 | PID diagnostics log (per-sensor, PID-loop cadence) |
-| 32403 | 20 | Board ID label report (16-char description, ~2 s cyclic) |
+| 32403 | 29 | Identity report: [2] ID (0-7 or 25), [3-18] description, [19-24] MAC, [25] InoType, [26-27] InoID, [28] CRC. Sent at boot (retried until it goes out) then every 2 s, also at ID 25 |
 
 ### CAN proprietary frame mapping (CommMode 1/2, via `CanFrameTranslator`)
-Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF). Board label:
-- RC → module: PGN 32506 → **0xFF11/0xFF12/0xFF13** (16 chars in 3 frames, `data[0]`=ModID + 7 chars, commit on 0xFF13)
-- module → RC: **0xFF14/0xFF15/0xFF16** → PGN 32403 (assembled on 0xFF16)
-- Stored in a dedicated EEPROM slot (offset 3) that **survives a firmware reflash** (unlike settings).
+Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
+- 0xFF00/0xFF01 → 32400; **0xFF02 alone → 12-byte 32401**; 0xFF08 = identification (type, InoID, byte 4 full ID).
+- Description RC → module: 32506 → **0xFF11/0xFF12/0xFF13** (commit on 0xFF13).
+- Identity module → RC: **0xFF14/0xFF15/0xFF16** (description) then **0xFF18** (`[0]` full ID, `[1-6]` MAC). The translator builds the 29-byte 32403 when 0xFF18 arrives, with type/InoID from the last 0xFF08 of the same CAN source address.
+- Assign by MAC RC → module: 32508 → **0xFF19** (`[0]` new ID, `[1-6]` MAC).
+- The Teensy ISOBUS NAME identity number is the low 21 bits of its MAC, so two boards at the same ID still claim different addresses.
 
-### Unassigned boards (ID 25)
-- New/blank boards start at **ID 25** (`NewModuleID`, all 3 firmwares; app `Props.NewModuleID`). A firmware update keeps the stored ID when it is 0-15 (`LoadData()` ID-keep reads EEPROM 23; `ModuleConfig.ID` must stay the first field).
-- At 25 a board sends only PGN 32401 (+ 32403 on Teensy/ESP32); per-product PGNs (32400, 32402) are suppressed because Mod/Sen packing would read 25 as module 9.
-- CAN (Teensy): only 0xFF08 is sent, low nibble = 15, **byte 4 = full ID** (always sent; >15 = unassigned). `CanFrameTranslator` turns that into a 32401 from ID 25 instead of a module-15 entry.
-- App: `PGN32401.NewBoardConnected()`; the 32700 bit-6 assign guard counts a new board as connected; Config page shows `lbNewBoard`.
+### Board identity and new boards (ID 25)
+- Boards are identified by MAC. App: `PGN32403` is the board list keyed by MAC (`BoardsAt`, `AnyLiveAt`, `NewBoards`, `Accepted`, `Rejected`, `DuplicateID`); live = heard within 5 s.
+- **Old firmware is rejected from 32403 only:** shorter than 29 bytes, or InoID older than `MinInoDate`. Rejected wins over an updated board on the same ID. `PGN32401.Connected()` needs an accepted board; 32400 and 32500-32502 are ignored/blocked for a rejected ID. A board that sends no 32403 (e.g. an older Nano) never appears at all.
+- New/blank boards start at **ID 25** (`NewModuleID`). **Module IDs are 0-7** (`MaxModuleID = 7` in firmware, `Props.MaxModules = 8` in the app); a stored ID above 7 other than 25 resets to 25 at boot, and assigns above 7 are ignored. A firmware update keeps a stored ID of 0-7 (`LoadData()` reads EEPROM 23; `ModuleConfig.ID` must stay the first field).
+- At 25 a board sends 32401 and 32403 only; per-product PGNs are suppressed (Mod/Sen packing would read 25 as module 9). On CAN only 0xFF08 and the identity frames are sent.
+- MAC: ESP32 `ChipMAC()` (base efuse MAC), Teensy `TeensyMAC()` (fuses), Nano random `0A:0B:42:r:r:r` made once and stored at EEPROM 3-9 (marker 0xA5), also used for the ENC28J60.
+- App UI: **Modules > Boards** (`frmMenuNetwork`) lists boards and holds pending changes (`Core.SetPending`, by MAC, in memory); **Send** (`frmMenu.SendModuleConfig`) sends 32508, then pending 32506s, then 32507 + 32700. Send is refused (and pending changes dropped) when the edited module has no board or old firmware, or a moved board is gone / its target taken.
 - ESP32 hotspot name: `APname_<ID>_<MAC bytes 3-5 hex>`, e.g. `RateModule_25_123456`; the WiFi list on Comm reads the ID from the name.
-
-### Gateway PGNs
-| PGN | Direction | Description |
-|-----|-----------|-------------|
-| 32600 | Gateway → RC | ISOBUS rate from Task Controller |
-| 32604 | Gateway → RC | ISOBUS speed from tractor |
-| 32605 | Gateway → RC | Gateway status flags |
 
 ## Architecture
 ```
-RateController (C#) ──UDP──► IsobusGateway (C++) ──CAN──► Teensy Modules
-  TASK CONTROLLER            TC SERVER PROXY              TC CLIENTS
+RateController (C#)
+  ├── UDP (Ethernet / WiFi)  → Teensy (CommMode 0/2), ESP32, Nano
+  └── CAN (CanBridgeComm + CanFrameTranslator) → Teensy (CommMode 1/2)
 ```
-
-## Implementation Status
-| Phase | Status | Notes |
-|-------|--------|-------|
-| 1. Gateway Foundation | ✓ Complete | CAN, PGN translation, speed |
-| 2. Gateway TC Server | Not Started | TC protocol proxy for RC |
-| 3. RateController Integration | ✓ Complete | Full bidirectional, multi-driver |
-| 4. Speed & Diagnostics | ✓ Complete | Speed, status indicators, debug toggle |
-| 5. Testing | ✓ Complete | Green light, 200ms timing verified |
-| 6. Teensy TC Client | In Progress | ISO 11783-10 implementation started |
 
 ## Key Files
 
 ### RateController (C#)
-- `RateController/Classes/IsobusComm.cs` - Gateway UDP communication, status tracking
-- `RateController/Classes/Props.cs` - CanDriver enum, CanPort, ShowCanDiagnostics
-- `RateController/Menu/frmMenuOptions.cs` - ISOBUS config UI (driver, port, diagnostics, indicators)
+- `RateController/Classes/Can/CanBridgeComm.cs` - CAN link (replaces the old Gateway/IsobusComm)
+- `RateController/Classes/Can/CanFrameTranslator.cs` - 0xFFxx ↔ 32xxx translation
+- `RateController/PGNs/PGN32403.cs` - board list by MAC, rejection
+- `RateController/Menu/frmMenuNetwork.cs` - Boards page
+- `RateController/Classes/Props.cs` - CanDriver enum, CanPort, MaxModules, NewModuleID
 
 ### Teensy Firmware
 - `Modules/Teensy Rate/RCteensy/RCteensy.ino` - Main firmware, CommMode setting
-- `Modules/Teensy Rate/RCteensy/CANBus.ino` - ISOBUS CAN (FlexCAN_T4), address claim, PGN routing
-- `Modules/Teensy Rate/RCteensy/TCClient.ino` - TC Client state machine (ISO 11783-10)
-- `Modules/Teensy Rate/RCteensy/DDOP.ino` - Device Description Object Pool builder
-- `Modules/Teensy Rate/RCteensy/TP.ino` - Transport Protocol for multi-frame messages
-- `Modules/Teensy Rate/RCteensy/TCDefs.h` - Shared DDI/element/state definitions
+- `Modules/Teensy Rate/RCteensy/CANBus.ino` - CAN (FlexCAN_T4), address claim, PGN routing
 - `Modules/Teensy Rate/RCteensy/Send.ino` - UDP Ethernet send
 
-### IsobusGateway (separate repo)
-See `F:\Documents\GitHub\RateControl\Gateway` for gateway source code.
-
-## Future Work - TC Server Implementation
-
-See `docs/TC_Server_Design.md` for detailed architecture.
-
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 1 | Gateway TC Server Foundation - Working Set detection | Not Started |
-| 2 | DDOP Parsing & Capabilities - Report implement structure to RC | Not Started |
-| 3 | Process Data Receive - Actual rates from external implements | Not Started |
-| 4 | Process Data Send - Setpoints and section control to implements | Not Started |
-| 5 | Prescription/Task Data - Variable rate from maps | Not Started |
-| 6 | Integration & Testing - External implements | Not Started |
-| 7 | Teensy TC Client - Full ISOBUS compliance for Teensy modules | In Progress |
-
-**Additional future items:**
-- ISOBUS Speed Source - Use tractor ground speed (PGN 65267)
-- ISOBUS Diagnostics - DM1/DM2 fault codes from bus
-
 ## Known Issues
-
-### Gateway CPU Usage - NEEDS INVESTIGATION
-Gateway uses ~20-23% CPU even after optimizations. Initial changes (1ms→5ms main loop, 1ms→2ms SLCAN thread, debug→info logging) did not significantly reduce usage. Further investigation needed:
-- Profile to identify hotspots
-- Check AgIsoStack++ internal update loops
-- Consider event-driven vs polling architecture
-- Investigate serial port read efficiency
+- Windows can block UDP ports after an improper shutdown (see the end of this file).
+- Some PC WiFi adapters (e.g. an old Ralink card) can't see or join the ESP32 hotspot; a phone can. Not a firmware issue.
 
 ## Recent Changes
+
+### Nov 5-7, 2026 — Board Identity by MAC (branch `Identity-fix`) — firmware ×3 + app
+
+Design: `D:\Sync\RATE CONTROL\Design Docs\Board_Identity_MAC.md`. Several new boards at ID 25
+looked like one board, the broadcast assign (32700 bit 6) was taken by every board that heard it,
+duplicate detection was guesswork, and two new Nanos had the same MAC and IP.
+- **Protocol:** 32403 grows to 29 bytes (ID, description, MAC, InoType, InoID); 32401 shrinks to
+  12 bytes (status only); new 32508 assign by MAC with a deferred restart; CAN 0xFF18 (identity)
+  and 0xFF19 (assign). 32700 bit 6 assign removed.
+- **App:** board list keyed by MAC (`PGN32403`); old firmware rejected from 32403 and its module
+  blocked; Boards page redone (list, Save then Send, preset offer for a new board); Load preset
+  moved to Config; Send refused for a module with no board or old firmware, which drops pending
+  board changes; undoing a pending move restores the config pages; no description for a Nano.
+- **Firmware (InoID 7116):** 29-byte 32403 retried until it actually goes out, 12-byte 32401,
+  32508 handler, module IDs limited to 0-7, Nano random MAC at EEPROM 3-9, Teensy NAME from its MAC.
+- **Testing tool:** `Modules/EraseSettings` (Teensy/Nano hex next to each firmware) blanks EEPROM.
+- **Release:** firmware ×3 and the app ship together. A new app rejects old firmware (an older
+  Nano isn't listed at all); an old app shows new boards as not connected.
+- Help pages and manual updated (Boards, Config, troubleshooting).
 
 ### Jul 9, 2026 — Multi-Sensor Calibration (per-sensor AutoOn) — firmware ×3 + app
 
