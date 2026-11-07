@@ -177,7 +177,8 @@ void SendComm()
         static bool BoardIDSent = false;
         if (!BoardIDSent || millis() - BoardIDLast > 2000)
         {
-            BoardIDSent = true;
+            // BoardIDSent is set only once a report actually goes out, so a first report
+            // lost to a link that isn't up yet is retried next cycle, not 2 s later
             BoardIDLast = millis();
             byte B[29];
             B[0] = 147;
@@ -198,6 +199,7 @@ void SendComm()
                 UDPcomm.beginPacket(DestinationIP, DestinationPort);
                 UDPcomm.write(B, 29);
                 UDPcomm.endPacket();
+                BoardIDSent = true;
             }
         }
     }

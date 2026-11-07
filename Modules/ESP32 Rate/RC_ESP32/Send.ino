@@ -223,7 +223,8 @@ void SendComm()
 		static bool BoardIDSent = false;
 		if (!BoardIDSent || millis() - BoardIDLast > 2000)
 		{
-			BoardIDSent = true;
+			// BoardIDSent is set only once a report actually goes out, so a first report
+			// lost to a link that isn't up yet is retried next cycle, not 2 s later
 			BoardIDLast = millis();
 			byte B[29];
 			B[0] = 147;
@@ -251,6 +252,7 @@ void SendComm()
 					UDP_Ethernet.write(B, 29);
 					UDP_Ethernet.endPacket();
 					Sent = true;
+					BoardIDSent = true;
 				}
 			}
 
@@ -259,7 +261,7 @@ void SendComm()
 			{
 				UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
 				UDP_Wifi.write(B, 29);
-				UDP_Wifi.endPacket();
+				if (UDP_Wifi.endPacket()) BoardIDSent = true;	// 0 when it couldn't be sent
 			}
 		}
 	}

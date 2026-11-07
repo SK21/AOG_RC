@@ -25,7 +25,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 5116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
+const uint16_t InoID = 7116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
 								// resets stored settings — bump a record's version below for that
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U

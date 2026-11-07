@@ -804,8 +804,9 @@ void CANBus_SendModuleIdent() {
 // from 0xFF08).
 // 0xFF14-16: data[0] = ModID (low nibble; 15 while unassigned, as in 0xFF08), data[1..7] = 7 chars.
 // 0xFF18:    data[0] = full module ID (25 = unassigned), data[1..6] = MAC, data[7] = 0.
+// Returns true when 0xFF18 went out: the translator builds the 32403 only on that frame.
 //-----------------------------------------------------------------------------
-void CANBus_SendBoardLabel() {
+bool CANBus_SendBoardLabel() {
 	uint8_t data[8];
 	uint8_t label[16];
 	uint8_t mod = (MDL.ID <= 15) ? MDL.ID : 0x0F;
@@ -834,7 +835,7 @@ void CANBus_SendBoardLabel() {
 	data[0] = MDL.ID;                            // full ID
 	TeensyMAC(data + 1);                         // MAC, bytes 1-6
 	data[7] = 0;
-	CANBus_SendProprietaryB(0x18, data, 8);
+	return CANBus_SendProprietaryB(0x18, data, 8);
 }
 
 //-----------------------------------------------------------------------------
@@ -887,13 +888,13 @@ void CANBus_Update() {
 		CANBus_SendModuleIdent();
 	}
 
-	// Send the identity report every 2 s, from the first update after boot (mirrors the
-	// UDP PGN 32403 report). Unassigned boards send it too: 0xFF18 carries the full ID.
+	// Send the identity report every 2 s, from the first update after boot that can send
+	// (the address must be claimed); retried every SendTime until it goes out. Mirrors the
+	// UDP PGN 32403 report. Unassigned boards send it too: 0xFF18 carries the full ID.
 	static bool boardIdSent = false;
-	if (!boardIdSent || millis() - lastBoardIdSend >= 2000) {
-		boardIdSent = true;
+	if ((!boardIdSent && millis() - lastBoardIdSend >= SendTime) || millis() - lastBoardIdSend >= 2000) {
 		lastBoardIdSend = millis();
-		CANBus_SendBoardLabel();
+		boardIdSent = CANBus_SendBoardLabel() || boardIdSent;
 	}
 }
 
