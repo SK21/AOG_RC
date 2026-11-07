@@ -154,10 +154,8 @@ namespace RateController.Classes.Can
             // An unassigned Teensy (Props.NewModuleID) sends only 0xFF08, with module 15 in the
             // low nibble and its full ID in byte 4. It's dropped here so no module-15 entry or
             // "connected" event is created. Its identity comes via 0xFF18 -> PGN 32403.
-            if (pgnLow == 0x08 && frame.Dlc >= 5 && frame.Data[4] > 15)
-            {
-            }
-            else
+            bool unassigned = pgnLow == 0x08 && frame.Dlc >= 5 && frame.Data[4] > 15;
+            if (!unassigned)
             {
                 var state = GetOrCreateState(moduleId);
 

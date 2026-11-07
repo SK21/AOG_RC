@@ -125,6 +125,22 @@ namespace RateController.PGNs
             return Result;
         }
 
+        // true when any live board reports this ID: Accepted() and the other yes/no checks,
+        // which run many times a second, so no list is built or sorted
+        public bool AnyLiveAt(int ID)
+        {
+            bool Result = false;
+            foreach (BoardInfo Brd in cBoards.Values)
+            {
+                if (Brd.ID == ID && Brd.Live)
+                {
+                    Result = true;
+                    break;
+                }
+            }
+            return Result;
+        }
+
         public List<BoardInfo> NewBoards() => BoardsAt(Props.NewModuleID);
 
         // the live board with this MAC, or null
@@ -143,7 +159,7 @@ namespace RateController.PGNs
         }
 
         // a good board is live at this ID and no old firmware shares it (rejected wins)
-        public bool Accepted(int ID) => !Rejected(ID) && BoardsAt(ID).Count > 0;
+        public bool Accepted(int ID) => !Rejected(ID) && AnyLiveAt(ID);
 
         // more than one board at this ID
         public bool DuplicateID(int Module)

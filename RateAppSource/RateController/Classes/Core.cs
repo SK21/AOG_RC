@@ -330,7 +330,7 @@ namespace RateController.Classes
         // a module that is not in use. A board that is powered off isn't seen (Phase 2 MAC map).
         public static bool ModuleInUse(int moduleID)
         {
-            return ModulesBoardID.BoardsAt(moduleID).Count > 0 || ModulesBoardID.Rejected(moduleID);
+            return ModulesBoardID.AnyLiveAt(moduleID) || ModulesBoardID.Rejected(moduleID);
         }
 
         // in use, or the target of a pending ID change: no other board may be lined up for it
