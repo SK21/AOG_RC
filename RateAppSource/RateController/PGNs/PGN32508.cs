@@ -10,7 +10,8 @@ namespace RateController.PGNs
         //2-7   MAC         the board that takes the ID; every other board ignores it
         //8     new module ID 0-15
         //9     CRC
-        // The board saves the ID and restarts. Its settings go with the next Send.
+        // The board saves the ID and restarts after about 1.5 s, so the rest of the same Send
+        // (32506, 32507, 32700) reaches it at the new ID. Over CAN it goes as 0xFF19.
 
         private const byte cByteCount = 10;
 

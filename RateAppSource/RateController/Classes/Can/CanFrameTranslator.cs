@@ -30,12 +30,17 @@ namespace RateController.Classes.Can
     ///   0xFF12: Board label set 2 (from PGN 32506, chars 7-13)
     ///   0xFF13: Board label set 3 (from PGN 32506, chars 14-15, commit)
     ///   0xFF17: Sensor pins      (from PGN 32507, one frame per sensor)
+    ///   0xFF19: Assign ID by MAC (from PGN 32508): [0]=new ID, [1-6]=MAC, [7]=0
     ///
-    /// Frame protocol (Teensy → RC):
-    ///   0xFF14: Board label rpt 1 (→ PGN 32403, chars 0-6)
-    ///   0xFF15: Board label rpt 2 (→ PGN 32403, chars 7-13)
-    ///   0xFF16: Board label rpt 3 (→ PGN 32403, chars 14-15, assemble)
-    /// Board-label frames carry moduleId in data[0] low nibble + 7 chars in data[1-7].
+    /// Frame protocol (Teensy → RC), identity report:
+    ///   0xFF14: Board label rpt 1 (chars 0-6)
+    ///   0xFF15: Board label rpt 2 (chars 7-13)
+    ///   0xFF16: Board label rpt 3 (chars 14-15)
+    ///   0xFF18: Identity          ([0]=full module ID, [1-6]=MAC, [7]=0) → assembles PGN 32403
+    /// Label frames carry the module ID in data[0] low nibble (15 while unassigned) + 7 chars
+    /// in data[1-7]. The 29-byte PGN 32403 is built on 0xFF18 from that node's label frames
+    /// and its last 0xFF08 (type and firmware). Old firmware sends no 0xFF18, so no 32403,
+    /// and the app rejects the board.
     /// </summary>
     public class CanFrameTranslator
     {
@@ -50,14 +55,23 @@ namespace RateController.Classes.Can
             public byte[] Last0xFF02;  // ModuleStatus
             public byte[] Last0xFF08;  // ModuleIdentification
             public byte[] Last0xFF09;  // WheelCounts (optional, calibration mode)
-            public byte[] Last0xFF14;  // BoardLabel report part 1
-            public byte[] Last0xFF15;  // BoardLabel report part 2
-            public byte[] Last0xFF16;  // BoardLabel report part 3
             public DateTime Last0xFF08Time = DateTime.MinValue;
             public bool WasConnected = false;
         }
 
+        // Per-node cache for the identity report, keyed by CAN source address: unassigned
+        // boards all report module 15 in the label frames, so the module number can't tell
+        // two of them apart. Every node has its own claimed address.
+        private class SourceState
+        {
+            public byte[] Last0xFF08;  // ModuleIdentification (type, firmware)
+            public byte[] Last0xFF14;  // BoardLabel report part 1
+            public byte[] Last0xFF15;  // BoardLabel report part 2
+            public byte[] Last0xFF16;  // BoardLabel report part 3
+        }
+
         private readonly Dictionary<int, ModuleState> _modules = new Dictionary<int, ModuleState>();
+        private readonly Dictionary<byte, SourceState> _sources = new Dictionary<byte, SourceState>();
 
         /// <summary>Raised when PGN 32400 (sensor data) is assembled from 0xFF00+0xFF01.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32400Ready;
@@ -65,7 +79,7 @@ namespace RateController.Classes.Can
         /// <summary>Raised when PGN 32401 (module status) is assembled from 0xFF02.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32401Ready;
 
-        /// <summary>Raised when PGN 32403 (board label) is assembled from 0xFF14+0xFF15+0xFF16.</summary>
+        /// <summary>Raised when PGN 32403 (identity report) is assembled on 0xFF18, from 0xFF14-16 and 0xFF08.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32403Ready;
 
         /// <summary>Raised when 0xFF08 is first seen from a module (module came online).</summary>
@@ -111,6 +125,32 @@ namespace RateController.Classes.Can
 
             byte pgnLow = ps;
             int moduleId = frame.Data[0] & 0x0F;
+            byte sa = (byte)(frame.Id & 0xFF);
+
+            // identity report frames, by source node
+            switch (pgnLow)
+            {
+                case 0x08:
+                    if (frame.Dlc >= 4) GetOrCreateSource(sa).Last0xFF08 = CloneData(frame.Data, 8);
+                    break;
+
+                case 0x14:  // 0xFF14 — Board label report part 1
+                    if (frame.Dlc >= 8) GetOrCreateSource(sa).Last0xFF14 = CloneData(frame.Data, 8);
+                    return;
+
+                case 0x15:  // 0xFF15 — Board label report part 2
+                    if (frame.Dlc >= 8) GetOrCreateSource(sa).Last0xFF15 = CloneData(frame.Data, 8);
+                    return;
+
+                case 0x16:  // 0xFF16 — Board label report part 3
+                    if (frame.Dlc >= 3) GetOrCreateSource(sa).Last0xFF16 = CloneData(frame.Data, 8);
+                    return;
+
+                case 0x18:  // 0xFF18 — Identity (assemble PGN 32403)
+                    if (frame.Dlc >= 7) TryAssemble32403(GetOrCreateSource(sa), frame.Data);
+                    return;
+            }
+
             // An unassigned Teensy (Props.NewModuleID) sends only 0xFF08, with module 15 in the
             // low nibble and its full ID in byte 4. It's dropped here so no module-15 entry or
             // "connected" event is created. Its identity comes via 0xFF18 -> PGN 32403.
@@ -167,30 +207,6 @@ namespace RateController.Classes.Can
                     case 0x09:  // 0xFF09 — Wheel Counts (24-bit, calibration mode)
                         if (frame.Dlc >= 4)
                             state.Last0xFF09 = CloneData(frame.Data, 8);
-                        break;
-
-                    case 0x14:  // 0xFF14 — Board label report part 1
-                        if (frame.Dlc >= 8)
-                        {
-                            state.Last0xFF14 = CloneData(frame.Data, 8);
-                            TryAssemble32403(state);
-                        }
-                        break;
-
-                    case 0x15:  // 0xFF15 — Board label report part 2
-                        if (frame.Dlc >= 8)
-                        {
-                            state.Last0xFF15 = CloneData(frame.Data, 8);
-                            TryAssemble32403(state);
-                        }
-                        break;
-
-                    case 0x16:  // 0xFF16 — Board label report part 3 (assemble)
-                        if (frame.Dlc >= 3)
-                        {
-                            state.Last0xFF16 = CloneData(frame.Data, 8);
-                            TryAssemble32403(state);
-                        }
                         break;
                 }
             }
@@ -290,25 +306,33 @@ namespace RateController.Classes.Can
             PGN32401Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }
 
-        private void TryAssemble32403(ModuleState state)
+        private void TryAssemble32403(SourceState src, byte[] f18)
         {
-            if (state.Last0xFF14 == null || state.Last0xFF15 == null || state.Last0xFF16 == null) return;
+            // waits for the node's label frames and its 0xFF08 (every 500 ms)
+            if (src.Last0xFF08 == null || src.Last0xFF14 == null || src.Last0xFF15 == null || src.Last0xFF16 == null) return;
 
-            // PGN 32403 (20 bytes): header 0x93 0x7E
-            //  [2]     moduleId   ← f14[0] & 0x0F
+            // PGN 32403 (29 bytes): header 0x93 0x7E
+            //  [2]     moduleId   ← f18[0] (full ID, 25 = unassigned)
             //  [3-9]   chars 0-6  ← f14[1-7]
             //  [10-16] chars 7-13 ← f15[1-7]
             //  [17-18] chars 14-15← f16[1-2]
-            //  [19]    CRC
-            var pgn = new byte[20];
+            //  [19-24] MAC        ← f18[1-6]
+            //  [25]    InoType    ← f08[1]
+            //  [26-27] InoID      ← f08[2-3]
+            //  [28]    CRC
+            var pgn = new byte[29];
             pgn[0] = 0x93;
             pgn[1] = 0x7E;
-            pgn[2] = (byte)(state.Last0xFF14[0] & 0x0F);
-            Array.Copy(state.Last0xFF14, 1, pgn, 3, 7);
-            Array.Copy(state.Last0xFF15, 1, pgn, 10, 7);
-            pgn[17] = state.Last0xFF16[1];
-            pgn[18] = state.Last0xFF16[2];
-            pgn[19] = CalcCrc(pgn, 19);
+            pgn[2] = f18[0];
+            Array.Copy(src.Last0xFF14, 1, pgn, 3, 7);
+            Array.Copy(src.Last0xFF15, 1, pgn, 10, 7);
+            pgn[17] = src.Last0xFF16[1];
+            pgn[18] = src.Last0xFF16[2];
+            Array.Copy(f18, 1, pgn, 19, 6);
+            pgn[25] = src.Last0xFF08[1];
+            pgn[26] = src.Last0xFF08[2];
+            pgn[27] = src.Last0xFF08[3];
+            pgn[28] = CalcCrc(pgn, 28);
 
             PGN32403Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }
@@ -485,6 +509,19 @@ namespace RateController.Classes.Can
                     }
                     break;
 
+                case 32508:
+                    // → 0xFF19 (assign module ID by MAC)
+                    // PGN32508 layout: [2-7]=MAC, [8]=new module ID
+                    if (pgnData.Length >= 9)
+                    {
+                        frames.Add(BuildFrame(0x19, new byte[] {
+                            pgnData[8],  // new ID
+                            pgnData[2], pgnData[3], pgnData[4], pgnData[5], pgnData[6], pgnData[7],  // MAC
+                            0
+                        }));
+                    }
+                    break;
+
                 case 32700:
                     // → 0xFF0C (config part 1) + 0xFF0D (part 2) + 0xFF0E (part 3) + 0xFF0F (part 4/commit)
                     // PGN32700 layout: [2]=ModID, [3]=SensorCount, [4]=commands,
@@ -534,6 +571,16 @@ namespace RateController.Classes.Can
                 _modules[moduleId] = state;
             }
             return state;
+        }
+
+        private SourceState GetOrCreateSource(byte sa)
+        {
+            if (!_sources.TryGetValue(sa, out var src))
+            {
+                src = new SourceState();
+                _sources[sa] = src;
+            }
+            return src;
         }
 
         private static byte[] CloneData(byte[] src, int minSize)
