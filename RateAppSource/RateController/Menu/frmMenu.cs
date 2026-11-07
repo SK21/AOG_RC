@@ -1029,17 +1029,19 @@ namespace RateController
                 // no board change: the module being edited must have an accepted board.
                 // Old firmware would apply 32507/32700 and restart while its rate commands
                 // are blocked (design §5 item 3); with no board the settings go nowhere.
-                // Nothing is sent, so pending descriptions are kept for the next Send.
+                // Nothing is sent, and pending descriptions are dropped.
                 if (Core.ModulesBoardID.Rejected(editID))
                 {
                     Props.ShowMessage("Module " + editID.ToString() + ": " + Lang.lgFirmwareUpdateRequired,
                         "Config", 15000);
+                    DropPendingBoards();
                     proceed = false;
                 }
                 else if (!Core.ModulesStatus.Connected(editID))
                 {
                     Props.ShowMessage("Module " + editID.ToString() + ": " + Lang.lgNotConnected,
                         "Config", 15000);
+                    DropPendingBoards();
                     proceed = false;
                 }
             }
@@ -1053,7 +1055,7 @@ namespace RateController
                     // settings were meant for the moved board, so nothing is sent
                     Props.ShowMessage(brd == null ? Lang.lgBoardGone
                         : string.Format(Lang.lgModuleInUse, move.NewID), "Boards", 15000);
-                    Core.ClearPending(move.MAC);
+                    DropPendingBoards();
                     proceed = false;
                 }
                 else if (Core.ModuleConfig.GetData()[2] != move.NewID)
@@ -1089,6 +1091,14 @@ namespace RateController
                 Props.ShowMessage(msg, "Config", 15000);
                 HighlightUpdateButton(false);
             }
+        }
+
+        // a refused Send drops every pending board change: kept, it would go out on a later
+        // Send the user meant for something else. The user can save it again if needed.
+        // Not used for the Save/Cancel-first prompt, where the user sends again at once.
+        private void DropPendingBoards()
+        {
+            foreach (PGNs.PendingBoard p in Core.PendingBoards()) Core.ClearPending(p.MAC);
         }
 
         // 32506 to each board with a saved description: at its new ID for the board just
