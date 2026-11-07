@@ -493,12 +493,13 @@ namespace RateController.Menu
 
         // 32506 is addressed by module ID: it reaches the board at 0-15 when no other board
         // shares the ID, or at the new ID it is being given in the same Send. A new board
-        // with no module chosen, or a duplicate, can't take a description.
+        // with no module chosen, or a duplicate, can't take a description. A Nano stores
+        // no description (it has no 32506 handler), so it never takes one.
         private void UpdateDescriptionEnabled()
         {
             BoardInfo Brd = SelectedBoard();
             bool enabled = false;
-            if (Brd != null)
+            if (Brd != null && (ModuleTypes)Brd.InoType != ModuleTypes.Nano_Rate)
             {
                 bool moving = SelectedModule() >= 0 && SelectedModule() != Brd.ID;
                 bool reachable = Brd.ID < Props.MaxModules && !Core.ModulesBoardID.DuplicateID(Brd.ID);
