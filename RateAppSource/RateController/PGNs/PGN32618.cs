@@ -482,6 +482,11 @@ namespace RateController.PGNs
 
         private void EndRemote(RemoteEndReasons Reason)
         {
+            if (cRemoteActive)
+            {
+                Props.WriteActivityLog("Switches: remote control ended, "
+                    + (Reason == RemoteEndReasons.Timeout ? "phone dead-man timed out, master off" : "cab switch moved"), false, true);
+            }
             cRemoteActive = false;
             cRemotePhone = false;
             cRemoteEndReason = Reason;
@@ -541,10 +546,23 @@ namespace RateController.PGNs
                 cRemoteActive = true;
                 cRemoteEndReason = RemoteEndReasons.None;
                 cRemoteForcedOff = false;
+                Props.WriteActivityLog("Switches: remote control started from the " + (Source == RemoteSources.Phone ? "phone" : "screen"), false, true);
             }
-            if (Source == RemoteSources.Phone) cRemotePhone = true;
 
-            // dead-man only once the phone is involved, an on-screen press means someone is in the cab
+            // dead-man only while the phone has control: an on-screen press means someone
+            // is in the cab, so it ends the phone's hold on the session
+            bool Phone = (Source == RemoteSources.Phone);
+            if (Phone && !cRemotePhone)
+            {
+                Props.WriteActivityLog("Switches: phone has control, master turns off after "
+                    + RemoteTimeoutSeconds.ToString() + " s without a phone press", false, true);
+            }
+            else if (!Phone && cRemotePhone)
+            {
+                Props.WriteActivityLog("Switches: on-screen press, phone dead-man stopped", false, true);
+            }
+            cRemotePhone = Phone;
+
             RemoteLastPress = DateTime.Now;
             RemoteTimer.Stop();
             if (cRemotePhone) RemoteTimer.Start();
