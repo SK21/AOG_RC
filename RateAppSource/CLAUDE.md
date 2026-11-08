@@ -42,7 +42,7 @@ Windows application for agricultural rate control. Communicates with:
 | 32504 | 9 | Wheel speed config |
 | 32505 | 6 | Max pressure gate threshold (raw ADC) |
 | 32506 | 20 | Board description set (16 chars → module EEPROM; Teensy/ESP32 only — the Nano stores none) |
-| 32508 | 10 | Assign module ID by MAC: [2-7] MAC, [8] new ID 0-7, [9] CRC. Only the matching board acts; it saves and restarts after ~1.5 s (deferred) so the rest of the same Send reaches it at its new ID |
+| 32508 | 13 | Assign module ID by MAC: [2-7] MAC, [8] new ID 0-7, [9-11] network a.b.c (0.0.0 = keep; ESP32 applies it over Ethernet only), [12] CRC. Only the matching board acts; it saves and restarts after ~1.5 s (deferred) so the rest of the same Send reaches it at its new ID |
 | 32700 | 32 | Module config (pins, relay types, CommMode). Bit 6 of the commands byte (old broadcast assign) is never sent and is ignored by firmware |
 
 ### Module → RC PGNs (data)
@@ -51,7 +51,7 @@ Windows application for agricultural rate control. Communicates with:
 | 32400 | 15 | Sensor data (rate, qty, PWM, Hz) |
 | 32401 | 12 | Module status: [2] ID, [3-4] pressure, [5-6] wheel speed ×10, [7-9] wheel count, [10] status bits, [11] CRC. Status only — type/firmware moved to 32403 |
 | 32402 | 24 | PID diagnostics log (per-sensor, PID-loop cadence) |
-| 32403 | 29 | Identity report: [2] ID (0-7 or 25), [3-18] description, [19-24] MAC, [25] InoType, [26-27] InoID, [28] CRC. Sent at boot (retried until it goes out) then every 2 s, also at ID 25 |
+| 32403 | 29 | Identity report: [2] ID (0-7 or 25), [3-18] description, [19-24] MAC, [25] InoType, [26-27] InoID, [28] CRC. Sent at boot (retried until it goes out) then every 2 s, also at ID 25. At ID 25 it goes to 255.255.255.255 (ESP32: Ethernet only) so the app hears a new board on any subnet |
 
 ### CAN proprietary frame mapping (CommMode 1/2, via `CanFrameTranslator`)
 Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
@@ -68,6 +68,7 @@ Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
 - At 25 a board sends 32401 and 32403 only; per-product PGNs are suppressed (Mod/Sen packing would read 25 as module 9). On CAN only 0xFF08 and the identity frames are sent.
 - MAC: ESP32 `ChipMAC()` (base efuse MAC), Teensy `TeensyMAC()` (fuses), Nano random `0A:0B:42:r:r:r` made once and stored at EEPROM 3-9 (marker 0xA5), also used for the ENC28J60.
 - App UI: **Modules > Boards** (`frmMenuNetwork`) lists boards and holds pending changes (`Core.SetPending`, by MAC, in memory); **Send** (`frmMenu.SendModuleConfig`) sends 32508, then pending 32506s, then 32507 + 32700. Send is refused (and pending changes dropped) when the edited module has no board or old firmware, or a moved board is gone / its target taken.
+- **New board setup prompt** (`frmMain.CheckNewBoardSetup`, `Core.NewBoardToSetUp/SetUpNewBoard`): when the board list holds only one new board, the main form asks once per MAC per session to set it up as module 0 (preset for its type, then the same sends as Send). A board heard at its Ethernet address on another network (`BoardInfo.OtherNetwork`) gets a second yes/no to move it to the app's module network; that Send also goes to every network (`UDPComm.AllNetworks` / `SendAllNetworks`). A board set up over its own hotspot: the PC rejoins the renamed hotspot (`Core.RejoinModuleHotspot`). Design docs `New_Board_Setup_Prompt.md`, `New_Board_Any_Network.md`.
 - ESP32 hotspot name: `APname_<ID>_<MAC bytes 3-5 hex>`, e.g. `RateModule_25_123456`; the WiFi list on Comm reads the ID from the name.
 
 ## Architecture

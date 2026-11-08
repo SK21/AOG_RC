@@ -221,11 +221,12 @@ void SendComm()
 		//28    CRC
 		static uint32_t BoardIDLast = 0;
 		static bool BoardIDSent = false;
-		if (!BoardIDSent || millis() - BoardIDLast > 2000)
+		uint32_t now = millis();
+		if (!BoardIDSent || now - BoardIDLast > 2000)
 		{
-			// BoardIDSent is set only once a report actually goes out, so a first report
-			// lost to a link that isn't up yet is retried next cycle, not 2 s later
-			BoardIDLast = millis();
+			// BoardIDSent and BoardIDLast are set only when endPacket() reports the report went
+			// out, so one lost to a link or stack that isn't ready is retried next cycle
+			// (SendTime), not 2 s later
 			byte B[29];
 			B[0] = 147;
 			B[1] = 126;
@@ -251,9 +252,12 @@ void SendComm()
 					IPAddress Dest = (MDL.ID == NewModuleID) ? IPAddress(255, 255, 255, 255) : Ethernet_DestinationIP;
 					UDP_Ethernet.beginPacket(Dest, DestinationPort);
 					UDP_Ethernet.write(B, 29);
-					UDP_Ethernet.endPacket();
-					Sent = true;
-					BoardIDSent = true;
+					if (UDP_Ethernet.endPacket())		// 0 when it couldn't be sent
+					{
+						BoardIDLast = now;
+						BoardIDSent = true;
+					}
+					Sent = true;		// Ethernet link up: WiFi isn't used, as before
 				}
 			}
 
@@ -262,7 +266,11 @@ void SendComm()
 			{
 				UDP_Wifi.beginPacket(Wifi_DestinationIP, DestinationPort);
 				UDP_Wifi.write(B, 29);
-				if (UDP_Wifi.endPacket()) BoardIDSent = true;	// 0 when it couldn't be sent
+				if (UDP_Wifi.endPacket())			// 0 when it couldn't be sent
+				{
+					BoardIDLast = now;
+					BoardIDSent = true;
+				}
 			}
 		}
 	}

@@ -1099,7 +1099,17 @@ namespace RateController
                     hotspotOldID = brd.OnOwnHotspot ? brd.ID : -1;
 
                     Core.UDPmodules.AllNetworks = allNetworks;
-                    new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID, moveNetwork ? Core.UDPmodules.SubNet : null);
+                    try
+                    {
+                        new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID, moveNetwork ? Core.UDPmodules.SubNet : null);
+                    }
+                    catch
+                    {
+                        // cleared below by the finally once the rest of the Send has gone;
+                        // if 32508 itself fails, clear it here so later Sends aren't widened
+                        Core.UDPmodules.AllNetworks = false;
+                        throw;
+                    }
                     msg = string.Format(Lang.lgIDSent, move.NewID);
                 }
             }

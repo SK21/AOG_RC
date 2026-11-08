@@ -38,6 +38,9 @@ namespace RateController.Classes
             PGNdata = new byte[6];
             PGNdata[0] = 106;
             PGNdata[1] = 127;
+            // valid CRC from the first send: until then PGN32618 rejects every packet, the
+            // switchbox reads as missing and PGN32500 sends master on while the button shows off
+            PGNdata[5] = Core.Tls.CRC(PGNdata, 5);
 
             SendTimer.Tick += SendTimer_Tick;
             SendTimer.Interval = 250;

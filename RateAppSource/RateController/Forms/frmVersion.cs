@@ -95,7 +95,8 @@ namespace RateController.Forms
                 lbModuleLatest.Text = "--";
             }
 
-            if (Core.SwitchBox.Connected())
+            // a real switchbox only: the app's virtual one reports no firmware version
+            if (Core.SwitchBox.RealConnected())
             {
                 lbSwitchBoxCurrent.Text = Core.SwitchBox.ModuleVersion();
                 lbSwitchBoxLatest.Text = VC.ModuleVersion((int)ModuleTypes.Nano_SwitchBox);

@@ -175,11 +175,12 @@ void SendComm()
         //28    CRC
         static uint32_t BoardIDLast = 0;
         static bool BoardIDSent = false;
-        if (!BoardIDSent || millis() - BoardIDLast > 2000)
+        uint32_t now = millis();
+        if (!BoardIDSent || now - BoardIDLast > 2000)
         {
-            // BoardIDSent is set only once a report actually goes out, so a first report
-            // lost to a link that isn't up yet is retried next cycle, not 2 s later
-            BoardIDLast = millis();
+            // BoardIDSent and BoardIDLast are set only when endPacket() reports the report went
+            // out, so one lost to a link or stack that isn't ready is retried next cycle
+            // (SendTime), not 2 s later
             byte B[29];
             B[0] = 147;
             B[1] = 126;
@@ -200,8 +201,11 @@ void SendComm()
                 IPAddress Dest = (MDL.ID == NewModuleID) ? IPAddress(255, 255, 255, 255) : DestinationIP;
                 UDPcomm.beginPacket(Dest, DestinationPort);
                 UDPcomm.write(B, 29);
-                UDPcomm.endPacket();
-                BoardIDSent = true;
+                if (UDPcomm.endPacket())     // false when FNET couldn't send it
+                {
+                    BoardIDLast = now;
+                    BoardIDSent = true;
+                }
             }
         }
     }
