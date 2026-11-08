@@ -1159,7 +1159,9 @@ namespace RateController.Classes
                 }
 
                 // send to arduino
-                ModuleRateSettings.Send();
+                // a disabled product sends nothing: it may share its module and sensor with an
+                // enabled one. A running calibration disables its own product, so it still sends
+                if (Enabled || (CalibrateOjbect?.PowerOn ?? false)) ModuleRateSettings.Send();
 
                 if (cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
                 {

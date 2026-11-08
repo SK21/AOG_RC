@@ -418,7 +418,7 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //double debug3;
 //double debug4;
 //double debug5;
-
+//
 //void DebugTheIno()
 //{
 //	if (millis() - DebugTime > 1000)
@@ -431,21 +431,26 @@ uint32_t MedianFromArray(uint32_t buf[], int count)
 //
 //		Serial.print(F(",  SRAM: "));
 //		Serial.print(MinMem);
-//		//Serial.print(", ");
+//		Serial.print(", ");
 //
-//		//Serial.print(debug1);
+//		debug2 = PIDenabled[0];
+//		debug3 = AutoOn[0];
+//		debug4 = Sensor[0].UPM;
+//		debug5 = Sensor[0].PWM;
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug2);
+//		Serial.print(debug1);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug3);
+//		Serial.print(", ");
+//		Serial.print(debug2);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug4);
+//		Serial.print(", ");
+//		Serial.print(debug3);
 //
-//		//Serial.print(", ");
-//		//Serial.print(debug5);
+//		Serial.print(", ");
+//		Serial.print(debug4);
+//
+//		Serial.print(", ");
+//		Serial.print(debug5);
 //
 //		if (ReadReset++ > 10)
 //		{
