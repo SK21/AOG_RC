@@ -53,7 +53,8 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
         //          - bit 7         calibration on
         //10    manual pwm Lo
         //11    manual pwm Hi
-        //12    -
+        //12    flags
+        //          - bit 0         no flow path: no section on the machine is on
         //13    CRC
 
         PGNlength = 14;
@@ -89,6 +90,8 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
                         PidLogEnabled = ((InCommand & 32) == 32);
 
                         AutoOn[SensorID] = ((InCommand & 64) == 64);	// per-sensor: this packet's bit only affects this sensor
+
+                        FlowExpected[SensorID] = ((data[12] & 1) == 0);
 
                         CalibrationOn[SensorID] = ((InCommand & 128) == 128);
 

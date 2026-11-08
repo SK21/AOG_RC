@@ -26,6 +26,19 @@ namespace RateController.Classes
 
         public IList<clsRelay> Items { get => cItems; set => cItems = value; }
 
+        // any section on the machine is on, or this module is calibrating. One answer for the
+        // whole machine, matching the width the rate target is worked from. Also sent to the
+        // modules as the flow-path flag (PGN 32500 byte 12).
+        public bool AnySectionOn(int ModuleID)
+        {
+            bool Result = Props.RateCalibrationOn && Core.Products.CalibrationOnModule(ModuleID);
+            for (int i = 0; i < Props.MaxSections && !Result; i++)
+            {
+                Result = Core.Sections.Item(i).IsON;
+            }
+            return Result;
+        }
+
         public int Count()
         {
             return cRelays.Count;
@@ -160,7 +173,7 @@ namespace RateController.Classes
                 // other modules keep their normal relay states
                 bool CalibratingModule = Props.RateCalibrationOn && Core.Products.CalibrationOnModule(ModuleID);
 
-                bool SectionsOn = false;
+                bool SectionsOn = AnySectionOn(ModuleID);
                 bool MasterOn = Core.SectionControl.MasterOn || CalibratingModule;
                 bool FlowEnabled = Props.Speed_KMH > 0.1;
                 bool FlowMasterOn;
@@ -176,23 +189,6 @@ namespace RateController.Classes
                 else
                 {
                     FlowMasterOn = Core.SwitchBox.MasterOn;
-                }
-
-                // determine if any section is ON
-                if (CalibratingModule)
-                {
-                    SectionsOn = true;
-                }
-                else
-                {
-                    for (int i = 0; i < Props.MaxSections; i++)
-                    {
-                        if (Core.Sections.Item(i).IsON)
-                        {
-                            SectionsOn = true;
-                            break;
-                        }
-                    }
                 }
 
                 // hydraulic handled separately

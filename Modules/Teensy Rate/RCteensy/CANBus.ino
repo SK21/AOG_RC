@@ -327,7 +327,7 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	// Bytes 1-2: Rate setpoint (0.001 UPM per bit)
 	// Bytes 3-4: Manual adjust (signed)
 	// Byte 5: Command byte
-	// Bytes 6-7: Reserved
+	// Byte 7: Flags, bit 0 no flow path (PGN 32500 byte 12)
 
 	uint8_t modId = msg.buf[0] & 0x0F;
 	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
@@ -349,6 +349,7 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	Sensor[senId].ControlType = (cmd >> 1) & 0x07;
 	MasterOn = ((cmd & 0x10) == 0x10);
 	AutoOn[senId] = ((cmd & 0x40) == 0x40);	// per-sensor (matches UDP decode in Receive.ino)
+	FlowExpected[senId] = (msg.len <= 7) || ((msg.buf[7] & 0x01) == 0);
 	CalibrationOn[senId] = ((cmd & 0x80) == 0x80);
 
 	// Update timeout

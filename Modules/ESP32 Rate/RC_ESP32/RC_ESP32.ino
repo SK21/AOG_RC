@@ -25,7 +25,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 7116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
+const uint16_t InoID = 8116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
 								// resets stored settings — bump a record's version below for that
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
@@ -210,7 +210,8 @@ static_assert(RecordHeaderSize + SensorStoredBytes <= EE_SensorStep, "SensorConf
 static_assert(EE_Sensor + MaxProductCount * EE_SensorStep <= EEPROM_SIZE, "sensor slots overflow EEPROM_SIZE");
 
 SensorConfig Sensor[MaxProductCount];
-bool SensorConnected[MaxProductCount];
+volatile bool SensorConnected[MaxProductCount];	// volatile: read in PulseISR
+volatile bool FlowExpected[MaxProductCount];	// PGN32500 byte 12 bit 0 clear: a section is on, or a fan or calibration
 bool PIDenabled[MaxProductCount];
 bool Applying[MaxProductCount];
 
@@ -246,16 +247,12 @@ volatile byte InvertedLo;
 volatile byte InvertedHi;
 byte FlowMasterValveIndex = 255;
 
-// "is any section on", the flow-path test. The relay bits are OUTPUT states, so two
-// corrections are needed before they mean anything logical: XOR the inverted list
-// (Invert_Section and friends read backwards - a module with every section inverted
-// otherwise looks idle exactly when all sections are on), and mask off Power relays
-// (always energized, so they would make the test permanently true).
+// should this sensor's flow be counted and its PID run? The app states it for each sensor
+// in PGN 32500 byte 12, and it reads false once the app stops sending. The relay word can't answer
+// this: it holds output states, a relay may not be a section, and a module's sections
+// can be on another module's relays.
 // A macro, not a function: PulseISR uses it, and an ESP32 ISR cannot call into flash.
-// STILL IMPERFECT - Master/Switch/Hyd/Tram/GeoStop relays are not sections either but
-// have no mask on the wire. See the Option B note (explicit section state in PGN 32500
-// byte 12) for the real fix.
-#define AnySectionOn() ((((RelayLo ^ InvertedLo) & ~PowerRelayLo) | ((RelayHi ^ InvertedHi) & ~PowerRelayHi)) != 0)
+#define CountPulses(ID) (SensorConnected[ID] && FlowExpected[ID])
 
 const uint16_t LoopTime = 50;      //in msec = 20hz
 uint32_t LoopLast = LoopTime;
@@ -368,7 +365,7 @@ void loop()
 		for (int i = 0; i < MDL.SensorCount; i++)
 		{
 			SensorConnected[i] = (millis() - Sensor[i].CommTime < 4000);
-			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && AnySectionOn() && (Sensor[i].TargetUPM > 0);
+			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && FlowExpected[i] && (Sensor[i].TargetUPM > 0);
 			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn[i]);
 		}
 

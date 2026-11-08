@@ -39,7 +39,9 @@ namespace RateController.PGNs
         //          - bit 7         Calibration On
         //10    manual pwm Lo
         //11    manual pwm Hi
-        //12    -
+        //12    Flags
+        //          - bit 0         no flow path: no section on the machine is on (a calibrating
+        //                          module or a fan is open). Must stay 1 = closed: an older app sends 0
         //13    CRC
 
         private const byte cByteCount = 14;
@@ -206,6 +208,10 @@ namespace RateController.PGNs
                     cData[4] = (byte)((int)RateSet >> 8);
                     cData[5] = (byte)((int)RateSet >> 16);
                 }
+
+                // a fan doesn't depend on the sections: its speed is still measured with them off
+                bool FlowExpected = Prod.ControlType == ControlTypeEnum.Fan || Core.RelayObjects.AnySectionOn(Prod.ModuleID);
+                if (!FlowExpected) cData[12] |= 1;
 
                 // CRC
                 cData[cByteCount - 1] = Core.Tls.CRC(cData, cByteCount - 1);

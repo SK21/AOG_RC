@@ -365,7 +365,7 @@ namespace RateController.Classes.Can
                             pgnData[10],  // manualPwm lo
                             pgnData[11],  // manualPwm hi
                             pgnData[9],   // command byte
-                            0             // reserved
+                            (byte)(pgnData.Length > 12 ? pgnData[12] : 0)   // flags, bit 0 no flow path
                         }));
                         frames.Add(BuildFrame(0x0A, new byte[] {
                             canModSenId,  // ModSenId (CAN nibble order)

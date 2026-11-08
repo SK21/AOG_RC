@@ -22,7 +22,7 @@ volatile uint8_t SamplesIndex[MaxProductCount];
 
 void PulseISR(uint8_t ID)
 {
-	if (AnySectionOn())
+	if (CountPulses(ID))
 	{
 		uint32_t ReadTime = micros();
 		PulseTime[ID] = ReadTime - ReadLast[ID];
@@ -92,7 +92,7 @@ void GetUPM()
 		else
 		{
 			// No flow check
-			if (millis() - LastPulse[i] > FlowTimeout || !AnySectionOn())
+			if (millis() - LastPulse[i] > FlowTimeout || !CountPulses(i))
 			{
 				Sensor[i].UPM = 0;
 				Sensor[i].Hz = 0;
