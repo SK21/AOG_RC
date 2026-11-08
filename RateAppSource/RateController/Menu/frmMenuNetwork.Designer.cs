@@ -41,6 +41,7 @@ namespace RateController.Menu
             this.lbDescription = new System.Windows.Forms.Label();
             this.tbDescription = new System.Windows.Forms.TextBox();
             this.lnkWeb = new System.Windows.Forms.LinkLabel();
+            this.lbBoardsFound = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lvBoards
@@ -53,10 +54,10 @@ namespace RateController.Menu
             this.lvBoards.FullRowSelect = true;
             this.lvBoards.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvBoards.HideSelection = false;
-            this.lvBoards.Location = new System.Drawing.Point(20, 65);
+            this.lvBoards.Location = new System.Drawing.Point(20, 103);
             this.lvBoards.MultiSelect = false;
             this.lvBoards.Name = "lvBoards";
-            this.lvBoards.Size = new System.Drawing.Size(500, 400);
+            this.lvBoards.Size = new System.Drawing.Size(500, 294);
             this.lvBoards.SmallImageList = this.ilRowHeight;
             this.lvBoards.TabIndex = 0;
             this.lvBoards.UseCompatibleStateImageBehavior = false;
@@ -88,7 +89,7 @@ namespace RateController.Menu
             // 
             this.lbModule.AutoSize = true;
             this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModule.Location = new System.Drawing.Point(20, 490);
+            this.lbModule.Location = new System.Drawing.Point(20, 428);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(74, 24);
             this.lbModule.TabIndex = 1;
@@ -98,7 +99,7 @@ namespace RateController.Menu
             // 
             this.cbModule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbModule.Location = new System.Drawing.Point(160, 486);
+            this.cbModule.Location = new System.Drawing.Point(160, 424);
             this.cbModule.Name = "cbModule";
             this.cbModule.Size = new System.Drawing.Size(100, 32);
             this.cbModule.TabIndex = 2;
@@ -141,7 +142,7 @@ namespace RateController.Menu
             // 
             this.lbDescription.AutoSize = true;
             this.lbDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDescription.Location = new System.Drawing.Point(20, 546);
+            this.lbDescription.Location = new System.Drawing.Point(20, 484);
             this.lbDescription.Name = "lbDescription";
             this.lbDescription.Size = new System.Drawing.Size(104, 24);
             this.lbDescription.TabIndex = 4;
@@ -151,30 +152,41 @@ namespace RateController.Menu
             // 
             this.tbDescription.Enabled = false;
             this.tbDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDescription.Location = new System.Drawing.Point(160, 544);
+            this.tbDescription.Location = new System.Drawing.Point(160, 482);
             this.tbDescription.MaxLength = 16;
             this.tbDescription.Name = "tbDescription";
             this.tbDescription.Size = new System.Drawing.Size(240, 29);
             this.tbDescription.TabIndex = 5;
             this.tbDescription.TabStop = false;
             this.tbDescription.TextChanged += new System.EventHandler(this.Edit_Changed);
-            //
+            // 
             // lnkWeb
-            //
+            // 
             this.lnkWeb.AutoSize = true;
             this.lnkWeb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkWeb.Location = new System.Drawing.Point(160, 590);
+            this.lnkWeb.Location = new System.Drawing.Point(160, 528);
             this.lnkWeb.Name = "lnkWeb";
             this.lnkWeb.Size = new System.Drawing.Size(0, 24);
             this.lnkWeb.TabIndex = 6;
             this.lnkWeb.Visible = false;
             this.lnkWeb.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkWeb_LinkClicked);
             //
+            // lbBoardsFound
+            //
+            this.lbBoardsFound.AutoSize = true;
+            this.lbBoardsFound.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbBoardsFound.Location = new System.Drawing.Point(20, 70);
+            this.lbBoardsFound.Name = "lbBoardsFound";
+            this.lbBoardsFound.Size = new System.Drawing.Size(232, 24);
+            this.lbBoardsFound.TabIndex = 9;
+            this.lbBoardsFound.Text = "Boards found - select one";
+            //
             // frmMenuNetwork
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.lbBoardsFound);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lnkWeb);
@@ -208,5 +220,6 @@ namespace RateController.Menu
         private System.Windows.Forms.Label lbDescription;
         private System.Windows.Forms.TextBox tbDescription;
         private System.Windows.Forms.LinkLabel lnkWeb;
+        private System.Windows.Forms.Label lbBoardsFound;
     }
 }

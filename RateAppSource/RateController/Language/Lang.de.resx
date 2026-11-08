@@ -876,6 +876,9 @@ Modul {1} hat dann keine Platine.</value>
   <data name="lgBoards" xml:space="preserve">
     <value>Platinen</value>
   </data>
+  <data name="lgBoardsFound" xml:space="preserve">
+    <value>Gefundene Platinen - eine wählen</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Modul</value>
   </data>

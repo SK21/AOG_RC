@@ -875,6 +875,9 @@
   <data name="lgBoards" xml:space="preserve">
     <value>Платы</value>
   </data>
+  <data name="lgBoardsFound" xml:space="preserve">
+    <value>Найденные платы - выберите одну</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Модуль</value>
   </data>

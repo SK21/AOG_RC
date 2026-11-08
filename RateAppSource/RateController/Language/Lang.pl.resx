@@ -875,6 +875,9 @@ Moduł {1} zostanie bez płytki.</value>
   <data name="lgBoards" xml:space="preserve">
     <value>Płytki</value>
   </data>
+  <data name="lgBoardsFound" xml:space="preserve">
+    <value>Znalezione płytki - wybierz jedną</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Moduł</value>
   </data>

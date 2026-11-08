@@ -486,6 +486,7 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
+            lbBoardsFound.Text = Lang.lgBoardsFound;
             chModule.Text = Lang.lgModule;
             chBoard.Text = Lang.lgBoard;
             chState.Text = Lang.lgState;

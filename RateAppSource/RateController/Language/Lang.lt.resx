@@ -875,6 +875,9 @@ Modulis {1} liks be plokštės.</value>
   <data name="lgBoards" xml:space="preserve">
     <value>Plokštė</value>
   </data>
+  <data name="lgBoardsFound" xml:space="preserve">
+    <value>Rastos plokštės - pasirinkite vieną</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Modulis</value>
   </data>

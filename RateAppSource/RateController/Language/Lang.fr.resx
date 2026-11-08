@@ -875,6 +875,9 @@ Le module {1} n&apos;aura plus de carte.</value>
   <data name="lgBoards" xml:space="preserve">
     <value>Cartes</value>
   </data>
+  <data name="lgBoardsFound" xml:space="preserve">
+    <value>Cartes trouvées - choisissez-en une</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Module</value>
   </data>

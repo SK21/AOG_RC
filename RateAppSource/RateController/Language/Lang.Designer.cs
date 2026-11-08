@@ -194,7 +194,16 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgBoards", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Boards found - select one.
+        /// </summary>
+        internal static string lgBoardsFound {
+            get {
+                return ResourceManager.GetString("lgBoardsFound", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Bypass.
         /// </summary>

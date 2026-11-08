@@ -881,6 +881,9 @@ Module {1} will have no board.</value>
   <data name="lgBoards" xml:space="preserve">
     <value>Boards</value>
   </data>
+  <data name="lgBoardsFound" xml:space="preserve">
+    <value>Boards found - select one</value>
+  </data>
   <data name="lgModule" xml:space="preserve">
     <value>Module</value>
   </data>
