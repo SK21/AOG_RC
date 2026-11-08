@@ -834,6 +834,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Nouvelle carte détectée : {0}. La configurer comme module {1} ?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Déplacer la carte vers le réseau {0} ? Elle est sur {1}.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>La carte reste sur le réseau {0}. Réglez ce PC sur ce réseau pour vous y connecter.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>Le point d&apos;accès de la carte est maintenant {0}. Rejoignez-le pour rester connecté.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>Nouvelle, réseau {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>À modifier dans {0}</value>
   </data>

@@ -837,6 +837,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Új panel található: {0}. Beállítja {1}. modulként?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Áthelyezi a panelt a(z) {0} hálózatra? Jelenleg a(z) {1} hálózaton van.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>A panel a(z) {0} hálózaton marad. A csatlakozáshoz állítsa ezt a számítógépet erre a hálózatra.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>A panel hotspotja most {0}. Csatlakozzon hozzá, hogy kapcsolatban maradjon.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>Új, hálózat: {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Módosítás itt: {0}</value>
   </data>

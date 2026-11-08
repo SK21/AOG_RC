@@ -365,8 +365,11 @@ namespace RateController.Classes
 
         public static void NewBoardSetupAsked(ulong MAC) => cSetupAsked.Add(MAC);
 
-        // module 0, the board's preset, then the same sends as frmMenu.SendModuleConfig
-        public static void SetUpNewBoard(BoardInfo Brd, frmMenu Menu)
+        // module 0, the board's preset, then the same sends as frmMenu.SendModuleConfig.
+        // MoveNetwork: the board also takes the app's module network (only asked when
+        // Brd.OtherNetwork, New_Board_Any_Network.md). A board on another network is sent
+        // to on every network for this Send, so its ID and settings still reach it.
+        public static void SetUpNewBoard(BoardInfo Brd, frmMenu Menu, bool MoveNetwork = false)
         {
             const byte Module = 0;
             BoardInfo live = ModulesBoardID.LiveBoard(Brd.MAC);
@@ -376,14 +379,116 @@ namespace RateController.Classes
                     : string.Format(Lang.lgModuleInUse, Module), "Boards", 15000);
                 return;
             }
+            bool other = live.OtherNetwork;
+            bool hotspot = live.OnOwnHotspot;
+            byte oldID = live.ID;
+            string oldNetwork = live.Network;
+
             ModuleConfig.ModuleID = Module;
             ModuleConfig.Save();
             clsPresets.Load((ModuleTypes)live.InoType, Menu);
-            new PGN32508().Send(live.MAC, Module);
-            SensorPins.Send();
-            ModuleConfig.Send();
+
+            UDPmodules.AllNetworks = other;
+            try
+            {
+                new PGN32508().Send(live.MAC, Module, (other && MoveNetwork) ? UDPmodules.SubNet : null);
+                SensorPins.Send();
+                ModuleConfig.Send();
+            }
+            finally
+            {
+                UDPmodules.AllNetworks = false;
+            }
+
             Menu?.HighlightUpdateButton(false);
-            Props.ShowMessage(string.Format(Lang.lgIDSent, Module), "Config", 15000);
+            string msg = string.Format(Lang.lgIDSent, Module);
+            if (other && !MoveNetwork) msg += " " + string.Format(Lang.lgBoardStaysOnNetwork, oldNetwork);
+            Props.ShowMessage(msg, "Config", 15000);
+
+            if (hotspot) RejoinModuleHotspot(oldID, Module);
+        }
+
+        // An ESP32's hotspot is named <APname>_<ID>_<MAC suffix>, so it is renamed when its ID
+        // changes and the PC drops off it at the restart. Rejoin the new name on the adapter
+        // that was on the old one. An open hotspot (the default) is rejoined in the background;
+        // a secured one can't be (Windows won't give the key back), so the user is told.
+        public static void RejoinModuleHotspot(byte OldID, byte NewID)
+        {
+            try
+            {
+                string tag = "_" + OldID.ToString() + "_";
+                foreach (Wlan.Adapter a in Wlan.Adapters())
+                {
+                    Wlan.Network n = Wlan.ConnectedNetwork(a.Guid);
+                    int at = (n != null && n.Ssid != null) ? n.Ssid.LastIndexOf(tag) : -1;
+                    if (at > 0)
+                    {
+                        string newSsid = n.Ssid.Substring(0, at) + "_" + NewID.ToString() + "_"
+                            + n.Ssid.Substring(at + tag.Length);
+                        if (n.Secured)
+                        {
+                            Props.ShowMessage(string.Format(Lang.lgJoinHotspot, newSsid), "Boards", 20000);
+                        }
+                        else
+                        {
+                            Guid g = a.Guid;
+                            System.Threading.Tasks.Task.Run(() => RejoinWorker(g, newSsid));
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("Core/RejoinModuleHotspot: " + ex.Message);
+            }
+        }
+
+        private static void RejoinWorker(Guid Adapter, string Ssid)
+        {
+            // background thread: the board restarts about 1.5 s after the Send and its
+            // hotspot takes a few seconds to come up under the new name
+            bool ok = false;
+            string err = "";
+            try
+            {
+                System.Threading.Thread.Sleep(3000);
+                Wlan.TrySetProfile(Adapter, Ssid, "", out _);
+                DateTime end = DateTime.Now.AddSeconds(30);
+                while (!ok && DateTime.Now < end)
+                {
+                    ok = Wlan.ConnectAndWait(Adapter, Ssid, Ssid, 5000, out err);
+                    if (!ok)
+                    {
+                        Wlan.RequestScan(Adapter);
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                err = ex.Message;
+            }
+
+            try
+            {
+                MainForm?.BeginInvoke((Action)(() =>
+                {
+                    if (ok)
+                    {
+                        Props.WriteActivityLog("Boards: rejoined the module hotspot " + Ssid, false, true);
+                    }
+                    else
+                    {
+                        Props.WriteErrorLog("Core/RejoinWorker: " + Ssid + " " + err);
+                        Props.ShowMessage(string.Format(Lang.lgJoinHotspot, Ssid), "Boards", 20000);
+                    }
+                }));
+            }
+            catch (InvalidOperationException)
+            {
+                // main form closing
+            }
         }
 
         // Board changes saved on the Boards page and sent with the next Send, keyed by MAC.

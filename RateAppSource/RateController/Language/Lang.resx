@@ -840,6 +840,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>New board found: {0}. Set it up as module {1}?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Move the board to network {0}? It is on {1}.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>The board stays on network {0}. Set this PC to that network to connect to it.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>The board's hotspot is now {0}. Join it to stay connected.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>New, network {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Change it on {0}</value>
   </data>

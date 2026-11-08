@@ -52,7 +52,11 @@ namespace RateController
         }
 
         // Status delegate
-        private delegate void HandleDataDelegateObj(int port, byte[] msg);
+        private delegate void HandleDataDelegateObj(int port, byte[] msg, IPAddress from);
+
+        // While true, Send also goes to 255.255.255.255 on every adapter (SendAllNetworks):
+        // set only for the one Send to a board heard on another network (New_Board_Any_Network.md)
+        public bool AllNetworks { get; set; } = false;
 
         public bool IsRunning
         { get { return Running; } }
@@ -171,6 +175,51 @@ namespace RateController
             return cLog;
         }
 
+        // 255.255.255.255 on every IPv4 adapter that is up, so a board on any subnet of the
+        // LAN hears it. Not the tablet hotspot: only WiFi modules are on it, whose address
+        // comes from the hotspot. Used by 32503 (subnet change) and by AllNetworks.
+        public static void SendAllNetworks(byte[] Data, int Port)
+        {
+            IPEndPoint epAll = new IPEndPoint(IPAddress.Broadcast, Port);
+            foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                try
+                {
+                    if (nic.Supports(NetworkInterfaceComponent.IPv4) && nic.OperationalStatus == OperationalStatus.Up)
+                    {
+                        foreach (var info in nic.GetIPProperties().UnicastAddresses)
+                        {
+                            if (info.Address.AddressFamily == AddressFamily.InterNetwork &&
+                                !IPAddress.IsLoopback(info.Address) &&
+                                info.IPv4Mask != null &&
+                                !IsTabletHotspot(nic, info.Address))
+                            {
+                                using (Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                                {
+                                    try
+                                    {
+                                        s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+                                        s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                                        s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
+                                        s.Bind(new IPEndPoint(info.Address, 9578));
+                                        s.SendTo(Data, 0, Data.Length, SocketFlags.None, epAll);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Props.WriteErrorLog("UDPComm/SendAllNetworks/Bind error " + ex.Message);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("UDPComm/SendAllNetworks/nic loop error " + ex.Message);
+                }
+            }
+        }
+
         public void Send(byte[] byteData)
         {
             if (Running && sendSocket != null)
@@ -195,6 +244,9 @@ namespace RateController
                                 sendSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, Ep, new AsyncCallback(HandleSend), null);
                             }
                         }
+
+                        // a board on another network (New_Board_Any_Network.md)
+                        if (AllNetworks) SendAllNetworks(byteData, cSendToPort);
                     }
                 }
                 catch (Exception ex)
@@ -269,7 +321,7 @@ namespace RateController
             cLog = cLog.Replace("\0", string.Empty);
         }
 
-        private void HandleData(int Port, byte[] Data)
+        private void HandleData(int Port, byte[] Data, IPAddress From)
         {
             try
             {
@@ -295,7 +347,7 @@ namespace RateController
                             break;
 
                         case 32403:
-                            if (!Props.CanEnabled) Core.ModulesBoardID.ParseByteData(Data);
+                            if (!Props.CanEnabled) Core.ModulesBoardID.ParseByteData(Data, From);
                             break;
 
                         case 32402:
@@ -495,7 +547,7 @@ namespace RateController
                     {
                         try
                         {
-                            mf.BeginInvoke(HandleDataDelegate, new object[] { port, localMsg });
+                            mf.BeginInvoke(HandleDataDelegate, new object[] { port, localMsg, ((IPEndPoint)epSender).Address });
                         }
                         catch (InvalidOperationException)
                         {

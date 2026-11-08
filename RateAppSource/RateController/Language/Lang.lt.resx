@@ -834,6 +834,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Rasta nauja plokštė: {0}. Nustatyti ją kaip modulį {1}?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Perkelti plokštę į tinklą {0}? Ji yra tinkle {1}.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>Plokštė lieka tinkle {0}. Norėdami prie jos prisijungti, nustatykite šį kompiuterį tam tinklui.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>Plokštės prieigos taškas dabar yra {0}. Prisijunkite prie jo, kad liktumėte prisijungę.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>Nauja, tinklas {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Pakeisti galima {0}</value>
   </data>

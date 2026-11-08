@@ -2248,6 +2248,42 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move the board to network {0}? It is on {1}.
+        /// </summary>
+        internal static string lgMoveBoardNetwork {
+            get {
+                return ResourceManager.GetString("lgMoveBoardNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board stays on network {0}. Set this PC to that network to connect to it.
+        /// </summary>
+        internal static string lgBoardStaysOnNetwork {
+            get {
+                return ResourceManager.GetString("lgBoardStaysOnNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board&apos;s hotspot is now {0}. Join it to stay connected.
+        /// </summary>
+        internal static string lgJoinHotspot {
+            get {
+                return ResourceManager.GetString("lgJoinHotspot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New, network {0}.
+        /// </summary>
+        internal static string lgStateNewNetwork {
+            get {
+                return ResourceManager.GetString("lgStateNewNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change it on {0}.
         /// </summary>
         internal static string lgChangeItOn {

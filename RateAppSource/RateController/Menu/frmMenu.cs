@@ -1023,6 +1023,9 @@ namespace RateController
             bool proceed = true;
             string msg = "Settings sent to module";
             byte editID = Core.ModuleConfig.GetData()[2];
+            bool allNetworks = false;       // the moved board is on another network
+            string stays = null;            // its network, when the user keeps it there
+            int hotspotOldID = -1;          // the moved board's ID, when heard on its own hotspot
 
             if (move == null)
             {
@@ -1077,19 +1080,49 @@ namespace RateController
 
                 if (proceed)
                 {
-                    new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID);
+                    // a board heard on another network: the user chooses whether it moves to
+                    // the app's network; either way this Send goes to every network so its ID
+                    // and settings reach it (New_Board_Any_Network.md)
+                    allNetworks = brd.OtherNetwork;
+                    bool moveNetwork = false;
+                    if (allNetworks)
+                    {
+                        using (var Hlp = new frmMsgBox(string.Format(Lang.lgMoveBoardNetwork,
+                            Core.UDPmodules.SubNet, brd.Network), "Boards", true))
+                        {
+                            Hlp.TopMost = true;
+                            Hlp.ShowDialog();
+                            moveNetwork = Hlp.Result;
+                        }
+                        if (!moveNetwork) stays = brd.Network;
+                    }
+                    hotspotOldID = brd.OnOwnHotspot ? brd.ID : -1;
+
+                    Core.UDPmodules.AllNetworks = allNetworks;
+                    new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID, moveNetwork ? Core.UDPmodules.SubNet : null);
                     msg = string.Format(Lang.lgIDSent, move.NewID);
                 }
             }
 
             if (proceed)
             {
-                SendPendingDescriptions(move);
-                Core.SensorPins.Send();
-                Core.ModuleConfig.Send();
+                try
+                {
+                    SendPendingDescriptions(move);
+                    Core.SensorPins.Send();
+                    Core.ModuleConfig.Send();
+                }
+                finally
+                {
+                    Core.UDPmodules.AllNetworks = false;
+                }
 
+                if (stays != null) msg += " " + string.Format(Lang.lgBoardStaysOnNetwork, stays);
                 Props.ShowMessage(msg, "Config", 15000);
                 HighlightUpdateButton(false);
+
+                // an ESP32 set up over its own hotspot: the hotspot is renamed with the ID
+                if (hotspotOldID >= 0) Core.RejoinModuleHotspot((byte)hotspotOldID, (byte)move.NewID);
             }
         }
 

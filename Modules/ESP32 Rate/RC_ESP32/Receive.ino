@@ -389,16 +389,25 @@ void ReadPGNs(byte data[], uint16_t len, bool FromWifi)
         //1     HeaderHi    126
         //2-7   MAC         acted on only by the board with this MAC
         //8     new module ID 0-7 (MaxModuleID)
-        //9     CRC
-        PGNlength = 10;
+        //9-11  network a.b.c (the app's module network), 0.0.0 = keep this board's network
+        //12    CRC
+        PGNlength = 13;
         if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= MaxModuleID)
         {
             uint8_t mac[6];
             ChipMAC(mac);
             if (memcmp(data + 2, mac, 6) == 0)
             {
+                // the network is the Ethernet chip's: applied only over Ethernet, as 32503.
+                // Over WiFi the address comes from the network joined.
+                if ((data[9] | data[10] | data[11]) != 0 && !FromWifi)
+                {
+                    MDLnetwork.IP0 = data[9];
+                    MDLnetwork.IP1 = data[10];
+                    MDLnetwork.IP2 = data[11];
+                }
                 MDL.ID = data[8];
-                SaveIdentity();     // the ID lives in the identity record
+                SaveIdentity();     // the ID and the network live in the identity record
                 // IPs, hotspot subnet and every packet's ID are set at boot, so restart -
                 // but shortly, not now: the rest of the same Send (32506, 32507, 32700)
                 // follows within milliseconds, addressed to the new ID. 32700 restarts at

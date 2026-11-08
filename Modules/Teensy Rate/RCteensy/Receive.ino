@@ -377,13 +377,24 @@ void ReadPGNs(byte data[], uint16_t len)
 		//1     HeaderHi    126
 		//2-7   MAC         acted on only by the board with this MAC
 		//8     new module ID 0-7 (MaxModuleID)
-		//9     CRC
-		PGNlength = 10;
+		//9-11  network a.b.c (the app's module network), 0.0.0 = keep this board's network
+		//12    CRC
+		PGNlength = 13;
 		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= MaxModuleID)
 		{
 			uint8_t mac[6];
 			TeensyMAC(mac);
-			if (memcmp(data + 2, mac, 6) == 0) AssignModuleID(data[8]);
+			if (memcmp(data + 2, mac, 6) == 0)
+			{
+				if ((data[9] | data[10] | data[11]) != 0)
+				{
+					MDLnetwork.IP0 = data[9];
+					MDLnetwork.IP1 = data[10];
+					MDLnetwork.IP2 = data[11];
+					SaveNetworks();
+				}
+				AssignModuleID(data[8]);	// saves, then the deferred restart picks up both
+			}
 		}
 		break;
 

@@ -196,7 +196,9 @@ void SendComm()
             B[28] = CRC(B, 28, 0);
             if (Ethernet.linkStatus() == LinkON)
             {
-                UDPcomm.beginPacket(DestinationIP, DestinationPort);
+                // a new board (25) reports to every network, so the app hears it on any subnet
+                IPAddress Dest = (MDL.ID == NewModuleID) ? IPAddress(255, 255, 255, 255) : DestinationIP;
+                UDPcomm.beginPacket(Dest, DestinationPort);
                 UDPcomm.write(B, 29);
                 UDPcomm.endPacket();
                 BoardIDSent = true;

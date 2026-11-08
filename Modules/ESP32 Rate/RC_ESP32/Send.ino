@@ -247,8 +247,9 @@ void SendComm()
 			{
 				if (Ethernet.linkStatus() == LinkON)
 				{
-
-					UDP_Ethernet.beginPacket(Ethernet_DestinationIP, DestinationPort);
+					// a new board (25) reports to every network, so the app hears it on any subnet
+					IPAddress Dest = (MDL.ID == NewModuleID) ? IPAddress(255, 255, 255, 255) : Ethernet_DestinationIP;
+					UDP_Ethernet.beginPacket(Dest, DestinationPort);
 					UDP_Ethernet.write(B, 29);
 					UDP_Ethernet.endPacket();
 					Sent = true;

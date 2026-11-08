@@ -182,7 +182,9 @@ void SendComm()
 
             if (EthernetConnected())
             {
-                ether.sendUdp(Data, 29, SourcePort, DestinationIP, DestinationPort);
+                // a new board (25) reports to every network, so the app hears it on any subnet
+                static byte AllNetworks[] = { 255, 255, 255, 255 };
+                ether.sendUdp(Data, 29, SourcePort, (MDL.ID == NewModuleID) ? AllNetworks : DestinationIP, DestinationPort);
                 BoardIDSent = true;
             }
         }

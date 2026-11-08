@@ -834,6 +834,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Найдена новая плата: {0}. Настроить её как модуль {1}?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Перенести плату в сеть {0}? Сейчас она в сети {1}.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>Плата остаётся в сети {0}. Чтобы подключиться к ней, переведите этот ПК в эту сеть.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>Точка доступа платы теперь называется {0}. Подключитесь к ней, чтобы оставаться на связи.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>Новая, сеть {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Изменить: {0}</value>
   </data>

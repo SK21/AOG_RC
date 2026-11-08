@@ -834,6 +834,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Znaleziono nową płytkę: {0}. Skonfigurować ją jako moduł {1}?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Przenieść płytkę do sieci {0}? Jest w sieci {1}.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>Płytka pozostaje w sieci {0}. Aby się z nią połączyć, ustaw ten komputer na tę sieć.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>Hotspot płytki nazywa się teraz {0}. Połącz się z nim, aby pozostać w kontakcie.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>Nowa, sieć {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Zmień w {0}</value>
   </data>

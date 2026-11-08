@@ -459,11 +459,13 @@ namespace RateController.Forms
             try
             {
                 Core.NewBoardSetupAsked(Brd.MAC);   // asked once per session, whatever the answer
-                using (var Hlp = new frmMsgBox(string.Format(Lang.lgNewBoardSetup, Brd.Text, 0), "Boards", true))
+                if (AskYesNo(string.Format(Lang.lgNewBoardSetup, Brd.Text, 0)))
                 {
-                    Hlp.TopMost = true;
-                    Hlp.ShowDialog();
-                    if (Hlp.Result) Core.SetUpNewBoard(Brd, Menu);
+                    // the network is the user's choice, asked only for a board on its Ethernet
+                    // address on another network (New_Board_Any_Network.md)
+                    bool move = Brd.OtherNetwork
+                        && AskYesNo(string.Format(Lang.lgMoveBoardNetwork, Core.UDPmodules.SubNet, Brd.Network));
+                    Core.SetUpNewBoard(Brd, Menu, move);
                 }
             }
             catch (Exception ex)
@@ -473,6 +475,16 @@ namespace RateController.Forms
             finally
             {
                 cSetupPromptOpen = false;
+            }
+        }
+
+        private static bool AskYesNo(string Message)
+        {
+            using (var Hlp = new frmMsgBox(Message, "Boards", true))
+            {
+                Hlp.TopMost = true;
+                Hlp.ShowDialog();
+                return Hlp.Result;
             }
         }
 

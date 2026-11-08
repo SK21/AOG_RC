@@ -1,12 +1,5 @@
 ﻿using RateController.Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RateController.PGNs
 {
@@ -39,58 +32,11 @@ namespace RateController.PGNs
             // CRC
             cData[5] = Core.Tls.CRC(cData, 5);
 
-            // based on AGIO/FormUDP
-            IPEndPoint epModuleSet = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 28888);
-            IPAddress IP;
-            if (IPAddress.TryParse(EP, out IP))
+            // every board on every network hears it (not addressed by MAC: every board moves).
+            // Not the tablet hotspot: an ESP32 restarts on this PGN (UDPComm.SendAllNetworks)
+            if (IPAddress.TryParse(EP, out _))
             {
-                //loop thru all interfaces
-                foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
-                {
-                    if (nic.Supports(NetworkInterfaceComponent.IPv4) && nic.OperationalStatus == OperationalStatus.Up)
-                    {
-                        foreach (var info in nic.GetIPProperties().UnicastAddresses)
-                        {
-                            // Only InterNetwork and not loopback which have a subnetmask.
-                            // Not the tablet hotspot: only WiFi modules are on it, whose address
-                            // comes from the hotspot, and an ESP32 restarts on this PGN
-                            if (info.Address.AddressFamily == AddressFamily.InterNetwork &&
-                                !IPAddress.IsLoopback(info.Address) &&
-                                info.IPv4Mask != null &&
-                                !UDPComm.IsTabletHotspot(nic, info.Address))
-                            {
-                                Socket scanSocket;
-                                try
-                                {
-                                    if (nic.OperationalStatus == OperationalStatus.Up
-                                        && info.IPv4Mask != null)
-                                    {
-                                        scanSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                                        scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-                                        scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                                        scanSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
-
-                                        try
-                                        {
-                                            scanSocket.Bind(new IPEndPoint(info.Address, 9578));
-                                            scanSocket.SendTo(cData, 0, cData.Length, SocketFlags.None, epModuleSet);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Props.WriteErrorLog("frmNework/btnSend_Click/Bind error " + ex.Message);
-                                        }
-
-                                        scanSocket.Dispose();
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Props.WriteErrorLog("frmNework/btnSend_Click/nic loop error " + ex.Message);
-                                }
-                            }
-                        }
-                    }
-                }
+                UDPComm.SendAllNetworks(cData, 28888);
                 Result = true;
             }
             return Result;

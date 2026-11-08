@@ -835,6 +835,18 @@
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Neue Platine gefunden: {0}. Als Modul {1} einrichten?</value>
   </data>
+  <data name="lgMoveBoardNetwork" xml:space="preserve">
+    <value>Platine in das Netzwerk {0} verschieben? Sie ist im Netzwerk {1}.</value>
+  </data>
+  <data name="lgBoardStaysOnNetwork" xml:space="preserve">
+    <value>Die Platine bleibt im Netzwerk {0}. Stellen Sie diesen PC auf dieses Netzwerk ein, um sich mit ihr zu verbinden.</value>
+  </data>
+  <data name="lgJoinHotspot" xml:space="preserve">
+    <value>Der Hotspot der Platine heißt jetzt {0}. Verbinden Sie sich damit, um verbunden zu bleiben.</value>
+  </data>
+  <data name="lgStateNewNetwork" xml:space="preserve">
+    <value>Neu, Netzwerk {0}</value>
+  </data>
   <data name="lgChangeItOn" xml:space="preserve">
     <value>Änderbar unter {0}</value>
   </data>

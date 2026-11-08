@@ -308,7 +308,9 @@ namespace RateController.Menu
             newBoards.Sort((a, b) => a.MAC.CompareTo(b.MAC));
             foreach (BoardInfo Brd in newBoards)
             {
-                rows.Add(BoardRow(Brd, Lang.lgNew, Lang.lgStateNew, Color.Blue));
+                // a new board on another network is moved there only if the user agrees at Send
+                string state = Brd.OtherNetwork ? string.Format(Lang.lgStateNewNetwork, Brd.Network) : Lang.lgStateNew;
+                rows.Add(BoardRow(Brd, Lang.lgNew, state, Color.Blue));
             }
             return rows;
         }

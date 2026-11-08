@@ -1,6 +1,7 @@
 using RateController.Classes;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace RateController.PGNs
@@ -14,8 +15,43 @@ namespace RateController.PGNs
         public byte InoType;
         public ushort InoID;        // ddmmy, no leading 0
         public DateTime LastHeard;
+        public IPAddress IP;        // where its last report came from; null over CAN
 
         public bool Live => (DateTime.Now - LastHeard).TotalSeconds < PGN32403.LiveSec;
+
+        // the a.b.c of the address it was heard from, "" over CAN
+        public string Network
+        {
+            get
+            {
+                string Result = "";
+                if (IP != null)
+                {
+                    byte[] B = IP.GetAddressBytes();
+                    if (B.Length == 4) Result = B[0] + "." + B[1] + "." + B[2];
+                }
+                return Result;
+            }
+        }
+
+        // heard at its Ethernet address (a.b.c.ID+50 on all three firmwares) on a network
+        // other than the app's module network: only then can its network be moved (32508)
+        public bool OtherNetwork
+        {
+            get
+            {
+                bool Result = false;
+                if (IP != null)
+                {
+                    byte[] B = IP.GetAddressBytes();
+                    Result = B.Length == 4 && B[3] == ID + 50 && Network != Core.UDPmodules.SubNet;
+                }
+                return Result;
+            }
+        }
+
+        // an ESP32 heard on its own hotspot (192.168.(ID+200).1); the hotspot name follows its ID
+        public bool OnOwnHotspot => IP != null && IP.ToString() == "192.168." + (ID + 200) + ".1";
 
         // last 3 bytes, e.g. "…0B:B0:12": enough to tell boards apart on screen
         public string ShortMAC => "…" + ((MAC >> 16) & 0xFF).ToString("X2") + ":"
@@ -67,7 +103,8 @@ namespace RateController.PGNs
         // last time old firmware reported at each ID (0-15 and 25)
         private readonly DateTime[] cRejectedTime = new DateTime[Props.NewModuleID + 1];
 
-        public bool ParseByteData(byte[] Data)
+        // From: the sender's address (UDP), null over CAN
+        public bool ParseByteData(byte[] Data, IPAddress From = null)
         {
             bool Result = false;
             try
@@ -101,6 +138,7 @@ namespace RateController.PGNs
                             Brd.InoType = Data[25];
                             Brd.InoID = inoID;
                             Brd.LastHeard = DateTime.Now;
+                            Brd.IP = From;
                         }
                         Result = true;
                     }

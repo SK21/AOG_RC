@@ -311,11 +311,19 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 		//1     HeaderHi    126
 		//2-7   MAC         acted on only by the board with this MAC
 		//8     new module ID 0-7 (MaxModuleID)
-		//9     CRC
-		PGNlength = 10;
+		//9-11  network a.b.c (the app's module network), 0.0.0 = keep this board's network
+		//12    CRC
+		PGNlength = 13;
 		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && data[8] <= MaxModuleID
 			&& memcmp(data + 2, BoardMAC, 6) == 0)
 		{
+			if ((data[9] | data[10] | data[11]) != 0)
+			{
+				MDLnetwork.IP0 = data[9];
+				MDLnetwork.IP1 = data[10];
+				MDLnetwork.IP2 = data[11];
+				SaveNetworks();
+			}
 			MDL.ID = data[8];
 			SaveData();
 			// the IP and every packet's ID are set at boot, so restart - but shortly, not
