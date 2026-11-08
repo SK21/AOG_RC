@@ -176,6 +176,8 @@ void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
 void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info)
 {
 	Serial.print("Network IP: ");
+	Serial.print(WiFi.localIP());
+	Serial.print(", settings page http://");	// the web server answers on every interface
 	Serial.println(WiFi.localIP());
 	// subnet broadcast from the real mask, not an assumed /24: an iPhone hotspot is
 	// 172.20.10.0/28, where .255 is off-subnet and goes to the phone as gateway (dropped)
