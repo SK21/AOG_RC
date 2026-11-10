@@ -66,9 +66,21 @@ namespace RateController.PGNs
                     }
                     cLspeed = Data[13] / 10.0;
                     cRspeed = Data[14] / 10.0;
-                    if (Changed()) SectionsChanged?.Invoke(this, EventArgs.Empty);
 
+                    // a gap means SectionIsOn read the PGN 254 relay bytes meanwhile
+                    if (ReceiveTime != DateTime.MinValue && !Connected())
+                    {
+                        Props.WriteActivityLog("AOG PGN 229 received again after "
+                            + (DateTime.Now - ReceiveTime).TotalSeconds.ToString("N1")
+                            + " s (sections came from PGN 254 meanwhile)", false, true);
+                    }
                     ReceiveTime = DateTime.Now;
+
+                    if (Changed())
+                    {
+                        Props.WriteActivityLog("AOG sections (229): " + OnList(cSection, SectionCount) + SpeedText(), false, true);
+                        SectionsChanged?.Invoke(this, EventArgs.Empty);
+                    }
                 }
             }
         }
@@ -101,7 +113,43 @@ namespace RateController.PGNs
         private void AutoSteerPGN_SectionsChanged(object sender, EventArgs e)
         {
             // re-raise PGN254 event
-            if (!Connected()) SectionsChanged?.Invoke(this, EventArgs.Empty);
+            if (!Connected())
+            {
+                bool[] Relays = new bool[16];
+                for (int i = 0; i < 8; i++)
+                {
+                    Relays[i] = Core.Tls.BitRead(Core.AutoSteerPGN.RelayLo, i);
+                    Relays[i + 8] = Core.Tls.BitRead(Core.AutoSteerPGN.RelayHi, i);
+                }
+                Props.WriteActivityLog("AOG sections (254 fallback): " + OnList(Relays, 16) + SpeedText(), false, true);
+
+                SectionsChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private string OnList(bool[] Sections, int Count)
+        {
+            // section numbers from 1, as AOG shows them
+            string Result = "";
+            for (int i = 0; i < Count; i++)
+            {
+                if (Sections[i]) Result += " " + (i + 1).ToString();
+            }
+
+            if (Result == "")
+            {
+                Result = "all off";
+            }
+            else
+            {
+                Result = "on" + Result;
+            }
+            return Result;
+        }
+
+        private string SpeedText()
+        {
+            return ", speed " + Props.Speed_KMH.ToString("N1") + " km/h";
         }
 
         private bool Changed()
