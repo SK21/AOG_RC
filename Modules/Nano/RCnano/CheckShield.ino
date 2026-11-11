@@ -66,4 +66,30 @@ static byte readOp(byte op, byte address) {
     return result;
 }
 
+#define ENC_BIT_FIELD_SET   0x80
+#define ENC_BIT_FIELD_CLR   0xA0
+#define ENC_EIR             0x1C    // every bank
+#define ENC_EIR_RXERIF      0x01    // receive buffer overflowed
+#define ENC_ECON1           0x1F    // every bank
+#define ENC_RXEN            0x04    // ECON1 receive enable
+
+// Receive on/off. ether.begin() switches receiving on at once, but the Nano reads nothing until
+// loop() runs, so on a busy network (AgOpenWeb broadcasts PGNs to port 8888 about 300 times a
+// second) the ENC28J60 buffer overflows during setup, which can leave it unable to receive.
+// So receiving is switched off after ether.begin() and on when loop() is about to run.
+// ECON1 and EIR are in every bank, so EtherCard's bank selection is not disturbed.
+void SetReceive(bool On)
+{
+    if (On)
+    {
+        writeOp(ENC_BIT_FIELD_CLR, ENC_EIR, ENC_EIR_RXERIF);    // forget an overflow from before
+        writeOp(ENC_BIT_FIELD_SET, ENC_ECON1, ENC_RXEN);
+    }
+    else
+    {
+        writeOp(ENC_BIT_FIELD_CLR, ENC_ECON1, ENC_RXEN);
+    }
+}
+
+
 

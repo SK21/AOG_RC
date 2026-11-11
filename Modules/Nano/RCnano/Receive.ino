@@ -4,6 +4,8 @@ void ReceiveUDPwired(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_po
 	uint8_t PGNlength;
 	uint16_t PGN = data[1] << 8 | data[0];
 
+	LastRCpacket = millis();	// any packet on ListeningPort: receiving works (Ethernet recovery)
+
 	switch (PGN)
 	{
 	case 32500:

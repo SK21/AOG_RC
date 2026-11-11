@@ -64,26 +64,17 @@ void DoSetup()
 	// ethernet 
 	Serial.println(F("Starting Ethernet ..."));
 	MDLnetwork.IP3 = MDL.ID + 50;
-	byte ArduinoIP[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, MDLnetwork.IP3 };
-	static byte gwip[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 1 };
-	static byte myDNS[] = { 8, 8, 8, 8 };
-	static byte mask[] = { 255, 255, 255, 0 };
 
 	// update from saved data
 	DestinationIP[0] = MDLnetwork.IP0;
 	DestinationIP[1] = MDLnetwork.IP1;
 	DestinationIP[2] = MDLnetwork.IP2;
 
-	ENCfound = ShieldFound();
+	StartEthernet();
 	if (ENCfound)
 	{
-		ether.begin(sizeof Ethernet::buffer, BoardMAC, selectPin);
 		Serial.println("");
 		Serial.println(F("Ethernet controller found."));
-		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
-
-		//register sub for received data
-		ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
 
 		delay(500);
 		if (EthernetConnected())
@@ -306,6 +297,32 @@ void DoSetup()
 	Serial.println("");
 	Serial.println(F("Finished setup."));
 	Serial.println("");
+
+	if (ENCfound) SetReceive(true);		// last: loop() reads from here on
+}
+
+// Probe and start the ENC28J60 with this module's address and listener. Used at boot and to
+// recover when the ENC28J60 has stopped receiving (see EthernetRecoverTime).
+void StartEthernet()
+{
+	LastEthernetStart = millis();
+
+	byte ArduinoIP[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, MDLnetwork.IP3 };
+	byte gwip[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 1 };
+	byte myDNS[] = { 8, 8, 8, 8 };
+	byte mask[] = { 255, 255, 255, 0 };
+
+	ENCfound = ShieldFound();
+	if (ENCfound)
+	{
+		ether.begin(sizeof Ethernet::buffer, BoardMAC, selectPin);
+		SetReceive(false);		// on again when loop() is about to read (see SetReceive)
+		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
+
+		// register sub for received data, once: the listener list lives in EtherCard, not
+		// the ENC28J60, and each call adds another entry (each packet would be handled twice)
+		if (!ether.udpServerListening()) ether.udpServerListenOnPort(&ReceiveUDPwired, ListeningPort);
+	}
 }
 
 // eeprom map:

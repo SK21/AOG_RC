@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 8116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 11116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
@@ -129,6 +129,18 @@ byte DestinationIP[] = { MDLnetwork.IP0, MDLnetwork.IP1, MDLnetwork.IP2, 255 };	
 unsigned int SourcePort = 5123;		// to send from
 bool ENCfound;
 
+// Busy networks. The ENC28J60 takes every broadcast; with AgOpenWeb that is PGNs 254/239/229 to
+// port 8888 every 10 ms, about 250-300 packets a second (RC sends about 6 a second here). If the
+// receive buffer overflows, which happened during setup on every boot or restart, the ENC28J60
+// can be left unable to receive while sending still works (EtherCard doesn't handle overflow).
+// So: receiving is off until loop() is about to read (SetReceive), every queued packet is read
+// each loop (up to MaxPacketsPerLoop), and as a backstop Ethernet is started again when the link
+// is up but nothing has come from RC on ListeningPort for EthernetRecoverTime.
+const uint8_t MaxPacketsPerLoop = 8;
+const uint16_t EthernetRecoverTime = 5000;	// ms
+uint32_t LastRCpacket = 0;					// millis() of the last packet on ListeningPort
+uint32_t LastEthernetStart = 0;				// millis() of the last StartEthernet()
+
 // Relays
 volatile byte RelayLo = 0;	// sections 0-7
 volatile byte RelayHi = 0;	// sections 8-15
@@ -231,7 +243,14 @@ void loop()
 	if (EthernetConnected())
 	{
 		//this must be called for ethercard functions to work.
-		ether.packetLoop(ether.packetReceive());
+		// read every queued packet (up to MaxPacketsPerLoop), not one per loop, so broadcast
+		// traffic can't fill the ENC28J60 receive buffer
+		for (uint8_t i = 0; i < MaxPacketsPerLoop; i++)
+		{
+			uint16_t len = ether.packetReceive();
+			ether.packetLoop(len);
+			if (len == 0) break;
+		}
 	}
 
 	DoPID();
@@ -261,6 +280,19 @@ void loop()
 		if (RestartPending && (millis() - RestartLastConfig >= RestartDelay))
 		{
 			resetFunc();
+		}
+
+		// receive recovery: link up but nothing from RC for EthernetRecoverTime. With RC
+		// closed this restarts Ethernet once every EthernetRecoverTime (5 s); each restart
+		// blocks for about 0.5 s (ShieldFound), harmless since nothing is being controlled
+		// then. Not for a new board (NewModuleID): RC sends it nothing until it is set up,
+		// and a restart could lose that setup.
+		if ((MDL.ID != NewModuleID) && EthernetConnected() && (millis() - LastRCpacket > EthernetRecoverTime)
+			&& (millis() - LastEthernetStart > EthernetRecoverTime))
+		{
+			Serial.println(F("No data from RC, restarting Ethernet."));
+			StartEthernet();
+			if (ENCfound) SetReceive(true);		// loop() reads straight away
 		}
 	}
 
