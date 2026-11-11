@@ -4,7 +4,11 @@
 
 // Nano board for rate control switches
 # define InoDescription "SWarduino"
-const int16_t InoID = 23075;	// change to send defaults to eeprom
+const int16_t InoID = 11116;	// firmware build, ddmmy, no leading 0. Version label only (sent to RC in
+								// PGN 32618): it doesn't reset stored settings, SettingsVersion does
+const int16_t SettingsVersion = 23075;	// stored at EEPROM 0. Change it only when ModuleConfig's layout
+										// changes: that update loads defaults. 23075 is what boards
+										// stored before (the old InoID), so they keep their settings.
 const uint8_t InoType = 3;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 #define NC 255		// not connected
@@ -40,6 +44,12 @@ unsigned int DestinationPort = 29999; // Rate Controller listening port
 byte Ethernet::buffer[500]; // udp send and receive buffer
 bool ENCfound;
 static byte selectPin = 10;
+
+// Busy networks. AgOpenWeb broadcasts PGNs 254/239/229 to port 8888 every 10 ms (about 250-300
+// packets a second), and the ENC28J60 takes every broadcast. Receiving is off until setup is
+// done (SetReceive), so the buffer can't overflow before loop() reads, and loop() reads every
+// queued packet, not one. Same fix as RCnano (InoID 11116).
+const uint8_t MaxPacketsPerLoop = 8;
 
 unsigned long LastTime;
 
@@ -77,7 +87,12 @@ void loop()
 	if (EthernetConnected())
 	{
 		//this must be called for ethercard functions to work.
-		ether.packetLoop(ether.packetReceive());
+		for (uint8_t i = 0; i < MaxPacketsPerLoop; i++)
+		{
+			uint16_t len = ether.packetReceive();
+			ether.packetLoop(len);
+			if (len == 0) break;
+		}
 	}
 
 	//Blink();

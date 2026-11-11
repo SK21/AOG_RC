@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 8116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 11116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
@@ -375,11 +375,20 @@ bool WorkPinOn()
 {
 	static bool WrkOn = false;
 	static bool WrkLast = false;
+	static bool WrkStarted = false;		// first reading only sets WrkLast
 
 	if (MDL.WorkPin < NC)
 	{
 		bool WrkCurrent = digitalRead(MDL.WorkPin);
 		if (MDL.InvertWork) WrkCurrent = !WrkCurrent;
+
+		if (!WrkStarted)
+		{
+			// a boot is not a press: start from the pin as it is now. Without this a
+			// momentary switch with Invert off (pin high at rest) turned on at every boot.
+			WrkLast = WrkCurrent;
+			WrkStarted = true;
+		}
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)

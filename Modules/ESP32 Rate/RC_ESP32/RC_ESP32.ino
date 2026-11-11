@@ -25,7 +25,7 @@
 
 //rate control with ESP32, board: DOIT ESP32 DEVKIT V1
 # define InoDescription "RC_ESP32"
-const uint16_t InoID = 8116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
+const uint16_t InoID = 11116;	// firmware build, ddmmy, no leading 0. Version label only: it no longer
 								// resets stored settings — bump a record's version below for that
 const uint8_t InoType = 4;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t Processor = 0;	// 0 - ESP32-Wroom-32U
@@ -426,11 +426,20 @@ bool WorkPinOn()
 {
 	static bool WrkOn = false;
 	static bool WrkLast = false;
+	static bool WrkStarted = false;		// first reading only sets WrkLast
 
 	if (MDL.WorkPin < NC)
 	{
 		bool WrkCurrent = digitalRead(MDL.WorkPin);
 		if (MDL.InvertWork) WrkCurrent = !WrkCurrent;
+
+		if (!WrkStarted)
+		{
+			// a boot is not a press: start from the pin as it is now. Without this a
+			// momentary switch with Invert off (pin high at rest) turned on at every boot.
+			WrkLast = WrkCurrent;
+			WrkStarted = true;
+		}
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)

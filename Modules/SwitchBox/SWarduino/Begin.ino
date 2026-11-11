@@ -63,6 +63,7 @@ void DoSetup()
 	if (ENCfound)
 	{
 		ether.begin(sizeof Ethernet::buffer, LocalMac, selectPin);
+		SetReceive(false);		// on again at the end of setup (see SetReceive)
 		Serial.println("");
 		Serial.println("Ethernet controller found.");
 		ether.staticSetup(ArduinoIP, gwip, myDNS, mask);
@@ -88,6 +89,8 @@ void DoSetup()
 
 	Serial.println("");
 	Serial.println("Finished Setup.");
+
+	if (ENCfound) SetReceive(true);		// last: loop() reads from here on
 }
 
 void LoadData()
@@ -97,7 +100,7 @@ void LoadData()
 	int8_t StoredType;
 	EEPROM.get(0, StoredID);
 	EEPROM.get(4, StoredType);
-	if (StoredID == InoID && StoredType == InoType)
+	if (StoredID == SettingsVersion && StoredType == InoType)
 	{
 		// load stored data
 		Serial.println("Loading stored settings.");
@@ -120,7 +123,7 @@ void SaveData()
 {
 	// update stored data
 	Serial.println("Updating stored settings.");
-	EEPROM.put(0, InoID);
+	EEPROM.put(0, SettingsVersion);
 	EEPROM.put(4, InoType);
 	EEPROM.put(110, MDL);
 }

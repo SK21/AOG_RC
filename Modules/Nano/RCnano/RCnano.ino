@@ -338,11 +338,20 @@ bool WorkPinOn()
 {
 	static bool WrkOn = false;
 	static bool WrkLast = false;
+	static bool WrkStarted = false;		// first reading only sets WrkLast
 
 	if (MDL.WorkPin < NC)
 	{
 		bool WrkCurrent = digitalRead(MDL.WorkPin);
 		if (MDL.InvertWork) WrkCurrent = !WrkCurrent;
+
+		if (!WrkStarted)
+		{
+			// a boot is not a press: start from the pin as it is now. Without this a
+			// momentary switch with Invert off (pin high at rest) turned on at every boot.
+			WrkLast = WrkCurrent;
+			WrkStarted = true;
+		}
 		if (MDL.WorkPinIsMomentary)
 		{
 			if (WrkCurrent != WrkLast)
