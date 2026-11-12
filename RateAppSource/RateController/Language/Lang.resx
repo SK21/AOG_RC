@@ -908,7 +908,7 @@ Module {1} will have no board.</value>
 This replaces the module&apos;s pins and relay settings.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
-    <value>Load preset</value>
+    <value>Load Presets</value>
   </data>
   <data name="lgBoardGone" xml:space="preserve">
     <value>The board is no longer reporting.</value>

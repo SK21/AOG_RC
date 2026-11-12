@@ -134,12 +134,15 @@ bool ENCfound;
 // receive buffer overflows, which happened during setup on every boot or restart, the ENC28J60
 // can be left unable to receive while sending still works (EtherCard doesn't handle overflow).
 // So: receiving is off until loop() is about to read (SetReceive), every queued packet is read
-// each loop (up to MaxPacketsPerLoop), and as a backstop Ethernet is started again when the link
-// is up but nothing has come from RC on ListeningPort for EthernetRecoverTime.
+// each loop (up to MaxPacketsPerLoop), and as a backstop the PHY is reset when the link is up
+// but nothing has come from RC on ListeningPort for EthernetRecoverTime. Not a full Ethernet
+// restart: EtherCard keeps its receive read position in a static in packetReceive() that
+// ether.begin() doesn't reset, so after a restart it reads from the wrong place and can stop
+// the chip receiving; only a reset of the Nano clears that.
 const uint8_t MaxPacketsPerLoop = 8;
 const uint16_t EthernetRecoverTime = 5000;	// ms
 uint32_t LastRCpacket = 0;					// millis() of the last packet on ListeningPort
-uint32_t LastEthernetStart = 0;				// millis() of the last StartEthernet()
+uint32_t LastEthernetStart = 0;				// millis() of the last StartEthernet() or PHY recovery
 
 // Relays
 volatile byte RelayLo = 0;	// sections 0-7
@@ -282,17 +285,19 @@ void loop()
 			resetFunc();
 		}
 
-		// receive recovery: link up but nothing from RC for EthernetRecoverTime. With RC
-		// closed this restarts Ethernet once every EthernetRecoverTime (5 s); each restart
-		// blocks for about 0.5 s (ShieldFound), harmless since nothing is being controlled
-		// then. Not for a new board (NewModuleID): RC sends it nothing until it is set up,
-		// and a restart could lose that setup.
+		// receive recovery: link up but nothing from RC for EthernetRecoverTime. Records the
+		// ENC28J60's state, then resets its PHY only (no soft reset or ether.begin, see
+		// EthernetRecoverTime). With RC closed this runs once every EthernetRecoverTime (5 s)
+		// and the link drops for a moment each time, harmless since nothing is being
+		// controlled then. Not for a new board (NewModuleID): RC sends it nothing until it is
+		// set up.
 		if ((MDL.ID != NewModuleID) && EthernetConnected() && (millis() - LastRCpacket > EthernetRecoverTime)
 			&& (millis() - LastEthernetStart > EthernetRecoverTime))
 		{
-			Serial.println(F("No data from RC, restarting Ethernet."));
-			StartEthernet();
-			if (ENCfound) SetReceive(true);		// loop() reads straight away
+			Serial.println(F("No data from RC, resetting the PHY."));
+			EncReport();
+			EncPhyRecover();
+			LastEthernetStart = millis();
 		}
 	}
 

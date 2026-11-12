@@ -58,17 +58,6 @@ namespace RateController.Menu
             }
         }
 
-        private void btnRescan_Click(object sender, EventArgs e)
-        {
-            // resets this page's settings only, to be Saved or Cancelled like any edit; the
-            // module being edited (cbModuleID) is navigation, not a setting, so it stays
-            ckRelayOn.Checked = true;
-            ckFlowOn.Checked = true;
-            ckADS1115enabled.Checked = false;
-            tbSensorCount.Text = "1";
-            cbOnboardRelays.SelectedIndex = 0;
-        }
-
         // Loads the starting configuration for the board reporting at this module, or for
         // the board type the user picks when none is reporting. Not while edits are unsaved:
         // the preset is saved and reloads every module page.
@@ -131,9 +120,11 @@ namespace RateController.Menu
 
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
-            btnRescan.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing;
-            btnRescan.Top = btnOK.Top;
+            btnPreset.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing;
+            btnPreset.Top = btnOK.Top;
+            float typeSize = lbModuleType.Font.Size;      // StyleControls sets every label to MenuFontSmall
             MainMenu.StyleControls(this);
+            lbModuleType.Font = new Font(lbModuleType.Font.FontFamily, typeSize);
 
             lbModule.Font = new Font(lbModule.Font, FontStyle.Underline);
             cModuleColor = lbModule.ForeColor;
@@ -243,7 +234,6 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             lbModuleID.Text = Lang.lgModuleToEdit;
-            btnPreset.Text = Lang.lgLoadPresetChoose;
             lbSensorCount.Text = Lang.lgSensorCount;
             lbRelay.Text = Lang.lgRelayControl;
             lbRemoteRelay.Text = Lang.lgRemoteRelayControl;

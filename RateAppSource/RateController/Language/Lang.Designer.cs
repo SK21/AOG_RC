@@ -2401,7 +2401,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Load preset.
+        ///   Looks up a localized string similar to Load Presets.
         /// </summary>
         internal static string lgLoadPresetChoose {
             get {
