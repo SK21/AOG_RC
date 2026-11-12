@@ -151,6 +151,35 @@ namespace RateController
             return Result;
         }
 
+        // true when a PC adapter that is up has an address on network a.b.c (same match as
+        // BroadcastFor). Without one, the app can't be set to that network.
+        public static bool HasAdapterOn(string Network)
+        {
+            bool Found = false;
+            try
+            {
+                foreach (NetworkInterface Nic in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (!Found && Nic.OperationalStatus == OperationalStatus.Up && Nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                    {
+                        foreach (UnicastIPAddressInformation Info in Nic.GetIPProperties().UnicastAddresses)
+                        {
+                            if (!Found && Info.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                byte[] L = Info.Address.GetAddressBytes();
+                                Found = (L[0] + "." + L[1] + "." + L[2]) == Network;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("UDPComm/HasAdapterOn: " + ex.Message);
+            }
+            return Found;
+        }
+
         public static bool IsTabletHotspot(NetworkInterface Nic, IPAddress Address)
         {
             // the Windows mobile hotspot runs on a Wi-Fi Direct virtual adapter at 192.168.137.1

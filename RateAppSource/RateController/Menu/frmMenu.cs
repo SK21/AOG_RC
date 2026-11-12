@@ -1080,12 +1080,13 @@ namespace RateController
 
                 if (proceed)
                 {
-                    // a board heard on another network: the user chooses whether it moves to
-                    // the app's network; either way this Send goes to every network so its ID
-                    // and settings reach it (New_Board_Any_Network.md)
+                    // a board heard on another network moves to the app's network; the user
+                    // chooses only when this PC also has an adapter on the board's network.
+                    // Either way this Send goes to every network so its ID and settings reach
+                    // it (New_Board_Any_Network.md)
                     allNetworks = brd.OtherNetwork;
-                    bool moveNetwork = false;
-                    if (allNetworks)
+                    bool moveNetwork = allNetworks && !brd.CanStayOnNetwork;
+                    if (allNetworks && !moveNetwork)
                     {
                         using (var Hlp = new frmMsgBox(string.Format(Lang.lgMoveBoardNetwork,
                             Core.UDPmodules.SubNet, brd.Network), "Boards", true))

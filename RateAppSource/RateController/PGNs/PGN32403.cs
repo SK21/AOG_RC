@@ -50,6 +50,11 @@ namespace RateController.PGNs
             }
         }
 
+        // on another network that this PC also has an adapter on: only then is keeping the
+        // board there a real choice (the app can be set to that network on Comm). Otherwise
+        // the board is always moved to the app's network, without asking.
+        public bool CanStayOnNetwork => OtherNetwork && UDPComm.HasAdapterOn(Network);
+
         // an ESP32 heard on its own hotspot (192.168.(ID+200).1); the hotspot name follows its ID
         public bool OnOwnHotspot => IP != null && IP.ToString() == "192.168." + (ID + 200) + ".1";
 

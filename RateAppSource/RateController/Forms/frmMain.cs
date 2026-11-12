@@ -461,10 +461,12 @@ namespace RateController.Forms
                 Core.NewBoardSetupAsked(Brd.MAC);   // asked once per session, whatever the answer
                 if (AskYesNo(string.Format(Lang.lgNewBoardSetup, Brd.Text, 0)))
                 {
-                    // the network is the user's choice, asked only for a board on its Ethernet
-                    // address on another network (New_Board_Any_Network.md)
+                    // a board on its Ethernet address on another network is moved to the app's
+                    // network; asked only when this PC also has an adapter on the board's network,
+                    // otherwise the board would be out of reach (New_Board_Any_Network.md)
                     bool move = Brd.OtherNetwork
-                        && AskYesNo(string.Format(Lang.lgMoveBoardNetwork, Core.UDPmodules.SubNet, Brd.Network));
+                        && (!Brd.CanStayOnNetwork
+                        || AskYesNo(string.Format(Lang.lgMoveBoardNetwork, Core.UDPmodules.SubNet, Brd.Network)));
                     Core.SetUpNewBoard(Brd, Menu, move);
                 }
             }
