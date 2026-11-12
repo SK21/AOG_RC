@@ -40,6 +40,7 @@ namespace RateController.PGNs
 
             if (Props.CanEnabled) Core.CanBridgeComm?.SendModuleCommand(Data);
             Core.UDPmodules.Send(Data);
+            Core.LastIDAssign = System.DateTime.Now;   // holds off the new board setup prompt
         }
     }
 }

@@ -344,13 +344,24 @@ namespace RateController.Classes
         // can set up with a yes/no. Only when the board list holds nothing but this new board.
         // Boards already asked this session (Yes or No) are never asked twice. After Yes the
         // board still reports at 25 until its deferred restart, and stays live for 5 s.
+        // Two or more new boards seen together are all marked asked: when one restarts after
+        // its assign, the other would otherwise look like the only board.
+        // No prompt for AssignHoldSeconds after any ID assign (PGN 32508): a board restarting
+        // to its new ID is not live for a few seconds, and the board list looks emptier than it is.
         private static readonly HashSet<ulong> cSetupAsked = new HashSet<ulong>();
+        private const double AssignHoldSeconds = 30;
+        public static DateTime LastIDAssign = DateTime.MinValue;
 
         public static BoardInfo NewBoardToSetUp()
         {
             BoardInfo Result = null;
             List<BoardInfo> nb = ModulesBoardID.NewBoards();
-            if (nb.Count == 1 && !HasPendingBoards && !cSetupAsked.Contains(nb[0].MAC)
+            if (nb.Count > 1)
+            {
+                foreach (BoardInfo b in nb) cSetupAsked.Add(b.MAC);
+            }
+            bool holding = (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+            if (nb.Count == 1 && !holding && !HasPendingBoards && !cSetupAsked.Contains(nb[0].MAC)
                 && clsPresets.Has((ModuleTypes)nb[0].InoType))
             {
                 bool other = false;
