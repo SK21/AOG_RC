@@ -117,7 +117,7 @@ namespace RateController.Menu
                     }
 
                     SetButtons(false);
-                    if (Core.HasPendingBoards) MainMenu.HighlightUpdateButton();
+                    if (Core.HasPendingBoards) MainMenu.HighlightUpdateButton(true, true);
                     RefreshPage();
                 }
             }

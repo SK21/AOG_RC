@@ -189,9 +189,16 @@ namespace RateController
         // saved changes not yet sent to the module (the Send button is highlighted)
         public bool ChangesWaitingToSend { get; private set; }
 
-        public void HighlightUpdateButton(bool Highlight = true)
+        // a module page (or a preset) was saved since the last Send. A Boards page Save sets
+        // only the highlight (BoardsOnly), so a Send with nothing else waiting can send just
+        // the board descriptions (SendDescriptionsOnly).
+        private bool cConfigWaiting = false;
+
+        public void HighlightUpdateButton(bool Highlight = true, bool BoardsOnly = false)
         {
             ChangesWaitingToSend = Highlight;
+            if (!Highlight) cConfigWaiting = false;
+            else if (!BoardsOnly) cConfigWaiting = true;
             if (Highlight)
             {
                 butUpdateModules.FlatAppearance.BorderSize = 4;
@@ -1002,6 +1009,10 @@ namespace RateController
                     Props.ShowMessage("Pressure settings sent", "Pressure", 10000);
                     HighlightUpdateButton(false);
                 }
+                else if (Core.PendingIDChange() == null && Core.HasPendingBoards && !cConfigWaiting)
+                {
+                    SendDescriptionsOnly();
+                }
                 else
                 {
                     SendModuleConfig();
@@ -1135,11 +1146,22 @@ namespace RateController
             foreach (PGNs.PendingBoard p in Core.PendingBoards()) Core.ClearPending(p.MAC);
         }
 
+        // Only descriptions saved on the Boards page, no ID change and no module page saved:
+        // 32506 alone to each board. No 32507/32700, so the board doesn't restart, and the
+        // module the config pages are on doesn't matter.
+        private void SendDescriptionsOnly()
+        {
+            int sent = SendPendingDescriptions(null);
+            Props.ShowMessage(sent > 0 ? "Description sent" : Lang.lgBoardGone, "Boards", 10000);
+            HighlightUpdateButton(false);
+        }
+
         // 32506 to each board with a saved description: at its new ID for the board just
         // moved (Move), else at its ID when that reaches only it (0-15, not a duplicate).
-        // Every pending change is cleared once this Send has gone.
-        private void SendPendingDescriptions(PGNs.PendingBoard Move)
+        // Every pending change is cleared once this Send has gone. Returns the number sent.
+        private int SendPendingDescriptions(PGNs.PendingBoard Move)
         {
+            int sent = 0;
             foreach (PGNs.PendingBoard p in Core.PendingBoards())
             {
                 if (p.Description != null)
@@ -1154,10 +1176,15 @@ namespace RateController
                         PGNs.BoardInfo brd = Core.ModulesBoardID.LiveBoard(p.MAC);
                         if (brd != null && brd.ID < Props.MaxModules && !Core.ModulesBoardID.DuplicateID(brd.ID)) id = brd.ID;
                     }
-                    if (id >= 0) new PGNs.PGN32506().Send(id, p.Description);
+                    if (id >= 0)
+                    {
+                        new PGNs.PGN32506().Send(id, p.Description);
+                        sent++;
+                    }
                 }
                 Core.ClearPending(p.MAC);
             }
+            return sent;
         }
 
         // true when any open module page other than Except holds unsaved edits (each page
