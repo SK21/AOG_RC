@@ -66,6 +66,7 @@
             this.lbModulesHeading = new System.Windows.Forms.Label();
             this.lbWifiKey = new System.Windows.Forms.Label();
             this.tbWifiKey = new System.Windows.Forms.TextBox();
+            this.btnShowWifiKey = new System.Windows.Forms.Button();
             this.lbModuleKey = new System.Windows.Forms.Label();
             this.tbModuleKey = new System.Windows.Forms.TextBox();
             this.lstModules = new System.Windows.Forms.ListBox();
@@ -452,6 +453,7 @@
             this.tabPage3.Controls.Add(this.lbModulesHeading);
             this.tabPage3.Controls.Add(this.lbWifiKey);
             this.tabPage3.Controls.Add(this.tbWifiKey);
+            this.tabPage3.Controls.Add(this.btnShowWifiKey);
             this.tabPage3.Controls.Add(this.lbModuleKey);
             this.tabPage3.Controls.Add(this.tbModuleKey);
             this.tabPage3.Controls.Add(this.lstModules);
@@ -550,9 +552,21 @@
             this.tbWifiKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbWifiKey.Location = new System.Drawing.Point(190, 120);
             this.tbWifiKey.Name = "tbWifiKey";
-            this.tbWifiKey.Size = new System.Drawing.Size(298, 29);
+            this.tbWifiKey.Size = new System.Drawing.Size(258, 29);
             this.tbWifiKey.TabIndex = 3;
             this.tbWifiKey.UseSystemPasswordChar = true;
+            //
+            // btnShowWifiKey
+            //
+            this.btnShowWifiKey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnShowWifiKey.Font = new System.Drawing.Font("Segoe MDL2 Assets", 12F);
+            this.btnShowWifiKey.Location = new System.Drawing.Point(452, 120);
+            this.btnShowWifiKey.Name = "btnShowWifiKey";
+            this.btnShowWifiKey.Size = new System.Drawing.Size(36, 29);
+            this.btnShowWifiKey.TabIndex = 18;
+            this.btnShowWifiKey.Text = "";
+            this.btnShowWifiKey.UseVisualStyleBackColor = true;
+            this.btnShowWifiKey.Click += new System.EventHandler(this.btnShowWifiKey_Click);
             // 
             // lbModuleKey
             // 
@@ -784,6 +798,7 @@
         private System.Windows.Forms.LinkLabel lnkModuleIP;
         private System.Windows.Forms.Label lbWifiKey;
         private System.Windows.Forms.TextBox tbWifiKey;
+        private System.Windows.Forms.Button btnShowWifiKey;
         private System.Windows.Forms.Label lbModuleKey;
         private System.Windows.Forms.TextBox tbModuleKey;
         private System.Windows.Forms.ListBox lstModules;

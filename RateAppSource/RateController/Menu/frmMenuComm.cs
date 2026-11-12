@@ -331,14 +331,30 @@ namespace RateController.Menu
         {
             // password box follows the target: the hotspot's password is known, a WiFi
             // network's is typed, prefilled only when the saved one belongs to that network
+            // The prefill can be stale (the network's password changed, its name didn't), and
+            // Windows won't give the PC's own key back, so the log says where it came from.
             if (cTarget != null && !cTarget.Hotspot)
             {
                 tbWifiKey.Text = (WifiStore.HomeSsid == cTarget.Ssid) ? WifiStore.HomeKey : "";
+                if (tbWifiKey.Text != "") Log("Password filled in from the last setup on " + cTarget.Ssid + ". Type it again if it has changed.");
             }
             else
             {
                 tbWifiKey.Text = "";
             }
+            ShowWifiKey(false);
+        }
+
+        private void btnShowWifiKey_Click(object sender, EventArgs e)
+        {
+            ShowWifiKey(tbWifiKey.UseSystemPasswordChar);
+        }
+
+        private void ShowWifiKey(bool Show)
+        {
+            // hidden again whenever the target changes
+            tbWifiKey.UseSystemPasswordChar = !Show;
+            btnShowWifiKey.Text = Show ? "" : "";   // Segoe MDL2: Hide / View
         }
 
         private void rbHotspot_CheckedChanged(object sender, EventArgs e)
@@ -467,6 +483,7 @@ namespace RateController.Menu
             rbHotspot.Enabled = !Running;
             rbPcWifi.Enabled = !Running;
             tbWifiKey.Enabled = !Running && Target != null && !Target.Hotspot;
+            btnShowWifiKey.Enabled = tbWifiKey.Enabled;
             tbModuleKey.Enabled = !Running;
             cbWifiModuleID.Enabled = !Running;
             btnWifiScan.Enabled = !Running && !WifiScanning;
