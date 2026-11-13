@@ -295,11 +295,13 @@ namespace RateController
                 // initialize the receive socket
                 recvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 recvSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                IgnoreConnReset(recvSocket);
                 recvSocket.Bind(new IPEndPoint(IPAddress.Any, cReceivePort));
 
                 // initialize the send socket
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 sendSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                IgnoreConnReset(sendSocket);
 
                 // Initialise the IPEndPoint for the server to send on port
                 IPEndPoint server = new IPEndPoint(IPAddress.Any, cSendFromPort);
@@ -315,6 +317,22 @@ namespace RateController
             catch (Exception e)
             {
                 Props.WriteErrorLog("UDPcomm/Start: \n" + e.Message);
+            }
+        }
+
+        // Windows reports an ICMP "port unreachable" (a send to an address with nothing
+        // listening) as a ConnectionReset on the socket's next receive. Turned off, as
+        // AgOpenWeb and AgIO do, so it can't end receiving.
+        private static void IgnoreConnReset(Socket S)
+        {
+            const int SIO_UDP_CONNRESET = -1744830452;     // 0x9800000C
+            try
+            {
+                S.IOControl((IOControlCode)SIO_UDP_CONNRESET, new byte[] { 0 }, null);
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("UDPcomm/IgnoreConnReset: " + ex.Message);
             }
         }
 
@@ -526,6 +544,7 @@ namespace RateController
         {
             if (Running)
             {
+                bool listening = false;     // the next receive is armed
                 try
                 {
                     // Initialise the IPEndPoint for the client
@@ -565,10 +584,12 @@ namespace RateController
                             EndPoint nextSender = new IPEndPoint(IPAddress.Any, 0);
                             recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(Receive), recvSocket);
                         }
+                        listening = true;
                     }
                     catch (System.ObjectDisposedException)
                     {
                         // socket closed during shutdown
+                        listening = true;
                     }
 
                     // Update status through a delegate (avoid blocking the socket thread)
@@ -586,12 +607,37 @@ namespace RateController
                 }
                 catch (System.ObjectDisposedException)
                 {
-                    // do nothing
+                    // socket closed during shutdown
+                    listening = true;
                 }
                 catch (Exception ex)
                 {
                     Props.WriteErrorLog("UDPcomm/Receive " + ex.Message);
                 }
+
+                // an error before the next receive was armed (e.g. the adapter dropped while a
+                // packet was in flight) would otherwise end receiving until the app restarts
+                if (!listening) ListenAgain();
+            }
+        }
+
+        private void ListenAgain()
+        {
+            try
+            {
+                if (Running && recvSocket != null)
+                {
+                    EndPoint nextSender = new IPEndPoint(IPAddress.Any, 0);
+                    recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(Receive), recvSocket);
+                }
+            }
+            catch (System.ObjectDisposedException)
+            {
+                // socket closed during shutdown
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("UDPcomm/ListenAgain " + ex.Message);
             }
         }
 
