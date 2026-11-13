@@ -342,19 +342,23 @@ namespace RateController.Menu
             {
                 tbWifiKey.Text = "";
             }
-            ShowWifiKey(false);
+            ShowKey(tbWifiKey, btnShowWifiKey, false);    // hidden again whenever the target changes
         }
 
         private void btnShowWifiKey_Click(object sender, EventArgs e)
         {
-            ShowWifiKey(tbWifiKey.UseSystemPasswordChar);
+            ShowKey(tbWifiKey, btnShowWifiKey, tbWifiKey.UseSystemPasswordChar);
         }
 
-        private void ShowWifiKey(bool Show)
+        private void btnShowModuleKey_Click(object sender, EventArgs e)
         {
-            // hidden again whenever the target changes
-            tbWifiKey.UseSystemPasswordChar = !Show;
-            btnShowWifiKey.Text = Show ? "" : "";   // Segoe MDL2: Hide / View
+            ShowKey(tbModuleKey, btnShowModuleKey, tbModuleKey.UseSystemPasswordChar);
+        }
+
+        private void ShowKey(TextBox Box, Button Btn, bool Show)
+        {
+            Box.UseSystemPasswordChar = !Show;
+            Btn.Text = Show ? "" : "";   // Segoe MDL2: Hide / View
         }
 
         private void rbHotspot_CheckedChanged(object sender, EventArgs e)
@@ -485,6 +489,7 @@ namespace RateController.Menu
             tbWifiKey.Enabled = !Running && Target != null && !Target.Hotspot;
             btnShowWifiKey.Enabled = tbWifiKey.Enabled;
             tbModuleKey.Enabled = !Running;
+            btnShowModuleKey.Enabled = tbModuleKey.Enabled;
             cbWifiModuleID.Enabled = !Running;
             btnWifiScan.Enabled = !Running && !WifiScanning;
             btnWifiSetup.Enabled = !Running && !WifiScanning && Target != null && lstModules.SelectedItem != null;
