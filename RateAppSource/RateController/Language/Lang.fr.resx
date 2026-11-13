@@ -831,6 +831,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>ID du module {0} envoyé avec ses réglages. La carte redémarre et se reconnecte comme module {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>ID du module {0} envoyé. La carte garde ses propres réglages, redémarre et se reconnecte comme module {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Aucune carte</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>Configuration de départ {0} enregistrée pour le module {1}.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Nouvelle carte détectée : {0}. La configurer comme module {1} ?</value>
   </data>
@@ -899,7 +908,7 @@ Le module {1} n&apos;aura plus de carte.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Charger la configuration de départ {0} pour le module {1} ?
 
-Cela remplace les broches et les réglages des relais du module.</value>
+Cela remplace les réglages des pages {2}, {3} et {4}.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Charger un préréglage</value>

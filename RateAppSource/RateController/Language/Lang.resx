@@ -837,6 +837,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Module ID {0} sent with its settings. The board restarts and reconnects as module {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>Module ID {0} sent. The board keeps its own settings, restarts and reconnects as module {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>No board</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>{0} starting configuration saved for module {1}.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>New board found: {0}. Set it up as module {1}?</value>
   </data>
@@ -905,7 +914,7 @@ Module {1} will have no board.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Load the {0} starting configuration for module {1}?
 
-This replaces the module&apos;s pins and relay settings.</value>
+This replaces the settings on the {2}, {3} and {4} pages.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Load Presets</value>

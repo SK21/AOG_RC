@@ -2246,6 +2246,33 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgIDSent", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Module ID {0} sent. The board keeps its own settings, restarts and reconnects as module {0}..
+        /// </summary>
+        internal static string lgIDOnlySent {
+            get {
+                return ResourceManager.GetString("lgIDOnlySent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No board.
+        /// </summary>
+        internal static string lgNoBoard {
+            get {
+                return ResourceManager.GetString("lgNoBoard", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} starting configuration saved for module {1}..
+        /// </summary>
+        internal static string lgPresetSaved {
+            get {
+                return ResourceManager.GetString("lgPresetSaved", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to New board found: {0}. Set it up as module {1}?.

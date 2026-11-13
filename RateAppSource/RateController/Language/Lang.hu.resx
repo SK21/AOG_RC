@@ -834,6 +834,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>{0} modul ID elküldve a beállításaival. A panel újraindul, és {0}. modulként csatlakozik újra.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>{0} modul ID elküldve. A panel megtartja a saját beállításait, újraindul, és {0}. modulként csatlakozik újra.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Nincs panel</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>A(z) {0} kezdő konfiguráció mentve a(z) {1}. modulhoz.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Új panel található: {0}. Beállítja {1}. modulként?</value>
   </data>
@@ -902,7 +911,7 @@ A(z) {1}. modulnak nem lesz panelje.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Betölti a(z) {0} kezdő konfigurációt a(z) {1}. modulhoz?
 
-Ez lecseréli a modul tűit és relébeállításait.</value>
+Ez lecseréli a(z) {2}, {3} és {4} oldal beállításait.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Előbeállítás betöltése</value>

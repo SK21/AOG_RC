@@ -38,6 +38,7 @@ namespace RateController.Menu
             this.cbModule = new System.Windows.Forms.ComboBox();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnPreset = new System.Windows.Forms.Button();
             this.lbDescription = new System.Windows.Forms.Label();
             this.tbDescription = new System.Windows.Forms.TextBox();
             this.lnkWeb = new System.Windows.Forms.LinkLabel();
@@ -54,10 +55,10 @@ namespace RateController.Menu
             this.lvBoards.FullRowSelect = true;
             this.lvBoards.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvBoards.HideSelection = false;
-            this.lvBoards.Location = new System.Drawing.Point(20, 103);
+            this.lvBoards.Location = new System.Drawing.Point(20, 45);
             this.lvBoards.MultiSelect = false;
             this.lvBoards.Name = "lvBoards";
-            this.lvBoards.Size = new System.Drawing.Size(500, 294);
+            this.lvBoards.Size = new System.Drawing.Size(500, 384);
             this.lvBoards.SmallImageList = this.ilRowHeight;
             this.lvBoards.TabIndex = 0;
             this.lvBoards.UseCompatibleStateImageBehavior = false;
@@ -89,7 +90,7 @@ namespace RateController.Menu
             // 
             this.lbModule.AutoSize = true;
             this.lbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbModule.Location = new System.Drawing.Point(20, 428);
+            this.lbModule.Location = new System.Drawing.Point(20, 464);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(74, 24);
             this.lbModule.TabIndex = 1;
@@ -99,7 +100,7 @@ namespace RateController.Menu
             // 
             this.cbModule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbModule.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbModule.Location = new System.Drawing.Point(160, 424);
+            this.cbModule.Location = new System.Drawing.Point(160, 460);
             this.cbModule.Name = "cbModule";
             this.cbModule.Size = new System.Drawing.Size(100, 32);
             this.cbModule.TabIndex = 2;
@@ -137,12 +138,30 @@ namespace RateController.Menu
             this.btnCancel.TabIndex = 8;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            //
+            // btnPreset
+            //
+            this.btnPreset.BackColor = System.Drawing.Color.Transparent;
+            this.btnPreset.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPreset.FlatAppearance.BorderSize = 0;
+            this.btnPreset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPreset.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnPreset.Image = global::RateController.Properties.Resources.VehFileLoad;
+            this.btnPreset.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnPreset.Location = new System.Drawing.Point(306, 603);
+            this.btnPreset.Name = "btnPreset";
+            this.btnPreset.Size = new System.Drawing.Size(70, 63);
+            this.btnPreset.TabIndex = 10;
+            this.btnPreset.TabStop = false;
+            this.btnPreset.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnPreset.UseVisualStyleBackColor = false;
+            this.btnPreset.Click += new System.EventHandler(this.btnPreset_Click);
             // 
             // lbDescription
             // 
             this.lbDescription.AutoSize = true;
             this.lbDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDescription.Location = new System.Drawing.Point(20, 484);
+            this.lbDescription.Location = new System.Drawing.Point(20, 518);
             this.lbDescription.Name = "lbDescription";
             this.lbDescription.Size = new System.Drawing.Size(104, 24);
             this.lbDescription.TabIndex = 4;
@@ -152,7 +171,7 @@ namespace RateController.Menu
             // 
             this.tbDescription.Enabled = false;
             this.tbDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDescription.Location = new System.Drawing.Point(160, 482);
+            this.tbDescription.Location = new System.Drawing.Point(160, 516);
             this.tbDescription.MaxLength = 16;
             this.tbDescription.Name = "tbDescription";
             this.tbDescription.Size = new System.Drawing.Size(240, 29);
@@ -164,7 +183,7 @@ namespace RateController.Menu
             // 
             this.lnkWeb.AutoSize = true;
             this.lnkWeb.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkWeb.Location = new System.Drawing.Point(160, 528);
+            this.lnkWeb.Location = new System.Drawing.Point(160, 560);
             this.lnkWeb.Name = "lnkWeb";
             this.lnkWeb.Size = new System.Drawing.Size(0, 24);
             this.lnkWeb.TabIndex = 6;
@@ -175,7 +194,7 @@ namespace RateController.Menu
             //
             this.lbBoardsFound.AutoSize = true;
             this.lbBoardsFound.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbBoardsFound.Location = new System.Drawing.Point(20, 70);
+            this.lbBoardsFound.Location = new System.Drawing.Point(20, 12);
             this.lbBoardsFound.Name = "lbBoardsFound";
             this.lbBoardsFound.Size = new System.Drawing.Size(232, 24);
             this.lbBoardsFound.TabIndex = 9;
@@ -188,6 +207,7 @@ namespace RateController.Menu
             this.ClientSize = new System.Drawing.Size(540, 678);
             this.Controls.Add(this.lbBoardsFound);
             this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnPreset);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lnkWeb);
             this.Controls.Add(this.tbDescription);
@@ -217,6 +237,7 @@ namespace RateController.Menu
         private System.Windows.Forms.ComboBox cbModule;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnPreset;
         private System.Windows.Forms.Label lbDescription;
         private System.Windows.Forms.TextBox tbDescription;
         private System.Windows.Forms.LinkLabel lnkWeb;

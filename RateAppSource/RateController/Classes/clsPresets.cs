@@ -198,7 +198,7 @@ namespace RateController.Classes
             Core.SensorPins.Save();
 
             MainMenu?.DefaultsSet();                // null: the menu is closed (new board setup)
-            MainMenu?.HighlightUpdateButton();
+            MainMenu?.HighlightModuleSave();
         }
     }
 }

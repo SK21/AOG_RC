@@ -832,6 +832,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Modul-ID {0} mit ihren Einstellungen gesendet. Die Platine startet neu und verbindet sich als Modul {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>Modul-ID {0} gesendet. Die Platine behält ihre eigenen Einstellungen, startet neu und verbindet sich als Modul {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Keine Platine</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>Startkonfiguration {0} für Modul {1} gespeichert.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Neue Platine gefunden: {0}. Als Modul {1} einrichten?</value>
   </data>
@@ -900,7 +909,7 @@ Modul {1} hat dann keine Platine.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Die Startkonfiguration {0} für Modul {1} laden?
 
-Dies ersetzt die Pins und Relaiseinstellungen des Moduls.</value>
+Dies ersetzt die Einstellungen auf den Seiten {2}, {3} und {4}.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Vorlage laden</value>

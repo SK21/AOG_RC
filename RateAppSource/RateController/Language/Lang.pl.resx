@@ -831,6 +831,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Wysłano ID modułu {0} z ustawieniami. Płytka uruchomi się ponownie i połączy jako moduł {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>Wysłano ID modułu {0}. Płytka zachowa własne ustawienia, uruchomi się ponownie i połączy jako moduł {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Brak płytki</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>Zapisano konfigurację startową {0} dla modułu {1}.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Znaleziono nową płytkę: {0}. Skonfigurować ją jako moduł {1}?</value>
   </data>
@@ -899,7 +908,7 @@ Moduł {1} zostanie bez płytki.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Wczytać konfigurację startową {0} dla modułu {1}?
 
-Zastąpi to piny i ustawienia przekaźników modułu.</value>
+Zastąpi to ustawienia na stronach {2}, {3} i {4}.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Wczytaj ustawienia</value>

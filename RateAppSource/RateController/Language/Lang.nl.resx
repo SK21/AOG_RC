@@ -831,6 +831,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Module-ID {0} verzonden met de instellingen. Het board herstart en maakt opnieuw verbinding als module {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>Module-ID {0} verzonden. Het board behoudt zijn eigen instellingen, herstart en maakt opnieuw verbinding als module {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Geen board</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>Startconfiguratie {0} opgeslagen voor module {1}.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Nieuw board gevonden: {0}. Instellen als module {1}?</value>
   </data>
@@ -899,7 +908,7 @@ Module {1} heeft dan geen board.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>De startconfiguratie {0} laden voor module {1}?
 
-Dit vervangt de pinnen en relaisinstellingen van de module.</value>
+Dit vervangt de instellingen op de pagina's {2}, {3} en {4}.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Voorinstelling laden</value>

@@ -33,7 +33,7 @@ namespace RateController.Menu
                 Core.ModuleConfig.Save();
                 SetButtons(false);
                 UpdateForm();
-                MainMenu.HighlightUpdateButton();
+                MainMenu.HighlightModuleSave();
             }
             catch (Exception ex)
             {

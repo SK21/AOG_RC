@@ -831,6 +831,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>Modulio ID {0} išsiųstas su nustatymais. Plokštė paleidžiama iš naujo ir vėl prisijungia kaip modulis {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>Modulio ID {0} išsiųstas. Plokštė išlaiko savo nustatymus, paleidžiama iš naujo ir vėl prisijungia kaip modulis {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Nėra plokštės</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>{0} pradinė konfigūracija išsaugota moduliui {1}.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Rasta nauja plokštė: {0}. Nustatyti ją kaip modulį {1}?</value>
   </data>
@@ -899,7 +908,7 @@ Modulis {1} liks be plokštės.</value>
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Įkelti {0} pradinę konfigūraciją moduliui {1}?
 
-Tai pakeis modulio kontaktus ir relių nustatymus.</value>
+Tai pakeis nustatymus puslapiuose {2}, {3} ir {4}.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Įkelti šabloną</value>

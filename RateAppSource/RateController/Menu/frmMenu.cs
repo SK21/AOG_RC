@@ -210,6 +210,14 @@ namespace RateController
             }
         }
 
+        // a module page (Config, Pins, Relay Pins, Valves) or a preset was saved: its settings go
+        // to the board at the module being edited. With no (accepted) board there, Send would be
+        // refused, so it isn't lit. A new board set up at that module later gets them with its ID.
+        public void HighlightModuleSave()
+        {
+            if (Core.ModulesStatus.Connected(Core.ModuleConfig.GetData()[2])) HighlightUpdateButton();
+        }
+
         public void RaiseEventProductEnabled()
         {
             ProductEnabled?.Invoke(this, EventArgs.Empty);
@@ -1026,7 +1034,9 @@ namespace RateController
 
         // Send: board changes saved on the Boards page first, then the settings of the module
         // being edited. A new ID (32508) defers the board's restart (~1.5 s), so the rest of
-        // this Send still reaches it at its new ID. 32700 restarts the module immediately on
+        // this Send still reaches it at its new ID. A board that already had an ID (0-7) gets
+        // only its new ID and description: it keeps its own settings. A new board (25) gets
+        // the module's settings too. 32700 restarts the module immediately on
         // receipt, so the sensor pins (32507) must go out before it or they would be lost.
         private void SendModuleConfig()
         {
@@ -1037,6 +1047,7 @@ namespace RateController
             bool allNetworks = false;       // the moved board is on another network
             string stays = null;            // its network, when the user keeps it there
             int hotspotOldID = -1;          // the moved board's ID, when heard on its own hotspot
+            bool idOnly = false;            // a board that already has an ID: only its ID (and description) go
 
             if (move == null)
             {
@@ -1071,6 +1082,13 @@ namespace RateController
                         : string.Format(Lang.lgModuleInUse, move.NewID), "Boards", 15000);
                     DropPendingBoards();
                     proceed = false;
+                }
+                else if (brd.ID != Props.NewModuleID)
+                {
+                    // a board that already has an ID keeps its own settings: the user changed
+                    // only its ID, and the app's saved settings for the new ID may not match
+                    // what is on the board. A new board (25) has none, so it gets the module's.
+                    idOnly = true;
                 }
                 else if (Core.ModuleConfig.GetData()[2] != move.NewID)
                 {
@@ -1112,7 +1130,7 @@ namespace RateController
 
                     Core.UDPmodules.AllNetworks = allNetworks;
                     new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID, moveNetwork ? Core.UDPmodules.SubNet : null);
-                    msg = string.Format(Lang.lgIDSent, move.NewID);
+                    msg = string.Format(idOnly ? Lang.lgIDOnlySent : Lang.lgIDSent, move.NewID);
                 }
             }
 
@@ -1121,8 +1139,11 @@ namespace RateController
                 try
                 {
                     SendPendingDescriptions(move);
-                    Core.SensorPins.Send();
-                    Core.ModuleConfig.Send();
+                    if (!idOnly)
+                    {
+                        Core.SensorPins.Send();
+                        Core.ModuleConfig.Send();
+                    }
                 }
                 finally
                 {
@@ -1131,7 +1152,10 @@ namespace RateController
 
                 if (stays != null) msg += " " + string.Format(Lang.lgBoardStaysOnNetwork, stays);
                 Props.ShowMessage(msg, "Config", 15000);
-                HighlightUpdateButton(false);
+
+                // module pages saved before an ID-only Send stay waiting: the next Send gives
+                // them to the board at its new ID
+                if (!(idOnly && cConfigWaiting)) HighlightUpdateButton(false);
 
                 // an ESP32 set up over its own hotspot: the hotspot is renamed with the ID
                 if (hotspotOldID >= 0) Core.RejoinModuleHotspot((byte)hotspotOldID, (byte)move.NewID);

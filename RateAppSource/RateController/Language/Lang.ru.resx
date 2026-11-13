@@ -831,6 +831,15 @@
   <data name="lgIDSent" xml:space="preserve">
     <value>ID модуля {0} отправлен вместе с настройками. Плата перезагрузится и снова подключится как модуль {0}.</value>
   </data>
+  <data name="lgIDOnlySent" xml:space="preserve">
+    <value>ID модуля {0} отправлен. Плата сохранит свои настройки, перезагрузится и снова подключится как модуль {0}.</value>
+  </data>
+  <data name="lgNoBoard" xml:space="preserve">
+    <value>Нет платы</value>
+  </data>
+  <data name="lgPresetSaved" xml:space="preserve">
+    <value>Начальная конфигурация {0} сохранена для модуля {1}.</value>
+  </data>
   <data name="lgNewBoardSetup" xml:space="preserve">
     <value>Найдена новая плата: {0}. Настроить её как модуль {1}?</value>
   </data>
@@ -899,7 +908,7 @@
   <data name="lgLoadPresetConfirm" xml:space="preserve">
     <value>Загрузить начальную конфигурацию {0} для модуля {1}?
 
-Это заменит выводы и настройки реле модуля.</value>
+Это заменит настройки на страницах {2}, {3} и {4}.</value>
   </data>
   <data name="lgLoadPresetChoose" xml:space="preserve">
     <value>Загрузить шаблон</value>

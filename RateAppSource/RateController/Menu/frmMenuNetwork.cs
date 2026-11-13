@@ -18,20 +18,25 @@ namespace RateController.Menu
         private frmMenu MainMenu;
         private Timer cTimer;
 
-        // one list row: a live board (MAC > 0), or a module with old firmware (MAC 0)
+        // one list row: a live board (MAC > 0), a module with old firmware (MAC 0), or a
+        // module with no board (MAC 0, Empty). Every module 0-7 has at least one row.
         private class Row
         {
             public ulong MAC;
             public int ID;
+            public bool Empty;
+            public int ModuleNo = -1;       // the module the row belongs to, -1 for a new board
+            public bool Bold;               // the module the config pages are editing
             public string Module;
             public string Board;
             public string State;
             public Color Fore;
-            public string Key => MAC != 0 ? "M" + MAC.ToString() : "R" + ID.ToString();
-            public string Signature => Key + "|" + Module + "|" + Board + "|" + State + "|" + Fore.ToArgb();
+            public string Key => MAC != 0 ? "M" + MAC.ToString() : (Empty ? "E" : "R") + ID.ToString();
+            public string Signature => Key + "|" + Module + "|" + Board + "|" + State + "|" + Fore.ToArgb() + "|" + Bold;
         }
 
         private readonly List<Row> cRows = new List<Row>();
+        private Font cBoldFont;
         private readonly List<int> cModules = new List<int>();     // cbModule item i = cModules[i]
         private string cSelectedKey = "";
         private bool cRebuilding = false;
@@ -95,7 +100,9 @@ namespace RateController.Menu
 
                     if (idChange)
                     {
-                        // the next Send gives this module's settings to the board
+                        // the config pages follow the board to its new module. The next Send
+                        // gives this module's settings to a new board only; a moved board
+                        // keeps its own (frmMenu.SendModuleConfig)
                         Core.ModuleConfig.ModuleID = (byte)newID;
                         Core.ModuleConfig.Save();
                         MainMenu.DefaultsSet();
@@ -104,7 +111,7 @@ namespace RateController.Menu
                         // for its type. A moved board takes the module's existing settings.
                         ModuleTypes type = (ModuleTypes)Brd.InoType;
                         if (Brd.ID == Props.NewModuleID && clsPresets.Has(type)
-                            && Confirm(string.Format(Lang.lgLoadPresetConfirm, clsPresets.Name(type), newID)))
+                            && Confirm(PresetConfirmText(type, newID)))
                         {
                             clsPresets.Load(type, MainMenu);
                         }
@@ -125,6 +132,63 @@ namespace RateController.Menu
             {
                 Props.WriteErrorLog("frmMenuNetwork/btnOK_Click: " + ex.Message);
             }
+        }
+
+        // Loads the starting configuration into the module being edited (the selected row's
+        // module): for the selected board's type, the board reporting at that module, or the
+        // type the user picks when there is none. Not while edits are unsaved here or on a
+        // module page: the preset is saved at once and reloads every module page.
+        private void btnPreset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cEdited || MainMenu.AnyPageEdited(this))
+                {
+                    Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Boards", 10000);
+                }
+                else
+                {
+                    byte id = Core.ModuleConfig.GetData()[2];
+                    int r = cRows.FindIndex(x => x.Key == cSelectedKey);
+                    BoardInfo Brd = (r >= 0 && TargetModule(cRows[r]) == id) ? SelectedBoard() : null;
+                    ModuleTypes type = Brd != null ? (ModuleTypes)Brd.InoType
+                        : Core.ModulesStatus.Connected(id) ? (ModuleTypes)Core.ModulesBoardID.ModuleType(id)
+                        : ModuleTypes.unknown;
+
+                    bool load;
+                    bool chosen = false;    // picked from the type list: no confirm was shown
+                    if (clsPresets.Has(type))
+                    {
+                        load = Confirm(PresetConfirmText(type, id));
+                    }
+                    else
+                    {
+                        type = clsPresets.Choose(this);
+                        load = clsPresets.Has(type);
+                        chosen = true;
+                    }
+
+                    if (load)
+                    {
+                        clsPresets.Load(type, MainMenu);
+
+                        // with a board the confirm already said what happens and Send lights;
+                        // with none nothing else on screen changes, so say it was saved
+                        if (chosen) Props.ShowMessage(string.Format(Lang.lgPresetSaved, clsPresets.Name(type), id), "Boards", 10000);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuNetwork/btnPreset_Click: " + ex.Message);
+            }
+        }
+
+        // names the three pages the preset rewrites, as the menu shows them
+        private static string PresetConfirmText(ModuleTypes Type, int ModuleID)
+        {
+            return string.Format(Lang.lgLoadPresetConfirm, clsPresets.Name(Type), ModuleID,
+                Lang.lgConfig, Lang.lgPins, Lang.lgRelayPins);
         }
 
         private bool Confirm(string Message)
@@ -157,6 +221,8 @@ namespace RateController.Menu
                 cTimer.Dispose();
                 cTimer = null;
             }
+            cBoldFont?.Dispose();
+            cBoldFont = null;
             Props.SaveFormLocation(this);
         }
 
@@ -165,6 +231,8 @@ namespace RateController.Menu
             SubMenuLayout.SetFormLayout(this, MainMenu, btnOK);
             btnCancel.Left = btnOK.Left - SubMenuLayout.ButtonSpacing;
             btnCancel.Top = btnOK.Top;
+            btnPreset.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing;
+            btnPreset.Top = btnOK.Top;
 
             MainMenu.StyleControls(this);
             lvBoards.BackColor = Properties.Settings.Default.MainBackColour;
@@ -236,6 +304,11 @@ namespace RateController.Menu
 
                 string text = p != null && p.Description != null ? p.Description : (Brd?.Label ?? "");
                 if (tbDescription.Text != text) tbDescription.Text = text;
+
+                // a new board with no module chosen has no settings to load into
+                int r = cRows.FindIndex(x => x.Key == cSelectedKey);
+                bool presetOn = r < 0 || TargetModule(cRows[r]) >= 0;
+                if (btnPreset.Enabled != presetOn) btnPreset.Enabled = presetOn;
             }
             finally
             {
@@ -259,9 +332,41 @@ namespace RateController.Menu
             }
             else
             {
-                cSelectedKey = key;
-                LoadSelected();
+                // choosing a row also chooses the module the config pages edit (as the
+                // Config page's module selector did): live, no Save, no Send highlight.
+                // Refused while a module page holds unsaved edits, since they all reload.
+                int i = cRows.FindIndex(r => r.Key == key);
+                int target = i >= 0 ? TargetModule(cRows[i]) : -1;
+                bool retarget = target >= 0 && target != Core.ModuleConfig.GetData()[2];
+
+                if (retarget && MainMenu.AnyPageEdited(this))
+                {
+                    Props.ShowMessage(Lang.lgSaveOrCancelFirst, "Boards", 10000);
+                    SelectKey(cSelectedKey);
+                }
+                else
+                {
+                    cSelectedKey = key;
+                    LoadSelected();
+                    if (retarget)
+                    {
+                        Core.ModuleConfig.ModuleID = (byte)target;
+                        Core.ModuleConfig.Save();
+                        MainMenu.DefaultsSet();
+                        RefreshRows();      // the bold row follows at once
+                    }
+                }
             }
+        }
+
+        // the module a row stands for: a board with a saved move goes to its new module (the
+        // config pages moved there on Save); a new board with none has no module yet (-1)
+        private int TargetModule(Row R)
+        {
+            int Result = R.ModuleNo;
+            PendingBoard p = R.MAC != 0 ? Core.PendingFor(R.MAC) : null;
+            if (p != null && p.NewID >= 0) Result = p.NewID;
+            return Result;
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -280,8 +385,10 @@ namespace RateController.Menu
         private List<Row> BuildRows()
         {
             var rows = new List<Row>();
+            int editID = Core.ModuleConfig.GetData()[2];
             for (int id = 0; id < Props.MaxModules; id++)
             {
+                int first = rows.Count;
                 var boards = Core.ModulesBoardID.BoardsAt(id);
                 boards.Sort((a, b) => a.MAC.CompareTo(b.MAC));      // steady order for duplicates
                 bool dup = boards.Count > 1;
@@ -301,6 +408,38 @@ namespace RateController.Menu
                         State = Lang.lgUpdateFirmware,
                         Fore = Color.Red
                     });
+                }
+
+                if (rows.Count == first)
+                {
+                    // no board here: the module can still be chosen for editing. A board with a
+                    // saved (not yet sent) move to this module is shown on it.
+                    Row empty = new Row
+                    {
+                        ID = id,
+                        Empty = true,
+                        Module = id.ToString(),
+                        Board = "—",
+                        State = Lang.lgNoBoard,
+                        Fore = Color.Gray
+                    };
+                    foreach (PendingBoard p in Core.PendingBoards())
+                    {
+                        BoardInfo mover = p.NewID == id ? Core.ModulesBoardID.LiveBoard(p.MAC) : null;
+                        if (mover != null)
+                        {
+                            empty.Board = mover.Text;
+                            empty.State = string.Format(Lang.lgPendingModule, id);
+                            empty.Fore = Color.Blue;
+                        }
+                    }
+                    rows.Add(empty);
+                }
+
+                for (int i = first; i < rows.Count; i++)
+                {
+                    rows[i].ModuleNo = id;
+                    rows[i].Bold = id == editID;
                 }
             }
 
@@ -395,11 +534,16 @@ namespace RateController.Menu
 
             if (changed)
             {
+                // the module of the selected row, so a board that goes keeps its module selected
+                int prev = cRows.FindIndex(r => r.Key == cSelectedKey);
+                int prevModule = prev >= 0 ? cRows[prev].ModuleNo : -1;
+
                 // clearing the list fires SelectedIndexChanged; don't let it drop the selection
                 cRebuilding = true;
                 lvBoards.BeginUpdate();
                 lvBoards.Items.Clear();
                 cRows.Clear();
+                if (cBoldFont == null) cBoldFont = new Font(lvBoards.Font, FontStyle.Bold);
                 foreach (Row r in rows)
                 {
                     var item = new ListViewItem(new[] { r.Module, r.Board, r.State })
@@ -408,18 +552,27 @@ namespace RateController.Menu
                         ForeColor = r.Fore,
                         UseItemStyleForSubItems = true
                     };
+                    if (r.Bold) item.Font = cBoldFont;
                     lvBoards.Items.Add(item);
                     cRows.Add(r);
                 }
                 lvBoards.EndUpdate();
                 FitLastColumn();
 
-                // keep the selected board; with nothing selected (or it went, and nothing is
-                // being edited), pick the first new board
+                // keep the selected row. When it went (and nothing is being edited): the first
+                // row of its module; with nothing selected yet, the first new board, else the
+                // module being edited. Never changes which module the config pages edit.
                 string key = cSelectedKey;
                 if (cRows.FindIndex(r => r.Key == key) < 0 && !cEdited)
                 {
-                    int n = cRows.FindIndex(r => r.ID == Props.NewModuleID);
+                    int n = -1;
+                    if (prevModule >= 0) n = cRows.FindIndex(r => r.ModuleNo == prevModule);
+                    if (n < 0) n = cRows.FindIndex(r => r.ModuleNo < 0);
+                    if (n < 0)
+                    {
+                        int editID = Core.ModuleConfig.GetData()[2];
+                        n = cRows.FindIndex(r => r.ModuleNo == editID);
+                    }
                     key = n >= 0 ? cRows[n].Key : "";
                 }
                 SelectKey(key);

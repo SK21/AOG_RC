@@ -120,7 +120,7 @@ namespace RateController.Menu
 
                     SetButtons(false);
                     UpdateForm();
-                    MainMenu.HighlightUpdateButton();
+                    MainMenu.HighlightModuleSave();
                 }
             }
             catch (Exception ex)
