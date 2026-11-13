@@ -1086,8 +1086,9 @@ namespace RateController
                 else if (brd.ID != Props.NewModuleID)
                 {
                     // a board that already has an ID keeps its own settings: the user changed
-                    // only its ID, and the app's saved settings for the new ID may not match
-                    // what is on the board. A new board (25) has none, so it gets the module's.
+                    // only its ID, and the app's saved module settings (one set, whichever
+                    // module is being edited) may not match what is on the board. A new
+                    // board (25) has none, so it gets the app's.
                     idOnly = true;
                 }
                 else if (Core.ModuleConfig.GetData()[2] != move.NewID)
