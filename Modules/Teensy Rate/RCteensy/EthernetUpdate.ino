@@ -81,7 +81,9 @@ void ReceiveUpdate()
 					{
 						if (GoodCRC(ReceivedData, PGNlength))
 						{
-							if (ParseModID(ReceivedData[2]) == MDL.ID)
+							// module-level PGN: byte 2 is the raw module ID (PCBsetup sends it
+							// raw; this compared the high nibble, so only module 0 matched)
+							if (ReceivedData[2] == MDL.ID)
 							{
 								if ((ReceivedData[4] == 1) || (ReceivedData[3] == InoType))
 								{
@@ -127,7 +129,22 @@ void SendLineCheck()
 	//5		hex lines byte 3
 	//6		CRC
 
-	if (Ethernet.linkStatus() == LinkON)
+	if (UpdActive)
+	{
+		// update from RateController: the count goes back on its link as PGN 32812 status 105,
+		// but only for Teensy rate firmware. Anything else gets 102 and is never installed.
+		if (UpdTagGood())
+		{
+			UpdSendStatus(UpdEOF, 0, hex.lines);
+		}
+		else
+		{
+			Serial.println("Firmware update: not Teensy rate firmware.");
+			UpdSendStatus(UpdWrongType, 0, 0);
+			UpdCancel();
+		}
+	}
+	else if (Ethernet.linkStatus() == LinkON)
 	{
 		byte data[7];
 		data[0] = 33;

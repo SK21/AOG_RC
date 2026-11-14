@@ -125,6 +125,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FirmwareUpdate.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Motor.ino">
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>

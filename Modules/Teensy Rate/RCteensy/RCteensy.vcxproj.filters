@@ -20,6 +20,7 @@
     <ClCompile Include="Begin.ino" />
     <ClCompile Include="CANBus.ino" />
     <ClCompile Include="EthernetUpdate.ino" />
+    <ClCompile Include="FirmwareUpdate.ino" />
     <ClCompile Include="FlashTxx.c">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -171,8 +171,14 @@ void CANBus_Receive() {
 	CAN_message_t msg;
 
 	while (ISOBUS.read(msg)) {
-		if (!msg.flags.extended) continue;  // Only process extended frames
+		CANBus_Handle(msg);
+	}
+}
 
+// One received frame. Called from CANBus_Receive (polled mailboxes) and, during a firmware
+// update, from ISOBUS.events() (interrupt queue, FirmwareUpdate.ino).
+void CANBus_Handle(const CAN_message_t& msg) {
+	if (msg.flags.extended) {  // Only process extended frames
 		// Extract PGN from 29-bit ID
 		// ID format: Priority(3) | R(1) | DP(1) | PF(8) | PS(8) | SA(8)
 		uint8_t pf = (msg.id >> 16) & 0xFF;  // PDU Format
@@ -198,8 +204,20 @@ void CANBus_Receive() {
 		Serial.println(ps, HEX);
 #endif
 
+		// in update mode only the update frames and address claiming count: control has
+		// stopped (FirmwareUpdate.ino)
+		if (UpdActive && pgn != 0xFF1A && pgn != 0xFF1B && pgn != 0xEE00 && pgn != 0xEA00) pgn = 0;
+
 		// Handle specific PGNs
 		switch (pgn) {
+		case 0xFF1A:  // Firmware update control (from PGN 32810, and block header of 32811)
+			UpdCanControl(msg);
+			break;
+
+		case 0xFF1B:  // Firmware update block data (from PGN 32811)
+			UpdCanData(msg);
+			break;
+
 		case 0xEE00:  // Address Claimed
 			CANBus_HandleAddressClaim(msg, sa);
 			break;

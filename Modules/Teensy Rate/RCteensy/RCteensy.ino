@@ -17,6 +17,12 @@ extern "C" {
 # define InoDescription "RCteensy"
 const uint16_t InoID = 14116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
+
+// Firmware identity in the program image: magic "RCFWID01", InoType, InoID lo, InoID hi.
+// The app finds it in a hex file before an update (wrong firmware is refused), and the board
+// checks the new image for it before installing (FirmwareUpdate.ino). Built from the constants
+// above, so nothing changes at a release. 'used' keeps it although only the update check reads it.
+const uint8_t FwTag[11] PROGMEM __attribute__((used)) = { 'R','C','F','W','I','D','0','1', InoType, InoID & 0xFF, InoID >> 8 };
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
 
@@ -219,6 +225,23 @@ uint16_t UpdateSendPort = 29000;
 uint32_t buffer_addr, buffer_size;
 bool FirmwareUpdateMode = false;
 
+// firmware update from RateController, PGN 32810-32812 over UDP or CAN 0xFF1A-0xFF1C
+// (FirmwareUpdate.ino; Design Docs\Teensy_CAN_Firmware_Update.md). FlasherX does the flash work.
+const uint8_t UpdLinkUDP = 1;
+const uint8_t UpdLinkCAN = 2;
+const uint16_t UpdMaxBlock = 11 * 21;			// 11 hex records of up to 16 data bytes (21 bytes each)
+const uint16_t UpdMaxPacket = UpdMaxBlock + 9;	// PGN 32811: 6 header bytes + block + CRC-16 + CRC
+// PGN 32812 / 0xFF1C status codes (100 and 102 as the Ethernet update's PGN 32802)
+const uint8_t UpdReady = 100;		// flash buffer erased, send blocks
+const uint8_t UpdWrongType = 102;	// the file is for another board type
+const uint8_t UpdBlockOK = 103;		// block written
+const uint8_t UpdResend = 104;		// block bad or incomplete, block number = the one wanted
+const uint8_t UpdEOF = 105;			// end of file reached, record count attached
+const uint8_t UpdError = 106;		// cancelled, rebooting into the old firmware
+const uint8_t UpdRefused = 107;		// Master is on, or an Ethernet update is running
+bool UpdActive = false;			// in update mode: control stopped, only update traffic is handled
+uint8_t UpdLink = 0;			// the link the update started on; replies go back on it
+
 bool CalibrationOn[MaxProductCount];	// zero-initialized; sized by constant, not initializer (an
 										// aggregate initializer silently under-fills at 6 products)
 float WheelSpeed = 0;
@@ -271,6 +294,18 @@ void setup()
 }
 
 void loop()
+{
+	if (UpdActive)
+	{
+		UpdLoop();
+	}
+	else
+	{
+		RunModule();
+	}
+}
+
+void RunModule()
 {
 	// Communication - UDP and/or CAN based on CommMode
 	switch (MDL.CommMode)

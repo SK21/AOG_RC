@@ -6,8 +6,8 @@ void ReceiveUDP()
 		uint16_t WDlength = UDPcomm.parsePacket();
 		if (WDlength > 0)
 		{
-			uint8_t WD[50];
-			if (WDlength > 50) WDlength = 50;
+			uint8_t WD[UpdMaxPacket];	// a firmware update block (PGN 32811) is up to 240 bytes
+			if (WDlength > UpdMaxPacket) WDlength = UpdMaxPacket;
 			UDPcomm.read(WD, WDlength);
 			ReadPGNs(WD, WDlength);
 		}
@@ -19,8 +19,46 @@ void ReadPGNs(byte data[], uint16_t len)
 	byte PGNlength;
 	uint16_t PGN = data[1] << 8 | data[0];
 
+	// in update mode only the update PGNs count: control has stopped (FirmwareUpdate.ino)
+	if (UpdActive && PGN != 32810 && PGN != 32811) PGN = 0;
+
 	switch (PGN)
 	{
+	case 32810:
+		// firmware update control, RC to module (FirmwareUpdate.ino)
+		//0     HeaderLo    42
+		//1     HeaderHi    128
+		//2     command     1 start, 3 commit, 4 abort
+		//3-8   MAC         acted on only by the board with this MAC
+		//9     InoType     expected board type, 0xFF = don't check
+		//10    CRC
+		PGNlength = 11;
+		if (len > PGNlength - 1 && GoodCRC(data, PGNlength))
+		{
+			UpdControl(data[2], data + 3, data[9], UpdLinkUDP);
+		}
+		break;
+
+	case 32811:
+		// firmware update block, RC to module (FirmwareUpdate.ino)
+		//0     HeaderLo    43
+		//1     HeaderHi    128
+		//2-3   block number
+		//4-5   data length n (11 hex records, up to UpdMaxBlock)
+		//6..   hex records: len, addrHi, addrLo, type, data, checksum
+		//6+n   CRC-16 Lo
+		//7+n   CRC-16 Hi
+		//8+n   CRC
+		if (len > 6)
+		{
+			uint16_t n = data[4] | data[5] << 8;
+			if (n <= UpdMaxBlock && len >= n + 9 && GoodCRC(data, n + 9))
+			{
+				UpdBlock(data[2] | data[3] << 8, data + 6, n, data[6 + n] | data[7 + n] << 8);
+			}
+		}
+		break;
+
 	case 32500:
 		//PGN32500, Rate settings from RC to module
 		//0	    HeaderLo		    244
