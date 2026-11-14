@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 11116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 14116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
@@ -82,7 +82,7 @@ struct ModuleConfig
 	bool ADS1115Enabled = false;
 	uint8_t WheelSpeedPin = NC;
 	float WheelCal = 0;
-	uint8_t CommMode = 1;			// 0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary
+	uint8_t CommMode = 2;			// 0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary
 	uint16_t MaxPressureReading = 0xFFFF;	// raw analog reading for pressure. 0xFFFF is off
 };
 

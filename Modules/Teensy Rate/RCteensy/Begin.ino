@@ -558,7 +558,7 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
-	MDL.CommMode = 0;
+	MDL.CommMode = 2;	// UDP + CAN: a blank or updated board is heard on either link; the app's first 32700 sets its own link
 }
 
 // NC is a valid setting (input/output not used); Teensy 4.1 GPIOs are 0-41
