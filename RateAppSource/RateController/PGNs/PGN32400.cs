@@ -98,9 +98,18 @@ namespace RateController.PGNs
                     tmp = Core.Tls.ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
-                        PGNstopWatch.Stop();
-                        cElapsedTime = PGNstopWatch.Elapsed.TotalMilliseconds;
-                        PGNstopWatch.Restart();
+                        // a copy within DuplicateGapMs is the same send arriving by a second
+                        // path (two PC adapters on the subnet, or a board on Ethernet + WiFi):
+                        // parse it but keep timing the real send interval
+                        if (!PGNstopWatch.IsRunning)
+                        {
+                            PGNstopWatch.Restart();
+                        }
+                        else if (PGNstopWatch.Elapsed.TotalMilliseconds > Props.DuplicateGapMs)
+                        {
+                            cElapsedTime = PGNstopWatch.Elapsed.TotalMilliseconds;
+                            PGNstopWatch.Restart();
+                        }
 
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 1000.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;

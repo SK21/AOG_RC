@@ -1087,7 +1087,7 @@ namespace RateController.Classes
 
         public string Units()
         {
-            string uq = Core.Tls.ClipText(cQuantityDescription, 1);
+            string uq = Core.Tls.ClipText(cQuantityDescription, 2);
             string s = uq + "/" + Props.CoverageAbbr[CoverageUnits];
             return s;
         }

@@ -144,9 +144,18 @@ namespace RateController.PGNs
                     byte ModuleID = Data[2];
                     if (ModuleID < Props.MaxModules)
                     {
-                        PGNstopWatch[ModuleID].Stop();
-                        cElapsedTime[ModuleID] = PGNstopWatch[ModuleID].Elapsed.TotalMilliseconds;
-                        PGNstopWatch[ModuleID].Restart();
+                        // a copy within DuplicateGapMs is the same send arriving by a second
+                        // path (two PC adapters on the subnet, or a board on Ethernet + WiFi):
+                        // parse it but keep timing the real send interval
+                        if (!PGNstopWatch[ModuleID].IsRunning)
+                        {
+                            PGNstopWatch[ModuleID].Restart();
+                        }
+                        else if (PGNstopWatch[ModuleID].Elapsed.TotalMilliseconds > Props.DuplicateGapMs)
+                        {
+                            cElapsedTime[ModuleID] = PGNstopWatch[ModuleID].Elapsed.TotalMilliseconds;
+                            PGNstopWatch[ModuleID].Restart();
+                        }
 
                         cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
 

@@ -60,7 +60,8 @@ namespace RateController.Classes
     public static class Props
     {
         public static readonly int MaxModules = 8;
-        public const byte NewModuleID = 25;     // firmware ID of an unassigned board (above every real ID 0-15; must match the firmwares' NewModuleID)
+        public const double DuplicateGapMs = 50;  // module PGNs closer than this are one send seen twice (boards send every 200 ms)
+        public const byte NewModuleID = 25;    // firmware ID of an unassigned board (above every real ID 0-15; must match the firmwares' NewModuleID)
         public static readonly int MaxProducts = 7;
         public static readonly int MaxRelays = 16;
         public static readonly int MaxSections = 128;
@@ -77,7 +78,7 @@ namespace RateController.Classes
             Lang.lgTramLeft,Lang.lgGeoStop,Lang.lgSwitch, Lang.lgNone,Lang.lgInvert_Master,Lang.lgBypass,Lang.lgFlowMaster,Lang.lgInvert_FlowMaster};
 
         private static string cActivityFileName = "";
-        private static string cAppDate = "13-Nov-2026";
+        private static string cAppDate = "14-Nov-2026";
         private static string cAppName = "RateController";
         private static SortedDictionary<string, string> cAppProps = new SortedDictionary<string, string>();
         private static string cAppPropsFileName = "";

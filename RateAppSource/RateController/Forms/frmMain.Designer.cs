@@ -326,7 +326,7 @@
             this.btnVR.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
             this.btnVR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnVR.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVR.Image = global::RateController.Properties.Resources.VRon;
+            this.btnVR.Image = global::RateController.Properties.Resources.VRoff;
             this.btnVR.Location = new System.Drawing.Point(194, 284);
             this.btnVR.Name = "btnVR";
             this.btnVR.Size = new System.Drawing.Size(60, 60);
