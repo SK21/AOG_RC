@@ -3,6 +3,7 @@ using RateController.Classes;
 using RateController.Language;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RateController.Menu
@@ -44,6 +45,13 @@ namespace RateController.Menu
                 if (double.TryParse(tbTime.Text, out double Time)) Props.PrimeTime = Time;
                 if (int.TryParse(tbDelay.Text, out int Delay)) Props.PrimeDelay = Delay;
                 Props.ResumeAfterPrime = ckResume.Checked;
+
+                if (int.TryParse(tbPrimeRate.Text, out int Pct)) Props.PrimeRatePct = Pct;
+                Props.PrimeEndOnMovement = rbEndMoving.Checked;
+                if (double.TryParse(tbEndSpeed.Text, out double EndSpd))
+                {
+                    Props.PrimeEndSpeed_KMH = Props.UseMetric ? EndSpd : EndSpd * Props.MPHtoKPH;
+                }
                 SetButtons(false);
                 UpdateForm();
                 MainMenu.HighlightUpdateButton();
@@ -66,12 +74,19 @@ namespace RateController.Menu
             btnOK.Top = this.Height - 84;
             btnCancel.Left = btnOK.Left - 78;
             btnCancel.Top = btnOK.Top;
+            Font hintFont = lbPrimeHint.Font;      // StyleControls sets every label to the menu font
             MainMenu.StyleControls(this);
+            lbPrimeHint.Font = hintFont;
             SetLanguage();
             MainMenu.MenuMoved += MainMenu_MenuMoved;
             this.BackColor = Properties.Settings.Default.MainBackColour;
             PositionForm();
             UpdateForm();
+        }
+
+        private void gbPrimeEnds_Paint(object sender, PaintEventArgs e)
+        {
+            Props.DrawGroupBox((GroupBox)sender, e.Graphics, this.BackColor, Color.Black, Color.Blue);
         }
 
         private void MainMenu_MenuMoved(object sender, EventArgs e)
@@ -108,18 +123,108 @@ namespace RateController.Menu
         private void SetLanguage()
         {
             lbOnTime.Text = Lang.lgOnTime;
-            lbSpeed.Text = Lang.lgSpeed;
+            lbPrimedSpeed.Text = Lang.lgSimulateSpeed;       // lbSpeed is the unit, set in UpdateForm
             lbDelay.Text = Lang.lgSwitchDelay;
-            ckResume.Text = Lang.lgResume;
+            ckResume.Text = Lang.lgKeepMasterOn;
             lbOnSeconds.Text = Lang.lgSeconds;
             lbDelaySeconds.Text = Lang.lgSeconds;
+            lbPrimeRate.Text = Lang.lgPrimeRate;
+            gbPrimeEnds.Text = Lang.lgPrimeEnds;
+            rbEndTime.Text = Lang.lgPrimeEndTime;
+            rbEndMoving.Text = Lang.lgPrimeEndMoving;
+        }
+
+        private void tbEndSpeed_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbEndSpeed.Text, out tempD);
+            using (var form = new FormNumeric(EndSpeedMin(), EndSpeedMax(), tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbEndSpeed.Text = form.ReturnValue.ToString("N1");
+                }
+            }
+        }
+
+        private void tbEndSpeed_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbEndSpeed.Text, out tempD);
+            if (tempD < EndSpeedMin() || tempD > EndSpeedMax())
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        // the end speed range, 0.3 to 5 km/h, in the units shown
+        private double EndSpeedMin()
+        {
+            return Props.UseMetric ? 0.3 : 0.2;
+        }
+
+        private double EndSpeedMax()
+        {
+            return Props.UseMetric ? 5 : 3;
+        }
+
+        private void tbPrime_TextChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
+            UpdatePrimeInfo();
+        }
+
+        private void tbPrimeRate_Enter(object sender, EventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPrimeRate.Text, out tempD);
+            using (var form = new FormNumeric(0, 100, tempD))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    tbPrimeRate.Text = form.ReturnValue.ToString("N0");
+                }
+            }
+        }
+
+        private void tbPrimeRate_Validating(object sender, CancelEventArgs e)
+        {
+            double tempD;
+            double.TryParse(tbPrimeRate.Text, out tempD);
+            if (tempD < 0 || tempD > 100)
+            {
+                System.Media.SystemSounds.Exclamation.Play();
+                e.Cancel = true;
+            }
+        }
+
+        // the end speed box follows the "When moving" choice; the hint says what will flow
+        private void UpdatePrimeInfo()
+        {
+            tbEndSpeed.Enabled = rbEndMoving.Checked;
+
+            double.TryParse(tbSpeed.Text, out double Spd);
+            double.TryParse(tbPrimeRate.Text, out double Pct);
+            if (Spd <= 0 || Pct <= 0)
+            {
+                lbPrimeHint.Text = Lang.lgPrimeNoFlow;
+            }
+            else
+            {
+                string Hint = Lang.lgPrimeFloorNote;
+                if (rbEndMoving.Checked) Hint += Environment.NewLine + Lang.lgPrimeMaxStopped;
+                lbPrimeHint.Text = Hint;
+            }
         }
 
         private void tbDelay_Enter(object sender, EventArgs e)
         {
             double tempD;
             double.TryParse(tbDelay.Text, out tempD);
-            using (var form = new FormNumeric(0, 8, tempD))
+            using (var form = new FormNumeric(3, 8, tempD))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -133,7 +238,7 @@ namespace RateController.Menu
         {
             double tempD;
             double.TryParse(tbDelay.Text, out tempD);
-            if (tempD < 0 || tempD > 8)
+            if (tempD < 3 || tempD > 8)     // Props.PrimeDelay accepts 3-8: a shorter hold would start prime by accident
             {
                 System.Media.SystemSounds.Exclamation.Play();
                 e.Cancel = true;
@@ -207,6 +312,12 @@ namespace RateController.Menu
 
             ckResume.Checked = Props.ResumeAfterPrime;
 
+            tbPrimeRate.Text = Props.PrimeRatePct.ToString("N0");
+            rbEndMoving.Checked = Props.PrimeEndOnMovement;
+            rbEndTime.Checked = !Props.PrimeEndOnMovement;
+            double endSpeed = Props.UseMetric ? Props.PrimeEndSpeed_KMH : Props.PrimeEndSpeed_KMH / Props.MPHtoKPH;
+            tbEndSpeed.Text = endSpeed.ToString("N1");
+
             if (!Props.UseMetric)
             {
                 lbSpeed.Text = "MPH";
@@ -215,6 +326,8 @@ namespace RateController.Menu
             {
                 lbSpeed.Text = "KMH";
             }
+            lbEndSpeedUnit.Text = lbSpeed.Text;
+            UpdatePrimeInfo();
             Initializing = false;
         }
     }

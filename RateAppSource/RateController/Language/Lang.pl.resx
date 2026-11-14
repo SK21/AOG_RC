@@ -262,7 +262,7 @@
     <value>Alarm wyłączenia</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>Czas</value>
+    <value>Czas napełniania</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Opcje</value>
@@ -355,7 +355,7 @@
     <value>Przełacznik</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Opóźnienie zmiany</value>
+    <value>Przytrzymaj główny</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Przełączniki</value>
@@ -924,5 +924,29 @@ Zastąpi to ustawienia na stronach {2}, {3} i {4}.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Najpierw wyślij oczekującą zmianę modułu.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>Przy jeździe od</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>Po upływie czasu napełniania</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Koniec napełniania wstępnego</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>Min UPM produktu nadal obowiązuje.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>Czas napełniania = maks. czas na postoju.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Nic nie popłynie: prędkość lub dawka wynosi 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Dawka</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>Główny włączony po czasie napełniania</value>
   </data>
 </root>

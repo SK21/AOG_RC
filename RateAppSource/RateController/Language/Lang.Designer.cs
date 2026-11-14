@@ -610,6 +610,15 @@ namespace RateController.Language {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keep Master on when Prime Duration ends
+        /// </summary>
+        internal static string lgKeepMasterOn {
+            get {
+                return ResourceManager.GetString("lgKeepMasterOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string lgLanguage {
@@ -835,7 +844,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to On Time.
+        ///   Looks up a localized string similar to Prime Duration.
         /// </summary>
         internal static string lgOnTime {
             get {
@@ -957,6 +966,69 @@ namespace RateController.Language {
         internal static string lgPressureZero {
             get {
                 return ResourceManager.GetString("lgPressureZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When moving at
+        /// </summary>
+        internal static string lgPrimeEndMoving {
+            get {
+                return ResourceManager.GetString("lgPrimeEndMoving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When Prime Duration ends
+        /// </summary>
+        internal static string lgPrimeEndTime {
+            get {
+                return ResourceManager.GetString("lgPrimeEndTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prime ends
+        /// </summary>
+        internal static string lgPrimeEnds {
+            get {
+                return ResourceManager.GetString("lgPrimeEnds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A product&apos;s Min UPM still applies.
+        /// </summary>
+        internal static string lgPrimeFloorNote {
+            get {
+                return ResourceManager.GetString("lgPrimeFloorNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prime Duration limits prime while stopped.
+        /// </summary>
+        internal static string lgPrimeMaxStopped {
+            get {
+                return ResourceManager.GetString("lgPrimeMaxStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing will flow: the speed or the prime rate is 0.
+        /// </summary>
+        internal static string lgPrimeNoFlow {
+            get {
+                return ResourceManager.GetString("lgPrimeNoFlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Rate
+        /// </summary>
+        internal static string lgPrimeRate {
+            get {
+                return ResourceManager.GetString("lgPrimeRate", resourceCulture);
             }
         }
         
@@ -1348,7 +1420,7 @@ namespace RateController.Language {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Master Switch Delay.
+        ///   Looks up a localized string similar to Hold Master to start Prime.
         /// </summary>
         internal static string lgSwitchDelay {
             get {

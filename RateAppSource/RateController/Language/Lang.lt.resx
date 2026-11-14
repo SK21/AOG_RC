@@ -265,7 +265,7 @@
     <value>Nuokrypio Aliarmas</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>Ijungimo Laikas</value>
+    <value>Išankstinio starto trukmė</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Opcijos</value>
@@ -358,7 +358,7 @@
     <value>Jungtukas</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Mygtukų Uždelsimas</value>
+    <value>Laikyti pagrindinį</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Mygtukai</value>
@@ -924,5 +924,29 @@ Tai pakeis nustatymus puslapiuose {2}, {3} ir {4}.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Pirmiausia išsiųskite laukiantį modulio pakeitimą.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>Važiuojant nuo</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>Kai baigiasi išankstinio starto trukmė</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Išankstinis startas baigiasi</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>Produkto minimalus VPM vis tiek taikomas.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>Išankstinio starto trukmė – ilgiausias laikas stovint.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Niekas netekės: greitis arba norma yra 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Taikymo norma</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>Palikti pagrindinį įjungtą, kai baigiasi trukmė</value>
   </data>
 </root>

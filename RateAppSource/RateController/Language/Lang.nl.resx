@@ -421,7 +421,7 @@
     <value>afwijkingsalarm</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>inschakeltijd</value>
+    <value>voorvulduur</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>secties per zone</value>
@@ -535,7 +535,7 @@
     <value>start</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>vertraging masterschakelaar</value>
+    <value>master vasthouden</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>schakelaars</value>
@@ -924,5 +924,29 @@ Dit vervangt de instellingen op de pagina's {2}, {3} en {4}.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Verzend eerst de openstaande modulewijziging.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>bij rijden vanaf</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>wanneer de voorvulduur eindigt</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>voorvullen stopt</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>minimum eenheden/min van product blijft gelden.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>de voorvulduur is de langste tijd bij stilstand.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>er stroomt niets: de snelheid of de dosering is 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>dosering</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>master aan laten wanneer de voorvulduur eindigt</value>
   </data>
 </root>

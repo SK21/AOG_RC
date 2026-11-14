@@ -425,7 +425,7 @@
     <value>Abweichungsalarm</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>Einschaltzeit</value>
+    <value>Vorbefülldauer</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Teilbreiten pro Zone</value>
@@ -536,7 +536,7 @@
     <value>Start</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Master-Schaltverzögerung</value>
+    <value>Master halten zum Start</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Schalter</value>
@@ -925,5 +925,29 @@ Dies ersetzt die Einstellungen auf den Seiten {2}, {3} und {4}.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Zuerst die offene Moduländerung senden.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>Bei Fahrt ab</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>Nach Vorbefülldauer</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Vorbefüllen endet</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>Min. Einheiten/min des Produkts gilt weiterhin.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>Vorbefülldauer = max. Zeit im Stillstand.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Kein Durchfluss: Geschwindigkeit oder Rate ist 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Ausbringrate</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>Master bleibt an nach Vorbefülldauer</value>
   </data>
 </root>

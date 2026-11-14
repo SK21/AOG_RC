@@ -472,7 +472,7 @@
     <value>Kapcsoló</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>MST kapcsoló késleltetése</value>
+    <value>MST nyomva tartása</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Kapcsolók</value>
@@ -577,7 +577,7 @@
     <value>3 vezetékes szelep (relé jel, szelep saját tápról)</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>Bekapcsolási idő</value>
+    <value>Kényszerindítás időtartama</value>
   </data>
   <data name="lgScaling" xml:space="preserve">
     <value>Erősítés</value>
@@ -927,5 +927,29 @@ Ez lecseréli a(z) {2}, {3} és {4} oldal beállításait.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Előbb küldje el a függő modulváltozást.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>Mozgáskor, legalább</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>Az időtartam lejártakor</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Kényszerindítás vége</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>A termék Minimum UPM értéke továbbra is érvényes.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>Időtartam = max. idő álló helyzetben.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Nem lesz kijuttatás: a sebesség vagy az arány 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Kijuttatási arány</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>MST bekapcsolva marad az időtartam lejárta után</value>
   </data>
 </root>

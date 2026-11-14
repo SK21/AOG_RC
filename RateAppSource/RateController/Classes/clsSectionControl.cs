@@ -5,6 +5,7 @@ namespace RateController.Classes
 {
     public class clsSectionControl
     {
+        private const int TicksPerSecond = 5;        // PrimeTimer at 200 ms
         private readonly System.Windows.Forms.Timer PrimeTimer;
         private bool AutoSectionLast;
         private bool AutoSectionsChanged;
@@ -14,6 +15,7 @@ namespace RateController.Classes
         private bool MasterIsOnChanged;
         private bool MasterIsOnLast;
         private bool MasterSWOnPending;
+        private int MovingTicks;                     // consecutive ticks at or above PrimeEndSpeed
         private DateTime OnFirstPressed;
         private bool PrimeInitialized;
         private bool[] RCzoneOn;
@@ -34,7 +36,7 @@ namespace RateController.Classes
             MasterIsOnLast = true;   // force initial change detection
 
             PrimeTimer = new System.Windows.Forms.Timer();
-            PrimeTimer.Interval = 1000;
+            PrimeTimer.Interval = 1000 / TicksPerSecond;
             PrimeTimer.Tick += PrimingTimerTick;
             PrimeTimer.Enabled = false;
         }
@@ -47,10 +49,11 @@ namespace RateController.Classes
 
         public void StartPrime()
         {
-            if (!Props.MasterMaintained && Props.Speed_KMH < 0.1)
+            if (!Props.MasterMaintained && Props.RealSpeed_KMH < 0.1)
             {
                 cPrimeOn = true;
                 TimerCount = 0;
+                MovingTicks = 0;
                 PrimeTimer.Enabled = true;
             }
         }
@@ -203,9 +206,29 @@ namespace RateController.Classes
 
         private void PrimingTimerTick(object sender, EventArgs e)
         {
-            TimerCount++;
+            bool endByMovement = false;
+            if (Props.PrimeEndOnMovement)
+            {
+                if (Props.RealSpeed_KMH >= Props.PrimeEndSpeed_KMH) MovingTicks++; else MovingTicks = 0;
 
-            if (TimerCount > Props.PrimeTime)
+                // moving for about 1 s: normal or AOG section control takes over
+                endByMovement = MovingTicks >= TicksPerSecond;
+            }
+
+            // ending on movement, On Time is the longest prime may run while stopped
+            if (!Props.PrimeEndOnMovement || MovingTicks == 0) TimerCount++;
+
+            if (endByMovement)
+            {
+                // hand over with Master on: normal or auto section control carries on
+                TimerCount = 0;
+                MovingTicks = 0;
+                PrimeTimer.Enabled = false;
+                cPrimeOn = false;
+                PrimeInitialized = false;
+                ForceOff = false;
+            }
+            else if (TimerCount > Props.PrimeTime * TicksPerSecond)
             {
                 TimerCount = 0;
                 PrimeTimer.Enabled = false;
@@ -256,12 +279,14 @@ namespace RateController.Classes
                     {
                         cPrimeOn = true;
                         TimerCount = 0;
+                        MovingTicks = 0;
                         PrimeTimer.Enabled = true;
                     }
                 }
                 else
                 {
-                    if (Props.Speed_KMH < 0.1)
+                    // a prime already on (PRM button, phone) is left running
+                    if (!cPrimeOn && Props.RealSpeed_KMH < 0.1)
                     {
                         PrimeInitialized = true;
                         OnFirstPressed = DateTime.Now;

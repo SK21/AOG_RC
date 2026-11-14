@@ -175,7 +175,7 @@ namespace RateController.Classes
 
                 bool SectionsOn = AnySectionOn(ModuleID);
                 bool MasterOn = Core.SectionControl.MasterOn || CalibratingModule;
-                bool FlowEnabled = Props.Speed_KMH > 0.1;
+                bool FlowEnabled = Props.Speed_KMH > 0.1 || Core.SectionControl.PrimeOn;    // a low prime % can be below 0.1
                 bool FlowMasterOn;
 
                 if (CalibratingModule)

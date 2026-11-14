@@ -460,7 +460,7 @@
     <value>Aucun</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>Temps Actif</value>
+    <value>Durée d&apos;amorçage</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Sections par Zone</value>
@@ -547,7 +547,7 @@
     <value>Vitesse Simulée</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Délai Interrupteur Maître</value>
+    <value>Appui maître pour amorcer</value>
   </data>
   <data name="lgTextColor" xml:space="preserve">
     <value>Couleur du Texte</value>
@@ -924,5 +924,29 @@ Cela remplace les réglages des pages {2}, {3} et {4}.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Envoyez d&apos;abord le changement de module en attente.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>En roulant à</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>À la fin de la durée d&apos;amorçage</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Fin de l&apos;amorçage</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>Le Minimum UPM d&apos;un produit s&apos;applique toujours.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>La durée d&apos;amorçage est la durée maximale à l&apos;arrêt.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Aucun débit : la vitesse ou le taux d&apos;amorçage est 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Taux d&apos;application</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>Maître actif après la durée d&apos;amorçage</value>
   </data>
 </root>

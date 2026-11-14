@@ -96,7 +96,10 @@ namespace RateController.Classes
         private static bool cMasterMaintained = false;
         private static MasterSwitchMode cMasterSwitchMode = MasterSwitchMode.Standard;
         private static int cPrimeDelay = 3;
-        private static double cPrimeTime = 0;
+        private static bool cPrimeEndOnMovement;
+        private static double cPrimeEndSpeed = 0.8;
+        private static int cPrimeRatePct = 100;
+        private static double cPrimeTime = 20;
         private static SortedDictionary<string, string> cProps = new SortedDictionary<string, string>();
         private static bool cRateCalibrationOn = false;
         private static bool cRateRecordEnabled;
@@ -336,6 +339,45 @@ namespace RateController.Classes
             }
         }
 
+        // prime ends once the machine is really moving (PrimeEndSpeed_KMH), instead of
+        // only when PrimeTime runs out
+        public static bool PrimeEndOnMovement
+        {
+            get { return cPrimeEndOnMovement; }
+            set
+            {
+                cPrimeEndOnMovement = value;
+                SetProp("PrimeEndOnMovement", cPrimeEndOnMovement.ToString());
+            }
+        }
+
+        public static double PrimeEndSpeed_KMH
+        {
+            get { return cPrimeEndSpeed; }
+            set
+            {
+                if (value >= 0.3 && value <= 5)
+                {
+                    cPrimeEndSpeed = value;
+                    SetProp("PrimeEndSpeed", NumberText(cPrimeEndSpeed));
+                }
+            }
+        }
+
+        // rate while primed and stopped, as a % of the rate at SimSpeed_KMH
+        public static int PrimeRatePct
+        {
+            get { return cPrimeRatePct; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    cPrimeRatePct = value;
+                    SetProp("PrimeRatePct", cPrimeRatePct.ToString());
+                }
+            }
+        }
+
         public static double PrimeTime
         {
             get { return cPrimeTime; }
@@ -366,6 +408,43 @@ namespace RateController.Classes
                 bool Changed = cReadOnly != value;
                 cReadOnly = value;
                 if (Changed) Save(cProps, Props.CurrentFile);
+            }
+        }
+
+        // the speed from the selected source, never faked by prime
+        public static double RealSpeed_KMH
+        {
+            get
+            {
+                double Result = 0;
+                switch (cSpeedMode)
+                {
+                    case SpeedType.Wheel:
+                        if (UseMetric)
+                        {
+                            Result = Core.ModulesStatus.WheelSpeed(Core.WheelSpeed.WheelModule);
+                        }
+                        else
+                        {
+                            Result = Core.ModulesStatus.WheelSpeed(Core.WheelSpeed.WheelModule) * MPHtoKPH;
+                        }
+                        break;
+
+                    case SpeedType.Simulated:
+                        Result = SimSpeed_KMH;
+                        break;
+
+                    case SpeedType.ISOBUS:
+                        // ISOBUS speed source removed — fall through to GPS
+                        Result = Core.GPS.Speed_KMH;
+                        break;
+
+                    default:
+                        Result = Core.GPS.Speed_KMH;
+                        break;
+                }
+                if (Result < 0 || Result > 10000) Result = 0;
+                return Result;
             }
         }
 
@@ -482,45 +561,18 @@ namespace RateController.Classes
             }
         }
 
+        // the speed the rate is worked out from. Primed and stopped: the prime rate, as
+        // PrimeRatePct of the rate at the sim speed (the rate is proportional to speed).
+        // Moving, or not priming: the real speed.
         public static double Speed_KMH
         {
             get
             {
-                double Result = 0;
-                if (Core.SectionControl.PrimeOn)
+                double Result = RealSpeed_KMH;
+                if (Core.SectionControl.PrimeOn && Result < 0.1)
                 {
-                    Result = SimSpeed_KMH;
+                    Result = SimSpeed_KMH * cPrimeRatePct / 100.0;
                 }
-                else
-                {
-                    switch (cSpeedMode)
-                    {
-                        case SpeedType.Wheel:
-                            if (UseMetric)
-                            {
-                                Result = Core.ModulesStatus.WheelSpeed(Core.WheelSpeed.WheelModule);
-                            }
-                            else
-                            {
-                                Result = Core.ModulesStatus.WheelSpeed(Core.WheelSpeed.WheelModule) * MPHtoKPH;
-                            }
-                            break;
-
-                        case SpeedType.Simulated:
-                            Result = SimSpeed_KMH;
-                            break;
-
-                        case SpeedType.ISOBUS:
-                            // ISOBUS speed source removed — fall through to GPS
-                            Result = Core.GPS.Speed_KMH;
-                            break;
-
-                        default:
-                            Result = Core.GPS.Speed_KMH;
-                            break;
-                    }
-                }
-                if (Result < 0 || Result > 10000) Result = 0;
                 return Result;
             }
         }
@@ -1283,7 +1335,10 @@ namespace RateController.Classes
             CurrentProduct = cDefaultProduct;
 
             cPrimeDelay = int.TryParse(GetProp("PrimeDelay"), out int pd) ? pd : 3;
-            cPrimeTime = TryParseNumber(GetProp("PrimeTime"), out double pt) ? pt : 5;
+            cPrimeEndOnMovement = bool.TryParse(GetProp("PrimeEndOnMovement"), out bool pem) ? pem : false;
+            cPrimeEndSpeed = TryParseNumber(GetProp("PrimeEndSpeed"), out double pes) && pes >= 0.3 && pes <= 5 ? pes : 0.8;
+            cPrimeRatePct = int.TryParse(GetProp("PrimeRatePct"), out int prp) && prp >= 0 && prp <= 100 ? prp : 100;
+            cPrimeTime = TryParseNumber(GetProp("PrimeTime"), out double pt) ? pt : 20;
             cResumeAfterPrime = bool.TryParse(GetProp("ResumeAfterPrime"), out bool rp) ? rp : false;
             cUseZones = bool.TryParse(GetProp("UseZones"), out bool uz) ? uz : false;
             cShowQuantityRemaining = bool.TryParse(GetProp("ShowQuantityRemaining"), out bool qr) ? qr : false;

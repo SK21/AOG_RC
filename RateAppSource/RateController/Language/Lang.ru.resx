@@ -442,7 +442,7 @@
     <value>Нет</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>Время включения</value>
+    <value>Длительность заправки</value>
   </data>
   <data name="lgPerZone" xml:space="preserve">
     <value>Секций на зону</value>
@@ -541,7 +541,7 @@
     <value>Старт</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Задержка главного выключателя</value>
+    <value>Удержание главного</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Переключатели</value>
@@ -924,5 +924,29 @@
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Сначала отправьте ожидающее изменение модуля.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>При движении от</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>По окончании заправки</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Заправка завершается</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>Мин ед/мин продукта по-прежнему действует.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>Длительность = макс. время на месте.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Подачи не будет: скорость или норма 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Норма внесения</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>Главный включён после заправки</value>
   </data>
 </root>

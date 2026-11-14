@@ -352,7 +352,7 @@
     <value>Off-rate Alarm</value>
   </data>
   <data name="lgOnTime" xml:space="preserve">
-    <value>On Time</value>
+    <value>Prime Duration</value>
   </data>
   <data name="lgOptions" xml:space="preserve">
     <value>Options</value>
@@ -511,7 +511,7 @@
     <value>Switch</value>
   </data>
   <data name="lgSwitchDelay" xml:space="preserve">
-    <value>Master Switch Delay</value>
+    <value>Hold Master to start Prime</value>
   </data>
   <data name="lgSwitches" xml:space="preserve">
     <value>Switches</value>
@@ -930,5 +930,29 @@ This replaces the settings on the {2}, {3} and {4} pages.</value>
   </data>
   <data name="lgSendPendingFirst" xml:space="preserve">
     <value>Send the pending module change first.</value>
+  </data>
+  <data name="lgPrimeEndMoving" xml:space="preserve">
+    <value>When moving at</value>
+  </data>
+  <data name="lgPrimeEndTime" xml:space="preserve">
+    <value>When Prime Duration ends</value>
+  </data>
+  <data name="lgPrimeEnds" xml:space="preserve">
+    <value>Prime ends</value>
+  </data>
+  <data name="lgPrimeFloorNote" xml:space="preserve">
+    <value>A product&apos;s Min UPM still applies.</value>
+  </data>
+  <data name="lgPrimeMaxStopped" xml:space="preserve">
+    <value>Prime Duration limits prime while stopped.</value>
+  </data>
+  <data name="lgPrimeNoFlow" xml:space="preserve">
+    <value>Nothing will flow: the speed or the prime rate is 0.</value>
+  </data>
+  <data name="lgPrimeRate" xml:space="preserve">
+    <value>Application Rate</value>
+  </data>
+  <data name="lgKeepMasterOn" xml:space="preserve">
+    <value>Keep Master on when Prime Duration ends</value>
   </data>
 </root>
