@@ -141,6 +141,8 @@
     <Compile Include="Classes\clsSensorSettings.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsVersionChecker.cs" />
+    <Compile Include="Classes\FirmwareFiles.cs" />
+    <Compile Include="Classes\FirmwareUpdater.cs" />
     <Compile Include="Classes\clsQrCode.cs" />
     <Compile Include="Classes\clsVirtualSwitchBox.cs" />
     <Compile Include="Classes\clsWebServer.cs" />
@@ -230,6 +232,12 @@
     </Compile>
     <Compile Include="Forms\frmSwitches.Designer.cs">
       <DependentUpon>frmSwitches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFirmwareUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFirmwareUpdate.Designer.cs">
+      <DependentUpon>frmFirmwareUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmVersion.cs">
       <SubType>Form</SubType>
@@ -467,6 +475,8 @@
     <Compile Include="PGNs\PGN32506.cs" />
     <Compile Include="PGNs\PGN32507.cs" />
     <Compile Include="PGNs\PGN32508.cs" />
+    <Compile Include="PGNs\PGN32810.cs" />
+    <Compile Include="PGNs\PGN32811.cs" />
     <Compile Include="PGNs\PGN32618.cs" />
     <Compile Include="PGNs\PGN32700.cs" />
     <Compile Include="Printing\RichTexBoxPrinterRTF.cs" />

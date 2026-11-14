@@ -15,6 +15,7 @@ namespace RateController.Classes
         public static PGN254 AutoSteerPGN;
         public static clsCalibrationSession CalSession;
         public static CanBridgeComm CanBridgeComm;
+        public static FirmwareUpdater FirmwareUpdate;     // set while a firmware update runs (frmFirmwareUpdate)
         public static PGN208 GPS;
         public static PGN238 MachineConfig;
         public static PGN239 MachineData;

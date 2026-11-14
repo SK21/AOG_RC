@@ -39,6 +39,7 @@ namespace RateController.Menu
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnPreset = new System.Windows.Forms.Button();
+            this.btnFirmware = new System.Windows.Forms.Button();
             this.lbDescription = new System.Windows.Forms.Label();
             this.tbDescription = new System.Windows.Forms.TextBox();
             this.lnkWeb = new System.Windows.Forms.LinkLabel();
@@ -156,7 +157,26 @@ namespace RateController.Menu
             this.btnPreset.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnPreset.UseVisualStyleBackColor = false;
             this.btnPreset.Click += new System.EventHandler(this.btnPreset_Click);
-            // 
+            //
+            // btnFirmware
+            //
+            this.btnFirmware.BackColor = System.Drawing.Color.Transparent;
+            this.btnFirmware.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnFirmware.Enabled = false;
+            this.btnFirmware.FlatAppearance.BorderSize = 0;
+            this.btnFirmware.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFirmware.Font = new System.Drawing.Font("Tahoma", 14.25F);
+            this.btnFirmware.Image = global::RateController.Properties.Resources.Update4;
+            this.btnFirmware.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.btnFirmware.Location = new System.Drawing.Point(230, 603);
+            this.btnFirmware.Name = "btnFirmware";
+            this.btnFirmware.Size = new System.Drawing.Size(70, 63);
+            this.btnFirmware.TabIndex = 11;
+            this.btnFirmware.TabStop = false;
+            this.btnFirmware.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnFirmware.UseVisualStyleBackColor = false;
+            this.btnFirmware.Click += new System.EventHandler(this.btnFirmware_Click);
+            //
             // lbDescription
             // 
             this.lbDescription.AutoSize = true;
@@ -208,6 +228,7 @@ namespace RateController.Menu
             this.Controls.Add(this.lbBoardsFound);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnPreset);
+            this.Controls.Add(this.btnFirmware);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lnkWeb);
             this.Controls.Add(this.tbDescription);
@@ -238,6 +259,7 @@ namespace RateController.Menu
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnPreset;
+        private System.Windows.Forms.Button btnFirmware;
         private System.Windows.Forms.Label lbDescription;
         private System.Windows.Forms.TextBox tbDescription;
         private System.Windows.Forms.LinkLabel lnkWeb;

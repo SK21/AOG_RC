@@ -225,12 +225,13 @@ Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$b
             // hotspot or a router counts as Public on Windows and its subnet isn't known in advance
             // (192.168.43.x, 172.20.10.x ...), so the rule uses localsubnet. One admin prompt; the
             // exe's own Public Block rule, if the first-run prompt left one, is flipped too.
+            // UDP 29000 is where a Teensy on older firmware answers a firmware update (FirmwareUpdater).
             bool Result = false;
             try
             {
                 string Rule = "advfirewall firewall {0} rule name=\"" + ModuleDataRule + "\"";
                 string Args = "/c netsh " + string.Format(Rule, "delete") + " & netsh " + string.Format(Rule, "add")
-                    + " dir=in action=allow protocol=UDP localport=" + ModulePort.ToString()
+                    + " dir=in action=allow protocol=UDP localport=" + ModulePort.ToString() + ",29000"
                     + " profile=public,private remoteip=localsubnet";
                 if (ExeBlockedOnPublic())
                 {

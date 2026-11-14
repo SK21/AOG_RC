@@ -949,4 +949,110 @@
   <data name="lgKeepMasterOn" xml:space="preserve">
     <value>Главный включён после заправки</value>
   </data>
+  <data name="lgFwTitle" xml:space="preserve">
+    <value>Обновление прошивки</value>
+  </data>
+  <data name="lgFwBoardFirmware" xml:space="preserve">
+    <value>Прошивка платы</value>
+  </data>
+  <data name="lgFwFile" xml:space="preserve">
+    <value>Файл прошивки</value>
+  </data>
+  <data name="lgFwConnection" xml:space="preserve">
+    <value>Связь</value>
+  </data>
+  <data name="lgFwNone" xml:space="preserve">
+    <value>Нет. Проверьте обновления или выберите файл.</value>
+  </data>
+  <data name="lgFwUnknown" xml:space="preserve">
+    <value>неизвестно</value>
+  </data>
+  <data name="lgFwOldModule" xml:space="preserve">
+    <value>Модуль {0}, старая прошивка</value>
+  </data>
+  <data name="lgFwChecking" xml:space="preserve">
+    <value>Проверка новой прошивки.</value>
+  </data>
+  <data name="lgFwDownloaded" xml:space="preserve">
+    <value>Прошивка загружена.</value>
+  </data>
+  <data name="lgFwDownloadFailed" xml:space="preserve">
+    <value>Ошибка загрузки. Проверьте подключение к интернету.</value>
+  </data>
+  <data name="lgFwNoNew" xml:space="preserve">
+    <value>Новой прошивки нет. Загрузить заново?</value>
+  </data>
+  <data name="lgFwBadFile" xml:space="preserve">
+    <value>Это не файл прошивки.</value>
+  </data>
+  <data name="lgFwNotConnected" xml:space="preserve">
+    <value>Плата не подключена.</value>
+  </data>
+  <data name="lgFwMasterOn" xml:space="preserve">
+    <value>Сначала выключите Master.</value>
+  </data>
+  <data name="lgFwOldOnCan" xml:space="preserve">
+    <value>Прошивка этой платы слишком старая для обновления по CanBus. Обновите её один раз через Ethernet или USB.</value>
+  </data>
+  <data name="lgFwConfirm" xml:space="preserve">
+    <value>Обновить модуль {0} прошивкой {1}?
+Модуль не управляет до конца обновления.</value>
+  </data>
+  <data name="lgFwOlder" xml:space="preserve">
+    <value>Файл старее прошивки платы.</value>
+  </data>
+  <data name="lgFwDateUnknown" xml:space="preserve">
+    <value>Дата файла неизвестна.</value>
+  </data>
+  <data name="lgFwStarting" xml:space="preserve">
+    <value>Запуск.</value>
+  </data>
+  <data name="lgFwSending" xml:space="preserve">
+    <value>Отправка, {0}%</value>
+  </data>
+  <data name="lgFwInstalling" xml:space="preserve">
+    <value>Установка. Плата перезапустится сама примерно через минуту.</value>
+  </data>
+  <data name="lgFwDone" xml:space="preserve">
+    <value>Прошивка обновлена. Отправьте настройки в модуль.</value>
+  </data>
+  <data name="lgFwNotBack" xml:space="preserve">
+    <value>Плата ещё не ответила. Проверьте её на странице {0}.</value>
+  </data>
+  <data name="lgFwNoReply" xml:space="preserve">
+    <value>Плата не отвечает.</value>
+  </data>
+  <data name="lgFwTryOld" xml:space="preserve">
+    <value>Нет ответа на новый способ обновления. Попробовать старый способ?</value>
+  </data>
+  <data name="lgFwWrongType" xml:space="preserve">
+    <value>Файл для другого типа платы.</value>
+  </data>
+  <data name="lgFwWrongModule" xml:space="preserve">
+    <value>Плата не приняла номер модуля.</value>
+  </data>
+  <data name="lgFwRefused" xml:space="preserve">
+    <value>Плата отказала: Master включён.</value>
+  </data>
+  <data name="lgFwNoAnswer" xml:space="preserve">
+    <value>Плата перестала отвечать. Она сохраняет старую прошивку.</value>
+  </data>
+  <data name="lgFwCountWrong" xml:space="preserve">
+    <value>Плата получила не весь файл. Она сохраняет старую прошивку.</value>
+  </data>
+  <data name="lgFwCancelled" xml:space="preserve">
+    <value>Обновление отменено. Плата сохраняет старую прошивку.</value>
+  </data>
+  <data name="lgFwFailed" xml:space="preserve">
+    <value>Ошибка обновления. Плата сохраняет старую прошивку.</value>
+  </data>
+  <data name="lgFwRunning" xml:space="preserve">
+    <value>Дождитесь окончания обновления или отмените его.</value>
+  </data>
+  <data name="lgFwHexFiles" xml:space="preserve">
+    <value>Файлы прошивки</value>
+  </data>
+  <data name="lgFwNoTag" xml:space="preserve">
+    <value>Этот файл не является прошивкой Teensy для нормы внесения этой или более новой версии. Для установки старой прошивки используйте PCBsetup.</value>
+  </data>
 </root>

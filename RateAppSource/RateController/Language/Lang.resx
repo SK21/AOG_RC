@@ -955,4 +955,110 @@ This replaces the settings on the {2}, {3} and {4} pages.</value>
   <data name="lgKeepMasterOn" xml:space="preserve">
     <value>Keep Master on when Prime Duration ends</value>
   </data>
+  <data name="lgFwTitle" xml:space="preserve">
+    <value>Firmware Update</value>
+  </data>
+  <data name="lgFwBoardFirmware" xml:space="preserve">
+    <value>Board firmware</value>
+  </data>
+  <data name="lgFwFile" xml:space="preserve">
+    <value>Firmware file</value>
+  </data>
+  <data name="lgFwConnection" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="lgFwNone" xml:space="preserve">
+    <value>None. Check for updates or browse.</value>
+  </data>
+  <data name="lgFwUnknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="lgFwOldModule" xml:space="preserve">
+    <value>Module {0}, old firmware</value>
+  </data>
+  <data name="lgFwChecking" xml:space="preserve">
+    <value>Checking for new firmware.</value>
+  </data>
+  <data name="lgFwDownloaded" xml:space="preserve">
+    <value>Firmware downloaded.</value>
+  </data>
+  <data name="lgFwDownloadFailed" xml:space="preserve">
+    <value>Download failed. Check the internet connection.</value>
+  </data>
+  <data name="lgFwNoNew" xml:space="preserve">
+    <value>No new firmware found. Download it again?</value>
+  </data>
+  <data name="lgFwBadFile" xml:space="preserve">
+    <value>This is not a valid firmware file.</value>
+  </data>
+  <data name="lgFwNotConnected" xml:space="preserve">
+    <value>The board is not connected.</value>
+  </data>
+  <data name="lgFwMasterOn" xml:space="preserve">
+    <value>Turn Master off first.</value>
+  </data>
+  <data name="lgFwOldOnCan" xml:space="preserve">
+    <value>This board's firmware is too old to update over CanBus. Update it once over Ethernet or USB.</value>
+  </data>
+  <data name="lgFwConfirm" xml:space="preserve">
+    <value>Update module {0} with firmware {1}?
+The module stops controlling until the update is done.</value>
+  </data>
+  <data name="lgFwOlder" xml:space="preserve">
+    <value>The file is older than the board's firmware.</value>
+  </data>
+  <data name="lgFwDateUnknown" xml:space="preserve">
+    <value>The file's date is unknown.</value>
+  </data>
+  <data name="lgFwStarting" xml:space="preserve">
+    <value>Starting.</value>
+  </data>
+  <data name="lgFwSending" xml:space="preserve">
+    <value>Sending, {0}%</value>
+  </data>
+  <data name="lgFwInstalling" xml:space="preserve">
+    <value>Installing. The board restarts by itself in about a minute.</value>
+  </data>
+  <data name="lgFwDone" xml:space="preserve">
+    <value>Firmware updated. Send the settings to the module.</value>
+  </data>
+  <data name="lgFwNotBack" xml:space="preserve">
+    <value>The board hasn't reported back yet. Check it on the {0} page.</value>
+  </data>
+  <data name="lgFwNoReply" xml:space="preserve">
+    <value>No reply from the board.</value>
+  </data>
+  <data name="lgFwTryOld" xml:space="preserve">
+    <value>No reply to the new update method. Try the older method?</value>
+  </data>
+  <data name="lgFwWrongType" xml:space="preserve">
+    <value>The file is for another board type.</value>
+  </data>
+  <data name="lgFwWrongModule" xml:space="preserve">
+    <value>The board didn't accept the module number.</value>
+  </data>
+  <data name="lgFwRefused" xml:space="preserve">
+    <value>The board refused: Master is on.</value>
+  </data>
+  <data name="lgFwNoAnswer" xml:space="preserve">
+    <value>The board stopped answering. It keeps its old firmware.</value>
+  </data>
+  <data name="lgFwCountWrong" xml:space="preserve">
+    <value>The board didn't receive the whole file. It keeps its old firmware.</value>
+  </data>
+  <data name="lgFwCancelled" xml:space="preserve">
+    <value>Update cancelled. The board keeps its old firmware.</value>
+  </data>
+  <data name="lgFwFailed" xml:space="preserve">
+    <value>Update failed. The board keeps its old firmware.</value>
+  </data>
+  <data name="lgFwRunning" xml:space="preserve">
+    <value>Wait for the update to finish, or cancel it.</value>
+  </data>
+  <data name="lgFwHexFiles" xml:space="preserve">
+    <value>Firmware files</value>
+  </data>
+  <data name="lgFwNoTag" xml:space="preserve">
+    <value>This file isn't Teensy rate firmware from this version or newer. Use PCBsetup to install older firmware.</value>
+  </data>
 </root>

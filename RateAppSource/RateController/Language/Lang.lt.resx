@@ -949,4 +949,110 @@ Tai pakeis nustatymus puslapiuose {2}, {3} ir {4}.</value>
   <data name="lgKeepMasterOn" xml:space="preserve">
     <value>Palikti pagrindinį įjungtą, kai baigiasi trukmė</value>
   </data>
+  <data name="lgFwTitle" xml:space="preserve">
+    <value>Programinės įrangos atnaujinimas</value>
+  </data>
+  <data name="lgFwBoardFirmware" xml:space="preserve">
+    <value>Plokštės programinė įranga</value>
+  </data>
+  <data name="lgFwFile" xml:space="preserve">
+    <value>Programinės įrangos failas</value>
+  </data>
+  <data name="lgFwConnection" xml:space="preserve">
+    <value>Ryšys</value>
+  </data>
+  <data name="lgFwNone" xml:space="preserve">
+    <value>Nėra. Patikrinkite atnaujinimus arba pasirinkite failą.</value>
+  </data>
+  <data name="lgFwUnknown" xml:space="preserve">
+    <value>nežinoma</value>
+  </data>
+  <data name="lgFwOldModule" xml:space="preserve">
+    <value>Modulis {0}, sena programinė įranga</value>
+  </data>
+  <data name="lgFwChecking" xml:space="preserve">
+    <value>Ieškoma naujos programinės įrangos.</value>
+  </data>
+  <data name="lgFwDownloaded" xml:space="preserve">
+    <value>Programinė įranga atsisiųsta.</value>
+  </data>
+  <data name="lgFwDownloadFailed" xml:space="preserve">
+    <value>Atsisiųsti nepavyko. Patikrinkite interneto ryšį.</value>
+  </data>
+  <data name="lgFwNoNew" xml:space="preserve">
+    <value>Naujos programinės įrangos nėra. Atsisiųsti iš naujo?</value>
+  </data>
+  <data name="lgFwBadFile" xml:space="preserve">
+    <value>Tai netinkamas programinės įrangos failas.</value>
+  </data>
+  <data name="lgFwNotConnected" xml:space="preserve">
+    <value>Plokštė neprijungta.</value>
+  </data>
+  <data name="lgFwMasterOn" xml:space="preserve">
+    <value>Pirmiausia išjunkite Master.</value>
+  </data>
+  <data name="lgFwOldOnCan" xml:space="preserve">
+    <value>Šios plokštės programinė įranga per sena atnaujinti per CanBus. Vieną kartą atnaujinkite per Ethernet arba USB.</value>
+  </data>
+  <data name="lgFwConfirm" xml:space="preserve">
+    <value>Atnaujinti modulį {0} programine įranga {1}?
+Modulis nevaldo, kol atnaujinimas baigsis.</value>
+  </data>
+  <data name="lgFwOlder" xml:space="preserve">
+    <value>Failas senesnis nei plokštės programinė įranga.</value>
+  </data>
+  <data name="lgFwDateUnknown" xml:space="preserve">
+    <value>Failo data nežinoma.</value>
+  </data>
+  <data name="lgFwStarting" xml:space="preserve">
+    <value>Pradedama.</value>
+  </data>
+  <data name="lgFwSending" xml:space="preserve">
+    <value>Siunčiama, {0}%</value>
+  </data>
+  <data name="lgFwInstalling" xml:space="preserve">
+    <value>Diegiama. Plokštė pati pasileis iš naujo maždaug po minutės.</value>
+  </data>
+  <data name="lgFwDone" xml:space="preserve">
+    <value>Programinė įranga atnaujinta. Nusiųskite nustatymus į modulį.</value>
+  </data>
+  <data name="lgFwNotBack" xml:space="preserve">
+    <value>Plokštė dar neatsiliepė. Patikrinkite puslapyje {0}.</value>
+  </data>
+  <data name="lgFwNoReply" xml:space="preserve">
+    <value>Plokštė neatsako.</value>
+  </data>
+  <data name="lgFwTryOld" xml:space="preserve">
+    <value>Nėra atsakymo į naują atnaujinimo būdą. Bandyti senesnį būdą?</value>
+  </data>
+  <data name="lgFwWrongType" xml:space="preserve">
+    <value>Failas skirtas kito tipo plokštei.</value>
+  </data>
+  <data name="lgFwWrongModule" xml:space="preserve">
+    <value>Plokštė nepriėmė modulio numerio.</value>
+  </data>
+  <data name="lgFwRefused" xml:space="preserve">
+    <value>Plokštė atsisakė: Master įjungtas.</value>
+  </data>
+  <data name="lgFwNoAnswer" xml:space="preserve">
+    <value>Plokštė nustojo atsakyti. Ji lieka su sena programine įranga.</value>
+  </data>
+  <data name="lgFwCountWrong" xml:space="preserve">
+    <value>Plokštė negavo viso failo. Ji lieka su sena programine įranga.</value>
+  </data>
+  <data name="lgFwCancelled" xml:space="preserve">
+    <value>Atnaujinimas atšauktas. Plokštė lieka su sena programine įranga.</value>
+  </data>
+  <data name="lgFwFailed" xml:space="preserve">
+    <value>Atnaujinti nepavyko. Plokštė lieka su sena programine įranga.</value>
+  </data>
+  <data name="lgFwRunning" xml:space="preserve">
+    <value>Palaukite, kol atnaujinimas baigsis, arba atšaukite.</value>
+  </data>
+  <data name="lgFwHexFiles" xml:space="preserve">
+    <value>Programinės įrangos failai</value>
+  </data>
+  <data name="lgFwNoTag" xml:space="preserve">
+    <value>Šis failas nėra šios ar naujesnės versijos Teensy normos programinė įranga. Senesnei programinei įrangai įdiegti naudokite PCBsetup.</value>
+  </data>
 </root>

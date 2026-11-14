@@ -952,4 +952,110 @@ Ez lecseréli a(z) {2}, {3} és {4} oldal beállításait.</value>
   <data name="lgKeepMasterOn" xml:space="preserve">
     <value>MST bekapcsolva marad az időtartam lejárta után</value>
   </data>
+  <data name="lgFwTitle" xml:space="preserve">
+    <value>Firmware frissítés</value>
+  </data>
+  <data name="lgFwBoardFirmware" xml:space="preserve">
+    <value>Panel firmware</value>
+  </data>
+  <data name="lgFwFile" xml:space="preserve">
+    <value>Firmware fájl</value>
+  </data>
+  <data name="lgFwConnection" xml:space="preserve">
+    <value>Kapcsolat</value>
+  </data>
+  <data name="lgFwNone" xml:space="preserve">
+    <value>Nincs. Keressen frissítést vagy tallózzon.</value>
+  </data>
+  <data name="lgFwUnknown" xml:space="preserve">
+    <value>ismeretlen</value>
+  </data>
+  <data name="lgFwOldModule" xml:space="preserve">
+    <value>{0}. modul, régi firmware</value>
+  </data>
+  <data name="lgFwChecking" xml:space="preserve">
+    <value>Új firmware keresése.</value>
+  </data>
+  <data name="lgFwDownloaded" xml:space="preserve">
+    <value>Firmware letöltve.</value>
+  </data>
+  <data name="lgFwDownloadFailed" xml:space="preserve">
+    <value>A letöltés sikertelen. Ellenőrizze az internetkapcsolatot.</value>
+  </data>
+  <data name="lgFwNoNew" xml:space="preserve">
+    <value>Nincs új firmware. Letölti újra?</value>
+  </data>
+  <data name="lgFwBadFile" xml:space="preserve">
+    <value>Ez nem érvényes firmware fájl.</value>
+  </data>
+  <data name="lgFwNotConnected" xml:space="preserve">
+    <value>A panel nincs csatlakoztatva.</value>
+  </data>
+  <data name="lgFwMasterOn" xml:space="preserve">
+    <value>Előbb kapcsolja ki a Mastert.</value>
+  </data>
+  <data name="lgFwOldOnCan" xml:space="preserve">
+    <value>A panel firmware-je túl régi a CanBus frissítéshez. Frissítse egyszer Etherneten vagy USB-n.</value>
+  </data>
+  <data name="lgFwConfirm" xml:space="preserve">
+    <value>Frissíti a(z) {0}. modult a(z) {1} firmware-rel?
+A modul a frissítés végéig nem szabályoz.</value>
+  </data>
+  <data name="lgFwOlder" xml:space="preserve">
+    <value>A fájl régebbi, mint a panel firmware-je.</value>
+  </data>
+  <data name="lgFwDateUnknown" xml:space="preserve">
+    <value>A fájl dátuma ismeretlen.</value>
+  </data>
+  <data name="lgFwStarting" xml:space="preserve">
+    <value>Indítás.</value>
+  </data>
+  <data name="lgFwSending" xml:space="preserve">
+    <value>Küldés, {0}%</value>
+  </data>
+  <data name="lgFwInstalling" xml:space="preserve">
+    <value>Telepítés. A panel kb. egy perc múlva magától újraindul.</value>
+  </data>
+  <data name="lgFwDone" xml:space="preserve">
+    <value>Firmware frissítve. Küldje el a beállításokat a modulnak.</value>
+  </data>
+  <data name="lgFwNotBack" xml:space="preserve">
+    <value>A panel még nem jelentkezett. Ellenőrizze a(z) {0} oldalon.</value>
+  </data>
+  <data name="lgFwNoReply" xml:space="preserve">
+    <value>Nincs válasz a paneltől.</value>
+  </data>
+  <data name="lgFwTryOld" xml:space="preserve">
+    <value>Nincs válasz az új frissítési módra. Próbálja a régebbi módot?</value>
+  </data>
+  <data name="lgFwWrongType" xml:space="preserve">
+    <value>A fájl más paneltípushoz való.</value>
+  </data>
+  <data name="lgFwWrongModule" xml:space="preserve">
+    <value>A panel nem fogadta el a modul számát.</value>
+  </data>
+  <data name="lgFwRefused" xml:space="preserve">
+    <value>A panel elutasította: a Master be van kapcsolva.</value>
+  </data>
+  <data name="lgFwNoAnswer" xml:space="preserve">
+    <value>A panel nem válaszol. Megtartja a régi firmware-t.</value>
+  </data>
+  <data name="lgFwCountWrong" xml:space="preserve">
+    <value>A panel nem kapta meg a teljes fájlt. Megtartja a régi firmware-t.</value>
+  </data>
+  <data name="lgFwCancelled" xml:space="preserve">
+    <value>Frissítés megszakítva. A panel megtartja a régi firmware-t.</value>
+  </data>
+  <data name="lgFwFailed" xml:space="preserve">
+    <value>A frissítés sikertelen. A panel megtartja a régi firmware-t.</value>
+  </data>
+  <data name="lgFwRunning" xml:space="preserve">
+    <value>Várja meg a frissítés végét, vagy szakítsa meg.</value>
+  </data>
+  <data name="lgFwHexFiles" xml:space="preserve">
+    <value>Firmware fájlok</value>
+  </data>
+  <data name="lgFwNoTag" xml:space="preserve">
+    <value>Ez a fájl nem ilyen vagy újabb verziójú Teensy adagoló firmware. Régebbi firmware telepítéséhez használja a PCBsetup programot.</value>
+  </data>
 </root>

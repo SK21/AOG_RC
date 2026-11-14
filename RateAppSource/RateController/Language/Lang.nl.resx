@@ -949,4 +949,110 @@ Dit vervangt de instellingen op de pagina's {2}, {3} en {4}.</value>
   <data name="lgKeepMasterOn" xml:space="preserve">
     <value>master aan laten wanneer de voorvulduur eindigt</value>
   </data>
+  <data name="lgFwTitle" xml:space="preserve">
+    <value>Firmware-update</value>
+  </data>
+  <data name="lgFwBoardFirmware" xml:space="preserve">
+    <value>Firmware van het board</value>
+  </data>
+  <data name="lgFwFile" xml:space="preserve">
+    <value>Firmwarebestand</value>
+  </data>
+  <data name="lgFwConnection" xml:space="preserve">
+    <value>Verbinding</value>
+  </data>
+  <data name="lgFwNone" xml:space="preserve">
+    <value>Geen. Zoek naar updates of blader.</value>
+  </data>
+  <data name="lgFwUnknown" xml:space="preserve">
+    <value>onbekend</value>
+  </data>
+  <data name="lgFwOldModule" xml:space="preserve">
+    <value>Module {0}, oude firmware</value>
+  </data>
+  <data name="lgFwChecking" xml:space="preserve">
+    <value>Zoeken naar nieuwe firmware.</value>
+  </data>
+  <data name="lgFwDownloaded" xml:space="preserve">
+    <value>Firmware gedownload.</value>
+  </data>
+  <data name="lgFwDownloadFailed" xml:space="preserve">
+    <value>Downloaden mislukt. Controleer de internetverbinding.</value>
+  </data>
+  <data name="lgFwNoNew" xml:space="preserve">
+    <value>Geen nieuwe firmware gevonden. Opnieuw downloaden?</value>
+  </data>
+  <data name="lgFwBadFile" xml:space="preserve">
+    <value>Dit is geen geldig firmwarebestand.</value>
+  </data>
+  <data name="lgFwNotConnected" xml:space="preserve">
+    <value>Het board is niet verbonden.</value>
+  </data>
+  <data name="lgFwMasterOn" xml:space="preserve">
+    <value>Zet eerst Master uit.</value>
+  </data>
+  <data name="lgFwOldOnCan" xml:space="preserve">
+    <value>De firmware van dit board is te oud om via CanBus bij te werken. Werk het één keer bij via Ethernet of USB.</value>
+  </data>
+  <data name="lgFwConfirm" xml:space="preserve">
+    <value>Module {0} bijwerken met firmware {1}?
+De module regelt niet tot de update klaar is.</value>
+  </data>
+  <data name="lgFwOlder" xml:space="preserve">
+    <value>Het bestand is ouder dan de firmware van het board.</value>
+  </data>
+  <data name="lgFwDateUnknown" xml:space="preserve">
+    <value>De datum van het bestand is onbekend.</value>
+  </data>
+  <data name="lgFwStarting" xml:space="preserve">
+    <value>Starten.</value>
+  </data>
+  <data name="lgFwSending" xml:space="preserve">
+    <value>Verzenden, {0}%</value>
+  </data>
+  <data name="lgFwInstalling" xml:space="preserve">
+    <value>Installeren. Het board herstart vanzelf na ongeveer een minuut.</value>
+  </data>
+  <data name="lgFwDone" xml:space="preserve">
+    <value>Firmware bijgewerkt. Stuur de instellingen naar de module.</value>
+  </data>
+  <data name="lgFwNotBack" xml:space="preserve">
+    <value>Het board heeft zich nog niet gemeld. Controleer het op de pagina {0}.</value>
+  </data>
+  <data name="lgFwNoReply" xml:space="preserve">
+    <value>Geen antwoord van het board.</value>
+  </data>
+  <data name="lgFwTryOld" xml:space="preserve">
+    <value>Geen antwoord op de nieuwe updatemethode. De oudere methode proberen?</value>
+  </data>
+  <data name="lgFwWrongType" xml:space="preserve">
+    <value>Het bestand is voor een ander type board.</value>
+  </data>
+  <data name="lgFwWrongModule" xml:space="preserve">
+    <value>Het board accepteerde het modulenummer niet.</value>
+  </data>
+  <data name="lgFwRefused" xml:space="preserve">
+    <value>Het board weigert: Master staat aan.</value>
+  </data>
+  <data name="lgFwNoAnswer" xml:space="preserve">
+    <value>Het board antwoordt niet meer. Het houdt zijn oude firmware.</value>
+  </data>
+  <data name="lgFwCountWrong" xml:space="preserve">
+    <value>Het board heeft niet het hele bestand ontvangen. Het houdt zijn oude firmware.</value>
+  </data>
+  <data name="lgFwCancelled" xml:space="preserve">
+    <value>Update geannuleerd. Het board houdt zijn oude firmware.</value>
+  </data>
+  <data name="lgFwFailed" xml:space="preserve">
+    <value>Update mislukt. Het board houdt zijn oude firmware.</value>
+  </data>
+  <data name="lgFwRunning" xml:space="preserve">
+    <value>Wacht tot de update klaar is, of annuleer hem.</value>
+  </data>
+  <data name="lgFwHexFiles" xml:space="preserve">
+    <value>Firmwarebestanden</value>
+  </data>
+  <data name="lgFwNoTag" xml:space="preserve">
+    <value>Dit bestand is geen Teensy rate-firmware van deze versie of nieuwer. Gebruik PCBsetup om oudere firmware te installeren.</value>
+  </data>
 </root>

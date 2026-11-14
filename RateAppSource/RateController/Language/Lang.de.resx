@@ -950,4 +950,110 @@ Dies ersetzt die Einstellungen auf den Seiten {2}, {3} und {4}.</value>
   <data name="lgKeepMasterOn" xml:space="preserve">
     <value>Master bleibt an nach Vorbefülldauer</value>
   </data>
+  <data name="lgFwTitle" xml:space="preserve">
+    <value>Firmware-Update</value>
+  </data>
+  <data name="lgFwBoardFirmware" xml:space="preserve">
+    <value>Platinen-Firmware</value>
+  </data>
+  <data name="lgFwFile" xml:space="preserve">
+    <value>Firmware-Datei</value>
+  </data>
+  <data name="lgFwConnection" xml:space="preserve">
+    <value>Verbindung</value>
+  </data>
+  <data name="lgFwNone" xml:space="preserve">
+    <value>Keine. Nach Updates suchen oder Datei wählen.</value>
+  </data>
+  <data name="lgFwUnknown" xml:space="preserve">
+    <value>unbekannt</value>
+  </data>
+  <data name="lgFwOldModule" xml:space="preserve">
+    <value>Modul {0}, alte Firmware</value>
+  </data>
+  <data name="lgFwChecking" xml:space="preserve">
+    <value>Suche nach neuer Firmware.</value>
+  </data>
+  <data name="lgFwDownloaded" xml:space="preserve">
+    <value>Firmware heruntergeladen.</value>
+  </data>
+  <data name="lgFwDownloadFailed" xml:space="preserve">
+    <value>Download fehlgeschlagen. Internetverbindung prüfen.</value>
+  </data>
+  <data name="lgFwNoNew" xml:space="preserve">
+    <value>Keine neue Firmware gefunden. Erneut herunterladen?</value>
+  </data>
+  <data name="lgFwBadFile" xml:space="preserve">
+    <value>Dies ist keine gültige Firmware-Datei.</value>
+  </data>
+  <data name="lgFwNotConnected" xml:space="preserve">
+    <value>Die Platine ist nicht verbunden.</value>
+  </data>
+  <data name="lgFwMasterOn" xml:space="preserve">
+    <value>Zuerst Master ausschalten.</value>
+  </data>
+  <data name="lgFwOldOnCan" xml:space="preserve">
+    <value>Die Firmware dieser Platine ist zu alt für ein Update über CanBus. Einmal über Ethernet oder USB aktualisieren.</value>
+  </data>
+  <data name="lgFwConfirm" xml:space="preserve">
+    <value>Modul {0} mit Firmware {1} aktualisieren?
+Das Modul regelt nicht, bis das Update fertig ist.</value>
+  </data>
+  <data name="lgFwOlder" xml:space="preserve">
+    <value>Die Datei ist älter als die Firmware der Platine.</value>
+  </data>
+  <data name="lgFwDateUnknown" xml:space="preserve">
+    <value>Das Datum der Datei ist unbekannt.</value>
+  </data>
+  <data name="lgFwStarting" xml:space="preserve">
+    <value>Start.</value>
+  </data>
+  <data name="lgFwSending" xml:space="preserve">
+    <value>Senden, {0}%</value>
+  </data>
+  <data name="lgFwInstalling" xml:space="preserve">
+    <value>Installation. Die Platine startet in etwa einer Minute selbst neu.</value>
+  </data>
+  <data name="lgFwDone" xml:space="preserve">
+    <value>Firmware aktualisiert. Einstellungen an das Modul senden.</value>
+  </data>
+  <data name="lgFwNotBack" xml:space="preserve">
+    <value>Die Platine hat sich noch nicht zurückgemeldet. Auf der Seite {0} prüfen.</value>
+  </data>
+  <data name="lgFwNoReply" xml:space="preserve">
+    <value>Keine Antwort von der Platine.</value>
+  </data>
+  <data name="lgFwTryOld" xml:space="preserve">
+    <value>Keine Antwort auf die neue Update-Methode. Ältere Methode versuchen?</value>
+  </data>
+  <data name="lgFwWrongType" xml:space="preserve">
+    <value>Die Datei ist für einen anderen Platinentyp.</value>
+  </data>
+  <data name="lgFwWrongModule" xml:space="preserve">
+    <value>Die Platine hat die Modulnummer nicht angenommen.</value>
+  </data>
+  <data name="lgFwRefused" xml:space="preserve">
+    <value>Die Platine lehnt ab: Master ist an.</value>
+  </data>
+  <data name="lgFwNoAnswer" xml:space="preserve">
+    <value>Die Platine antwortet nicht mehr. Sie behält ihre alte Firmware.</value>
+  </data>
+  <data name="lgFwCountWrong" xml:space="preserve">
+    <value>Die Platine hat nicht die ganze Datei erhalten. Sie behält ihre alte Firmware.</value>
+  </data>
+  <data name="lgFwCancelled" xml:space="preserve">
+    <value>Update abgebrochen. Die Platine behält ihre alte Firmware.</value>
+  </data>
+  <data name="lgFwFailed" xml:space="preserve">
+    <value>Update fehlgeschlagen. Die Platine behält ihre alte Firmware.</value>
+  </data>
+  <data name="lgFwRunning" xml:space="preserve">
+    <value>Warten, bis das Update fertig ist, oder abbrechen.</value>
+  </data>
+  <data name="lgFwHexFiles" xml:space="preserve">
+    <value>Firmware-Dateien</value>
+  </data>
+  <data name="lgFwNoTag" xml:space="preserve">
+    <value>Diese Datei ist keine Teensy-Rate-Firmware ab dieser Version. Ältere Firmware mit PCBsetup installieren.</value>
+  </data>
 </root>

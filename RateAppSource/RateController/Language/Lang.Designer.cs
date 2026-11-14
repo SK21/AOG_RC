@@ -2543,5 +2543,320 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgSendPendingFirst", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware Update.
+        /// </summary>
+        internal static string lgFwTitle {
+            get {
+                return ResourceManager.GetString("lgFwTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Board firmware.
+        /// </summary>
+        internal static string lgFwBoardFirmware {
+            get {
+                return ResourceManager.GetString("lgFwBoardFirmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware file.
+        /// </summary>
+        internal static string lgFwFile {
+            get {
+                return ResourceManager.GetString("lgFwFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection.
+        /// </summary>
+        internal static string lgFwConnection {
+            get {
+                return ResourceManager.GetString("lgFwConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None. Check for updates or browse..
+        /// </summary>
+        internal static string lgFwNone {
+            get {
+                return ResourceManager.GetString("lgFwNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to unknown.
+        /// </summary>
+        internal static string lgFwUnknown {
+            get {
+                return ResourceManager.GetString("lgFwUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module {0}, old firmware.
+        /// </summary>
+        internal static string lgFwOldModule {
+            get {
+                return ResourceManager.GetString("lgFwOldModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking for new firmware..
+        /// </summary>
+        internal static string lgFwChecking {
+            get {
+                return ResourceManager.GetString("lgFwChecking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware downloaded..
+        /// </summary>
+        internal static string lgFwDownloaded {
+            get {
+                return ResourceManager.GetString("lgFwDownloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download failed. Check the internet connection..
+        /// </summary>
+        internal static string lgFwDownloadFailed {
+            get {
+                return ResourceManager.GetString("lgFwDownloadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No new firmware found. Download it again?.
+        /// </summary>
+        internal static string lgFwNoNew {
+            get {
+                return ResourceManager.GetString("lgFwNoNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is not a valid firmware file..
+        /// </summary>
+        internal static string lgFwBadFile {
+            get {
+                return ResourceManager.GetString("lgFwBadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board is not connected..
+        /// </summary>
+        internal static string lgFwNotConnected {
+            get {
+                return ResourceManager.GetString("lgFwNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turn Master off first..
+        /// </summary>
+        internal static string lgFwMasterOn {
+            get {
+                return ResourceManager.GetString("lgFwMasterOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This board's firmware is too old to update over CanBus. Update it once over Ethernet or USB..
+        /// </summary>
+        internal static string lgFwOldOnCan {
+            get {
+                return ResourceManager.GetString("lgFwOldOnCan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update module {0} with firmware {1}? The module stops controlling until the update is done..
+        /// </summary>
+        internal static string lgFwConfirm {
+            get {
+                return ResourceManager.GetString("lgFwConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file is older than the board's firmware..
+        /// </summary>
+        internal static string lgFwOlder {
+            get {
+                return ResourceManager.GetString("lgFwOlder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file's date is unknown..
+        /// </summary>
+        internal static string lgFwDateUnknown {
+            get {
+                return ResourceManager.GetString("lgFwDateUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting..
+        /// </summary>
+        internal static string lgFwStarting {
+            get {
+                return ResourceManager.GetString("lgFwStarting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sending, {0}%.
+        /// </summary>
+        internal static string lgFwSending {
+            get {
+                return ResourceManager.GetString("lgFwSending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing. The board restarts by itself in about a minute..
+        /// </summary>
+        internal static string lgFwInstalling {
+            get {
+                return ResourceManager.GetString("lgFwInstalling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware updated. Send the settings to the module..
+        /// </summary>
+        internal static string lgFwDone {
+            get {
+                return ResourceManager.GetString("lgFwDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board hasn't reported back yet. Check it on the {0} page..
+        /// </summary>
+        internal static string lgFwNotBack {
+            get {
+                return ResourceManager.GetString("lgFwNotBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No reply from the board..
+        /// </summary>
+        internal static string lgFwNoReply {
+            get {
+                return ResourceManager.GetString("lgFwNoReply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No reply to the new update method. Try the older method?.
+        /// </summary>
+        internal static string lgFwTryOld {
+            get {
+                return ResourceManager.GetString("lgFwTryOld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file is for another board type..
+        /// </summary>
+        internal static string lgFwWrongType {
+            get {
+                return ResourceManager.GetString("lgFwWrongType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board didn't accept the module number..
+        /// </summary>
+        internal static string lgFwWrongModule {
+            get {
+                return ResourceManager.GetString("lgFwWrongModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board refused: Master is on..
+        /// </summary>
+        internal static string lgFwRefused {
+            get {
+                return ResourceManager.GetString("lgFwRefused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board stopped answering. It keeps its old firmware..
+        /// </summary>
+        internal static string lgFwNoAnswer {
+            get {
+                return ResourceManager.GetString("lgFwNoAnswer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The board didn't receive the whole file. It keeps its old firmware..
+        /// </summary>
+        internal static string lgFwCountWrong {
+            get {
+                return ResourceManager.GetString("lgFwCountWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update cancelled. The board keeps its old firmware..
+        /// </summary>
+        internal static string lgFwCancelled {
+            get {
+                return ResourceManager.GetString("lgFwCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update failed. The board keeps its old firmware..
+        /// </summary>
+        internal static string lgFwFailed {
+            get {
+                return ResourceManager.GetString("lgFwFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for the update to finish, or cancel it..
+        /// </summary>
+        internal static string lgFwRunning {
+            get {
+                return ResourceManager.GetString("lgFwRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware files.
+        /// </summary>
+        internal static string lgFwHexFiles {
+            get {
+                return ResourceManager.GetString("lgFwHexFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This file isn't Teensy rate firmware from this version or newer. Use PCBsetup to install older firmware..
+        /// </summary>
+        internal static string lgFwNoTag {
+            get {
+                return ResourceManager.GetString("lgFwNoTag", resourceCulture);
+            }
+        }
     }
 }

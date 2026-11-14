@@ -184,6 +184,26 @@ namespace RateController.Menu
             }
         }
 
+        // the firmware update page for the selected row's board (Design Docs\Teensy_CAN_Firmware_Update.md)
+        private void btnFirmware_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int r = cRows.FindIndex(x => x.Key == cSelectedKey);
+                if (r >= 0)
+                {
+                    using (var frm = new Forms.frmFirmwareUpdate(cRows[r].MAC, cRows[r].ID))
+                    {
+                        frm.ShowDialog(this);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("frmMenuNetwork/btnFirmware_Click: " + ex.Message);
+            }
+        }
+
         // names the three pages the preset rewrites, as the menu shows them
         private static string PresetConfirmText(ModuleTypes Type, int ModuleID)
         {
@@ -233,6 +253,8 @@ namespace RateController.Menu
             btnCancel.Top = btnOK.Top;
             btnPreset.Left = btnCancel.Left - SubMenuLayout.ButtonSpacing;
             btnPreset.Top = btnOK.Top;
+            btnFirmware.Left = btnPreset.Left - SubMenuLayout.ButtonSpacing;
+            btnFirmware.Top = btnOK.Top;
 
             MainMenu.StyleControls(this);
             lvBoards.BackColor = Properties.Settings.Default.MainBackColour;
@@ -309,6 +331,22 @@ namespace RateController.Menu
                 int r = cRows.FindIndex(x => x.Key == cSelectedKey);
                 bool presetOn = r < 0 || TargetModule(cRows[r]) >= 0;
                 if (btnPreset.Enabled != presetOn) btnPreset.Enabled = presetOn;
+
+                // firmware update: a Teensy rate board, or an old-firmware row (its type isn't
+                // known; only the old method, over Ethernet, can reach it)
+                bool firmwareOn = false;
+                if (r >= 0)
+                {
+                    if (cRows[r].MAC != 0)
+                    {
+                        firmwareOn = Brd != null && Brd.InoType == (byte)ModuleTypes.Teensy_Rate;
+                    }
+                    else if (!cRows[r].Empty)
+                    {
+                        firmwareOn = !Props.CanEnabled;
+                    }
+                }
+                if (btnFirmware.Enabled != firmwareOn) btnFirmware.Enabled = firmwareOn;
             }
             finally
             {

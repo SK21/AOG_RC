@@ -235,7 +235,7 @@ namespace RateController.PGNs
         }
 
         // ddmmy (no leading 0) -> yyyymmdd, so firmware dates compare in order
-        private static int InoDate(ushort InoID)
+        public static int InoDate(ushort InoID)
         {
             int Result = 0;
             string s = InoID.ToString();

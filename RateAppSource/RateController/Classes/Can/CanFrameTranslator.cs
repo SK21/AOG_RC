@@ -68,6 +68,7 @@ namespace RateController.Classes.Can
             public byte[] Last0xFF14;  // BoardLabel report part 1
             public byte[] Last0xFF15;  // BoardLabel report part 2
             public byte[] Last0xFF16;  // BoardLabel report part 3
+            public byte[] Mac;         // from its 0xFF18, for the firmware update status (0xFF1C)
         }
 
         private readonly Dictionary<int, ModuleState> _modules = new Dictionary<int, ModuleState>();
@@ -81,6 +82,9 @@ namespace RateController.Classes.Can
 
         /// <summary>Raised when PGN 32403 (identity report) is assembled on 0xFF18, from 0xFF14-16 and 0xFF08.</summary>
         public event EventHandler<PgnAssembledEventArgs> PGN32403Ready;
+
+        /// <summary>Raised when PGN 32812 (firmware update status) is built from 0xFF1C.</summary>
+        public event EventHandler<PgnAssembledEventArgs> PGN32812Ready;
 
         /// <summary>Raised when 0xFF08 is first seen from a module (module came online).</summary>
         public event EventHandler<int> ModuleConnected;
@@ -147,7 +151,17 @@ namespace RateController.Classes.Can
                     return;
 
                 case 0x18:  // 0xFF18 — Identity (assemble PGN 32403)
-                    if (frame.Dlc >= 7) TryAssemble32403(GetOrCreateSource(sa), frame.Data);
+                    if (frame.Dlc >= 7)
+                    {
+                        SourceState src = GetOrCreateSource(sa);
+                        src.Mac = new byte[6];
+                        Array.Copy(frame.Data, 1, src.Mac, 0, 6);
+                        TryAssemble32403(src, frame.Data);
+                    }
+                    return;
+
+                case 0x1C:  // 0xFF1C — Firmware update status (build PGN 32812)
+                    if (frame.Dlc >= 7) Assemble32812(GetOrCreateSource(sa), frame.Data);
                     return;
             }
 
@@ -335,6 +349,24 @@ namespace RateController.Classes.Can
             PGN32403Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }
 
+        private void Assemble32812(SourceState src, byte[] f1c)
+        {
+            // PGN 32812 (16 bytes): header 44 128
+            //  [2-7]   MAC          ← the node's 0xFF18 (zeros if not heard yet)
+            //  [8]     status       ← f1c[0]
+            //  [9-10]  block number ← f1c[1-2]
+            //  [11-14] record count ← f1c[3-6]
+            //  [15]    CRC
+            var pgn = new byte[16];
+            pgn[0] = 44;
+            pgn[1] = 128;
+            if (src.Mac != null) Array.Copy(src.Mac, 0, pgn, 2, 6);
+            Array.Copy(f1c, 0, pgn, 8, 7);
+            pgn[15] = CalcCrc(pgn, 15);
+
+            PGN32812Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
+        }
+
         // --- Outbound translation ---
 
         /// <summary>
@@ -517,6 +549,48 @@ namespace RateController.Classes.Can
                             pgnData[2], pgnData[3], pgnData[4], pgnData[5], pgnData[6], pgnData[7],  // MAC
                             0
                         }));
+                    }
+                    break;
+
+                case 32810:
+                    // → 0xFF1A (firmware update control: start, commit, abort)
+                    // PGN32810 layout: [2]=command, [3-8]=MAC, [9]=InoType
+                    if (pgnData.Length >= 10)
+                    {
+                        frames.Add(BuildFrame(0x1A, new byte[] {
+                            pgnData[2],  // command
+                            pgnData[3], pgnData[4], pgnData[5], pgnData[6], pgnData[7], pgnData[8],  // MAC
+                            pgnData[9]   // InoType
+                        }));
+                    }
+                    break;
+
+                case 32811:
+                    // → 0xFF1A command 2 (block header) + 0xFF1B × k (block data, 7 bytes each)
+                    // PGN32811 layout: [2-3]=block, [4-5]=n, [6..5+n]=records, [6+n,7+n]=CRC-16
+                    if (pgnData.Length >= 8)
+                    {
+                        int n = pgnData[4] | (pgnData[5] << 8);
+                        if (pgnData.Length >= n + 8)
+                        {
+                            frames.Add(BuildFrame(0x1A, new byte[] {
+                                2,                          // block header
+                                pgnData[2], pgnData[3],     // block number
+                                pgnData[4], pgnData[5],     // length
+                                pgnData[6 + n], pgnData[7 + n],   // CRC-16
+                                0
+                            }));
+                            int k = (n + 6) / 7;
+                            for (int f = 0; f < k; f++)
+                            {
+                                byte[] d = new byte[8];
+                                d[0] = (byte)f;
+                                int start = f * 7;
+                                int count = Math.Min(7, n - start);
+                                Array.Copy(pgnData, 6 + start, d, 1, count);
+                                frames.Add(BuildFrame(0x1B, d));
+                            }
+                        }
                     }
                     break;
 

@@ -405,6 +405,11 @@ namespace RateController
                             Core.SwitchBox.ParseByteData(Data);
                             break;
 
+                        case 32812:
+                            // firmware update status (FirmwareUpdater)
+                            Core.FirmwareUpdate?.StatusReceived(Data);
+                            break;
+
                         case 32296:
                             Core.ScaleIndicator.ParseByteData(Data);
                             break;

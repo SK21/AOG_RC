@@ -62,6 +62,7 @@ namespace RateController.Classes.Can
                 _translator.PGN32400Ready += OnPGN32400Ready;
                 _translator.PGN32401Ready += OnPGN32401Ready;
                 _translator.PGN32403Ready += OnPGN32403Ready;
+                _translator.PGN32812Ready += OnPGN32812Ready;
                 _translator.ModuleConnected += OnModuleConnected;
                 _translator.ModuleDisconnected += OnModuleDisconnected;
 
@@ -126,6 +127,7 @@ namespace RateController.Classes.Can
                 _translator.PGN32400Ready -= OnPGN32400Ready;
                 _translator.PGN32401Ready -= OnPGN32401Ready;
                 _translator.PGN32403Ready -= OnPGN32403Ready;
+                _translator.PGN32812Ready -= OnPGN32812Ready;
                 _translator.ModuleConnected -= OnModuleConnected;
                 _translator.ModuleDisconnected -= OnModuleDisconnected;
                 _translator = null;
@@ -198,6 +200,13 @@ namespace RateController.Classes.Can
                     Core.ModulesStatus.ParseByteData(e.Data);
                 }
             });
+        }
+
+        // firmware update status: straight to the updater, which waits for it on its own thread
+        private void OnPGN32812Ready(object sender, PgnAssembledEventArgs e)
+        {
+            AddToLog("< 32812");
+            Core.FirmwareUpdate?.StatusReceived(e.Data);
         }
 
         private void OnPGN32403Ready(object sender, PgnAssembledEventArgs e)
