@@ -275,10 +275,7 @@ void DoSetup()
 	// this address works only while joined to the hotspot; on a network the page is
 	// also at the network IP (printed by WiFiGotIP)
 	Serial.print("Hotspot settings page: http://");
-	Serial.print(AP_LocalIP);
-	Serial.print(" (join ");
-	Serial.print(AP);
-	Serial.println(")");
+	Serial.println(AP_LocalIP);
 	Serial.print("Access Point channel: ");
 	Serial.println(APchannel);
 
