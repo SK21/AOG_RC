@@ -29,6 +29,7 @@ namespace RateController.Menu
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMenuNetwork));
             this.lvBoards = new System.Windows.Forms.ListView();
             this.chModule = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBoard = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -139,9 +140,9 @@ namespace RateController.Menu
             this.btnCancel.TabIndex = 8;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            //
+            // 
             // btnPreset
-            //
+            // 
             this.btnPreset.BackColor = System.Drawing.Color.Transparent;
             this.btnPreset.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPreset.FlatAppearance.BorderSize = 0;
@@ -157,16 +158,16 @@ namespace RateController.Menu
             this.btnPreset.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnPreset.UseVisualStyleBackColor = false;
             this.btnPreset.Click += new System.EventHandler(this.btnPreset_Click);
-            //
+            // 
             // btnFirmware
-            //
+            // 
             this.btnFirmware.BackColor = System.Drawing.Color.Transparent;
             this.btnFirmware.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnFirmware.Enabled = false;
             this.btnFirmware.FlatAppearance.BorderSize = 0;
             this.btnFirmware.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFirmware.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnFirmware.Image = global::RateController.Properties.Resources.Update4;
+            this.btnFirmware.Image = ((System.Drawing.Image)(resources.GetObject("btnFirmware.Image")));
             this.btnFirmware.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.btnFirmware.Location = new System.Drawing.Point(230, 603);
             this.btnFirmware.Name = "btnFirmware";
@@ -176,7 +177,7 @@ namespace RateController.Menu
             this.btnFirmware.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnFirmware.UseVisualStyleBackColor = false;
             this.btnFirmware.Click += new System.EventHandler(this.btnFirmware_Click);
-            //
+            // 
             // lbDescription
             // 
             this.lbDescription.AutoSize = true;
@@ -209,17 +210,17 @@ namespace RateController.Menu
             this.lnkWeb.TabIndex = 6;
             this.lnkWeb.Visible = false;
             this.lnkWeb.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkWeb_LinkClicked);
-            //
+            // 
             // lbBoardsFound
-            //
+            // 
             this.lbBoardsFound.AutoSize = true;
             this.lbBoardsFound.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbBoardsFound.Location = new System.Drawing.Point(20, 12);
             this.lbBoardsFound.Name = "lbBoardsFound";
-            this.lbBoardsFound.Size = new System.Drawing.Size(232, 24);
+            this.lbBoardsFound.Size = new System.Drawing.Size(225, 24);
             this.lbBoardsFound.TabIndex = 9;
             this.lbBoardsFound.Text = "Boards found - select one";
-            //
+            // 
             // frmMenuNetwork
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

@@ -29,6 +29,7 @@ namespace RateController.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFirmwareUpdate));
             this.lbBoardName = new System.Windows.Forms.Label();
             this.lbBoard = new System.Windows.Forms.Label();
             this.lbModuleName = new System.Windows.Forms.Label();
@@ -49,114 +50,114 @@ namespace RateController.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ofdHex = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
-            //
+            // 
             // lbBoardName
-            //
+            // 
             this.lbBoardName.AutoSize = true;
             this.lbBoardName.Location = new System.Drawing.Point(12, 15);
             this.lbBoardName.Name = "lbBoardName";
-            this.lbBoardName.Size = new System.Drawing.Size(61, 24);
+            this.lbBoardName.Size = new System.Drawing.Size(60, 24);
             this.lbBoardName.TabIndex = 0;
             this.lbBoardName.Text = "Board";
-            //
+            // 
             // lbBoard
-            //
+            // 
             this.lbBoard.AutoEllipsis = true;
             this.lbBoard.Location = new System.Drawing.Point(180, 15);
             this.lbBoard.Name = "lbBoard";
             this.lbBoard.Size = new System.Drawing.Size(320, 24);
             this.lbBoard.TabIndex = 1;
             this.lbBoard.Text = "Teensy Rate 12:34:56";
-            //
+            // 
             // lbModuleName
-            //
+            // 
             this.lbModuleName.AutoSize = true;
             this.lbModuleName.Location = new System.Drawing.Point(12, 50);
             this.lbModuleName.Name = "lbModuleName";
             this.lbModuleName.Size = new System.Drawing.Size(74, 24);
             this.lbModuleName.TabIndex = 2;
             this.lbModuleName.Text = "Module";
-            //
+            // 
             // lbModule
-            //
+            // 
             this.lbModule.AutoEllipsis = true;
             this.lbModule.Location = new System.Drawing.Point(180, 50);
             this.lbModule.Name = "lbModule";
             this.lbModule.Size = new System.Drawing.Size(320, 24);
             this.lbModule.TabIndex = 3;
             this.lbModule.Text = "0";
-            //
+            // 
             // lbLinkName
-            //
+            // 
             this.lbLinkName.AutoSize = true;
             this.lbLinkName.Location = new System.Drawing.Point(12, 85);
             this.lbLinkName.Name = "lbLinkName";
-            this.lbLinkName.Size = new System.Drawing.Size(108, 24);
+            this.lbLinkName.Size = new System.Drawing.Size(107, 24);
             this.lbLinkName.TabIndex = 4;
             this.lbLinkName.Text = "Connection";
-            //
+            // 
             // lbLink
-            //
+            // 
             this.lbLink.AutoEllipsis = true;
             this.lbLink.Location = new System.Drawing.Point(180, 85);
             this.lbLink.Name = "lbLink";
             this.lbLink.Size = new System.Drawing.Size(320, 24);
             this.lbLink.TabIndex = 5;
             this.lbLink.Text = "Ethernet";
-            //
+            // 
             // lbCurrentName
-            //
+            // 
             this.lbCurrentName.AutoSize = true;
             this.lbCurrentName.Location = new System.Drawing.Point(12, 120);
             this.lbCurrentName.Name = "lbCurrentName";
-            this.lbCurrentName.Size = new System.Drawing.Size(143, 24);
+            this.lbCurrentName.Size = new System.Drawing.Size(136, 24);
             this.lbCurrentName.TabIndex = 6;
             this.lbCurrentName.Text = "Board firmware";
-            //
+            // 
             // lbCurrent
-            //
+            // 
             this.lbCurrent.AutoEllipsis = true;
             this.lbCurrent.Location = new System.Drawing.Point(180, 120);
             this.lbCurrent.Name = "lbCurrent";
             this.lbCurrent.Size = new System.Drawing.Size(320, 24);
             this.lbCurrent.TabIndex = 7;
             this.lbCurrent.Text = "14-Nov-2026";
-            //
+            // 
             // lbFileName
-            //
+            // 
             this.lbFileName.AutoSize = true;
             this.lbFileName.Location = new System.Drawing.Point(12, 155);
             this.lbFileName.Name = "lbFileName";
             this.lbFileName.Size = new System.Drawing.Size(117, 24);
             this.lbFileName.TabIndex = 8;
             this.lbFileName.Text = "Firmware file";
-            //
+            // 
             // lbFile
-            //
+            // 
             this.lbFile.AutoEllipsis = true;
             this.lbFile.Location = new System.Drawing.Point(180, 155);
             this.lbFile.Name = "lbFile";
             this.lbFile.Size = new System.Drawing.Size(320, 24);
             this.lbFile.TabIndex = 9;
             this.lbFile.Text = "v2026.11.14";
-            //
+            // 
             // pbProgress
-            //
+            // 
             this.pbProgress.Location = new System.Drawing.Point(16, 196);
             this.pbProgress.Name = "pbProgress";
             this.pbProgress.Size = new System.Drawing.Size(484, 24);
             this.pbProgress.TabIndex = 10;
-            //
+            // 
             // lbStatus
-            //
+            // 
             this.lbStatus.Location = new System.Drawing.Point(12, 230);
             this.lbStatus.Name = "lbStatus";
             this.lbStatus.Size = new System.Drawing.Size(488, 84);
             this.lbStatus.TabIndex = 11;
             this.lbStatus.Text = "Status";
-            //
+            // 
             // btnCheck
-            //
+            // 
             this.btnCheck.BackColor = System.Drawing.Color.Transparent;
             this.btnCheck.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCheck.FlatAppearance.BorderSize = 0;
@@ -169,24 +170,24 @@ namespace RateController.Forms
             this.btnCheck.TabIndex = 12;
             this.btnCheck.UseVisualStyleBackColor = false;
             this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
-            //
+            // 
             // btnBrowse
-            //
+            // 
             this.btnBrowse.BackColor = System.Drawing.Color.Transparent;
             this.btnBrowse.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnBrowse.FlatAppearance.BorderSize = 0;
             this.btnBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowse.Font = new System.Drawing.Font("Tahoma", 14.25F);
-            this.btnBrowse.Image = global::RateController.Properties.Resources.FileExplorerWindows;
+            this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
             this.btnBrowse.Location = new System.Drawing.Point(92, 322);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(72, 72);
             this.btnBrowse.TabIndex = 13;
             this.btnBrowse.UseVisualStyleBackColor = false;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-            //
+            // 
             // btnStart
-            //
+            // 
             this.btnStart.BackColor = System.Drawing.Color.Transparent;
             this.btnStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnStart.Enabled = false;
@@ -200,9 +201,9 @@ namespace RateController.Forms
             this.btnStart.TabIndex = 14;
             this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            //
+            // 
             // btnCancel
-            //
+            // 
             this.btnCancel.BackColor = System.Drawing.Color.Transparent;
             this.btnCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCancel.Enabled = false;
@@ -216,9 +217,9 @@ namespace RateController.Forms
             this.btnCancel.TabIndex = 15;
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            //
+            // 
             // btnClose
-            //
+            // 
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnClose.FlatAppearance.BorderSize = 0;
@@ -231,18 +232,18 @@ namespace RateController.Forms
             this.btnClose.TabIndex = 16;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            //
+            // 
             // timer1
-            //
+            // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            //
+            // 
             // ofdHex
-            //
+            // 
             this.ofdHex.Filter = "Firmware files (*.hex)|*.hex";
-            //
+            // 
             // frmFirmwareUpdate
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(512, 406);

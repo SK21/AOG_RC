@@ -535,6 +535,9 @@
     <EmbeddedResource Include="Forms\FormNumeric.resx">
       <DependentUpon>FormNumeric.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFirmwareUpdate.resx">
+      <DependentUpon>frmFirmwareUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmHelp.resx">
       <DependentUpon>frmHelp.cs</DependentUpon>
     </EmbeddedResource>

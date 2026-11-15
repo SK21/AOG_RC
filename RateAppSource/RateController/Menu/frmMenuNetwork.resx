@@ -120,4 +120,27 @@
   <metadata name="ilRowHeight.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnFirmware.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAOtSURBVHhe7ZrNaxNBGMabpJ5EEBX1YqwVEbV+XoRevAgi
+        fuFBUDwogl70n/CkZ09+XTwqHrSCB0ERRVT8QrR+Iyp68VJsoYra1t+T2S2TySa2TXa2SeaBh2Tf2Zn3
+        ed/MzruZ3Y6AgICAjFDM5XKX4e1CobAlsrUPCPxKPp8fiziAaY5paQ/kCPqtlYAxbD2mqT1AzPlXVgJG
+        sK0yTe0BJaA/JCAkICQgJCAkoIUToDu9i/AWd3pbI1uMiSRgidV/c2RrHiD8qhWguC9qEjismYBl2D5Z
+        7YPY5pumJgEJeGwFII7COAm6E3QTEN8JKvjPVluJ2LtNc5OAabvbDQKOYt+jdr6/tO2YFsIi3yuCJ5mn
+        1KfpgPgDbjBwBO6HDyzbEInZwecby1YiwZ+LhmtOEERSEnQ5DFrHv+CQdVxi0wcfg2CSklCTLRN8DIKa
+        cBJaLvgYBPffJLRs8DEIsmoSWj74GARbkYS2CT4GQR+CpUpA8Gcjc9thEVxtvgY0N3Qnp6kM7zCtH0Ld
+        6TWSGvMe41/i8wguZxvP2aMbUTcRVbaoeeBHkr4r0pAZuhDyxRHmm3sjLd6B7/xdS4jLv1B/fBrJJD/D
+        aFlqJHkE02+bK4ZLoQ/7dprXwJVQmxyNoMYSe/FxAl9lycB2hrZUkYN5i/jMXXBE9GH3Avwds33Dr5hn
+        qcliAdYN7etp1X0BtYMjaiNDxz/huIjOzs5NUR8fmIHPb7Z/+A5KW6yzH+3aT5z6k2cGuMZAtpOq5HSv
+        Dzfx+dzVUIU/OH2e6TVJ0PmZM1hVcvp608sLcFm2pVaTnL/YdJs8tE31HWoHp9aKrE1NLVLegM8nrgZo
+        Vx5pHmYWn4y6TBmaPpreZSsyg2f6eBufTx3/O+EKGOuU5i6YDnD6yBGQdQKKpiUduGUQnxUCsk6A/lXa
+        OlMtg6JdBiUg6zXgA7R1ei2DerCx1vTyAj1ZCmXQ9l+LnB/KYD0IZTAJOA1l0BGQdQJCGYSZlkFtgvjC
+        tCyD60wvL1AC9GsnanHJ+Q0vgyo3rpMNposf4LPiZQrorwzq+sLBuHOOj2P3hY34/GP510tUvVDaYp2p
+        l8GjlgDxNzxM00xzRirQyt6Ln/eWXyX/hmn2i7k41+VhJ0HUS05JT3bq5X34Grr+xljp3fcQ/QDHSW+C
+        eSW/fupb4jWBiINw2BbliwR/WhKMkmzRg5jziNJjMi1OSX+eGsUBfF1n9ukBzLSDFsDl0K4ajeYCGBAQ
+        EBBQPzo6/gFyv/vsQZ82VgAAAABJRU5ErkJggg==
+</value>
+  </data>
 </root>
