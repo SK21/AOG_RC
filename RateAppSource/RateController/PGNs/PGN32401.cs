@@ -32,7 +32,7 @@ namespace RateController.PGNs
         private const byte cByteCount = 12;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
-        private double[] cElapsedTime;
+        private ArrivalTimer[] cArrivals;
         private bool[] cConfigRejected;
         private bool[] cEthernetConnected;
         private bool[] cGoodPins;
@@ -43,7 +43,6 @@ namespace RateController.PGNs
         private byte[] cWifiSignal;
         private bool[] cWorkSwitch;
         private ModuleStatus[] LastStatus;
-        private Stopwatch[] PGNstopWatch;
         private DateTime[] ReceiveTime;
 
         public PGN32401()
@@ -58,12 +57,10 @@ namespace RateController.PGNs
 
             cWheelSpeed = new double[Props.MaxModules];
             cWheelCounts = new ushort[Props.MaxModules];
-            cElapsedTime = new double[Props.MaxModules];
-
-            PGNstopWatch = new Stopwatch[Props.MaxModules];
+            cArrivals = new ArrivalTimer[Props.MaxModules];
             for (int i = 0; i < Props.MaxModules; i++)
             {
-                PGNstopWatch[i] = new Stopwatch();
+                cArrivals[i] = new ArrivalTimer();
             }
 
             cIs3Wire = new bool[Props.MaxModules];
@@ -107,7 +104,7 @@ namespace RateController.PGNs
         public double ElapsedTime(int ModuleID)
         {
             double Result = 0;
-            if (ValidID(ModuleID) && ModuleSending(ModuleID)) Result = cElapsedTime[ModuleID];
+            if (ValidID(ModuleID) && ModuleSending(ModuleID)) Result = cArrivals[ModuleID].AverageMs;
             return Result;
         }
 
@@ -144,18 +141,7 @@ namespace RateController.PGNs
                     byte ModuleID = Data[2];
                     if (ModuleID < Props.MaxModules)
                     {
-                        // a copy within DuplicateGapMs is the same send arriving by a second
-                        // path (two PC adapters on the subnet, or a board on Ethernet + WiFi):
-                        // parse it but keep timing the real send interval
-                        if (!PGNstopWatch[ModuleID].IsRunning)
-                        {
-                            PGNstopWatch[ModuleID].Restart();
-                        }
-                        else if (PGNstopWatch[ModuleID].Elapsed.TotalMilliseconds > Props.DuplicateGapMs)
-                        {
-                            cElapsedTime[ModuleID] = PGNstopWatch[ModuleID].Elapsed.TotalMilliseconds;
-                            PGNstopWatch[ModuleID].Restart();
-                        }
+                        cArrivals[ModuleID].Mark();
 
                         cPressureReading[ModuleID] = (double)(Data[3] | Data[4] << 8);
 

@@ -30,7 +30,7 @@ namespace RateController.PGNs
         private const byte HeaderLo = 144;
         private readonly clsProduct Prod;
         private bool cBinEmpty;
-        private double cElapsedTime;
+        private readonly ArrivalTimer cArrivals = new ArrivalTimer();
         private double cHz;
         private double cPWMsetting;
         private double cQuantity;
@@ -38,13 +38,11 @@ namespace RateController.PGNs
         private double cUPM;
         private bool LastModuleReceiving;
         private bool LastModuleSending;
-        private Stopwatch PGNstopWatch;
         private DateTime ReceiveTime;
 
         public PGN32400(clsProduct CalledFrom)
         {
             Prod = CalledFrom;
-            PGNstopWatch = new Stopwatch();
         }
 
         public double AccumulatedQuantity
@@ -70,7 +68,7 @@ namespace RateController.PGNs
         public double ElapsedTime()
         {
             double Result = 0;
-            if (ModuleSending()) Result = cElapsedTime;
+            if (ModuleSending()) Result = cArrivals.AverageMs;
             UpdateActivity();
             return Result;
         }
@@ -98,18 +96,7 @@ namespace RateController.PGNs
                     tmp = Core.Tls.ParseSenID(Data[2]);
                     if (Prod.SensorID == tmp)
                     {
-                        // a copy within DuplicateGapMs is the same send arriving by a second
-                        // path (two PC adapters on the subnet, or a board on Ethernet + WiFi):
-                        // parse it but keep timing the real send interval
-                        if (!PGNstopWatch.IsRunning)
-                        {
-                            PGNstopWatch.Restart();
-                        }
-                        else if (PGNstopWatch.Elapsed.TotalMilliseconds > Props.DuplicateGapMs)
-                        {
-                            cElapsedTime = PGNstopWatch.Elapsed.TotalMilliseconds;
-                            PGNstopWatch.Restart();
-                        }
+                        cArrivals.Mark();
 
                         cUPM = (Data[5] << 16 | Data[4] << 8 | Data[3]) / 1000.0;
                         cQuantity = (Data[8] << 16 | Data[7] << 8 | Data[6]) / 10.0;

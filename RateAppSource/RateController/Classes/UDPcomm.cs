@@ -297,6 +297,7 @@ namespace RateController
                 recvSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 IgnoreConnReset(recvSocket);
                 recvSocket.Bind(new IPEndPoint(IPAddress.Any, cReceivePort));
+                recvSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.PacketInformation, true);     // the adapter each packet came in on (OnePath)
 
                 // initialize the send socket
                 sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -311,7 +312,7 @@ namespace RateController
                 EndPoint client = new IPEndPoint(IPAddress.Any, 0);
 
                 // Start listening for incoming data
-                recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(Receive), recvSocket);
+                recvSocket.BeginReceiveMessageFrom(buffer, 0, buffer.Length, SocketFlags.None, ref client, new AsyncCallback(Receive), recvSocket);
                 Running = true;
             }
             catch (Exception e)
@@ -545,6 +546,37 @@ namespace RateController
             return Result;
         }
 
+        // One adapter per sender. A PC with two adapters on one network (e.g. Ethernet and WiFi
+        // both on 192.168.10) receives every broadcast twice, the WiFi copy often 50-150 ms late,
+        // so each report would be read twice: PGN Time halved, PID log rows doubled, an old
+        // switchbox state possibly read after a newer one. Packets from a sender are taken from
+        // the adapter that last delivered it; copies on another adapter are dropped, unless that
+        // adapter has been quiet for that sender for PathTakeoverMs (a cable pulled: the other
+        // adapter takes over). Called on socket threads, hence the lock.
+        private const double PathTakeoverMs = 1000;
+        private readonly Dictionary<string, KeyValuePair<int, DateTime>> cPaths = new Dictionary<string, KeyValuePair<int, DateTime>>();
+        private readonly object PathLock = new object();
+
+        private bool OnePath(IPAddress Sender, int Adapter)
+        {
+            bool Result = true;
+            string Key = Sender.ToString();
+            DateTime Now = DateTime.Now;
+            lock (PathLock)
+            {
+                if (cPaths.TryGetValue(Key, out KeyValuePair<int, DateTime> P) && P.Key != Adapter
+                    && (Now - P.Value).TotalMilliseconds < PathTakeoverMs)
+                {
+                    Result = false;
+                }
+                else
+                {
+                    cPaths[Key] = new KeyValuePair<int, DateTime>(Adapter, Now);
+                }
+            }
+            return Result;
+        }
+
         private void Receive(IAsyncResult asyncResult)
         {
             if (Running)
@@ -555,11 +587,15 @@ namespace RateController
                     // Initialise the IPEndPoint for the client
                     EndPoint epSender = new IPEndPoint(IPAddress.Any, 0);
 
-                    // Receive all data
-                    int msgLen = recvSocket.EndReceiveFrom(asyncResult, ref epSender);
+                    // Receive all data, and the adapter it came in on
+                    SocketFlags flags = SocketFlags.None;
+                    int msgLen = recvSocket.EndReceiveMessageFrom(asyncResult, ref flags, ref epSender, out IPPacketInformation info);
 
                     byte[] localMsg = null;
                     int port = 0;
+
+                    // a copy of a broadcast that a second adapter of this PC also received: dropped
+                    if (msgLen > 0 && !OnePath(((IPEndPoint)epSender).Address, info.Interface)) msgLen = 0;
 
                     if (msgLen > 0)
                     {
@@ -587,7 +623,7 @@ namespace RateController
                         if (Running && recvSocket != null)
                         {
                             EndPoint nextSender = new IPEndPoint(IPAddress.Any, 0);
-                            recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(Receive), recvSocket);
+                            recvSocket.BeginReceiveMessageFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(Receive), recvSocket);
                         }
                         listening = true;
                     }
@@ -633,7 +669,7 @@ namespace RateController
                 if (Running && recvSocket != null)
                 {
                     EndPoint nextSender = new IPEndPoint(IPAddress.Any, 0);
-                    recvSocket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(Receive), recvSocket);
+                    recvSocket.BeginReceiveMessageFrom(buffer, 0, buffer.Length, SocketFlags.None, ref nextSender, new AsyncCallback(Receive), recvSocket);
                 }
             }
             catch (System.ObjectDisposedException)

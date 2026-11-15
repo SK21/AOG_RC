@@ -149,6 +149,7 @@
     <Compile Include="Classes\clsWifiSetup.cs" />
     <Compile Include="Classes\clsZone.cs" />
     <Compile Include="Classes\clsZones.cs" />
+    <Compile Include="Classes\ArrivalTimer.cs" />
     <Compile Include="Classes\Can\CanBridgeComm.cs" />
     <Compile Include="Classes\Can\CanFrameTranslator.cs" />
     <Compile Include="Classes\Can\ICanInterface.cs" />
