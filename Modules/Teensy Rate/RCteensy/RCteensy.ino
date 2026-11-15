@@ -88,7 +88,8 @@ struct ModuleConfig
 	bool ADS1115Enabled = false;
 	uint8_t WheelSpeedPin = NC;
 	float WheelCal = 0;
-	uint8_t CommMode = 2;			// 0 - UDP only, 1 - CAN Proprietary, 2 - UDP + CAN Proprietary
+	uint8_t CommMode = 2;			// not used: the board replies on the link RateController uses (AppOnUDP/AppOnCAN).
+									// Kept so the EEPROM layout and PGN 32700 byte 31 stay as they were.
 	uint16_t MaxPressureReading = 0xFFFF;	// raw analog reading for pressure. 0xFFFF is off
 };
 
@@ -242,6 +243,14 @@ const uint8_t UpdRefused = 107;		// Master is on, or an Ethernet update is runni
 bool UpdActive = false;			// in update mode: control stopped, only update traffic is handled
 uint8_t UpdLink = 0;			// the link the update started on; replies go back on it
 
+// Links: the board always receives on UDP and CAN, and sends on the link RateController was
+// heard on in the last AppLinkTimeout. Heard on neither (or both): it sends on both, so the app
+// finds it on whichever link it uses. No comm mode to set, so a board can't be left on a link
+// it has no wiring for.
+const uint16_t AppLinkTimeout = 4000;	// ms
+uint32_t AppHeardUDP = 0;				// millis() of the last app message on each link, 0 = never
+uint32_t AppHeardCAN = 0;
+
 bool CalibrationOn[MaxProductCount];	// zero-initialized; sized by constant, not initializer (an
 										// aggregate initializer silently under-fills at 6 products)
 float WheelSpeed = 0;
@@ -305,24 +314,31 @@ void loop()
 	}
 }
 
+bool AppOnUDP()
+{
+	return AppHeardUDP != 0 && millis() - AppHeardUDP < AppLinkTimeout;
+}
+
+bool AppOnCAN()
+{
+	return AppHeardCAN != 0 && millis() - AppHeardCAN < AppLinkTimeout;
+}
+
+// send on a link while the app is heard there, or on both while it is heard on neither
+bool SendOnUDP()
+{
+	return AppOnUDP() || !AppOnCAN();
+}
+
+bool SendOnCAN()
+{
+	return AppOnCAN() || !AppOnUDP();
+}
+
 void RunModule()
 {
-	// Communication - UDP and/or CAN based on CommMode
-	switch (MDL.CommMode)
-	{
-	case 0:
-		// UDP only — receive CAN so PGN 32700 can switch CommMode from CAN
-		CANBus_Receive();
-		break;
-	case 1:
-		// CAN Proprietary only
-		CANBus_Update();
-		break;
-	case 2:
-		// UDP + CAN Proprietary
-		CANBus_Update();
-		break;
-	}
+	// CAN: always receive and keep the address claimed; send data only while the app uses CAN
+	CANBus_Update(SendOnCAN());
 
 	ReceiveUDP();
 	ReceiveUpdate();
@@ -354,18 +370,11 @@ void RunModule()
 		}
 	}
 
-	// Send data back based on CommMode
-	switch (MDL.CommMode)
+	// UDP data and the identity report (32403) while the app uses UDP, or is heard on neither link
+	if (SendOnUDP())
 	{
-	case 0:
 		SendComm();
 		SendPIDlog();
-		break;
-	case 2:
-		SendComm();
-		SendPIDlog();
-		break;
-		// CommMode 1 doesn't need SendComm() - data sent via CANBus_Update()
 	}
 
 	Blink();

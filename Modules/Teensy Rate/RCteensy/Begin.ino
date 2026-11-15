@@ -261,22 +261,7 @@ void DoSetup()
 		Serial.println(F("ADS1115: Disabled "));
 	}
 
-	Serial.print(F("Comm Mode: "));
-	switch (MDL.CommMode)
-	{
-	case 0:
-		Serial.println(F("UDP only"));
-		break;
-	case 1:
-		Serial.println(F("CAN/ISOBUS Proprietary"));
-		break;
-	case 2:
-		Serial.println(F("UDP + CAN/ISOBUS Proprietary"));
-		break;
-	default:
-		Serial.println(F("Unknown"));
-		break;
-	}
+	Serial.println(F("Comm: UDP and CAN, replies on the link RateController uses."));
 
 	if (GoodPins)
 	{
@@ -558,7 +543,7 @@ void LoadDefaults()
 	MDL.PressurePin = 40;
 	MDL.WheelCal = 0;
 	MDL.WheelSpeedPin = NC;
-	MDL.CommMode = 2;	// UDP + CAN: a blank or updated board is heard on either link; the app's first 32700 sets its own link
+	MDL.CommMode = 2;	// not used (the board follows the app's link); kept for the EEPROM layout
 }
 
 // NC is a valid setting (input/output not used); Teensy 4.1 GPIOs are 0-41

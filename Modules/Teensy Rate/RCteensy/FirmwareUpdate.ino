@@ -72,7 +72,7 @@ void UpdStart(uint8_t Type, uint8_t Link)
 	}
 	else if (Link == UpdLinkCAN && !ISOBUSid.addressClaimed)
 	{
-		// nothing can be sent back on CAN without a claimed address (CommMode 0)
+		// nothing can be sent back on CAN without a claimed address (just after boot)
 	}
 	else
 	{

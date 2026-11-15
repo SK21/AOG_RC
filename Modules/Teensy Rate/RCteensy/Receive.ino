@@ -9,6 +9,12 @@ void ReceiveUDP()
 			uint8_t WD[UpdMaxPacket];	// a firmware update block (PGN 32811) is up to 240 bytes
 			if (WDlength > UpdMaxPacket) WDlength = UpdMaxPacket;
 			UDPcomm.read(WD, WDlength);
+
+			// a PGN only RateController sends (32500-32700; boards send 324xx): the app is on
+			// UDP, so the board sends its data here (RunModule)
+			uint16_t PGN = WD[1] << 8 | WD[0];
+			if (WDlength > 2 && PGN >= 32500 && PGN <= 32700) AppHeardUDP = millis() | 1;
+
 			ReadPGNs(WD, WDlength);
 		}
 	}
@@ -85,7 +91,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 14;
 
-		if (len > PGNlength - 1 && MDL.CommMode != 1)
+		if (len > PGNlength - 1)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
@@ -147,7 +153,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 11;
 
-		if (len > PGNlength - 1 && MDL.CommMode != 1)
+		if (len > PGNlength - 1)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
@@ -194,7 +200,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 24;
 
-		if (len > PGNlength - 1 && MDL.CommMode != 1)
+		if (len > PGNlength - 1)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
@@ -294,7 +300,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 9;
 
-		if (len > PGNlength - 1 && MDL.CommMode != 1)
+		if (len > PGNlength - 1)
 		{
 			// module-level PGN: data[2] is the raw module ID (like 32700/32401/32403), not Mod/Sen packed
 			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
@@ -343,7 +349,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 		PGNlength = 20;
 
-		if (len > PGNlength - 1 && MDL.CommMode != 1)
+		if (len > PGNlength - 1)
 		{
 			// module-level PGN: data[2] is the raw module ID (like 32700/32401/32403), not Mod/Sen packed
 			if (GoodCRC(data, PGNlength) && data[2] == MDL.ID)
@@ -521,7 +527,7 @@ void ReadPGNs(byte data[], uint16_t len)
 
 					MDL.WorkPin = data[29];
 					MDL.PressurePin = data[30];
-					MDL.CommMode = data[31];
+					// data[31] (comm mode) not used: the board follows the app's link
 
 					SaveData();
 					SCB_AIRCR = 0x05FA0004;	//restart the Teensy

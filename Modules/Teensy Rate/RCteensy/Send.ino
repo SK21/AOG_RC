@@ -107,8 +107,8 @@ void SendComm()
         //11    CRC
         // board type and firmware are in PGN 32403
 
-        // Skip when ISOBUS active - Gateway forwards 0xFF02 as PGN 32401
-        if (MDL.CommMode == 0)
+        // always: SendComm runs only while the app is heard on UDP (RunModule); over CAN the
+        // same status goes as 0xFF02
         {
             Data[0] = 145;
             Data[1] = 126;
@@ -197,8 +197,10 @@ void SendComm()
             B[28] = CRC(B, 28, 0);
             if (Ethernet.linkStatus() == LinkON)
             {
-                // a new board (25) reports to every network, so the app hears it on any subnet
-                IPAddress Dest = (MDL.ID == NewModuleID) ? IPAddress(255, 255, 255, 255) : DestinationIP;
+                // to every network, so the app hears it on any subnet: a new board (25), or one not
+                // hearing the app on UDP (e.g. set up over CAN, still on the default 192.168.1).
+                // Once the app's broadcasts arrive, the board is on its network: own subnet only.
+                IPAddress Dest = (MDL.ID == NewModuleID || !AppOnUDP()) ? IPAddress(255, 255, 255, 255) : DestinationIP;
                 UDPcomm.beginPacket(Dest, DestinationPort);
                 UDPcomm.write(B, 29);
                 if (UDPcomm.endPacket())     // false when FNET couldn't send it

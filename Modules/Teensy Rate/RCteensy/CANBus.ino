@@ -204,6 +204,11 @@ void CANBus_Handle(const CAN_message_t& msg) {
 		Serial.println(ps, HEX);
 #endif
 
+		// a frame only RateController sends (boards send 0xFF00-02, 08, 09, 14-16, 18, 1C):
+		// the app is on CAN, so the board sends its data here (RunModule)
+		if ((pgn >= 0xFF03 && pgn <= 0xFF07) || (pgn >= 0xFF0A && pgn <= 0xFF13) || pgn == 0xFF17
+			|| (pgn >= 0xFF19 && pgn <= 0xFF1B)) AppHeardCAN = millis() | 1;
+
 		// in update mode only the update frames and address claiming count: control has
 		// stopped (FirmwareUpdate.ino)
 		if (UpdActive && pgn != 0xFF1A && pgn != 0xFF1B && pgn != 0xEE00 && pgn != 0xEA00) pgn = 0;
@@ -676,7 +681,7 @@ void CANBus_HandleModuleConfig4(const CAN_message_t& msg) {
 
 	MDL.WorkPin = cfgBuf[27];
 	MDL.PressurePin = cfgBuf[28];
-	MDL.CommMode = cfgBuf[29];
+	// cfgBuf[29] (comm mode) not used: the board follows the app's link
 
 	SaveData();
 	SCB_AIRCR = 0x05FA0004;  // restart Teensy to apply new config
@@ -860,7 +865,9 @@ bool CANBus_SendBoardLabel() {
 //-----------------------------------------------------------------------------
 // Periodic CAN communication (call from main loop)
 //-----------------------------------------------------------------------------
-void CANBus_Update() {
+// Send: false while the app is heard only on UDP. Receiving and the address claim go on
+// regardless, so the app is noticed the moment it starts using CAN.
+void CANBus_Update(bool Send) {
 	static uint32_t lastSensorSend = 0;
 	static uint32_t lastStatusSend = 0;
 	static uint32_t lastClaimCheck = 0;
@@ -887,7 +894,7 @@ void CANBus_Update() {
 	bool Assigned = (MDL.ID <= 15);
 
 	// Send sensor data at same rate as UDP (SendTime = 200ms)
-	if (Assigned && millis() - lastSensorSend >= SendTime) {
+	if (Send && Assigned && millis() - lastSensorSend >= SendTime) {
 		lastSensorSend = millis();
 		for (int i = 0; i < MDL.SensorCount; i++) {
 			CANBus_SendSensorRateQty(i);
@@ -896,13 +903,13 @@ void CANBus_Update() {
 	}
 
 	// Send status at same rate as sensor data (SendTime = 200ms)
-	if (Assigned && millis() - lastStatusSend >= SendTime) {
+	if (Send && Assigned && millis() - lastStatusSend >= SendTime) {
 		lastStatusSend = millis();
 		CANBus_SendModuleStatus();
 	}
 
 	// Send module identification every 500ms
-	if (millis() - lastIdentSend >= 500) {
+	if (Send && millis() - lastIdentSend >= 500) {
 		lastIdentSend = millis();
 		CANBus_SendModuleIdent();
 	}
@@ -911,7 +918,7 @@ void CANBus_Update() {
 	// (the address must be claimed); retried every SendTime until it goes out. Mirrors the
 	// UDP PGN 32403 report. Unassigned boards send it too: 0xFF18 carries the full ID.
 	static bool boardIdSent = false;
-	if ((!boardIdSent && millis() - lastBoardIdSend >= SendTime) || millis() - lastBoardIdSend >= 2000) {
+	if (Send && ((!boardIdSent && millis() - lastBoardIdSend >= SendTime) || millis() - lastBoardIdSend >= 2000)) {
 		lastBoardIdSend = millis();
 		boardIdSent = CANBus_SendBoardLabel() || boardIdSent;
 	}
