@@ -202,9 +202,16 @@ int process_hex_record(const uint8_t* packetBuffer, int packetSize)
 	}
 	else
 	{
-		for (byte idx = 1; idx + 4 < packetSize;)
+		// int index: an Ethernet packet can be up to 500 bytes, a byte index would wrap
+		for (int idx = 1; idx + 4 < packetSize;)
 		{
 			byte len = packetBuffer[idx];
+			if (len > sizeof(data))
+			{
+				// hex.data holds 16 bytes: a longer record would overrun it
+				Serial.printf("abort - hex record too long (%d bytes)\n", len);
+				return 1;
+			}
 			unsigned int addr = packetBuffer[idx + 1] << 8 | packetBuffer[idx + 2];
 
 			byte type = packetBuffer[idx + 3];
