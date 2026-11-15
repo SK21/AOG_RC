@@ -432,8 +432,20 @@ namespace RateController.Menu
                 bool dup = boards.Count > 1;
                 foreach (BoardInfo Brd in boards)
                 {
-                    rows.Add(BoardRow(Brd, id.ToString(),
-                        dup ? Lang.lgStateDuplicate : Lang.lgConnected, dup ? Color.Red : lvBoards.ForeColor));
+                    // heard on another network (e.g. set up over CAN, still on 192.168.1): Send
+                    // with this module selected moves it to the app's network
+                    if (dup)
+                    {
+                        rows.Add(BoardRow(Brd, id.ToString(), Lang.lgStateDuplicate, Color.Red));
+                    }
+                    else if (Brd.OtherNetwork)
+                    {
+                        rows.Add(BoardRow(Brd, id.ToString(), string.Format(Lang.lgStateOtherNetwork, Brd.Network), Color.Blue));
+                    }
+                    else
+                    {
+                        rows.Add(BoardRow(Brd, id.ToString(), Lang.lgConnected, lvBoards.ForeColor));
+                    }
                 }
 
                 if (Core.ModulesBoardID.Rejected(id))

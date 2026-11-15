@@ -438,6 +438,41 @@ namespace RateController.Forms
             {
                 cSetupTick = 0;
                 CheckNewBoardSetup();
+                CheckBoardNetworks();
+            }
+        }
+
+        // a board with a module on a network this PC can't reach (Core.BoardToMoveNetwork): ask
+        // to move it, so the user needn't find it on the Boards page. Once per board per session.
+        private void CheckBoardNetworks()
+        {
+            if (!cSetupPromptOpen)
+            {
+                PGNs.BoardInfo Brd = Core.BoardToMoveNetwork();
+                frmMenu Menu = Application.OpenForms.OfType<frmMenu>().FirstOrDefault();
+
+                // with unsaved module page edits it is asked once they are saved or cancelled
+                if (Brd != null && (Menu == null || !Menu.AnyPageEdited()))
+                {
+                    cSetupPromptOpen = true;
+                    try
+                    {
+                        Core.MoveNetworkAsked(Brd.MAC);     // whatever the answer
+                        if (AskYesNo(string.Format(Lang.lgMoveModuleNetwork, Brd.ID, Brd.Text, Brd.Network, Core.UDPmodules.SubNet)))
+                        {
+                            Core.MoveBoardNetwork(Brd);
+                            Props.ShowMessage(string.Format(Lang.lgNetworkMoveSent, Brd.ID, Core.UDPmodules.SubNet), "Boards", 15000);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.WriteErrorLog("frmMain/CheckBoardNetworks: " + ex.Message);
+                    }
+                    finally
+                    {
+                        cSetupPromptOpen = false;
+                    }
+                }
             }
         }
 

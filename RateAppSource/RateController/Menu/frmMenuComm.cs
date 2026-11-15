@@ -184,16 +184,12 @@ namespace RateController.Menu
                         break;
 
                     default:
-                        // Ethernet: only a Teensy that was switched is worth a message
+                        // Ethernet: nothing to report (a Teensy follows by itself)
                         Mes = "";
                         break;
                 }
 
-                if (ModeChanged)
-                {
-                    Core.ModuleConfig.Save();
-                    if (Core.CommModeNote != "") Mes = (Core.CommModeNote + " " + Mes).Trim();
-                }
+                if (ModeChanged) Core.ModuleConfig.Save();
                 if (Mes != "") Props.ShowMessage(Mes, "Config", 10000);
             }
 
@@ -1263,18 +1259,36 @@ namespace RateController.Menu
             return Count;
         }
 
+        private int OldModulesOn(string Subnet)
+        {
+            // modules heard on Subnet whose board has firmware too old to use (PGN 32403 rejected).
+            // They report, so they are on this adapter; Send can't help them, a firmware update can.
+            int Count = 0;
+            for (int i = 0; i < Props.MaxModules; i++)
+            {
+                if (Core.ModulesBoardID.Rejected(i) && Core.UDPmodules.ModuleIP(i).StartsWith(Subnet + ".")) Count++;
+            }
+            return Count;
+        }
+
         private void ShowSubnets()
         {
             // one status line for the selected (always sent to) subnet: no adapter of this PC on
             // it (LoadCombo has already switched to one if any wired adapter has an address),
-            // or how many connected modules are on it
+            // or how many modules are on it, and how many of those need a firmware update
             string Sub = Core.UDPmodules.SubNet;
             bool HasAdapter = UDPComm.AdapterName(Sub) != "";
             int Count = ModulesOn(Sub);
+            int Old = OldModulesOn(Sub);
             string Status;
             if (!HasAdapter)
             {
                 Status = string.Format(Lang.lgNoWiredAdapter, Sub);
+            }
+            else if (Old > 0)
+            {
+                // two lines, so the label never breaks the text in the middle
+                Status = string.Format(Lang.lgModulesOnAdapter, Count + Old) + "\n" + string.Format(Lang.lgModulesOldOnAdapter, Old);
             }
             else if (Count > 0)
             {

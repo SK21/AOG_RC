@@ -1055,4 +1055,16 @@ Moduł nie steruje do końca aktualizacji.</value>
   <data name="lgFwNoTag" xml:space="preserve">
     <value>Ten plik nie jest oprogramowaniem Teensy do dawkowania w tej lub nowszej wersji. Starsze oprogramowanie zainstaluj za pomocą PCBsetup.</value>
   </data>
+  <data name="lgModulesOldOnAdapter" xml:space="preserve">
+    <value>Zbyt stare oprogramowanie: {0} (zob. Moduły &gt; Płytki).</value>
+  </data>
+  <data name="lgStateOtherNetwork" xml:space="preserve">
+    <value>W sieci {0}</value>
+  </data>
+  <data name="lgNetworkMoveSent" xml:space="preserve">
+    <value>Moduł {0} przeniesiony do sieci {1}. Płytka zachowuje własne ustawienia, uruchamia się ponownie i łączy ponownie.</value>
+  </data>
+  <data name="lgMoveModuleNetwork" xml:space="preserve">
+    <value>Moduł {0} jest w sieci {2}. Przenieść do {3}?</value>
+  </data>
 </root>

@@ -1055,4 +1055,16 @@ Le module ne régule plus jusqu'à la fin de la mise à jour.</value>
   <data name="lgFwNoTag" xml:space="preserve">
     <value>Ce fichier n'est pas un firmware Teensy de dosage de cette version ou plus récent. Utilisez PCBsetup pour installer un firmware plus ancien.</value>
   </data>
+  <data name="lgModulesOldOnAdapter" xml:space="preserve">
+    <value>Firmware trop ancien : {0} (voir Modules &gt; Cartes).</value>
+  </data>
+  <data name="lgStateOtherNetwork" xml:space="preserve">
+    <value>Sur le réseau {0}</value>
+  </data>
+  <data name="lgNetworkMoveSent" xml:space="preserve">
+    <value>Module {0} déplacé vers le réseau {1}. La carte garde ses propres réglages, redémarre et se reconnecte.</value>
+  </data>
+  <data name="lgMoveModuleNetwork" xml:space="preserve">
+    <value>Le module {0} est sur le réseau {2}. Le déplacer vers {3} ?</value>
+  </data>
 </root>

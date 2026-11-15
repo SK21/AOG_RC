@@ -2858,5 +2858,41 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFwNoTag", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware too old: {0} (see Modules &gt; Boards)..
+        /// </summary>
+        internal static string lgModulesOldOnAdapter {
+            get {
+                return ResourceManager.GetString("lgModulesOldOnAdapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On network {0}.
+        /// </summary>
+        internal static string lgStateOtherNetwork {
+            get {
+                return ResourceManager.GetString("lgStateOtherNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module {0} moved to network {1}. The board keeps its own settings, restarts and reconnects..
+        /// </summary>
+        internal static string lgNetworkMoveSent {
+            get {
+                return ResourceManager.GetString("lgNetworkMoveSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module {0} is on network {2}. Move it to {3}?.
+        /// </summary>
+        internal static string lgMoveModuleNetwork {
+            get {
+                return ResourceManager.GetString("lgMoveModuleNetwork", resourceCulture);
+            }
+        }
     }
 }

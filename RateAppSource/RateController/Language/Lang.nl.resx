@@ -1055,4 +1055,16 @@ De module regelt niet tot de update klaar is.</value>
   <data name="lgFwNoTag" xml:space="preserve">
     <value>Dit bestand is geen Teensy rate-firmware van deze versie of nieuwer. Gebruik PCBsetup om oudere firmware te installeren.</value>
   </data>
+  <data name="lgModulesOldOnAdapter" xml:space="preserve">
+    <value>Firmware te oud: {0} (zie Modules &gt; Boards).</value>
+  </data>
+  <data name="lgStateOtherNetwork" xml:space="preserve">
+    <value>Op netwerk {0}</value>
+  </data>
+  <data name="lgNetworkMoveSent" xml:space="preserve">
+    <value>Module {0} verplaatst naar netwerk {1}. Het board houdt zijn eigen instellingen, herstart en maakt opnieuw verbinding.</value>
+  </data>
+  <data name="lgMoveModuleNetwork" xml:space="preserve">
+    <value>Module {0} staat op netwerk {2}. Verplaatsen naar {3}?</value>
+  </data>
 </root>

@@ -377,6 +377,46 @@ namespace RateController.Classes
 
         public static void NewBoardSetupAsked(ulong MAC) => cSetupAsked.Add(MAC);
 
+        // A board that has a module but is heard on a network this PC has no adapter on (e.g. set
+        // up over CAN, still on the default 192.168.1, then plugged into Ethernet): it can't be
+        // reached there, so the main form asks to move it (frmMain.CheckBoardNetworks). Once per
+        // board per session. With an adapter on its network the app reaches it where it is, and
+        // moving it is a choice left to the Boards page.
+        private static readonly HashSet<ulong> cMoveAsked = new HashSet<ulong>();
+
+        public static BoardInfo BoardToMoveNetwork()
+        {
+            BoardInfo Result = null;
+            bool holding = (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+            if (!holding && !HasPendingBoards)
+            {
+                for (int id = 0; id < Props.MaxModules && Result == null; id++)
+                {
+                    List<BoardInfo> here = ModulesBoardID.BoardsAt(id);
+                    if (!ModulesBoardID.Rejected(id) && here.Count == 1 && here[0].OtherNetwork
+                        && !here[0].CanStayOnNetwork && !cMoveAsked.Contains(here[0].MAC)) Result = here[0];
+                }
+            }
+            return Result;
+        }
+
+        public static void MoveNetworkAsked(ulong MAC) => cMoveAsked.Add(MAC);
+
+        // the board's own ID with the app's network, to every network so it reaches the board
+        // where it is: it keeps its module and its settings, restarts and reconnects
+        public static void MoveBoardNetwork(BoardInfo Brd)
+        {
+            UDPmodules.AllNetworks = true;
+            try
+            {
+                new PGN32508().Send(Brd.MAC, Brd.ID, UDPmodules.SubNet);
+            }
+            finally
+            {
+                UDPmodules.AllNetworks = false;
+            }
+        }
+
         // module 0, the board's preset, then the same sends as frmMenu.SendModuleConfig.
         // MoveNetwork: the board also takes the app's module network (only asked when
         // Brd.OtherNetwork, New_Board_Any_Network.md). A board on another network is sent
@@ -577,38 +617,13 @@ namespace RateController.Classes
             }
         }
 
-        public static string CommModeNote { get; private set; } = "";      // what UseCanComm told the module, for the caller's message
-
-        private static void SendCommMode(byte Mode)
-        {
-            // Only the Teensy firmware has CAN (the comm mode byte); Nano and ESP32 boards ignore
-            // it but still validate the whole 32700 pin set, so the app's saved pins could get
-            // it rejected for nothing. The app holds one module config, the module selected on
-            // Config, so only that module can be told - another Teensy would get its pins.
-            byte id = ModuleConfig.GetData()[2];
-            if (ModulesStatus.Connected(id) && ModulesBoardID.ModuleType(id) == (int)ModuleTypes.Teensy_Rate)
-            {
-                ModuleConfig.Send(Mode);
-                CommModeNote = "Comm change sent to Teensy module " + id + ".";
-            }
-            // nothing sent, nothing to report
-        }
-
         public static int UseCanComm(bool enable)
         {
             int Result = -1;
-            CommModeNote = "";
 
-            // The module's CommMode is just Props.CanEnabled - the CAN driver and COM port
-            // are app side only and mean nothing to it. So the config is sent ONLY when the
-            // transport actually flips. PGN 32700 carries the whole module config (pins,
-            // relay types, work/pressure pins) and restarts the module on arrival, so
-            // sending it for a driver or port change would push pin config the user never
-            // touched from a page that says nothing about pins.
-            // Each send below still runs BEFORE the transport it announces is switched, so
-            // it reaches the module over the transport that is still up.
-            bool WasCan = Props.CanEnabled;
-
+            // Nothing is sent to the modules: a Teensy listens on both links and replies on the
+            // one it hears the app on, within a few seconds. (Teensy firmware before that only
+            // changes link from a Config Send, PGN 32700 byte 31.)
             if (enable)
             {
                 // use CanBus
@@ -618,7 +633,6 @@ namespace RateController.Classes
                 bool started = Core.CanBridgeComm?.Start(Props.CurrentCanDriver, Props.CanPort) ?? false;
                 if (started)
                 {
-                    if (!WasCan) SendCommMode(1);
                     Props.CanEnabled = true;
                     Props.ShowMessage("CAN Bridge started.", "Help", 10000);
                     Result = 1;
@@ -632,10 +646,9 @@ namespace RateController.Classes
             if (Result != 1)
             {
                 // use Ethernet
-                if (WasCan) SendCommMode(0);
                 if (Props.CanEnabled)
                 {
-                    CanBridgeComm?.Stop();      // no message: switching to Ethernet only reports a Teensy that was changed
+                    CanBridgeComm?.Stop();
                     Props.CanEnabled = false;
                 }
                 Result += 1;

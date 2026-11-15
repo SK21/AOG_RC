@@ -3,6 +3,7 @@ using RateController.Forms;
 using RateController.Language;
 using RateController.Menu;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -1049,7 +1050,17 @@ namespace RateController
             int hotspotOldID = -1;          // the moved board's ID, when heard on its own hotspot
             bool idOnly = false;            // a board that already has an ID: only its ID (and description) go
 
-            if (move == null)
+            // nothing pending, but the module's board is heard on another network (set up over
+            // CAN, or plugged into Ethernet later, still on the default 192.168.1): Send moves it
+            // to the app's network, keeping its ID and its own settings
+            PGNs.BoardInfo away = null;
+            if (move == null && !Core.ModulesBoardID.Rejected(editID))
+            {
+                List<PGNs.BoardInfo> here = Core.ModulesBoardID.BoardsAt(editID);
+                if (here.Count == 1 && here[0].OtherNetwork) away = here[0];
+            }
+
+            if (move == null && away == null)
             {
                 // no board change: the module being edited must have an accepted board.
                 // Old firmware would apply 32507/32700 and restart while its rate commands
@@ -1115,23 +1126,32 @@ namespace RateController
                     // Either way this Send goes to every network so its ID and settings reach
                     // it (New_Board_Any_Network.md)
                     allNetworks = brd.OtherNetwork;
-                    bool moveNetwork = allNetworks && !brd.CanStayOnNetwork;
-                    if (allNetworks && !moveNetwork)
-                    {
-                        using (var Hlp = new frmMsgBox(string.Format(Lang.lgMoveBoardNetwork,
-                            Core.UDPmodules.SubNet, brd.Network), "Boards", true))
-                        {
-                            Hlp.TopMost = true;
-                            Hlp.ShowDialog();
-                            moveNetwork = Hlp.Result;
-                        }
-                        if (!moveNetwork) stays = brd.Network;
-                    }
+                    bool moveNetwork = allNetworks && MoveToAppNetwork(brd);
+                    if (allNetworks && !moveNetwork) stays = brd.Network;
                     hotspotOldID = brd.OnOwnHotspot ? brd.ID : -1;
 
                     Core.UDPmodules.AllNetworks = allNetworks;
                     new PGNs.PGN32508().Send(brd.MAC, (byte)move.NewID, moveNetwork ? Core.UDPmodules.SubNet : null);
                     msg = string.Format(idOnly ? Lang.lgIDOnlySent : Lang.lgIDSent, move.NewID);
+                }
+            }
+            else if (away != null)
+            {
+                if (MoveToAppNetwork(away))
+                {
+                    // its own ID again, with the app's network, to every network so it reaches
+                    // the board where it is. Like any board that has an ID it keeps its own
+                    // settings: module pages saved meanwhile go with the next Send.
+                    allNetworks = true;
+                    idOnly = true;
+                    Core.MoveBoardNetwork(away);
+                    Core.UDPmodules.AllNetworks = true;     // descriptions below reach it too
+                    msg =string.Format(Lang.lgNetworkMoveSent, away.ID, Core.UDPmodules.SubNet);
+                }
+                else
+                {
+                    Props.ShowMessage(string.Format(Lang.lgBoardStaysOnNetwork, away.Network), "Boards", 15000);
+                    proceed = false;
                 }
             }
 
@@ -1161,6 +1181,25 @@ namespace RateController
                 // an ESP32 set up over its own hotspot: the hotspot is renamed with the ID
                 if (hotspotOldID >= 0) Core.RejoinModuleHotspot((byte)hotspotOldID, (byte)move.NewID);
             }
+        }
+
+        // A board heard on another network moves to the app's network. The user chooses only when
+        // this PC also has an adapter on the board's network (keeping it there is then a real
+        // choice); otherwise it is moved without asking (New_Board_Any_Network.md).
+        private bool MoveToAppNetwork(PGNs.BoardInfo Brd)
+        {
+            bool Result = true;
+            if (Brd.CanStayOnNetwork)
+            {
+                using (var Hlp = new frmMsgBox(string.Format(Lang.lgMoveBoardNetwork,
+                    Core.UDPmodules.SubNet, Brd.Network), "Boards", true))
+                {
+                    Hlp.TopMost = true;
+                    Hlp.ShowDialog();
+                    Result = Hlp.Result;
+                }
+            }
+            return Result;
         }
 
         // a refused Send drops every pending board change: kept, it would go out on a later

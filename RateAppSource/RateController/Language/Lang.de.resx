@@ -1056,4 +1056,16 @@ Das Modul regelt nicht, bis das Update fertig ist.</value>
   <data name="lgFwNoTag" xml:space="preserve">
     <value>Diese Datei ist keine Teensy-Rate-Firmware ab dieser Version. Ältere Firmware mit PCBsetup installieren.</value>
   </data>
+  <data name="lgModulesOldOnAdapter" xml:space="preserve">
+    <value>Firmware zu alt: {0} (siehe Module &gt; Platinen).</value>
+  </data>
+  <data name="lgStateOtherNetwork" xml:space="preserve">
+    <value>Im Netzwerk {0}</value>
+  </data>
+  <data name="lgNetworkMoveSent" xml:space="preserve">
+    <value>Modul {0} in Netzwerk {1} verschoben. Die Platine behält ihre Einstellungen, startet neu und verbindet sich wieder.</value>
+  </data>
+  <data name="lgMoveModuleNetwork" xml:space="preserve">
+    <value>Modul {0} ist im Netzwerk {2}. Nach {3} verschieben?</value>
+  </data>
 </root>
