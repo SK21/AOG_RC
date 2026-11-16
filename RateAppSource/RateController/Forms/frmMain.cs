@@ -462,7 +462,14 @@ namespace RateController.Forms
                         Core.OldFirmwareAsked(ID);      // whatever the answer
                         if (!CanUpdate)
                         {
-                            Props.ShowMessage(string.Format(Lang.lgOldFwManual, ID), "Boards", 20000);
+                            // an ESP32 on another WiFi network comes back on its own hotspot
+                            // (192.168.225.1), out of the app's sight. Heard on Ethernet or with
+                            // this PC on its hotspot, the new board prompt follows the update.
+                            bool Esp = Core.ModulesStatus.OldFirmwareType(ID) == ModuleTypes.ESP_Rate;
+                            bool EspWifi = Esp && !Core.ModulesStatus.OldFirmwareOnEthernet(ID)
+                                && !Core.ModulesBoardID.RejectedOnOwnHotspot(ID);
+                            string Msg = EspWifi ? Lang.lgOldFwEspWifi : Esp ? Lang.lgOldFwEsp : Lang.lgOldFwManual;
+                            Props.ShowMessage(string.Format(Msg, ID), "Boards", 30000);
                         }
                         else if (AskYesNo(string.Format(Lang.lgOldFwUpdate, ID)))
                         {

@@ -905,6 +905,7 @@ namespace RateController.Menu
             ModuleProvisioner P = new ModuleProvisioner(s => Post(() => Log(s)));
             Provisioner = P;
             SetupSsid = Req.ModuleSsid;     // the list stays readable but locked to this pick
+            Core.WifiSetupRunning = true;   // no main form board prompt while the module moves
             EnableWifi();
             ThreadPool.QueueUserWorkItem(o =>
             {
@@ -919,6 +920,16 @@ namespace RateController.Menu
                 }
                 // always logged: the form may have closed during the run
                 Props.WriteErrorLog("frmMenuComm/ModuleWifiSetup " + Req.ModuleSsid + " -> " + Req.HomeSsid + ": " + R.Outcome + (R.Detail != "" ? ", " + R.Detail : ""));
+
+                // through the main form, so it is cleared even if this page has closed
+                try
+                {
+                    Core.MainForm.BeginInvoke((Action)Core.WifiSetupEnded);
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("frmMenuComm/StartSetup end: " + ex.Message);
+                }
                 Post(() => SetupDone(R));
             });
         }

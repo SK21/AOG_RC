@@ -353,6 +353,23 @@ namespace RateController.Classes
         private const double AssignHoldSeconds = 30;
         public static DateTime LastIDAssign = DateTime.MinValue;
 
+        // set while the Comm page's WiFi setup runs (UI thread): the module joins the network at
+        // ID 25 before the setup gives it its module, so no board prompt meanwhile. Its end starts
+        // the same hold as an ID assign (WifiSetupEnded).
+        public static bool WifiSetupRunning = false;
+
+        public static void WifiSetupEnded()
+        {
+            WifiSetupRunning = false;
+            LastIDAssign = DateTime.Now;
+        }
+
+        // the main form's board prompts wait: just after an ID assign, or during WiFi setup
+        private static bool HoldingPrompts()
+        {
+            return WifiSetupRunning || (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+        }
+
         public static BoardInfo NewBoardToSetUp()
         {
             BoardInfo Result = null;
@@ -361,7 +378,7 @@ namespace RateController.Classes
             {
                 foreach (BoardInfo b in nb) cSetupAsked.Add(b.MAC);
             }
-            bool holding = (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+            bool holding = HoldingPrompts();
             if (nb.Count == 1 && !holding && !HasPendingBoards && !cSetupAsked.Contains(nb[0].MAC)
                 && clsPresets.Has((ModuleTypes)nb[0].InoType))
             {
@@ -387,7 +404,7 @@ namespace RateController.Classes
         public static BoardInfo BoardToMoveNetwork()
         {
             BoardInfo Result = null;
-            bool holding = (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+            bool holding = HoldingPrompts();
             if (!holding && !HasPendingBoards)
             {
                 for (int id = 0; id < Props.MaxModules && Result == null; id++)
@@ -413,7 +430,7 @@ namespace RateController.Classes
         {
             int Result = -1;
             CanUpdate = false;
-            bool holding = (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+            bool holding = HoldingPrompts();
             if (!Props.CanEnabled && !holding && !HasPendingBoards && FirmwareUpdate == null
                 && ModulesBoardID.NewBoards().Count == 0 && !ModulesBoardID.Rejected(Props.NewModuleID))
             {

@@ -1031,6 +1031,12 @@ A modul a frissítés végéig nem szabályoz.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>A(z) {0}. modul paneljének firmware-je túl régi ehhez az alkalmazáshoz. Frissítse a PCBsetup programmal vagy USB-n keresztül.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>A(z) {0}. modul ESP32 paneljének firmware-je túl régi ehhez az alkalmazáshoz. Frissítse a PCBsetup programmal, USB-n keresztül vagy a weboldaláról.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>A(z) {0}. modul ESP32 paneljének firmware-je túl régi ehhez az alkalmazáshoz. Frissítse a PCBsetup programmal vagy a weboldaláról. Ezután új panelként, saját WiFi hotspottal indul: állítsa be a Komm oldal WiFi lapján.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>A 29000-es portot egy másik program használja, valószínűleg a PCBsetup. Zárja be, és próbálja újra.</value>
   </data>

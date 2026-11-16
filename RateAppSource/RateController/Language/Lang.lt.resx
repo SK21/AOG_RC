@@ -1028,6 +1028,12 @@ Modulis nevaldo, kol atnaujinimas baigsis.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>Modulio {0} plokštės programinė įranga per sena šiai programai. Atnaujinkite ją su PCBsetup arba per USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>Modulio {0} ESP32 plokštės programinė įranga per sena šiai programai. Atnaujinkite ją su PCBsetup, per USB arba iš jos tinklalapio.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>Modulio {0} ESP32 plokštės programinė įranga per sena šiai programai. Atnaujinkite ją su PCBsetup arba iš jos tinklalapio. Tada ji pasileis kaip nauja plokštė su savo WiFi prieigos tašku: nustatykite ją puslapio „Ryšys“ skirtuke WiFi.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>29000 prievadą naudoja kita programa, tikriausiai PCBsetup. Uždarykite ją ir bandykite dar kartą.</value>
   </data>

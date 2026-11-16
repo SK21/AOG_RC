@@ -205,6 +205,24 @@ namespace RateController.PGNs
                 && (DateTime.Now - cRejectedTime[ID]).TotalSeconds < LiveSec;
         }
 
+        // old firmware reported at this ID by another PGN (PGN32401's old 15-byte report)
+        public void MarkOldFirmware(int ID, IPAddress From)
+        {
+            if (ID >= 0 && ID < cRejectedTime.Length)
+            {
+                cRejectedTime[ID] = DateTime.Now;
+                if (From != null) cRejectedFrom[ID] = From;
+            }
+        }
+
+        // old firmware at this ID reports from an ESP32's own hotspot (192.168.(ID+200).1, as
+        // BoardInfo.OnOwnHotspot), so this PC is joined to it
+        public bool RejectedOnOwnHotspot(int ID)
+        {
+            return ID >= 0 && ID < cRejectedFrom.Length && cRejectedFrom[ID] != null
+                && cRejectedFrom[ID].ToString() == "192.168." + (ID + 200) + ".1";
+        }
+
         // the network (a.b.c) old firmware at this ID reports from, "" when not known (CAN)
         public string RejectedNetwork(int ID)
         {

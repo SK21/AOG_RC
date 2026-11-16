@@ -1034,6 +1034,12 @@ The module stops controlling until the update is done.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>The board at module {0} has firmware too old for this app. Update it with PCBsetup or by USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>The ESP32 board at module {0} has firmware too old for this app. Update it with PCBsetup, by USB or from its web page.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>The ESP32 board at module {0} has firmware too old for this app. Update it with PCBsetup or from its web page. It then starts as a new board on its own WiFi hotspot: set it up on the Comm page, WiFi tab.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>Port 29000 is in use by another program, probably PCBsetup. Close it and try again.</value>
   </data>

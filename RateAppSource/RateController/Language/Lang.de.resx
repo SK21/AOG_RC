@@ -1029,6 +1029,12 @@ Das Modul regelt nicht, bis das Update fertig ist.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>Die Platine an Modul {0} hat eine zu alte Firmware für diese App. Aktualisieren Sie sie mit PCBsetup oder über USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>Die ESP32-Platine an Modul {0} hat eine zu alte Firmware für diese App. Aktualisieren Sie sie mit PCBsetup, über USB oder über ihre Webseite.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>Die ESP32-Platine an Modul {0} hat eine zu alte Firmware für diese App. Aktualisieren Sie sie mit PCBsetup oder über ihre Webseite. Danach startet sie als neue Platine mit eigenem WLAN-Hotspot: Richten Sie sie auf der Seite Komm, Registerkarte WiFi, ein.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>Port 29000 wird von einem anderen Programm benutzt, wahrscheinlich PCBsetup. Schließen Sie es und versuchen Sie es erneut.</value>
   </data>

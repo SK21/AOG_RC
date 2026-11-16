@@ -1028,6 +1028,12 @@ De module regelt niet tot de update klaar is.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>Het board op module {0} heeft firmware die te oud is voor deze app. Werk het bij met PCBsetup of via USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>Het ESP32-board op module {0} heeft firmware die te oud is voor deze app. Werk het bij met PCBsetup, via USB of via de eigen webpagina.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>Het ESP32-board op module {0} heeft firmware die te oud is voor deze app. Werk het bij met PCBsetup of via de eigen webpagina. Daarna start het als nieuw board met een eigen WiFi-hotspot: stel het in op de pagina comm, tabblad WiFi.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>Poort 29000 wordt door een ander programma gebruikt, waarschijnlijk PCBsetup. Sluit het en probeer opnieuw.</value>
   </data>

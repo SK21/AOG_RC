@@ -1028,6 +1028,12 @@ Moduł nie steruje do końca aktualizacji.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>Płytka modułu {0} ma oprogramowanie zbyt stare dla tej aplikacji. Zaktualizuj je programem PCBsetup lub przez USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>Płytka ESP32 modułu {0} ma oprogramowanie zbyt stare dla tej aplikacji. Zaktualizuj je programem PCBsetup, przez USB lub z jej strony internetowej.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>Płytka ESP32 modułu {0} ma oprogramowanie zbyt stare dla tej aplikacji. Zaktualizuj je programem PCBsetup lub z jej strony internetowej. Potem uruchomi się jako nowa płytka z własnym hotspotem WiFi: skonfiguruj ją na stronie Komunikacja, karta WiFi.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>Port 29000 jest używany przez inny program, prawdopodobnie PCBsetup. Zamknij go i spróbuj ponownie.</value>
   </data>

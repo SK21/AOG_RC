@@ -1028,6 +1028,12 @@
   <data name="lgOldFwManual" xml:space="preserve">
     <value>Прошивка платы модуля {0} слишком старая для этого приложения. Обновите её с помощью PCBsetup или через USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>Прошивка платы ESP32 модуля {0} слишком старая для этого приложения. Обновите её с помощью PCBsetup, через USB или с её веб-страницы.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>Прошивка платы ESP32 модуля {0} слишком старая для этого приложения. Обновите её с помощью PCBsetup или с её веб-страницы. После этого она запустится как новая плата со своей точкой доступа WiFi: настройте её на странице «Связь», вкладка WiFi.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>Порт 29000 занят другой программой, вероятно PCBsetup. Закройте её и повторите попытку.</value>
   </data>

@@ -1028,6 +1028,12 @@ Le module ne régule plus jusqu'à la fin de la mise à jour.</value>
   <data name="lgOldFwManual" xml:space="preserve">
     <value>La carte du module {0} a un firmware trop ancien pour cette application. Mettez-la à jour avec PCBsetup ou par USB.</value>
   </data>
+  <data name="lgOldFwEsp" xml:space="preserve">
+    <value>La carte ESP32 du module {0} a un firmware trop ancien pour cette application. Mettez-la à jour avec PCBsetup, par USB ou depuis sa page web.</value>
+  </data>
+  <data name="lgOldFwEspWifi" xml:space="preserve">
+    <value>La carte ESP32 du module {0} a un firmware trop ancien pour cette application. Mettez-la à jour avec PCBsetup ou depuis sa page web. Elle démarre ensuite comme une nouvelle carte avec son propre point d'accès WiFi : configurez-la sur la page Comm, onglet WiFi.</value>
+  </data>
   <data name="lgFwPortBusy" xml:space="preserve">
     <value>Le port 29000 est utilisé par un autre programme, probablement PCBsetup. Fermez-le et réessayez.</value>
   </data>

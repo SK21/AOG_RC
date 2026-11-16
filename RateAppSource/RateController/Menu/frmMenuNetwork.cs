@@ -332,8 +332,8 @@ namespace RateController.Menu
                 bool presetOn = r < 0 || TargetModule(cRows[r]) >= 0;
                 if (btnPreset.Enabled != presetOn) btnPreset.Enabled = presetOn;
 
-                // firmware update: a Teensy rate board, or an old-firmware row (its type isn't
-                // known; only the old method, over Ethernet, can reach it)
+                // firmware update: a Teensy rate board, or an old-firmware row that isn't known to
+                // be another type (only the old method, over Ethernet, can reach it; it is Teensy only)
                 bool firmwareOn = false;
                 if (r >= 0)
                 {
@@ -343,7 +343,9 @@ namespace RateController.Menu
                     }
                     else if (!cRows[r].Empty)
                     {
-                        firmwareOn = !Props.CanEnabled;
+                        ModuleTypes Type = Core.ModulesStatus.OldFirmwareType(cRows[r].ID);
+                        firmwareOn = !Props.CanEnabled
+                            && (Type == ModuleTypes.unknown || Type == ModuleTypes.Teensy_Rate);
                     }
                 }
                 if (btnFirmware.Enabled != firmwareOn) btnFirmware.Enabled = firmwareOn;

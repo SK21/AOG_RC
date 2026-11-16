@@ -2795,6 +2795,24 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgOldFwManual", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The ESP32 board at module {0} has firmware too old for this app. Update it with PCBsetup, by USB or from its web page..
+        /// </summary>
+        internal static string lgOldFwEsp {
+            get {
+                return ResourceManager.GetString("lgOldFwEsp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The ESP32 board at module {0} has firmware too old for this app. Update it with PCBsetup or from its web page. It then starts as a new board on its own WiFi hotspot: set it up on the Comm page, WiFi tab..
+        /// </summary>
+        internal static string lgOldFwEspWifi {
+            get {
+                return ResourceManager.GetString("lgOldFwEspWifi", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to No reply to the new update method. Try the older method?.

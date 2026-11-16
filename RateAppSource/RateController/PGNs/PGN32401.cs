@@ -27,13 +27,15 @@ namespace RateController.PGNs
         //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
         //      bit 7   config rejected (2 s after a discarded 32507/32700)
         //11    CRC
-        // Board type and firmware are in PGN 32403. The old 15-byte report (old firmware) is
-        // ignored, except its board type in byte 10 (OldFirmwareType). An old Teensy sends it
-        // in CommMode 0 only; an old ESP32 always does.
+        // Board type and firmware are in PGN 32403. The old 15-byte report (old firmware) marks
+        // its module as old firmware (PGN32403.MarkOldFirmware) and keeps its board type from
+        // byte 10 (OldFirmwareType); nothing else is read. An old Teensy sends it in CommMode 0
+        // only; an old ESP32 and an old Nano always do.
 
         private const byte cByteCount = 12;
         private const byte cOldByteCount = 15;
         private readonly byte[] cOldType = new byte[Props.MaxModules];
+        private readonly byte[] cOldStatus = new byte[Props.MaxModules];
         private readonly DateTime[] cOldTypeTime = new DateTime[Props.MaxModules];
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
@@ -136,7 +138,8 @@ namespace RateController.PGNs
             return (ValidID(ModuleID) && (DateTime.Now - ReceiveTime[ModuleID]).TotalSeconds < 4);
         }
 
-        public bool ParseByteData(byte[] Data)
+        // From: the sender's address (UDP), null over CAN
+        public bool ParseByteData(byte[] Data, System.Net.IPAddress From = null)
         {
             bool Result = false;
             try
@@ -174,9 +177,12 @@ namespace RateController.PGNs
                 else if (Data.Length == cOldByteCount && Data[1] == HeaderHi && Data[0] == HeaderLo
                     && Core.Tls.GoodCRC(Data) && Data[2] < Props.MaxModules)
                 {
-                    // old firmware: only its board type is kept
+                    // old firmware: only its board type is kept, and the module is marked as
+                    // having old firmware (an old Nano sends no PGN 32403, so this is the only sign of it)
                     cOldType[Data[2]] = Data[10];
+                    cOldStatus[Data[2]] = Data[13];
                     cOldTypeTime[Data[2]] = DateTime.Now;
+                    Core.ModulesBoardID?.MarkOldFirmware(Data[2], From);
                 }
                 UpdateActivity();
             }
@@ -323,6 +329,14 @@ namespace RateController.PGNs
                 Result = (ModuleTypes)cOldType[Module];
             }
             return Result;
+        }
+
+        // an old firmware's 15-byte report in the last 5 s had its Ethernet link up (status byte
+        // 13, bit 4); false for an old ESP32 on WiFi only
+        public bool OldFirmwareOnEthernet(int Module)
+        {
+            return ValidID(Module) && (DateTime.Now - cOldTypeTime[Module]).TotalSeconds < PGN32403.LiveSec
+                && (cOldStatus[Module] & 0b00010000) != 0;
         }
 
         private bool ValidID(int ModuleID)
