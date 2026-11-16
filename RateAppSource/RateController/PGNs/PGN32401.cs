@@ -27,9 +27,14 @@ namespace RateController.PGNs
         //      bit 6   0 - 2 wire relays, 1 - 3 wire relays
         //      bit 7   config rejected (2 s after a discarded 32507/32700)
         //11    CRC
-        // Board type and firmware are in PGN 32403. The old 15-byte report (old firmware) is ignored.
+        // Board type and firmware are in PGN 32403. The old 15-byte report (old firmware) is
+        // ignored, except its board type in byte 10 (OldFirmwareType). An old Teensy sends it
+        // in CommMode 0 only; an old ESP32 always does.
 
         private const byte cByteCount = 12;
+        private const byte cOldByteCount = 15;
+        private readonly byte[] cOldType = new byte[Props.MaxModules];
+        private readonly DateTime[] cOldTypeTime = new DateTime[Props.MaxModules];
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 145;
         private ArrivalTimer[] cArrivals;
@@ -166,6 +171,13 @@ namespace RateController.PGNs
                         Result = true;
                     }
                 }
+                else if (Data.Length == cOldByteCount && Data[1] == HeaderHi && Data[0] == HeaderLo
+                    && Core.Tls.GoodCRC(Data) && Data[2] < Props.MaxModules)
+                {
+                    // old firmware: only its board type is kept
+                    cOldType[Data[2]] = Data[10];
+                    cOldTypeTime[Data[2]] = DateTime.Now;
+                }
                 UpdateActivity();
             }
             catch (Exception ex)
@@ -298,6 +310,17 @@ namespace RateController.PGNs
                     Result = cWorkSwitch[i];
                     if (Result) break;
                 }
+            }
+            return Result;
+        }
+
+        // the board type from an old firmware's 15-byte report in the last 5 s, else unknown
+        public ModuleTypes OldFirmwareType(int Module)
+        {
+            ModuleTypes Result = ModuleTypes.unknown;
+            if (ValidID(Module) && (DateTime.Now - cOldTypeTime[Module]).TotalSeconds < PGN32403.LiveSec)
+            {
+                Result = (ModuleTypes)cOldType[Module];
             }
             return Result;
         }

@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 namespace RateController.Classes
 {
     // Module firmware files from the latest GitHub release, fetched the way PCBsetup does:
-    // ModulesHex.zip unpacked to <Application folder>\Firmware\ModulesHex. Only on the update
-    // page's button, never by itself. The Teensy file's date (Versions.json key 1 when it was
-    // downloaded) is kept next to it.
+    // ModulesHex.zip unpacked to <Application folder>\Firmware\ModulesHex. Only from the update
+    // page: its button, or when it opens with no Teensy file at all. The Teensy file's date
+    // (Versions.json key 1 when it was downloaded) is kept next to it.
+    //
+    // The app also ships the Teensy file it was built with (BundledHex, linked in the project
+    // from Modules\Teensy Rate\RCteensy.ino.hex), so an update works offline. The page uses
+    // whichever of the two has the newer firmware tag (BestTeensyHex).
     public static class FirmwareFiles
     {
         private const string HexFilesURL = "https://github.com/SK21/AOG_RC/releases/latest/download/ModulesHex.zip";
@@ -18,6 +22,49 @@ namespace RateController.Classes
         public static string Folder => Path.Combine(Props.ApplicationFolder, "Firmware");
 
         public static string TeensyHex => Path.Combine(Folder, "ModulesHex", "RCteensy.ino.hex");
+
+        public static string BundledHex => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Firmware", "RCteensy.ino.hex");
+
+        // the downloaded or the bundled Teensy file, whichever has the newer firmware tag
+        // (a file without a Teensy rate tag counts as oldest), "" when neither exists.
+        // Version: the downloaded file's release version, "" for the bundled one.
+        public static string BestTeensyHex(out string Version)
+        {
+            string Result = "";
+            Version = "";
+            int Downloaded = TagDate(TeensyHex);
+            int Bundled = TagDate(BundledHex);
+            if (File.Exists(TeensyHex) && (!File.Exists(BundledHex) || Downloaded >= Bundled))
+            {
+                Result = TeensyHex;
+                Version = TeensyVersion();
+            }
+            else if (File.Exists(BundledHex))
+            {
+                Result = BundledHex;
+            }
+            return Result;
+        }
+
+        // the file's Teensy rate firmware tag date (yyyymmdd), 0 when it has none or can't be read
+        private static int TagDate(string FileName)
+        {
+            int Result = 0;
+            try
+            {
+                if (File.Exists(FileName))
+                {
+                    var Records = FirmwareUpdater.ReadHex(FileName);
+                    if (Records != null && FirmwareUpdater.FindTag(Records, out byte Type, out ushort ID)
+                        && Type == (byte)ModuleTypes.Teensy_Rate) Result = PGNs.PGN32403.InoDate(ID);
+                }
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("FirmwareFiles/TagDate: " + ex.Message);
+            }
+            return Result;
+        }
 
         private static string VersionFile => Path.Combine(Folder, "RCteensyVersion.txt");
 

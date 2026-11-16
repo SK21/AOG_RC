@@ -23,6 +23,7 @@ namespace RateController.Forms
         private ushort cFileInoID = 0;          // InoID from the file's firmware tag, 0 without one
         private string cMessage = "";           // the last progress or result message
         private bool cBusy = false;             // updating or downloading
+        private bool cUpdated = false;          // the update finished: its message stays, the board's gone from this row
 
         public frmFirmwareUpdate(ulong MAC, int ModuleID)
         {
@@ -70,7 +71,9 @@ namespace RateController.Forms
                 {
                     if (await FirmwareFiles.Download(Latest))
                     {
-                        SetFile(FirmwareFiles.TeensyHex, FirmwareFiles.TeensyVersion());
+                        // the app's own file stays when it is newer than the release
+                        string Hex = FirmwareFiles.BestTeensyHex(out string Version);
+                        SetFile(Hex, Version);
                         cMessage = Lang.lgFwDownloaded;
                     }
                     else
@@ -207,9 +210,13 @@ namespace RateController.Forms
             Props.LoadFormLocation(this);
             this.BackColor = Properties.Settings.Default.MainBackColour;
             SetLanguage();
-            if (File.Exists(FirmwareFiles.TeensyHex)) SetFile(FirmwareFiles.TeensyHex, FirmwareFiles.TeensyVersion());
+            string Hex = FirmwareFiles.BestTeensyHex(out string Version);
+            if (Hex != "") SetFile(Hex, Version);
             UpdateForm();
             timer1.Enabled = true;
+
+            // no firmware file at all: get it now, as the button does, once the page shows
+            if (Hex == "") BeginInvoke((Action)(() => btnCheck_Click(btnCheck, EventArgs.Empty)));
         }
 
         // the file's firmware date from its tag (as the board's is shown), else its version or name
@@ -263,6 +270,14 @@ namespace RateController.Forms
 
                 case FirmwareUpdater.Outcome.WrongType:
                     Text = Lang.lgFwWrongType;
+                    break;
+
+                case FirmwareUpdater.Outcome.DoneNew:
+                    Text = Lang.lgFwDoneNew;
+                    break;
+
+                case FirmwareUpdater.Outcome.PortBusy:
+                    Text = Lang.lgFwPortBusy;
                     break;
 
                 case FirmwareUpdater.Outcome.WrongModule:
@@ -331,7 +346,8 @@ namespace RateController.Forms
             Updater.ProgressChanged -= Updater_ProgressChanged;
             Updater.StageChanged -= Updater_StageChanged;
 
-            if (Result == FirmwareUpdater.Outcome.Done) pbProgress.Value = 100;
+            cUpdated = Result == FirmwareUpdater.Outcome.Done || Result == FirmwareUpdater.Outcome.DoneNew;
+            if (cUpdated) pbProgress.Value = 100;
             cMessage = OutcomeText(Result);
             SetBusy(false);
             cCancel.Dispose();
@@ -388,7 +404,7 @@ namespace RateController.Forms
             if (!cBusy) btnStart.Enabled = Block == "";
 
             // a reason Update can't start comes before an older message
-            lbStatus.Text = !cBusy && Block != "" && Block != Lang.lgFwNone ? Block : cMessage;
+            lbStatus.Text = !cBusy && !cUpdated && Block != "" && Block != Lang.lgFwNone ? Block : cMessage;
         }
 
         private void Updater_ProgressChanged(int Percent)

@@ -108,6 +108,9 @@ namespace RateController.PGNs
         // last time old firmware reported at each ID (0-15 and 25)
         private readonly DateTime[] cRejectedTime = new DateTime[Props.NewModuleID + 1];
 
+        // where old firmware at each ID last reported from (UDP), null over CAN
+        private readonly IPAddress[] cRejectedFrom = new IPAddress[Props.NewModuleID + 1];
+
         // From: the sender's address (UDP), null over CAN
         public bool ParseByteData(byte[] Data, IPAddress From = null)
         {
@@ -127,6 +130,7 @@ namespace RateController.PGNs
                         {
                             // old firmware
                             cRejectedTime[ID] = DateTime.Now;
+                            cRejectedFrom[ID] = From;
                         }
                         else
                         {
@@ -199,6 +203,18 @@ namespace RateController.PGNs
         {
             return ID >= 0 && ID < cRejectedTime.Length
                 && (DateTime.Now - cRejectedTime[ID]).TotalSeconds < LiveSec;
+        }
+
+        // the network (a.b.c) old firmware at this ID reports from, "" when not known (CAN)
+        public string RejectedNetwork(int ID)
+        {
+            string Result = "";
+            if (ID >= 0 && ID < cRejectedFrom.Length && cRejectedFrom[ID] != null)
+            {
+                byte[] B = cRejectedFrom[ID].GetAddressBytes();
+                if (B.Length == 4) Result = B[0] + "." + B[1] + "." + B[2];
+            }
+            return Result;
         }
 
         // a good board is live at this ID and no old firmware shares it (rejected wins)

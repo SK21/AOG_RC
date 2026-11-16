@@ -29,7 +29,7 @@ namespace RateController.Classes
         public const int MinProtocolDate = 20261114;
 
         public enum Outcome
-        { Done, NotBack, NoReply, WrongType, WrongModule, Refused, NoAnswer, CountWrong, Cancelled, Failed }
+        { Done, DoneNew, NotBack, NoReply, WrongType, WrongModule, Refused, NoAnswer, CountWrong, Cancelled, PortBusy, Failed }
 
         public enum Stage
         { Starting, Sending, Installing }
@@ -406,6 +406,7 @@ namespace RateController.Classes
         {
             Outcome Result = Outcome.Failed;
             bool Started = false;
+            bool Bound = false;
             UdpClient Udp = null;
             IPEndPoint Board = null;
             var Replies = new BlockingCollection<byte[]>();
@@ -416,6 +417,7 @@ namespace RateController.Classes
                 Udp = new UdpClient();
                 Udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 Udp.Client.Bind(new IPEndPoint(IPAddress.Any, LegacyReceivePort));
+                Bound = true;
                 Udp.EnableBroadcast = true;
                 Board = new IPEndPoint(IPAddress.Parse(Core.UDPmodules.NetworkEP), LegacySendPort);
                 UdpClient Rx = Udp;
@@ -489,18 +491,35 @@ namespace RateController.Classes
                     }
                     else
                     {
+                        // the old firmware's update clears the board's settings, so it usually
+                        // comes back as a new board (ID 25): one that wasn't there before the
+                        // commit is this board
+                        var Before = (HashSet<ulong>)Core.MainForm.Invoke((Func<HashSet<ulong>>)NewBoardMACs);
+                        cLegacyBefore = Before;
+
                         DateTime Sent = DateTime.Now;
                         byte[] Commit = { 0x3A, 0x00, 0x00, 0x00, 0x06, 0xFA };
                         Udp.Send(Commit, Commit.Length, Board);
                         Started = false;
                         StageChanged?.Invoke(Stage.Installing);
                         Result = WaitForBoard(Sent, () => LastHeardAt(ModuleID), Ct);
+                        if (Result == Outcome.Done
+                            && (bool)Core.MainForm.Invoke((Func<bool>)(() => !BackAt(ModuleID, Sent) && NewBoardSince(Before, Sent))))
+                        {
+                            Result = Outcome.DoneNew;
+                        }
                     }
                 }
             }
             catch (OperationCanceledException)
             {
                 Result = Outcome.Cancelled;
+            }
+            catch (SocketException ex) when (!Bound)
+            {
+                // another program (PCBsetup) holds the reply port
+                Props.WriteErrorLog("FirmwareUpdater/RunLegacy port " + LegacyReceivePort + ": " + ex.Message);
+                Result = Outcome.PortBusy;
             }
             catch (Exception ex)
             {
@@ -525,14 +544,53 @@ namespace RateController.Classes
             return Result;
         }
 
-        // the newest report of any board at this module (an old board comes back with a MAC)
-        private static DateTime LastHeardAt(int ModuleID)
+        // the newest report of any board at this module (an old board comes back with a MAC), or
+        // of a new board that wasn't there before the update (the old update cleared its settings)
+        private HashSet<ulong> cLegacyBefore;
+
+        private DateTime LastHeardAt(int ModuleID)
         {
             DateTime Result = DateTime.MinValue;
             foreach (BoardInfo B in Core.ModulesBoardID.BoardsAt(ModuleID))
             {
                 if (B.LastHeard > Result) Result = B.LastHeard;
             }
+            if (cLegacyBefore != null)
+            {
+                foreach (BoardInfo B in Core.ModulesBoardID.NewBoards())
+                {
+                    if (!cLegacyBefore.Contains(B.MAC) && B.LastHeard > Result) Result = B.LastHeard;
+                }
+            }
+            return Result;
+        }
+
+        // a board with new firmware reports at this module after Since
+        private static bool BackAt(int ModuleID, DateTime Since)
+        {
+            bool Result = false;
+            foreach (BoardInfo B in Core.ModulesBoardID.BoardsAt(ModuleID))
+            {
+                if (B.LastHeard > Since.AddSeconds(2)) Result = true;
+            }
+            return Result;
+        }
+
+        // a new board (ID 25) not in Before reports after Since
+        private static bool NewBoardSince(HashSet<ulong> Before, DateTime Since)
+        {
+            bool Result = false;
+            foreach (BoardInfo B in Core.ModulesBoardID.NewBoards())
+            {
+                if (!Before.Contains(B.MAC) && B.LastHeard > Since.AddSeconds(2)) Result = true;
+            }
+            return Result;
+        }
+
+        private static HashSet<ulong> NewBoardMACs()
+        {
+            var Result = new HashSet<ulong>();
+            foreach (BoardInfo B in Core.ModulesBoardID.NewBoards()) Result.Add(B.MAC);
             return Result;
         }
 

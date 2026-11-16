@@ -2759,6 +2759,42 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFwNoReply", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Port 29000 is in use by another program, probably PCBsetup. Close it and try again..
+        /// </summary>
+        internal static string lgFwPortBusy {
+            get {
+                return ResourceManager.GetString("lgFwPortBusy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Firmware updated. The board restarted as a new board with its settings cleared. Set it up when asked, or on the Boards page..
+        /// </summary>
+        internal static string lgFwDoneNew {
+            get {
+                return ResourceManager.GetString("lgFwDoneNew", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The board at module {0} has firmware too old for this app. Update its firmware now?.
+        /// </summary>
+        internal static string lgOldFwUpdate {
+            get {
+                return ResourceManager.GetString("lgOldFwUpdate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The board at module {0} has firmware too old for this app. Update it with PCBsetup or by USB..
+        /// </summary>
+        internal static string lgOldFwManual {
+            get {
+                return ResourceManager.GetString("lgOldFwManual", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to No reply to the new update method. Try the older method?.

@@ -1020,6 +1020,18 @@ Das Modul regelt nicht, bis das Update fertig ist.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>Die Platine hat sich noch nicht zurückgemeldet. Auf der Seite {0} prüfen.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Firmware aktualisiert. Die Platine wurde als neue Platine mit gelöschten Einstellungen neu gestartet. Richten Sie sie ein, wenn Sie gefragt werden, oder auf der Seite Platinen.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>Die Platine an Modul {0} hat eine zu alte Firmware für diese App. Firmware jetzt aktualisieren?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>Die Platine an Modul {0} hat eine zu alte Firmware für diese App. Aktualisieren Sie sie mit PCBsetup oder über USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>Port 29000 wird von einem anderen Programm benutzt, wahrscheinlich PCBsetup. Schließen Sie es und versuchen Sie es erneut.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Keine Antwort von der Platine.</value>
   </data>

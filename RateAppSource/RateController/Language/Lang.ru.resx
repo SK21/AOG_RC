@@ -1019,6 +1019,18 @@
   <data name="lgFwNotBack" xml:space="preserve">
     <value>Плата ещё не ответила. Проверьте её на странице {0}.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Прошивка обновлена. Плата перезапустилась как новая, её настройки стёрты. Настройте её, когда появится запрос, или на странице «Платы».</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>Прошивка платы модуля {0} слишком старая для этого приложения. Обновить прошивку сейчас?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>Прошивка платы модуля {0} слишком старая для этого приложения. Обновите её с помощью PCBsetup или через USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>Порт 29000 занят другой программой, вероятно PCBsetup. Закройте её и повторите попытку.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Плата не отвечает.</value>
   </data>

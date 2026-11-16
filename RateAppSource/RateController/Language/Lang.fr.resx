@@ -1019,6 +1019,18 @@ Le module ne régule plus jusqu'à la fin de la mise à jour.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>La carte ne s'est pas encore manifestée. Vérifiez-la sur la page {0}.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Firmware mis à jour. La carte a redémarré comme une nouvelle carte, ses réglages effacés. Configurez-la quand on vous le demande, ou sur la page Cartes.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>La carte du module {0} a un firmware trop ancien pour cette application. Mettre à jour son firmware maintenant ?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>La carte du module {0} a un firmware trop ancien pour cette application. Mettez-la à jour avec PCBsetup ou par USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>Le port 29000 est utilisé par un autre programme, probablement PCBsetup. Fermez-le et réessayez.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Aucune réponse de la carte.</value>
   </data>

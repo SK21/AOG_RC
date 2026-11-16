@@ -1019,6 +1019,18 @@ De module regelt niet tot de update klaar is.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>Het board heeft zich nog niet gemeld. Controleer het op de pagina {0}.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Firmware bijgewerkt. Het board is opnieuw gestart als nieuw board, met gewiste instellingen. Stel het in wanneer daarom gevraagd wordt, of op de pagina Boards.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>Het board op module {0} heeft firmware die te oud is voor deze app. Firmware nu bijwerken?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>Het board op module {0} heeft firmware die te oud is voor deze app. Werk het bij met PCBsetup of via USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>Poort 29000 wordt door een ander programma gebruikt, waarschijnlijk PCBsetup. Sluit het en probeer opnieuw.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Geen antwoord van het board.</value>
   </data>

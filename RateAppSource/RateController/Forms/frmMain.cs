@@ -439,6 +439,48 @@ namespace RateController.Forms
                 cSetupTick = 0;
                 CheckNewBoardSetup();
                 CheckBoardNetworks();
+                CheckOldFirmware();
+            }
+        }
+
+        // one install, one board with firmware too old for this app: offer the update instead of
+        // leaving it to the Boards page. The board comes back as a new board (the old firmware's
+        // update clears its settings) and CheckNewBoardSetup sets it up. Once per module per session.
+        private void CheckOldFirmware()
+        {
+            if (!cSetupPromptOpen)
+            {
+                int ID = Core.OldBoardToUpdate(out bool CanUpdate);
+                frmMenu Menu = Application.OpenForms.OfType<frmMenu>().FirstOrDefault();
+
+                // with unsaved module page edits it is asked once they are saved or cancelled
+                if (ID >= 0 && (Menu == null || !Menu.AnyPageEdited()))
+                {
+                    cSetupPromptOpen = true;
+                    try
+                    {
+                        Core.OldFirmwareAsked(ID);      // whatever the answer
+                        if (!CanUpdate)
+                        {
+                            Props.ShowMessage(string.Format(Lang.lgOldFwManual, ID), "Boards", 20000);
+                        }
+                        else if (AskYesNo(string.Format(Lang.lgOldFwUpdate, ID)))
+                        {
+                            using (var frm = new frmFirmwareUpdate(0, ID))
+                            {
+                                frm.ShowDialog(this);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Props.WriteErrorLog("frmMain/CheckOldFirmware: " + ex.Message);
+                    }
+                    finally
+                    {
+                        cSetupPromptOpen = false;
+                    }
+                }
             }
         }
 
@@ -484,6 +526,7 @@ namespace RateController.Forms
         private void CheckNewBoardSetup()
         {
             if (cSetupPromptOpen) return;
+            if (Application.OpenForms.OfType<frmFirmwareUpdate>().Any()) return;   // asked once the update page closes
             PGNs.BoardInfo Brd = Core.NewBoardToSetUp();
             if (Brd == null) return;
 

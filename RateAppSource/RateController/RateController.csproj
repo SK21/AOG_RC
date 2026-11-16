@@ -712,6 +712,10 @@
     <EmbeddedResource Include="RateMap\frmZoneList.resx">
       <DependentUpon>frmZoneList.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\..\Modules\Teensy Rate\RCteensy.ino.hex">
+      <Link>Firmware\RCteensy.ino.hex</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Help\frmMap.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

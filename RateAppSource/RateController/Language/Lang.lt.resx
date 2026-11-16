@@ -1019,6 +1019,18 @@ Modulis nevaldo, kol atnaujinimas baigsis.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>Plokštė dar neatsiliepė. Patikrinkite puslapyje {0}.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Programinė įranga atnaujinta. Plokštė paleista iš naujo kaip nauja plokštė, jos nustatymai ištrinti. Nustatykite ją, kai bus paklausta, arba puslapyje „Plokštė“.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>Modulio {0} plokštės programinė įranga per sena šiai programai. Atnaujinti programinę įrangą dabar?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>Modulio {0} plokštės programinė įranga per sena šiai programai. Atnaujinkite ją su PCBsetup arba per USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>29000 prievadą naudoja kita programa, tikriausiai PCBsetup. Uždarykite ją ir bandykite dar kartą.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Plokštė neatsako.</value>
   </data>

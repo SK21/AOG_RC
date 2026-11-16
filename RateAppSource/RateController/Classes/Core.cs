@@ -402,6 +402,46 @@ namespace RateController.Classes
 
         public static void MoveNetworkAsked(ulong MAC) => cMoveAsked.Add(MAC);
 
+        // One install, one board, with firmware too old for this app (frmMain.CheckOldFirmware):
+        // offer the firmware update, after which the board comes back as a new board and the new
+        // board setup prompt takes over. Ethernet only, no other board, once per module per
+        // session. CanUpdate: a Teensy (or a board that sent no type: an old Teensy in CommMode 2)
+        // on the app's network, which the old update method reaches; any other gets a message.
+        private static readonly HashSet<int> cOldFirmwareAsked = new HashSet<int>();
+
+        public static int OldBoardToUpdate(out bool CanUpdate)
+        {
+            int Result = -1;
+            CanUpdate = false;
+            bool holding = (DateTime.Now - LastIDAssign).TotalSeconds < AssignHoldSeconds;
+            if (!Props.CanEnabled && !holding && !HasPendingBoards && FirmwareUpdate == null
+                && ModulesBoardID.NewBoards().Count == 0 && !ModulesBoardID.Rejected(Props.NewModuleID))
+            {
+                int Old = -1;
+                int OldCount = 0;
+                bool Other = false;
+                for (int id = 0; id < Props.MaxModules; id++)
+                {
+                    if (ModulesBoardID.AnyLiveAt(id)) Other = true;
+                    if (ModulesBoardID.Rejected(id))
+                    {
+                        Old = id;
+                        OldCount++;
+                    }
+                }
+                if (!Other && OldCount == 1 && !cOldFirmwareAsked.Contains(Old))
+                {
+                    Result = Old;
+                    ModuleTypes Type = ModulesStatus.OldFirmwareType(Old);
+                    CanUpdate = (Type == ModuleTypes.unknown || Type == ModuleTypes.Teensy_Rate)
+                        && ModulesBoardID.RejectedNetwork(Old) == UDPmodules.SubNet;
+                }
+            }
+            return Result;
+        }
+
+        public static void OldFirmwareAsked(int ModuleID) => cOldFirmwareAsked.Add(ModuleID);
+
         // the board's own ID with the app's network, to every network so it reaches the board
         // where it is: it keeps its module and its settings, restarts and reconnects
         public static void MoveBoardNetwork(BoardInfo Brd)

@@ -1019,6 +1019,18 @@ Moduł nie steruje do końca aktualizacji.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>Płytka jeszcze się nie zgłosiła. Sprawdź ją na stronie {0}.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Oprogramowanie zaktualizowane. Płytka uruchomiła się ponownie jako nowa płytka z usuniętymi ustawieniami. Skonfiguruj ją, gdy pojawi się pytanie, lub na stronie Płytki.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>Płytka modułu {0} ma oprogramowanie zbyt stare dla tej aplikacji. Zaktualizować oprogramowanie teraz?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>Płytka modułu {0} ma oprogramowanie zbyt stare dla tej aplikacji. Zaktualizuj je programem PCBsetup lub przez USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>Port 29000 jest używany przez inny program, prawdopodobnie PCBsetup. Zamknij go i spróbuj ponownie.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Brak odpowiedzi z płytki.</value>
   </data>

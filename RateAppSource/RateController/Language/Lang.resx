@@ -1025,6 +1025,18 @@ The module stops controlling until the update is done.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>The board hasn't reported back yet. Check it on the {0} page.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>Firmware updated. The board restarted as a new board with its settings cleared. Set it up when asked, or on the Boards page.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>The board at module {0} has firmware too old for this app. Update its firmware now?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>The board at module {0} has firmware too old for this app. Update it with PCBsetup or by USB.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>Port 29000 is in use by another program, probably PCBsetup. Close it and try again.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>No reply from the board.</value>
   </data>

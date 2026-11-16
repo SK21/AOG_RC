@@ -1022,6 +1022,18 @@ A modul a frissítés végéig nem szabályoz.</value>
   <data name="lgFwNotBack" xml:space="preserve">
     <value>A panel még nem jelentkezett. Ellenőrizze a(z) {0} oldalon.</value>
   </data>
+  <data name="lgFwDoneNew" xml:space="preserve">
+    <value>A firmware frissítve. A panel új panelként, törölt beállításokkal indult újra. Állítsa be, amikor a program kéri, vagy a PCBk oldalon.</value>
+  </data>
+  <data name="lgOldFwUpdate" xml:space="preserve">
+    <value>A(z) {0}. modul paneljének firmware-je túl régi ehhez az alkalmazáshoz. Frissíti most a firmware-t?</value>
+  </data>
+  <data name="lgOldFwManual" xml:space="preserve">
+    <value>A(z) {0}. modul paneljének firmware-je túl régi ehhez az alkalmazáshoz. Frissítse a PCBsetup programmal vagy USB-n keresztül.</value>
+  </data>
+  <data name="lgFwPortBusy" xml:space="preserve">
+    <value>A 29000-es portot egy másik program használja, valószínűleg a PCBsetup. Zárja be, és próbálja újra.</value>
+  </data>
   <data name="lgFwNoReply" xml:space="preserve">
     <value>Nincs válasz a paneltől.</value>
   </data>
