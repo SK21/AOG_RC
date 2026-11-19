@@ -265,6 +265,7 @@ namespace RateController.Classes
         public static void RequestRestart()
         {
             IsRestarting = true;
+            Program.ReleaseInstanceLock();
             Application.Restart();
         }
 

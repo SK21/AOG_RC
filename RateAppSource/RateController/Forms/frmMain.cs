@@ -607,6 +607,27 @@ namespace RateController.Forms
             }
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (Program.WM_SHOWINSTANCE != 0 && m.Msg == Program.WM_SHOWINSTANCE)
+            {
+                // a second copy was started; show this one instead
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    if (MainMini != null)
+                    {
+                        Core.SetMainDisplay(true);
+                    }
+                    else
+                    {
+                        WindowState = FormWindowState.Normal;
+                    }
+                }
+                Activate();
+            }
+            base.WndProc(ref m);
+        }
+
         private void frmMainDisplay_Load(object sender, EventArgs e)
         {
             MainMini = new RCRestore();
