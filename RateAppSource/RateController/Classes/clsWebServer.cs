@@ -826,6 +826,17 @@ Write-Output ('{0}|{1}|{2}|{3}|{4}|{5}' -f $m.TetheringOperationalState,$r,$b,$b
                 }
                 cHotspotSsid = Parts[4];
                 cHotspotPassword = Parts[5];
+
+                // a hotspot found on while Tablet Hotspot is unticked (left on from before, or turned
+                // on in Windows by a user who didn't know RateController does it) is adopted, so the
+                // app keeps it up and shows it. Status checks only, and only with no other call in
+                // flight, so it can't undo a Save that is stopping the hotspot
+                if (Action == "status" && cHotspotState == "On" && !Props.TabletHotspot && !HotspotPaused && cHotspotPending == 1)
+                {
+                    Props.TabletHotspot = true;
+                    HotspotWatchReset();
+                    Props.WriteErrorLog("clsWebServer/Hotspot: Windows hotspot found on, Tablet Hotspot selected");
+                }
             }
             else
             {

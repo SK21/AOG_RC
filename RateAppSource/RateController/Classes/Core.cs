@@ -214,7 +214,14 @@ namespace RateController.Classes
 
                 WebServer = new clsWebServer();
                 WebServer.Start(Props.WebServerPort);   // phone remote switches, failure is logged only
-                if (Props.TabletHotspot) WebServer.HotspotAsync("start", null);     // Windows doesn't keep it across a reboot, watchdog keeps it on
+                if (Props.TabletHotspot)
+                {
+                    WebServer.HotspotAsync("start", null);     // Windows doesn't keep it across a reboot, watchdog keeps it on
+                }
+                else
+                {
+                    WebServer.HotspotAsync("status", null);    // a hotspot already on is adopted (clsWebServer.ApplyHotspot)
+                }
 
                 Props.DisplayPressure();
                 Props.DisplayProducts();

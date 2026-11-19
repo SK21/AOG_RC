@@ -496,6 +496,15 @@ namespace RateController.Menu
         {
             if (!IsDisposed)
             {
+                // the hotspot was found on and adopted (clsWebServer.ApplyHotspot): follow it,
+                // unless the user is changing this page
+                if (Props.TabletHotspot && rbPcWifi.Checked && !cEdited)
+                {
+                    Initializing = true;
+                    rbHotspot.Checked = true;
+                    Initializing = false;
+                }
+
                 ReadWifiNetwork();
                 if (Provisioner == null)
                 {
