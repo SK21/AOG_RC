@@ -6,7 +6,7 @@
 
 // rate control with arduino nano
 # define InoDescription "RCnano"
-const uint16_t InoID = 11116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 19116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 2;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
@@ -268,8 +268,11 @@ void loop()
 			// gate PID off when master or all sections are off - no flow path means UPM=0
 			// with a nonzero target, so the loop would wind the valve open (huge overshoot
 			// when flow starts). PWM=0 makes a standard valve HOLD position, not close.
-			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && MasterOn && FlowExpected[i] && (Sensor[i].TargetUPM > 0);
-			Applying[i] = MasterOn && (Sensor[i].TargetUPM > 0 || !AutoOn[i]);
+			// a fan in auto runs independent of the master switch: the app sends it a target
+			// only while the operator has it started (target 0 stops it)
+			bool Active = MasterOn || (Sensor[i].ControlType == Fan_ct && AutoOn[i]);
+			PIDenabled[i] = SensorConnected[i] && AutoOn[i] && Active && FlowExpected[i] && (Sensor[i].TargetUPM > 0);
+			Applying[i] = Active && (Sensor[i].TargetUPM > 0 || !AutoOn[i]);
 		}
 
 		CheckRelays();

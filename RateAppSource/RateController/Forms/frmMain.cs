@@ -171,6 +171,10 @@ namespace RateController.Forms
             Properties.Resources.RCVlightFans
         };
 
+        // fan start/stop, scaled to fit the 40 px rows of the fan view
+        private readonly Image FanOnImage = new Bitmap(Properties.Resources.FanOn, 34, 34);
+        private readonly Image FanOffImage = new Bitmap(Properties.Resources.FanOff, 34, 34);
+
         #endregion Images
 
         private void ApplyVisibility()
@@ -186,6 +190,12 @@ namespace RateController.Forms
             barQuantity.Visible = Products;
             btnResetQuantity.Visible = Products;
             btnResetAcres.Visible = Products;
+            if (Products)
+            {
+                // the fan start/stop buttons are shown by UpdateFans
+                btnFan1.Visible = false;
+                btnFan2.Visible = false;
+            }
 
             // the rest of the layout is hidden while the display is collapsed
             bool Full = !CompactMode;
@@ -259,12 +269,13 @@ namespace RateController.Forms
 
         private void btnMenu_Click(object sender, EventArgs e)
         {
-            Form fs = Props.IsFormOpen("frmMenu");
+            frmMenu fs = (frmMenu)Props.IsFormOpen("frmMenu");
             if (fs == null)
             {
                 fs = new frmMenu();
                 fs.Show();
             }
+            if (ShowFans) fs.ChangeProduct(frmMenu.LastFan);
             fs.Focus();
         }
 
@@ -934,6 +945,38 @@ namespace RateController.Forms
             // the products view may have left the rate readout alarm-red
             lbRateAmount.ForeColor = lbTargetAmount.ForeColor;
             btnUnits.ForeColor = btnTarget.ForeColor;
+
+            SetFanButton(btnFan1, Core.Products.Item(5));
+            SetFanButton(btnFan2, Core.Products.Item(6));
+        }
+
+        // start/stop button for a fan set to Control Speed, hidden for Monitor Only
+        private void SetFanButton(Button btn, clsProduct Fan)
+        {
+            bool Show = ShowFans && !CompactMode && Fan.Enabled && Fan.FanControlSpeed;
+            btn.Visible = Show;
+            if (Show)
+            {
+                Image img = Fan.FanOn ? FanOnImage : FanOffImage;
+                if (btn.Image != img) btn.Image = img;
+                btn.BringToFront();
+            }
+        }
+
+        private void ToggleFan(Button btn, clsProduct Fan)
+        {
+            Fan.FanOn = !Fan.FanOn;
+            SetFanButton(btn, Fan);
+        }
+
+        private void btnFan1_Click(object sender, EventArgs e)
+        {
+            ToggleFan(btnFan1, Core.Products.Item(5));
+        }
+
+        private void btnFan2_Click(object sender, EventArgs e)
+        {
+            ToggleFan(btnFan2, Core.Products.Item(6));
         }
 
         // enabled, or being calibrated (a running calibration disables its product itself)

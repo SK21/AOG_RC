@@ -222,8 +222,9 @@ namespace RateController.Menu
             Initializing = true;
             if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
-                // fans
+                // fans have no data page
                 lbProduct.Text = MainMenu.CurrentProduct.ProductName;
+                if (MainMenu.LastScreen == this.Text) MainMenu.ShowSettings();
             }
             else
             {

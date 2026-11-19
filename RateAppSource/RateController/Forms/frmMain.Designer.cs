@@ -62,6 +62,8 @@
             this.btnResetQuantity = new RateController.Classes.RoundedButton();
             this.FlashTimer = new System.Windows.Forms.Timer(this.components);
             this.UL1 = new System.Windows.Forms.Panel();
+            this.btnFan1 = new System.Windows.Forms.Button();
+            this.btnFan2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Fans)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.prod1)).BeginInit();
@@ -487,13 +489,43 @@
             this.UL1.Name = "UL1";
             this.UL1.Size = new System.Drawing.Size(30, 2);
             this.UL1.TabIndex = 444;
-            // 
+            //
+            // btnFan1
+            //
+            this.btnFan1.BackColor = System.Drawing.Color.Transparent;
+            this.btnFan1.FlatAppearance.BorderSize = 0;
+            this.btnFan1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnFan1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFan1.Location = new System.Drawing.Point(300, 109);
+            this.btnFan1.Name = "btnFan1";
+            this.btnFan1.Size = new System.Drawing.Size(40, 40);
+            this.btnFan1.TabIndex = 445;
+            this.btnFan1.UseVisualStyleBackColor = false;
+            this.btnFan1.Visible = false;
+            this.btnFan1.Click += new System.EventHandler(this.btnFan1_Click);
+            //
+            // btnFan2
+            //
+            this.btnFan2.BackColor = System.Drawing.Color.Transparent;
+            this.btnFan2.FlatAppearance.BorderSize = 0;
+            this.btnFan2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.btnFan2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFan2.Location = new System.Drawing.Point(300, 152);
+            this.btnFan2.Name = "btnFan2";
+            this.btnFan2.Size = new System.Drawing.Size(40, 40);
+            this.btnFan2.TabIndex = 446;
+            this.btnFan2.UseVisualStyleBackColor = false;
+            this.btnFan2.Visible = false;
+            this.btnFan2.Click += new System.EventHandler(this.btnFan2_Click);
+            //
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(237)))), ((int)(((byte)(197)))));
             this.ClientSize = new System.Drawing.Size(389, 356);
+            this.Controls.Add(this.btnFan1);
+            this.Controls.Add(this.btnFan2);
             this.Controls.Add(this.UL1);
             this.Controls.Add(this.btnResetQuantity);
             this.Controls.Add(this.btnResetAcres);
@@ -579,6 +611,8 @@
         private Classes.RoundedButton btnUnits;
         private Classes.RoundedButton btnResetAcres;
         private Classes.RoundedButton btnResetQuantity;
+        private System.Windows.Forms.Button btnFan1;
+        private System.Windows.Forms.Button btnFan2;
         private System.Windows.Forms.Timer FlashTimer;
         private System.Windows.Forms.Panel UL1;
     }

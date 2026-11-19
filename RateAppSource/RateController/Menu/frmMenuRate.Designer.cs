@@ -54,6 +54,8 @@
             this.lbFanError = new System.Windows.Forms.Label();
             this.lbFanRPMvalue = new System.Windows.Forms.Label();
             this.lbFanRPM = new System.Windows.Forms.Label();
+            this.lbFanPWMvalue = new System.Windows.Forms.Label();
+            this.lbFanPWM = new System.Windows.Forms.Label();
             this.lbCountsRPM = new System.Windows.Forms.Label();
             this.tbCountsRPM = new System.Windows.Forms.TextBox();
             this.lbTargetRPM = new System.Windows.Forms.Label();
@@ -309,6 +311,8 @@
             // 
             // pnlFan
             // 
+            this.pnlFan.Controls.Add(this.lbFanPWMvalue);
+            this.pnlFan.Controls.Add(this.lbFanPWM);
             this.pnlFan.Controls.Add(this.lbFanErrorValue);
             this.pnlFan.Controls.Add(this.lbFanError);
             this.pnlFan.Controls.Add(this.lbFanRPMvalue);
@@ -321,6 +325,26 @@
             this.pnlFan.Name = "pnlFan";
             this.pnlFan.Size = new System.Drawing.Size(396, 260);
             this.pnlFan.TabIndex = 163;
+            //
+            // lbFanPWMvalue
+            //
+            this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanPWMvalue.Location = new System.Drawing.Point(245, 174);
+            this.lbFanPWMvalue.Name = "lbFanPWMvalue";
+            this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
+            this.lbFanPWMvalue.TabIndex = 198;
+            this.lbFanPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
+            // lbFanPWM
+            //
+            this.lbFanPWM.AutoSize = true;
+            this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFanPWM.Location = new System.Drawing.Point(42, 178);
+            this.lbFanPWM.Name = "lbFanPWM";
+            this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
+            this.lbFanPWM.TabIndex = 199;
+            this.lbFanPWM.Text = "PWM";
             //
             // lbFanErrorValue
             //
@@ -561,6 +585,8 @@
         private System.Windows.Forms.Label lbFanError;
         private System.Windows.Forms.Label lbFanRPMvalue;
         private System.Windows.Forms.Label lbFanRPM;
+        private System.Windows.Forms.Label lbFanPWMvalue;
+        private System.Windows.Forms.Label lbFanPWM;
         private System.Windows.Forms.Label lbCountsRPM;
         private System.Windows.Forms.TextBox tbCountsRPM;
         private System.Windows.Forms.Label lbTargetRPM;

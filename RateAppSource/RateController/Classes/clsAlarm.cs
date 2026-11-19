@@ -11,6 +11,9 @@ namespace RateController.Classes
         // during headland turns does not flash the alarm; clearing is immediate
         private const double RatePersistSeconds = 5.0;
 
+        // a fan just started needs time to reach speed before its off-rate alarm is checked
+        private const double FanStartGraceSeconds = 15.0;
+
         private readonly System.Media.SoundPlayer sound;
         private DateTime? alarmStart;
         private bool cAlarmIsOn;
@@ -124,9 +127,22 @@ namespace RateController.Classes
             bool[] NewBin = new bool[Props.MaxProducts];
             bool[] NewPressure = new bool[Props.MaxModules];
 
-            if (Core.Sections.WorkRatePerHour() > 0)
+            bool Working = Core.Sections.WorkRatePerHour() > 0;
+            foreach (clsProduct Prd in Core.Products.Items)
             {
-                foreach (clsProduct Prd in Core.Products.Items)
+                // a started fan (Control Speed) is checked at any time, after a spin-up grace;
+                // everything else only while working
+                bool Check;
+                if (Prd.FanRunning)
+                {
+                    Check = (DateTime.Now - Prd.FanStartTime).TotalSeconds >= FanStartGraceSeconds;
+                }
+                else
+                {
+                    Check = Working;
+                }
+
+                if (Check)
                 {
                     if (Prd.Enabled && Prd.UseOffRateAlarm && Prd.AppMode != ApplicationMode.DocumentAppliedManual)
                     {
@@ -162,13 +178,10 @@ namespace RateController.Classes
                         }
                     }
                 }
-            }
-            else
-            {
-                // not applying - restart the rate persistence timers
-                for (int i = 0; i < Props.MaxProducts; i++)
+                else
                 {
-                    cRateOutOfBandSince[i] = null;
+                    // not checked now - restart the rate persistence timer
+                    cRateOutOfBandSince[Prd.ID] = null;
                 }
             }
 

@@ -18,7 +18,7 @@ struct IsobusIdentity {
 
 	// ISO 11783 NAME fields (64-bit)
 	uint32_t identityNumber = 1;      // Unique serial number (21 bits)
-	uint16_t manufacturerCode = 0;    // Assigned by AEF (11 bits)
+	uint16_t manufacturerCode = 0;    // Assigned by SAE J1939 (11 bits); 0 = experimental use only. ISOBUS builds will use 1407 (Open-Agriculture)
 	uint8_t deviceClass = 25;         // 25 = Sprayer/Spreader control
 	uint8_t deviceClassInstance = 0;
 	uint8_t functionCode = 130;       // 130 = Rate Control

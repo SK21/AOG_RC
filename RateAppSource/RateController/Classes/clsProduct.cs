@@ -304,14 +304,29 @@ namespace RateController.Classes
 
         public bool EraseAccumulatedUnits { get; set; }
 
+        // fan started by the operator from the main screen. Not saved: a fan is stopped
+        // every time the app starts.
         public bool FanOn
         {
             get { return cFanOn; }
             set
             {
+                if (value && !cFanOn) FanStartTime = DateTime.Now;
                 cFanOn = value;
             }
         }
+
+        // when the fan was last started, for the off-rate alarm's spin-up grace
+        public DateTime FanStartTime { get; private set; } = DateTime.MinValue;
+
+        // fan set to Control Speed on Products > Settings (Monitor Only = Document Applied)
+        public bool FanControlSpeed
+        { get { return cControlType == ControlTypeEnum.Fan && cAppMode != ApplicationMode.DocumentApplied; } }
+
+        // fan the module should drive to its Target RPM, regardless of master, sections,
+        // speed and auto/manual
+        public bool FanRunning
+        { get { return FanControlSpeed && cEnabled && cFanOn; } }
 
         public double Hours1
         { get { return cHours1; } }
@@ -653,6 +668,10 @@ namespace RateController.Classes
             if (Props.TryParseNumber(Props.GetProp(IDname + "Hours2"), out double h2)) cHours2 = h2;
             if (Enum.TryParse(Props.GetProp(IDname + "AppMode"), true, out ApplicationMode am)) cAppMode = am;
 
+            // a fan is either Monitor Only (Document Applied) or Control Speed (Controlled UPM);
+            // a mode left from when the Mode page applied to fans counts as Control Speed
+            if (cControlType == ControlTypeEnum.Fan && cAppMode != ApplicationMode.DocumentApplied) cAppMode = ApplicationMode.ControlledUPM;
+
             if (int.TryParse(Props.GetProp(IDname + "SensorSettings"), out int ss)) cSensorSettingsID = ss;
             if (bool.TryParse(Props.GetProp(IDname + "Enabled"), out bool pe)) cEnabled = pe;
 
@@ -993,7 +1012,12 @@ namespace RateController.Classes
         public double TargetRate(bool UseRateSet = false)
         {
             double Result = 0;
-            if (cEnabled)
+            if (cEnabled && cControlType == ControlTypeEnum.Fan)
+            {
+                // a fan runs at its Target RPM: no rate map, no alternate rate
+                Result = cRateSet;
+            }
+            else if (cEnabled)
             {
                 if (Props.VariableRateEnabled && !Props.RateCalibrationOn && !UseRateSet)
                 {

@@ -54,8 +54,12 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ckEnabled = new System.Windows.Forms.CheckBox();
             this.ckSeparateDisplay = new System.Windows.Forms.CheckBox();
+            this.grpFan = new System.Windows.Forms.GroupBox();
+            this.rbFanMonitor = new System.Windows.Forms.RadioButton();
+            this.rbFanControl = new System.Windows.Forms.RadioButton();
             this.grpMinUPM.SuspendLayout();
             this.grpSensor.SuspendLayout();
+            this.grpFan.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckScale
@@ -401,12 +405,60 @@
             this.ckSeparateDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSeparateDisplay.UseVisualStyleBackColor = true;
             this.ckSeparateDisplay.CheckedChanged += new System.EventHandler(this.ckSeparateDisplay_CheckedChanged);
-            // 
+            //
+            // grpFan
+            //
+            this.grpFan.Controls.Add(this.rbFanMonitor);
+            this.grpFan.Controls.Add(this.rbFanControl);
+            this.grpFan.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpFan.Location = new System.Drawing.Point(86, 284);
+            this.grpFan.Name = "grpFan";
+            this.grpFan.Size = new System.Drawing.Size(354, 125);
+            this.grpFan.TabIndex = 1;
+            this.grpFan.TabStop = false;
+            this.grpFan.Text = "Mode";
+            this.grpFan.Visible = false;
+            this.grpFan.Paint += new System.Windows.Forms.PaintEventHandler(this.grpMinUPM_Paint);
+            //
+            // rbFanMonitor
+            //
+            this.rbFanMonitor.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbFanMonitor.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbFanMonitor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbFanMonitor.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbFanMonitor.Location = new System.Drawing.Point(77, 28);
+            this.rbFanMonitor.Margin = new System.Windows.Forms.Padding(2);
+            this.rbFanMonitor.Name = "rbFanMonitor";
+            this.rbFanMonitor.Size = new System.Drawing.Size(200, 37);
+            this.rbFanMonitor.TabIndex = 0;
+            this.rbFanMonitor.TabStop = true;
+            this.rbFanMonitor.Text = "Monitor Only";
+            this.rbFanMonitor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbFanMonitor.UseVisualStyleBackColor = true;
+            this.rbFanMonitor.CheckedChanged += new System.EventHandler(this.rbFan_CheckedChanged);
+            //
+            // rbFanControl
+            //
+            this.rbFanControl.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rbFanControl.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.rbFanControl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rbFanControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbFanControl.Location = new System.Drawing.Point(77, 75);
+            this.rbFanControl.Margin = new System.Windows.Forms.Padding(2);
+            this.rbFanControl.Name = "rbFanControl";
+            this.rbFanControl.Size = new System.Drawing.Size(200, 37);
+            this.rbFanControl.TabIndex = 1;
+            this.rbFanControl.Text = "Control Speed";
+            this.rbFanControl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rbFanControl.UseVisualStyleBackColor = true;
+            this.rbFanControl.CheckedChanged += new System.EventHandler(this.rbFan_CheckedChanged);
+            //
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(540, 678);
+            this.Controls.Add(this.grpFan);
             this.Controls.Add(this.ckSeparateDisplay);
             this.Controls.Add(this.ckEnabled);
             this.Controls.Add(this.lbProduct);
@@ -433,6 +485,7 @@
             this.grpMinUPM.PerformLayout();
             this.grpSensor.ResumeLayout(false);
             this.grpSensor.PerformLayout();
+            this.grpFan.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -465,5 +518,8 @@
         private System.Windows.Forms.CheckBox ckEnabled;
         private System.Windows.Forms.Label lbUPMhint;
         private System.Windows.Forms.CheckBox ckSeparateDisplay;
+        private System.Windows.Forms.GroupBox grpFan;
+        private System.Windows.Forms.RadioButton rbFanMonitor;
+        private System.Windows.Forms.RadioButton rbFanControl;
     }
 }

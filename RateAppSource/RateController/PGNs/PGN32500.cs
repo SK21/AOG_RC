@@ -144,14 +144,22 @@ namespace RateController.PGNs
                         // combo-close valve is driven closed. AutoOn is per-sensor in the
                         // firmware, so this cannot disturb the calibrating sensor's phase.
                         cData[9] |= (byte)(CommandPGN32500.AutoOn);
+
+                        // a started fan keeps its speed while another product on the module calibrates
+                        if (Prod.FanRunning) RateSet = Prod.TargetUPM() * 1000.0;
                     }
                 }
                 else
                 {
                     // normal run
                     // rate
-                    if ((Prod.ControlType == ControlTypeEnum.Fan && !Prod.FanOn) || Prod.AppMode == ApplicationMode.DocumentTarget
-                            || Prod.AppMode == ApplicationMode.DocumentApplied)
+                    if (Prod.ControlType == ControlTypeEnum.Fan)
+                    {
+                        // a fan runs at its Target RPM while started, whatever the master, sections,
+                        // speed or auto/manual; stopped or Monitor Only it gets no target. No min-UPM floor.
+                        RateSet = Prod.FanRunning ? Prod.TargetUPM() * 1000.0 : 0;
+                    }
+                    else if (Prod.AppMode == ApplicationMode.DocumentTarget || Prod.AppMode == ApplicationMode.DocumentApplied)
                     {
                         RateSet = 0;
                     }
@@ -180,7 +188,9 @@ namespace RateController.PGNs
                         cData[9] |= (byte)CommandPGN32500.MasterOnMode;
                     }
 
-                    if (Core.SwitchBox.AutoRateOn)
+                    // a fan is always in auto, so the firmware drives it only to its target
+                    // (0 = stopped) and never by the manual PWM
+                    if (Core.SwitchBox.AutoRateOn || Prod.ControlType == ControlTypeEnum.Fan)
                     {
                         // auto on
                         cData[9] |= (byte)CommandPGN32500.AutoOn;
@@ -195,7 +205,7 @@ namespace RateController.PGNs
                     }
 
                     // manual
-                    if (Prod.Enabled)
+                    if (Prod.Enabled && Prod.ControlType != ControlTypeEnum.Fan)
                     {
                         cData[10] = (byte)Prod.ManualPWM;
                         cData[11] = (byte)(Prod.ManualPWM >> 8);

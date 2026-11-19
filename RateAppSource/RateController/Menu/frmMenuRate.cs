@@ -458,6 +458,7 @@ namespace RateController.Menu
             }
 
             lbFanErrorValue.Text = RateError.ToString("N1");
+            lbFanPWMvalue.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
         }
 
         private void UpdateForm()

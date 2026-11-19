@@ -173,12 +173,24 @@ namespace RateController
             }
         }
 
+        // the fan last shown in the menu, so the menu opened from the main screen's fan
+        // view comes back to it (the main screen shows both fans at once)
+        public static int LastFan { get; private set; } = Props.MaxProducts - 2;
+
         public void ChangeProduct(int NewID, bool NoFans = false)
         {
             if (NewID < 0) NewID = 0;
             if (NewID > Props.MaxProducts - 1) NewID = Props.MaxProducts - 1;
             if (NoFans && NewID > Props.MaxProducts - 3) NewID = Props.MaxProducts - 3;
             cCurrentProduct = Core.Products.Item(NewID);
+
+            // Mode, Monitoring and Data don't apply to a fan
+            bool Fan = cCurrentProduct.ControlType == ControlTypeEnum.Fan;
+            if (Fan) LastFan = NewID;
+            butMode.Enabled = !Fan;
+            butMonitor.Enabled = !Fan;
+            butData.Enabled = !Fan;
+
             ProductChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -968,6 +980,17 @@ namespace RateController
             {
                 fs.Focus();
             }
+        }
+
+        // Mode, Monitoring and Data don't apply to a fan: those pages move to Settings
+        // when a fan is selected on them
+        public void ShowSettings()
+        {
+            butSettings_Click(butSettings, EventArgs.Empty);
+
+            // the disabled page button would keep focus, and a focused flat button draws
+            // a border, so it would look highlighted next to Settings
+            ActiveControl = butSettings;
         }
 
         private void butSettings_Click(object sender, EventArgs e)

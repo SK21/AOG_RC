@@ -62,6 +62,15 @@ namespace RateController.Menu
                     if (byte.TryParse(tbOffRate.Text, out byte off)) Prd.OffRateSetting = off;
                     Prd.UseMinUPMbySpeed = rbUPMSpeed.Checked;
 
+                    if (Prd.ControlType == ControlTypeEnum.Fan)
+                    {
+                        // Monitor Only: RC reads the speed, never drives the fan. A fan switched to
+                        // Monitor Only stops, and is stopped again when switched back.
+                        bool WasControl = Prd.FanControlSpeed;
+                        Prd.AppMode = rbFanControl.Checked ? ApplicationMode.ControlledUPM : ApplicationMode.DocumentApplied;
+                        if (WasControl != Prd.FanControlSpeed) Prd.FanOn = false;
+                    }
+
                     bool EnabledChanged;
                     clsCalibrate Cal = Prd.CalibrateOjbect;
                     if (Cal?.PowerOn == true)
@@ -236,6 +245,11 @@ namespace RateController.Menu
             }
 
             lbUPMhint.Text = hint;
+        }
+
+        private void rbFan_CheckedChanged(object sender, EventArgs e)
+        {
+            SetButtons(true);
         }
 
         private void grpMinUPM_Paint(object sender, PaintEventArgs e)
@@ -477,10 +491,14 @@ namespace RateController.Menu
                 ckDefault.Visible = false;
                 ckScale.Visible = false;
 
-                ckSeparateDisplay.Top = 290;
+                grpFan.Visible = true;
+                rbFanControl.Checked = MainMenu.CurrentProduct.FanControlSpeed;
+                rbFanMonitor.Checked = !MainMenu.CurrentProduct.FanControlSpeed;
+
+                ckSeparateDisplay.Top = 432;
 
                 ckOffRate.Left = 288;
-                ckOffRate.Top = 290;
+                ckOffRate.Top = 432;
 
                 tbOffRate.Left = ckOffRate.Left + 149;
                 tbOffRate.Top = ckOffRate.Top + 3;
@@ -495,6 +513,7 @@ namespace RateController.Menu
                 grpMinUPM.Visible = true;
                 ckDefault.Visible = true;
                 ckScale.Visible = true;
+                grpFan.Visible = false;
 
                 ckSeparateDisplay.Top = 532;
 

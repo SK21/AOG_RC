@@ -123,7 +123,8 @@ namespace RateController.Classes
                     Prd.TankSize = 1000;
                     Prd.CurrentTankAmount = 1000;
                     Prd.LoadSensorSettings();
-                    Prd.AppMode = ApplicationMode.ControlledUPM;
+                    // a new fan is Monitor Only (Document Applied); Control Speed is chosen on Settings
+                    Prd.AppMode = Prd.ControlType == ControlTypeEnum.Fan ? ApplicationMode.DocumentApplied : ApplicationMode.ControlledUPM;
                     Prd.OffRateSetting = 0;
                     Prd.MinUPM = 0;
                     Prd.UseMinUPMbySpeed = true;   // by-speed is the default minimum mode for new profiles

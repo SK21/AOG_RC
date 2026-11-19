@@ -199,8 +199,9 @@ namespace RateController.Menu
             Initializing = true;
             if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
-                // fans
+                // fans have no mode (Monitor Only / Control Speed is on Settings)
                 lbProduct.Text = MainMenu.CurrentProduct.ProductName;
+                if (MainMenu.LastScreen == this.Text) MainMenu.ShowSettings();
             }
             else
             {

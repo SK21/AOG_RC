@@ -31,7 +31,7 @@ namespace RateController.Menu
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1, true);
+            MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1);
             UpdateForm();
         }
 
@@ -52,7 +52,7 @@ namespace RateController.Menu
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID + 1, true);
+            MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID + 1);
             UpdateForm();
         }
 
@@ -296,10 +296,11 @@ namespace RateController.Menu
         private void UpdateForm()
         {
             Initializing = true;
-            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3 && MainMenu.LastScreen == this.Text)
+            if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
             {
-                // fans, move to product only
-                MainMenu.ChangeProduct(MainMenu.CurrentProduct.ID - 1, true);
+                // fans have no monitoring page
+                lbProduct.Text = MainMenu.CurrentProduct.ProductName;
+                if (MainMenu.LastScreen == this.Text) MainMenu.ShowSettings();
             }
             else
             {
