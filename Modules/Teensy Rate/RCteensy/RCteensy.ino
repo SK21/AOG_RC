@@ -15,7 +15,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 19116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 20116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 // Firmware identity in the program image: magic "RCFWID01", InoType, InoID lo, InoID hi.
