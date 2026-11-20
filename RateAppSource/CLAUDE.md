@@ -51,13 +51,14 @@ Windows application for agricultural rate control. Communicates with:
 | 32400 | 15 | Sensor data (rate, qty, PWM, Hz) |
 | 32401 | 12 | Module status: [2] ID, [3-4] pressure, [5-6] wheel speed ×10, [7-9] wheel count, [10] status bits, [11] CRC. Status only — type/firmware moved to 32403 |
 | 32402 | 24 | PID diagnostics log (per-sensor, PID-loop cadence) |
-| 32403 | 29 | Identity report: [2] ID (0-7 or 25), [3-18] description, [19-24] MAC, [25] InoType, [26-27] InoID, [28] CRC. Sent at boot (retried until it goes out) then every 2 s, also at ID 25. At ID 25 it goes to 255.255.255.255 (ESP32: Ethernet only) so the app hears a new board on any subnet |
+| 32403 | 29/30 | Identity report: [2] ID (0-7 or 25), [3-18] description, [19-24] MAC, [25] InoType, [26-27] InoID, [28] CRC. Teensy from InoID 20116 sends 30 bytes: [28] build flags (bit 0 = ISOBUS build, `ISOBUS_ENABLED`), [29] CRC; the CRC is always the last byte, so older apps accept it. Sent at boot (retried until it goes out) then every 2 s, also at ID 25. At ID 25 it goes to 255.255.255.255 (ESP32: Ethernet only) so the app hears a new board on any subnet |
 
 ### CAN proprietary frame mapping (CommMode 1/2, via `CanFrameTranslator`)
 Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
-- 0xFF00/0xFF01 → 32400; **0xFF02 alone → 12-byte 32401**; 0xFF08 = identification (type, InoID, byte 4 full ID).
+- 0xFF00/0xFF01 → 32400; **0xFF02 alone → 12-byte 32401**; 0xFF08 = identification (type, InoID, byte 4 full ID, byte 5 build flags — bit 0 = ISOBUS build; 0 from older firmware).
 - Description RC → module: 32506 → **0xFF11/0xFF12/0xFF13** (commit on 0xFF13).
-- Identity module → RC: **0xFF14/0xFF15/0xFF16** (description) then **0xFF18** (`[0]` full ID, `[1-6]` MAC). The translator builds the 29-byte 32403 when 0xFF18 arrives, with type/InoID from the last 0xFF08 of the same CAN source address.
+- Identity module → RC: **0xFF14/0xFF15/0xFF16** (description) then **0xFF18** (`[0]` full ID, `[1-6]` MAC). The translator builds a 30-byte 32403 when 0xFF18 arrives, with type/InoID/build flags from the last 0xFF08 of the same CAN source address.
+- Hex files: FwTag is `"RCFWID01"`, InoType, InoID lo/hi, then (from InoID 20116) the build flags byte; `FirmwareUpdater.FindTag` reads it only for tags dated `TagFlagsDate` or later. The firmware update page warns, but allows, switching between the normal and ISOBUS builds.
 - Assign by MAC RC → module: 32508 → **0xFF19** (`[0]` new ID, `[1-6]` MAC).
 - The Teensy ISOBUS NAME identity number is the low 21 bits of its MAC, so two boards at the same ID still claim different addresses.
 

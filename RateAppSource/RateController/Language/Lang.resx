@@ -1007,6 +1007,12 @@ The module stops controlling until the update is done.</value>
   <data name="lgFwOlder" xml:space="preserve">
     <value>The file is older than the board's firmware.</value>
   </data>
+  <data name="lgFwToIsobus" xml:space="preserve">
+    <value>This file is the ISOBUS build. The board runs the normal build.</value>
+  </data>
+  <data name="lgFwToNormal" xml:space="preserve">
+    <value>This file is the normal build. The board runs the ISOBUS build.</value>
+  </data>
   <data name="lgFwDateUnknown" xml:space="preserve">
     <value>The file's date is unknown.</value>
   </data>

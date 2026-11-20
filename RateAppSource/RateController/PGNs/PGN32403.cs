@@ -14,6 +14,7 @@ namespace RateController.PGNs
         public string Label = "";
         public byte InoType;
         public ushort InoID;        // ddmmy, no leading 0
+        public byte BuildFlags;     // bit 0 = ISOBUS build (Teensy, from InoID 20116); 0 when not reported
         public DateTime LastHeard;
         public IPAddress IP;        // where its last report came from; null over CAN
 
@@ -62,7 +63,10 @@ namespace RateController.PGNs
         public string ShortMAC => "…" + ((MAC >> 16) & 0xFF).ToString("X2") + ":"
             + ((MAC >> 8) & 0xFF).ToString("X2") + ":" + (MAC & 0xFF).ToString("X2");
 
-        public string TypeName => (Enum.GetName(typeof(ModuleTypes), InoType) ?? "").Replace('_', ' ');
+        public bool IsIsobus => (BuildFlags & 1) != 0;
+
+        public string TypeName => (Enum.GetName(typeof(ModuleTypes), InoType) ?? "").Replace('_', ' ')
+            + (IsIsobus ? " ISOBUS" : "");
 
         // the board as the user sees it: type, end of the MAC, and its label when it has one
         public string Text => TypeName + " " + ShortMAC + (Label.Length > 0 ? " " + Label : "");
@@ -87,10 +91,13 @@ namespace RateController.PGNs
         //25    InoType
         //26    InoID lo
         //27    InoID hi
-        //28    CRC
+        //28    CRC, or build flags (bit 0 = ISOBUS build) in a 30-byte report
+        //29    CRC (30-byte report: Teensy from InoID 20116)
+        // The CRC is always the last byte. A 29-byte report has no build flags (0).
         // A shorter report (20 bytes, no MAC/type/firmware) is old firmware: rejected.
 
         private const byte cByteCount = 29;
+        private const byte cFlagsByteCount = 30;
         private const byte cOldByteCount = 20;
         private const byte HeaderHi = 126;
         private const byte HeaderLo = 147;
@@ -146,6 +153,7 @@ namespace RateController.PGNs
                             Brd.Label = ReadLabel(Data);
                             Brd.InoType = Data[25];
                             Brd.InoID = inoID;
+                            Brd.BuildFlags = Data.Length >= cFlagsByteCount ? Data[28] : (byte)0;
                             Brd.LastHeard = DateTime.Now;
                             Brd.IP = From;
                         }

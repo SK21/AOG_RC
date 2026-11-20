@@ -1001,6 +1001,12 @@
   <data name="lgFwOlder" xml:space="preserve">
     <value>Файл старее прошивки платы.</value>
   </data>
+  <data name="lgFwToIsobus" xml:space="preserve">
+    <value>Этот файл — версия ISOBUS. На плате работает обычная версия.</value>
+  </data>
+  <data name="lgFwToNormal" xml:space="preserve">
+    <value>Этот файл — обычная версия. На плате работает версия ISOBUS.</value>
+  </data>
   <data name="lgFwDateUnknown" xml:space="preserve">
     <value>Дата файла неизвестна.</value>
   </data>

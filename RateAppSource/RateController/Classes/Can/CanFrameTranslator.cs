@@ -323,7 +323,7 @@ namespace RateController.Classes.Can
             // waits for the node's label frames and its 0xFF08 (every 500 ms)
             if (src.Last0xFF08 == null || src.Last0xFF14 == null || src.Last0xFF15 == null || src.Last0xFF16 == null) return;
 
-            // PGN 32403 (29 bytes): header 0x93 0x7E
+            // PGN 32403 (30 bytes): header 0x93 0x7E
             //  [2]     moduleId   ← f18[0] (full ID, 25 = unassigned)
             //  [3-9]   chars 0-6  ← f14[1-7]
             //  [10-16] chars 7-13 ← f15[1-7]
@@ -331,8 +331,9 @@ namespace RateController.Classes.Can
             //  [19-24] MAC        ← f18[1-6]
             //  [25]    InoType    ← f08[1]
             //  [26-27] InoID      ← f08[2-3]
-            //  [28]    CRC
-            var pgn = new byte[29];
+            //  [28]    build flags← f08[5] (bit 0 = ISOBUS build; 0 from firmware before InoID 20116)
+            //  [29]    CRC
+            var pgn = new byte[30];
             pgn[0] = 0x93;
             pgn[1] = 0x7E;
             pgn[2] = f18[0];
@@ -344,7 +345,8 @@ namespace RateController.Classes.Can
             pgn[25] = src.Last0xFF08[1];
             pgn[26] = src.Last0xFF08[2];
             pgn[27] = src.Last0xFF08[3];
-            pgn[28] = CalcCrc(pgn, 28);
+            pgn[28] = src.Last0xFF08[5];
+            pgn[29] = CalcCrc(pgn, 29);
 
             PGN32403Ready?.Invoke(this, new PgnAssembledEventArgs(pgn));
         }

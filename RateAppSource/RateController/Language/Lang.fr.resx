@@ -1001,6 +1001,12 @@ Le module ne régule plus jusqu'à la fin de la mise à jour.</value>
   <data name="lgFwOlder" xml:space="preserve">
     <value>Le fichier est plus ancien que le firmware de la carte.</value>
   </data>
+  <data name="lgFwToIsobus" xml:space="preserve">
+    <value>Ce fichier est la version ISOBUS. La carte utilise la version normale.</value>
+  </data>
+  <data name="lgFwToNormal" xml:space="preserve">
+    <value>Ce fichier est la version normale. La carte utilise la version ISOBUS.</value>
+  </data>
   <data name="lgFwDateUnknown" xml:space="preserve">
     <value>La date du fichier est inconnue.</value>
   </data>

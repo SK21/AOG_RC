@@ -107,15 +107,26 @@ namespace RateController.Classes
             return Result;
         }
 
-        // The firmware identity tag (FwTag in RCteensy.ino): "RCFWID01", InoType, InoID lo, InoID hi.
+        // first firmware date (yyyymmdd) whose tag carries the build flags byte
+        public const int TagFlagsDate = 20261120;
+
+        // The firmware identity tag (FwTag in RCteensy.ino): "RCFWID01", InoType, InoID lo, InoID hi,
+        // then build flags (bit 0 = ISOBUS build) in tags from TagFlagsDate on; older tags have no
+        // flags byte, so it is read only by date (Flags 0 otherwise).
         // Searched in the program bytes rebuilt by address from the records; a run of records that
         // isn't contiguous starts a new search, so a match never spans a gap. False when there is none
         // (another kind of firmware, or a rate build from before the tag).
         public static bool FindTag(List<byte[]> Records, out byte Type, out ushort InoID)
         {
+            return FindTag(Records, out Type, out InoID, out _);
+        }
+
+        public static bool FindTag(List<byte[]> Records, out byte Type, out ushort InoID, out byte Flags)
+        {
             bool Result = false;
             Type = 0;
             InoID = 0;
+            Flags = 0;
             byte[] Magic = { (byte)'R', (byte)'C', (byte)'F', (byte)'W', (byte)'I', (byte)'D', (byte)'0', (byte)'1' };
             var Run = new List<byte>();
             long Base = 0;
@@ -128,7 +139,7 @@ namespace RateController.Classes
                     long Addr = Base + ((R[1] << 8) | R[2]);
                     if (Addr != Next)
                     {
-                        Result = SearchTag(Run, Magic, ref Type, ref InoID);
+                        Result = SearchTag(Run, Magic, ref Type, ref InoID, ref Flags);
                         Run.Clear();
                     }
                     for (int i = 0; i < R[0]; i++) Run.Add(R[4 + i]);
@@ -143,11 +154,11 @@ namespace RateController.Classes
                     Base = (long)((R[4] << 8) | R[5]) << 4;
                 }
             }
-            if (!Result) Result = SearchTag(Run, Magic, ref Type, ref InoID);
+            if (!Result) Result = SearchTag(Run, Magic, ref Type, ref InoID, ref Flags);
             return Result;
         }
 
-        private static bool SearchTag(List<byte> Run, byte[] Magic, ref byte Type, ref ushort InoID)
+        private static bool SearchTag(List<byte> Run, byte[] Magic, ref byte Type, ref ushort InoID, ref byte Flags)
         {
             bool Result = false;
             for (int i = 0; !Result && i + Magic.Length + 3 <= Run.Count; i++)
@@ -158,6 +169,7 @@ namespace RateController.Classes
                 {
                     Type = Run[i + 8];
                     InoID = (ushort)(Run[i + 9] | (Run[i + 10] << 8));
+                    if (PGN32403.InoDate(InoID) >= TagFlagsDate && i + 11 < Run.Count) Flags = Run[i + 11];
                     Result = true;
                 }
             }

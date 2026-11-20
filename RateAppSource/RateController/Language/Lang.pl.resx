@@ -1001,6 +1001,12 @@ Moduł nie steruje do końca aktualizacji.</value>
   <data name="lgFwOlder" xml:space="preserve">
     <value>Plik jest starszy niż oprogramowanie płytki.</value>
   </data>
+  <data name="lgFwToIsobus" xml:space="preserve">
+    <value>Ten plik to wersja ISOBUS. Na płytce działa wersja standardowa.</value>
+  </data>
+  <data name="lgFwToNormal" xml:space="preserve">
+    <value>Ten plik to wersja standardowa. Na płytce działa wersja ISOBUS.</value>
+  </data>
   <data name="lgFwDateUnknown" xml:space="preserve">
     <value>Data pliku jest nieznana.</value>
   </data>

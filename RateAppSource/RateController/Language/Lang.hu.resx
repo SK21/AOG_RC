@@ -1004,6 +1004,12 @@ A modul a frissítés végéig nem szabályoz.</value>
   <data name="lgFwOlder" xml:space="preserve">
     <value>A fájl régebbi, mint a panel firmware-je.</value>
   </data>
+  <data name="lgFwToIsobus" xml:space="preserve">
+    <value>Ez a fájl az ISOBUS változat. A panelen a normál változat fut.</value>
+  </data>
+  <data name="lgFwToNormal" xml:space="preserve">
+    <value>Ez a fájl a normál változat. A panelen az ISOBUS változat fut.</value>
+  </data>
   <data name="lgFwDateUnknown" xml:space="preserve">
     <value>A fájl dátuma ismeretlen.</value>
   </data>

@@ -2696,7 +2696,25 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgFwOlder", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to This file is the ISOBUS build. The board runs the normal build..
+        /// </summary>
+        internal static string lgFwToIsobus {
+            get {
+                return ResourceManager.GetString("lgFwToIsobus", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This file is the normal build. The board runs the ISOBUS build..
+        /// </summary>
+        internal static string lgFwToNormal {
+            get {
+                return ResourceManager.GetString("lgFwToNormal", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to The file's date is unknown..
         /// </summary>

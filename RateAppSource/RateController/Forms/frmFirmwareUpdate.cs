@@ -107,7 +107,8 @@ namespace RateController.Forms
             bool Tagged = false;
             byte FileType = 0;
             ushort FileID = 0;
-            if (Records != null) Tagged = FirmwareUpdater.FindTag(Records, out FileType, out FileID);
+            byte FileFlags = 0;
+            if (Records != null) Tagged = FirmwareUpdater.FindTag(Records, out FileType, out FileID, out FileFlags);
 
             if (Records == null)
             {
@@ -137,6 +138,13 @@ namespace RateController.Forms
                 else if (Brd != null && FileDate < PGN32403.InoDate(Brd.InoID))
                 {
                     Text += "\n\n" + Lang.lgFwOlder;
+                }
+
+                // the other build (normal / ISOBUS): allowed, the user switches on purpose
+                bool FileIsobus = (FileFlags & 1) != 0;
+                if (Brd != null && FileIsobus != Brd.IsIsobus)
+                {
+                    Text += "\n\n" + (FileIsobus ? Lang.lgFwToIsobus : Lang.lgFwToNormal);
                 }
 
                 if (Confirm(Text)) await RunUpdate(Records, Brd);

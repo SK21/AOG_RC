@@ -1002,6 +1002,12 @@ Das Modul regelt nicht, bis das Update fertig ist.</value>
   <data name="lgFwOlder" xml:space="preserve">
     <value>Die Datei ist älter als die Firmware der Platine.</value>
   </data>
+  <data name="lgFwToIsobus" xml:space="preserve">
+    <value>Diese Datei ist die ISOBUS-Version. Auf der Platine läuft die normale Version.</value>
+  </data>
+  <data name="lgFwToNormal" xml:space="preserve">
+    <value>Diese Datei ist die normale Version. Auf der Platine läuft die ISOBUS-Version.</value>
+  </data>
   <data name="lgFwDateUnknown" xml:space="preserve">
     <value>Das Datum der Datei ist unbekannt.</value>
   </data>
