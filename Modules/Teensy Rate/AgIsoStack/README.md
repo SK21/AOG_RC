@@ -13,10 +13,15 @@ window stays open at the end so its result can be read.
 
 ## Install the library: `MakeLib.bat` (this folder)
 
-Double-click it, once per PC (again only when the tested commit changes). It gets AgIsoStack++
-at the tested commit into `D:\Temp\AgIsoStack-plus-plus` (`%TEMP%` when there is no `D:\Temp`)
-and installs the library into the Arduino sketchbook's `libraries\AgIsoStack`, the sketchbook
-the Arduino IDE uses. Restart the Arduino IDE or Visual Micro afterwards.
+Double-click it. When the installed library is already from the tested commit (`PINNED` in
+`make_lib.sh`) it does nothing. Otherwise it gets AgIsoStack++ at that commit into
+`D:\Temp\AgIsoStack-plus-plus` (`%TEMP%` when there is no `D:\Temp`), installs the library into
+the Arduino sketchbook's `libraries\AgIsoStack` (the sketchbook the Arduino IDE uses), and
+deletes the download again. `D:\Temp` can be cleared any time. Restart the Arduino IDE or Visual
+Micro after an install. `MakeLib.bat /force` reinstalls even when the library is current;
+`MakeLib.bat [/force] <checkout>` uses an AgIsoStack++ checkout of your own (kept).
+
+`BuildRelease.bat` stops at once when the library is missing or from another commit.
 
 By hand in Git Bash: `make_lib.sh <AgIsoStack++ checkout> [library folder]`; without the
 second argument the library goes to `D:/Sync/Documents/Arduino/libraries/AgIsoStack`.

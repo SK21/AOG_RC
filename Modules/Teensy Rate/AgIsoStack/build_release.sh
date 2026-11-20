@@ -33,7 +33,13 @@ fail() { echo "build_release: $*"; exit 1; }
 grep -q '^#define ISOBUS_ENABLED 0' "$SKETCH/RCteensy.ino" || fail "RCteensy.ino must have #define ISOBUS_ENABLED 0 (the normal build is made from the sketch as it is)"
 
 SKETCHBOOK=$(grep '^sketchbook.path=' "$PREFS" | cut -d= -f2- | tr -d '\r')
-[ -f "$(cygpath -u "$SKETCHBOOK")/libraries/AgIsoStack/src/AgIsoStack.hpp" ] || fail "AgIsoStack library not installed in $SKETCHBOOK\\libraries (run make_lib.sh)"
+LIB="$(cygpath -u "$SKETCHBOOK")/libraries/AgIsoStack"
+[ -f "$LIB/src/AgIsoStack.hpp" ] || fail "AgIsoStack library not installed in $SKETCHBOOK\\libraries. Run AgIsoStack\\MakeLib.bat first."
+
+# the library must be from the tested commit: library.properties "sentence=AgIsoStack++ <commit> ..."
+PINNED=$(grep '^PINNED=' "$HERE/make_lib.sh" | cut -d= -f2 | awk '{print $1}')
+INSTALLED=$(grep '^sentence=' "$LIB/library.properties" 2>/dev/null | tr -d '\r' | awk '{print $2}')
+[ "$INSTALLED" = "$PINNED" ] || fail "the AgIsoStack library is from ${INSTALLED:-an unknown commit}, the tested commit is $PINNED. Run AgIsoStack\\MakeLib.bat first."
 
 # only this script's files: a failed build must not leave an older hex looking current
 mkdir -p "$OUT"

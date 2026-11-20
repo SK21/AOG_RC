@@ -1,13 +1,23 @@
 @echo off
 rem Installs the AgIsoStack library that RCteensy ISOBUS builds need. Double-click to run.
-rem Gets AgIsoStack++ at the tested commit (PINNED in make_lib.sh) into
-rem D:\Temp\AgIsoStack-plus-plus (or %TEMP%\AgIsoStack-plus-plus when D:\Temp doesn't exist),
-rem or uses the AgIsoStack++ checkout given as an argument, and installs the library into the
-rem Arduino sketchbook's libraries folder. Needs Git for Windows (Git Bash) and the Arduino IDE.
+rem Does nothing when the installed library is already at the tested commit (PINNED in
+rem make_lib.sh). Otherwise gets AgIsoStack++ at that commit into D:\Temp\AgIsoStack-plus-plus
+rem (or %TEMP%\AgIsoStack-plus-plus when D:\Temp doesn't exist), installs the library into the
+rem Arduino sketchbook's libraries folder, and deletes the download again.
+rem   MakeLib.bat /force          reinstall even when the installed library is current
+rem   MakeLib.bat [/force] <dir>  use this AgIsoStack++ checkout instead (it is not deleted)
+rem Needs Git for Windows (Git Bash) and the Arduino IDE.
 setlocal
 
+rem before the shift below, which also moves %0
 set "HERE=%~dp0"
 set "SCRIPT=%HERE:\=/%make_lib.sh"
+
+set "FORCE="
+if /i "%~1"=="/force" (
+	set "FORCE=1"
+	shift
+)
 
 set "GITDIR="
 if exist "%ProgramFiles%\Git\bin\bash.exe" set "GITDIR=%ProgramFiles%\Git"
@@ -34,13 +44,30 @@ if not defined SKETCHBOOK (
 	echo Arduino sketchbook not found. Open the Arduino IDE once, then run this again.
 	goto done
 )
+set "LIB=%SKETCHBOOK%\libraries\AgIsoStack"
 
+rem the commit the installed library was made from: library.properties "sentence=AgIsoStack++ <commit> ..."
+set "INSTALLED="
+if exist "%LIB%\library.properties" (
+	for /f "tokens=2" %%C in ('findstr /b "sentence=" "%LIB%\library.properties"') do set "INSTALLED=%%C"
+)
+if "%INSTALLED%"=="%PINNED%" if not defined FORCE (
+	echo AgIsoStack %PINNED% is already installed in %LIB%
+	echo Nothing to do. Use MakeLib.bat /force to reinstall it.
+	goto done
+)
+
+rem a checkout given by the user is kept; the default download is deleted after the install
+set "OWNSRC="
 if not "%~1"=="" (
 	set "SRC=%~f1"
-) else if exist "D:\Temp\" (
-	set "SRC=D:\Temp\AgIsoStack-plus-plus"
 ) else (
-	set "SRC=%TEMP%\AgIsoStack-plus-plus"
+	set "OWNSRC=1"
+	if exist "D:\Temp\" (
+		set "SRC=D:\Temp\AgIsoStack-plus-plus"
+	) else (
+		set "SRC=%TEMP%\AgIsoStack-plus-plus"
+	)
 )
 
 if not exist "%SRC%\.git\" (
@@ -59,12 +86,16 @@ if errorlevel 1 (
 	goto done
 )
 
-set "LIB=%SKETCHBOOK%\libraries\AgIsoStack"
 echo Installing the library into %LIB%
 "%BASH%" "%SCRIPT%" "%SRC:\=/%" "%LIB:\=/%"
 if errorlevel 1 (
 	echo The library was not installed. See the message above.
 	goto done
+)
+
+if defined OWNSRC (
+	echo Deleting the download %SRC%
+	rmdir /s /q "%SRC%"
 )
 echo.
 echo Done. Restart the Arduino IDE or Visual Micro to pick up the library.
