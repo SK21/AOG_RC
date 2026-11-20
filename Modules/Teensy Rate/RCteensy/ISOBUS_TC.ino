@@ -4,16 +4,23 @@
 // commands, it switches the sections (condensed work state, DDI 161) and sets product 1's
 // rate in L/ha (DDI 1), which becomes Sensor[0].TargetUPM from speed and active width.
 //
+// Command authority (ISOBUS_Path_Forward.md "Command authority"):
+// - RC: at power-up and after a TC session. RC's rate and relay commands apply, as today.
+//   A connected TC is not a command source.
+// - TC: from the TC's first section or rate value command. RC's rate and relay commands
+//   (0xFF03/0xFF04, UDP 32500/32501) are ignored for the whole module. Entering clears every
+//   target, master and the sections; only product 1 (Sensor[0]) is driven, in auto, and only
+//   its comm time is kept fresh, so products 2-6 stop and then go to comm loss.
+// - Back to RC when the TC disconnects: everything cleared and every sensor's comm time
+//   expired, so the module is in RC's comm-loss state at once until RC's next command.
+// Config, telemetry and firmware update are never blocked.
+//
 // Changed from RC11-isobus:
-// - no output is touched while the TC isn't commanding; when it stops, sections, master and
-//   the TC's target are cleared once (RC11-isobus cleared them every loop, which would stop
-//   RC's own control on a board with no terminal)
-// - RC's per-sensor AutoOn[0] decides auto/manual (RC11-isobus had one Machine.AutoOn)
+// - no output is touched while the TC isn't commanding (RC11-isobus cleared them every loop,
+//   which would stop RC's own control on a board with no terminal)
 // - the TC's target rate is kept in RAM only (the TC sends it again); section geometry is
 //   stored in EEPROM at TCsettingsAddr (RC11-isobus used 640, inside mainline's sensors 3-6)
-// - no VT client yet (Phase E run screen)
-// Not yet: RC commands (0xFF03/0xFF04, UDP) are not blocked while the TC commands; command
-// authority is still to be decided.
+// - no VT client yet (Phase E run screen); no manual mode from the terminal yet
 
 #if ISOBUS_ENABLED
 
@@ -46,7 +53,7 @@ extern uint8_t NewLo;	// Relays.ino: outputs actually driven (that file comes la
 extern uint8_t NewHi;
 
 std::shared_ptr<isobus::TaskControllerClient> ISOBUStc;
-bool TC_SectionControlActive = false;
+bool TC_InCommand = false;			// command authority: true = TC, false = RC
 bool TC_DDOPNeedsReupload = false;
 uint32_t TC_LastReport = 0;
 uint32_t TC_ProcessDataReadyAt = 0;
@@ -109,18 +116,59 @@ void TC_UpdateConnectionState()
 	TC_WasConnected = connected;
 }
 
-// keeps the sensors "connected" (RC's 4 s comm-loss rule) while the TC commands
-void TC_RefreshCommandTime()
+// true while the TC has command authority: RC's rate and relay commands are ignored
+// (CANBus.ino 0xFF03/0xFF04, Receive.ino 32500/32501)
+bool TC_Commanding()
 {
+	return TC_InCommand;
+}
+
+// every target, master and the sections cleared: no command from the old source survives
+void TC_ClearCommands()
+{
+	RelayLo = 0;
+	RelayHi = 0;
+	MasterOn = false;
+	TC_TargetRateLHa = 0.0f;
 	for (uint8_t i = 0; i < MDL.SensorCount; i++)
 	{
-		Sensor[i].CommTime = millis();
+		Sensor[i].TargetUPM = 0.0f;
+		Sensor[i].ManualAdjust = 0;
+		AutoOn[i] = true;		// auto at target 0 applies nothing
+		CalibrationOn[i] = false;
 	}
 }
 
-bool TC_AutoMode()
+// the TC's first value command: authority RC -> TC
+void TC_EnterCommand()
 {
-	return (MDL.SensorCount == 0) || AutoOn[0];
+	if (!TC_InCommand)
+	{
+		TC_ClearCommands();
+		TC_InCommand = true;
+		Serial.println(F("TC: commanding, RC rate and relay commands ignored."));
+	}
+}
+
+// TC lost: authority TC -> RC, in RC's comm-loss state until RC's next command
+void TC_LeaveCommand()
+{
+	if (TC_InCommand)
+	{
+		TC_ClearCommands();
+		for (uint8_t i = 0; i < MDL.SensorCount; i++)
+		{
+			Sensor[i].CommTime = millis() - 5000;	// older than the 4 s comm-loss limit
+		}
+		TC_InCommand = false;
+		Serial.println(F("TC: stopped commanding, back to RC."));
+	}
+}
+
+// keeps product 1 "connected" (RC's 4 s comm-loss rule) while the TC commands
+void TC_RefreshCommandTime()
+{
+	if (MDL.SensorCount > 0) Sensor[0].CommTime = millis();
 }
 
 float TC_ActiveWidthM()
@@ -199,22 +247,20 @@ void TC_ReportActualSectionState(bool force)
 
 void TC_ApplyCondensedWorkState(int32_t value)
 {
-	if (TC_AutoMode())
+	TC_EnterCommand();
+	byte Lo = 0;
+	byte Hi = 0;
+	for (uint8_t i = 0; i < TCset.SectionCount; i++)
 	{
-		byte Lo = 0;
-		byte Hi = 0;
-		for (uint8_t i = 0; i < TCset.SectionCount; i++)
+		if (((value >> (i * 2)) & 0x03) == 0x01)
 		{
-			if (((value >> (i * 2)) & 0x03) == 0x01)
-			{
-				if (i < 8) bitSet(Lo, i); else bitSet(Hi, i - 8);
-			}
+			if (i < 8) bitSet(Lo, i); else bitSet(Hi, i - 8);
 		}
-		RelayLo = Lo;
-		RelayHi = Hi;
-		MasterOn = (RelayLo > 0 || RelayHi > 0);
-		TC_RefreshCommandTime();
 	}
+	RelayLo = Lo;
+	RelayHi = Hi;
+	MasterOn = (RelayLo > 0 || RelayHi > 0);
+	TC_RefreshCommandTime();
 	TC_ReportActualSectionState(true);
 }
 
@@ -264,8 +310,9 @@ bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 		}
 		else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointVolumePerAreaApplicationRate))
 		{
-			// in manual mode the rate is RC's manual setting; the TC's target is not used
-			if (TC_AutoMode()) TC_TargetRateLHa = TC_ValueToLHa(value);
+			TC_EnterCommand();
+			TC_TargetRateLHa = TC_ValueToLHa(value);
+			TC_RefreshCommandTime();
 			Result = true;
 		}
 	}
@@ -348,23 +395,16 @@ void TC_Update()
 	ISOBUStc->update();
 	TC_UpdateConnectionState();
 
-	bool Active = TC_ProcessDataReady() && TC_AutoMode();
-	if (Active)
+	if (!TC_ProcessDataReady())
 	{
+		TC_LeaveCommand();		// does nothing unless the TC was commanding
+	}
+	else if (TC_InCommand)
+	{
+		// the TC's rate becomes product 1's target as speed and active width change
 		TC_RefreshCommandTime();
 		if (MDL.SensorCount > 0) Sensor[0].TargetUPM = TC_TargetUPM();
 	}
-	else if (TC_SectionControlActive)
-	{
-		// the TC stopped commanding (lost, task ended or RC switched to manual): clear once
-		RelayLo = 0;
-		RelayHi = 0;
-		MasterOn = false;
-		TC_TargetRateLHa = 0.0f;
-		if (MDL.SensorCount > 0) Sensor[0].TargetUPM = 0.0f;
-		Serial.println(F("TC: stopped commanding, sections and target cleared."));
-	}
-	TC_SectionControlActive = Active;
 
 	if (TC_DDOPNeedsReupload && ISOBUStc->get_is_connected())
 	{

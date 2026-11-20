@@ -50,8 +50,10 @@ void SPEED_Update()
 	{
 		SPEED_SetKmh(wheelBased->get_machine_speed() * 0.0036f, SPEED_SOURCE_WHEEL);
 	}
-	else if (millis() - ISOBUSspeedLastMs > ISOBUS_SPEED_TIMEOUT_MS)
+	else
 	{
+		// AgIsoStack drops a speed message once it is stale: missing speed is no speed,
+		// never the last value (ISOBUS_Path_Forward.md "Speed source")
 		ISOBUSspeedKmh = 0.0f;
 		ISOBUSspeedSource = SPEED_SOURCE_NONE;
 	}

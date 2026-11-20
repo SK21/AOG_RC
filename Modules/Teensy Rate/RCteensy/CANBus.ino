@@ -450,7 +450,11 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	uint8_t modId = msg.buf[0] & 0x0F;
 	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
+#if ISOBUS_ENABLED
+	if (modId != MDL.ID || TC_Commanding()) return;  // Not for us, or the TC commands (ISOBUS_TC.ino)
+#else
 	if (modId != MDL.ID) return;  // Not for us
+#endif
 	if (senId >= MaxProductCount) return;
 
 	// Parse rate setpoint (matches UDP PGN 32500 format: 1000 X actual)
@@ -478,7 +482,11 @@ void CANBus_HandleRelayCommand(const CAN_message_t& msg) {
 	// PGN 0xFF04 - Relay Command from Gateway
 	// Matches UDP PGN 32501 format
 	uint8_t modId = msg.buf[0] & 0x0F;
+#if ISOBUS_ENABLED
+	if (modId != MDL.ID || TC_Commanding()) return;  // or the TC commands (ISOBUS_TC.ino)
+#else
 	if (modId != MDL.ID) return;
+#endif
 
 	RelayLo = msg.buf[1];
 	RelayHi = msg.buf[2];

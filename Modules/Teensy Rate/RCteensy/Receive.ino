@@ -95,7 +95,11 @@ void ReadPGNs(byte data[], uint16_t len)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
+#if ISOBUS_ENABLED
+				if (ParseModID(data[2]) == MDL.ID && !TC_Commanding())	// ignored while the TC commands (ISOBUS_TC.ino)
+#else
 				if (ParseModID(data[2]) == MDL.ID)
+#endif
 				{
 					byte SensorID = ParseSenID(data[2]);
 					if (SensorID < MDL.SensorCount)
@@ -157,7 +161,11 @@ void ReadPGNs(byte data[], uint16_t len)
 		{
 			if (GoodCRC(data, PGNlength))
 			{
+#if ISOBUS_ENABLED
+				if (ParseModID(data[2]) == MDL.ID && !TC_Commanding())	// ignored while the TC commands (ISOBUS_TC.ino)
+#else
 				if (ParseModID(data[2]) == MDL.ID)
+#endif
 				{
 					RelayLo = data[3];
 					RelayHi = data[4];
