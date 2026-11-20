@@ -317,7 +317,14 @@ bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 		else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointVolumePerAreaApplicationRate))
 		{
 			TC_EnterCommand();
-			TC_TargetRateLHa = TC_ValueToLHa(value);
+			float NewRate = TC_ValueToLHa(value);
+			if (NewRate != TC_TargetRateLHa)
+			{
+				Serial.print(F("TC: rate "));
+				Serial.print(NewRate, 2);
+				Serial.println(F(" L/ha"));
+			}
+			TC_TargetRateLHa = NewRate;
 			TC_RefreshCommandTime();
 			Result = true;
 		}
@@ -333,9 +340,10 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 
 	auto ddop = std::make_shared<isobus::DeviceDescriptorObjectPool>(4);
 	std::array<std::uint8_t, isobus::task_controller_object::DeviceObject::MAX_STRUCTURE_AND_LOCALIZATION_LABEL_LENGTH> localization = { 'e','n',0,0,0,0,0xFF };
-	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','0','4' };
+	// change the structure label whenever the DDOP's structure changes, so a TC reloads it
+	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','0','5' };
 
-	ddop->add_device(InoDescription, String(InoID).c_str(), String(MDL.ID).c_str(), "RCTC004", localization, extendedLabel, ISOBUSicf->get_NAME().get_full_name());
+	ddop->add_device(InoDescription, String(InoID).c_str(), String(MDL.ID).c_str(), "RCTC005", localization, extendedLabel, ISOBUSicf->get_NAME().get_full_name());
 	ddop->add_device_element("Boom", TC_ELEMENT_BOOM, 0, DeviceElementType::Function, TC_OBJ_BOOM);
 
 	const uint8_t settable = static_cast<std::uint8_t>(PropertiesBit::MemberOfDefaultSet) | static_cast<std::uint8_t>(PropertiesBit::Settable);
@@ -367,7 +375,8 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 		char name[12];
 		snprintf(name, sizeof(name), "Sec %02u", i + 1);
 
-		ddop->add_device_element(name, i + 1, TC_OBJ_BOOM, DeviceElementType::Section, sectionObjectID);
+		// element numbers are unique in the DDOP: the device is 0, the boom 1, sections from 2
+		ddop->add_device_element(name, TC_ELEMENT_BOOM + 1 + i, TC_OBJ_BOOM, DeviceElementType::Section, sectionObjectID);
 		ddop->add_device_property("Width", static_cast<std::int32_t>(TCset.SectionWidthCm[i]) * 10, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::DefaultWorkingWidth), TC_OBJ_DVP_WIDTH, widthPropertyID);
 
 		auto section = std::static_pointer_cast<isobus::task_controller_object::DeviceElementObject>(ddop->get_object_by_id(sectionObjectID));
