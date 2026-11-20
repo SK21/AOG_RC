@@ -3,15 +3,24 @@
 #   RCteensy.ino.hex     normal build (ISOBUS_ENABLED 0, as in the repo)
 #   RCteensy_ISOBUS.hex  ISOBUS build (a temporary copy of the sketch with ISOBUS_ENABLED 1)
 # The working copy is not changed. The ISOBUS build needs the AgIsoStack library (make_lib.sh).
+# Usually started from BuildRelease.bat in the Teensy Rate folder.
 #
-# Usage: build_release.sh [output folder]     (default: %TEMP%\RCteensy_release)
+# Usage: build_release.sh [output folder]
+#   default: D:\Temp\RCteensy_release, or %TEMP%\RCteensy_release when D:\Temp doesn't exist.
+#   Only this script's own files in the folder are replaced; anything else there is left alone.
 
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 SKETCH="$(cd "$HERE/../RCteensy" && pwd)"
 REPO_HEX="$HERE/../RCteensy.ino.hex"
-OUT="${1:-$(cygpath -u "$TEMP")/RCteensy_release}"
+if [ -n "${1:-}" ]; then
+	OUT="$(cygpath -u "$1")"
+elif [ -d /d/Temp ]; then
+	OUT="/d/Temp/RCteensy_release"
+else
+	OUT="$(cygpath -u "$TEMP")/RCteensy_release"
+fi
 
 ARDUINO="/c/Program Files (x86)/Arduino/arduino_debug.exe"
 OBJCOPY="/c/Program Files (x86)/Arduino/hardware/tools/arm/bin/arm-none-eabi-objcopy.exe"
@@ -26,9 +35,11 @@ grep -q '^#define ISOBUS_ENABLED 0' "$SKETCH/RCteensy.ino" || fail "RCteensy.ino
 SKETCHBOOK=$(grep '^sketchbook.path=' "$PREFS" | cut -d= -f2- | tr -d '\r')
 [ -f "$(cygpath -u "$SKETCHBOOK")/libraries/AgIsoStack/src/AgIsoStack.hpp" ] || fail "AgIsoStack library not installed in $SKETCHBOOK\\libraries (run make_lib.sh)"
 
-rm -rf "$OUT"
+# only this script's files: a failed build must not leave an older hex looking current
 mkdir -p "$OUT"
 WORK="$OUT/work"
+rm -f "$OUT/RCteensy.ino.hex" "$OUT/RCteensy_ISOBUS.hex" "$OUT/normal.log" "$OUT/isobus.log"
+rm -rf "$WORK"
 
 # build <sketch .ino> <build folder> <log>: true when a hex came out. arduino-builder sometimes
 # crashes on a first build (Go runtime exception), so it is retried once.

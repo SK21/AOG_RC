@@ -3,3 +3,6 @@
 
 # shell scripts run in Git Bash, which fails on CRLF line endings
 *.sh text eol=lf
+
+# batch files: cmd can misread LF-only line endings
+*.bat text eol=crlf
