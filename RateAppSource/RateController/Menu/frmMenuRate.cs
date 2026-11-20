@@ -13,12 +13,21 @@ namespace RateController.Menu
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
+        private ushort OtherDDI;            // the Other unit being edited, saved with the product
+        private double OtherFactor;
+        private string OtherName = "";
+        private int QuantityIndex = -1;     // the unit chosen before Other, put back if its dialog is cancelled
 
         public frmMenuRate(frmMenu menu)
         {
             InitializeComponent();
             MainMenu = menu;
             this.Tag = false;
+        }
+
+        private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetTCenabled();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -40,8 +49,6 @@ namespace RateController.Menu
                 // save changes
                 MainMenu.CurrentProduct.ProductName = tbProduct.Text;
                 MainMenu.CurrentProduct.ControlType = ConvertValveIndex(ValveType.SelectedIndex);
-                MainMenu.CurrentProduct.QuantityDescription = tbVolumeUnits.Text;
-
                 if (MainMenu.CurrentProduct.ControlType == ControlTypeEnum.Fan)
                 {
                     // set rate by fan
@@ -57,6 +64,20 @@ namespace RateController.Menu
                     if (double.TryParse(ProdDensity.Text, out double de)) MainMenu.CurrentProduct.ProdDensity = de;
                     if (double.TryParse(FlowCal.Text, out double fc)) MainMenu.CurrentProduct.MeterCal = fc;
                     MainMenu.CurrentProduct.CoverageUnits = Convert.ToByte(AreaUnits.SelectedIndex);
+
+                    // quantity unit: Other keeps the user's name, type and factor
+                    if (tbVolumeUnits.SelectedIndex >= 0)
+                    {
+                        QuantityUnits Unit = (QuantityUnits)tbVolumeUnits.SelectedIndex;
+                        if (Unit == QuantityUnits.Other)
+                        {
+                            MainMenu.CurrentProduct.QuantityDescription = OtherName;
+                            MainMenu.CurrentProduct.QuantityDDI = OtherDDI;
+                            MainMenu.CurrentProduct.QuantityFactor = OtherFactor;
+                        }
+                        MainMenu.CurrentProduct.QuantityUnit = Unit;
+                    }
+                    MainMenu.CurrentProduct.TCsend = ckTCsend.Checked;
                 }
                 if (double.TryParse(tbAltRate.Text, out double ar)) MainMenu.CurrentProduct.RateAlt = ar;
                 if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
@@ -328,6 +349,74 @@ namespace RateController.Menu
             AreaUnits.Items[1] = Lang.lgHectares;
             AreaUnits.Items[2] = Lang.lgMinute;
             AreaUnits.Items[3] = Lang.lgHour;
+
+            ckTCsend.Text = Lang.lgTaskController;
+            tbVolumeUnits.Items[(int)QuantityUnits.GallonsImp] = Lang.lgTCImpGallons;
+            tbVolumeUnits.Items[(int)QuantityUnits.GallonsUS] = Lang.lgTCUSGallons;
+            tbVolumeUnits.Items[(int)QuantityUnits.Litres] = Lang.lgTCLitres;
+            tbVolumeUnits.Items[(int)QuantityUnits.Tonnes] = Lang.lgTCTonnes;
+            tbVolumeUnits.Items[(int)QuantityUnits.Seeds] = Lang.lgTCSeeds;
+            tbVolumeUnits.Items[(int)QuantityUnits.Seeds1000] = Lang.lgTC1000Seeds;
+            SetOtherText();
+        }
+
+        // the Other entry shows the user's name once there is one
+        private void SetOtherText()
+        {
+            string Text = OtherName.Length > 0 ? OtherName + "..." : Lang.lgTCOther;
+            if (!Equals(tbVolumeUnits.Items[(int)QuantityUnits.Other], Text)) tbVolumeUnits.Items[(int)QuantityUnits.Other] = Text;
+        }
+
+        private void SetTCenabled()
+        {
+            // only a unit with an ISO type, and a per-area rate (acres or hectares), can go to the task controller
+            bool PerArea = AreaUnits.SelectedIndex >= 0 && AreaUnits.SelectedIndex <= 1;
+            bool HasType;
+            if (tbVolumeUnits.SelectedIndex == (int)QuantityUnits.Other)
+            {
+                HasType = OtherDDI != 0 && OtherFactor > 0;
+            }
+            else
+            {
+                HasType = tbVolumeUnits.SelectedIndex >= 0;
+            }
+            ckTCsend.Enabled = PerArea && HasType;
+        }
+
+        private void tbVolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetTCenabled();
+            SetButtons(true);
+        }
+
+        // also raised when Other is chosen again, so its dialog can edit it
+        private void tbVolumeUnits_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (tbVolumeUnits.SelectedIndex == (int)QuantityUnits.Other)
+            {
+                using (var frm = new Forms.frmQuantityUnit(OtherName, OtherDDI, OtherFactor))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.Result)
+                    {
+                        OtherName = frm.UnitName;
+                        OtherDDI = frm.UnitDDI;
+                        OtherFactor = frm.UnitFactor;
+                        QuantityIndex = (int)QuantityUnits.Other;
+                        SetOtherText();
+                        SetTCenabled();
+                        SetButtons(true);
+                    }
+                    else if (QuantityIndex >= 0 && QuantityIndex != (int)QuantityUnits.Other)
+                    {
+                        tbVolumeUnits.SelectedIndex = QuantityIndex;     // cancelled: back to the unit before
+                    }
+                }
+            }
+            else
+            {
+                QuantityIndex = tbVolumeUnits.SelectedIndex;
+            }
         }
 
         private void TankSize_Enter(object sender, EventArgs e)
@@ -481,7 +570,23 @@ namespace RateController.Menu
                 }
 
                 tbProduct.Text = MainMenu.CurrentProduct.ProductName;
-                tbVolumeUnits.Text = MainMenu.CurrentProduct.QuantityDescription;
+                clsProduct Prd = MainMenu.CurrentProduct;
+                if (Prd.QuantityUnit == QuantityUnits.Other)
+                {
+                    OtherName = Prd.QuantityDescription;
+                    OtherDDI = Prd.QuantityDDI;
+                    OtherFactor = Prd.QuantityFactor;
+                }
+                else
+                {
+                    OtherName = "";
+                    OtherDDI = 0;
+                    OtherFactor = 0;
+                }
+                SetOtherText();
+                tbVolumeUnits.SelectedIndex = (int)Prd.QuantityUnit;
+                QuantityIndex = tbVolumeUnits.SelectedIndex;
+                ckTCsend.Checked = Prd.TCsend;
                 AreaUnits.SelectedIndex = MainMenu.CurrentProduct.CoverageUnits;
                 CbUseProdDensity.Checked = MainMenu.CurrentProduct.EnableProdDensity;
                 if (!CbUseProdDensity.Checked) CbUseProdDensity_CheckedChanged(CbUseProdDensity, EventArgs.Empty);
@@ -489,6 +594,7 @@ namespace RateController.Menu
                 tbAltRate.Text = MainMenu.CurrentProduct.RateAlt.ToString("N0");
                 TankSize.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
                 ValveType.SelectedIndex = ConvertControlType(MainMenu.CurrentProduct.ControlType);
+                SetTCenabled();
 
                 if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
                 {

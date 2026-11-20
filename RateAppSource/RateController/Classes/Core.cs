@@ -34,6 +34,7 @@ namespace RateController.Classes
         public static clsSectionControl SectionControl;
         public static clsRateAdjustController RateAdjustController;
         public static clsSections Sections;
+        public static clsTaskControllerRate TCrate;
         public static PGN235 SectionsPGN;
         public static PGN32618 SwitchBox;
         public static clsTools Tls = new clsTools();
@@ -79,6 +80,7 @@ namespace RateController.Classes
                 IsShuttingDown = true;
 
                 SafeTry(() => MainTimer.Enabled = false);
+                SafeTry(() => TCrate?.Dispose());
                 SafeTry(() => UDPaog.Stop());
                 SafeTry(() => UDPmodules.Stop());
 
@@ -232,6 +234,9 @@ namespace RateController.Classes
                 MainTimer.Interval = 1000;
                 MainTimer.Tick += MainTimer_Tick;
                 MainTimer.Enabled = true;
+
+                TCrate = new clsTaskControllerRate();      // products set to a task controller unit only
+                TCrate.Start();
 
                 Props.WriteActivityLog("Started", true);
                 cStartTime = DateTime.Now;

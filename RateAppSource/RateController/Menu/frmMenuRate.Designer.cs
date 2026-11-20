@@ -38,7 +38,7 @@
             this.ProdDensity = new System.Windows.Forms.TextBox();
             this.lbSensorCounts = new System.Windows.Forms.Label();
             this.AreaUnits = new System.Windows.Forms.ComboBox();
-            this.tbVolumeUnits = new System.Windows.Forms.TextBox();
+            this.tbVolumeUnits = new System.Windows.Forms.ComboBox();
             this.TankSize = new System.Windows.Forms.TextBox();
             this.FlowCal = new System.Windows.Forms.TextBox();
             this.lb6 = new System.Windows.Forms.Label();
@@ -61,6 +61,7 @@
             this.lbTargetRPM = new System.Windows.Forms.Label();
             this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.ckTCsend = new System.Windows.Forms.CheckBox();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -179,18 +180,29 @@
             this.AreaUnits.Size = new System.Drawing.Size(176, 31);
             this.AreaUnits.TabIndex = 141;
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
             // 
             // tbVolumeUnits
             // 
+            this.tbVolumeUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tbVolumeUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbVolumeUnits.FormattingEnabled = true;
+            this.tbVolumeUnits.Items.AddRange(new object[] {
+            "Gallons (Imp)",
+            "Gallons (US)",
+            "Litres",
+            "lbs",
+            "kg",
+            "Tonnes",
+            "Seeds",
+            "1000 Seeds",
+            "Other..."});
             this.tbVolumeUnits.Location = new System.Drawing.Point(206, 114);
-            this.tbVolumeUnits.MaxLength = 15;
             this.tbVolumeUnits.Name = "tbVolumeUnits";
-            this.tbVolumeUnits.Size = new System.Drawing.Size(176, 30);
+            this.tbVolumeUnits.Size = new System.Drawing.Size(176, 31);
             this.tbVolumeUnits.TabIndex = 154;
-            this.tbVolumeUnits.Text = "Gallons";
-            this.tbVolumeUnits.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbVolumeUnits.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.tbVolumeUnits.SelectedIndexChanged += new System.EventHandler(this.tbVolumeUnits_SelectedIndexChanged);
+            this.tbVolumeUnits.SelectionChangeCommitted += new System.EventHandler(this.tbVolumeUnits_SelectionChangeCommitted);
             // 
             // TankSize
             // 
@@ -228,7 +240,23 @@
             this.lb6.Size = new System.Drawing.Size(90, 23);
             this.lb6.TabIndex = 151;
             this.lb6.Text = "Tank Size";
-            // 
+            //
+            // ckTCsend
+            //
+            this.ckTCsend.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckTCsend.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckTCsend.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckTCsend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckTCsend.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckTCsend.Location = new System.Drawing.Point(88, 476);
+            this.ckTCsend.Name = "ckTCsend";
+            this.ckTCsend.Size = new System.Drawing.Size(220, 34);
+            this.ckTCsend.TabIndex = 165;
+            this.ckTCsend.Text = "Task Controller";
+            this.ckTCsend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckTCsend.UseVisualStyleBackColor = true;
+            this.ckTCsend.CheckedChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            //
             // tbAltRate
             // 
             this.tbAltRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -455,9 +483,10 @@
             this.pnlMain.Controls.Add(this.FlowCal);
             this.pnlMain.Controls.Add(this.tbVolumeUnits);
             this.pnlMain.Controls.Add(this.TankSize);
+            this.pnlMain.Controls.Add(this.ckTCsend);
             this.pnlMain.Location = new System.Drawing.Point(71, 75);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(396, 480);
+            this.pnlMain.Size = new System.Drawing.Size(396, 522);
             this.pnlMain.TabIndex = 164;
             // 
             // btnRight
@@ -567,7 +596,7 @@
         private System.Windows.Forms.TextBox ProdDensity;
         private System.Windows.Forms.Label lbSensorCounts;
         private System.Windows.Forms.ComboBox AreaUnits;
-        private System.Windows.Forms.TextBox tbVolumeUnits;
+        private System.Windows.Forms.ComboBox tbVolumeUnits;
         private System.Windows.Forms.TextBox TankSize;
         private System.Windows.Forms.TextBox FlowCal;
         private System.Windows.Forms.Label lb6;
@@ -592,6 +621,7 @@
         private System.Windows.Forms.Label lbTargetRPM;
         private System.Windows.Forms.TextBox tbTargetRPM;
         private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.CheckBox ckTCsend;
         private System.Windows.Forms.Timer timer1;
     }
 }

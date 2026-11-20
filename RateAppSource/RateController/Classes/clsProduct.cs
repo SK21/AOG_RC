@@ -46,6 +46,10 @@ namespace RateController.Classes
         private int cSensorSettingsID = -1;
         private double cSessionTotalHectares = 0;
         private double cTankSize = 0;
+        private QuantityUnits cQuantityUnit = QuantityUnits.Other;
+        private ushort cQuantityDDI = 0;        // Other only: ISO rate DDI, 0 = none
+        private double cQuantityFactor = 0;     // Other only: litres, kg or seeds in one unit
+        private bool cTCsend = false;           // send the target rate to the task controller
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
         private double CurrentWorkedArea_Hc = 0;
@@ -528,6 +532,84 @@ namespace RateController.Classes
             set { cTankSize = value; }
         }
 
+        // Quantity units, in QuantityUnits order: the name RC shows (QuantityDescription), the ISO rate
+        // DDI sent to a task controller (1 volume, 6 mass, 11 count per area) and how many litres, kg
+        // or seeds one unit is. RC itself only uses the name. Other: the user's own name, DDI and factor.
+        private static readonly (string Name, ushort DDI, double Factor)[] UnitTable =
+        {
+            ("Gallons", 1, 4.54609),        // Imp. gallons
+            ("Gallons", 1, 3.785411784),    // US gallons
+            ("Litres", 1, 1),
+            ("Lbs", 6, 0.45359237),
+            ("kg", 6, 1),
+            ("Tonnes", 6, 1000),
+            ("Seeds", 11, 1),
+            ("kSeeds", 11, 1000),           // 1000 seeds ("1000 Seeds" would clip to "10/ac")
+            ("", 0, 0),                     // Other
+        };
+
+        public QuantityUnits QuantityUnit
+        {
+            get { return cQuantityUnit; }
+            set
+            {
+                if ((int)value >= 0 && (int)value < UnitTable.Length)
+                {
+                    cQuantityUnit = value;
+                    if (value != QuantityUnits.Other) cQuantityDescription = UnitTable[(int)value].Name;
+                }
+            }
+        }
+
+        /// <summary>Other only: the ISO rate DDI (1, 6 or 11), 0 = none. Standard units return their own.</summary>
+        public ushort QuantityDDI
+        {
+            get { return cQuantityUnit == QuantityUnits.Other ? cQuantityDDI : UnitTable[(int)cQuantityUnit].DDI; }
+            set { if (value == 0 || value == 1 || value == 6 || value == 11) cQuantityDDI = value; }
+        }
+
+        /// <summary>Other only: litres, kg or seeds in one unit. Standard units return their own.</summary>
+        public double QuantityFactor
+        {
+            get { return cQuantityUnit == QuantityUnits.Other ? cQuantityFactor : UnitTable[(int)cQuantityUnit].Factor; }
+            set { if (value >= 0 && value <= 1000000) cQuantityFactor = value; }
+        }
+
+        public bool TCsend
+        { get { return cTCsend; } set { cTCsend = value; } }
+
+        // the unit an older profile's free-text quantity name stands for; "Gallons" is US or Imp, so Other
+        public static QuantityUnits UnitFromText(string Text)
+        {
+            QuantityUnits Result = QuantityUnits.Other;
+            switch ((Text ?? "").Trim().ToLowerInvariant())
+            {
+                case "l":
+                case "litre":
+                case "litres":
+                case "liter":
+                case "liters":
+                    Result = QuantityUnits.Litres;
+                    break;
+
+                case "lb":
+                case "lbs":
+                case "pound":
+                case "pounds":
+                    Result = QuantityUnits.Lbs;
+                    break;
+
+                case "kg":
+                    Result = QuantityUnits.Kg;
+                    break;
+
+                case "seeds":
+                    Result = QuantityUnits.Seeds;
+                    break;
+            }
+            return Result;
+        }
+
         public bool UseAltRate
         { get { return cUseAltRate; } set { cUseAltRate = value; } }
 
@@ -617,6 +699,22 @@ namespace RateController.Classes
 
             cQuantityDescription = Props.GetProp(IDname + "QuantityDescription");
             if (cQuantityDescription == "") cQuantityDescription = "Lbs";
+
+            // the unit; an older profile has only the name, which is matched and kept as it is
+            if (Enum.TryParse(Props.GetProp(IDname + "QuantityUnit"), true, out QuantityUnits qu) && Enum.IsDefined(typeof(QuantityUnits), qu))
+            {
+                cQuantityUnit = qu;
+            }
+            else
+            {
+                cQuantityUnit = UnitFromText(cQuantityDescription);
+            }
+            if (cQuantityUnit != QuantityUnits.Other) cQuantityDescription = UnitTable[(int)cQuantityUnit].Name;
+            cQuantityDDI = 0;
+            if (ushort.TryParse(Props.GetProp(IDname + "QuantityDDI"), out ushort qd)) QuantityDDI = qd;
+            cQuantityFactor = 0;
+            if (Props.TryParseNumber(Props.GetProp(IDname + "QuantityFactor"), out double qf)) QuantityFactor = qf;
+            bool.TryParse(Props.GetProp(IDname + "TCsend"), out cTCsend);
 
             Props.TryParseNumber(Props.GetProp(IDname + "RateSet"), out cRateSet);
             if (cRateSet < 0 || cRateSet > 50000) cRateSet = 0;
@@ -933,6 +1031,10 @@ namespace RateController.Classes
             Props.SetProp(IDname + "RateAlt", Props.NumberText(cRateAlt));
             Props.SetProp(IDname + "FlowCal", Props.NumberText(cMeterCal));
             Props.SetProp(IDname + "TankSize", Props.NumberText(TankSize));
+            Props.SetProp(IDname + "QuantityUnit", cQuantityUnit.ToString());
+            Props.SetProp(IDname + "QuantityDDI", cQuantityDDI.ToString());
+            Props.SetProp(IDname + "QuantityFactor", Props.NumberText(cQuantityFactor));
+            Props.SetProp(IDname + "TCsend", cTCsend.ToString());
             Props.SetProp(IDname + "ManualUPM", Props.NumberText(cManualUPM));
             Props.SetProp(IDname + "ValveType", cControlType.ToString());
 
@@ -1028,6 +1130,49 @@ namespace RateController.Classes
                     Result = cRateSet;
                     if (UseAltRate) Result *= cRateAlt * 0.01;
                 }
+            }
+            return Result;
+        }
+
+        /// <summary>True when the unit can go to a task controller: it has an ISO type and a factor,
+        /// the product is a rate product (not a fan) and the rate is per area (acres or hectares).</summary>
+        public bool TCcanSend()
+        {
+            return QuantityDDI != 0 && QuantityFactor > 0 && cControlType != ControlTypeEnum.Fan && CoverageUnits <= 1;
+        }
+
+        /// <summary>True when this product's rate is sent to the task controller.</summary>
+        public bool TCsends()
+        {
+            return cTCsend && TCcanSend();
+        }
+
+        /// <summary>The ISO rate DDI sent to the task controller: 1 volume, 6 mass, 11 count per area; 0 = not sent.</summary>
+        public ushort TCddi()
+        {
+            return TCsends() ? QuantityDDI : (ushort)0;
+        }
+
+        /// <summary>The target rate in the ISO unit of TCddi(): DDI 1 0.01 mm³/m² (1 L/ha = 10000),
+        /// DDI 6 1 mg/m² (1 kg/ha = 100), DDI 11 0.001 /m² (1 seed/ha = 0.1). 0 when disabled or not sent.</summary>
+        public int TCvalue()
+        {
+            int Result = 0;
+            if (TCsends() && cEnabled)
+            {
+                double PerHa = TargetRate() * QuantityFactor;    // litres, kg or seeds per coverage unit
+                if (CoverageUnits == 0) PerHa *= 2.47105;          // per acre -> per ha
+
+                double Scale;
+                switch (QuantityDDI)
+                {
+                    case 1: Scale = 10000; break;
+                    case 6: Scale = 100; break;
+                    default: Scale = 0.1; break;
+                }
+
+                double Raw = PerHa * Scale;
+                if (Raw > 0) Result = Raw >= int.MaxValue ? int.MaxValue : (int)Math.Round(Raw);
             }
             return Result;
         }

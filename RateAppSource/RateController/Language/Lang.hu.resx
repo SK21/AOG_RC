@@ -480,6 +480,48 @@
   <data name="lgTankSize" xml:space="preserve">
     <value>Tartályméret</value>
   </data>
+  <data name="lgTaskController" xml:space="preserve">
+    <value>Feladatvezérlő</value>
+  </data>
+  <data name="lgTCLitres" xml:space="preserve">
+    <value>Liter</value>
+  </data>
+  <data name="lgTCUSGallons" xml:space="preserve">
+    <value>Gallon (US)</value>
+  </data>
+  <data name="lgTCImpGallons" xml:space="preserve">
+    <value>Gallon (Imp)</value>
+  </data>
+  <data name="lgTCTonnes" xml:space="preserve">
+    <value>Tonna</value>
+  </data>
+  <data name="lgTCOther" xml:space="preserve">
+    <value>Egyéb...</value>
+  </data>
+  <data name="lgTCUnitName" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="lgTCUnitType" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="lgTCVolume" xml:space="preserve">
+    <value>Térfogat</value>
+  </data>
+  <data name="lgTCMass" xml:space="preserve">
+    <value>Tömeg</value>
+  </data>
+  <data name="lgTCCount" xml:space="preserve">
+    <value>Darabszám</value>
+  </data>
+  <data name="lgTCPerUnit" xml:space="preserve">
+    <value>Liter, kg vagy mag egységenként</value>
+  </data>
+  <data name="lgTCSeeds" xml:space="preserve">
+    <value>Mag</value>
+  </data>
+  <data name="lgTC1000Seeds" xml:space="preserve">
+    <value>1000 mag</value>
+  </data>
   <data name="lgTank_Remaining" xml:space="preserve">
     <value>Hátralévő mennyiség</value>
   </data>

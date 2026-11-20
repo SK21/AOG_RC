@@ -113,7 +113,7 @@ namespace RateController.Classes
 
                     Prd.ProductName = "Prod  " + (char)(65 + i);
                     Prd.ControlType = ControlTypeEnum.Valve;
-                    Prd.QuantityDescription = "Gallons";
+                    Prd.QuantityUnit = QuantityUnits.GallonsImp;    // shown as "Gallons"
                     Prd.CoverageUnits = 0;
                     Prd.MeterCal = 1;
                     Prd.EnableProdDensity = false;
@@ -276,6 +276,9 @@ namespace RateController.Classes
                     string pfx = "Product_" + i + "_";
                     data[pfx + "ProductName"]         = p.ProductName;
                     data[pfx + "QuantityDescription"] = p.QuantityDescription;
+                    data[pfx + "QuantityUnit"]        = p.QuantityUnit.ToString();
+                    data[pfx + "QuantityDDI"]         = p.QuantityDDI.ToString();
+                    data[pfx + "QuantityFactor"]      = p.QuantityFactor.ToString(CultureInfo.InvariantCulture);
                     data[pfx + "CoverageUnits"]       = p.CoverageUnits.ToString();
                     data[pfx + "CountsRev"]           = p.CountsRev.ToString();
                     data[pfx + "MeterCal"]            = p.MeterCal.ToString(CultureInfo.InvariantCulture);
@@ -314,8 +317,25 @@ namespace RateController.Classes
 
                     if (data.TryGetValue(pfx + "ProductName", out string name))
                         p.ProductName = name;
-                    if (data.TryGetValue(pfx + "QuantityDescription", out string qd))
+                    if (data.TryGetValue(pfx + "QuantityUnit", out string qu)
+                        && Enum.TryParse(qu, true, out QuantityUnits quVal) && Enum.IsDefined(typeof(QuantityUnits), quVal))
+                    {
+                        if (data.TryGetValue(pfx + "QuantityDescription", out string qn)) p.QuantityDescription = qn;
+                        if (data.TryGetValue(pfx + "QuantityDDI", out string qdi)
+                            && ushort.TryParse(qdi, out ushort qdiVal))
+                            p.QuantityDDI = qdiVal;
+                        if (data.TryGetValue(pfx + "QuantityFactor", out string qf)
+                            && double.TryParse(qf, NumberStyles.Any, CultureInfo.InvariantCulture, out double qfVal))
+                            p.QuantityFactor = qfVal;
+                        p.QuantityUnit = quVal;
+                    }
+                    else if (data.TryGetValue(pfx + "QuantityDescription", out string qd)
+                        && qd != p.QuantityDescription)
+                    {
+                        // an older sidecar has only the name: match it, or keep it as Other
                         p.QuantityDescription = qd;
+                        p.QuantityUnit = clsProduct.UnitFromText(qd);
+                    }
                     if (data.TryGetValue(pfx + "CoverageUnits", out string cu)
                         && byte.TryParse(cu, out byte cuVal))
                         p.CoverageUnits = cuVal;

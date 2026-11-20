@@ -366,6 +366,48 @@
   <data name="lgTankSize" xml:space="preserve">
     <value>Talpos Dydis</value>
   </data>
+  <data name="lgTaskController" xml:space="preserve">
+    <value>Užduočių valdiklis</value>
+  </data>
+  <data name="lgTCLitres" xml:space="preserve">
+    <value>Litrai</value>
+  </data>
+  <data name="lgTCUSGallons" xml:space="preserve">
+    <value>Galonai (JAV)</value>
+  </data>
+  <data name="lgTCImpGallons" xml:space="preserve">
+    <value>Galonai (Imp)</value>
+  </data>
+  <data name="lgTCTonnes" xml:space="preserve">
+    <value>Tonos</value>
+  </data>
+  <data name="lgTCOther" xml:space="preserve">
+    <value>Kita...</value>
+  </data>
+  <data name="lgTCUnitName" xml:space="preserve">
+    <value>Pavadinimas</value>
+  </data>
+  <data name="lgTCUnitType" xml:space="preserve">
+    <value>Tipas</value>
+  </data>
+  <data name="lgTCVolume" xml:space="preserve">
+    <value>Tūris</value>
+  </data>
+  <data name="lgTCMass" xml:space="preserve">
+    <value>Masė</value>
+  </data>
+  <data name="lgTCCount" xml:space="preserve">
+    <value>Kiekis</value>
+  </data>
+  <data name="lgTCPerUnit" xml:space="preserve">
+    <value>Litrai, kg arba sėklos vienetui</value>
+  </data>
+  <data name="lgTCSeeds" xml:space="preserve">
+    <value>Sėklos</value>
+  </data>
+  <data name="lgTC1000Seeds" xml:space="preserve">
+    <value>1000 sėklų</value>
+  </data>
   <data name="lgTank_Remaining" xml:space="preserve">
     <value>Likes Kiekis</value>
   </data>

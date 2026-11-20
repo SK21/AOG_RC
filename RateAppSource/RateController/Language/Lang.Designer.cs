@@ -1454,7 +1454,133 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgTankSize", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Task Controller.
+        /// </summary>
+        internal static string lgTaskController {
+            get {
+                return ResourceManager.GetString("lgTaskController", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to 1000 Seeds.
+        /// </summary>
+        internal static string lgTC1000Seeds {
+            get {
+                return ResourceManager.GetString("lgTC1000Seeds", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string lgTCCount {
+            get {
+                return ResourceManager.GetString("lgTCCount", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Mass.
+        /// </summary>
+        internal static string lgTCMass {
+            get {
+                return ResourceManager.GetString("lgTCMass", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Other....
+        /// </summary>
+        internal static string lgTCOther {
+            get {
+                return ResourceManager.GetString("lgTCOther", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Litres, kg or seeds per unit.
+        /// </summary>
+        internal static string lgTCPerUnit {
+            get {
+                return ResourceManager.GetString("lgTCPerUnit", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Tonnes.
+        /// </summary>
+        internal static string lgTCTonnes {
+            get {
+                return ResourceManager.GetString("lgTCTonnes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string lgTCUnitName {
+            get {
+                return ResourceManager.GetString("lgTCUnitName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string lgTCUnitType {
+            get {
+                return ResourceManager.GetString("lgTCUnitType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Volume.
+        /// </summary>
+        internal static string lgTCVolume {
+            get {
+                return ResourceManager.GetString("lgTCVolume", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gallons (Imp).
+        /// </summary>
+        internal static string lgTCImpGallons {
+            get {
+                return ResourceManager.GetString("lgTCImpGallons", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Litres.
+        /// </summary>
+        internal static string lgTCLitres {
+            get {
+                return ResourceManager.GetString("lgTCLitres", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Seeds.
+        /// </summary>
+        internal static string lgTCSeeds {
+            get {
+                return ResourceManager.GetString("lgTCSeeds", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gallons (US).
+        /// </summary>
+        internal static string lgTCUSGallons {
+            get {
+                return ResourceManager.GetString("lgTCUSGallons", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Target Rate.
         /// </summary>

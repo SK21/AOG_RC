@@ -363,6 +363,48 @@
   <data name="lgTankSize" xml:space="preserve">
     <value>Pojemność zbiornika</value>
   </data>
+  <data name="lgTaskController" xml:space="preserve">
+    <value>Kontroler zadań</value>
+  </data>
+  <data name="lgTCLitres" xml:space="preserve">
+    <value>Litry</value>
+  </data>
+  <data name="lgTCUSGallons" xml:space="preserve">
+    <value>Galony (USA)</value>
+  </data>
+  <data name="lgTCImpGallons" xml:space="preserve">
+    <value>Galony (imp.)</value>
+  </data>
+  <data name="lgTCTonnes" xml:space="preserve">
+    <value>Tony</value>
+  </data>
+  <data name="lgTCOther" xml:space="preserve">
+    <value>Inne...</value>
+  </data>
+  <data name="lgTCUnitName" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="lgTCUnitType" xml:space="preserve">
+    <value>Rodzaj</value>
+  </data>
+  <data name="lgTCVolume" xml:space="preserve">
+    <value>Objętość</value>
+  </data>
+  <data name="lgTCMass" xml:space="preserve">
+    <value>Masa</value>
+  </data>
+  <data name="lgTCCount" xml:space="preserve">
+    <value>Liczba</value>
+  </data>
+  <data name="lgTCPerUnit" xml:space="preserve">
+    <value>Litry, kg lub nasiona na jednostkę</value>
+  </data>
+  <data name="lgTCSeeds" xml:space="preserve">
+    <value>Nasiona</value>
+  </data>
+  <data name="lgTC1000Seeds" xml:space="preserve">
+    <value>1000 nasion</value>
+  </data>
   <data name="lgTank_Remaining" xml:space="preserve">
     <value>Pozostała ilość</value>
   </data>

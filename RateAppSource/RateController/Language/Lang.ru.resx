@@ -261,6 +261,48 @@
   <data name="lgTankSize" xml:space="preserve">
     <value>Емкость Бака</value>
   </data>
+  <data name="lgTaskController" xml:space="preserve">
+    <value>Контроллер задач</value>
+  </data>
+  <data name="lgTCLitres" xml:space="preserve">
+    <value>Литры</value>
+  </data>
+  <data name="lgTCUSGallons" xml:space="preserve">
+    <value>Галлоны (США)</value>
+  </data>
+  <data name="lgTCImpGallons" xml:space="preserve">
+    <value>Галлоны (имп.)</value>
+  </data>
+  <data name="lgTCTonnes" xml:space="preserve">
+    <value>Тонны</value>
+  </data>
+  <data name="lgTCOther" xml:space="preserve">
+    <value>Другое...</value>
+  </data>
+  <data name="lgTCUnitName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="lgTCUnitType" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="lgTCVolume" xml:space="preserve">
+    <value>Объём</value>
+  </data>
+  <data name="lgTCMass" xml:space="preserve">
+    <value>Масса</value>
+  </data>
+  <data name="lgTCCount" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="lgTCPerUnit" xml:space="preserve">
+    <value>Литры, кг или семена на единицу</value>
+  </data>
+  <data name="lgTCSeeds" xml:space="preserve">
+    <value>Семена</value>
+  </data>
+  <data name="lgTC1000Seeds" xml:space="preserve">
+    <value>1000 семян</value>
+  </data>
   <data name="lgTank_Remaining" xml:space="preserve">
     <value>Количество ост</value>
   </data>

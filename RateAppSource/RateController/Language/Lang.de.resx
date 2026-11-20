@@ -226,6 +226,48 @@
   <data name="lgTankSize" xml:space="preserve">
     <value>Tanknenninhalt </value>
   </data>
+  <data name="lgTaskController" xml:space="preserve">
+    <value>Task Controller</value>
+  </data>
+  <data name="lgTCLitres" xml:space="preserve">
+    <value>Liter</value>
+  </data>
+  <data name="lgTCUSGallons" xml:space="preserve">
+    <value>Gallonen (US)</value>
+  </data>
+  <data name="lgTCImpGallons" xml:space="preserve">
+    <value>Gallonen (Imp)</value>
+  </data>
+  <data name="lgTCTonnes" xml:space="preserve">
+    <value>Tonnen</value>
+  </data>
+  <data name="lgTCOther" xml:space="preserve">
+    <value>Andere...</value>
+  </data>
+  <data name="lgTCUnitName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="lgTCUnitType" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="lgTCVolume" xml:space="preserve">
+    <value>Volumen</value>
+  </data>
+  <data name="lgTCMass" xml:space="preserve">
+    <value>Masse</value>
+  </data>
+  <data name="lgTCCount" xml:space="preserve">
+    <value>Anzahl</value>
+  </data>
+  <data name="lgTCPerUnit" xml:space="preserve">
+    <value>Liter, kg oder Körner pro Einheit</value>
+  </data>
+  <data name="lgTCSeeds" xml:space="preserve">
+    <value>Körner</value>
+  </data>
+  <data name="lgTC1000Seeds" xml:space="preserve">
+    <value>1000 Körner</value>
+  </data>
   <data name="lgTank_Remaining" xml:space="preserve">
     <value>Restmenge Tank</value>
   </data>

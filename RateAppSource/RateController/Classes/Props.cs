@@ -22,6 +22,10 @@ namespace RateController.Classes
     public enum ControlTypeEnum
     { Valve, ComboClose, Motor, MotorWeights, Fan, ComboCloseTimed }
 
+    // a product's quantity unit, in clsProduct.UnitTable order (stored by name)
+    public enum QuantityUnits
+    { GallonsImp, GallonsUS, Litres, Lbs, Kg, Tonnes, Seeds, Seeds1000, Other }
+
     public enum FlowMasterValveMode
     { ThreeWire, TwoWire, TwoWireInvertFlowMaster };
 
