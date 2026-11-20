@@ -6,8 +6,18 @@
 // Uses FlexCAN_T4 library (built-in for Teensy 4.x)
 // CAN1 pins: TX=22, RX=23 (connected to MCP2562-E/P transceiver)
 
+#if ISOBUS_ENABLED
+// ISOBUS build: AgIsoStack owns CAN1 (plugin channel 0 = CAN1 on Teensy 4.1) and claims the
+// address. Received frames reach CANBus_Handle through a frame listener; proprietary frames
+// are sent raw through the plugin (CANBus_Write), from the address the stack claimed.
+std::shared_ptr<isobus::FlexCANT4Plugin> CANplugin;
+std::shared_ptr<isobus::InternalControlFunction> ISOBUSicf;
+std::shared_ptr<isobus::DiagnosticProtocol> ISOBUSdiag;
+const std::size_t CANqueueSize = 64;	// receive/transmit queue depth; a firmware update block is 34 frames
+#else
 // CAN bus instance - using CAN1 at 250kbps (ISOBUS standard)
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ISOBUS;
+#endif
 uint8_t StandbyPin = 6;
 
 // ISOBUS address claiming
@@ -88,6 +98,7 @@ bool CANBus_Begin() {
 	pinMode(StandbyPin, OUTPUT);
 	digitalWrite(StandbyPin, LOW);
 
+#if !ISOBUS_ENABLED
 	// Initialize FlexCAN at 250kbps (ISOBUS standard)
 	ISOBUS.begin();
 	ISOBUS.setBaudRate(250000);
@@ -95,6 +106,7 @@ bool CANBus_Begin() {
 	// Set up mailboxes for reception
 	ISOBUS.setMaxMB(16);
 	ISOBUS.setMBFilter(ACCEPT_ALL);
+#endif
 
 	// Identity number from the board's factory MAC (low 21 bits), so every board has its
 	// own NAME and two boards at the same module ID (e.g. new boards at 25) don't both
@@ -103,9 +115,75 @@ bool CANBus_Begin() {
 	TeensyMAC(mac);
 	ISOBUSid.identityNumber = ((uint32_t)(mac[3] & 0x1F) << 16) | ((uint32_t)mac[4] << 8) | mac[5];
 
+#if ISOBUS_ENABLED
+	// AgIsoStack on CAN1 at 250 kbit/s (set by the plugin). The NAME needs identityNumber above.
+	CANplugin = std::make_shared<isobus::FlexCANT4Plugin>(0);
+	isobus::CANHardwareInterface::set_number_of_can_channels(1, CANqueueSize);
+	isobus::CANHardwareInterface::assign_can_channel_frame_handler(0, CANplugin);
+	isobus::CANHardwareInterface::get_can_frame_received_event_dispatcher().add_listener(CANBus_HandleFrame);
+	isobus::CANHardwareInterface::start();
+
+	isobus::NAME myNAME(buildIsobusNAME());
+	ISOBUSicf = isobus::CANNetworkManager::CANNetwork.create_internal_control_function(myNAME, 0, ISOBUSid.address);
+
+	ISOBUSdiag = std::make_shared<isobus::DiagnosticProtocol>(ISOBUSicf);
+	ISOBUSdiag->initialize();
+	ISOBUSdiag->set_product_identification_brand("AgOpenGPS");
+	ISOBUSdiag->set_product_identification_code(InoDescription);
+	ISOBUSdiag->set_product_identification_model("Teensy Rate");
+	ISOBUSdiag->set_software_id_field(0, String(InoID).c_str());
+	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::HardwareID, "Teensy 4.1");
+	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::Location, "Implement");
+	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::ManufacturerName, "AgOpenGPS");
+	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::PartNumber, InoDescription);
+	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::Type, "RateControl");
+#endif
+
 	return true;
 }
 
+#if ISOBUS_ENABLED
+// One received frame from AgIsoStack, as a CAN_message_t so the proprietary handlers are
+// shared with the normal build
+void CANBus_HandleFrame(const isobus::CANMessageFrame& frame) {
+	CAN_message_t msg;
+	msg.id = frame.identifier;
+	msg.flags.extended = frame.isExtendedFrame;
+	msg.len = (frame.dataLength > 8) ? 8 : frame.dataLength;
+	memcpy(msg.buf, frame.data, msg.len);
+	CANBus_Handle(msg);
+}
+
+// Runs the stack: receive (frames go to CANBus_HandleFrame), address claim, transmit queue.
+// The proprietary frames use the address the stack claimed.
+void CANBus_Service() {
+	isobus::CANHardwareInterface::update();
+	ISOBUSdiag->update();
+	ISOBUSid.addressClaimed = ISOBUSicf->get_address_valid();
+	if (ISOBUSid.addressClaimed) ISOBUSid.address = ISOBUSicf->get_address();
+}
+#endif
+
+#if ISOBUS_ENABLED
+// Sends one frame; true if it was accepted for sending. Normal build: ISOBUS.write() (kept
+// at the call sites so that build stays byte-identical).
+bool CANBus_Write(const CAN_message_t& msg) {
+	// Straight to the plugin's interrupt-driven transmit queue, as ISOBUS.write() does in the
+	// normal build, so a frame goes out even if CANBus_Service doesn't run again (a status
+	// just before a reboot, FirmwareUpdate.ino)
+	isobus::CANMessageFrame frame;
+	frame.timestamp_us = 0;
+	frame.identifier = msg.id;
+	frame.channel = 0;
+	frame.dataLength = msg.len;
+	frame.isExtendedFrame = msg.flags.extended;
+	memcpy(frame.data, msg.buf, 8);
+	return CANplugin->write_frame(frame);
+}
+#endif
+
+#if !ISOBUS_ENABLED
+// (ISOBUS build: AgIsoStack claims the address and answers address requests)
 //-----------------------------------------------------------------------------
 // Send address claim message (PGN 60928 / 0xEE00)
 //-----------------------------------------------------------------------------
@@ -124,7 +202,7 @@ void CANBus_SendAddressClaim() {
 		msg.buf[i] = (name >> (i * 8)) & 0xFF;
 	}
 
-	if (ISOBUS.write(msg)) 
+	if (ISOBUS.write(msg))
 	{
 		ISOBUSid.lastClaimTime = millis();
 		ISOBUSid.addressClaimed = true;
@@ -140,6 +218,7 @@ void CANBus_SendAddressClaim() {
 	}
 #endif
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Send proprietary message (PGN 0xFF00-0xFFFF range)
@@ -157,7 +236,11 @@ bool CANBus_SendProprietaryB(uint8_t pgnLow, const uint8_t* data, uint8_t len) {
 
 	memcpy(msg.buf, data, msg.len);
 
+#if ISOBUS_ENABLED
+	if (CANBus_Write(msg)) {
+#else
 	if (ISOBUS.write(msg)) {
+#endif
 		return true;
 	}
 
@@ -168,15 +251,20 @@ bool CANBus_SendProprietaryB(uint8_t pgnLow, const uint8_t* data, uint8_t len) {
 // Process received CAN messages
 //-----------------------------------------------------------------------------
 void CANBus_Receive() {
+#if ISOBUS_ENABLED
+	CANBus_Service();
+#else
 	CAN_message_t msg;
 
 	while (ISOBUS.read(msg)) {
 		CANBus_Handle(msg);
 	}
+#endif
 }
 
 // One received frame. Called from CANBus_Receive (polled mailboxes) and, during a firmware
-// update, from ISOBUS.events() (interrupt queue, FirmwareUpdate.ino).
+// update, from ISOBUS.events() (interrupt queue, FirmwareUpdate.ino). ISOBUS build: called
+// from CANBus_HandleFrame for every frame AgIsoStack receives.
 void CANBus_Handle(const CAN_message_t& msg) {
 	if (msg.flags.extended) {  // Only process extended frames
 		// Extract PGN from 29-bit ID
@@ -223,6 +311,7 @@ void CANBus_Handle(const CAN_message_t& msg) {
 			UpdCanData(msg);
 			break;
 
+#if !ISOBUS_ENABLED
 		case 0xEE00:  // Address Claimed
 			CANBus_HandleAddressClaim(msg, sa);
 			break;
@@ -239,6 +328,7 @@ void CANBus_Handle(const CAN_message_t& msg) {
 			}
 		}
 		break;
+#endif
 
 		case 0xFF03:  // Rate Command (from Gateway)
 			CANBus_HandleRateCommand(msg);
@@ -312,6 +402,7 @@ void CANBus_Handle(const CAN_message_t& msg) {
 	}
 }
 
+#if !ISOBUS_ENABLED
 //-----------------------------------------------------------------------------
 // Handle address claim from another device
 //-----------------------------------------------------------------------------
@@ -338,6 +429,7 @@ void CANBus_HandleAddressClaim(const CAN_message_t& msg, uint8_t sourceAddr) {
 		}
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Message handlers - to be implemented
@@ -870,22 +962,26 @@ bool CANBus_SendBoardLabel() {
 void CANBus_Update(bool Send) {
 	static uint32_t lastSensorSend = 0;
 	static uint32_t lastStatusSend = 0;
+#if !ISOBUS_ENABLED
 	static uint32_t lastClaimCheck = 0;
+#endif
 	static uint32_t lastIdentSend = 0;
 	static uint32_t lastBoardIdSend = 0;
 
-	// Receive any pending messages
+	// Receive any pending messages (ISOBUS build: also runs the stack)
 	CANBus_Receive();
 
+#if !ISOBUS_ENABLED
 	// Address claiming - check every 5 seconds
-	if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000)) 
+	if (!ISOBUSid.addressClaimed || (millis() - lastClaimCheck > 5000))
 	{
 		lastClaimCheck = millis();
-		if (!ISOBUSid.addressClaimed) 
+		if (!ISOBUSid.addressClaimed)
 		{
 			CANBus_SendAddressClaim();
 		}
 	}
+#endif
 
 	// An unassigned board (NewModuleID) can't be identified in the data frames: each packs
 	// the module ID into 4 bits, so 25 would arrive as module 9. It sends only the

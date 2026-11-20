@@ -88,6 +88,9 @@ void UpdStart(uint8_t Type, uint8_t Link)
 			UpdCanPending = false;
 			UpdLastRx = millis();
 
+#if !ISOBUS_ENABLED
+			// (ISOBUS build: AgIsoStack's CAN plugin always receives under interrupt, into a
+			// CANqueueSize-deep queue that UpdLoop empties with CANBus_Service)
 			if (Link == UpdLinkCAN)
 			{
 				// From here the CAN library queues received frames under interrupt (256 deep)
@@ -98,6 +101,7 @@ void UpdStart(uint8_t Type, uint8_t Link)
 				ISOBUS.onReceive(CANBus_Handle);
 				ISOBUS.enableMBInterrupts();
 			}
+#endif
 			UpdSendStatus(UpdReady, 0, 0);
 		}
 		else
@@ -266,8 +270,13 @@ void UpdLoop()
 {
 	if (UpdLink == UpdLinkCAN)
 	{
+#if ISOBUS_ENABLED
+		// frames queued by the plugin's interrupt; also keeps the address claim and sends
+		CANBus_Service();
+#else
 		// frames queued by the CAN interrupt, one per events() call
 		for (int i = 0; i < 40; i++) ISOBUS.events();
+#endif
 	}
 	else
 	{
@@ -326,7 +335,10 @@ void UpdSendOn(uint8_t Link, uint8_t Status, uint16_t Block, uint32_t Count)
 		B[6] = Count >> 24;
 		B[7] = 0;
 		CANBus_SendProprietaryB(0x1C, B, 8);
+#if !ISOBUS_ENABLED
 		if (UpdActive) ISOBUS.events();		// interrupt mode: events() moves queued frames out
+#endif
+		// (ISOBUS build: CANBus_Write hands the frame to the plugin's interrupt transmit queue)
 	}
 	else if (Ethernet.linkStatus() == LinkON)
 	{

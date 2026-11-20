@@ -1,12 +1,20 @@
 
 // rate control with Teensy 4.1
 
+// 1 = ISOBUS build: the AgIsoStack library (Modules/Teensy Rate/AgIsoStack) owns CAN1 and the
+// TC client and ISOBUS speed run alongside the proprietary frames. 0 = normal build.
+#define ISOBUS_ENABLED 0
+
 #include <Wire.h>
 #include <EEPROM.h>
 #include <NativeEthernet.h>
 #include <fnet.h>  // hint for VM�s library resolver. Speed up compile with Deep Search off.
 #include <NativeEthernetUdp.h>
+#if ISOBUS_ENABLED
+#include <AgIsoStack.hpp>	// also brings its own FlexCAN_T4 copy (CAN_message_t)
+#else
 #include <FlexCAN_T4.h>
+#endif
 #include "PCA95x5_RC.h"		// modified from https://github.com/hideakitai/PCA95x5
 
 #include "FXUtil.h"		// read_ascii_line(), hex file support
