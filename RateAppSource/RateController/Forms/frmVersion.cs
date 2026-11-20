@@ -84,7 +84,7 @@ namespace RateController.Forms
 
             if (Core.ModulesStatus.Connected(cModuleID) && Core.ModulesBoardID.ModuleType(cModuleID) > 0)
             {
-                lbModule.Text = Enum.GetName(typeof(ModuleTypes), Core.ModulesBoardID.ModuleType(cModuleID));
+                lbModule.Text = Core.ModulesBoardID.TypeName(cModuleID);
                 lbModuleCurrent.Text = Core.ModulesBoardID.ModuleVersion(cModuleID);
                 lbModuleLatest.Text = VC.ModuleVersion(Core.ModulesBoardID.ModuleType(cModuleID));
             }

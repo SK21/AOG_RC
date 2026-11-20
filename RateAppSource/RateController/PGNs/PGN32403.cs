@@ -262,6 +262,9 @@ namespace RateController.PGNs
         public ushort InoID(int Module) => Board(Module)?.InoID ?? 0;
         public ushort ModuleType(int Module) => Board(Module)?.InoType ?? 0;
 
+        // "Teensy Rate", "Teensy Rate ISOBUS", ...; "" when no board reports at that ID
+        public string TypeName(int Module) => Board(Module)?.TypeName ?? "";
+
         public string ModuleVersion(int Module)
         {
             BoardInfo Brd = Board(Module);
