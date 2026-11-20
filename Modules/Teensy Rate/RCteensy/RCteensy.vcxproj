@@ -131,6 +131,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ISOBUS_Speed.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ISOBUS_TC.ino">
+      <FileType>CppCode</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Motor.ino">
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>

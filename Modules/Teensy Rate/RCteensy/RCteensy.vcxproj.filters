@@ -33,6 +33,8 @@
     <ClCompile Include="FXUtil.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="ISOBUS_Speed.ino" />
+    <ClCompile Include="ISOBUS_TC.ino" />
     <ClCompile Include="Motor.ino" />
     <ClCompile Include="PCA95x5_RC.h">
       <Filter>Header Files</Filter>

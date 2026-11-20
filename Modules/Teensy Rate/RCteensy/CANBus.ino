@@ -137,6 +137,9 @@ bool CANBus_Begin() {
 	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::ManufacturerName, "AgOpenGPS");
 	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::PartNumber, InoDescription);
 	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::Type, "RateControl");
+
+	SPEED_Begin();		// ISOBUS_Speed.ino
+	TC_Begin();			// ISOBUS_TC.ino
 #endif
 
 	return true;
@@ -970,6 +973,11 @@ void CANBus_Update(bool Send) {
 
 	// Receive any pending messages (ISOBUS build: also runs the stack)
 	CANBus_Receive();
+
+#if ISOBUS_ENABLED
+	SPEED_Update();
+	TC_Update();
+#endif
 
 #if !ISOBUS_ENABLED
 	// Address claiming - check every 5 seconds
