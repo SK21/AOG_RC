@@ -1,8 +1,9 @@
 // ISOBUS_TC.ino - Task Controller client (ISOBUS build only)
 // From jaworeA's RC11-isobus. The module uploads a DDOP (one boom, its sections, rate and
 // speed process data) to a TC: a tractor terminal or AOG-TaskController. While the TC
-// commands, it switches the sections (condensed work state, DDI 161) and sets product 1's
-// rate in L/ha (DDI 1), which becomes Sensor[0].TargetUPM from speed and active width.
+// commands, it switches the sections (setpoint condensed work state, DDI 290; the module
+// reports the actual state, DDI 161) and sets product 1's rate in L/ha (DDI 1), which becomes
+// Sensor[0].TargetUPM from speed and active width.
 //
 // Command authority (ISOBUS_Path_Forward.md "Command authority"):
 // - RC: at power-up and after a TC session. RC's rate and relay commands apply, as today.
@@ -13,6 +14,10 @@
 //   its comm time is kept fresh, so products 2-6 stop and then go to comm loss.
 // - Back to RC when the TC disconnects: everything cleared and every sensor's comm time
 //   expired, so the module is in RC's comm-loss state at once until RC's next command.
+//   A TC that stops sending is noticed after the TC client's 6 s status timeout (AgIsoStack).
+// Value commands are accepted as soon as the client is connected (AOG-TaskController sends
+// its first section state about 2 s after the DDOP is activated, and only resends on change);
+// the module's own reports wait 3 s (TC_ProcessDataReady).
 // Config, telemetry and firmware update are never blocked.
 //
 // Changed from RC11-isobus:
@@ -83,7 +88,8 @@ void TC_SaveSettings()
 	EEPROM.put(TCsettingsAddr, TCset);
 }
 
-// DDOP active for 3 s before process data is used (gives the TC time after the upload)
+// DDOP active for 3 s before the module reports process data (gives the TC time after the
+// upload); value commands from the TC don't wait for this
 bool TC_ProcessDataReady()
 {
 	return ISOBUStc->get_is_connected() &&
@@ -301,7 +307,7 @@ bool TC_RequestValue(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_t value, void*)
 {
 	bool Result = false;
-	if (TC_ProcessDataReady() && elementNumber == TC_ELEMENT_BOOM)
+	if (ISOBUStc->get_is_connected() && elementNumber == TC_ELEMENT_BOOM)
 	{
 		if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointCondensedWorkState1_16))
 		{
@@ -395,7 +401,7 @@ void TC_Update()
 	ISOBUStc->update();
 	TC_UpdateConnectionState();
 
-	if (!TC_ProcessDataReady())
+	if (!ISOBUStc->get_is_connected())
 	{
 		TC_LeaveCommand();		// does nothing unless the TC was commanding
 	}

@@ -14,6 +14,20 @@ std::shared_ptr<isobus::FlexCANT4Plugin> CANplugin;
 std::shared_ptr<isobus::InternalControlFunction> ISOBUSicf;
 std::shared_ptr<isobus::DiagnosticProtocol> ISOBUSdiag;
 const std::size_t CANqueueSize = 64;	// receive/transmit queue depth; a firmware update block is 34 frames
+
+// AgIsoStack's own log messages (e.g. "[TC]: ...") to the serial port; warnings and errors
+// only, so the main loop isn't slowed by Info/Debug traffic
+class SerialCANLogger : public isobus::CANStackLogger
+{
+public:
+	void sink_CAN_stack_log(isobus::CANStackLogger::LoggingLevel level, const std::string& text) override
+	{
+		Serial.print(F("ISOBUS "));
+		Serial.print(level == isobus::CANStackLogger::LoggingLevel::Warning ? F("warning: ") : F("error: "));
+		Serial.println(text.c_str());
+	}
+};
+SerialCANLogger CANlogger;
 #else
 // CAN bus instance - using CAN1 at 250kbps (ISOBUS standard)
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> ISOBUS;
@@ -117,6 +131,8 @@ bool CANBus_Begin() {
 
 #if ISOBUS_ENABLED
 	// AgIsoStack on CAN1 at 250 kbit/s (set by the plugin). The NAME needs identityNumber above.
+	isobus::CANStackLogger::set_can_stack_logger_sink(&CANlogger);
+	isobus::CANStackLogger::set_log_level(isobus::CANStackLogger::LoggingLevel::Warning);
 	CANplugin = std::make_shared<isobus::FlexCANT4Plugin>(0);
 	isobus::CANHardwareInterface::set_number_of_can_channels(1, CANqueueSize);
 	isobus::CANHardwareInterface::assign_can_channel_frame_handler(0, CANplugin);
