@@ -29,9 +29,9 @@ struct IsobusIdentity {
 	// ISO 11783 NAME fields (64-bit)
 	uint32_t identityNumber = 1;      // Unique serial number (21 bits)
 	uint16_t manufacturerCode = 1407; // Assigned by SAE J1939 (11 bits); 1407 = Open-Agriculture, free for open-source projects (RC is free open source)
-	uint8_t deviceClass = 25;         // 25 = Sprayer/Spreader control
+	uint8_t deviceClass = 6;          // 6 = Sprayer (industry group 2; 4 planter/seeder, 5 fertilizer)
 	uint8_t deviceClassInstance = 0;
-	uint8_t functionCode = 130;       // 130 = Rate Control
+	uint8_t functionCode = 128;       // 128 = Rate Control (130 is Task Controller: TC clients that find their TC by function code would pick this board)
 	uint8_t functionInstance = 0;
 	uint8_t industryGroup = 2;        // 2 = Agricultural
 	bool selfConfigurable = true;
