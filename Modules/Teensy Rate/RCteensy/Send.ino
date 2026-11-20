@@ -172,7 +172,8 @@ void SendComm()
         //25    InoType
         //26    InoID lo
         //27    InoID hi
-        //28    CRC
+        //28    build flags bit 0 = ISOBUS build (ISOBUS_ENABLED); older apps ignore it (CRC is the last byte)
+        //29    CRC
         static uint32_t BoardIDLast = 0;
         static bool BoardIDSent = false;
         uint32_t now = millis();
@@ -181,7 +182,7 @@ void SendComm()
             // BoardIDSent and BoardIDLast are set only when endPacket() reports the report went
             // out, so one lost to a link or stack that isn't ready is retried next cycle
             // (SendTime), not 2 s later
-            byte B[29];
+            byte B[30];
             B[0] = 147;
             B[1] = 126;
             B[2] = MDL.ID;	// raw module ID, matching the module-level status report (PGN 32401)
@@ -194,7 +195,8 @@ void SendComm()
             B[25] = InoType;
             B[26] = (byte)InoID;
             B[27] = InoID >> 8;
-            B[28] = CRC(B, 28, 0);
+            B[28] = ISOBUS_ENABLED;
+            B[29] = CRC(B, 29, 0);
             if (Ethernet.linkStatus() == LinkON)
             {
                 // to every network, so the app hears it on any subnet: a new board (25), or one not
@@ -202,7 +204,7 @@ void SendComm()
                 // Once the app's broadcasts arrive, the board is on its network: own subnet only.
                 IPAddress Dest = (MDL.ID == NewModuleID || !AppOnUDP()) ? IPAddress(255, 255, 255, 255) : DestinationIP;
                 UDPcomm.beginPacket(Dest, DestinationPort);
-                UDPcomm.write(B, 29);
+                UDPcomm.write(B, 30);
                 if (UDPcomm.endPacket())     // false when FNET couldn't send it
                 {
                     BoardIDLast = now;

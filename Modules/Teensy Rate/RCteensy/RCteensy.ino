@@ -26,11 +26,13 @@ extern "C" {
 const uint16_t InoID = 20116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
-// Firmware identity in the program image: magic "RCFWID01", InoType, InoID lo, InoID hi.
+// Firmware identity in the program image: magic "RCFWID01", InoType, InoID lo, InoID hi, build
+// flags (bit 0 = ISOBUS_ENABLED; the same byte as PGN 32403 [28] and 0xFF08 [5]). The build flags
+// byte exists from InoID 20116; the app reads it only from tags of that date or later.
 // The app finds it in a hex file before an update (wrong firmware is refused), and the board
 // checks the new image for it before installing (FirmwareUpdate.ino). Built from the constants
 // above, so nothing changes at a release. 'used' keeps it although only the update check reads it.
-const uint8_t FwTag[11] PROGMEM __attribute__((used)) = { 'R','C','F','W','I','D','0','1', InoType, InoID & 0xFF, InoID >> 8 };
+const uint8_t FwTag[12] PROGMEM __attribute__((used)) = { 'R','C','F','W','I','D','0','1', InoType, InoID & 0xFF, InoID >> 8, ISOBUS_ENABLED };
 const uint8_t NewModuleID = 25;	// unassigned board: above every real ID (0-15), and 25+50 still makes a valid address
 const uint8_t MaxModuleID = 7;		// highest module ID the app uses (Props.MaxModules = 8); a stored ID above it (other than NewModuleID) starts as a new board
 

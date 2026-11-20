@@ -908,9 +908,10 @@ void CANBus_SendModuleIdent() {
 	data[2] = InoID & 0xFF;
 	data[3] = (InoID >> 8) & 0xFF;
 
-	// Byte 4: full module ID (25 = unassigned). Bytes 5-7: reserved
+	// Byte 4: full module ID (25 = unassigned). Byte 5: build flags, bit 0 = ISOBUS build
+	// (as PGN 32403 [28]; firmware before InoID 20116 sends 0). Bytes 6-7: reserved
 	data[4] = MDL.ID;
-	data[5] = 0;
+	data[5] = ISOBUS_ENABLED;
 	data[6] = 0;
 	data[7] = 0;
 
