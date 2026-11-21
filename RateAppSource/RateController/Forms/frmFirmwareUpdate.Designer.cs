@@ -40,6 +40,7 @@ namespace RateController.Forms
             this.lbCurrent = new System.Windows.Forms.Label();
             this.lbFileName = new System.Windows.Forms.Label();
             this.lbFile = new System.Windows.Forms.Label();
+            this.lbHexFile = new System.Windows.Forms.Label();
             this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.lbStatus = new System.Windows.Forms.Label();
             this.btnCheck = new System.Windows.Forms.Button();
@@ -140,17 +141,26 @@ namespace RateController.Forms
             this.lbFile.Size = new System.Drawing.Size(320, 24);
             this.lbFile.TabIndex = 9;
             this.lbFile.Text = "v2026.11.14";
-            // 
+            //
+            // lbHexFile
+            //
+            this.lbHexFile.AutoEllipsis = true;
+            this.lbHexFile.Location = new System.Drawing.Point(180, 185);
+            this.lbHexFile.Name = "lbHexFile";
+            this.lbHexFile.Size = new System.Drawing.Size(320, 24);
+            this.lbHexFile.TabIndex = 17;
+            this.lbHexFile.Text = "RCteensy.ino.hex";
+            //
             // pbProgress
-            // 
-            this.pbProgress.Location = new System.Drawing.Point(16, 196);
+            //
+            this.pbProgress.Location = new System.Drawing.Point(16, 226);
             this.pbProgress.Name = "pbProgress";
             this.pbProgress.Size = new System.Drawing.Size(484, 24);
             this.pbProgress.TabIndex = 10;
             // 
             // lbStatus
             // 
-            this.lbStatus.Location = new System.Drawing.Point(12, 230);
+            this.lbStatus.Location = new System.Drawing.Point(12, 260);
             this.lbStatus.Name = "lbStatus";
             this.lbStatus.Size = new System.Drawing.Size(488, 84);
             this.lbStatus.TabIndex = 11;
@@ -164,7 +174,7 @@ namespace RateController.Forms
             this.btnCheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCheck.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCheck.Image = global::RateController.Properties.Resources.Update;
-            this.btnCheck.Location = new System.Drawing.Point(12, 322);
+            this.btnCheck.Location = new System.Drawing.Point(12, 352);
             this.btnCheck.Name = "btnCheck";
             this.btnCheck.Size = new System.Drawing.Size(72, 72);
             this.btnCheck.TabIndex = 12;
@@ -179,7 +189,7 @@ namespace RateController.Forms
             this.btnBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBrowse.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
-            this.btnBrowse.Location = new System.Drawing.Point(92, 322);
+            this.btnBrowse.Location = new System.Drawing.Point(92, 352);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(72, 72);
             this.btnBrowse.TabIndex = 13;
@@ -195,7 +205,7 @@ namespace RateController.Forms
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStart.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnStart.Image = global::RateController.Properties.Resources.Update4;
-            this.btnStart.Location = new System.Drawing.Point(268, 322);
+            this.btnStart.Location = new System.Drawing.Point(268, 352);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(72, 72);
             this.btnStart.TabIndex = 14;
@@ -211,7 +221,7 @@ namespace RateController.Forms
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnCancel.Image = global::RateController.Properties.Resources.Cancel64;
-            this.btnCancel.Location = new System.Drawing.Point(348, 322);
+            this.btnCancel.Location = new System.Drawing.Point(348, 352);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 72);
             this.btnCancel.TabIndex = 15;
@@ -226,7 +236,7 @@ namespace RateController.Forms
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Tahoma", 14.25F);
             this.btnClose.Image = global::RateController.Properties.Resources.OK;
-            this.btnClose.Location = new System.Drawing.Point(428, 322);
+            this.btnClose.Location = new System.Drawing.Point(428, 352);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(72, 72);
             this.btnClose.TabIndex = 16;
@@ -246,7 +256,7 @@ namespace RateController.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 406);
+            this.ClientSize = new System.Drawing.Size(512, 436);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnStart);
@@ -254,6 +264,7 @@ namespace RateController.Forms
             this.Controls.Add(this.btnCheck);
             this.Controls.Add(this.lbStatus);
             this.Controls.Add(this.pbProgress);
+            this.Controls.Add(this.lbHexFile);
             this.Controls.Add(this.lbFile);
             this.Controls.Add(this.lbFileName);
             this.Controls.Add(this.lbCurrent);
@@ -295,6 +306,7 @@ namespace RateController.Forms
         private System.Windows.Forms.Label lbCurrent;
         private System.Windows.Forms.Label lbFileName;
         private System.Windows.Forms.Label lbFile;
+        private System.Windows.Forms.Label lbHexFile;
         private System.Windows.Forms.ProgressBar pbProgress;
         private System.Windows.Forms.Label lbStatus;
         private System.Windows.Forms.Button btnCheck;

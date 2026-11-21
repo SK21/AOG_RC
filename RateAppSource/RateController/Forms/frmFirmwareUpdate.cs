@@ -407,6 +407,7 @@ namespace RateController.Forms
             lbLink.Text = Props.CanEnabled ? "CanBus" : "Ethernet";
             lbCurrent.Text = Brd != null ? Props.ParseDate(Brd.InoID.ToString()) : Lang.lgFwUnknown;
             lbFile.Text = !File.Exists(cFile) ? Lang.lgFwNone : FileText();
+            lbHexFile.Text = File.Exists(cFile) ? Path.GetFileName(cFile) : "";
 
             string Block = Blocker(Brd);
             if (!cBusy) btnStart.Enabled = Block == "";

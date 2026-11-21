@@ -554,6 +554,20 @@ namespace RateController.Classes.Can
                     }
                     break;
 
+                case 32509:
+                    // → 0xFF1D (a product's units for a task controller)
+                    // PGN32509 layout: [2]=ModSenId (UDP: high=ModID,low=SenID), [3-4]=DDI, [5-8]=float metered units per ISO unit
+                    if (pgnData.Length >= 9)
+                    {
+                        frames.Add(BuildFrame(0x1D, new byte[] {
+                            SwapModSenNibbles(pgnData[2]),  // ModSenId (CAN: low=ModID,high=SenID)
+                            pgnData[3], pgnData[4],         // DDI
+                            pgnData[5], pgnData[6], pgnData[7], pgnData[8],  // float
+                            0
+                        }));
+                    }
+                    break;
+
                 case 32810:
                     // → 0xFF1A (firmware update control: start, commit, abort)
                     // PGN32810 layout: [2]=command, [3-8]=MAC, [9]=InoType

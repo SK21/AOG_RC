@@ -35,6 +35,7 @@ namespace RateController.Classes
         public static clsRateAdjustController RateAdjustController;
         public static clsSections Sections;
         public static clsTaskControllerRate TCrate;
+        public static PGN32509 ProductUnits = new PGN32509();
         public static PGN235 SectionsPGN;
         public static PGN32618 SwitchBox;
         public static clsTools Tls = new clsTools();
@@ -739,6 +740,7 @@ namespace RateController.Classes
             SafeEvent.Raise(UpdateStatus);
             SendRelays();
             RCalarm.CheckAlarms();
+            ProductUnits.Check();       // 32509 on a change or a module connecting
         }
 
         private static Boolean OpenFile(string NewProfile)

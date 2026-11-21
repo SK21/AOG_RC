@@ -453,6 +453,26 @@ void ReadPGNs(byte data[], uint16_t len)
 		}
 		break;
 
+#if ISOBUS_ENABLED
+	case 32509:
+		// a product's units for a task controller, RC to module (ISOBUS_TC.ino TC_SetUnits)
+		//0     HeaderLo    253
+		//1     HeaderHi    126
+		//2     ModSenID    high nibble module, low nibble sensor
+		//3-4   DDI         1 volume, 6 mass, 11 count per area; 0 = no type
+		//5-8   float32     metered units per litre, kg or seed
+		//9     CRC
+		// configuration: applied while the TC commands too
+		PGNlength = 10;
+		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
+		{
+			float Factor;
+			memcpy(&Factor, data + 5, 4);
+			TC_SetUnits(ParseSenID(data[2]), data[3] | data[4] << 8, Factor);
+		}
+		break;
+#endif
+
 	case 32700:
 		// module config
 		//0     HeaderLo    188

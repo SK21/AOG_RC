@@ -350,7 +350,6 @@ namespace RateController.Menu
             AreaUnits.Items[2] = Lang.lgMinute;
             AreaUnits.Items[3] = Lang.lgHour;
 
-            ckTCsend.Text = Lang.lgTaskController;
             tbVolumeUnits.Items[(int)QuantityUnits.GallonsImp] = Lang.lgTCImpGallons;
             tbVolumeUnits.Items[(int)QuantityUnits.GallonsUS] = Lang.lgTCUSGallons;
             tbVolumeUnits.Items[(int)QuantityUnits.Litres] = Lang.lgTCLitres;

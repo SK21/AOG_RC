@@ -2,8 +2,14 @@
 // From jaworeA's RC11-isobus. The module uploads a DDOP (one boom, its sections, rate and
 // speed process data) to a TC: a tractor terminal or AOG-TaskController. While the TC
 // commands, it switches the sections (setpoint condensed work state, DDI 290; the module
-// reports the actual state, DDI 161) and sets product 1's rate in L/ha (DDI 1), which becomes
+// reports the actual state, DDI 161) and sets product 1's rate, which becomes
 // Sensor[0].TargetUPM from speed and active width.
+//
+// Rate units: the TC sends the rate in the ISO unit of its DDI (1 litres, 6 kg, 11 seeds per
+// ha); the board meters in RC's units (its flow cal is pulses per RC unit). RC sends the type
+// and how many metered units are one litre, kg or seed (PGN 32509 / CAN 0xFF1D, TC_SetUnits),
+// stored in TCsettings so a board under a terminal without RC keeps them. The DDOP declares
+// that type's rate DDIs. Until RC has sent units, the TC's rate is not applied.
 //
 // Command authority (ISOBUS_Path_Forward.md "Command authority"):
 // - RC: at power-up and after a TC session. RC's rate and relay commands apply, as today.
@@ -42,17 +48,20 @@ const uint16_t TC_OBJ_DPT_WIDTH_BASE = 3100;
 
 const uint8_t TCmaxSections = 16;
 const int TCsettingsAddr = 1024;		// after the sensors (253 + 6 x 124 = 997)
-const uint16_t TCsettingsID = 0x5443;	// "TC"; change when TCsettings changes shape
+const uint16_t TCsettingsID = 0x5444;	// change when TCsettings changes shape (0x5443: no units)
 
 struct TCsettings
 {
 	uint16_t Identifier = TCsettingsID;
 	uint8_t SectionCount = 8;
 	uint16_t SectionWidthCm[TCmaxSections] = { 50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50 };
+	uint16_t RateDDI = 1;			// setpoint rate DDI: 1 volume, 6 mass, 11 count per area (from RC)
+	float UnitsPerISO = 0.0f;		// metered units per litre, kg or seed (from RC); 0 = not set
 };
 
 TCsettings TCset;
-float TC_TargetRateLHa = 0.0f;		// from the TC (DDI 1), RAM only
+float TC_TargetRate = 0.0f;			// from the TC, litres, kg or seeds per ha; RAM only
+bool TC_UnitsWarned = false;		// "units not set" printed once
 
 extern uint8_t NewLo;	// Relays.ino: outputs actually driven (that file comes later in the build)
 extern uint8_t NewHi;
@@ -79,6 +88,85 @@ void TC_LoadSettings()
 	else
 	{
 		TCset = TCsettings();	// defaults, not written until settings are saved
+	}
+	if (!TC_IsRateDDI(TCset.RateDDI)) TCset.RateDDI = 1;
+	if (!(TCset.UnitsPerISO > 0.0f && TCset.UnitsPerISO < 1.0e7f)) TCset.UnitsPerISO = 0.0f;	// also catches NaN
+}
+
+// the setpoint rate DDIs a product can use: 1 volume, 6 mass, 11 count per area
+bool TC_IsRateDDI(uint16_t DDI)
+{
+	return DDI == 1 || DDI == 6 || DDI == 11;
+}
+
+// the matching actual rate DDI: 2, 7 or 12
+uint16_t TC_ActualRateDDI()
+{
+	return TCset.RateDDI + 1;
+}
+
+// the rate DDI's raw value <-> litres, kg or seeds per ha
+// DDI 1: 0.01 mm3/m2 per bit (1 L/ha = 10000), DDI 6: 1 mg/m2 (1 kg/ha = 100), DDI 11: 0.001 /m2 (1 seed/ha = 0.1)
+float TC_ValueToPerHa(std::int32_t value)
+{
+	float Result = 0.0f;
+	if (value > 0)
+	{
+		if (TCset.RateDDI == 6) Result = value * 0.01f;
+		else if (TCset.RateDDI == 11) Result = value * 10.0f;
+		else Result = value * 0.0001f;
+	}
+	return Result;
+}
+
+std::int32_t TC_PerHaToValue(float perHa)
+{
+	float Raw;
+	if (TCset.RateDDI == 6) Raw = perHa * 100.0f;
+	else if (TCset.RateDDI == 11) Raw = perHa * 0.1f;
+	else Raw = perHa * 10000.0f;
+	if (Raw < 0.0f) Raw = 0.0f;
+	if (Raw > 2.0e9f) Raw = 2.0e9f;
+	return static_cast<std::int32_t>(Raw + 0.5f);
+}
+
+const __FlashStringHelper* TC_RateUnit()
+{
+	if (TCset.RateDDI == 6) return F(" kg/ha");
+	if (TCset.RateDDI == 11) return F(" seeds/ha");
+	return F(" L/ha");
+}
+
+// PGN 32509 / CAN 0xFF1D from RC: the product's type and metered units per litre, kg or seed.
+// Only sensor 0 is driven by the TC. DDI 0 = the unit has no type: the TC's rate is not applied.
+void TC_SetUnits(uint8_t SensorID, uint16_t DDI, float UnitsPerISO)
+{
+	if (SensorID == 0)
+	{
+		float Factor = (TC_IsRateDDI(DDI) && UnitsPerISO > 0.0f && UnitsPerISO < 1.0e7f) ? UnitsPerISO : 0.0f;
+		bool NewType = TC_IsRateDDI(DDI) && DDI != TCset.RateDDI;
+		if (NewType || Factor != TCset.UnitsPerISO)
+		{
+			if (NewType) TCset.RateDDI = DDI;
+			TCset.UnitsPerISO = Factor;
+			TC_TargetRate = 0.0f;		// a rate in the old type's unit no longer applies
+			TC_UnitsWarned = false;
+
+			Serial.print(F("TC: units DDI "));
+			Serial.print(TCset.RateDDI);
+			Serial.print(F(", "));
+			Serial.print(Factor, 6);
+			Serial.println(F(" per litre, kg or seed"));
+
+			if (NewType)
+			{
+				TC_GeometryChanged();	// saves, and uploads the DDOP with the new rate DDIs
+			}
+			else
+			{
+				TC_SaveSettings();
+			}
+		}
 	}
 }
 
@@ -135,13 +223,14 @@ void TC_ClearCommands()
 	RelayLo = 0;
 	RelayHi = 0;
 	MasterOn = false;
-	TC_TargetRateLHa = 0.0f;
+	TC_TargetRate = 0.0f;
 	for (uint8_t i = 0; i < MDL.SensorCount; i++)
 	{
 		Sensor[i].TargetUPM = 0.0f;
 		Sensor[i].ManualAdjust = 0;
 		AutoOn[i] = true;		// auto at target 0 applies nothing
 		CalibrationOn[i] = false;
+		FlowExpected[i] = false;	// set by RC's 32500/0xFF03, which the TC state ignores; TC_Update sets product 1's
 	}
 }
 
@@ -188,39 +277,31 @@ float TC_ActiveWidthM()
 	return Result;
 }
 
+// metered units per minute: the TC's rate (litres, kg or seeds per ha) x metered units per ISO unit
+// x ha per minute; 0 until RC has sent the units
 float TC_TargetUPM()
 {
 	float Result = 0.0f;
 	float speedKmh = SPEED_GetKmh();
 	float widthM = TC_ActiveWidthM();
-	if (MasterOn && TC_TargetRateLHa > 0.0f && speedKmh > 0.05f && widthM > 0.01f)
+	if (MasterOn && TC_TargetRate > 0.0f && TCset.UnitsPerISO > 0.0f && speedKmh > 0.05f && widthM > 0.01f)
 	{
-		Result = (TC_TargetRateLHa * speedKmh * widthM) / 600.0f;
+		Result = (TC_TargetRate * TCset.UnitsPerISO * speedKmh * widthM) / 600.0f;
 	}
 	return Result;
 }
 
-float TC_ActualRateLHa()
+// litres, kg or seeds per ha actually applied, the inverse of TC_TargetUPM
+float TC_ActualRate()
 {
 	float Result = 0.0f;
 	float speedKmh = SPEED_GetKmh();
 	float widthM = TC_ActiveWidthM();
-	if (MDL.SensorCount > 0 && speedKmh > 0.05f && widthM > 0.01f)
+	if (MDL.SensorCount > 0 && TCset.UnitsPerISO > 0.0f && speedKmh > 0.05f && widthM > 0.01f)
 	{
-		Result = (Sensor[0].UPM * 600.0f) / (speedKmh * widthM);
+		Result = (Sensor[0].UPM * 600.0f) / (speedKmh * widthM * TCset.UnitsPerISO);
 	}
 	return Result;
-}
-
-// DDI 1/2 are mm3/m2 at 0.01 per bit: 1 L/ha = 100 mm3/m2 = 10000 counts
-std::int32_t TC_LHaToValue(float rateLHa)
-{
-	return static_cast<std::int32_t>(rateLHa * 10000.0f);
-}
-
-float TC_ValueToLHa(std::int32_t value)
-{
-	return (value < 0) ? 0.0f : value * 0.0001f;
 }
 
 uint32_t TC_EncodeWorkState(uint8_t lo, uint8_t hi)
@@ -284,13 +365,13 @@ bool TC_RequestValue(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 		{
 			value = static_cast<std::int32_t>(TC_EncodeWorkState(RelayLo, RelayHi));
 		}
-		else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointVolumePerAreaApplicationRate))
+		else if (DDI == TCset.RateDDI)
 		{
-			value = TC_LHaToValue(TC_TargetRateLHa);
+			value = TC_PerHaToValue(TC_TargetRate);
 		}
-		else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualVolumePerAreaApplicationRate))
+		else if (DDI == TC_ActualRateDDI())
 		{
-			value = TC_LHaToValue(TC_ActualRateLHa());
+			value = TC_PerHaToValue(TC_ActualRate());
 		}
 		else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualSpeed))
 		{
@@ -314,17 +395,22 @@ bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 			TC_ApplyCondensedWorkState(value);
 			Result = true;
 		}
-		else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointVolumePerAreaApplicationRate))
+		else if (DDI == TCset.RateDDI)
 		{
 			TC_EnterCommand();
-			float NewRate = TC_ValueToLHa(value);
-			if (NewRate != TC_TargetRateLHa)
+			float NewRate = TC_ValueToPerHa(value);
+			if (NewRate != TC_TargetRate)
 			{
 				Serial.print(F("TC: rate "));
 				Serial.print(NewRate, 2);
-				Serial.println(F(" L/ha"));
+				Serial.println(TC_RateUnit());
 			}
-			TC_TargetRateLHa = NewRate;
+			if (TCset.UnitsPerISO <= 0.0f && NewRate > 0.0f && !TC_UnitsWarned)
+			{
+				Serial.println(F("TC: rate ignored, units not set in RC"));	// TC_TargetUPM stays 0
+				TC_UnitsWarned = true;
+			}
+			TC_TargetRate = NewRate;
 			TC_RefreshCommandTime();
 			Result = true;
 		}
@@ -340,10 +426,13 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 
 	auto ddop = std::make_shared<isobus::DeviceDescriptorObjectPool>(4);
 	std::array<std::uint8_t, isobus::task_controller_object::DeviceObject::MAX_STRUCTURE_AND_LOCALIZATION_LABEL_LENGTH> localization = { 'e','n',0,0,0,0,0xFF };
-	// change the structure label whenever the DDOP's structure changes, so a TC reloads it
-	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','0','5' };
+	// change the structure label whenever the DDOP's structure changes, so a TC reloads it;
+	// the last character is the rate type (V volume, M mass, C count)
+	char TypeChar = (TCset.RateDDI == 6) ? 'M' : ((TCset.RateDDI == 11) ? 'C' : 'V');
+	char structureLabel[8] = { 'R','C','T','C','0','6', TypeChar, 0 };
+	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','0','6', static_cast<std::uint8_t>(TypeChar) };
 
-	ddop->add_device(InoDescription, String(InoID).c_str(), String(MDL.ID).c_str(), "RCTC005", localization, extendedLabel, ISOBUSicf->get_NAME().get_full_name());
+	ddop->add_device(InoDescription, String(InoID).c_str(), String(MDL.ID).c_str(), structureLabel, localization, extendedLabel, ISOBUSicf->get_NAME().get_full_name());
 	ddop->add_device_element("Boom", TC_ELEMENT_BOOM, 0, DeviceElementType::Function, TC_OBJ_BOOM);
 
 	const uint8_t settable = static_cast<std::uint8_t>(PropertiesBit::MemberOfDefaultSet) | static_cast<std::uint8_t>(PropertiesBit::Settable);
@@ -352,8 +441,9 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 
 	ddop->add_device_process_data("Set Section State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointCondensedWorkState1_16), isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_SETPOINT_WORK_STATE);
 	ddop->add_device_process_data("Actual Section State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualCondensedWorkState1_16), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_WORK_STATE);
-	ddop->add_device_process_data("Target LHa", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointVolumePerAreaApplicationRate), isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_SETPOINT_AREA_RATE);
-	ddop->add_device_process_data("Actual LHa", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualVolumePerAreaApplicationRate), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_AREA_RATE);
+	// rate DDIs follow the product's type from RC: 1/2 volume, 6/7 mass, 11/12 count per area
+	ddop->add_device_process_data("Target Rate", TCset.RateDDI, isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_SETPOINT_AREA_RATE);
+	ddop->add_device_process_data("Actual Rate", TC_ActualRateDDI(), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_AREA_RATE);
 	ddop->add_device_process_data("Actual Speed", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualSpeed), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_SPEED);
 
 	auto boom = std::static_pointer_cast<isobus::task_controller_object::DeviceElementObject>(ddop->get_object_by_id(TC_OBJ_BOOM));
@@ -418,7 +508,11 @@ void TC_Update()
 	{
 		// the TC's rate becomes product 1's target as speed and active width change
 		TC_RefreshCommandTime();
-		if (MDL.SensorCount > 0) Sensor[0].TargetUPM = TC_TargetUPM();
+		if (MDL.SensorCount > 0)
+		{
+			Sensor[0].TargetUPM = TC_TargetUPM();
+			FlowExpected[0] = (RelayLo || RelayHi);	// RC's flow-path rule: a section is on
+		}
 	}
 
 	if (TC_DDOPNeedsReupload && ISOBUStc->get_is_connected())
@@ -431,7 +525,7 @@ void TC_Update()
 	{
 		TC_LastReport = millis();
 		TC_ReportActualSectionState(false);
-		ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualVolumePerAreaApplicationRate));
+		ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, TC_ActualRateDDI());
 		ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualSpeed));
 	}
 }

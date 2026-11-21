@@ -50,12 +50,12 @@
             this.lbAltRate = new System.Windows.Forms.Label();
             this.lbProduct = new System.Windows.Forms.Label();
             this.pnlFan = new System.Windows.Forms.Panel();
+            this.lbFanPWMvalue = new System.Windows.Forms.Label();
+            this.lbFanPWM = new System.Windows.Forms.Label();
             this.lbFanErrorValue = new System.Windows.Forms.Label();
             this.lbFanError = new System.Windows.Forms.Label();
             this.lbFanRPMvalue = new System.Windows.Forms.Label();
             this.lbFanRPM = new System.Windows.Forms.Label();
-            this.lbFanPWMvalue = new System.Windows.Forms.Label();
-            this.lbFanPWM = new System.Windows.Forms.Label();
             this.lbCountsRPM = new System.Windows.Forms.Label();
             this.tbCountsRPM = new System.Windows.Forms.TextBox();
             this.lbTargetRPM = new System.Windows.Forms.Label();
@@ -179,8 +179,8 @@
             this.AreaUnits.Name = "AreaUnits";
             this.AreaUnits.Size = new System.Drawing.Size(176, 31);
             this.AreaUnits.TabIndex = 141;
-            this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.tbProduct_TextChanged);
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
+            this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.tbProduct_TextChanged);
             // 
             // tbVolumeUnits
             // 
@@ -240,23 +240,7 @@
             this.lb6.Size = new System.Drawing.Size(90, 23);
             this.lb6.TabIndex = 151;
             this.lb6.Text = "Tank Size";
-            //
-            // ckTCsend
-            //
-            this.ckTCsend.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckTCsend.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckTCsend.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckTCsend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTCsend.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckTCsend.Location = new System.Drawing.Point(88, 476);
-            this.ckTCsend.Name = "ckTCsend";
-            this.ckTCsend.Size = new System.Drawing.Size(220, 34);
-            this.ckTCsend.TabIndex = 165;
-            this.ckTCsend.Text = "Task Controller";
-            this.ckTCsend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckTCsend.UseVisualStyleBackColor = true;
-            this.ckTCsend.CheckedChanged += new System.EventHandler(this.tbProduct_TextChanged);
-            //
+            // 
             // tbAltRate
             // 
             this.tbAltRate.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -353,9 +337,9 @@
             this.pnlFan.Name = "pnlFan";
             this.pnlFan.Size = new System.Drawing.Size(396, 260);
             this.pnlFan.TabIndex = 163;
-            //
+            // 
             // lbFanPWMvalue
-            //
+            // 
             this.lbFanPWMvalue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFanPWMvalue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFanPWMvalue.Location = new System.Drawing.Point(245, 174);
@@ -363,9 +347,9 @@
             this.lbFanPWMvalue.Size = new System.Drawing.Size(102, 30);
             this.lbFanPWMvalue.TabIndex = 198;
             this.lbFanPWMvalue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lbFanPWM
-            //
+            // 
             this.lbFanPWM.AutoSize = true;
             this.lbFanPWM.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFanPWM.Location = new System.Drawing.Point(42, 178);
@@ -373,9 +357,9 @@
             this.lbFanPWM.Size = new System.Drawing.Size(52, 23);
             this.lbFanPWM.TabIndex = 199;
             this.lbFanPWM.Text = "PWM";
-            //
+            // 
             // lbFanErrorValue
-            //
+            // 
             this.lbFanErrorValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbFanErrorValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbFanErrorValue.Location = new System.Drawing.Point(245, 133);
@@ -488,6 +472,22 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(396, 522);
             this.pnlMain.TabIndex = 164;
+            // 
+            // ckTCsend
+            // 
+            this.ckTCsend.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckTCsend.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckTCsend.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckTCsend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckTCsend.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckTCsend.Location = new System.Drawing.Point(88, 476);
+            this.ckTCsend.Name = "ckTCsend";
+            this.ckTCsend.Size = new System.Drawing.Size(220, 34);
+            this.ckTCsend.TabIndex = 165;
+            this.ckTCsend.Text = "ISOBUS";
+            this.ckTCsend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckTCsend.UseVisualStyleBackColor = true;
+            this.ckTCsend.CheckedChanged += new System.EventHandler(this.tbProduct_TextChanged);
             // 
             // btnRight
             // 

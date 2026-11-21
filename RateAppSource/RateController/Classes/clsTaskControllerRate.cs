@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 namespace RateController.Classes
@@ -9,13 +11,19 @@ namespace RateController.Classes
     // Frame: 80 81 7F F2 07 [DDI lo, hi] [value int32 LE] [channel] [checksum], channel = product + 1.
     // Sent every second (AOG-TaskController sends 0 after 4 s without a setpoint) and at once on a change.
     // Source 0x7F: AOG-TaskController only accepts AgIO's source today; RC's own source is a question for upstream.
-    // Sent to 127.0.0.1:8888 only, AOG-TaskController on this PC; another PC, or a TC bound to a LAN
-    // address, would also need the subnet broadcast.
+    // Sent to AOG-TaskController on this PC: to 127.0.0.1:8888 and to each of this PC's own IPv4
+    // addresses on 8888. AOG-TaskController reads 8888 through a socket bound to ONE address: loopback
+    // when no adapter matches its subnet, the adapter's address once AgIO sends its subnet (it rebinds),
+    // and then packets to 127.0.0.1 never reach it. Packets to the PC's own address stay on the PC.
+    // Another PC would need the subnet broadcast.
     public class clsTaskControllerRate : IDisposable
     {
+        private const int AddressRefreshMs = 5000;
         private const int CheckMs = 200;
         private const int ResendMs = 1000;
         private const int TCport = 8888;
+        private List<IPAddress> LocalAddresses = new List<IPAddress>();
+        private DateTime LocalAddressesTime = DateTime.MinValue;
         private readonly int RateProducts = Props.MaxProducts - 2;     // the last two are fans
         private readonly ushort[] LastDDI;
         private readonly DateTime[] LastSent;
@@ -82,11 +90,43 @@ namespace RateController.Classes
             return Data;
         }
 
+        // 127.0.0.1 plus this PC's own IPv4 addresses on adapters that are up, refreshed every few seconds
+        private List<IPAddress> Destinations()
+        {
+            if ((DateTime.Now - LocalAddressesTime).TotalMilliseconds >= AddressRefreshMs)
+            {
+                List<IPAddress> Found = new List<IPAddress> { IPAddress.Loopback };
+                try
+                {
+                    foreach (NetworkInterface Nic in NetworkInterface.GetAllNetworkInterfaces())
+                    {
+                        if (Nic.OperationalStatus == OperationalStatus.Up && Nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                        {
+                            foreach (UnicastIPAddressInformation Info in Nic.GetIPProperties().UnicastAddresses)
+                            {
+                                if (Info.Address.AddressFamily == AddressFamily.InterNetwork && !Found.Contains(Info.Address)) Found.Add(Info.Address);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Props.WriteErrorLog("clsTaskControllerRate/Destinations: " + ex.Message);
+                }
+                LocalAddresses = Found;
+                LocalAddressesTime = DateTime.Now;
+            }
+            return LocalAddresses;
+        }
+
         private void Send(ushort DDI, int Value, byte Channel)
         {
             if (Udp == null) Udp = new UdpClient();
             byte[] Frame = BuildFrame(DDI, Value, Channel);
-            Udp.Send(Frame, Frame.Length, new IPEndPoint(IPAddress.Loopback, TCport));
+            foreach (IPAddress Address in Destinations())
+            {
+                Udp.Send(Frame, Frame.Length, new IPEndPoint(Address, TCport));
+            }
         }
 
         private void SendTimer_Tick(object sender, EventArgs e)
