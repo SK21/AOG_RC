@@ -17,6 +17,9 @@ namespace RateController.Menu
         private double OtherFactor;
         private string OtherName = "";
         private int QuantityIndex = -1;     // the unit chosen before Other, put back if its dialog is cancelled
+        private const int ListClosedMs = 500;
+        private Control LastList;           // the drop-down list that closed last, and when
+        private DateTime LastListClosed = DateTime.MinValue;
 
         public frmMenuRate(frmMenu menu)
         {
@@ -28,6 +31,25 @@ namespace RateController.Menu
         private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetTCenabled();
+        }
+
+        private void List_DropDownClosed(object sender, EventArgs e)
+        {
+            LastList = sender as Control;
+            LastListClosed = DateTime.Now;
+        }
+
+        // true when a number box got focus just after a drop-down list closed: the click that chose the item
+        // reached the box under the list. Focus goes back to the list and the number pad stays closed.
+        private bool FromClosedList()
+        {
+            bool Result = LastList != null && (DateTime.Now - LastListClosed).TotalMilliseconds < ListClosedMs;
+            if (Result)
+            {
+                Control List = LastList;
+                BeginInvoke((Action)(() => List.Focus()));
+            }
+            return Result;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -165,14 +187,17 @@ namespace RateController.Menu
 
         private void FlowCal_Enter(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(FlowCal.Text, out tempD);
-            using (var form = new FormNumeric(0.01, 16700, tempD))
+            if (!FromClosedList())
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                double tempD;
+                double.TryParse(FlowCal.Text, out tempD);
+                using (var form = new FormNumeric(0.01, 16700, tempD))
                 {
-                    FlowCal.Text = form.ReturnValue.ToString("N3");
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        FlowCal.Text = form.ReturnValue.ToString("N3");
+                    }
                 }
             }
         }
@@ -226,14 +251,17 @@ namespace RateController.Menu
 
         private void lbBaseRate_Enter(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(lbBaseRate.Text, out tempD);
-            using (var form = new FormNumeric(0, 50000, tempD))
+            if (!FromClosedList())
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                double tempD;
+                double.TryParse(lbBaseRate.Text, out tempD);
+                using (var form = new FormNumeric(0, 50000, tempD))
                 {
-                    lbBaseRate.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        lbBaseRate.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -272,14 +300,17 @@ namespace RateController.Menu
 
         private void ProdDensity_Enter(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(ProdDensity.Text, out tempD);
-            using (var form = new FormNumeric(0, 10000, tempD))
+            if (!FromClosedList())
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                double tempD;
+                double.TryParse(ProdDensity.Text, out tempD);
+                using (var form = new FormNumeric(0, 10000, tempD))
                 {
-                    ProdDensity.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        ProdDensity.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -420,14 +451,17 @@ namespace RateController.Menu
 
         private void TankSize_Enter(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(TankSize.Text, out tempD);
-            using (var form = new FormNumeric(0, 100000, tempD))
+            if (!FromClosedList())
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                double tempD;
+                double.TryParse(TankSize.Text, out tempD);
+                using (var form = new FormNumeric(0, 100000, tempD))
                 {
-                    TankSize.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        TankSize.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }
@@ -445,14 +479,17 @@ namespace RateController.Menu
 
         private void tbAltRate_Enter(object sender, EventArgs e)
         {
-            double tempD;
-            double.TryParse(tbAltRate.Text, out tempD);
-            using (var form = new FormNumeric(1, 200, tempD))
+            if (!FromClosedList())
             {
-                var result = form.ShowDialog();
-                if (result == DialogResult.OK)
+                double tempD;
+                double.TryParse(tbAltRate.Text, out tempD);
+                using (var form = new FormNumeric(1, 200, tempD))
                 {
-                    tbAltRate.Text = form.ReturnValue.ToString();
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        tbAltRate.Text = form.ReturnValue.ToString();
+                    }
                 }
             }
         }

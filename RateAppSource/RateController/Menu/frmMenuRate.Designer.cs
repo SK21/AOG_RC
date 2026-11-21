@@ -110,6 +110,7 @@
             this.ValveType.Size = new System.Drawing.Size(176, 31);
             this.ValveType.TabIndex = 139;
             this.ValveType.SelectedIndexChanged += new System.EventHandler(this.ValveType_SelectedIndexChanged);
+            this.ValveType.DropDownClosed += new System.EventHandler(this.List_DropDownClosed);
             // 
             // lb5
             // 
@@ -139,7 +140,7 @@
             this.CbUseProdDensity.Margin = new System.Windows.Forms.Padding(2);
             this.CbUseProdDensity.Name = "CbUseProdDensity";
             this.CbUseProdDensity.Size = new System.Drawing.Size(15, 14);
-            this.CbUseProdDensity.TabIndex = 156;
+            this.CbUseProdDensity.TabIndex = 144;
             this.CbUseProdDensity.UseVisualStyleBackColor = true;
             this.CbUseProdDensity.CheckedChanged += new System.EventHandler(this.CbUseProdDensity_CheckedChanged);
             // 
@@ -150,7 +151,7 @@
             this.ProdDensity.MaxLength = 8;
             this.ProdDensity.Name = "ProdDensity";
             this.ProdDensity.Size = new System.Drawing.Size(100, 30);
-            this.ProdDensity.TabIndex = 155;
+            this.ProdDensity.TabIndex = 145;
             this.ProdDensity.Text = "143";
             this.ProdDensity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ProdDensity.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
@@ -178,9 +179,10 @@
             this.AreaUnits.Location = new System.Drawing.Point(206, 166);
             this.AreaUnits.Name = "AreaUnits";
             this.AreaUnits.Size = new System.Drawing.Size(176, 31);
-            this.AreaUnits.TabIndex = 141;
+            this.AreaUnits.TabIndex = 142;
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            this.AreaUnits.DropDownClosed += new System.EventHandler(this.List_DropDownClosed);
             // 
             // tbVolumeUnits
             // 
@@ -200,8 +202,9 @@
             this.tbVolumeUnits.Location = new System.Drawing.Point(206, 114);
             this.tbVolumeUnits.Name = "tbVolumeUnits";
             this.tbVolumeUnits.Size = new System.Drawing.Size(176, 31);
-            this.tbVolumeUnits.TabIndex = 154;
+            this.tbVolumeUnits.TabIndex = 141;
             this.tbVolumeUnits.SelectedIndexChanged += new System.EventHandler(this.tbVolumeUnits_SelectedIndexChanged);
+            this.tbVolumeUnits.DropDownClosed += new System.EventHandler(this.List_DropDownClosed);
             this.tbVolumeUnits.SelectionChangeCommitted += new System.EventHandler(this.tbVolumeUnits_SelectionChangeCommitted);
             // 
             // TankSize
@@ -211,7 +214,7 @@
             this.TankSize.MaxLength = 8;
             this.TankSize.Name = "TankSize";
             this.TankSize.Size = new System.Drawing.Size(100, 30);
-            this.TankSize.TabIndex = 144;
+            this.TankSize.TabIndex = 148;
             this.TankSize.Text = "0";
             this.TankSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TankSize.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
@@ -225,7 +228,7 @@
             this.FlowCal.MaxLength = 8;
             this.FlowCal.Name = "FlowCal";
             this.FlowCal.Size = new System.Drawing.Size(100, 30);
-            this.FlowCal.TabIndex = 142;
+            this.FlowCal.TabIndex = 143;
             this.FlowCal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.FlowCal.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
             this.FlowCal.Enter += new System.EventHandler(this.FlowCal_Enter);
@@ -248,7 +251,7 @@
             this.tbAltRate.MaxLength = 8;
             this.tbAltRate.Name = "tbAltRate";
             this.tbAltRate.Size = new System.Drawing.Size(100, 30);
-            this.tbAltRate.TabIndex = 153;
+            this.tbAltRate.TabIndex = 147;
             this.tbAltRate.Text = "75";
             this.tbAltRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbAltRate.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
@@ -262,7 +265,7 @@
             this.lbBaseRateDes.Location = new System.Drawing.Point(16, 327);
             this.lbBaseRateDes.Name = "lbBaseRateDes";
             this.lbBaseRateDes.Size = new System.Drawing.Size(93, 23);
-            this.lbBaseRateDes.TabIndex = 147;
+            this.lbBaseRateDes.TabIndex = 170;
             this.lbBaseRateDes.Text = "Base Rate";
             // 
             // lb2
@@ -272,7 +275,7 @@
             this.lb2.Location = new System.Drawing.Point(16, 170);
             this.lb2.Name = "lb2";
             this.lb2.Size = new System.Drawing.Size(135, 23);
-            this.lb2.TabIndex = 148;
+            this.lb2.TabIndex = 171;
             this.lb2.Text = "Coverage Units";
             // 
             // lb1
@@ -282,7 +285,7 @@
             this.lb1.Location = new System.Drawing.Point(16, 118);
             this.lb1.Name = "lb1";
             this.lb1.Size = new System.Drawing.Size(127, 23);
-            this.lb1.TabIndex = 149;
+            this.lb1.TabIndex = 172;
             this.lb1.Text = "Quantity Units";
             // 
             // lbBaseRate
@@ -292,7 +295,7 @@
             this.lbBaseRate.MaxLength = 8;
             this.lbBaseRate.Name = "lbBaseRate";
             this.lbBaseRate.Size = new System.Drawing.Size(100, 30);
-            this.lbBaseRate.TabIndex = 143;
+            this.lbBaseRate.TabIndex = 146;
             this.lbBaseRate.Text = "0";
             this.lbBaseRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.lbBaseRate.TextChanged += new System.EventHandler(this.tbProduct_TextChanged);
@@ -483,7 +486,7 @@
             this.ckTCsend.Location = new System.Drawing.Point(88, 476);
             this.ckTCsend.Name = "ckTCsend";
             this.ckTCsend.Size = new System.Drawing.Size(220, 34);
-            this.ckTCsend.TabIndex = 165;
+            this.ckTCsend.TabIndex = 149;
             this.ckTCsend.Text = "ISOBUS";
             this.ckTCsend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckTCsend.UseVisualStyleBackColor = true;
