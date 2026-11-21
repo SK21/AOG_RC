@@ -66,16 +66,16 @@ namespace RateController.PGNs
 
         // metered units per ISO unit: the board meters in the quantity unit, or in quantity / density
         // when density is on (clsProduct.TargetUPM), so one ISO unit is 1 / (factor x density) of them
+        // (clsProduct.TCunitsPerISO, shared with the implement's actuals)
         private static void Units(clsProduct Prd, out ushort DDI, out float Factor)
         {
             DDI = 0;
             Factor = 0;
-            if (Prd.ControlType != ControlTypeEnum.Fan && Prd.QuantityDDI != 0 && Prd.QuantityFactor > 0)
+            double PerISO = Prd.TCunitsPerISO();
+            if (PerISO > 0)
             {
-                double PerMetered = Prd.QuantityFactor;     // litres, kg or seeds in one quantity unit
-                if (Prd.EnableProdDensity && Prd.ProdDensity > 0) PerMetered *= Prd.ProdDensity;
                 DDI = Prd.QuantityDDI;
-                Factor = (float)(1.0 / PerMetered);
+                Factor = (float)PerISO;
             }
         }
 

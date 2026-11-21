@@ -1177,6 +1177,64 @@ namespace RateController.Classes
             return Result;
         }
 
+        /// <summary>Metered units (what a module's flow cal counts) per litre, kg or seed of the product's ISO type:
+        /// 1 / (quantity factor x density when on). 0 when the unit has no ISO type. Used for PGN 32509 and for
+        /// the implement's actuals (PGN 0xF5).</summary>
+        public double TCunitsPerISO()
+        {
+            double Result = 0;
+            if (cControlType != ControlTypeEnum.Fan && QuantityDDI != 0 && QuantityFactor > 0)
+            {
+                double PerMetered = QuantityFactor;     // litres, kg or seeds in one quantity unit
+                if (cEnableProdDensity && cProdDensity > 0) PerMetered *= cProdDensity;
+                Result = 1.0 / PerMetered;
+            }
+            return Result;
+        }
+
+        // The implement's actuals for this product (PGN 0xF5 through AOG-TaskController), when its ISOBUS button
+        // is on and they are fresh: its rate in metered units per minute at RC's hectares per minute, and its
+        // total in metered units (TotalValid false when the implement reports none).
+        private bool ImplementActuals(out double UPM, out double Total, out bool TotalValid)
+        {
+            bool Result = false;
+            UPM = 0;
+            Total = 0;
+            TotalValid = false;
+            double PerISO = TCunitsPerISO();
+            if (TCsends() && PerISO > 0 && Core.TCrate != null &&
+                Core.TCrate.ImplementActuals(cProductID, out ushort ActualDDI, out int Rate, out bool RateValid, out ushort TotalDDI, out int TotalRaw, out bool TotalOK))
+            {
+                Result = true;
+                if (RateValid && Rate > 0)
+                {
+                    // DDI 2: 0.01 mm³/m² (1 L/ha = 10000), DDI 7: 1 mg/m² (1 kg/ha = 100), DDI 12: 0.001 /m² (1 seed/ha = 0.1)
+                    double PerHa;
+                    switch (ActualDDI)
+                    {
+                        case 2: PerHa = Rate / 10000.0; break;
+                        case 7: PerHa = Rate / 100.0; break;
+                        default: PerHa = Rate * 10.0; break;
+                    }
+                    UPM = PerHa * PerISO * Core.Sections.HectaresPerMinute;
+                }
+                if (TotalOK)
+                {
+                    // mL (351) and g (352) -> L and kg; count (82) as is
+                    double ISO = (TotalDDI == 82) ? TotalRaw : TotalRaw / 1000.0;
+                    Total = ISO * PerISO;
+                    TotalValid = true;
+                }
+            }
+            return Result;
+        }
+
+        /// <summary>True while the implement's actuals come in for this product: its module's PGN 32400 is ignored.</summary>
+        public bool ImplementReporting()
+        {
+            return ImplementActuals(out _, out _, out _);
+        }
+
         public double TargetUPM() // returns units per minute set rate
         {
             double Result = 0;
@@ -1237,7 +1295,9 @@ namespace RateController.Classes
         {
             try
             {
-                if (cAppMode != ApplicationMode.DocumentTarget)    // block real module
+                // block the real module for a document-target product, and while an ISOBUS implement reports
+                // this product's actuals (Group2_Step2_Recording_Design.md E4)
+                if (cAppMode != ApplicationMode.DocumentTarget && !ImplementReporting())
                 {
                     switch (PGN)
                     {
@@ -1282,7 +1342,8 @@ namespace RateController.Classes
 
         public void Update()
         {
-            if (RateSensorData.ModuleSending() || cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
+            bool Implement = ImplementActuals(out double ImplementUPM, out double ImplementTotal, out bool ImplementTotalValid);
+            if (RateSensorData.ModuleSending() || Implement || cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
             {
                 double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
                 UpdateStopWatch.Restart();
@@ -1333,13 +1394,28 @@ namespace RateController.Classes
                 // enabled one. A running calibration disables its own product, so it still sends
                 if (Enabled || (CalibrateOjbect?.PowerOn ?? false)) ModuleRateSettings.Send();
 
-                if (cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
+                if (Implement || cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
                 {
-                    // send pgn from virtual module (no real sensor/module for this product)
+                    // send pgn from virtual module (no real sensor/module for this product, or an ISOBUS
+                    // implement reports what it applied: Group2_Step2_Recording_Design.md)
                     // heartbeat always goes out so Connected() stays true, but reported flow
                     // is 0 (like a real sensor would read) unless actually applying
                     double VirtualUPM = 0;
-                    if (cHectaresPerMinute > 0)
+                    if (Implement)
+                    {
+                        // the implement's own rate and total; the total is absolute, so a reset on the
+                        // implement shows as a drop, which UpdateUnitsApplied counts as 0
+                        if (cHectaresPerMinute > 0) VirtualUPM = ImplementUPM;
+                        if (ImplementTotalValid)
+                        {
+                            cVirtualQuantity = ImplementTotal;
+                        }
+                        else
+                        {
+                            cVirtualQuantity += VirtualUPM * CurrentMinutes;
+                        }
+                    }
+                    else if (cHectaresPerMinute > 0)
                     {
                         VirtualUPM = cAppMode == ApplicationMode.DocumentTarget ? TargetUPM() : ManualUPMinUse();
                         cVirtualQuantity += VirtualUPM * CurrentMinutes;

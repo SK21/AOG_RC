@@ -54,6 +54,10 @@ Windows application for agricultural rate control. Communicates with:
 | 32402 | 24 | PID diagnostics log (per-sensor, PID-loop cadence) |
 | 32403 | 29/30 | Identity report: [2] ID (0-7 or 25), [3-18] description, [19-24] MAC, [25] InoType, [26-27] InoID, [28] CRC. Teensy from InoID 20116 sends 30 bytes: [28] build flags (bit 0 = ISOBUS build, `ISOBUS_ENABLED`), [29] CRC; the CRC is always the last byte, so older apps accept it. Sent at boot (retried until it goes out) then every 2 s, also at ID 25. At ID 25 it goes to 255.255.255.255 (ESP32: Ethernet only) so the app hears a new board on any subnet |
 
+### RC ↔ AOG-TaskController (ISOBUS Group 2, `clsTaskControllerRate`, AgIO framing 80 81 src pgn len … crc)
+- RC → TC, to 127.0.0.1 and the PC's own IPv4s on 8888, source 0x7F: `0xF2` per product with ISOBUS on `[DDI 1/6/11][int32 ISO setpoint][channel = product + 1]` every 1 s; `0xF4` channel info `[channel][DDI, 0 = not in use][name ≤ 24 B]` on change and every 2 s while any product sends.
+- TC → RC, back to the socket `0xF4` came from: `0xF5` per channel every 1 s `[channel][actual DDI 2/7/12][int32 rate][total DDI 351/352/82][int32 total][elements][flags]`. While fresh (< 3 s) the product's applied data comes from it (virtual 32400 in `clsProduct.Update`) and its module's 32400 is ignored. Designs: `IsoBus\Group2_Step1_Channels_Design.md`, `Group2_Step2_Recording_Design.md`.
+
 ### CAN proprietary frame mapping (CommMode 1/2, via `CanFrameTranslator`)
 Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
 - 0xFF00/0xFF01 → 32400; **0xFF02 alone → 12-byte 32401**; 0xFF08 = identification (type, InoID, byte 4 full ID, byte 5 build flags — bit 0 = ISOBUS build; 0 from older firmware).

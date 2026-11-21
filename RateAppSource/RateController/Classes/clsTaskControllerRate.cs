@@ -44,6 +44,25 @@ namespace RateController.Classes
         private bool AnySending;
         private bool cDisposed;
         private UdpClient Udp;
+        private bool Receiving;
+
+        // PGN 0xF5 from AOG-TaskController, back on the socket the setpoints go out from: per channel, what the
+        // implement reports (Group2_Step2_Recording_Design.md). [channel][actual DDI lo, hi][rate int32]
+        // [total DDI lo, hi][total int32][elements][flags: bit 0 rate valid, bit 1 total valid]
+        private const int ActualsFreshMs = 3000;
+        private readonly object ActualsLock = new object();
+        private readonly TCActuals[] Actuals;
+
+        private class TCActuals
+        {
+            public ushort ActualDDI;
+            public byte Elements;
+            public byte Flags;
+            public int Rate;
+            public DateTime Received = DateTime.MinValue;
+            public int Total;
+            public ushort TotalDDI;
+        }
 
         public clsTaskControllerRate()
         {
@@ -54,6 +73,8 @@ namespace RateController.Classes
             LastSent = new DateTime[RateProducts];
             LastValue = new int[RateProducts];
             Sending = new bool[RateProducts];
+            Actuals = new TCActuals[RateProducts];
+            for (int i = 0; i < RateProducts; i++) Actuals[i] = new TCActuals();
 
             // UI thread timer, like Core's MainTimer: products are read on the thread that edits them
             SendTimer = new System.Windows.Forms.Timer();
@@ -79,8 +100,100 @@ namespace RateController.Classes
         public void Stop()
         {
             SendTimer.Enabled = false;
+            CloseSocket();
+        }
+
+        /// <summary>What the implement applied for a product (PGN 0xF5), when it is fresh (under 3 s) and the
+        /// channel has elements. Rate: ISO raw in ActualDDI's unit (2, 7 or 12). Total: mL (351), g (352) or count (82).</summary>
+        public bool ImplementActuals(int ProductID, out ushort ActualDDI, out int Rate, out bool RateValid, out ushort TotalDDI, out int Total, out bool TotalValid)
+        {
+            bool Result = false;
+            ActualDDI = 0;
+            Rate = 0;
+            RateValid = false;
+            TotalDDI = 0;
+            Total = 0;
+            TotalValid = false;
+            if (ProductID >= 0 && ProductID < RateProducts)
+            {
+                lock (ActualsLock)
+                {
+                    TCActuals A = Actuals[ProductID];
+                    if (A.Elements > 0 && (DateTime.Now - A.Received).TotalMilliseconds < ActualsFreshMs)
+                    {
+                        ActualDDI = A.ActualDDI;
+                        Rate = A.Rate;
+                        RateValid = (A.Flags & 1) != 0;
+                        TotalDDI = A.TotalDDI;
+                        Total = A.Total;
+                        TotalValid = (A.Flags & 2) != 0;
+                        Result = true;
+                    }
+                }
+            }
+            return Result;
+        }
+
+        private void CloseSocket()
+        {
             try { Udp?.Close(); } catch { }
             Udp = null;
+            Receiving = false;
+        }
+
+        private void ReceiveCallback(IAsyncResult ar)
+        {
+            UdpClient Client = (UdpClient)ar.AsyncState;
+            bool Again = true;
+            try
+            {
+                IPEndPoint From = new IPEndPoint(IPAddress.Any, 0);
+                byte[] Data = Client.EndReceive(ar, ref From);
+                ParseActuals(Data);
+            }
+            catch (ObjectDisposedException)
+            {
+                Again = false;      // socket closed (Stop, or reopened after an error)
+            }
+            catch (Exception ex)
+            {
+                Props.WriteErrorLog("clsTaskControllerRate/ReceiveCallback: " + ex.Message);
+            }
+
+            if (Again)
+            {
+                try
+                {
+                    Client.BeginReceive(ReceiveCallback, Client);
+                }
+                catch (Exception ex)
+                {
+                    if (!(ex is ObjectDisposedException)) Props.WriteErrorLog("clsTaskControllerRate/BeginReceive: " + ex.Message);
+                }
+            }
+        }
+
+        private void ParseActuals(byte[] Data)
+        {
+            // 80 81 80 F5 0F [15 bytes] [checksum]
+            if (Data != null && Data.Length >= 21 && Data[0] == 0x80 && Data[1] == 0x81 && Data[3] == 0xF5 && Data[4] >= 15)
+            {
+                int Channel = Data[5];
+                if (Channel >= 1 && Channel <= RateProducts)
+                {
+                    lock (ActualsLock)
+                    {
+                        TCActuals A = Actuals[Channel - 1];
+                        A.ActualDDI = (ushort)(Data[6] | Data[7] << 8);
+                        A.Rate = BitConverter.ToInt32(Data, 8);
+                        A.TotalDDI = (ushort)(Data[12] | Data[13] << 8);
+                        A.Total = BitConverter.ToInt32(Data, 14);
+                        A.Elements = Data[18];
+                        A.Flags = Data[19];
+                        A.Received = DateTime.Now;
+                    }
+                }
+            }
         }
 
         private static byte[] BuildFrame(ushort DDI, int Value, byte Channel)
@@ -191,10 +304,24 @@ namespace RateController.Classes
 
         private void SendFrame(byte[] Frame)
         {
-            if (Udp == null) Udp = new UdpClient();
+            if (Udp == null)
+            {
+                Udp = new UdpClient();
+                // without this an ICMP "port unreachable" (a destination address with nothing on 8888) makes the
+                // next receive fail with WSAECONNRESET
+                const int SIO_UDP_CONNRESET = -1744830452;
+                Udp.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { 0 }, null);
+            }
             foreach (IPAddress Address in Destinations())
             {
                 Udp.Send(Frame, Frame.Length, new IPEndPoint(Address, TCport));
+            }
+
+            // the socket has a port once it has sent: AOG-TaskController's actuals (0xF5) come back to it
+            if (!Receiving)
+            {
+                Receiving = true;
+                Udp.BeginReceive(ReceiveCallback, Udp);
             }
         }
 
@@ -238,8 +365,7 @@ namespace RateController.Classes
             catch (Exception ex)
             {
                 Props.WriteErrorLog("clsTaskControllerRate/SendTimer_Tick: " + ex.Message);
-                try { Udp?.Close(); } catch { }
-                Udp = null;     // opened again on the next send
+                CloseSocket();     // opened again on the next send
             }
         }
     }

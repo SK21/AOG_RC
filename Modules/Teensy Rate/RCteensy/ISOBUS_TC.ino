@@ -50,6 +50,7 @@ const uint16_t TC_OBJ_DPD_ACTUAL_WORK_STATE = 1001;
 const uint16_t TC_OBJ_DPD_ACTUAL_SPEED = 1004;
 const uint16_t TC_OBJ_DPD_SETPOINT_RATE_BASE = 1010;
 const uint16_t TC_OBJ_DPD_ACTUAL_RATE_BASE = 1020;
+const uint16_t TC_OBJ_DPD_TOTAL_BASE = 1030;
 const uint16_t TC_OBJ_DVP_WIDTH = 3000;
 const uint16_t TC_OBJ_DPT_WIDTH_BASE = 3100;
 
@@ -158,6 +159,30 @@ std::int32_t TC_PerHaToValue(uint8_t r, float perHa)
 	if (Raw < 0.0f) Raw = 0.0f;
 	if (Raw > 2.0e9f) Raw = 2.0e9f;
 	return static_cast<std::int32_t>(Raw + 0.5f);
+}
+
+// the bin's application total DDI (bench stand-in, Group2_Step2_Recording_Design.md E5):
+// 351 mL for volume, 352 g for mass, 82 count
+uint16_t TC_TotalDDI(uint8_t r)
+{
+	uint16_t Result = static_cast<uint16_t>(isobus::DataDescriptionIndex::ApplicationTotalVolume_ml);
+	if (TCset.RateDDI[r] == 6) Result = static_cast<uint16_t>(isobus::DataDescriptionIndex::ApplicationTotalMassGram_g);
+	else if (TCset.RateDDI[r] == 11) Result = static_cast<uint16_t>(isobus::DataDescriptionIndex::ApplicationTotalCount);
+	return Result;
+}
+
+// what the sensor has metered since the module started (as PGN 32400's quantity) in the total's unit:
+// RC units / units per litre, kg or seed, x 1000 for mL and g; 0 until RC has sent the units
+std::int32_t TC_TotalValue(uint8_t r)
+{
+	float Result = 0.0f;
+	if (r < TC_RateCount() && Sensor[r].MeterCal > 0 && TCset.UnitsPerISO[r] > 0.0f)
+	{
+		Result = (Sensor[r].TotalPulses / Sensor[r].MeterCal) / TCset.UnitsPerISO[r];
+		if (TCset.RateDDI[r] != 11) Result *= 1000.0f;
+	}
+	if (Result > 2.0e9f) Result = 2.0e9f;
+	return static_cast<std::int32_t>(Result + 0.5f);
 }
 
 const __FlashStringHelper* TC_RateUnit(uint8_t r)
@@ -421,6 +446,10 @@ bool TC_RequestValue(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 			{
 				value = TC_PerHaToValue(r, TC_ActualRate(r));
 			}
+			else if (DDI == TC_TotalDDI(r))
+			{
+				value = TC_TotalValue(r);
+			}
 			else
 			{
 				Result = false;
@@ -487,8 +516,8 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 	// the last two characters are the bins' types (V volume, M mass, C count, - no bin)
 	char Type1 = (Rates > 0) ? TC_TypeChar(0) : '-';
 	char Type2 = (Rates > 1) ? TC_TypeChar(1) : '-';
-	char structureLabel[8] = { 'R','C','T','C','7', Type1, Type2, 0 };
-	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','7', static_cast<std::uint8_t>(Type1), static_cast<std::uint8_t>(Type2) };
+	char structureLabel[8] = { 'R','C','T','C','8', Type1, Type2, 0 };
+	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','8', static_cast<std::uint8_t>(Type1), static_cast<std::uint8_t>(Type2) };
 
 	ddop->add_device(InoDescription, String(InoID).c_str(), String(MDL.ID).c_str(), structureLabel, localization, extendedLabel, ISOBUSicf->get_NAME().get_full_name());
 	ddop->add_device_element("Boom", TC_ELEMENT_BOOM, 0, DeviceElementType::Function, TC_OBJ_BOOM);
@@ -496,6 +525,7 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 	const uint8_t settable = static_cast<std::uint8_t>(PropertiesBit::MemberOfDefaultSet) | static_cast<std::uint8_t>(PropertiesBit::Settable);
 	const uint8_t measurement = static_cast<std::uint8_t>(PropertiesBit::MemberOfDefaultSet);
 	const uint8_t onChange = static_cast<std::uint8_t>(Trigger::OnChange);
+	const uint8_t reported = static_cast<std::uint8_t>(Trigger::OnChange) | static_cast<std::uint8_t>(Trigger::TimeInterval) | static_cast<std::uint8_t>(Trigger::Total);
 
 	ddop->add_device_process_data("Set Section State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointCondensedWorkState1_16), isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_SETPOINT_WORK_STATE);
 	ddop->add_device_process_data("Actual Section State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualCondensedWorkState1_16), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_WORK_STATE);
@@ -517,13 +547,15 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 		snprintf(binName, sizeof(binName), "Rate %u", r + 1);
 		ddop->add_device_element(binName, TC_ELEMENT_BIN_BASE + r, TC_OBJ_BOOM, DeviceElementType::Bin, TC_OBJ_BIN_BASE + r);
 		ddop->add_device_process_data("Target Rate", TCset.RateDDI[r], isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_SETPOINT_RATE_BASE + r);
-		ddop->add_device_process_data("Actual Rate", TC_ActualRateDDI(r), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_RATE_BASE + r);
+		ddop->add_device_process_data("Actual Rate", TC_ActualRateDDI(r), isobus::NULL_OBJECT_ID, measurement, reported, TC_OBJ_DPD_ACTUAL_RATE_BASE + r);
+		ddop->add_device_process_data("Total", TC_TotalDDI(r), isobus::NULL_OBJECT_ID, measurement, reported, TC_OBJ_DPD_TOTAL_BASE + r);
 
 		auto bin = std::static_pointer_cast<isobus::task_controller_object::DeviceElementObject>(ddop->get_object_by_id(TC_OBJ_BIN_BASE + r));
 		if (bin != nullptr)
 		{
 			bin->add_reference_to_child_object(TC_OBJ_DPD_SETPOINT_RATE_BASE + r);
 			bin->add_reference_to_child_object(TC_OBJ_DPD_ACTUAL_RATE_BASE + r);
+			bin->add_reference_to_child_object(TC_OBJ_DPD_TOTAL_BASE + r);
 		}
 	}
 
@@ -599,6 +631,7 @@ void TC_Update()
 		for (uint8_t r = 0; r < TC_RateCount(); r++)
 		{
 			ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BIN_BASE + r, TC_ActualRateDDI(r));
+			ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BIN_BASE + r, TC_TotalDDI(r));
 		}
 		ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualSpeed));
 	}
