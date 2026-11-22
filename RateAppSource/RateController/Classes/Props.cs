@@ -71,7 +71,7 @@ namespace RateController.Classes
         public static readonly int MaxSensorsPerModule = 16;
         public static readonly int MaxSwitches = 16;
         public static readonly double MPHtoKPH = 1.609344;
-        public static string[] CoverageAbbr = new string[] { "Ac", "Ha", "Min", "Hr" };
+        public static string[] CoverageAbbr = new string[] { "ac", "ha", "min", "hr" };
         public static string[] CoverageDescriptions = new string[] { Lang.lgAcres, Lang.lgHectares, Lang.lgMinutes, Lang.lgHours };
         public static bool cShowCoverageRemaining;
         public static bool cShowQuantityRemaining;

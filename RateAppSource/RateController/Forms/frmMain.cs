@@ -1096,7 +1096,7 @@ namespace RateController.Forms
                 }
 
                 // quantity
-                lbQuantityType.Text = Core.Tls.ClipText(Prd.QuantityDescription, 3);
+                lbQuantityType.Text = Prd.QuantityAbbr();
                 double Tnk = 0;
                 if (Props.ShowQuantityRemaining)
                 {

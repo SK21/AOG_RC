@@ -566,9 +566,10 @@ namespace RateController.RateMap
                             {
                                 var Bnd = filtered[i];
 
+                                // the top band is open-ended (saved with Max 0): "9.8 - " as CreateLegend shows it
+                                string maxText = (i == filtered.Count - 1 && Bnd.Max <= Bnd.Min) ? " " : Bnd.Max.ToString(format, CultureInfo.CurrentCulture);
                                 string label = string.Format(CultureInfo.CurrentCulture, "{0} - {1}",
-                                    Bnd.Min.ToString(format, CultureInfo.CurrentCulture),
-                                    Bnd.Max.ToString(format, CultureInfo.CurrentCulture));
+                                    Bnd.Min.ToString(format, CultureInfo.CurrentCulture), maxText);
 
                                 CurrentBands[label] = ColorTranslator.FromHtml(Bnd.ColorHtml);
                             }
@@ -634,6 +635,10 @@ namespace RateController.RateMap
             {
                 if (LoadedBands == null) LoadedBands = new List<Band>();
 
+                // one legend per product: replace this product's bands. Adding a new set beside the old
+                // ones kept the first legend saved (Load only takes up to 5 bands per product), or none.
+                LoadedBands.RemoveAll(b => b.ProductIndex == MapController.ProductFilter);
+
                 foreach (var kvp in cCurrentLegend.Bands)
                 {
                     var parts = kvp.Key.Split('-');
@@ -642,35 +647,19 @@ namespace RateController.RateMap
                     string leftText = parts[0].Trim();
                     string rightText = parts[1].Trim();
 
+                    // the top band is open-ended ("9.8 - "): its Max is stored as 0
                     double min = double.TryParse(leftText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out double mn) ? mn : 0;
                     double max = double.TryParse(rightText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.CurrentCulture, out double mx) ? mx : 0;
 
-                    var colorHtml = ColorTranslator.ToHtml(kvp.Value);
-
-                    var existing = LoadedBands.FirstOrDefault(b =>
-                        b.ProductIndex == MapController.ProductFilter &&
-                        Math.Abs(b.Min - min) < 0.0001 &&
-                        Math.Abs(b.Max - max) < 0.0001);
-
-                    if (existing == null)
+                    LoadedBands.Add(new Band
                     {
-                        LoadedBands.Add(new Band
-                        {
-                            Min = min,
-                            Max = max,
-                            ColorHtml = colorHtml,
-                            ProductIndex = MapController.ProductFilter,
-                            ProductName = cCurrentLegend.Title,
-                            TargetRate = LegendBaseValue
-                        });
-                    }
-                    else
-                    {
-                        // Update existing band
-                        existing.ColorHtml = colorHtml;
-                        existing.ProductName = cCurrentLegend.Title;
-                        existing.TargetRate = LegendBaseValue;
-                    }
+                        Min = min,
+                        Max = max,
+                        ColorHtml = ColorTranslator.ToHtml(kvp.Value),
+                        ProductIndex = MapController.ProductFilter,
+                        ProductName = cCurrentLegend.Title,
+                        TargetRate = LegendBaseValue
+                    });
                 }
 
                 if (LoadedBands.Count > 0)

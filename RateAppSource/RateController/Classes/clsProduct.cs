@@ -532,21 +532,29 @@ namespace RateController.Classes
             set { cTankSize = value; }
         }
 
-        // Quantity units, in QuantityUnits order: the name RC shows (QuantityDescription), the ISO rate
-        // DDI sent to a task controller (1 volume, 6 mass, 11 count per area) and how many litres, kg
-        // or seeds one unit is. RC itself only uses the name. Other: the user's own name, DDI and factor.
-        private static readonly (string Name, ushort DDI, double Factor)[] UnitTable =
+        // Quantity units, in QuantityUnits order: the name RC shows (QuantityDescription), its abbreviation
+        // for the quantity label and for rates (RateAbbr + "/" + coverage), the ISO rate DDI sent to a task
+        // controller (1 volume, 6 mass, 11 count per area) and how many litres, kg or seeds one unit is.
+        // Other: the user's own name, DDI and factor; its name is clipped where an abbreviation is shown.
+        private static readonly (string Name, string Abbr, string RateAbbr, ushort DDI, double Factor)[] UnitTable =
         {
-            ("Gallons", 1, 4.54609),        // Imp. gallons
-            ("Gallons", 1, 3.785411784),    // US gallons
-            ("Litres", 1, 1),
-            ("Lbs", 6, 0.45359237),
-            ("kg", 6, 1),
-            ("Tonnes", 6, 1000),
-            ("Seeds", 11, 1),
-            ("kSeeds", 11, 1000),           // 1000 seeds ("1000 Seeds" would clip to "10/ac")
-            ("", 0, 0),                     // Other
+            ("Gallons", "gal", "gal", 1, 4.54609),          // Imp. gallons
+            ("Gallons", "gal", "gal", 1, 3.785411784),      // US gallons
+            ("Litres", "L", "L", 1, 1),
+            ("Lbs", "lb", "lb", 6, 0.45359237),
+            ("kg", "kg", "kg", 6, 1),
+            ("Tonnes", "t", "t", 6, 1000),
+            ("Seeds", "sds", "seeds", 11, 1),
+            ("kSeeds", "ks", "ks", 11, 1000),               // 1000 seeds
+            ("", "", "", 0, 0),                             // Other
         };
+
+        /// <summary>The quantity's short form for the quantity label: "L", "lb", "sds" …; an Other unit's
+        /// typed name clipped to 3 characters.</summary>
+        public string QuantityAbbr()
+        {
+            return cQuantityUnit == QuantityUnits.Other ? Core.Tls.ClipText(cQuantityDescription, 3) : UnitTable[(int)cQuantityUnit].Abbr;
+        }
 
         public QuantityUnits QuantityUnit
         {
@@ -1316,7 +1324,8 @@ namespace RateController.Classes
 
         public string Units()
         {
-            string uq = Core.Tls.ClipText(cQuantityDescription, 2);
+            // a known unit's rate abbreviation ("L/ha", "lb/ac"); an Other unit's name clipped to 2 characters
+            string uq = cQuantityUnit == QuantityUnits.Other ? Core.Tls.ClipText(cQuantityDescription, 2) : UnitTable[(int)cQuantityUnit].RateAbbr;
             string s = uq + "/" + Props.CoverageAbbr[CoverageUnits];
             return s;
         }

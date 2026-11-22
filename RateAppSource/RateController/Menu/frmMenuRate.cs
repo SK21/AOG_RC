@@ -411,6 +411,10 @@ namespace RateController.Menu
                 HasType = tbVolumeUnits.SelectedIndex >= 0;
             }
             ckTCsend.Enabled = PerArea && HasType;
+
+            // a flat checkbox button keeps its checked colour while disabled: use the page's colour so it doesn't look on.
+            // The product's choice is kept and shows green again once the unit can be sent.
+            ckTCsend.FlatAppearance.CheckedBackColor = ckTCsend.Enabled ? Color.LightGreen : ckTCsend.Parent.BackColor;
         }
 
         private void tbVolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
