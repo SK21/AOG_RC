@@ -1109,35 +1109,6 @@ namespace RateController.Classes
             return cSessionTotalHectares;
         }
 
-        public double SmoothRate()
-        {
-            double Result = 0;
-            if (ProductOn())
-            {
-                double Ra = RateApplied();
-                if (cEnableProdDensity && cProdDensity > 0) Ra *= cProdDensity;
-
-                if (TargetRate() > 0)
-                {
-                    double Rt = Ra / TargetRate();
-
-                    if (Rt >= .9 && Rt <= 1.1 && Core.SwitchBox.AutoRateOn)
-                    {
-                        Result = TargetRate();
-                    }
-                    else
-                    {
-                        Result = Ra;
-                    }
-                }
-                else
-                {
-                    Result = Ra;
-                }
-            }
-            return Result;
-        }
-
         public double TargetRate(bool UseRateSet = false)
         {
             double Result = 0;

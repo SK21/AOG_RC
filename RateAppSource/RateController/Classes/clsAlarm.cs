@@ -146,10 +146,20 @@ namespace RateController.Classes
                 {
                     if (Prd.Enabled && Prd.UseOffRateAlarm && Prd.AppMode != ApplicationMode.DocumentAppliedManual)
                     {
+                        // the real applied rate (in the target's units: density applied), 0 while the product isn't
+                        // applying. RatePersistSeconds rides out normal settling. (It used to read as the target
+                        // whenever it was within 10% with auto rate on, which hid off-rate settings below 10%.)
+                        double Applied = 0;
+                        if (Prd.ProductOn())
+                        {
+                            Applied = Prd.RateApplied();
+                            if (Prd.EnableProdDensity && Prd.ProdDensity > 0) Applied *= Prd.ProdDensity;
+                        }
+
                         // too low?
                         bool OutOfBand = false;
                         AlarmSetPoint = (100 - Prd.OffRateSetting) / 100.0;
-                        if (Prd.SmoothRate() < (Prd.TargetRate() * AlarmSetPoint))
+                        if (Applied < (Prd.TargetRate() * AlarmSetPoint))
                         {
                             OutOfBand = true;
                         }
@@ -157,7 +167,7 @@ namespace RateController.Classes
                         {
                             // too high?
                             AlarmSetPoint = (100 + Prd.OffRateSetting) / 100.0;
-                            if (Prd.SmoothRate() > (Prd.TargetRate() * AlarmSetPoint))
+                            if (Applied > (Prd.TargetRate() * AlarmSetPoint))
                             {
                                 OutOfBand = true;
                             }
