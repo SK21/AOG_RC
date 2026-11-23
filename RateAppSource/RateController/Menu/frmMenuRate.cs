@@ -136,6 +136,13 @@ namespace RateController.Menu
                 MainMenu.CurrentProduct.Save();
                 SetButtons(false);
                 UpdateForm();
+
+                // saved, but an ISOBUS product with this unit gets no rate: say so (the save isn't blocked,
+                // the unit may be part-way through a change)
+                if (MainMenu.CurrentProduct.IsIsobus() && !MainMenu.CurrentProduct.TCcanSend())
+                {
+                    Props.ShowMessage(Lang.lgTCcantSendMsg, "ISOBUS", 15000, false, false, true);
+                }
             }
             catch (Exception ex)
             {
@@ -268,6 +275,10 @@ namespace RateController.Menu
             btnLeft.Top = btnOK.Top;
             PositionForm();
             MainMenu.StyleControls(this);
+            // StyleControls gives every label the theme font and colour: this one matches Settings' lbUPMhint,
+            // in red as a warning
+            lbCantSend.Font = new Font("Tahoma", 12F, FontStyle.Regular);
+            lbCantSend.ForeColor = Color.Red;
             SetLanguage();
             lbProduct.Font = new Font(lbProduct.Font.FontFamily, 18, FontStyle.Underline);
             timer1.Enabled = true;

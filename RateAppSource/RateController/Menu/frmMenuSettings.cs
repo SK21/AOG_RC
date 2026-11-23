@@ -103,8 +103,14 @@ namespace RateController.Menu
                         Props.DisplayProducts();   // a disabled product gets no display window
                     }
 
-                    // the menu buttons (Control, Mode, Calibrate) and any open product page follow at once
+                    // the menu buttons (Control, Mode) and any open product page follow at once
                     if (IsobusChanged) MainMenu.ChangeProduct(Prd.ID);
+
+                    // ISOBUS on a product whose unit can't go to the implement: it gets no rate (unit is on the Rate page)
+                    if (Prd.IsIsobus() && !Prd.TCcanSend())
+                    {
+                        Props.ShowMessage(Lang.lgTCcantSendMsg, "ISOBUS", 15000, false, false, true);
+                    }
                 }
                 else
                 {

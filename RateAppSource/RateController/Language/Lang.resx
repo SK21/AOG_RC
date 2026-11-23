@@ -1149,6 +1149,9 @@ The module stops controlling until the update is done.</value>
     <value>All</value>
   </data>
   <data name="lgTCcantSend" xml:space="preserve">
-    <value>Unit can't be sent to the implement</value>
+    <value>Rate not sent: set a unit type and acres or ha</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>No rate will be sent to the implement. The quantity unit needs a type (volume, mass or count) and coverage in acres or hectares.</value>
   </data>
 </root>

@@ -480,13 +480,13 @@
             // 
             // lbCantSend
             //
-            this.lbCantSend.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCantSend.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbCantSend.ForeColor = System.Drawing.Color.Red;
             this.lbCantSend.Location = new System.Drawing.Point(8, 476);
             this.lbCantSend.Name = "lbCantSend";
             this.lbCantSend.Size = new System.Drawing.Size(380, 34);
             this.lbCantSend.TabIndex = 149;
-            this.lbCantSend.Text = "Unit can\'t be sent to the implement";
+            this.lbCantSend.Text = "Rate not sent: set a unit type and acres or ha";
             this.lbCantSend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbCantSend.Visible = false;
             // 

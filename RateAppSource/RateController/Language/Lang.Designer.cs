@@ -3121,11 +3121,20 @@ namespace RateController.Language {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Unit can&apos;t be sent to the implement.
+        ///   Looks up a localized string similar to Rate not sent: set a unit type and acres or ha.
         /// </summary>
         internal static string lgTCcantSend {
             get {
                 return ResourceManager.GetString("lgTCcantSend", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No rate will be sent to the implement. The quantity unit needs a type (volume, mass or count) and coverage in acres or hectares..
+        /// </summary>
+        internal static string lgTCcantSendMsg {
+            get {
+                return ResourceManager.GetString("lgTCcantSendMsg", resourceCulture);
             }
         }
     }
