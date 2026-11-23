@@ -96,6 +96,9 @@ void ReadPGNs(byte data[], uint16_t len)
 			if (GoodCRC(data, PGNlength))
 			{
 #if ISOBUS_ENABLED
+				// while the TC commands only the PID-log bit is taken, so the board can still be logged
+				if (ParseModID(data[2]) == MDL.ID && TC_Commanding()) PidLogEnabled = ((data[9] & 32) == 32);
+
 				if (ParseModID(data[2]) == MDL.ID && !TC_Commanding())	// ignored while the TC commands (ISOBUS_TC.ino)
 #else
 				if (ParseModID(data[2]) == MDL.ID)
@@ -462,9 +465,10 @@ void ReadPGNs(byte data[], uint16_t len)
 		//3-4   DDI         1 volume, 6 mass, 11 count per area; 0 = no type
 		//5-8   float32     metered units per litre, kg or seed
 		//9-12  float32     meter cal, pulses per metered unit (an ISOBUS product gets no 32500)
-		//13    CRC
+		//13    control type 0 valve, 1 combo close, 2 motor, 3 motor weights, 4 fan, 5 timed combo
+		//14    CRC
 		// configuration: applied while the TC commands too
-		PGNlength = 14;
+		PGNlength = 15;
 		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
 		{
 			float Factor;
@@ -474,6 +478,8 @@ void ReadPGNs(byte data[], uint16_t len)
 			float Cal;
 			memcpy(&Cal, data + 9, 4);
 			TC_SetMeterCal(ParseSenID(data[2]), Cal);
+
+			TC_SetControlType(ParseSenID(data[2]), data[13]);
 		}
 		break;
 #endif

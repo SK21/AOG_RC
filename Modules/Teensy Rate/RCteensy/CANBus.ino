@@ -419,12 +419,13 @@ void CANBus_Handle(const CAN_message_t& msg) {
 
 #if ISOBUS_ENABLED
 		case 0xFF1D:  // A product's units for a task controller (from PGN 32509, ISOBUS_TC.ino)
-			// buf[0] ModSenId (CAN: low = module, high = sensor), buf[1-2] DDI, buf[3-6] float
+			// buf[0] ModSenId (CAN: low = module, high = sensor), buf[1-2] DDI, buf[3-6] float, buf[7] control type
 			if ((msg.buf[0] & 0x0F) == MDL.ID)
 			{
 				float Factor;
 				memcpy(&Factor, msg.buf + 3, 4);
 				TC_SetUnits(msg.buf[0] >> 4, msg.buf[1] | msg.buf[2] << 8, Factor);
+				TC_SetControlType(msg.buf[0] >> 4, msg.buf[7]);
 			}
 			break;
 
@@ -489,6 +490,8 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
 #if ISOBUS_ENABLED
+	// while the TC commands only the PID-log bit is taken (as Receive.ino 32500), so the board can still be logged
+	if (modId == MDL.ID && TC_Commanding()) PidLogEnabled = ((msg.buf[6] & 0x20) == 0x20);
 	if (modId != MDL.ID || TC_Commanding()) return;  // Not for us, or the TC commands (ISOBUS_TC.ino)
 #else
 	if (modId != MDL.ID) return;  // Not for us

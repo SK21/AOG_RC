@@ -17,13 +17,16 @@ namespace RateController.PGNs
         //5-8   float32     metered units per litre, kg or seed (0 = no type)
         //9-12  float32     meter cal, pulses per metered unit: an ISOBUS product gets no 32500, which
         //                  otherwise carries it (Isobus_Product_Design.md). Over CAN: 0xFF1E.
-        //13    CRC
+        //13    control type    ControlTypeEnum (0 valve, 1 combo close, 2 motor, 3 motor weights, 4 fan,
+        //                  5 timed combo), the stored type: the board runs its own PID on it and 32500, which
+        //                  otherwise carries it, doesn't come. Over CAN: 0xFF1D byte 7.
+        //14    CRC
         //
-        // Sent when a product's type, factor or meter cal changes and when its module connects, not
+        // Sent when a product's type, factor, meter cal or control type changes and when its module connects, not
         // periodically: the board writes EEPROM when the value changes.
         // Bench only (the ISOBUS build standing in for an OEM implement); remove with the stand-in.
 
-        private const byte cByteCount = 14;
+        private const byte cByteCount = 15;
         private readonly bool[] WasConnected = new bool[Props.MaxModules];
         private readonly string[] LastSent = new string[Props.MaxProducts];
 
@@ -49,10 +52,11 @@ namespace RateController.PGNs
                     {
                         Units(Prd, out ushort DDI, out float Factor);
                         float Cal = (float)Prd.MeterCal;
-                        string Key = Mod + "/" + Sen + "/" + DDI + "/" + Factor.ToString("R") + "/" + Cal.ToString("R");
+                        byte Control = (byte)Prd.ControlType;
+                        string Key = Mod + "/" + Sen + "/" + DDI + "/" + Factor.ToString("R") + "/" + Cal.ToString("R") + "/" + Control;
                         if (JustConnected[Mod] || Key != LastSent[i])
                         {
-                            Send((byte)Mod, (byte)Sen, DDI, Factor, Cal);
+                            Send((byte)Mod, (byte)Sen, DDI, Factor, Cal, Control);
                             LastSent[i] = Key;
                         }
                     }
@@ -83,7 +87,7 @@ namespace RateController.PGNs
             }
         }
 
-        private void Send(byte Mod, byte Sen, ushort DDI, float Factor, float Cal)
+        private void Send(byte Mod, byte Sen, ushort DDI, float Factor, float Cal, byte Control)
         {
             byte[] Data = new byte[cByteCount];
             Data[0] = 253;
@@ -95,6 +99,7 @@ namespace RateController.PGNs
             Array.Copy(F, 0, Data, 5, 4);
             byte[] C = BitConverter.GetBytes(Cal);
             Array.Copy(C, 0, Data, 9, 4);
+            Data[13] = Control;
             Data[cByteCount - 1] = Core.Tls.CRC(Data, cByteCount - 1);
 
             // route through the CAN bridge or Ethernet, as PGN32505

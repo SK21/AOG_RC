@@ -557,15 +557,15 @@ namespace RateController.Classes.Can
                 case 32509:
                     // → 0xFF1D (a product's units for a task controller) + 0xFF1E (its meter cal)
                     // PGN32509 layout: [2]=ModSenId (UDP: high=ModID,low=SenID), [3-4]=DDI, [5-8]=float metered units per ISO unit,
-                    // [9-12]=float meter cal (pulses per metered unit)
-                    if (pgnData.Length >= 13)
+                    // [9-12]=float meter cal (pulses per metered unit), [13]=control type
+                    if (pgnData.Length >= 14)
                     {
                         byte ModSen = SwapModSenNibbles(pgnData[2]);   // ModSenId (CAN: low=ModID,high=SenID)
                         frames.Add(BuildFrame(0x1D, new byte[] {
                             ModSen,
                             pgnData[3], pgnData[4],         // DDI
                             pgnData[5], pgnData[6], pgnData[7], pgnData[8],  // float
-                            0
+                            pgnData[13]                     // control type
                         }));
                         frames.Add(BuildFrame(0x1E, new byte[] {
                             ModSen,

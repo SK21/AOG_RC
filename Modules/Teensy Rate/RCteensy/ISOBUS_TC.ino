@@ -57,7 +57,8 @@ const uint16_t TC_OBJ_DPT_WIDTH_BASE = 3100;
 const uint8_t TCmaxSections = 16;
 const uint8_t TCmaxRates = 2;			// bins: sensors 0 and 1
 const int TCsettingsAddr = 1024;		// after the sensors (253 + 6 x 124 = 997)
-const uint16_t TCsettingsID = 0x5446;	// change when TCsettings changes shape (0x5444: one rate; 0x5445: no meter cal)
+const uint16_t TCsettingsID = 0x5447;	// change when TCsettings changes shape (0x5444: one rate; 0x5445: no meter cal; 0x5446: no control type)
+const uint8_t TCnoControlType = 255;	// TCsettings.ControlType not set by RC yet
 
 struct TCsettings
 {
@@ -68,6 +69,8 @@ struct TCsettings
 	float UnitsPerISO[TCmaxRates] = { 0.0f, 0.0f };	// per sensor, metered units per litre, kg or seed (from RC); 0 = not set
 	float MeterCal[TCmaxRates] = { 0.0f, 0.0f };	// per sensor, pulses per metered unit (from RC's 32509, which an ISOBUS product
 													// gets instead of 32500); 0 = not set
+	uint8_t ControlType[TCmaxRates] = { TCnoControlType, TCnoControlType };	// per sensor, RC's control type (32509 byte 13,
+													// which an ISOBUS product gets instead of 32500): 0 valve ... 5 timed combo
 };
 
 TCsettings TCset;
@@ -106,6 +109,8 @@ void TC_LoadSettings()
 		if (!(TCset.UnitsPerISO[r] > 0.0f && TCset.UnitsPerISO[r] < 1.0e7f)) TCset.UnitsPerISO[r] = 0.0f;	// also catches NaN
 		if (!(TCset.MeterCal[r] > 0.0f && TCset.MeterCal[r] < 16701.0f)) TCset.MeterCal[r] = 0.0f;			// RC's range
 		if (TCset.MeterCal[r] > 0.0f) Sensor[r].MeterCal = TCset.MeterCal[r];	// no 32500 comes for an ISOBUS product
+		if (TCset.ControlType[r] > TimedCombo_ct) TCset.ControlType[r] = TCnoControlType;
+		if (TCset.ControlType[r] != TCnoControlType) Sensor[r].ControlType = TCset.ControlType[r];
 		TC_TargetRate[r] = 0.0f;
 		TC_UnitsWarned[r] = false;
 	}
@@ -247,6 +252,26 @@ void TC_SetMeterCal(uint8_t SensorID, float Cal)
 			Serial.print(r);
 			Serial.print(F(", "));
 			Serial.println(Cal, 3);
+			TC_SaveSettings();
+		}
+	}
+}
+
+// PGN 32509 byte 13 / CAN 0xFF1D byte 7 from RC: the sensor's control type. RC sends no 32500 for an
+// ISOBUS product, so without this the sensor runs whatever PID type it booted with (0, valve).
+void TC_SetControlType(uint8_t SensorID, uint8_t Type)
+{
+	if (SensorID < TCmaxRates && Type <= TimedCombo_ct)
+	{
+		uint8_t r = SensorID;
+		Sensor[r].ControlType = Type;
+		if (Type != TCset.ControlType[r])
+		{
+			TCset.ControlType[r] = Type;
+			Serial.print(F("TC: control type sensor "));
+			Serial.print(r);
+			Serial.print(F(", "));
+			Serial.println(Type);
 			TC_SaveSettings();
 		}
 	}
