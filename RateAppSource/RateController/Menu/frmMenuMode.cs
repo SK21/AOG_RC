@@ -206,6 +206,10 @@ namespace RateController.Menu
             else
             {
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
+
+                // an ISOBUS product's mode is fixed (Controlled UPM): nothing to set here, and saving would
+                // overwrite the mode it returns to when ISOBUS is turned off
+                if (MainMenu.CurrentProduct.IsIsobus() && MainMenu.LastScreen == this.Text) MainMenu.ShowSettings();
             }
 
             switch (MainMenu.CurrentProduct.AppMode)

@@ -1148,4 +1148,7 @@ The module stops controlling until the update is done.</value>
   <data name="lgAll" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Unit can't be sent to the implement</value>
+  </data>
 </root>

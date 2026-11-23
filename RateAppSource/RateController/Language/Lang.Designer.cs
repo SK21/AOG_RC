@@ -3119,5 +3119,14 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgAll", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unit can&apos;t be sent to the implement.
+        /// </summary>
+        internal static string lgTCcantSend {
+            get {
+                return ResourceManager.GetString("lgTCcantSend", resourceCulture);
+            }
+        }
     }
 }

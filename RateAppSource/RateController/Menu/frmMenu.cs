@@ -184,12 +184,16 @@ namespace RateController
             if (NoFans && NewID > Props.MaxProducts - 3) NewID = Props.MaxProducts - 3;
             cCurrentProduct = Core.Products.Item(NewID);
 
-            // Mode, Monitoring and Data don't apply to a fan
+            // Mode, Monitoring and Data don't apply to a fan; Control (PID) and Mode don't apply to an ISOBUS
+            // product, whose rate is applied by the implement (Isobus_Product_Design.md). Calibrate covers every
+            // product on its own page, which greys an ISOBUS product's power button.
             bool Fan = cCurrentProduct.ControlType == ControlTypeEnum.Fan;
+            bool Isobus = cCurrentProduct.IsIsobus();
             if (Fan) LastFan = NewID;
-            butMode.Enabled = !Fan;
+            butMode.Enabled = !Fan && !Isobus;
             butMonitor.Enabled = !Fan;
             butData.Enabled = !Fan;
+            butControl.Enabled = !Isobus;
 
             ProductChanged?.Invoke(this, EventArgs.Empty);
         }

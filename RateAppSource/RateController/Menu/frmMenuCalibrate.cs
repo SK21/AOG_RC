@@ -271,7 +271,10 @@ namespace RateController.Menu
                 }
 
                 tbSpeed.Enabled = !Cal.Running;
-                btnPower.Enabled = !Cal.Running;
+
+                // an ISOBUS product can't be calibrated here: its rate is applied by the implement
+                // (clsCalibrate.PowerOn refuses it too). Turning an already powered product off stays possible.
+                btnPower.Enabled = !Cal.Running && (Cal.PowerOn || !Prd.IsIsobus());
                 cEdited = Edited;
                 this.Tag = cEdited;
             }

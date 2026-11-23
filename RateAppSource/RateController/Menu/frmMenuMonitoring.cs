@@ -10,6 +10,7 @@ namespace RateController.Menu
 {
     public partial class frmMenuMonitoring : Form
     {
+        private const string NoValue = "—";   // em dash: doesn't apply to an ISOBUS product
         private bool cEdited;
         private bool Initializing = false;
         private frmMenu MainMenu;
@@ -161,7 +162,8 @@ namespace RateController.Menu
         {
             bool Enabled = MainMenu.CurrentProduct.Enabled;
 
-            tbCountsRev.Enabled = Enabled;
+            // an ISOBUS product has no flow sensor on RC's side: counts/rev doesn't apply (value kept)
+            tbCountsRev.Enabled = Enabled && !MainMenu.CurrentProduct.IsIsobus();
         }
 
         private void SetLanguage()
@@ -230,17 +232,27 @@ namespace RateController.Menu
             lbErrorPercent.Text = RateError.ToString("N1");
             lbRateAppliedData.Text = Applied.ToString("N1");
             lbRateSetData.Text = Target.ToString("N1");
-            lbPWMdata.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
-            lbHzData.Text = MainMenu.CurrentProduct.Hz().ToString("N1");
-
-            if (MainMenu.CurrentProduct.CountsRev > 0)
+            if (MainMenu.CurrentProduct.IsIsobus())
             {
-                float RPM = (float)((MainMenu.CurrentProduct.MeterCal * Applied) / MainMenu.CurrentProduct.CountsRev);
-                lbRPM.Text = RPM.ToString("N0");
+                // the implement applies the rate: no PWM, flow pulses or meter speed on RC's side
+                lbPWMdata.Text = NoValue;
+                lbHzData.Text = NoValue;
+                lbRPM.Text = NoValue;
             }
             else
             {
-                lbRPM.Text = "0";
+                lbPWMdata.Text = MainMenu.CurrentProduct.PWM().ToString("N0");
+                lbHzData.Text = MainMenu.CurrentProduct.Hz().ToString("N1");
+
+                if (MainMenu.CurrentProduct.CountsRev > 0)
+                {
+                    float RPM = (float)((MainMenu.CurrentProduct.MeterCal * Applied) / MainMenu.CurrentProduct.CountsRev);
+                    lbRPM.Text = RPM.ToString("N0");
+                }
+                else
+                {
+                    lbRPM.Text = "0";
+                }
             }
 
             if (Props.UseMetric)

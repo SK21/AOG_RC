@@ -103,9 +103,11 @@ namespace RateController.Menu
 
             lblSteerAng.Text = Prod.UPMapplied().ToString("N1");
             lblPWM.Text = Prod.TargetUPM().ToString("N1");
-            lbPWMvalue.Text = Prod.PWM().ToString("N0");
+            // an ISOBUS product's rate is applied by the implement: no PWM or flow pulses on RC's side
+            bool Isobus = Prod.IsIsobus();
+            lbPWMvalue.Text = Isobus ? "—" : Prod.PWM().ToString("N0");
             lbErrorValue.Text = ErrorPercent().ToString("N1");
-            lbHz.Text = Prod.Hz().ToString("N0");
+            lbHz.Text = Isobus ? "—" : Prod.Hz().ToString("N0");
 
             //chart data
             Series s = unoChart.Series["S"];

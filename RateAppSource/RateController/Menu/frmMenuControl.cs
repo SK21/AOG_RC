@@ -445,6 +445,9 @@ namespace RateController.Menu
             else
             {
                 lbProduct.Text = (MainMenu.CurrentProduct.ID + 1).ToString() + ". " + MainMenu.CurrentProduct.ProductName;
+
+                // an ISOBUS product has no PID or PWM here: the implement applies the rate
+                if (MainMenu.CurrentProduct.IsIsobus() && MainMenu.LastScreen == this.Text) MainMenu.ShowSettings();
             }
 
             HSmax.Value = MainMenu.CurrentProduct.MaxPWMadjust;

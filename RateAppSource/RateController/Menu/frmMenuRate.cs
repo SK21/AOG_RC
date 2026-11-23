@@ -17,6 +17,8 @@ namespace RateController.Menu
         private double OtherFactor;
         private string OtherName = "";
         private int QuantityIndex = -1;     // the unit chosen before Other, put back if its dialog is cancelled
+        private int AreaIndex = -1;         // the coverage before minute/hour was picked on an ISOBUS product, put back
+        private bool AreaReverting;         // AreaIndex is being put back: not an edit
         private const int ListClosedMs = 500;
         private Control LastList;           // the drop-down list that closed last, and when
         private DateTime LastListClosed = DateTime.MinValue;
@@ -30,7 +32,35 @@ namespace RateController.Menu
 
         private void AreaUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetTCenabled();
+            // an ISOBUS product's rate goes to the implement per area: minute and hour can't be picked (D2).
+            // A saved per-time coverage from before still shows, with the "can't be sent" line.
+            // Putting the previous choice back isn't an edit, so Cancel / OK stay as they were.
+            if (!Initializing && MainMenu.CurrentProduct.IsIsobus() && AreaUnits.SelectedIndex > 1)
+            {
+                AreaReverting = true;
+                AreaUnits.SelectedIndex = AreaIndex;
+                AreaReverting = false;
+            }
+            else
+            {
+                AreaIndex = AreaUnits.SelectedIndex;
+                if (!AreaReverting) SetButtons(true);
+            }
+            SetCantSend();
+        }
+
+        // minute and hour drawn grey while the product is ISOBUS
+        private void AreaUnits_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index >= 0)
+            {
+                bool Off = MainMenu.CurrentProduct.IsIsobus() && e.Index > 1;
+                e.DrawBackground();
+                Color Fore = Off ? SystemColors.GrayText : e.ForeColor;
+                TextRenderer.DrawText(e.Graphics, AreaUnits.Items[e.Index].ToString(), e.Font, e.Bounds, Fore,
+                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+                e.DrawFocusRectangle();
+            }
         }
 
         private void List_DropDownClosed(object sender, EventArgs e)
@@ -99,7 +129,6 @@ namespace RateController.Menu
                         }
                         MainMenu.CurrentProduct.QuantityUnit = Unit;
                     }
-                    MainMenu.CurrentProduct.Isobus = ckTCsend.Checked;
                 }
                 if (double.TryParse(tbAltRate.Text, out double ar)) MainMenu.CurrentProduct.RateAlt = ar;
                 if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
@@ -357,6 +386,12 @@ namespace RateController.Menu
 
             pnlFan.Enabled = Enabled;
             pnlMain.Enabled = Enabled;
+
+            // an ISOBUS product's rate is applied by the implement: RC's control type and meter cal don't apply
+            // (greyed, values kept for switching back)
+            bool Isobus = MainMenu.CurrentProduct.IsIsobus();
+            ValveType.Enabled = !Isobus;
+            FlowCal.Enabled = !Isobus;
         }
 
         private void SetLanguage()
@@ -370,6 +405,7 @@ namespace RateController.Menu
             lbBaseRateDes.Text = Lang.lgBaseRate;
             lbAltRate.Text = Lang.lgAltRate;
             lb6.Text = Lang.lgTankSize;
+            lbCantSend.Text = Lang.lgTCcantSend;
 
             ValveType.Items[0] = Lang.lgStandard;
             ValveType.Items[1] = Lang.lgComboClose;
@@ -397,9 +433,10 @@ namespace RateController.Menu
             if (!Equals(tbVolumeUnits.Items[(int)QuantityUnits.Other], Text)) tbVolumeUnits.Items[(int)QuantityUnits.Other] = Text;
         }
 
-        private void SetTCenabled()
+        // "Unit can't be sent to the implement" while the product is ISOBUS and the unit on the page (as edited) can't
+        // go to the task controller: only a unit with an ISO type and a per-area rate (acres or hectares) can
+        private void SetCantSend()
         {
-            // only a unit with an ISO type, and a per-area rate (acres or hectares), can go to the task controller
             bool PerArea = AreaUnits.SelectedIndex >= 0 && AreaUnits.SelectedIndex <= 1;
             bool HasType;
             if (tbVolumeUnits.SelectedIndex == (int)QuantityUnits.Other)
@@ -410,16 +447,12 @@ namespace RateController.Menu
             {
                 HasType = tbVolumeUnits.SelectedIndex >= 0;
             }
-            ckTCsend.Enabled = PerArea && HasType;
-
-            // a flat checkbox button keeps its checked colour while disabled: use the page's colour so it doesn't look on.
-            // The product's choice is kept and shows green again once the unit can be sent.
-            ckTCsend.FlatAppearance.CheckedBackColor = ckTCsend.Enabled ? Color.LightGreen : ckTCsend.Parent.BackColor;
+            lbCantSend.Visible = MainMenu.CurrentProduct.IsIsobus() && !(PerArea && HasType);
         }
 
         private void tbVolumeUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetTCenabled();
+            SetCantSend();
             SetButtons(true);
         }
 
@@ -438,7 +471,7 @@ namespace RateController.Menu
                         OtherFactor = frm.UnitFactor;
                         QuantityIndex = (int)QuantityUnits.Other;
                         SetOtherText();
-                        SetTCenabled();
+                        SetCantSend();
                         SetButtons(true);
                     }
                     else if (QuantityIndex >= 0 && QuantityIndex != (int)QuantityUnits.Other)
@@ -626,15 +659,16 @@ namespace RateController.Menu
                 SetOtherText();
                 tbVolumeUnits.SelectedIndex = (int)Prd.QuantityUnit;
                 QuantityIndex = tbVolumeUnits.SelectedIndex;
-                ckTCsend.Checked = Prd.Isobus;
                 AreaUnits.SelectedIndex = MainMenu.CurrentProduct.CoverageUnits;
+                AreaIndex = AreaUnits.SelectedIndex;
+                AreaUnits.Invalidate();     // minute / hour grey or not, for this product
                 CbUseProdDensity.Checked = MainMenu.CurrentProduct.EnableProdDensity;
                 if (!CbUseProdDensity.Checked) CbUseProdDensity_CheckedChanged(CbUseProdDensity, EventArgs.Empty);
                 ProdDensity.Text = MainMenu.CurrentProduct.ProdDensity.ToString("N1");
                 tbAltRate.Text = MainMenu.CurrentProduct.RateAlt.ToString("N0");
                 TankSize.Text = MainMenu.CurrentProduct.TankSize.ToString("N0");
                 ValveType.SelectedIndex = ConvertControlType(MainMenu.CurrentProduct.ControlType);
-                SetTCenabled();
+                SetCantSend();
 
                 if (MainMenu.CurrentProduct.ID > Props.MaxProducts - 3)
                 {

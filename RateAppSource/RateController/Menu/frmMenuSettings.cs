@@ -44,7 +44,9 @@ namespace RateController.Menu
                 byte.TryParse(tbSenID.Text, out SenID);
                 clsProduct Prd = MainMenu.CurrentProduct;
 
-                if (Core.Products.UniqueModSen(ModID, SenID, Prd.ID))
+                // an ISOBUS product's module/sensor are greyed and unused, so they aren't checked; turning ISOBUS
+                // off checks them again
+                if (ckIsobus.Checked || Core.Products.UniqueModSen(ModID, SenID, Prd.ID))
                 {
                     Prd.ModuleID = ModID;
                     Prd.SensorID = SenID;
@@ -71,6 +73,10 @@ namespace RateController.Menu
                         if (WasControl != Prd.FanControlSpeed) Prd.FanOn = false;
                     }
 
+                    // ISOBUS product (Isobus_Product_Design.md); a fan can't be one
+                    bool IsobusChanged = ckIsobus.Enabled && Prd.Isobus != ckIsobus.Checked;
+                    if (ckIsobus.Enabled) Prd.Isobus = ckIsobus.Checked;
+
                     bool EnabledChanged;
                     clsCalibrate Cal = Prd.CalibrateOjbect;
                     if (Cal?.PowerOn == true)
@@ -96,6 +102,9 @@ namespace RateController.Menu
                         MainMenu.RaiseEventProductEnabled();
                         Props.DisplayProducts();   // a disabled product gets no display window
                     }
+
+                    // the menu buttons (Control, Mode, Calibrate) and any open product page follow at once
+                    if (IsobusChanged) MainMenu.ChangeProduct(Prd.ID);
                 }
                 else
                 {
@@ -128,6 +137,13 @@ namespace RateController.Menu
         private void ckEnabled_CheckedChanged(object sender, EventArgs e)
         {
             SetEnabled();
+            SetButtons(true);
+        }
+
+        private void ckIsobus_CheckedChanged(object sender, EventArgs e)
+        {
+            grpSensor.Enabled = ckEnabled.Checked && !ckIsobus.Checked;
+            grpMinUPM.Enabled = ckEnabled.Checked && !ckIsobus.Checked;
             SetButtons(true);
         }
 
@@ -314,8 +330,10 @@ namespace RateController.Menu
         {
             bool Enabled = ckEnabled.Checked;
 
-            grpSensor.Enabled = Enabled;
-            grpMinUPM.Enabled = Enabled;
+            // an ISOBUS product's rate goes to the implement: its module, sensor and Min UPM don't apply
+            // (greyed, values kept for switching back)
+            grpSensor.Enabled = Enabled && !ckIsobus.Checked;
+            grpMinUPM.Enabled = Enabled && !ckIsobus.Checked;
             ckOffRate.Enabled = Enabled;
             tbOffRate.Enabled = Enabled;
             ckDefault.Enabled = Enabled;
@@ -492,6 +510,8 @@ namespace RateController.Menu
                 ckScale.Visible = false;
 
                 grpFan.Visible = true;
+                ckIsobus.Enabled = false;
+                ckIsobus.Checked = false;
                 rbFanControl.Checked = MainMenu.CurrentProduct.FanControlSpeed;
                 rbFanMonitor.Checked = !MainMenu.CurrentProduct.FanControlSpeed;
 
@@ -514,6 +534,8 @@ namespace RateController.Menu
                 ckDefault.Visible = true;
                 ckScale.Visible = true;
                 grpFan.Visible = false;
+                ckIsobus.Enabled = true;
+                ckIsobus.Checked = MainMenu.CurrentProduct.Isobus;
 
                 ckSeparateDisplay.Top = 532;
 
@@ -554,6 +576,9 @@ namespace RateController.Menu
             ckSeparateDisplay.Checked = Props.GetShowDisplay(MainMenu.CurrentProduct.ID);
 
             UpdateMinUPMhint();
+            // ckEnabled / ckIsobus may not have changed, so their events didn't grey the groups
+            grpSensor.Enabled = ckEnabled.Checked && !ckIsobus.Checked;
+            grpMinUPM.Enabled = ckEnabled.Checked && !ckIsobus.Checked;
 
             Initializing = false;
         }

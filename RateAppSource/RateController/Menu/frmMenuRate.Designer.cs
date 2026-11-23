@@ -61,7 +61,7 @@
             this.lbTargetRPM = new System.Windows.Forms.Label();
             this.tbTargetRPM = new System.Windows.Forms.TextBox();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.ckTCsend = new System.Windows.Forms.CheckBox();
+            this.lbCantSend = new System.Windows.Forms.Label();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -168,9 +168,11 @@
             // 
             // AreaUnits
             // 
+            this.AreaUnits.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.AreaUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.AreaUnits.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AreaUnits.FormattingEnabled = true;
+            this.AreaUnits.ItemHeight = 25;
             this.AreaUnits.Items.AddRange(new object[] {
             "Acre",
             "Hectare",
@@ -181,8 +183,8 @@
             this.AreaUnits.Size = new System.Drawing.Size(176, 31);
             this.AreaUnits.TabIndex = 142;
             this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.AreaUnits_SelectedIndexChanged);
-            this.AreaUnits.SelectedIndexChanged += new System.EventHandler(this.tbProduct_TextChanged);
             this.AreaUnits.DropDownClosed += new System.EventHandler(this.List_DropDownClosed);
+            this.AreaUnits.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.AreaUnits_DrawItem);
             // 
             // tbVolumeUnits
             // 
@@ -470,27 +472,23 @@
             this.pnlMain.Controls.Add(this.FlowCal);
             this.pnlMain.Controls.Add(this.tbVolumeUnits);
             this.pnlMain.Controls.Add(this.TankSize);
-            this.pnlMain.Controls.Add(this.ckTCsend);
+            this.pnlMain.Controls.Add(this.lbCantSend);
             this.pnlMain.Location = new System.Drawing.Point(71, 75);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(396, 522);
             this.pnlMain.TabIndex = 164;
             // 
-            // ckTCsend
-            // 
-            this.ckTCsend.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckTCsend.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckTCsend.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
-            this.ckTCsend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ckTCsend.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ckTCsend.Location = new System.Drawing.Point(88, 476);
-            this.ckTCsend.Name = "ckTCsend";
-            this.ckTCsend.Size = new System.Drawing.Size(220, 34);
-            this.ckTCsend.TabIndex = 149;
-            this.ckTCsend.Text = "ISOBUS";
-            this.ckTCsend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ckTCsend.UseVisualStyleBackColor = true;
-            this.ckTCsend.CheckedChanged += new System.EventHandler(this.tbProduct_TextChanged);
+            // lbCantSend
+            //
+            this.lbCantSend.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCantSend.ForeColor = System.Drawing.Color.Red;
+            this.lbCantSend.Location = new System.Drawing.Point(8, 476);
+            this.lbCantSend.Name = "lbCantSend";
+            this.lbCantSend.Size = new System.Drawing.Size(380, 34);
+            this.lbCantSend.TabIndex = 149;
+            this.lbCantSend.Text = "Unit can\'t be sent to the implement";
+            this.lbCantSend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbCantSend.Visible = false;
             // 
             // btnRight
             // 
@@ -624,7 +622,7 @@
         private System.Windows.Forms.Label lbTargetRPM;
         private System.Windows.Forms.TextBox tbTargetRPM;
         private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.CheckBox ckTCsend;
+        private System.Windows.Forms.Label lbCantSend;
         private System.Windows.Forms.Timer timer1;
     }
 }

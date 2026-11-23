@@ -53,6 +53,7 @@
             this.lbProduct = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ckEnabled = new System.Windows.Forms.CheckBox();
+            this.ckIsobus = new System.Windows.Forms.CheckBox();
             this.ckSeparateDisplay = new System.Windows.Forms.CheckBox();
             this.grpFan = new System.Windows.Forms.GroupBox();
             this.rbFanMonitor = new System.Windows.Forms.RadioButton();
@@ -383,12 +384,28 @@
             this.ckEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ckEnabled.Location = new System.Drawing.Point(86, 87);
             this.ckEnabled.Name = "ckEnabled";
-            this.ckEnabled.Size = new System.Drawing.Size(355, 34);
+            this.ckEnabled.Size = new System.Drawing.Size(244, 34);
             this.ckEnabled.TabIndex = 333;
             this.ckEnabled.Text = "Enabled";
             this.ckEnabled.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckEnabled.UseVisualStyleBackColor = true;
             this.ckEnabled.CheckedChanged += new System.EventHandler(this.ckEnabled_CheckedChanged);
+            // 
+            // ckIsobus
+            // 
+            this.ckIsobus.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckIsobus.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckIsobus.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
+            this.ckIsobus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ckIsobus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ckIsobus.Location = new System.Drawing.Point(336, 87);
+            this.ckIsobus.Name = "ckIsobus";
+            this.ckIsobus.Size = new System.Drawing.Size(105, 34);
+            this.ckIsobus.TabIndex = 334;
+            this.ckIsobus.Text = "ISOBUS";
+            this.ckIsobus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ckIsobus.UseVisualStyleBackColor = true;
+            this.ckIsobus.CheckedChanged += new System.EventHandler(this.ckIsobus_CheckedChanged);
             // 
             // ckSeparateDisplay
             // 
@@ -405,9 +422,9 @@
             this.ckSeparateDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ckSeparateDisplay.UseVisualStyleBackColor = true;
             this.ckSeparateDisplay.CheckedChanged += new System.EventHandler(this.ckSeparateDisplay_CheckedChanged);
-            //
+            // 
             // grpFan
-            //
+            // 
             this.grpFan.Controls.Add(this.rbFanMonitor);
             this.grpFan.Controls.Add(this.rbFanControl);
             this.grpFan.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -419,9 +436,9 @@
             this.grpFan.Text = "Mode";
             this.grpFan.Visible = false;
             this.grpFan.Paint += new System.Windows.Forms.PaintEventHandler(this.grpMinUPM_Paint);
-            //
+            // 
             // rbFanMonitor
-            //
+            // 
             this.rbFanMonitor.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbFanMonitor.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbFanMonitor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -436,9 +453,9 @@
             this.rbFanMonitor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbFanMonitor.UseVisualStyleBackColor = true;
             this.rbFanMonitor.CheckedChanged += new System.EventHandler(this.rbFan_CheckedChanged);
-            //
+            // 
             // rbFanControl
-            //
+            // 
             this.rbFanControl.Appearance = System.Windows.Forms.Appearance.Button;
             this.rbFanControl.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightGreen;
             this.rbFanControl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -452,7 +469,7 @@
             this.rbFanControl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbFanControl.UseVisualStyleBackColor = true;
             this.rbFanControl.CheckedChanged += new System.EventHandler(this.rbFan_CheckedChanged);
-            //
+            // 
             // frmMenuSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -461,6 +478,7 @@
             this.Controls.Add(this.grpFan);
             this.Controls.Add(this.ckSeparateDisplay);
             this.Controls.Add(this.ckEnabled);
+            this.Controls.Add(this.ckIsobus);
             this.Controls.Add(this.lbProduct);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -516,6 +534,7 @@
         private System.Windows.Forms.Label lbProduct;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox ckEnabled;
+        private System.Windows.Forms.CheckBox ckIsobus;
         private System.Windows.Forms.Label lbUPMhint;
         private System.Windows.Forms.CheckBox ckSeparateDisplay;
         private System.Windows.Forms.GroupBox grpFan;

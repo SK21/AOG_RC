@@ -204,11 +204,13 @@ namespace RateController.Classes
 
         public bool UniqueModSen(int ModID, int SenID, int ProdID)
         {
-            // checks if product module ID/sensor ID pair are unique
+            // checks if product module ID/sensor ID pair are unique. An ISOBUS product doesn't use its module/sensor
+            // (kept for switching back), so it doesn't hold them: another product may use the same pair.
+            // Bench note: the ISOBUS stand-in still gets that product's 32509/32502 there (D1 (a)).
             bool Result = true;
             for (int i = 0; i < Props.MaxProducts; i++)
             {
-                if (cProducts[i].Enabled && cProducts[i].ID != ProdID && cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID)
+                if (cProducts[i].Enabled && !cProducts[i].IsIsobus() && cProducts[i].ID != ProdID && cProducts[i].ModuleID == ModID && cProducts[i].SensorID == SenID)
                 {
                     Result = false;
                     break;
