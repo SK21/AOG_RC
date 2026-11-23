@@ -488,6 +488,12 @@ namespace RateController.Classes
                         NewState = ProductState.Sending;
                     }
                 }
+                else if (pd.IsIsobus() && Core.TCrate != null && Core.TCrate.Announced(pd.ID))
+                {
+                    // an ISOBUS product's 32400 is built from fresh, matched 0xF5 (green above). RC sending to the
+                    // TC without that (no TC, or nothing matched) is blue, as a module that doesn't answer
+                    NewState = ProductState.Sending;
+                }
                 else
                 {
                     NewState = ProductState.Off;

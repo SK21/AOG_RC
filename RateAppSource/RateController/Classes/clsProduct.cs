@@ -1263,6 +1263,53 @@ namespace RateController.Classes
             return Result;
         }
 
+        /// <summary>The dialog / popup text for an Rx case; "" for None.</summary>
+        public static string RxCaseText(RxCases Case)
+        {
+            string Result;
+            switch (Case)
+            {
+                case RxCases.TurnedOff: Result = Lang.lgRxTurnedOff; break;
+                case RxCases.Refused: Result = Lang.lgRxRefused; break;
+                case RxCases.Error: Result = Lang.lgRxError; break;
+                case RxCases.NoReply: Result = Lang.lgRxNoReply; break;
+                case RxCases.NoTC: Result = Lang.lgRxNoTC; break;
+                case RxCases.NoMatch: Result = Lang.lgRxNoMatch; break;
+                default: Result = ""; break;
+            }
+            return Result;
+        }
+
+        /// <summary>What it means or what to check for an Rx case (the dialog's smaller second line); "" for None.</summary>
+        public static string RxCaseAdvice(RxCases Case)
+        {
+            string Result;
+            switch (Case)
+            {
+                case RxCases.TurnedOff:
+                case RxCases.Refused: Result = Lang.lgRxAdvOwnRate; break;
+                case RxCases.Error: Result = Lang.lgRxAdvCheckImplement; break;
+                case RxCases.NoReply: Result = Lang.lgRxAdvCheckConnected; break;
+                case RxCases.NoTC: Result = Lang.lgRxAdvCheckTC; break;
+                case RxCases.NoMatch: Result = Lang.lgRxAdvCheckAssign; break;
+                default: Result = ""; break;
+            }
+            return Result;
+        }
+
+        /// <summary>True when the implement isn't using RC's rate for this ISOBUS product: VR off, or cases 1-4.
+        /// The target then shows "Implement". Cases 5 and 6 aren't included: nothing reports the implement's state.</summary>
+        public bool ImplementOwnRate()
+        {
+            bool Result = false;
+            if (Core.TCrate != null && Core.TCrate.Announced(cProductID))
+            {
+                RxCases Case = RxCase();
+                Result = !Props.VariableRateEnabled || (Case >= RxCases.TurnedOff && Case <= RxCases.NoReply);
+            }
+            return Result;
+        }
+
         // Update(): note 158 = 1 when the implement reports it
         private void UpdateRxSeen()
         {

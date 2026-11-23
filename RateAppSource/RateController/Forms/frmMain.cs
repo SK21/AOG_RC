@@ -25,7 +25,10 @@ namespace RateController.Forms
 
         private bool LastUseLight;
 
-        private bool LastVRenabled;
+        private int LastRxImage = -1;       // Rx button: 0 off (white), 1 on (green), 2 error (red)
+        private Font TargetFont;            // the target box's normal font, put back when it shows a number again
+        private Font ImplementFont;         // the largest size of it that fits "Implement" in the box
+        private int ImplementFontWidth;     // the box width ImplementFont was fitted to
 
         private Point MouseDownLocation;
 
@@ -365,7 +368,26 @@ namespace RateController.Forms
 
         private void btnVR_Click(object sender, EventArgs e)
         {
-            if (Props.VariableRateEnabled)
+            if (Props.VariableRateEnabled && Core.TCrate != null && Core.TCrate.AnyRxCase())
+            {
+                // red Rx: which ISOBUS products aren't on RC's rate, with Ask again / Turn VR off / Cancel
+                var Entries = Core.TCrate.RxLines(out bool CanAskAgain);
+                using (frmRxDialog Dlg = new frmRxDialog(Entries, CanAskAgain))
+                {
+                    Dlg.ShowDialog(this);
+                    switch (Dlg.Choice)
+                    {
+                        case frmRxDialog.Choices.AskAgain:
+                            Core.TCrate.AskAgainAll();
+                            break;
+
+                        case frmRxDialog.Choices.VROff:
+                            Props.VariableRateEnabled = false;
+                            break;
+                    }
+                }
+            }
+            else if (Props.VariableRateEnabled)
             {
                 Props.VariableRateEnabled = false;
             }
@@ -1083,16 +1105,35 @@ namespace RateController.Forms
                     lbRateAmount.ForeColor = lbTargetAmount.ForeColor;
                 }
 
-                // target rate
+                // target rate; an ISOBUS product not on RC's rate (VR off, or the implement turned it off,
+                // refused, error, no reply) runs at the implement's own rate
                 lbTargetType.Text = Core.Tls.ClipText(Prd.Units(), 8);
                 rt = Prd.TargetRate();
-                if (rt > 999)
+                if (TargetFont == null) TargetFont = lbTargetAmount.Font;
+                if (Prd.ImplementOwnRate())
                 {
-                    lbTargetAmount.Text = rt.ToString("N0");
+                    // a word, not a number: the largest size up to the normal one that fits the box
+                    lbTargetAmount.Text = Lang.lgImplement;
+                    if (ImplementFont == null || ImplementFontWidth != lbTargetAmount.ClientSize.Width)
+                    {
+                        ImplementFontWidth = lbTargetAmount.ClientSize.Width;
+                        float FitSize = TargetFont.Size;
+                        Font Fit = TargetFont;
+                        while (FitSize > 8 && TextRenderer.MeasureText(Lang.lgImplement, Fit).Width > ImplementFontWidth)
+                        {
+                            FitSize -= 0.5F;
+                            if (Fit != TargetFont) Fit.Dispose();
+                            Fit = new Font(TargetFont.FontFamily, FitSize, TargetFont.Style);
+                        }
+                        if (ImplementFont != null && ImplementFont != TargetFont && ImplementFont != lbTargetAmount.Font) ImplementFont.Dispose();
+                        ImplementFont = Fit;
+                    }
+                    if (lbTargetAmount.Font != ImplementFont) lbTargetAmount.Font = ImplementFont;
                 }
                 else
                 {
-                    lbTargetAmount.Text = rt.ToString("N1");
+                    if (lbTargetAmount.Font != TargetFont) lbTargetAmount.Font = TargetFont;
+                    lbTargetAmount.Text = rt > 999 ? rt.ToString("N0") : rt.ToString("N1");
                 }
 
                 // quantity
@@ -1226,17 +1267,26 @@ namespace RateController.Forms
                 }
             }
 
-            // Rx button
-            if (ThemeChanged || Props.VariableRateEnabled != LastVRenabled)
+            // Rx button: white = VR off, green = VR on, red = VR on and an ISOBUS product isn't on RC's rate
+            // (cases 1-6, Group2_Step3_Prescription_State_Design.md § 4)
+            int RxImage = 0;
+            if (Props.VariableRateEnabled) RxImage = (Core.TCrate != null && Core.TCrate.AnyRxCase()) ? 2 : 1;
+            if (ThemeChanged || RxImage != LastRxImage)
             {
-                LastVRenabled = Props.VariableRateEnabled;
-                if (Props.VariableRateEnabled)
+                LastRxImage = RxImage;
+                switch (RxImage)
                 {
-                    btnVR.Image = UseLight ? Properties.Resources.VRonLight : Properties.Resources.VRon;
-                }
-                else
-                {
-                    btnVR.Image = UseLight ? Properties.Resources.VRoffLight : Properties.Resources.VRoff;
+                    case 2:
+                        btnVR.Image = UseLight ? Properties.Resources.VRerrorLight : Properties.Resources.VRerror;
+                        break;
+
+                    case 1:
+                        btnVR.Image = UseLight ? Properties.Resources.VRonLight : Properties.Resources.VRon;
+                        break;
+
+                    default:
+                        btnVR.Image = UseLight ? Properties.Resources.VRoffLight : Properties.Resources.VRoff;
+                        break;
                 }
             }
 

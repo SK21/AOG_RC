@@ -1151,7 +1151,64 @@ The module stops controlling until the update is done.</value>
   <data name="lgTCcantSend" xml:space="preserve">
     <value>Rate not sent: set a unit type and acres or ha</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>Variable rate not reaching the implement</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>VR is on, but these products aren't getting RC's map rate:</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>the implement turned it off.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>the implement refused.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>the implement reports an error.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>the implement doesn't answer.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>the task controller isn't answering.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>no implement is matched to this product.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Ask again</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Use implement's rate</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Implement rate</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Implement</value>
+  </data>
   <data name="lgTCcantSendMsg" xml:space="preserve">
     <value>No rate will be sent to the implement. The quantity unit needs a type (volume, mass or count) and coverage in acres or hectares.</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Ask again: ask the implement to use RC's rate.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Use implement's rate: turns VR off. Each implement applies its own rate setting, not RC's map.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>It is using its own rate setting, not RC's map.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Check the implement.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Check that it is connected.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Check that AOG-TaskController is running.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Check that the implement is connected, or its assignment in AOG-TaskController.</value>
   </data>
 </root>

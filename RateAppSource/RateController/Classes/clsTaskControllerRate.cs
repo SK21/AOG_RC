@@ -50,6 +50,8 @@ namespace RateController.Classes
         private readonly DateTime StartTime = DateTime.Now;
         private const ushort DDIrxState = 158;          // Prescription Control State (Group2_Step3_Prescription_State_Design.md)
         private const int StartupHoldSeconds = 5;       // no "no TC" case right after RC starts
+        private const int AskResultSeconds = 6;         // Ask again: the result is read after AOG-TC's confirm (about 4 s)
+        private readonly DateTime?[] AskedTime;         // per product: when Ask again was sent, until its result is read
         private readonly System.Windows.Forms.Timer SendTimer;
         private bool AnySending;
         private bool cDisposed;
@@ -90,6 +92,7 @@ namespace RateController.Classes
             LastSent = new DateTime[RateProducts];
             LastValue = new int[RateProducts];
             LastRxOffSent = new DateTime[RateProducts];
+            AskedTime = new DateTime?[RateProducts];
             Sending = new bool[RateProducts];
             LastVR = Props.VariableRateEnabled;
             Actuals = new TCActuals[RateProducts];
@@ -159,8 +162,56 @@ namespace RateController.Classes
             return ProductID >= 0 && ProductID < RateProducts && Sending[ProductID];
         }
 
+        /// <summary>True while VR is on and at least one ISOBUS product is in case 1-6: the Rx button shows red.</summary>
+        public bool AnyRxCase()
+        {
+            bool Result = false;
+            if (Props.VariableRateEnabled)
+            {
+                for (int i = 0; i < RateProducts && !Result; i++)
+                {
+                    Result = Sending[i] && Core.Products.Item(i).RxCase() != RxCases.None;
+                }
+            }
+            return Result;
+        }
+
+        /// <summary>The red Rx dialog's entries, one per product in case 1-6: [0] "1. Seed: the implement refused.",
+        /// [1] the advice ("It is using its own rate setting, not RC's map."). CanAskAgain: any of them in cases 1-4.</summary>
+        public List<string[]> RxLines(out bool CanAskAgain)
+        {
+            List<string[]> Result = new List<string[]>();
+            CanAskAgain = false;
+            for (int i = 0; i < RateProducts; i++)
+            {
+                if (Sending[i])
+                {
+                    clsProduct Prd = Core.Products.Item(i);
+                    RxCases Case = Prd.RxCase();
+                    if (Case != RxCases.None)
+                    {
+                        Result.Add(new string[] { (i + 1).ToString() + ". " + Prd.ProductName + ": " + clsProduct.RxCaseText(Case),
+                            clsProduct.RxCaseAdvice(Case) });
+                        if (Case <= RxCases.NoReply) CanAskAgain = true;
+                    }
+                }
+            }
+            return Result;
+        }
+
+        /// <summary>"Ask again" for every product in case 1-4 (red Rx dialog).</summary>
+        public void AskAgainAll()
+        {
+            for (int i = 0; i < RateProducts; i++)
+            {
+                RxCases Case = Sending[i] ? Core.Products.Item(i).RxCase() : RxCases.None;
+                if (Case >= RxCases.TurnedOff && Case <= RxCases.NoReply) AskAgain(i);
+            }
+        }
+
         /// <summary>"Ask again" (red Rx dialog): DDI 158 = 1 once for the product's channel, and a new request
-        /// for telling "turned off" from "refused". Nothing for a channel that isn't announced.</summary>
+        /// for telling "turned off" from "refused". Nothing for a channel that isn't announced. About 6 s later
+        /// the result is checked: refused, error or no reply gets one popup.</summary>
         public void AskAgain(int ProductID)
         {
             try
@@ -169,6 +220,7 @@ namespace RateController.Classes
                 {
                     Send(DDIrxState, 1, (byte)(ProductID + 1));
                     Core.Products.Item(ProductID).RxRequest();
+                    AskedTime[ProductID] = DateTime.Now;
                 }
             }
             catch (Exception ex)
@@ -393,6 +445,26 @@ namespace RateController.Classes
             AnySending = Any;
         }
 
+        // Ask again's one popup: refused, error or no reply once AOG-TC has had time to confirm. Nothing when the
+        // implement took it (158 = 1); lasting conditions are shown by the red Rx button and the alarm.
+        private void CheckAskResults(DateTime Now)
+        {
+            for (int i = 0; i < RateProducts; i++)
+            {
+                if (AskedTime[i].HasValue && (Now - AskedTime[i].Value).TotalSeconds >= AskResultSeconds)
+                {
+                    AskedTime[i] = null;
+                    clsProduct Prd = Core.Products.Item(i);
+                    RxCases Case = Prd.RxCase();
+                    if (Case == RxCases.Refused || Case == RxCases.Error || Case == RxCases.NoReply)
+                    {
+                        Props.ShowMessage((i + 1).ToString() + ". " + Prd.ProductName + ": " + clsProduct.RxCaseText(Case)
+                            + " " + clsProduct.RxCaseAdvice(Case), Language.Lang.lgRxPopupTitle, 10000);
+                    }
+                }
+            }
+        }
+
         private void SendFrame(byte[] Frame)
         {
             if (Udp == null)
@@ -479,6 +551,7 @@ namespace RateController.Classes
                 }
 
                 SendChannelInfo(Now);
+                CheckAskResults(Now);
             }
             catch (Exception ex)
             {

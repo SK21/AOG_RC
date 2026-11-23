@@ -3137,5 +3137,176 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgTCcantSendMsg", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Implement rate control.
+        /// </summary>
+        internal static string lgRxTitle {
+            get {
+                return ResourceManager.GetString("lgRxTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to These implements are not using RC&apos;s rate:.
+        /// </summary>
+        internal static string lgRxIntro {
+            get {
+                return ResourceManager.GetString("lgRxIntro", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to implement turned rate control off.
+        /// </summary>
+        internal static string lgRxTurnedOff {
+            get {
+                return ResourceManager.GetString("lgRxTurnedOff", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to implement refused.
+        /// </summary>
+        internal static string lgRxRefused {
+            get {
+                return ResourceManager.GetString("lgRxRefused", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to implement reports an error.
+        /// </summary>
+        internal static string lgRxError {
+            get {
+                return ResourceManager.GetString("lgRxError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to no reply from the implement.
+        /// </summary>
+        internal static string lgRxNoReply {
+            get {
+                return ResourceManager.GetString("lgRxNoReply", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to no reply from the task controller.
+        /// </summary>
+        internal static string lgRxNoTC {
+            get {
+                return ResourceManager.GetString("lgRxNoTC", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to no implement matched: check the implement or the assignment.
+        /// </summary>
+        internal static string lgRxNoMatch {
+            get {
+                return ResourceManager.GetString("lgRxNoMatch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ask again.
+        /// </summary>
+        internal static string lgRxAskAgain {
+            get {
+                return ResourceManager.GetString("lgRxAskAgain", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Turn VR off.
+        /// </summary>
+        internal static string lgRxVROff {
+            get {
+                return ResourceManager.GetString("lgRxVROff", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Implement rate.
+        /// </summary>
+        internal static string lgRxPopupTitle {
+            get {
+                return ResourceManager.GetString("lgRxPopupTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Implement.
+        /// </summary>
+        internal static string lgImplement {
+            get {
+                return ResourceManager.GetString("lgImplement", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ask again: ask the implement to use RC&apos;s rate..
+        /// </summary>
+        internal static string lgRxAskAgainHelp {
+            get {
+                return ResourceManager.GetString("lgRxAskAgainHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use implement&apos;s rate: turns VR off. Each implement applies its own rate setting, not RC&apos;s map..
+        /// </summary>
+        internal static string lgRxVROffHelp {
+            get {
+                return ResourceManager.GetString("lgRxVROffHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to It is using its own rate setting, not RC&apos;s map..
+        /// </summary>
+        internal static string lgRxAdvOwnRate {
+            get {
+                return ResourceManager.GetString("lgRxAdvOwnRate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Check the implement..
+        /// </summary>
+        internal static string lgRxAdvCheckImplement {
+            get {
+                return ResourceManager.GetString("lgRxAdvCheckImplement", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Check that it is connected..
+        /// </summary>
+        internal static string lgRxAdvCheckConnected {
+            get {
+                return ResourceManager.GetString("lgRxAdvCheckConnected", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Check that AOG-TaskController is running..
+        /// </summary>
+        internal static string lgRxAdvCheckTC {
+            get {
+                return ResourceManager.GetString("lgRxAdvCheckTC", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Check that the implement is connected, or its assignment in AOG-TaskController..
+        /// </summary>
+        internal static string lgRxAdvCheckAssign {
+            get {
+                return ResourceManager.GetString("lgRxAdvCheckAssign", resourceCulture);
+            }
+        }
     }
 }
