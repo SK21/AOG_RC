@@ -22,6 +22,11 @@ namespace RateController.Classes
     // in use. AOG-TaskController matches the implement's rate elements to channels by DDI. While any
     // product sends, every channel's info goes out on a change and every 2 s; when the last one stops,
     // every channel gets DDI 0 once and nothing more is sent.
+    //
+    // Step 3 (Group2_Step3_Prescription_State_Design.md): a channel is announced while its product is ISOBUS, enabled
+    // and its unit can be sent, whatever VR is. VR on: setpoints as above. VR off: 0xF2 [DDI 158][0][channel] every
+    // second instead, so the implement uses its own rate. "Ask again": [DDI 158][1][channel] once. 0xF5 of 16 bytes
+    // adds 158 / has 158 / no reply (flags bits 2-5) and DDI 288 (byte 15); clsProduct.RxCase() reads them.
     public class clsTaskControllerRate : IDisposable
     {
         private const int AddressRefreshMs = 5000;
@@ -39,7 +44,12 @@ namespace RateController.Classes
         private readonly DateTime[] LastInfoSent;
         private readonly DateTime[] LastSent;
         private readonly int[] LastValue;
-        private readonly bool[] Sending;
+        private readonly DateTime[] LastRxOffSent;      // VR off: DDI 158 = 0 per channel every ResendMs
+        private readonly bool[] Sending;                // the channel is announced: ISOBUS, enabled, its unit can be sent
+        private bool LastVR;                            // VR as on the last tick
+        private readonly DateTime StartTime = DateTime.Now;
+        private const ushort DDIrxState = 158;          // Prescription Control State (Group2_Step3_Prescription_State_Design.md)
+        private const int StartupHoldSeconds = 5;       // no "no TC" case right after RC starts
         private readonly System.Windows.Forms.Timer SendTimer;
         private bool AnySending;
         private bool cDisposed;
@@ -59,9 +69,14 @@ namespace RateController.Classes
         {
             public ushort ActualDDI;
             public byte Elements;
+            public bool Extended;       // 16-byte frame (step 3): the prescription fields below are valid
             public byte Flags;
+            public bool Has158;         // flags bit 4: the channel's elements have DDI 158
+            public bool NoReply;        // flags bit 5: no reply to 158 after AOG-TC's resends
             public int Rate;
             public DateTime Received = DateTime.MinValue;
+            public byte RxMode;         // byte 15: DDI 288 Actual Prescription Mode, 0 = unknown / not present
+            public byte RxState;        // flags bits 2-3: DDI 158 as reported (0 off, 1 on, 2 error, 3 not installed)
             public int Total;
             public ushort TotalDDI;
         }
@@ -74,7 +89,9 @@ namespace RateController.Classes
             LastInfoSent = new DateTime[RateProducts];
             LastSent = new DateTime[RateProducts];
             LastValue = new int[RateProducts];
+            LastRxOffSent = new DateTime[RateProducts];
             Sending = new bool[RateProducts];
+            LastVR = Props.VariableRateEnabled;
             Actuals = new TCActuals[RateProducts];
             for (int i = 0; i < RateProducts; i++) Actuals[i] = new TCActuals();
 
@@ -136,6 +153,69 @@ namespace RateController.Classes
             return Result;
         }
 
+        /// <summary>True while the product's channel is announced (0xF4): ISOBUS, enabled, its unit can be sent.</summary>
+        public bool Announced(int ProductID)
+        {
+            return ProductID >= 0 && ProductID < RateProducts && Sending[ProductID];
+        }
+
+        /// <summary>"Ask again" (red Rx dialog): DDI 158 = 1 once for the product's channel, and a new request
+        /// for telling "turned off" from "refused". Nothing for a channel that isn't announced.</summary>
+        public void AskAgain(int ProductID)
+        {
+            try
+            {
+                if (Announced(ProductID))
+                {
+                    Send(DDIrxState, 1, (byte)(ProductID + 1));
+                    Core.Products.Item(ProductID).RxRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                Core.PgnLog.Note(PgnLink.TC, "ask again failed: " + ex.Message);
+                CloseSocket();
+            }
+        }
+
+        /// <summary>The prescription state AOG-TaskController reports for a product (0xF5, step 3). Fresh: a frame
+        /// within 3 s. Matched: it has elements. Extended: a 16-byte frame, so RxState, Has158, NoReply and RxMode
+        /// are valid. Returns Fresh.</summary>
+        public bool ImplementStatus(int ProductID, out bool Matched, out bool Extended, out byte RxState, out bool Has158, out bool NoReply, out byte RxMode)
+        {
+            bool Fresh = false;
+            Matched = false;
+            Extended = false;
+            RxState = 0;
+            Has158 = false;
+            NoReply = false;
+            RxMode = 0;
+            if (ProductID >= 0 && ProductID < RateProducts)
+            {
+                lock (ActualsLock)
+                {
+                    TCActuals A = Actuals[ProductID];
+                    Fresh = (DateTime.Now - A.Received).TotalMilliseconds < ActualsFreshMs;
+                    if (Fresh)
+                    {
+                        Matched = A.Elements > 0;
+                        Extended = A.Extended;
+                        RxState = A.RxState;
+                        Has158 = A.Has158;
+                        NoReply = A.NoReply;
+                        RxMode = A.RxMode;
+                    }
+                }
+            }
+            return Fresh;
+        }
+
+        /// <summary>True in the first seconds after RC starts: no 0xF5 yet is normal, not "no TC".</summary>
+        public bool StartupHold
+        {
+            get { return (DateTime.Now - StartTime).TotalSeconds < StartupHoldSeconds; }
+        }
+
         private void CloseSocket()
         {
             try { Udp?.Close(); } catch { }
@@ -178,12 +258,15 @@ namespace RateController.Classes
 
         private void ParseActuals(byte[] Data)
         {
-            // 80 81 80 F5 0F [15 bytes] [checksum]
+            // 80 81 80 F5 0F [15 bytes] [checksum]; step 3: 80 81 80 F5 10 [16 bytes] [checksum], byte 15 = DDI 288,
+            // flags bits 2-3 = DDI 158, bit 4 = has 158, bit 5 = no reply. A frame with elements = 0 is stored too:
+            // the TC is there but nothing is matched to the channel (case 6); ImplementActuals still needs elements.
             if (Data != null && Data.Length >= 21 && Data[0] == 0x80 && Data[1] == 0x81 && Data[3] == 0xF5 && Data[4] >= 15)
             {
                 int Channel = Data[5];
                 if (Channel >= 1 && Channel <= RateProducts)
                 {
+                    bool Extended = Data[4] >= 16 && Data.Length >= 22;
                     lock (ActualsLock)
                     {
                         TCActuals A = Actuals[Channel - 1];
@@ -193,6 +276,11 @@ namespace RateController.Classes
                         A.Total = BitConverter.ToInt32(Data, 14);
                         A.Elements = Data[18];
                         A.Flags = Data[19];
+                        A.Extended = Extended;
+                        A.RxState = (byte)((Data[19] >> 2) & 3);
+                        A.Has158 = Extended && (Data[19] & 0x10) != 0;
+                        A.NoReply = Extended && (Data[19] & 0x20) != 0;
+                        A.RxMode = Extended ? Data[20] : (byte)0;
                         A.Received = DateTime.Now;
                     }
                 }
@@ -291,7 +379,7 @@ namespace RateController.Classes
                 for (int i = 0; i < RateProducts; i++)
                 {
                     clsProduct Prd = Core.Products.Item(i);
-                    ushort DDI = Any && Prd.Enabled ? Prd.TCddi() : (ushort)0;
+                    ushort DDI = Sending[i] ? Prd.TCddi() : (ushort)0;
                     string Name = DDI != 0 ? Prd.ProductName : "";
                     if (!Any || DDI != LastInfoDDI[i] || Name != LastInfoName[i] || (Now - LastInfoSent[i]).TotalMilliseconds >= InfoResendMs)
                     {
@@ -333,33 +421,59 @@ namespace RateController.Classes
         {
             try
             {
+                // Step 3 (Group2_Step3_Prescription_State_Design.md): a channel is announced (0xF4) while its product
+                // is ISOBUS, enabled and its unit can be sent, whatever VR is. VR on: RC's rate as setpoints. VR off:
+                // DDI 158 = 0 every second, so the implement uses its own rate. A channel that stops gets no 0 setpoint:
+                // its 0xF4 with DDI 0 hands control back.
                 DateTime Now = DateTime.Now;
+                bool VR = Props.VariableRateEnabled;
+                bool VRchanged = VR != LastVR;
+                LastVR = VR;
+                if (VRchanged && AnySending)
+                {
+                    Props.WriteActivityLog("Task controller rate: " + (VR ? "VR on, RC's rate" : "VR off, implement's own rate (DDI 158 = 0)"));
+                }
+
                 for (int i = 0; i < RateProducts; i++)
                 {
                     clsProduct Prd = Core.Products.Item(i);
                     ushort DDI = Prd.TCddi();
-                    bool On = DDI != 0;
+                    bool On = Prd.Enabled && DDI != 0;
+                    byte Channel = (byte)(i + 1);
 
                     if (On != Sending[i])
                     {
                         Sending[i] = On;
-                        Props.WriteActivityLog("Task controller rate, product " + (i + 1).ToString()
-                            + (On ? ": sending on channel " + (i + 1).ToString() + ", DDI " + DDI.ToString() : ": stopped"));
-
-                        // switched off: 0 at once rather than after AOG-TaskController's 4 s timeout
-                        if (!On && LastDDI[i] != 0) Send(LastDDI[i], 0, (byte)(i + 1));
+                        Props.WriteActivityLog("Task controller rate, product " + Channel.ToString()
+                            + (On ? ": on channel " + Channel.ToString() + ", DDI " + DDI.ToString() : ": stopped"));
                         LastDDI[i] = 0;
+                        LastRxOffSent[i] = DateTime.MinValue;
+                        if (On && VR) Prd.RxRequest();      // a new request: case 1 vs 2 counts from here
+                    }
+                    else if (On && VRchanged)
+                    {
+                        LastDDI[i] = 0;                     // the first message of the new mode goes at once
+                        LastRxOffSent[i] = DateTime.MinValue;
+                        if (VR) Prd.RxRequest();
                     }
 
                     if (On)
                     {
-                        int Value = Prd.TCvalue();
-                        if (Value != LastValue[i] || DDI != LastDDI[i] || (Now - LastSent[i]).TotalMilliseconds >= ResendMs)
+                        if (VR)
                         {
-                            Send(DDI, Value, (byte)(i + 1));
-                            LastValue[i] = Value;
-                            LastDDI[i] = DDI;
-                            LastSent[i] = Now;
+                            int Value = Prd.TCvalue();
+                            if (Value != LastValue[i] || DDI != LastDDI[i] || (Now - LastSent[i]).TotalMilliseconds >= ResendMs)
+                            {
+                                Send(DDI, Value, Channel);
+                                LastValue[i] = Value;
+                                LastDDI[i] = DDI;
+                                LastSent[i] = Now;
+                            }
+                        }
+                        else if ((Now - LastRxOffSent[i]).TotalMilliseconds >= ResendMs)
+                        {
+                            Send(DDIrxState, 0, Channel);
+                            LastRxOffSent[i] = Now;
                         }
                     }
                 }

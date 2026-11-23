@@ -6,6 +6,18 @@ using System.Diagnostics;
 
 namespace RateController.Classes
 {
+    // why an ISOBUS product isn't on RC's rate (Group2_Step3_Prescription_State_Design.md § 4, cases 1-6)
+    public enum RxCases
+    {
+        None = 0,           // on RC's rate, or nothing to report
+        TurnedOff = 1,      // the implement turned prescription control (DDI 158) off after it was on
+        Refused = 2,        // the implement refused 158 on
+        Error = 3,          // the implement reports 158 = 2
+        NoReply = 4,        // no reply from the implement after AOG-TC's resends
+        NoTC = 5,           // no 0xF5 from AOG-TaskController for 3 s
+        NoMatch = 6         // AOG-TaskController is running, but no implement element is matched to the channel
+    }
+
     public class clsProduct
     {
         public byte CoverageUnits = 0;
@@ -1210,6 +1222,86 @@ namespace RateController.Classes
         // The implement's actuals for this product (PGN 0xF5 through AOG-TaskController), when its ISOBUS button
         // is on and they are fresh: its rate in metered units per minute at RC's hectares per minute, and its
         // total in metered units (TotalValid false when the implement reports none).
+        // Step 3: the request for prescription control (VR on, a channel announced with VR on, or Ask again) and
+        // whether the implement has reported 158 = 1 since, which tells "turned off" (case 1) from "refused" (case 2)
+        private const double RxPendingSeconds = 5;     // AOG-TC's confirm with resends takes about 4 s
+        private DateTime cRxRequestTime = DateTime.MinValue;
+        private bool cRxSeen1;
+
+        /// <summary>A new request for prescription control on this product's channel.</summary>
+        public void RxRequest()
+        {
+            cRxSeen1 = false;
+            cRxRequestTime = DateTime.Now;
+        }
+
+        /// <summary>DDI 288 Actual Prescription Mode as the implement reports it (1 TC rate, 2 manual, 3 peer,
+        /// 4/5 max/min override); 0 = unknown, not present, or no fresh 0xF5.</summary>
+        public byte ImplementRxMode()
+        {
+            byte Result = 0;
+            if (Core.TCrate != null && Core.TCrate.ImplementStatus(cProductID, out bool Matched, out bool Extended,
+                out _, out _, out _, out byte Mode) && Matched && Extended)
+            {
+                Result = Mode;
+            }
+            return Result;
+        }
+
+        /// <summary>Why this ISOBUS product isn't on RC's rate (cases 1-6), or None. Cases 1-4 only with VR on;
+        /// 5 and 6 whatever VR is. An old 15-byte 0xF5, or a channel without DDI 158, gives none of 1-4.</summary>
+        public RxCases RxCase()
+        {
+            RxCases Result = RxCases.None;
+            if (Core.TCrate != null && Core.TCrate.Announced(cProductID))
+            {
+                bool Fresh = Core.TCrate.ImplementStatus(cProductID, out bool Matched, out bool Extended,
+                    out byte State, out bool Has158, out bool NoReply, out _);
+                if (!Fresh)
+                {
+                    if (!Core.TCrate.StartupHold) Result = RxCases.NoTC;
+                }
+                else if (!Matched)
+                {
+                    Result = RxCases.NoMatch;
+                }
+                else if (Props.VariableRateEnabled && Extended && Has158)
+                {
+                    if (NoReply)
+                    {
+                        Result = RxCases.NoReply;
+                    }
+                    else if (State == 2)
+                    {
+                        Result = RxCases.Error;
+                    }
+                    else if (State == 0)
+                    {
+                        if (cRxSeen1)
+                        {
+                            Result = RxCases.TurnedOff;
+                        }
+                        else if ((DateTime.Now - cRxRequestTime).TotalSeconds >= RxPendingSeconds)
+                        {
+                            Result = RxCases.Refused;
+                        }
+                        // else: the request is still being confirmed
+                    }
+                }
+            }
+            return Result;
+        }
+
+        // Update(): note 158 = 1 when the implement reports it
+        private void UpdateRxSeen()
+        {
+            if (Core.TCrate != null && Core.TCrate.ImplementStatus(cProductID, out bool Matched, out bool Extended,
+                out byte State, out bool Has158, out _, out _) && Matched && Extended && Has158 && State == 1)
+            {
+                cRxSeen1 = true;
+            }
+        }
+
         private bool ImplementActuals(out double UPM, out double Total, out bool TotalValid)
         {
             bool Result = false;
@@ -1353,6 +1445,7 @@ namespace RateController.Classes
         public void Update()
         {
             bool Implement = ImplementActuals(out double ImplementUPM, out double ImplementTotal, out bool ImplementTotalValid);
+            if (IsIsobus()) UpdateRxSeen();
             if (RateSensorData.ModuleSending() || Implement || AppMode == ApplicationMode.DocumentTarget || AppMode == ApplicationMode.DocumentAppliedManual)
             {
                 double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
