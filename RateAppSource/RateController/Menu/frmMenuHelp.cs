@@ -228,7 +228,8 @@ namespace RateController.Menu
             if (!FreezeUpdate)
             {
                 tbEthernet.Text = RecentPgns();
-                tbEthernet.Select(tbEthernet.Text.Length, 0);
+                // the start of the last line: newest line in view, scrolled fully left
+                tbEthernet.Select(tbEthernet.GetFirstCharIndexFromLine(Math.Max(0, tbEthernet.Lines.Length - 1)), 0);
                 tbEthernet.ScrollToCaret();
             }
 

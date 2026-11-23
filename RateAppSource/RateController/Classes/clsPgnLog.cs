@@ -42,7 +42,10 @@ namespace RateController.Classes
             public string PgnText;      // "32500", "0xF2", "254"; "" for a note
             public int Sensor;          // sensor, or the TC channel; -1 = none
             public DateTime Time;
+            public string Hex;          // the packet's bytes in hex, up to MaxHexBytes; "" for a note
         }
+
+        private const int MaxHexBytes = 32;     // the longest packet (32700) fits whole
 
         /// <summary>AgIO traffic is recorded only while this is on (PGN Log page, AOG button). Off at start.</summary>
         public bool AogOn { get; set; } = false;
@@ -57,7 +60,7 @@ namespace RateController.Classes
             }
             else
             {
-                Result = Time + "  " + E.Dir + "  " + E.PgnText.PadRight(6) + " " + (E.Name ?? "").PadRight(16) + " " + E.Link.ToString().PadRight(4) + " " + Target(E);
+                Result = Time + "  " + E.Dir + "  " + E.PgnText.PadRight(6) + " " + (E.Name ?? "").PadRight(16) + " " + E.Link.ToString().PadRight(4) + " " + Target(E).PadRight(8) + " " + E.Hex;
             }
             return Result.TrimEnd();
         }
@@ -77,7 +80,8 @@ namespace RateController.Classes
                         Link = Link,
                         Module = -1,
                         Sensor = -1,
-                        NewModule = -1
+                        NewModule = -1,
+                        Hex = HexText(Data)
                     };
 
                     bool Keep = true;
@@ -191,7 +195,8 @@ namespace RateController.Classes
                 Sensor = -1,
                 NewModule = -1,
                 PgnText = "",
-                Name = Text
+                Name = Text,
+                Hex = ""
             };
             Store(E);
         }
@@ -245,6 +250,20 @@ namespace RateController.Classes
         private static string FilePath()
         {
             return Path.Combine(Props.ApplicationFolder, FileName);
+        }
+
+        // "80 81 7F F2 07 01 00 ..." ; longer packets end in ".."
+        private static string HexText(byte[] Data)
+        {
+            int Count = Math.Min(Data.Length, MaxHexBytes);
+            StringBuilder Sb = new StringBuilder(Count * 3 + 2);
+            for (int i = 0; i < Count; i++)
+            {
+                if (i > 0) Sb.Append(' ');
+                Sb.Append(Data[i].ToString("X2"));
+            }
+            if (Data.Length > Count) Sb.Append(" ..");
+            return Sb.ToString();
         }
 
         private static string ModuleName(int Pgn)
