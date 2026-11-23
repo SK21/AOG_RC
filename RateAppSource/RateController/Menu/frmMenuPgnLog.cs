@@ -104,12 +104,24 @@ namespace RateController.Menu
             btnFile.Text = Lang.lgFile;
         }
 
-        // an entry passes the link, module and PGN filters; TC entries carry a channel, not a module,
-        // so picking a module hides them
+        // the module an entry belongs to: its own for module PGNs; for a TC line, the module of the product on
+        // that channel (channel n = product n); -1 for notes and AgIO
+        private static int EntryModule(clsPgnLog.Entry E)
+        {
+            int Result = E.Module;
+            if (E.Link == PgnLink.TC)
+            {
+                Result = -1;
+                if (E.Sensor >= 1 && E.Sensor <= Props.MaxProducts) Result = Core.Products.Item(E.Sensor - 1).ModuleID;
+            }
+            return Result;
+        }
+
+        // an entry passes the link, module and PGN filters
         private bool PassesFilters(clsPgnLog.Entry E)
         {
             bool Result = LinkShown(E.Link);
-            if (Result && cbModule.SelectedIndex > 0) Result = E.Module == cbModule.SelectedIndex - 1;
+            if (Result && cbModule.SelectedIndex > 0) Result = EntryModule(E) == cbModule.SelectedIndex - 1;
             if (Result && cbPGN.SelectedIndex > 0) Result = E.PgnText == (string)cbPGN.SelectedItem;
             return Result;
         }

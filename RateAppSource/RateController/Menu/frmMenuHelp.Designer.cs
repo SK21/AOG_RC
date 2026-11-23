@@ -416,7 +416,7 @@
             this.butNet.Name = "butNet";
             this.butNet.Size = new System.Drawing.Size(94, 72);
             this.butNet.TabIndex = 281;
-            this.butNet.Text = "Network";
+            this.butNet.Text = "PGNs";
             this.butNet.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.butNet.UseVisualStyleBackColor = false;
             this.butNet.Click += new System.EventHandler(this.butNet_Click);
