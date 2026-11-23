@@ -59,11 +59,12 @@ namespace RateController.Classes
                         if (RateStep > MaxSteps) RateStep = MaxSteps;
                     }
 
-                    // adjust rate
-                    if ((DateTime.Now - AdjustTime).TotalMilliseconds > AdjustDelay)
+                    // adjust rate; not an ISOBUS product (step 3 design § 7): its Rate Set is the base rate outside
+                    // the map's zones, and a manual PWM never reaches the implement
+                    clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
+                    if (!Prd.IsIsobus() && (DateTime.Now - AdjustTime).TotalMilliseconds > AdjustDelay)
                     {
                         AdjustTime = DateTime.Now;
-                        clsProduct Prd = Core.Products.Item(Props.CurrentProduct);
 
                         if (Core.SwitchBox.AutoRateOn)
                         {

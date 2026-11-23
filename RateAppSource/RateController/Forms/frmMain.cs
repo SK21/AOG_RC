@@ -907,7 +907,7 @@ namespace RateController.Forms
                     {
                         // a newly announced product alarm switches the display to
                         // that product, once
-                        if ((kind == AlarmKind.Rate || kind == AlarmKind.Bin)
+                        if ((kind == AlarmKind.Rate || kind == AlarmKind.Bin || kind == AlarmKind.Rx)
                             && (LastAlarmKind != kind || LastAlarm != idx))
                         {
                             LastAlarmKind = kind;
@@ -928,6 +928,12 @@ namespace RateController.Forms
 
                             case AlarmKind.Bin:
                                 family = "Bin Empty";
+                                specific = Core.Tls.ClipText((idx + 1).ToString() + ". " + Core.Products.Item(idx).ProductName, 20);
+                                break;
+
+                            case AlarmKind.Rx:
+                                // an ISOBUS product not on RC's rate (red Rx); tap Rx for why
+                                family = "Implement Rate";
                                 specific = Core.Tls.ClipText((idx + 1).ToString() + ". " + Core.Products.Item(idx).ProductName, 20);
                                 break;
 

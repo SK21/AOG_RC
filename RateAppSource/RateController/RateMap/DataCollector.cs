@@ -14,7 +14,8 @@ namespace RateController.RateMap
         // Update CSVheader constant
         public const string CSVheader = "Timestamp,Latitude,Longitude," +
             "AppliedRate1,AppliedRate2,AppliedRate3,AppliedRate4,AppliedRate5," +
-            "WidthMeters,Elevation";
+            "WidthMeters,Elevation," +
+            "RxMode1,RxMode2,RxMode3,RxMode4,RxMode5";      // ISOBUS: DDI 288 per product, blank otherwise (written only)
 
         private readonly object _lock = new object();
         private readonly List<RateReading> Readings = new List<RateReading>();
@@ -229,7 +230,7 @@ namespace RateController.RateMap
         }
 
         // Update RecordReading method signature
-        public void RecordReading(double latitude, double longitude, double[] appliedRates, double elevation = 0.0)
+        public void RecordReading(double latitude, double longitude, double[] appliedRates, double elevation = 0.0, byte?[] rxModes = null)
         {
             if (cEnabled)
             {
@@ -247,7 +248,7 @@ namespace RateController.RateMap
 
                 if (IsValid && HasMoved(latitude, longitude))
                 {
-                    var reading = new RateReading(DateTime.Now, latitude, longitude, appliedRates, ImplementWidthMeters, elevation);
+                    var reading = new RateReading(DateTime.Now, latitude, longitude, appliedRates, ImplementWidthMeters, elevation, rxModes);
                     lock (_lock)
                     {
                         Readings.Add(reading);
@@ -307,7 +308,15 @@ namespace RateController.RateMap
                                 string implementWidthMeters = reading.ImplementWidthMeters.ToString(CultureInfo.InvariantCulture);
                                 string elevation = reading.Elevation.ToString(CultureInfo.InvariantCulture);
 
-                                string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", basicValues, appliedData, implementWidthMeters, elevation);
+                                string[] rxColumns = new string[5];
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    byte? Mode = (reading.RxModes != null && i < reading.RxModes.Length) ? reading.RxModes[i] : null;
+                                    rxColumns[i] = Mode.HasValue ? Mode.Value.ToString(CultureInfo.InvariantCulture) : string.Empty;
+                                }
+                                string rxData = string.Join(",", rxColumns);
+
+                                string csvLine = string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3},{4}", basicValues, appliedData, implementWidthMeters, elevation, rxData);
                                 writer.WriteLine(csvLine);
                             }
                         }

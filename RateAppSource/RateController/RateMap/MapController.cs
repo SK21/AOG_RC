@@ -929,7 +929,7 @@ namespace RateController.RateMap
                 SetTractorPosition(Position);
                 if (Core.Products.ProductsAreOn() && (cState == MapState.Tracking || cState == MapState.Preview))
                 {
-                    cRateCollector.RecordReading(Position.Lat, Position.Lng, Core.Products.ProductAppliedRates());
+                    cRateCollector.RecordReading(Position.Lat, Position.Lng, Core.Products.ProductAppliedRates(), 0.0, Core.Products.ProductRxModes());
                     ZnOverlays.UpdateAppliedOverlay(Core.Products.ProductAppliedRates());
                 }
 

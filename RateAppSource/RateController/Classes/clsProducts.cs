@@ -150,6 +150,21 @@ namespace RateController.Classes
             return Result;
         }
 
+        /// <summary>The job CSV's RxMode1-5 (D4): DDI 288 as an announced ISOBUS product's implement reports it
+        /// (0 unknown, 1 TC rate, 2 manual, 3 peer, 4/5 max/min override); null for any other product.</summary>
+        public byte?[] ProductRxModes()
+        {
+            byte?[] Result = new byte?[Props.MaxProducts - 2];
+            for (int i = 0; i < Props.MaxProducts - 2; i++)
+            {
+                if (cProducts[i].IsIsobus() && Core.TCrate != null && Core.TCrate.Announced(i))
+                {
+                    Result[i] = cProducts[i].ImplementRxMode();
+                }
+            }
+            return Result;
+        }
+
         public bool ProductsAreOn()
         {
             bool Result = false;
@@ -473,7 +488,7 @@ namespace RateController.Classes
                 {
                     NewState = ProductState.Off;
                 }
-                else if (Core.RCalarm.Alarms[i] || Core.RCalarm.BinAlarms[i])
+                else if (Core.RCalarm.Alarms[i] || Core.RCalarm.BinAlarms[i] || Core.RCalarm.RxAlarms[i])
                 {
                     NewState = ProductState.Error;
                 }

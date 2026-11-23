@@ -3,7 +3,7 @@
 namespace RateController.Classes
 {
     public enum AlarmKind
-    { None, Rate, Pressure, Bin }
+    { None, Rate, Pressure, Bin, Rx }
 
     public class clsAlarm
     {
@@ -23,6 +23,7 @@ namespace RateController.Classes
         private int cLatestIndex = -1;
         private bool[] cPressureAlarms;
         private DateTime?[] cRateOutOfBandSince;
+        private bool[] cRxAlarms;
         private bool IsPlaying;
         private bool SilenceAlarm;
 
@@ -33,6 +34,7 @@ namespace RateController.Classes
             cBinAlarms = new bool[Props.MaxProducts];
             cPressureAlarms = new bool[Props.MaxModules];
             cRateOutOfBandSince = new DateTime?[Props.MaxProducts];
+            cRxAlarms = new bool[Props.MaxProducts];
         }
 
         public bool AlarmIsOn
@@ -47,6 +49,10 @@ namespace RateController.Classes
         public bool PressureAlarmIsOn { get; private set; }
         public bool[] PressureAlarms { get { return cPressureAlarms; } }
 
+        /// <summary>ISOBUS products not on RC's rate while working (clsProduct.RxCase, step 3 design § 4).</summary>
+        public bool RxAlarmIsOn { get; private set; }
+        public bool[] RxAlarms { get { return cRxAlarms; } }
+
         public int ActiveCount
         {
             get
@@ -56,6 +62,7 @@ namespace RateController.Classes
                 {
                     if (cAlarms[i]) Result++;
                     if (cBinAlarms[i]) Result++;
+                    if (cRxAlarms[i]) Result++;
                 }
                 for (int i = 0; i < Props.MaxModules; i++)
                 {
@@ -83,6 +90,10 @@ namespace RateController.Classes
                 case AlarmKind.Pressure:
                     Valid = (cLatestIndex >= 0 && cLatestIndex < Props.MaxModules && cPressureAlarms[cLatestIndex]);
                     break;
+
+                case AlarmKind.Rx:
+                    Valid = (cLatestIndex >= 0 && cLatestIndex < Props.MaxProducts && cRxAlarms[cLatestIndex]);
+                    break;
             }
 
             if (!Valid)
@@ -107,6 +118,14 @@ namespace RateController.Classes
                 }
                 for (int i = 0; i < Props.MaxProducts && cLatestKind == AlarmKind.None; i++)
                 {
+                    if (cRxAlarms[i])
+                    {
+                        cLatestKind = AlarmKind.Rx;
+                        cLatestIndex = i;
+                    }
+                }
+                for (int i = 0; i < Props.MaxProducts && cLatestKind == AlarmKind.None; i++)
+                {
                     if (cAlarms[i])
                     {
                         cLatestKind = AlarmKind.Rate;
@@ -126,10 +145,27 @@ namespace RateController.Classes
             bool[] NewRate = new bool[Props.MaxProducts];
             bool[] NewBin = new bool[Props.MaxProducts];
             bool[] NewPressure = new bool[Props.MaxModules];
+            bool[] NewRx = new bool[Props.MaxProducts];
 
             bool Working = Core.Sections.WorkRatePerHour() > 0;
+            RxAlarmIsOn = false;
             foreach (clsProduct Prd in Core.Products.Items)
             {
+                // ISOBUS product (step 3 design § 4): an Rx alarm while working when it isn't on RC's rate
+                // (RxCase allows cases 1-4 only with VR on, 5-6 always); the off-rate alarm only when it is,
+                // so the two never show together
+                bool OffRateApplies = true;
+                if (Prd.IsIsobus())
+                {
+                    RxCases Case = Prd.Enabled ? Prd.RxCase() : RxCases.None;
+                    if (Working && Case != RxCases.None)
+                    {
+                        NewRx[Prd.ID] = true;
+                        RxAlarmIsOn = true;
+                    }
+                    OffRateApplies = Props.VariableRateEnabled && Case == RxCases.None;
+                }
+
                 // a started fan (Control Speed) is checked at any time, after a spin-up grace;
                 // everything else only while working
                 bool Check;
@@ -142,7 +178,7 @@ namespace RateController.Classes
                     Check = Working;
                 }
 
-                if (Check)
+                if (Check && OffRateApplies)
                 {
                     if (Prd.Enabled && Prd.UseOffRateAlarm && Prd.AppMode != ApplicationMode.DocumentAppliedManual)
                     {
@@ -232,6 +268,7 @@ namespace RateController.Classes
             {
                 if (NewRate[i] && !cAlarms[i]) NewAlarm(AlarmKind.Rate, i);
                 if (NewBin[i] && !cBinAlarms[i]) NewAlarm(AlarmKind.Bin, i);
+                if (NewRx[i] && !cRxAlarms[i]) NewAlarm(AlarmKind.Rx, i);
             }
             for (int i = 0; i < Props.MaxModules; i++)
             {
@@ -241,8 +278,9 @@ namespace RateController.Classes
             cAlarms = NewRate;
             cBinAlarms = NewBin;
             cPressureAlarms = NewPressure;
+            cRxAlarms = NewRx;
 
-            cAlarmIsOn = CurrentState || PressureAlarmIsOn || BinAlarmIsOn;
+            cAlarmIsOn = CurrentState || PressureAlarmIsOn || BinAlarmIsOn || RxAlarmIsOn;
             UpdateSound(cAlarmIsOn);
 
             return cAlarmIsOn;
