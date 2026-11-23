@@ -29,13 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.tbEthernet = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.PCBsLink = new System.Windows.Forms.LinkLabel();
@@ -74,92 +67,18 @@
             this.ckPidLog = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(328, 257);
-            this.label12.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(166, 23);
-            this.label12.TabIndex = 2;
-            this.label12.Text = "32618   switch box";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(328, 217);
-            this.label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(203, 23);
-            this.label8.TabIndex = 259;
-            this.label8.Text = "32503   subnet change";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(328, 177);
-            this.label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(178, 23);
-            this.label9.TabIndex = 258;
-            this.label9.Text = "32502   PID settings";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(328, 137);
-            this.label10.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(188, 23);
-            this.label10.TabIndex = 257;
-            this.label10.Text = "32501   relay settings";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(328, 97);
-            this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(181, 23);
-            this.label7.TabIndex = 256;
-            this.label7.Text = "32500   rate settings";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(328, 57);
-            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(177, 23);
-            this.label5.TabIndex = 255;
-            this.label5.Text = "32401   analog data";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(328, 17);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(178, 23);
-            this.label1.TabIndex = 254;
-            this.label1.Text = "32400   rate applied";
-            // 
             // tbEthernet
             // 
+            this.tbEthernet.Font = new System.Drawing.Font("Consolas", 10F);
             this.tbEthernet.Location = new System.Drawing.Point(9, 15);
             this.tbEthernet.Margin = new System.Windows.Forms.Padding(6);
             this.tbEthernet.Multiline = true;
             this.tbEthernet.Name = "tbEthernet";
-            this.tbEthernet.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbEthernet.Size = new System.Drawing.Size(307, 265);
+            this.tbEthernet.ReadOnly = true;
+            this.tbEthernet.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbEthernet.Size = new System.Drawing.Size(521, 265);
             this.tbEthernet.TabIndex = 253;
+            this.tbEthernet.WordWrap = false;
             // 
             // timer1
             // 
@@ -652,13 +571,6 @@
             this.Controls.Add(this.butActivity);
             this.Controls.Add(this.PCBsLink);
             this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.tbEthernet);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -674,13 +586,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbEthernet;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Timer timer1;

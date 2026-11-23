@@ -139,6 +139,7 @@
     <Compile Include="Classes\clsSectionControl.cs" />
     <Compile Include="Classes\clsSections.cs" />
     <Compile Include="Classes\clsSensorSettings.cs" />
+    <Compile Include="Classes\clsPgnLog.cs" />
     <Compile Include="Classes\clsTaskControllerRate.cs" />
     <Compile Include="Classes\clsTools.cs" />
     <Compile Include="Classes\clsVersionChecker.cs" />
@@ -352,6 +353,12 @@
     </Compile>
     <Compile Include="Menu\frmMenuHelp.Designer.cs">
       <DependentUpon>frmMenuHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\frmMenuPgnLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\frmMenuPgnLog.Designer.cs">
+      <DependentUpon>frmMenuPgnLog.cs</DependentUpon>
     </Compile>
     <Compile Include="Menu\frmMenuJobs.cs">
       <SubType>Form</SubType>
@@ -643,6 +650,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuHelp.resx">
       <DependentUpon>frmMenuHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\frmMenuPgnLog.resx">
+      <DependentUpon>frmMenuPgnLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menu\frmMenuJobs.resx">
       <DependentUpon>frmMenuJobs.cs</DependentUpon>

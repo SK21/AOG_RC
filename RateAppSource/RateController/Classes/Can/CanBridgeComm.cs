@@ -26,7 +26,6 @@ namespace RateController.Classes.Can
 
         private DateTime _lastModuleDataTime = DateTime.MinValue;
         private DateTime _lastFrameTime = DateTime.MinValue;
-        private string _cLog = "";
 
         private readonly List<CanModule> _connectedModules = new List<CanModule>();
         private readonly object _modulesLock = new object();
@@ -49,9 +48,6 @@ namespace RateController.Classes.Can
         public bool ModuleDataReceiving => (DateTime.Now - _lastModuleDataTime).TotalSeconds < 2;
 
         public DateTime LastModuleDataTime => _lastModuleDataTime;
-
-        /// <summary>Returns PGN traffic log for diagnostics display.</summary>
-        public string Log() => _cLog;
 
         public bool Start(CanDriver driver, string port)
         {
@@ -136,7 +132,6 @@ namespace RateController.Classes.Can
             _lastModuleDataTime = DateTime.MinValue;
             _lastFrameTime = DateTime.MinValue;
             lock (_modulesLock) { _connectedModules.Clear(); }
-            _cLog = "";
 
             Props.WriteActivityLog("CAN Bridge stopped", true, true);
         }
@@ -151,7 +146,7 @@ namespace RateController.Classes.Can
             try
             {
                 int pgn = data.Length >= 2 ? (data[0] | (data[1] << 8)) : 0;
-                AddToLog("               > " + pgn);
+                Core.PgnLog.Add(PgnLink.CAN, true, data);
 
                 var frames = _translator.TranslateOutbound(data);
                 foreach (var frame in frames)
@@ -178,7 +173,7 @@ namespace RateController.Classes.Can
         private void OnPGN32400Ready(object sender, PgnAssembledEventArgs e)
         {
             _lastModuleDataTime = DateTime.Now;
-            AddToLog("< 32400");
+            Core.PgnLog.Add(PgnLink.CAN, false, e.Data);
             InvokeOnMainForm(() =>
             {
                 if (Core.IsShuttingDown) return;
@@ -191,7 +186,7 @@ namespace RateController.Classes.Can
         private void OnPGN32401Ready(object sender, PgnAssembledEventArgs e)
         {
             _lastModuleDataTime = DateTime.Now;
-            AddToLog("< 32401");
+            Core.PgnLog.Add(PgnLink.CAN, false, e.Data);
             InvokeOnMainForm(() =>
             {
                 if (!Core.IsShuttingDown)
@@ -205,14 +200,14 @@ namespace RateController.Classes.Can
         // firmware update status: straight to the updater, which waits for it on its own thread
         private void OnPGN32812Ready(object sender, PgnAssembledEventArgs e)
         {
-            AddToLog("< 32812");
+            Core.PgnLog.Add(PgnLink.CAN, false, e.Data);
             Core.FirmwareUpdate?.StatusReceived(e.Data);
         }
 
         private void OnPGN32403Ready(object sender, PgnAssembledEventArgs e)
         {
             _lastModuleDataTime = DateTime.Now;
-            AddToLog("< 32403");
+            Core.PgnLog.Add(PgnLink.CAN, false, e.Data);
             InvokeOnMainForm(() =>
             {
                 if (!Core.IsShuttingDown)
@@ -277,14 +272,6 @@ namespace RateController.Classes.Can
                 form.BeginInvoke(action);
             else
                 action();
-        }
-
-        private void AddToLog(string entry)
-        {
-            _cLog += DateTime.Now.Second + "  " + entry + Environment.NewLine;
-            if (_cLog.Length > 100000)
-                _cLog = _cLog.Substring(_cLog.Length - 98000);
-            _cLog = _cLog.Replace("\0", string.Empty);
         }
 
         public void Dispose()

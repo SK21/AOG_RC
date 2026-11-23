@@ -2,6 +2,7 @@
 using RateController.Forms;
 using RateController.Language;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -101,10 +102,17 @@ namespace RateController.Menu
 
         private void butNet_Click(object sender, EventArgs e)
         {
-            Core.UDPmodules.UpdateLog();
-            if (!Props.ShowFile("Ethernet Log.txt"))
+            // the PGN Log window (every link, with filters), PGN_Log_Design.md
+            Form fs = Props.IsFormOpen("frmMenuPgnLog");
+
+            if (fs == null)
             {
-                Props.ShowMessage("File not found.");
+                Form frm = new frmMenuPgnLog();
+                frm.Show();
+            }
+            else
+            {
+                fs.Focus();
             }
         }
 
@@ -193,7 +201,7 @@ namespace RateController.Menu
 
         private void SetLanguage()
         {
-            butNet.Text = Lang.lgNetwork;
+            butNet.Text = Lang.lgPgnLog;
             butActivity.Text = Lang.lgActivity;
             butErrors.Text = Lang.lgErrors;
         }
@@ -219,14 +227,7 @@ namespace RateController.Menu
 
             if (!FreezeUpdate)
             {
-                if (Props.CanEnabled && Core.CanBridgeComm != null)
-                {
-                    tbEthernet.Text = Core.CanBridgeComm.Log();
-                }
-                else
-                {
-                    tbEthernet.Text = Core.UDPmodules.Log();
-                }
+                tbEthernet.Text = RecentPgns();
                 tbEthernet.Select(tbEthernet.Text.Length, 0);
                 tbEthernet.ScrollToCaret();
             }
@@ -245,6 +246,20 @@ namespace RateController.Menu
 
             lbLon.Text = Core.GPS.Longitude.ToString("N7");
             lbLat.Text = Core.GPS.Latitude.ToString("N7");
+        }
+
+        // the last lines of the PGN log, every link but AgIO, unfiltered (the PGN Log window has the filters)
+        private string RecentPgns()
+        {
+            const int MaxLines = 200;
+            List<clsPgnLog.Entry> Entries = Core.PgnLog.Snapshot();
+            List<string> Lines = new List<string>();
+            for (int i = Entries.Count - 1; i >= 0 && Lines.Count < MaxLines; i--)
+            {
+                if (Entries[i].Link != PgnLink.AOG) Lines.Add(clsPgnLog.Line(Entries[i]));
+            }
+            Lines.Reverse();
+            return string.Join(Environment.NewLine, Lines);
         }
 
         private void VisitLink(string Link)
@@ -266,7 +281,11 @@ namespace RateController.Menu
             Hlp.ShowDialog();
             bool Result = Hlp.Result;
             Hlp.Close();
-            if (Result) Props.DeleteLogs();
+            if (Result)
+            {
+                Props.DeleteLogs();
+                Core.PgnLog.DeleteFile();
+            }
         }
 
         private void ckPidLog_CheckedChanged(object sender, EventArgs e)

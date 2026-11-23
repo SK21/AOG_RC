@@ -3092,5 +3092,32 @@ namespace RateController.Language {
                 return ResourceManager.GetString("lgMoveModuleNetwork", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to PGN Log.
+        /// </summary>
+        internal static string lgPgnLog {
+            get {
+                return ResourceManager.GetString("lgPgnLog", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        internal static string lgClear {
+            get {
+                return ResourceManager.GetString("lgClear", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        internal static string lgAll {
+            get {
+                return ResourceManager.GetString("lgAll", resourceCulture);
+            }
+        }
     }
 }

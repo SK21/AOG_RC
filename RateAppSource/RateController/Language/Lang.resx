@@ -1139,4 +1139,13 @@ The module stops controlling until the update is done.</value>
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>Module {0} is on network {2}. Move it to {3}?</value>
   </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>PGN Log</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>All</value>
+  </data>
 </root>

@@ -25,7 +25,7 @@ namespace RateController
         private readonly Dictionary<int, string> cModuleIP = new Dictionary<int, string>();      // module ID -> last sender address of its PGN 32401
         private byte[] buffer = new byte[1024];
         private string cConnectionName;
-        private string cLog;
+        private readonly PgnLink cLink;     // how this instance's traffic shows in Core.PgnLog
         private IPAddress cNetworkEP;
         private int cReceivePort;   // local ports must be unique for each app on same pc and each class instance
         private int cSendFromPort;
@@ -47,8 +47,8 @@ namespace RateController
             cSendToPort = SendToPort;
             cSendFromPort = SendFromPort;
             cConnectionName = ConnectionName;
+            cLink = ConnectionName == "UDPaog" ? PgnLink.AOG : PgnLink.UDP;
             SetEP(DestinationEndPoint);
-            Props.WriteLog("Ethernet Log.txt", "", true, true);
         }
 
         // Status delegate
@@ -199,11 +199,6 @@ namespace RateController
             return Result;
         }
 
-        public string Log()
-        {
-            return cLog;
-        }
-
         // 255.255.255.255 on every IPv4 adapter that is up, so a board on any subnet of the
         // LAN hears it. Not the tablet hotspot: only WiFi modules are on it, whose address
         // comes from the hotspot. Used by 32503 (subnet change) and by AllNetworks.
@@ -255,8 +250,7 @@ namespace RateController
             {
                 try
                 {
-                    int PGN = byteData[0] | byteData[1] << 8;
-                    AddToLog("               > " + PGN.ToString());
+                    Core.PgnLog.Add(cLink, true, byteData);
 
                     if (byteData.Length != 0)
                     {
@@ -348,25 +342,7 @@ namespace RateController
 
                 recvSocket = null;
                 sendSocket = null;
-
-                Props.WriteLog("Ethernet Log.txt", cLog);
             }
-        }
-
-        public void UpdateLog()
-        {
-            Props.WriteLog("Ethernet Log.txt", cLog);
-            cLog = "";
-        }
-
-        private void AddToLog(string NewData)
-        {
-            cLog += DateTime.Now.Second.ToString() + "  " + NewData + Environment.NewLine;
-            if (cLog.Length > 100000)
-            {
-                cLog = cLog.Substring(cLog.Length - 98000, 98000);
-            }
-            cLog = cLog.Replace("\0", string.Empty);
         }
 
         private void HandleData(int Port, byte[] Data, IPAddress From)
@@ -376,7 +352,7 @@ namespace RateController
                 if (Data.Length > 1 && !Core.IsShuttingDown)
                 {
                     int PGN = Data[1] << 8 | Data[0];   // rc modules little endian
-                    AddToLog("< " + PGN.ToString());
+                    Core.PgnLog.Add(cLink, false, Data);
 
                     switch (PGN)
                     {
@@ -507,7 +483,7 @@ namespace RateController
         private List<IPAddress> LearnedTargets()
         {
             // learned subnets heard from within LearnedExpirySec, the selected one excluded (it is
-            // always sent to). Expired ones are dropped. Changes are written to the Ethernet log
+            // always sent to). Expired ones are dropped. Changes are noted in the PGN log
             List<IPAddress> Result = new List<IPAddress>();
             List<string> Live = new List<string>();
             string Selected = cNetworkEP.ToString();
@@ -531,7 +507,7 @@ namespace RateController
             foreach (string K in Live)
             {
                 Result.Add(IPAddress.Parse(K));
-                if (cLearnedLogged.Add(K)) AddToLog("+ subnet " + K);
+                if (cLearnedLogged.Add(K)) Core.PgnLog.Note(cLink, "+ subnet " + K);
             }
             List<string> Gone = new List<string>();
             foreach (string K in cLearnedLogged)
@@ -541,7 +517,7 @@ namespace RateController
             foreach (string K in Gone)
             {
                 cLearnedLogged.Remove(K);
-                AddToLog("- subnet " + K + " (no module " + LearnedExpirySec + " s)");
+                Core.PgnLog.Note(cLink, "- subnet " + K + " (no module " + LearnedExpirySec + " s)");
             }
             return Result;
         }

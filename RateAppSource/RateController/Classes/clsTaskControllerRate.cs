@@ -45,6 +45,8 @@ namespace RateController.Classes
         private bool cDisposed;
         private UdpClient Udp;
         private bool Receiving;
+        private const int FailNoteSeconds = 60;
+        private DateTime LastFailNote = DateTime.MinValue;    // send failures go to the PGN log at most once a minute
 
         // PGN 0xF5 from AOG-TaskController, back on the socket the setpoints go out from: per channel, what the
         // implement reports (Group2_Step2_Recording_Design.md). [channel][actual DDI lo, hi][rate int32]
@@ -149,6 +151,7 @@ namespace RateController.Classes
             {
                 IPEndPoint From = new IPEndPoint(IPAddress.Any, 0);
                 byte[] Data = Client.EndReceive(ar, ref From);
+                Core.PgnLog.Add(PgnLink.TC, false, Data);
                 ParseActuals(Data);
             }
             catch (ObjectDisposedException)
@@ -312,6 +315,7 @@ namespace RateController.Classes
                 const int SIO_UDP_CONNRESET = -1744830452;
                 Udp.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { 0 }, null);
             }
+            Core.PgnLog.Add(PgnLink.TC, true, Frame);     // once per frame, not per destination
             foreach (IPAddress Address in Destinations())
             {
                 Udp.Send(Frame, Frame.Length, new IPEndPoint(Address, TCport));
@@ -364,7 +368,19 @@ namespace RateController.Classes
             }
             catch (Exception ex)
             {
-                Props.WriteErrorLog("clsTaskControllerRate/SendTimer_Tick: " + ex.Message);
+                if (ex is SocketException)
+                {
+                    // e.g. an adapter unplugged: every 200 ms tick fails, so a note once a minute, not an error each time
+                    if ((DateTime.Now - LastFailNote).TotalSeconds >= FailNoteSeconds)
+                    {
+                        Core.PgnLog.Note(PgnLink.TC, "send failed: " + ex.Message);
+                        LastFailNote = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    Props.WriteErrorLog("clsTaskControllerRate/SendTimer_Tick: " + ex.Message);
+                }
                 CloseSocket();     // opened again on the next send
             }
         }

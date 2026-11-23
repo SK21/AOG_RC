@@ -24,6 +24,7 @@ namespace RateController.Classes
         public static PGN32507 SensorPins;
         public static PGN32401 ModulesStatus;
         public static PGN32403 ModulesBoardID;
+        public static clsPgnLog PgnLog = new clsPgnLog();     // every link's PGN traffic (PGN_Log_Design.md)
         public static PGN32402 PgnPidLog;
         public static PidLogger PidLogger;
         public static clsProducts Products;
@@ -86,6 +87,7 @@ namespace RateController.Classes
                 SafeTry(() => UDPmodules.Stop());
 
                 SafeTry(() => CanBridgeComm?.Stop());
+                SafeTry(() => PgnLog.Flush());
                 SafeTry(() => WebServer?.Stop());
                 SafeTry(() => CalSession?.Close());     // restores calibrating products before the app saves and exits
 
@@ -741,6 +743,7 @@ namespace RateController.Classes
             SendRelays();
             RCalarm.CheckAlarms();
             ProductUnits.Check();       // 32509 on a change or a module connecting
+            PgnLog.FlushIfDue();        // PGN Log.txt every 60 s
         }
 
         private static Boolean OpenFile(string NewProfile)
