@@ -134,8 +134,9 @@ namespace RateController.Classes
             get { return cPowerOn; }
             set
             {
-                // only an enabled product can be powered on, a disabled one's module/sensor IDs aren't checked
-                if (!value || cProduct.Enabled)
+                // only an enabled product can be powered on, a disabled one's module/sensor IDs aren't checked;
+                // an ISOBUS product can't be: its module gets no rate settings (Isobus_Product_Design.md)
+                if (!value || (cProduct.Enabled && !cProduct.IsIsobus()))
                 {
                     cPowerOn = value;
                     SetRunState(cPowerOn);

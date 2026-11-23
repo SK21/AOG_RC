@@ -43,7 +43,7 @@ Windows application for agricultural rate control. Communicates with:
 | 32505 | 6 | Max pressure gate threshold (raw ADC) |
 | 32506 | 20 | Board description set (16 chars → module EEPROM; Teensy/ESP32 only — the Nano stores none) |
 | 32508 | 13 | Assign module ID by MAC: [2-7] MAC, [8] new ID 0-7, [9-11] network a.b.c (0.0.0 = keep; ESP32 applies it over Ethernet only), [12] CRC. Only the matching board acts; it saves and restarts after ~1.5 s (deferred) so the rest of the same Send reaches it at its new ID |
-| 32509 | 10 | A product's units for a task controller, per product: [2] ModSen (as 32500), [3-4] ISO rate DDI (1 volume, 6 mass, 11 count; 0 = no type), [5-8] float32 metered units per litre, kg or seed (1 / (unit factor × density if on)), [9] CRC. Sent when it changes and when the module connects (`PGN32509.Check`). Used by the Teensy ISOBUS build only (stored; converts a TC's ISO rate); others ignore it |
+| 32509 | 14 | A product's units for a task controller, per product: [2] ModSen (as 32500), [3-4] ISO rate DDI (1 volume, 6 mass, 11 count; 0 = no type), [5-8] float32 metered units per litre, kg or seed (1 / (unit factor × density if on)), [9-12] float32 meter cal (pulses per metered unit; an ISOBUS product gets no 32500), [13] CRC. Sent when it changes and when the module connects (`PGN32509.Check`). Used by the Teensy ISOBUS build only (stored in its TC settings; converts a TC's ISO rate, meters the rate and total); others ignore it. Bench only: remove with the stand-in |
 | 32700 | 32 | Module config (pins, relay types, CommMode). Bit 6 of the commands byte (old broadcast assign) is never sent and is ignored by firmware |
 
 ### Module → RC PGNs (data)
@@ -57,6 +57,7 @@ Windows application for agricultural rate control. Communicates with:
 ### RC ↔ AOG-TaskController (ISOBUS Group 2, `clsTaskControllerRate`, AgIO framing 80 81 src pgn len … crc)
 - RC → TC, to 127.0.0.1 and the PC's own IPv4s on 8888, source 0x7F: `0xF2` per product with ISOBUS on `[DDI 1/6/11][int32 ISO setpoint][channel = product + 1]` every 1 s; `0xF4` channel info `[channel][DDI, 0 = not in use][name ≤ 24 B]` on change and every 2 s while any product sends.
 - TC → RC, back to the socket `0xF4` came from: `0xF5` per channel every 1 s `[channel][actual DDI 2/7/12][int32 rate][total DDI 351/352/82][int32 total][elements][flags]`. While fresh (< 3 s) the product's applied data comes from it (virtual 32400 in `clsProduct.Update`) and its module's 32400 is ignored. Designs: `IsoBus\Group2_Step1_Channels_Design.md`, `Group2_Step2_Recording_Design.md`.
+- **ISOBUS product** (`clsProduct.Isobus`, profile key `ISOBUS`; `IsIsobus()` = on and not a fan; `TCsending()` = `IsIsobus()` and the unit can go to a TC): its module's 32400 is always ignored (applied data only from `0xF5`), it gets no 32500, `AppMode` reads Controlled UPM (the stored mode is kept for when ISOBUS is turned off), and calibration can't be powered on. 32509 and 32502 still go to the bench stand-in. Design: `IsoBus\Isobus_Product_Design.md`.
 
 ### CAN proprietary frame mapping (CommMode 1/2, via `CanFrameTranslator`)
 Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
@@ -65,7 +66,7 @@ Each UDP PGN above maps to one or more 8-byte Proprietary-B frames (PF=0xFF):
 - Identity module → RC: **0xFF14/0xFF15/0xFF16** (description) then **0xFF18** (`[0]` full ID, `[1-6]` MAC). The translator builds a 30-byte 32403 when 0xFF18 arrives, with type/InoID/build flags from the last 0xFF08 of the same CAN source address.
 - Hex files: FwTag is `"RCFWID01"`, InoType, InoID lo/hi, then (from InoID 20116) the build flags byte; `FirmwareUpdater.FindTag` reads it only for tags dated `TagFlagsDate` or later. The firmware update page warns, but allows, switching between the normal and ISOBUS builds.
 - Assign by MAC RC → module: 32508 → **0xFF19** (`[0]` new ID, `[1-6]` MAC).
-- Product units RC → module: 32509 → **0xFF1D** (`[0]` ModSen in CAN nibble order, `[1-2]` DDI, `[3-6]` float).
+- Product units RC → module: 32509 → **0xFF1D** (`[0]` ModSen in CAN nibble order, `[1-2]` DDI, `[3-6]` float) + **0xFF1E** (`[0]` ModSen, `[1-4]` float meter cal).
 - The Teensy ISOBUS NAME identity number is the low 21 bits of its MAC, so two boards at the same ID still claim different addresses.
 
 ### Board identity and new boards (ID 25)

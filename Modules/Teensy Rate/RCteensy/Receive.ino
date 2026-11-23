@@ -461,14 +461,19 @@ void ReadPGNs(byte data[], uint16_t len)
 		//2     ModSenID    high nibble module, low nibble sensor
 		//3-4   DDI         1 volume, 6 mass, 11 count per area; 0 = no type
 		//5-8   float32     metered units per litre, kg or seed
-		//9     CRC
+		//9-12  float32     meter cal, pulses per metered unit (an ISOBUS product gets no 32500)
+		//13    CRC
 		// configuration: applied while the TC commands too
-		PGNlength = 10;
+		PGNlength = 14;
 		if (len > PGNlength - 1 && GoodCRC(data, PGNlength) && ParseModID(data[2]) == MDL.ID)
 		{
 			float Factor;
 			memcpy(&Factor, data + 5, 4);
 			TC_SetUnits(ParseSenID(data[2]), data[3] | data[4] << 8, Factor);
+
+			float Cal;
+			memcpy(&Cal, data + 9, 4);
+			TC_SetMeterCal(ParseSenID(data[2]), Cal);
 		}
 		break;
 #endif

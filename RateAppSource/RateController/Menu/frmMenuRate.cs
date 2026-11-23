@@ -99,7 +99,7 @@ namespace RateController.Menu
                         }
                         MainMenu.CurrentProduct.QuantityUnit = Unit;
                     }
-                    MainMenu.CurrentProduct.TCsend = ckTCsend.Checked;
+                    MainMenu.CurrentProduct.Isobus = ckTCsend.Checked;
                 }
                 if (double.TryParse(tbAltRate.Text, out double ar)) MainMenu.CurrentProduct.RateAlt = ar;
                 if (double.TryParse(TankSize.Text, out double tk)) MainMenu.CurrentProduct.TankSize = tk;
@@ -626,7 +626,7 @@ namespace RateController.Menu
                 SetOtherText();
                 tbVolumeUnits.SelectedIndex = (int)Prd.QuantityUnit;
                 QuantityIndex = tbVolumeUnits.SelectedIndex;
-                ckTCsend.Checked = Prd.TCsend;
+                ckTCsend.Checked = Prd.Isobus;
                 AreaUnits.SelectedIndex = MainMenu.CurrentProduct.CoverageUnits;
                 CbUseProdDensity.Checked = MainMenu.CurrentProduct.EnableProdDensity;
                 if (!CbUseProdDensity.Checked) CbUseProdDensity_CheckedChanged(CbUseProdDensity, EventArgs.Empty);

@@ -427,6 +427,16 @@ void CANBus_Handle(const CAN_message_t& msg) {
 				TC_SetUnits(msg.buf[0] >> 4, msg.buf[1] | msg.buf[2] << 8, Factor);
 			}
 			break;
+
+		case 0xFF1E:  // A product's meter cal for a task controller (from PGN 32509 bytes 9-12, ISOBUS_TC.ino)
+			// buf[0] ModSenId (CAN: low = module, high = sensor), buf[1-4] float pulses per metered unit
+			if ((msg.buf[0] & 0x0F) == MDL.ID)
+			{
+				float Cal;
+				memcpy(&Cal, msg.buf + 1, 4);
+				TC_SetMeterCal(msg.buf[0] >> 4, Cal);
+			}
+			break;
 #endif
 
 		}

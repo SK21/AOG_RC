@@ -62,7 +62,8 @@ namespace RateController.PGNs
             // old firmware at this module ID: send nothing, the board stops its PID (§5)
             if (Core.ModulesBoardID.Rejected(Prod.ModuleID)) return;
 
-            if (Prod.ModuleID >= 0 && Prod.SensorID >= 0)
+            // an ISOBUS product gets no rate settings: its rate goes to the implement (Isobus_Product_Design.md)
+            if (Prod.ModuleID >= 0 && Prod.SensorID >= 0 && !Prod.IsIsobus())
             {
                 double Tmp = 0;
                 double RateSet = 0;

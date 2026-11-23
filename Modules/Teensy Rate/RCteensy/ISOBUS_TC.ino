@@ -57,7 +57,7 @@ const uint16_t TC_OBJ_DPT_WIDTH_BASE = 3100;
 const uint8_t TCmaxSections = 16;
 const uint8_t TCmaxRates = 2;			// bins: sensors 0 and 1
 const int TCsettingsAddr = 1024;		// after the sensors (253 + 6 x 124 = 997)
-const uint16_t TCsettingsID = 0x5445;	// change when TCsettings changes shape (0x5444: one rate)
+const uint16_t TCsettingsID = 0x5446;	// change when TCsettings changes shape (0x5444: one rate; 0x5445: no meter cal)
 
 struct TCsettings
 {
@@ -66,6 +66,8 @@ struct TCsettings
 	uint16_t SectionWidthCm[TCmaxSections] = { 50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50 };
 	uint16_t RateDDI[TCmaxRates] = { 1, 1 };		// per sensor, setpoint rate DDI: 1 volume, 6 mass, 11 count per area (from RC)
 	float UnitsPerISO[TCmaxRates] = { 0.0f, 0.0f };	// per sensor, metered units per litre, kg or seed (from RC); 0 = not set
+	float MeterCal[TCmaxRates] = { 0.0f, 0.0f };	// per sensor, pulses per metered unit (from RC's 32509, which an ISOBUS product
+													// gets instead of 32500); 0 = not set
 };
 
 TCsettings TCset;
@@ -102,6 +104,8 @@ void TC_LoadSettings()
 	{
 		if (!TC_IsRateDDI(TCset.RateDDI[r])) TCset.RateDDI[r] = 1;
 		if (!(TCset.UnitsPerISO[r] > 0.0f && TCset.UnitsPerISO[r] < 1.0e7f)) TCset.UnitsPerISO[r] = 0.0f;	// also catches NaN
+		if (!(TCset.MeterCal[r] > 0.0f && TCset.MeterCal[r] < 16701.0f)) TCset.MeterCal[r] = 0.0f;			// RC's range
+		if (TCset.MeterCal[r] > 0.0f) Sensor[r].MeterCal = TCset.MeterCal[r];	// no 32500 comes for an ISOBUS product
 		TC_TargetRate[r] = 0.0f;
 		TC_UnitsWarned[r] = false;
 	}
@@ -224,6 +228,26 @@ void TC_SetUnits(uint8_t SensorID, uint16_t DDI, float UnitsPerISO)
 			{
 				TC_SaveSettings();
 			}
+		}
+	}
+}
+
+// PGN 32509 bytes 9-12 / CAN 0xFF1E from RC: the sensor's meter cal (pulses per metered unit). RC sends
+// no 32500 for an ISOBUS product, so this is the only place the measured rate and total get it from.
+void TC_SetMeterCal(uint8_t SensorID, float Cal)
+{
+	if (SensorID < TCmaxRates && Cal > 0.0f && Cal < 16701.0f)
+	{
+		uint8_t r = SensorID;
+		Sensor[r].MeterCal = Cal;
+		if (Cal != TCset.MeterCal[r])
+		{
+			TCset.MeterCal[r] = Cal;
+			Serial.print(F("TC: meter cal sensor "));
+			Serial.print(r);
+			Serial.print(F(", "));
+			Serial.println(Cal, 3);
+			TC_SaveSettings();
 		}
 	}
 }

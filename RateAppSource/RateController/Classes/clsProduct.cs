@@ -49,7 +49,7 @@ namespace RateController.Classes
         private QuantityUnits cQuantityUnit = QuantityUnits.Other;
         private ushort cQuantityDDI = 0;        // Other only: ISO rate DDI, 0 = none
         private double cQuantityFactor = 0;     // Other only: litres, kg or seeds in one unit
-        private bool cTCsend = false;           // send the target rate to the task controller
+        private bool cIsobus = false;           // ISOBUS product: the rate goes to the implement through the task controller
         private double cUnitsApplied = 0;
         private double cUnitsApplied2 = 0;
         private double CurrentWorkedArea_Hc = 0;
@@ -219,7 +219,8 @@ namespace RateController.Classes
 
         public ApplicationMode AppMode
         {
-            get { return cAppMode; }
+            // an ISOBUS product always runs as Controlled UPM; its stored mode is kept for when ISOBUS is turned off
+            get { return IsIsobus() ? ApplicationMode.ControlledUPM : cAppMode; }
             set
             { cAppMode = value; }
         }
@@ -325,7 +326,7 @@ namespace RateController.Classes
 
         // fan set to Control Speed on Products > Settings (Monitor Only = Document Applied)
         public bool FanControlSpeed
-        { get { return cControlType == ControlTypeEnum.Fan && cAppMode != ApplicationMode.DocumentApplied; } }
+        { get { return cControlType == ControlTypeEnum.Fan && AppMode != ApplicationMode.DocumentApplied; } }
 
         // fan the module should drive to its Target RPM, regardless of master, sections,
         // speed and auto/manual
@@ -583,8 +584,14 @@ namespace RateController.Classes
             set { if (value >= 0 && value <= 1000000) cQuantityFactor = value; }
         }
 
-        public bool TCsend
-        { get { return cTCsend; } set { cTCsend = value; } }
+        public bool Isobus
+        { get { return cIsobus; } set { cIsobus = value; } }
+
+        // the product is run as ISOBUS; a fan never is
+        public bool IsIsobus()
+        {
+            return cIsobus && cControlType != ControlTypeEnum.Fan;
+        }
 
         // the unit an older profile's free-text quantity name stands for; "Gallons" is US or Imp, so Other
         public static QuantityUnits UnitFromText(string Text)
@@ -722,7 +729,7 @@ namespace RateController.Classes
             if (ushort.TryParse(Props.GetProp(IDname + "QuantityDDI"), out ushort qd)) QuantityDDI = qd;
             cQuantityFactor = 0;
             if (Props.TryParseNumber(Props.GetProp(IDname + "QuantityFactor"), out double qf)) QuantityFactor = qf;
-            bool.TryParse(Props.GetProp(IDname + "TCsend"), out cTCsend);
+            bool.TryParse(Props.GetProp(IDname + "ISOBUS"), out cIsobus);
 
             Props.TryParseNumber(Props.GetProp(IDname + "RateSet"), out cRateSet);
             if (cRateSet < 0 || cRateSet > 50000) cRateSet = 0;
@@ -892,19 +899,19 @@ namespace RateController.Classes
             {
                 case 0:
                     // acres
-                    if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
+                    if (AppMode == ApplicationMode.ControlledUPM || AppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
                         if (cHectaresPerMinute > 0) Result = RateSensorData.UPM / (cHectaresPerMinute * 2.47105);
                     }
-                    else if (cAppMode == ApplicationMode.ConstantUPM)
+                    else if (AppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = RateSensorData.UPM / (HPM * 2.47105);
                     }
-                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    else if (AppMode == ApplicationMode.DocumentAppliedManual)
                     {
                         // manually entered flow, no sensor/module
                         // Deliberately total width, not working width: sections off cut the
@@ -924,19 +931,19 @@ namespace RateController.Classes
 
                 case 1:
                     // hectares
-                    if (cAppMode == ApplicationMode.ControlledUPM || cAppMode == ApplicationMode.DocumentApplied)
+                    if (AppMode == ApplicationMode.ControlledUPM || AppMode == ApplicationMode.DocumentApplied)
                     {
                         // section controlled UPM or Document applied
                         if (cHectaresPerMinute > 0) Result = RateSensorData.UPM / cHectaresPerMinute;
                     }
-                    else if (cAppMode == ApplicationMode.ConstantUPM)
+                    else if (AppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
                         double HPM = Core.Sections.TotalWidth(false) * Props.Speed_KMH / 600.0;
                         if (HPM > 0) Result = RateSensorData.UPM / HPM;
                     }
-                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    else if (AppMode == ApplicationMode.DocumentAppliedManual)
                     {
                         // manually entered flow, no sensor/module
                         // total width, not working width - see the acres case above
@@ -952,12 +959,12 @@ namespace RateController.Classes
 
                 case 2:
                     // minutes
-                    if (cAppMode == ApplicationMode.DocumentTarget)
+                    if (AppMode == ApplicationMode.DocumentTarget)
                     {
                         // document target rate
                         Result = TargetRate();
                     }
-                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    else if (AppMode == ApplicationMode.DocumentAppliedManual)
                     {
                         Result = ManualUPMinUse();
                     }
@@ -969,12 +976,12 @@ namespace RateController.Classes
 
                 default:
                     // hours
-                    if (cAppMode == ApplicationMode.DocumentTarget)
+                    if (AppMode == ApplicationMode.DocumentTarget)
                     {
                         // document target rate
                         Result = TargetRate();
                     }
-                    else if (cAppMode == ApplicationMode.DocumentAppliedManual)
+                    else if (AppMode == ApplicationMode.DocumentAppliedManual)
                     {
                         Result = ManualUPMinUse() * 60;
                     }
@@ -1042,7 +1049,7 @@ namespace RateController.Classes
             Props.SetProp(IDname + "QuantityUnit", cQuantityUnit.ToString());
             Props.SetProp(IDname + "QuantityDDI", cQuantityDDI.ToString());
             Props.SetProp(IDname + "QuantityFactor", Props.NumberText(cQuantityFactor));
-            Props.SetProp(IDname + "TCsend", cTCsend.ToString());
+            Props.SetProp(IDname + "ISOBUS", cIsobus.ToString());
             Props.SetProp(IDname + "ManualUPM", Props.NumberText(cManualUPM));
             Props.SetProp(IDname + "ValveType", cControlType.ToString());
 
@@ -1150,15 +1157,15 @@ namespace RateController.Classes
         }
 
         /// <summary>True when this product's rate is sent to the task controller.</summary>
-        public bool TCsends()
+        public bool TCsending()
         {
-            return cTCsend && TCcanSend();
+            return IsIsobus() && TCcanSend();
         }
 
         /// <summary>The ISO rate DDI sent to the task controller: 1 volume, 6 mass, 11 count per area; 0 = not sent.</summary>
         public ushort TCddi()
         {
-            return TCsends() ? QuantityDDI : (ushort)0;
+            return TCsending() ? QuantityDDI : (ushort)0;
         }
 
         /// <summary>The target rate in the ISO unit of TCddi(): DDI 1 0.01 mm³/m² (1 L/ha = 10000),
@@ -1166,7 +1173,7 @@ namespace RateController.Classes
         public int TCvalue()
         {
             int Result = 0;
-            if (TCsends() && cEnabled)
+            if (TCsending() && cEnabled)
             {
                 double PerHa = TargetRate() * QuantityFactor;    // litres, kg or seeds per coverage unit
                 if (CoverageUnits == 0) PerHa *= 2.47105;          // per acre -> per ha
@@ -1210,7 +1217,7 @@ namespace RateController.Classes
             Total = 0;
             TotalValid = false;
             double PerISO = TCunitsPerISO();
-            if (TCsends() && PerISO > 0 && Core.TCrate != null &&
+            if (TCsending() && PerISO > 0 && Core.TCrate != null &&
                 Core.TCrate.ImplementActuals(cProductID, out ushort ActualDDI, out int Rate, out bool RateValid, out ushort TotalDDI, out int TotalRaw, out bool TotalOK))
             {
                 Result = true;
@@ -1237,12 +1244,6 @@ namespace RateController.Classes
             return Result;
         }
 
-        /// <summary>True while the implement's actuals come in for this product: its module's PGN 32400 is ignored.</summary>
-        public bool ImplementReporting()
-        {
-            return ImplementActuals(out _, out _, out _);
-        }
-
         public double TargetUPM() // returns units per minute set rate
         {
             double Result = 0;
@@ -1250,7 +1251,7 @@ namespace RateController.Classes
             {
                 case 0:
                     // acres
-                    if (cAppMode == ApplicationMode.ConstantUPM)
+                    if (AppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
@@ -1267,7 +1268,7 @@ namespace RateController.Classes
 
                 case 1:
                     // hectares
-                    if (cAppMode == ApplicationMode.ConstantUPM)
+                    if (AppMode == ApplicationMode.ConstantUPM)
                     {
                         // Constant UPM
                         // same upm no matter how many sections are on
@@ -1303,9 +1304,9 @@ namespace RateController.Classes
         {
             try
             {
-                // block the real module for a document-target product, and while an ISOBUS implement reports
-                // this product's actuals (Group2_Step2_Recording_Design.md E4)
-                if (cAppMode != ApplicationMode.DocumentTarget && !ImplementReporting())
+                // block the real module for a document-target product, and always for an ISOBUS product:
+                // its applied data comes only from the implement (Isobus_Product_Design.md)
+                if (AppMode != ApplicationMode.DocumentTarget && !IsIsobus())
                 {
                     switch (PGN)
                     {
@@ -1352,7 +1353,7 @@ namespace RateController.Classes
         public void Update()
         {
             bool Implement = ImplementActuals(out double ImplementUPM, out double ImplementTotal, out bool ImplementTotalValid);
-            if (RateSensorData.ModuleSending() || Implement || cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
+            if (RateSensorData.ModuleSending() || Implement || AppMode == ApplicationMode.DocumentTarget || AppMode == ApplicationMode.DocumentAppliedManual)
             {
                 double CurrentMinutes = UpdateStopWatch.ElapsedMilliseconds / 60000.0;
                 UpdateStopWatch.Restart();
@@ -1403,7 +1404,7 @@ namespace RateController.Classes
                 // enabled one. A running calibration disables its own product, so it still sends
                 if (Enabled || (CalibrateOjbect?.PowerOn ?? false)) ModuleRateSettings.Send();
 
-                if (Implement || cAppMode == ApplicationMode.DocumentTarget || cAppMode == ApplicationMode.DocumentAppliedManual)
+                if (Implement || AppMode == ApplicationMode.DocumentTarget || AppMode == ApplicationMode.DocumentAppliedManual)
                 {
                     // send pgn from virtual module (no real sensor/module for this product, or an ISOBUS
                     // implement reports what it applied: Group2_Step2_Recording_Design.md)
@@ -1426,7 +1427,7 @@ namespace RateController.Classes
                     }
                     else if (cHectaresPerMinute > 0)
                     {
-                        VirtualUPM = cAppMode == ApplicationMode.DocumentTarget ? TargetUPM() : ManualUPMinUse();
+                        VirtualUPM = AppMode == ApplicationMode.DocumentTarget ? TargetUPM() : ManualUPMinUse();
                         cVirtualQuantity += VirtualUPM * CurrentMinutes;
                     }
 
@@ -1484,7 +1485,7 @@ namespace RateController.Classes
 
                 double NewApplied = Diff;
 
-                if (cAppMode == ApplicationMode.ConstantUPM && Core.Sections.TotalWidth() > 0 && !Props.RateCalibrationOn)
+                if (AppMode == ApplicationMode.ConstantUPM && Core.Sections.TotalWidth() > 0 && !Props.RateCalibrationOn)
                 {
                     // constant upm, subtract amount for sections that are off
                     double Offset = (1.0 - (Core.Sections.WorkingWidth() / Core.Sections.TotalWidth())) * Diff;
