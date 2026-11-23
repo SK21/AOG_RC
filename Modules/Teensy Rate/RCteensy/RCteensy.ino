@@ -3,7 +3,7 @@
 
 // 1 = ISOBUS build: the AgIsoStack library (Modules/Teensy Rate/AgIsoStack) owns CAN1 and the
 // TC client and ISOBUS speed run alongside the proprietary frames. 0 = normal build.
-#define ISOBUS_ENABLED 0
+#define ISOBUS_ENABLED 1
 
 #include <Wire.h>
 #include <EEPROM.h>
