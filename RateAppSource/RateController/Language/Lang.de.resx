@@ -1134,4 +1134,82 @@ Das Modul regelt nicht, bis das Update fertig ist.</value>
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>Modul {0} ist im Netzwerk {2}. Nach {3} verschieben?</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>Variable Ausbringrate erreicht das Gerät nicht</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>VR ist an, aber diese Produkte erhalten nicht die Ausbringrate aus der Karte von RC:</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>das Gerät hat sie ausgeschaltet.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>das Gerät hat abgelehnt.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>das Gerät meldet einen Fehler.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>das Gerät antwortet nicht.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>der Task Controller antwortet nicht.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>diesem Produkt ist kein Gerät zugeordnet.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Erneut anfragen</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Rate des Geräts verwenden</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Rate des Geräts</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Erneut anfragen: das Gerät bitten, die Rate von RC zu verwenden.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Rate des Geräts verwenden: schaltet VR aus. Jedes Gerät verwendet seine eigene Rateneinstellung, nicht die Karte von RC.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>Es verwendet seine eigene Rateneinstellung, nicht die Karte von RC.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Das Gerät prüfen.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Prüfen, ob es verbunden ist.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Prüfen, ob AOG-TaskController läuft.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Prüfen, ob das Gerät verbunden ist, oder seine Zuordnung in AOG-TaskController.</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Gerät</value>
+  </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Rate nicht gesendet: Einheitentyp und acres oder ha einstellen</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>Es wird keine Rate an das Gerät gesendet. Die Mengeneinheit braucht einen Typ (Volumen, Masse oder Anzahl) und die Fläche in acres oder Hektar.</value>
+  </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>PGN-Protokoll</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Nur Rate</value>
+  </data>
+  <data name="lgWindowOpacity" xml:space="preserve">
+    <value>Fensterdeckkraft</value>
+  </data>
 </root>

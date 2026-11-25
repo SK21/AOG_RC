@@ -1136,4 +1136,79 @@ A modul a frissítés végéig nem szabályoz.</value>
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>A(z) {0}. modul a(z) {2} hálózaton van. Áthelyezi ide: {3}?</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>A változó dózis nem jut el a munkagéphez</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>A VR be van kapcsolva, de ezek az anyagok nem kapják meg az RC térkép szerinti dózisát:</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>a munkagép kikapcsolta.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>a munkagép elutasította.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>a munkagép hibát jelez.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>a munkagép nem válaszol.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>a feladatvezérlő (task controller) nem válaszol.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>ehhez az anyaghoz nincs munkagép hozzárendelve.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Újrakérés</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Munkagép dózisa</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Munkagép dózisa</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Újrakérés: a munkagép kérése, hogy az RC dózisát használja.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Munkagép dózisa: kikapcsolja a VR-t. Minden munkagép a saját dózisbeállítását használja, nem az RC térképét.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>A saját dózisbeállítását használja, nem az RC térképét.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Ellenőrizze a munkagépet.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Ellenőrizze, hogy csatlakoztatva van-e.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Ellenőrizze, hogy az AOG-TaskController fut-e.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Ellenőrizze, hogy a munkagép csatlakoztatva van-e, vagy a hozzárendelését az AOG-TaskControllerben.</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Munkagép</value>
+  </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Dózis nincs elküldve: állítson be egységtípust és acre-t vagy ha-t</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>A munkagép nem kap dózist. A mennyiségi egységnek típus kell (térfogat, tömeg vagy darab), a területnek pedig acre vagy hektár.</value>
+  </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>PGN napló</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>Mind</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Csak dózis</value>
+  </data>
 </root>

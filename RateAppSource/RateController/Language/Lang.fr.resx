@@ -1133,4 +1133,82 @@ Le module ne régule plus jusqu'à la fin de la mise à jour.</value>
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>Le module {0} est sur le réseau {2}. Le déplacer vers {3} ?</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>La dose variable n'atteint pas l'outil</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>VR est activé, mais ces produits ne reçoivent pas la dose de la carte de RC :</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>l'outil l'a désactivée.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>l'outil a refusé.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>l'outil signale une erreur.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>l'outil ne répond pas.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>le contrôleur de tâches ne répond pas.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>aucun outil n'est associé à ce produit.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Redemander</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Utiliser la dose de l'outil</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Dose de l'outil</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Redemander : demander à l'outil d'utiliser la dose de RC.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Utiliser la dose de l'outil : désactive VR. Chaque outil applique son propre réglage de dose, pas la carte de RC.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>Il utilise son propre réglage de dose, pas la carte de RC.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Vérifiez l'outil.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Vérifiez qu'il est connecté.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Vérifiez qu'AOG-TaskController est en marche.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Vérifiez que l'outil est connecté, ou son affectation dans AOG-TaskController.</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Outil</value>
+  </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Dose non envoyée : choisir un type d'unité et acres ou ha</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>Aucune dose ne sera envoyée à l'outil. L'unité de quantité doit avoir un type (volume, masse ou nombre) et la surface en acres ou en hectares.</value>
+  </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>Journal PGN</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Effacer</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Dose seule</value>
+  </data>
+  <data name="lgWindowOpacity" xml:space="preserve">
+    <value>Opacité de la fenêtre</value>
+  </data>
 </root>

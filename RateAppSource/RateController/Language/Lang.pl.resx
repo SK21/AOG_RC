@@ -1133,4 +1133,82 @@ Moduł nie steruje do końca aktualizacji.</value>
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>Moduł {0} jest w sieci {2}. Przenieść do {3}?</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>Dawka zmienna nie dociera do maszyny</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>VR jest włączone, ale te produkty nie otrzymują dawki z mapy RC:</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>maszyna ją wyłączyła.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>maszyna odmówiła.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>maszyna zgłasza błąd.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>maszyna nie odpowiada.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>kontroler zadań nie odpowiada.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>do tego produktu nie przypisano żadnej maszyny.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Zapytaj ponownie</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Dawka maszyny</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Dawka maszyny</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Zapytaj ponownie: poproś maszynę o użycie dawki z RC.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Dawka maszyny: wyłącza VR. Każda maszyna stosuje własne ustawienie dawki, a nie mapę RC.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>Używa własnego ustawienia dawki, a nie mapy RC.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Sprawdź maszynę.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Sprawdź, czy jest podłączona.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Sprawdź, czy AOG-TaskController działa.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Sprawdź, czy maszyna jest podłączona, lub jej przypisanie w AOG-TaskController.</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Maszyna</value>
+  </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Dawka nie wysłana: ustaw typ jednostki i akry lub ha</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>Do maszyny nie zostanie wysłana żadna dawka. Jednostka ilości wymaga typu (objętość, masa lub liczba), a powierzchnia akrów lub hektarów.</value>
+  </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>Dziennik PGN</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>Wszystkie</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Tylko dawka</value>
+  </data>
+  <data name="lgWindowOpacity" xml:space="preserve">
+    <value>Krycie okna</value>
+  </data>
 </root>

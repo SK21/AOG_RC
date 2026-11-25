@@ -1133,4 +1133,82 @@ Modulis nevaldo, kol atnaujinimas baigsis.</value>
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>Modulis {0} yra tinkle {2}. Perkelti į {3}?</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>Kintama norma nepasiekia padargo</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>VR įjungtas, bet šie produktai negauna RC žemėlapio normos:</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>padargas ją išjungė.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>padargas atsisakė.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>padargas praneša apie klaidą.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>padargas neatsako.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>užduočių valdiklis neatsako.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>šiam produktui nepriskirtas joks padargas.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Paklausti dar kartą</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Padargo norma</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Padargo norma</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Paklausti dar kartą: paprašyti padargo naudoti RC normą.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Padargo norma: išjungia VR. Kiekvienas padargas naudoja savo normos nustatymą, o ne RC žemėlapį.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>Jis naudoja savo normos nustatymą, o ne RC žemėlapį.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Patikrinkite padargą.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Patikrinkite, ar jis prijungtas.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Patikrinkite, ar veikia AOG-TaskController.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Patikrinkite, ar padargas prijungtas, arba jo priskyrimą AOG-TaskController.</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Padargas</value>
+  </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Norma neišsiųsta: nustatykite vieneto tipą ir akrus arba ha</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>Padargui norma nebus siunčiama. Kiekio vienetui reikia tipo (tūris, masė arba kiekis), o plotui akrų arba hektarų.</value>
+  </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>PGN žurnalas</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>Visi</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Išvalyti</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Tik norma</value>
+  </data>
+  <data name="lgWindowOpacity" xml:space="preserve">
+    <value>Lango nepermatomumas</value>
+  </data>
 </root>

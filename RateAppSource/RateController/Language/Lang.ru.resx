@@ -1133,4 +1133,82 @@
   <data name="lgMoveModuleNetwork" xml:space="preserve">
     <value>Модуль {0} в сети {2}. Перенести в {3}?</value>
   </data>
+  <data name="lgRxTitle" xml:space="preserve">
+    <value>Переменный расход не доходит до агрегата</value>
+  </data>
+  <data name="lgRxIntro" xml:space="preserve">
+    <value>VR включён, но эти продукты не получают расход по карте RC:</value>
+  </data>
+  <data name="lgRxTurnedOff" xml:space="preserve">
+    <value>агрегат его отключил.</value>
+  </data>
+  <data name="lgRxRefused" xml:space="preserve">
+    <value>агрегат отказал.</value>
+  </data>
+  <data name="lgRxError" xml:space="preserve">
+    <value>агрегат сообщает об ошибке.</value>
+  </data>
+  <data name="lgRxNoReply" xml:space="preserve">
+    <value>агрегат не отвечает.</value>
+  </data>
+  <data name="lgRxNoTC" xml:space="preserve">
+    <value>контроллер заданий не отвечает.</value>
+  </data>
+  <data name="lgRxNoMatch" xml:space="preserve">
+    <value>этому продукту не назначен агрегат.</value>
+  </data>
+  <data name="lgRxAskAgain" xml:space="preserve">
+    <value>Запросить снова</value>
+  </data>
+  <data name="lgRxVROff" xml:space="preserve">
+    <value>Расход агрегата</value>
+  </data>
+  <data name="lgRxPopupTitle" xml:space="preserve">
+    <value>Расход агрегата</value>
+  </data>
+  <data name="lgRxAskAgainHelp" xml:space="preserve">
+    <value>Запросить снова: попросить агрегат использовать расход RC.</value>
+  </data>
+  <data name="lgRxVROffHelp" xml:space="preserve">
+    <value>Расход агрегата: выключает VR. Каждый агрегат применяет свою настройку расхода, а не карту RC.</value>
+  </data>
+  <data name="lgRxAdvOwnRate" xml:space="preserve">
+    <value>Он использует свою настройку расхода, а не карту RC.</value>
+  </data>
+  <data name="lgRxAdvCheckImplement" xml:space="preserve">
+    <value>Проверьте агрегат.</value>
+  </data>
+  <data name="lgRxAdvCheckConnected" xml:space="preserve">
+    <value>Проверьте, что он подключён.</value>
+  </data>
+  <data name="lgRxAdvCheckTC" xml:space="preserve">
+    <value>Проверьте, что AOG-TaskController запущен.</value>
+  </data>
+  <data name="lgRxAdvCheckAssign" xml:space="preserve">
+    <value>Проверьте, что агрегат подключён, или его назначение в AOG-TaskController.</value>
+  </data>
+  <data name="lgImplement" xml:space="preserve">
+    <value>Агрегат</value>
+  </data>
+  <data name="lgTCcantSend" xml:space="preserve">
+    <value>Расход не отправлен: задайте тип единицы и акры или га</value>
+  </data>
+  <data name="lgTCcantSendMsg" xml:space="preserve">
+    <value>Агрегату не будет отправлен расход. Единице количества нужен тип (объём, масса или штуки), а площади — акры или гектары.</value>
+  </data>
+  <data name="lgPgnLog" xml:space="preserve">
+    <value>Журнал PGN</value>
+  </data>
+  <data name="lgAll" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="lgClear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="lgRateOnly" xml:space="preserve">
+    <value>Только расход</value>
+  </data>
+  <data name="lgWindowOpacity" xml:space="preserve">
+    <value>Непрозрачность окна</value>
+  </data>
 </root>
