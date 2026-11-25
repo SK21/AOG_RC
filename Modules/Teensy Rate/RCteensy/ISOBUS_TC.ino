@@ -54,6 +54,31 @@ const uint16_t TC_OBJ_DPD_TOTAL_BASE = 1030;
 const uint16_t TC_OBJ_DVP_WIDTH = 3000;
 const uint16_t TC_OBJ_DPT_WIDTH_BASE = 3100;
 
+// ---- BENCH STAND-IN, remove with it (Group2_Step3_Prescription_State_Design.md § 8; Outstanding_Items.md A4) ----
+// Prescription control (DDI 158 / 287 / 288) and a default rate per bin, so the bench can stand in for an OEM
+// implement in step 3. A real ECU (Group 3) would take its own rate and default from its operator on its VT.
+#define TC_RX_DDIS 1						// 0: build without 158 / 287 / 288 / default (step 3 test 10, legacy implement)
+const uint16_t DDI_RX_STATE = 158;			// Prescription Control State: 0 off, 1 on, 2 error, 3 not installed
+const uint16_t DDI_RX_SOURCE = 287;			// Setpoint Prescription Mode: 1 TC rate, 2 default rate ...
+const uint16_t DDI_RX_MODE = 288;			// Actual Prescription Mode: 1 TC rate, 2 manual entry ...
+const uint16_t TC_OBJ_DPD_RX_STATE_BASE = 1040;
+const uint16_t TC_OBJ_DPD_RX_SOURCE_BASE = 1050;
+const uint16_t TC_OBJ_DPD_RX_MODE_BASE = 1060;
+const uint16_t TC_OBJ_DPT_DEFAULT_BASE = 3200;
+const float TC_DEFAULT_RATE = 50.0f;		// per ha, the bin's DDOP default rate (D1 fallback)
+const float TC_VT_RATE = 40.0f;				// per ha, the "operator's VT rate" used while 158 = 0
+uint8_t TC_Rx[2] = { 0, 0 };				// 158 per bin, 0 at boot and when the TC is lost
+int32_t TC_RxSource[2] = { 0, 0 };			// 287 as the TC set it
+bool TC_RefuseNext[2] = { false, false };	// serial r<bin>: answer the next 158 = 1 with 0
+uint8_t TC_IgnoreCount[2] = { 0, 0 };		// serial x<bin> [n]: ignore the next n 158 commands completely
+uint32_t TC_IgnoreRequestUntil[2] = { 0, 0 };	// ...and no answer to 158 requests until then (millis), so the TC's
+											// confirm request 1 s after an ignored command gets none. A window, not a one-shot:
+											// the stack also polls this callback every loop for an on-change subscription
+const uint32_t TC_IgnoreRequestMs = 1500;
+bool TC_DefaultOn = true;					// serial d: the default rate property in the DDOP
+bool TC_RateIgnoredLogged[2] = { false, false };
+// ---- end bench stand-in ----
+
 const uint8_t TCmaxSections = 16;
 const uint8_t TCmaxRates = 2;			// bins: sensors 0 and 1
 const int TCsettingsAddr = 1024;		// after the sensors (253 + 6 x 124 = 997)
@@ -339,6 +364,16 @@ void TC_ClearCommands()
 		CalibrationOn[i] = false;
 		FlowExpected[i] = false;	// set by RC's 32500/0xFF03, which the TC state ignores; TC_Update sets the bins'
 	}
+	for (uint8_t r = 0; r < TCmaxRates; r++)
+	{
+		// bench stand-in: prescription control back to off with the TC
+		TC_Rx[r] = 0;
+		TC_RxSource[r] = 0;
+		TC_RefuseNext[r] = false;
+		TC_IgnoreCount[r] = 0;
+		TC_IgnoreRequestUntil[r] = 0;
+		TC_RateIgnoredLogged[r] = false;
+	}
 }
 
 // the TC's first value command: authority RC -> TC
@@ -391,9 +426,14 @@ float TC_TargetUPM(uint8_t r)
 	float Result = 0.0f;
 	float speedKmh = SPEED_GetKmh();
 	float widthM = TC_ActiveWidthM();
-	if (MasterOn && TC_TargetRate[r] > 0.0f && TCset.UnitsPerISO[r] > 0.0f && speedKmh > 0.05f && widthM > 0.01f)
+#if TC_RX_DDIS
+	float Rate = (TC_Rx[r] == 1) ? TC_TargetRate[r] : TC_VT_RATE;	// bench stand-in: own (VT) rate while 158 = 0
+#else
+	float Rate = TC_TargetRate[r];
+#endif
+	if (MasterOn && Rate > 0.0f && TCset.UnitsPerISO[r] > 0.0f && speedKmh > 0.05f && widthM > 0.01f)
 	{
-		Result = (TC_TargetRate[r] * TCset.UnitsPerISO[r] * speedKmh * widthM) / 600.0f;
+		Result = (Rate * TCset.UnitsPerISO[r] * speedKmh * widthM) / 600.0f;
 	}
 	return Result;
 }
@@ -499,6 +539,22 @@ bool TC_RequestValue(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 			{
 				value = TC_TotalValue(r);
 			}
+#if TC_RX_DDIS
+			else if (DDI == DDI_RX_STATE)
+			{
+				// bench stand-in: x<bin> also swallows the requests in the window after an ignored command
+				Result = !(TC_IgnoreRequestUntil[r] != 0 && static_cast<int32_t>(millis() - TC_IgnoreRequestUntil[r]) < 0);
+				value = TC_Rx[r];
+			}
+			else if (DDI == DDI_RX_SOURCE)
+			{
+				value = TC_RxSource[r];
+			}
+			else if (DDI == DDI_RX_MODE)
+			{
+				value = (TC_Rx[r] == 1) ? 1 : 2;	// 1 TC rate, 2 manual entry
+			}
+#endif
 			else
 			{
 				Result = false;
@@ -519,9 +575,72 @@ bool TC_ValueCommand(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 			TC_ApplyCondensedWorkState(value);
 			Result = true;
 		}
+#if TC_RX_DDIS
+		else if (r >= 0 && DDI == DDI_RX_STATE)
+		{
+			// bench stand-in: prescription control state from the TC
+			TC_EnterCommand();
+			Result = true;
+			if (TC_IgnoreCount[r] > 0)
+			{
+				TC_IgnoreCount[r]--;
+				TC_IgnoreRequestUntil[r] = millis() + TC_IgnoreRequestMs;	// no change, no report, no answer to the request that follows
+				if (TC_IgnoreRequestUntil[r] == 0) TC_IgnoreRequestUntil[r] = 1;	// 0 = no window
+				Serial.print(F("TC: bin "));
+				Serial.print(r);
+				Serial.print(F(" 158 = "));
+				Serial.print(value);
+				Serial.println(F(" ignored (x)"));
+			}
+			else
+			{
+				uint8_t NewRx = (value == 1) ? 1 : 0;
+				if (NewRx == 1 && TC_RefuseNext[r])
+				{
+					TC_RefuseNext[r] = false;
+					NewRx = 0;
+					Serial.print(F("TC: bin "));
+					Serial.print(r);
+					Serial.println(F(" refuses 158 = 1 (r)"));
+				}
+				if (NewRx == 1 && TC_Rx[r] != 1) TC_TargetRate[r] = 0.0f;	// Q-a: the TC's setpoint follows
+				TC_Rx[r] = NewRx;
+				Serial.print(F("TC: bin "));
+				Serial.print(r);
+				Serial.print(F(" 158 = "));
+				Serial.println(NewRx);
+				ISOBUStc->on_value_changed_trigger(elementNumber, DDI_RX_STATE);	// reported even when unchanged: an answer
+				ISOBUStc->on_value_changed_trigger(elementNumber, DDI_RX_MODE);
+			}
+		}
+		else if (r >= 0 && DDI == DDI_RX_SOURCE)
+		{
+			TC_EnterCommand();
+			TC_RxSource[r] = value;
+			Serial.print(F("TC: bin "));
+			Serial.print(r);
+			Serial.print(F(" 287 = "));
+			Serial.println(value);
+			Result = true;
+		}
+		else if (r >= 0 && DDI == TCset.RateDDI[r] && TC_Rx[r] != 1)
+		{
+			// a strict implement ignores rate commands while prescription control is off
+			TC_EnterCommand();
+			if (!TC_RateIgnoredLogged[r])
+			{
+				Serial.print(F("TC: rate "));
+				Serial.print(r + 1);
+				Serial.println(F(" ignored, 158 = 0 (own rate)"));
+				TC_RateIgnoredLogged[r] = true;
+			}
+			Result = true;
+		}
+#endif
 		else if (r >= 0 && DDI == TCset.RateDDI[r])
 		{
 			TC_EnterCommand();
+			TC_RateIgnoredLogged[r] = false;
 			float NewRate = TC_ValueToPerHa(r, value);
 			if (NewRate != TC_TargetRate[r])
 			{
@@ -565,8 +684,15 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 	// the last two characters are the bins' types (V volume, M mass, C count, - no bin)
 	char Type1 = (Rates > 0) ? TC_TypeChar(0) : '-';
 	char Type2 = (Rates > 1) ? TC_TypeChar(1) : '-';
+	// bench stand-in: RCT9 = with 158 / 287 / 288; then D (default rate in the DDOP) or N; RCTC8 = without (TC_RX_DDIS 0)
+#if TC_RX_DDIS
+	char DefaultChar = TC_DefaultOn ? 'D' : 'N';
+	char structureLabel[8] = { 'R','C','T','9', DefaultChar, Type1, Type2, 0 };
+	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','9', static_cast<std::uint8_t>(DefaultChar), static_cast<std::uint8_t>(Type1), static_cast<std::uint8_t>(Type2) };
+#else
 	char structureLabel[8] = { 'R','C','T','C','8', Type1, Type2, 0 };
 	std::vector<std::uint8_t> extendedLabel = { 'R','C','T','C','8', static_cast<std::uint8_t>(Type1), static_cast<std::uint8_t>(Type2) };
+#endif
 
 	ddop->add_device(InoDescription, String(InoID).c_str(), String(MDL.ID).c_str(), structureLabel, localization, extendedLabel, ISOBUSicf->get_NAME().get_full_name());
 	ddop->add_device_element("Boom", TC_ELEMENT_BOOM, 0, DeviceElementType::Function, TC_OBJ_BOOM);
@@ -599,12 +725,29 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 		ddop->add_device_process_data("Actual Rate", TC_ActualRateDDI(r), isobus::NULL_OBJECT_ID, measurement, reported, TC_OBJ_DPD_ACTUAL_RATE_BASE + r);
 		ddop->add_device_process_data("Total", TC_TotalDDI(r), isobus::NULL_OBJECT_ID, measurement, reported, TC_OBJ_DPD_TOTAL_BASE + r);
 
+#if TC_RX_DDIS
+		// bench stand-in: prescription control and a default rate (3 / 8 / 13, the rate DDI + 2)
+		ddop->add_device_process_data("Rx Control State", DDI_RX_STATE, isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_RX_STATE_BASE + r);
+		ddop->add_device_process_data("Rx Source", DDI_RX_SOURCE, isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_RX_SOURCE_BASE + r);
+		ddop->add_device_process_data("Rx Mode", DDI_RX_MODE, isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_RX_MODE_BASE + r);
+		if (TC_DefaultOn)
+		{
+			ddop->add_device_property("Default Rate", TC_PerHaToValue(r, TC_DEFAULT_RATE), TCset.RateDDI[r] + 2, isobus::NULL_OBJECT_ID, TC_OBJ_DPT_DEFAULT_BASE + r);
+		}
+#endif
+
 		auto bin = std::static_pointer_cast<isobus::task_controller_object::DeviceElementObject>(ddop->get_object_by_id(TC_OBJ_BIN_BASE + r));
 		if (bin != nullptr)
 		{
 			bin->add_reference_to_child_object(TC_OBJ_DPD_SETPOINT_RATE_BASE + r);
 			bin->add_reference_to_child_object(TC_OBJ_DPD_ACTUAL_RATE_BASE + r);
 			bin->add_reference_to_child_object(TC_OBJ_DPD_TOTAL_BASE + r);
+#if TC_RX_DDIS
+			bin->add_reference_to_child_object(TC_OBJ_DPD_RX_STATE_BASE + r);
+			bin->add_reference_to_child_object(TC_OBJ_DPD_RX_SOURCE_BASE + r);
+			bin->add_reference_to_child_object(TC_OBJ_DPD_RX_MODE_BASE + r);
+			if (TC_DefaultOn) bin->add_reference_to_child_object(TC_OBJ_DPT_DEFAULT_BASE + r);
+#endif
 		}
 	}
 
@@ -646,8 +789,83 @@ FLASHMEM void TC_Begin()
 	ISOBUStc->initialize(false);
 }
 
+#if TC_RX_DDIS
+// ---- BENCH STAND-IN, remove with it: serial commands that imitate an implement's operator or a lost command ----
+//   m<bin>      implement drops to manual (158 = 0, reported; 288 = 2)
+//   r<bin>      refuse the next 158 = 1 (answer 0)
+//   x<bin> [n]  ignore the next n 158 commands (default 1): no change, no report, no answer to the request after
+//   d           default rate property in the DDOP on / off (DDOP re-uploaded)
+// <bin> is 0 or 1 (Rate 1 / Rate 2). One command per line.
+void TC_SerialCommands()
+{
+	static char Line[16];
+	static uint8_t Len = 0;
+	while (Serial.available())
+	{
+		char c = (char)Serial.read();
+		if (c == '\r' || c == '\n')
+		{
+			Line[Len] = 0;
+			if (Len > 0)
+			{
+				char Cmd = Line[0];
+				int Bin = (Len > 1 && Line[1] >= '0' && Line[1] <= '9') ? Line[1] - '0' : -1;
+				bool BinOk = Bin >= 0 && Bin < TC_RateCount();
+				if (Cmd == 'd')
+				{
+					TC_DefaultOn = !TC_DefaultOn;
+					TC_DDOPNeedsReupload = true;
+					Serial.println(TC_DefaultOn ? F("TC bench: default rate on, DDOP re-upload") : F("TC bench: default rate off, DDOP re-upload"));
+				}
+				else if (Cmd == 'm' && BinOk)
+				{
+					TC_Rx[Bin] = 0;
+					ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BIN_BASE + Bin, DDI_RX_STATE);
+					ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BIN_BASE + Bin, DDI_RX_MODE);
+					Serial.print(F("TC bench: bin "));
+					Serial.print(Bin);
+					Serial.println(F(" to manual, 158 = 0"));
+				}
+				else if (Cmd == 'r' && BinOk)
+				{
+					TC_RefuseNext[Bin] = true;
+					Serial.print(F("TC bench: bin "));
+					Serial.print(Bin);
+					Serial.println(F(" refuses the next 158 = 1"));
+				}
+				else if (Cmd == 'x' && BinOk)
+				{
+					int n = (Len > 2) ? atoi(Line + 2) : 0;
+					if (n < 1) n = 1;
+					if (n > 9) n = 9;
+					TC_IgnoreCount[Bin] = (uint8_t)n;
+					Serial.print(F("TC bench: bin "));
+					Serial.print(Bin);
+					Serial.print(F(" ignores the next "));
+					Serial.print(n);
+					Serial.println(F(" 158 command(s)"));
+				}
+				else
+				{
+					Serial.println(F("TC bench: m<bin>, r<bin>, x<bin> [n], d"));
+				}
+			}
+			Len = 0;
+		}
+		else if (Len < sizeof(Line) - 1)
+		{
+			Line[Len++] = c;
+		}
+	}
+}
+// ---- end bench stand-in ----
+#endif
+
 void TC_Update()
 {
+#if TC_RX_DDIS
+	TC_SerialCommands();
+#endif
 	TC_UpdateConnectionState();
 	ISOBUStc->update();
 	TC_UpdateConnectionState();
