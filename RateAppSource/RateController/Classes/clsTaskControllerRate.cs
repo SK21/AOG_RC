@@ -50,7 +50,8 @@ namespace RateController.Classes
         private readonly DateTime StartTime = DateTime.Now;
         private const ushort DDIrxState = 158;          // Prescription Control State (Group2_Step3_Prescription_State_Design.md)
         private const int StartupHoldSeconds = 5;       // no "no TC" case right after RC starts
-        private const int AskResultSeconds = 6;         // Ask again: the result is read after AOG-TC's confirm (about 4 s)
+        private const int AskGiveUpSeconds = 10;        // Ask again: stop waiting for a result (AOG-TC's no reply takes 6 s + one 0xF5)
+        private const int AskFrameMarginMs = 300;       // a 0xF5 this soon after the ask may have been built before AOG-TC had it
         private readonly DateTime?[] AskedTime;         // per product: when Ask again was sent, until its result is read
         private readonly System.Windows.Forms.Timer SendTimer;
         private bool AnySending;
@@ -210,8 +211,8 @@ namespace RateController.Classes
         }
 
         /// <summary>"Ask again" (red Rx dialog): DDI 158 = 1 once for the product's channel, and a new request
-        /// for telling "turned off" from "refused". Nothing for a channel that isn't announced. About 6 s later
-        /// the result is checked: refused, error or no reply gets one popup.</summary>
+        /// for telling "turned off" from "refused". Nothing for a channel that isn't announced. Refused, error or
+        /// no reply gets one popup as soon as it shows (CheckAskResults).</summary>
         public void AskAgain(int ProductID)
         {
             try
@@ -445,22 +446,40 @@ namespace RateController.Classes
             AnySending = Any;
         }
 
-        // Ask again's one popup: refused, error or no reply once AOG-TC has had time to confirm. Nothing when the
-        // implement took it (158 = 1); lasting conditions are shown by the red Rx button and the alarm.
+        // Ask again's one popup: refused, error or no reply as soon as it shows (checked every tick, from the first
+        // 0xF5 after the ask, so an old frame's no reply isn't taken as the answer). Refused shows from 5 s
+        // (clsProduct.RxPendingSeconds), no reply when AOG-TC gives up (6 s) and reports it. Nothing when the implement
+        // took it (158 = 1) or after AskGiveUpSeconds; lasting conditions are shown by the red Rx button and the alarm.
         private void CheckAskResults(DateTime Now)
         {
             for (int i = 0; i < RateProducts; i++)
             {
-                if (AskedTime[i].HasValue && (Now - AskedTime[i].Value).TotalSeconds >= AskResultSeconds)
+                if (AskedTime[i].HasValue)
                 {
-                    AskedTime[i] = null;
-                    clsProduct Prd = Core.Products.Item(i);
-                    RxCases Case = Prd.RxCase();
-                    if (Case == RxCases.Refused || Case == RxCases.Error || Case == RxCases.NoReply)
+                    DateTime Asked = AskedTime[i].Value;
+                    DateTime Received;
+                    lock (ActualsLock)
                     {
-                        Props.ShowMessage((i + 1).ToString() + ". " + Prd.ProductName + ": " + clsProduct.RxCaseText(Case)
-                            + " " + clsProduct.RxCaseAdvice(Case), Language.Lang.lgRxPopupTitle, 10000);
+                        Received = Actuals[i].Received;
                     }
+
+                    if (Received > Asked.AddMilliseconds(AskFrameMarginMs))
+                    {
+                        clsProduct Prd = Core.Products.Item(i);
+                        RxCases Case = Prd.RxCase();
+                        if (Case == RxCases.Refused || Case == RxCases.Error || Case == RxCases.NoReply)
+                        {
+                            AskedTime[i] = null;
+                            Props.ShowMessage((i + 1).ToString() + ". " + Prd.ProductName + ": " + clsProduct.RxCaseText(Case)
+                                + " " + clsProduct.RxCaseAdvice(Case), Language.Lang.lgRxPopupTitle, 10000);
+                        }
+                        else if (ImplementStatus(i, out _, out _, out byte State, out _, out _, out _) && State == 1)
+                        {
+                            AskedTime[i] = null;    // the implement took it
+                        }
+                    }
+
+                    if (AskedTime[i].HasValue && (Now - Asked).TotalSeconds >= AskGiveUpSeconds) AskedTime[i] = null;
                 }
             }
         }
