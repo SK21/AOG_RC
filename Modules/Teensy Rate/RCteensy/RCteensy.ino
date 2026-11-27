@@ -4,6 +4,9 @@
 // 1 = ISOBUS build: the AgIsoStack library (Modules/Teensy Rate/AgIsoStack) owns CAN1 and the
 // TC client and ISOBUS speed run alongside the proprietary frames. 0 = normal build.
 #define ISOBUS_ENABLED 1
+// 1 = with ISOBUS_ENABLED, the board also shows a run screen on a virtual terminal
+// (ISOBUS_VT.ino, display only). 0 = TC client only.
+#define ISOBUS_VT 1
 
 #include <Wire.h>
 #include <EEPROM.h>
@@ -23,7 +26,7 @@ extern "C" {
 }
 
 # define InoDescription "RCteensy"
-const uint16_t InoID = 23116;	// change to send defaults to eeprom, ddmmy, no leading 0
+const uint16_t InoID = 27116;	// change to send defaults to eeprom, ddmmy, no leading 0
 const uint8_t InoType = 1;		// 0 - Teensy AutoSteer, 1 - Teensy Rate, 2 - Nano Rate, 3 - Nano SwitchBox, 4 - ESP Rate
 
 // Firmware identity in the program image: magic "RCFWID01", InoType, InoID lo, InoID hi, build

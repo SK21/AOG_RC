@@ -36,7 +36,8 @@
 //   which would stop RC's own control on a board with no terminal)
 // - the TC's target rates are kept in RAM only (the TC sends them again); section geometry is
 //   stored in EEPROM at TCsettingsAddr (RC11-isobus used 640, inside mainline's sensors 3-6)
-// - no VT client yet (Phase E run screen); no manual mode from the terminal yet
+// - run screen on the VT in ISOBUS_VT.ino (display only, Group3_Step1_VT_Run_Screen_Design.md);
+//   no manual mode from the terminal yet
 
 #if ISOBUS_ENABLED
 
@@ -782,7 +783,10 @@ FLASHMEM void TC_Begin()
 	const std::vector<isobus::NAMEFilter> tcNameFilters = { filterTC };
 	auto partnerTC = isobus::CANNetworkManager::CANNetwork.create_partnered_control_function(0, tcNameFilters);
 
-	ISOBUStc = std::make_shared<isobus::TaskControllerClient>(partnerTC, ISOBUSicf, nullptr);	// no VT client yet
+	// No VT partner, also with ISOBUS_VT: for a TC below version 4 AgIsoStack then asks that VT for the language
+	// command, and with no VT on the bus the request can't be sent and the TC client resets every 6 s (bench
+	// 2026-11-27). nullptr asks globally, which any terminal answers.
+	ISOBUStc = std::make_shared<isobus::TaskControllerClient>(partnerTC, ISOBUSicf, nullptr);
 	ISOBUStc->configure(TC_CreateDDOP(), 1, TCset.SectionCount, 0, true, false, false, false, true);
 	ISOBUStc->add_request_value_callback(TC_RequestValue, nullptr);
 	ISOBUStc->add_value_command_callback(TC_ValueCommand, nullptr);

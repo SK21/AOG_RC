@@ -97,6 +97,7 @@ void ReadPGNs(byte data[], uint16_t len)
 			{
 #if ISOBUS_ENABLED
 				// while the TC commands only the PID-log bit is taken, so the board can still be logged
+				if (ParseModID(data[2]) == MDL.ID) RC_LastRateCommand = millis();
 				if (ParseModID(data[2]) == MDL.ID && TC_Commanding()) PidLogEnabled = ((data[9] & 32) == 32);
 
 				if (ParseModID(data[2]) == MDL.ID && !TC_Commanding())	// ignored while the TC commands (ISOBUS_TC.ino)

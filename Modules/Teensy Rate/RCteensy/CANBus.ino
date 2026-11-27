@@ -12,6 +12,11 @@
 // are sent raw through the plugin (CANBus_Write), from the address the stack claimed.
 std::shared_ptr<isobus::FlexCANT4Plugin> CANplugin;
 std::shared_ptr<isobus::InternalControlFunction> ISOBUSicf;
+uint32_t RC_LastRateCommand = 0;	// millis() of RC's last rate command for this module (0xFF03 / UDP 32500), also
+									// while the TC commands and it is ignored; for step 2's rate source (Group3_Step1 design § 9)
+#if ISOBUS_VT
+std::shared_ptr<isobus::PartneredControlFunction> ISOBUSvtPartner;	// the VT (ISOBUS_VT.ino); declared here, ISOBUS_TC.ino compiles before it
+#endif
 std::shared_ptr<isobus::DiagnosticProtocol> ISOBUSdiag;
 const std::size_t CANqueueSize = 64;	// receive/transmit queue depth; a firmware update block is 34 frames
 
@@ -155,6 +160,9 @@ bool CANBus_Begin() {
 	ISOBUSdiag->set_ecu_id_field(isobus::DiagnosticProtocol::ECUIdentificationFields::Type, "RateControl");
 
 	SPEED_Begin();		// ISOBUS_Speed.ino
+#if ISOBUS_VT
+	VT_Begin();			// ISOBUS_VT.ino
+#endif
 	TC_Begin();			// ISOBUS_TC.ino
 #endif
 
@@ -491,6 +499,7 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 
 #if ISOBUS_ENABLED
 	// while the TC commands only the PID-log bit is taken (as Receive.ino 32500), so the board can still be logged
+	if (modId == MDL.ID) RC_LastRateCommand = millis();
 	if (modId == MDL.ID && TC_Commanding()) PidLogEnabled = ((msg.buf[6] & 0x20) == 0x20);
 	if (modId != MDL.ID || TC_Commanding()) return;  // Not for us, or the TC commands (ISOBUS_TC.ino)
 #else
@@ -1027,6 +1036,9 @@ void CANBus_Update(bool Send) {
 #if ISOBUS_ENABLED
 	SPEED_Update();
 	TC_Update();
+#if ISOBUS_VT
+	VT_Update();
+#endif
 #endif
 
 #if !ISOBUS_ENABLED
