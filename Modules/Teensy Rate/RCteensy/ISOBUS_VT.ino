@@ -479,10 +479,21 @@ uint32_t VT_Tenths(float value)
 	return Result;
 }
 
-// sensors 0-1 with RC's units per litre, kg or seed (32509) are shown per hectare
-bool VT_PerHa(uint8_t r)
+// sensors 0-1 with RC's units per litre, kg or seed (32509)
+bool VT_HasUnits(uint8_t r)
 {
 	return (r < TCmaxRates) && (TCset.UnitsPerISO[r] > 0.0f);
+}
+
+// Per hectare while the TC drives the product (its rate is per hectare). Otherwise only with
+// units and a speed on the board (ISOBUS or wheel sensor): RC works out its rate from its own
+// speed, so without one here the conversion would show a false 0; then RC's per-minute values.
+bool VT_PerHa(uint8_t r)
+{
+	bool Result = false;
+	if (TC_InCommand && r < TCmaxRates) Result = true;
+	else if (VT_HasUnits(r) && SPEED_GetKmh() > 0.05f) Result = true;
+	return Result;
 }
 
 float VT_UPMtoPerHa(uint8_t r, float upm)
@@ -510,7 +521,7 @@ const char* VT_StateText(uint8_t r)
 {
 	const char* Result = "Off";
 	if (!SensorConnected[r]) Result = "No comm";
-	else if (TC_InCommand && r < TCmaxRates && !VT_PerHa(r)) Result = "No units";
+	else if (TC_InCommand && r < TCmaxRates && !VT_HasUnits(r)) Result = "No units";
 	else if (Applying[r]) Result = "Applying";
 	return Result;
 }
