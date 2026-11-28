@@ -57,7 +57,6 @@ const uint16_t VT_ID_FONT_SMALL = 102;		// 8 x 12
 const uint16_t VT_ID_LINE_BLACK = 110;
 const uint16_t VT_ID_MASK = 1000;
 const uint16_t VT_ID_TITLE = 2000;
-const uint16_t VT_ID_MODULE = 2001;
 const uint16_t VT_ID_SOURCE = 2002;
 const uint16_t VT_ID_HEAD_BASE = 2090;		// 2090-2094 column heads
 const uint16_t VT_ID_ROW_BASE = 2100;		// row r: 2100 + 10 r + offset below
@@ -123,7 +122,6 @@ struct VT_StringSlot
 enum VT_Slot : uint8_t
 {
 	VT_SLOT_DESIGNATOR = 0,
-	VT_SLOT_MODULE,
 	VT_SLOT_SOURCE,
 	VT_SLOT_UNIT_BASE,							// + r
 	VT_SLOT_STATE_BASE = VT_SLOT_UNIT_BASE + VT_ROWS,	// + r
@@ -339,12 +337,10 @@ FLASHMEM void VT_BuildPool()
 	w.LineAttributes(VT_ID_LINE_BLACK, VT_BLACK, 1);
 
 	// data mask children
-	const uint8_t MaskCount = 3 + 5 + VT_ROWS + VT_SECTIONS + 8;	// header, heads, rows, sections, footer (number variables are not children)
+	const uint8_t MaskCount = 1 + 5 + VT_ROWS + VT_SECTIONS + 9;	// title, heads, rows, sections, footer (number variables are not children)
 	VT_Child mask[MaskCount];
 	uint8_t n = 0;
-	mask[n++] = { VT_ID_TITLE, 5, 10 };
-	mask[n++] = { VT_ID_MODULE, 195, 14 };
-	mask[n++] = { VT_ID_SOURCE, 330, 14 };
+	mask[n++] = { VT_ID_TITLE, 0, 10 };		// centred over the full width; the module is on the working set button
 	const int16_t HeadX[5] = { 5, 105, 185, 280, 380 };
 	for (uint8_t i = 0; i < 5; i++) mask[n++] = { static_cast<uint16_t>(VT_ID_HEAD_BASE + i), HeadX[i], 55 };
 	for (uint8_t r = 0; r < VT_ROWS; r++) mask[n++] = { VT_RowID(r, VT_ROW_CONTAINER), 0, static_cast<int16_t>(78 + 45 * r) };
@@ -357,12 +353,11 @@ FLASHMEM void VT_BuildPool()
 	mask[n++] = { VT_ID_WIDTH, 345, 410 };
 	mask[n++] = { VT_ID_WIDTH_UNIT, 410, 410 };
 	mask[n++] = { VT_ID_TC_LINK, 5, 440 };
+	mask[n++] = { VT_ID_SOURCE, 160, 440 };		// technical detail: in the footer, under the speed source
 	w.DataMask(VT_ID_MASK, mask, n);
 
 	// header and column heads
-	w.OutputString(VT_ID_TITLE, 180, 30, VT_ID_FONT_LARGE, 11, "RateControl");
-	w.OutputString(VT_ID_MODULE, 110, 20, VT_ID_FONT_NORMAL, 9, "Module");
-	w.OutputString(VT_ID_SOURCE, 145, 20, VT_ID_FONT_NORMAL, 12, "Source:");
+	w.OutputString(VT_ID_TITLE, VT_MASK_SIZE, 30, VT_ID_FONT_LARGE, 11, "RateControl", VT_CENTRE_MIDDLE);
 	const char* Heads[5] = { "Product", "Target", "Actual", "Unit", "State" };
 	for (uint8_t i = 0; i < 5; i++)
 	{
@@ -413,6 +408,7 @@ FLASHMEM void VT_BuildPool()
 	w.NumberVariable(VT_ID_WIDTH_VAR);
 	w.OutputString(VT_ID_WIDTH_UNIT, 16, 16, VT_ID_FONT_SMALL, 1, "m");
 	w.OutputString(VT_ID_TC_LINK, 120, 16, VT_ID_FONT_SMALL, 13, "");
+	w.OutputString(VT_ID_SOURCE, 96, 16, VT_ID_FONT_SMALL, 12, "Source:");
 
 	snprintf(VT_Label, sizeof(VT_Label), "RC%05lX", (unsigned long)(VT_CRC32(VT_Pool) & 0xFFFFF));
 }
@@ -432,7 +428,6 @@ FLASHMEM void VT_InitSlots()
 {
 	VT_SetSlot(VT_SLOT_DESIGNATOR, VT_ID_DESIGNATOR, 5);
 	VT_Str[VT_SLOT_DESIGNATOR].Centred = true;
-	VT_SetSlot(VT_SLOT_MODULE, VT_ID_MODULE, 9);
 	VT_SetSlot(VT_SLOT_SOURCE, VT_ID_SOURCE, 12);
 	for (uint8_t r = 0; r < VT_ROWS; r++)
 	{
@@ -611,8 +606,6 @@ void VT_Scan()
 	// header and designator
 	snprintf(text, sizeof(text), "RC %u", MDL.ID);
 	VT_Want(VT_SLOT_DESIGNATOR, text);
-	snprintf(text, sizeof(text), "Module %u", MDL.ID);
-	VT_Want(VT_SLOT_MODULE, text);
 	const char* source = TC_Terminal() ? "Term" : (TC_InCommand ? "TC" : (VT_AnySensorConnected() ? "RC" : "None"));
 	snprintf(text, sizeof(text), "Source: %s", source);
 	VT_Want(VT_SLOT_SOURCE, text);
