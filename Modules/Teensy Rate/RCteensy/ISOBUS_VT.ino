@@ -1153,6 +1153,8 @@ void VT_OnKey(const isobus::VirtualTerminalClient::VTKeyEvent& event)
 			{
 			case VT_KEY_MASTER:
 				if (!TC_SetMaster(!MasterOn)) VT_Message("RC app mode");
+				else if (MasterOn && !TC_ProcessDataReady()) VT_Message("Master on: no TC");
+				else if (MasterOn && !TC_AogTcSeen()) VT_Message("Sections: on terminal");	// not AOG-TC: no PGN 234 to AOG
 				break;
 			case VT_KEY_SETUP:
 				VT_ShowMask(VT_ID_MASK_SETUP);

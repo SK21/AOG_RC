@@ -60,6 +60,7 @@ const uint16_t TC_OBJ_BIN_BASE = 110;
 const uint16_t TC_OBJ_SECTION_BASE = 200;
 const uint16_t TC_OBJ_DPD_SETPOINT_WORK_STATE = 1000;
 const uint16_t TC_OBJ_DPD_ACTUAL_WORK_STATE = 1001;
+const uint16_t TC_OBJ_DPD_WORK_STATE = 1002;		// DDI 141 on the boom = master (Group3_Step2 design § 16 B2)
 const uint16_t TC_OBJ_DPD_ACTUAL_SPEED = 1004;
 const uint16_t TC_OBJ_DPD_SETPOINT_RATE_BASE = 1010;
 const uint16_t TC_OBJ_DPD_ACTUAL_RATE_BASE = 1020;
@@ -133,6 +134,7 @@ extern uint8_t NewLo;	// Relays.ino: outputs actually driven (that file comes la
 extern uint8_t NewHi;
 
 std::shared_ptr<isobus::TaskControllerClient> ISOBUStc;
+std::shared_ptr<isobus::PartneredControlFunction> ISOBUStcPartner;	// the TC (also addressed by the master message)
 bool TC_InCommand = false;			// command authority: true = TC, false = RC
 bool TC_DDOPNeedsReupload = false;
 uint32_t TC_LastReport = 0;
@@ -142,6 +144,29 @@ uint8_t TC_LastState = 255;
 uint8_t TC_LastReportedActualLo = 0xFF;
 uint8_t TC_LastReportedActualHi = 0xFF;
 uint32_t TC_LastActualSectionReport = 0;
+
+// ---- master to AOG-TaskController (Group3_Step2_Rate_Source_Design.md § 16, batch 15a) ----
+// In Terminal mode the board sends its master to AOG-TC in a Proprietary A message; AOG-TC turns
+// AOG's auto button on / off with PGN 234, as RC does. Sent only while AOG-TC's hello has come from
+// the board's TC within 5 s: Proprietary A content is each maker's own, and code 1407 (Open-Agriculture)
+// is shared by other open-source TCs, so an OEM or other TC gets nothing.
+// Bytes: 0-1 'R' 'C', 2 version (high nibble) + type (low nibble).
+//   type 1, board -> TC: 3 flags (bit 0 master on, bit 1 section control auto, bit 2 Terminal mode),
+//     4-7 section switches, 2 bits each (0 auto, 1 off, 2 on; 15a: all auto)
+//   type 2, AOG-TC -> board (hello): 3 AOG-TC major version, 4 minor
+const uint32_t TC_PGN_PROPRIETARY_A = 0xEF00;
+const uint16_t TC_OPEN_AG_CODE = 1407;
+const uint8_t TC_PA_VERSION = 1;
+const uint8_t TC_PA_MASTER = 1;
+const uint8_t TC_PA_HELLO = 2;
+const uint32_t TC_HelloValidMs = 5000;
+const uint32_t TC_MasterSendMs = 1000;
+uint32_t TC_HelloAt = 0;			// millis() of the last hello from the board's TC, 0 = never
+uint16_t TC_HelloVersion = 0;
+uint32_t TC_MasterSentAt = 0;		// millis() of the last master message sent, 0 = never
+bool TC_MasterSentOn = false;
+bool TC_LastMasterOn = false;
+bool TC_WasTerminal = false;
 
 void TC_LoadSettings()
 {
@@ -541,6 +566,75 @@ bool TC_SetMaster(bool On)
 	return Result;
 }
 
+// AOG-TaskController's hello came from the board's TC within 5 s (§ 16 A7 / B4)
+bool TC_AogTcSeen()
+{
+	return ISOBUStc->get_is_connected() && (TC_HelloAt != 0) && (millis() - TC_HelloAt < TC_HelloValidMs);
+}
+
+// Proprietary A received (to this board or global): AOG-TC's hello from the board's TC only
+void TC_OnProprietaryA(const isobus::CANMessage& message, void*)
+{
+	auto source = message.get_source_control_function();
+	if (message.get_data_length() >= 5 && source != nullptr && ISOBUStcPartner != nullptr &&
+		ISOBUStcPartner->get_address_valid() && source->get_address() == ISOBUStcPartner->get_address() &&
+		source->get_NAME().get_manufacturer_code() == TC_OPEN_AG_CODE &&
+		message.get_uint8_at(0) == 'R' && message.get_uint8_at(1) == 'C' &&
+		message.get_uint8_at(2) == ((TC_PA_VERSION << 4) | TC_PA_HELLO))
+	{
+		if (!TC_AogTcSeen()) Serial.println(F("TC: AOG-TaskController hello, master goes to AOG"));
+		TC_HelloAt = millis() | 1;
+		TC_HelloVersion = static_cast<uint16_t>((message.get_uint8_at(3) << 8) | message.get_uint8_at(4));	// major, minor
+	}
+}
+
+// the master message to AOG-TC (§ 16 B4); Leaving = the one message with bit 2 = 0 after a change to RC app mode
+bool TC_SendMasterToTC(bool Leaving)
+{
+	bool Result = false;
+	if ((TC_Terminal() || Leaving) && TC_ProcessDataReady() && TC_AogTcSeen())
+	{
+		const bool On = MasterOn && TC_Terminal();
+		uint8_t data[8] = { 'R', 'C', static_cast<uint8_t>((TC_PA_VERSION << 4) | TC_PA_MASTER), 0, 0, 0, 0, 0 };
+		if (On) data[3] |= 0x01;
+		data[3] |= 0x02;					// section control auto (15a always; 15b adds the Auto Sec key)
+		if (TC_Terminal()) data[3] |= 0x04;
+		// bytes 4-7: section switches, all 0 = auto in 15a (15b)
+		Result = isobus::CANNetworkManager::CANNetwork.send_can_message(TC_PGN_PROPRIETARY_A, data, sizeof(data), ISOBUSicf, ISOBUStcPartner);
+		if (Result)
+		{
+			TC_MasterSentAt = millis() | 1;
+			TC_MasterSentOn = On;
+		}
+	}
+	return Result;
+}
+
+// master changes: DDI 141 at once; the master message on a change and every 1 s in Terminal mode (§ 16 B5)
+void TC_UpdateMasterLink()
+{
+	bool Changed = false;
+	if (MasterOn != TC_LastMasterOn)
+	{
+		TC_LastMasterOn = MasterOn;
+		Changed = true;
+		if (TC_ProcessDataReady()) ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualWorkState));
+	}
+
+	const bool Terminal = TC_Terminal();
+	const bool Leaving = TC_WasTerminal && !Terminal;
+	TC_WasTerminal = Terminal;
+
+	if (Leaving)
+	{
+		TC_SendMasterToTC(true);
+	}
+	else if (Terminal && (Changed || (millis() - TC_MasterSentAt >= TC_MasterSendMs)))
+	{
+		TC_SendMasterToTC(false);
+	}
+}
+
 // a valve type: manual + / - jumps to MinPWM and ramps; released = 0 (the valve holds)
 bool TC_IsValveType(uint8_t r)
 {
@@ -792,6 +886,10 @@ bool TC_RequestValue(std::uint16_t elementNumber, std::uint16_t DDI, std::int32_
 			{
 				value = static_cast<std::int32_t>(SPEED_GetKmh() * 277.7778f);	// mm/s
 			}
+			else if (DDI == static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualWorkState))
+			{
+				value = MasterOn ? 1 : 0;	// the implement's work state = master (both modes)
+			}
 			else
 			{
 				Result = false;
@@ -956,7 +1054,7 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 	auto ddop = std::make_shared<isobus::DeviceDescriptorObjectPool>(4);
 	std::array<std::uint8_t, isobus::task_controller_object::DeviceObject::MAX_STRUCTURE_AND_LOCALIZATION_LABEL_LENGTH> localization = { 'e','n',0,0,0,0,0xFF };
 	// change the structure label whenever the DDOP changes (ISO 11783-10; AgIsoStack logs an error and a TC may
-	// keep its stored copy otherwise): "RC" + 5 base-36 characters from the bins' types, the bin count, the
+	// keep its stored copy otherwise): 'R' + the layout letter + 5 base-36 characters from the bins' types, the bin count, the
 	// default rate flag, the 158 / 287 / 288 flag and a checksum of the default rates (the operator rates, as
 	// sent). Same content, same label. Extended label: the same 7 characters + one type letter per bin
 	// (V volume, M mass, C count), readable in a TC's log.
@@ -995,7 +1093,10 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 #endif
 	Code = Code * RateChecksums + Checksum;
 	const char Base36[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	char structureLabel[8] = { 'R','C',0,0,0,0,0,0 };
+	// layout letter: change by hand when the DDOP's layout changes (the code above has no room left), so a TC
+	// that keeps pools by label asks for the new one. C = Group 3 step 2a, D = with DDI 141 on the boom (15a)
+	const char LayoutLetter = 'D';
+	char structureLabel[8] = { 'R',LayoutLetter,0,0,0,0,0,0 };
 	for (int8_t i = 6; i >= 2; i--)
 	{
 		structureLabel[i] = Base36[Code % 36];
@@ -1017,6 +1118,8 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 	ddop->add_device_process_data("Set Section State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::SetpointCondensedWorkState1_16), isobus::NULL_OBJECT_ID, settable, onChange, TC_OBJ_DPD_SETPOINT_WORK_STATE);
 	ddop->add_device_process_data("Actual Section State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualCondensedWorkState1_16), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_WORK_STATE);
 	ddop->add_device_process_data("Actual Speed", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualSpeed), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_ACTUAL_SPEED);
+	// work state = master; not settable, so a TC records it but doesn't use it for section control
+	ddop->add_device_process_data("Work State", static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualWorkState), isobus::NULL_OBJECT_ID, measurement, onChange, TC_OBJ_DPD_WORK_STATE);
 
 	auto boom = std::static_pointer_cast<isobus::task_controller_object::DeviceElementObject>(ddop->get_object_by_id(TC_OBJ_BOOM));
 	if (boom != nullptr)
@@ -1024,6 +1127,7 @@ std::shared_ptr<isobus::DeviceDescriptorObjectPool> TC_CreateDDOP()
 		boom->add_reference_to_child_object(TC_OBJ_DPD_SETPOINT_WORK_STATE);
 		boom->add_reference_to_child_object(TC_OBJ_DPD_ACTUAL_WORK_STATE);
 		boom->add_reference_to_child_object(TC_OBJ_DPD_ACTUAL_SPEED);
+		boom->add_reference_to_child_object(TC_OBJ_DPD_WORK_STATE);
 	}
 
 	// a bin per rate sensor under the boom; rate DDIs follow the product's type from RC:
@@ -1092,16 +1196,21 @@ FLASHMEM void TC_Begin()
 
 	const isobus::NAMEFilter filterTC(isobus::NAME::NAMEParameters::FunctionCode, static_cast<std::uint8_t>(isobus::NAME::Function::TaskController));
 	const std::vector<isobus::NAMEFilter> tcNameFilters = { filterTC };
-	auto partnerTC = isobus::CANNetworkManager::CANNetwork.create_partnered_control_function(0, tcNameFilters);
+	ISOBUStcPartner = isobus::CANNetworkManager::CANNetwork.create_partnered_control_function(0, tcNameFilters);
 
 	// No VT partner, also with ISOBUS_VT: for a TC below version 4 AgIsoStack then asks that VT for the language
 	// command, and with no VT on the bus the request can't be sent and the TC client resets every 6 s (bench
 	// 2026-11-27). nullptr asks globally, which any terminal answers.
-	ISOBUStc = std::make_shared<isobus::TaskControllerClient>(partnerTC, ISOBUSicf, nullptr);
+	ISOBUStc = std::make_shared<isobus::TaskControllerClient>(ISOBUStcPartner, ISOBUSicf, nullptr);
 	ISOBUStc->configure(TC_CreateDDOP(), 1, TCset.SectionCount, 0, true, false, false, false, true);
 	ISOBUStc->add_request_value_callback(TC_RequestValue, nullptr);
 	ISOBUStc->add_value_command_callback(TC_ValueCommand, nullptr);
 	ISOBUStc->initialize(false);
+
+	// AOG-TaskController's hello (§ 16 A7)
+	isobus::CANNetworkManager::CANNetwork.add_any_control_function_parameter_group_number_callback(TC_PGN_PROPRIETARY_A, TC_OnProprietaryA, nullptr);
+	TC_LastMasterOn = MasterOn;
+	TC_WasTerminal = TC_Terminal();
 }
 
 void TC_PrintStatus()
@@ -1121,6 +1230,31 @@ void TC_PrintStatus()
 	Serial.print(F(" m, speed "));
 	Serial.print(SPEED_GetKmh(), 1);
 	Serial.println(F(" km/h"));
+	Serial.print(F("  AOG-TaskController hello "));
+	if (TC_AogTcSeen())
+	{
+		Serial.print(F("seen (version "));
+		Serial.print(TC_HelloVersion >> 8);
+		Serial.print(F("."));
+		Serial.print(TC_HelloVersion & 0xFF);
+		Serial.print(F(")"));
+	}
+	else
+	{
+		Serial.print(F("not seen"));
+	}
+	Serial.print(F(", to TC: "));
+	if (!TC_Terminal()) Serial.println(F("not sent (RC app mode)"));
+	else if (!TC_ProcessDataReady()) Serial.println(F("not sent (no TC)"));
+	else if (!TC_AogTcSeen()) Serial.println(F("not sent (not AOG-TaskController)"));
+	else if (TC_MasterSentAt == 0) Serial.println(F("not sent yet"));
+	else
+	{
+		Serial.print(TC_MasterSentOn ? F("master on") : F("master off"));
+		Serial.print(F(", sent "));
+		Serial.print((millis() - TC_MasterSentAt) / 1000.0f, 1);
+		Serial.println(F(" s ago"));
+	}
 	for (uint8_t r = 0; r < TC_RateCount(); r++)
 	{
 		Serial.print(F("  bin "));
@@ -1292,6 +1426,8 @@ void TC_Update()
 	}
 #endif
 
+	TC_UpdateMasterLink();
+
 	if (TC_DDOPNeedsReupload && ISOBUStc->get_is_connected())
 	{
 		TC_DDOPNeedsReupload = false;
@@ -1308,6 +1444,7 @@ void TC_Update()
 			ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BIN_BASE + r, TC_TotalDDI(r));
 		}
 		ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualSpeed));
+		ISOBUStc->on_value_changed_trigger(TC_ELEMENT_BOOM, static_cast<std::uint16_t>(isobus::DataDescriptionIndex::ActualWorkState));
 	}
 }
 
