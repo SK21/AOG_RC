@@ -126,6 +126,8 @@ float TC_TargetRate[TCmaxRates];		// from the TC, litres, kg or seeds per ha; RA
 bool TC_UnitsWarned[TCmaxRates];		// "units not set" printed once
 byte TC_SectionLo = 0;					// Terminal mode: the TC's sections, driven while master is on
 byte TC_SectionHi = 0;
+int16_t TC_ManualPWM[TCmaxRates];		// Terminal mode, manual: the operator's PWM (-255 to 255), driven only
+										// while master and a section are on (Group3_Step2 design § 14 G7)
 
 extern uint8_t NewLo;	// Relays.ino: outputs actually driven (that file comes later in the build)
 extern uint8_t NewHi;
@@ -410,6 +412,7 @@ void TC_ClearOutputs()
 		CalibrationOn[i] = false;
 		FlowExpected[i] = false;	// set by RC's 32500/0xFF03, which the TC state ignores; TC_Update sets the bins'
 	}
+	for (uint8_t r = 0; r < TCmaxRates; r++) TC_ManualPWM[r] = 0;
 }
 
 // every target, master and the sections cleared: no command from the old source survives
@@ -522,16 +525,74 @@ bool TC_SetControlMode(uint8_t Mode)
 }
 
 // the operator's master (Terminal mode only; in RC app mode RC or the TC's sections set it)
-void TC_SetMaster(bool On)
+bool TC_SetMaster(bool On)
 {
+	bool Result = false;
 	if (TC_Terminal())
 	{
 		MasterOn = On;
 		Serial.println(On ? F("TC: master on") : F("TC: master off"));
+		Result = true;
 	}
 	else
 	{
 		Serial.println(F("TC: master comes from RC or the TC in RC app mode"));
+	}
+	return Result;
+}
+
+// a valve type: manual + / - jumps to MinPWM and ramps; released = 0 (the valve holds)
+bool TC_IsValveType(uint8_t r)
+{
+	return Sensor[r].ControlType == 0 || Sensor[r].ControlType == 1 || Sensor[r].ControlType == TimedCombo_ct;
+}
+
+// auto / manual for a product (Terminal mode only; RC sets it in RC app mode). Manual starts a motor
+// at its current PWM (no jump), a valve at 0. A fan stays in auto (as RC).
+bool TC_SetAuto(uint8_t r, bool On)
+{
+	bool Result = false;
+	if (!TC_Terminal())
+	{
+		Serial.println(F("TC: auto / manual comes from RC in RC app mode"));
+	}
+	else if (r >= TC_RateCount())
+	{
+		Serial.println(F("TC: no such product"));
+	}
+	else if (!On && Sensor[r].ControlType == Fan_ct)
+	{
+		Serial.println(F("TC: a fan is always in auto"));
+	}
+	else
+	{
+		if (On != AutoOn[r])
+		{
+			TC_ManualPWM[r] = 0;
+			if (!On && !TC_IsValveType(r))
+			{
+				float pwm = constrain(Sensor[r].PWM, 0.0f, 255.0f);
+				TC_ManualPWM[r] = static_cast<int16_t>(pwm);
+			}
+			AutoOn[r] = On;
+		}
+		Serial.print(F("TC: product "));
+		Serial.print(r + 1);
+		Serial.println(On ? F(" auto") : F(" manual"));
+		Result = true;
+	}
+	return Result;
+}
+
+// the operator's manual PWM, clamped as RC's ManualPWM (valve -255 to 255, motor 0 to 255)
+void TC_SetManualPWM(uint8_t r, int16_t PWM)
+{
+	if (r < TCmaxRates)
+	{
+		int16_t Low = TC_IsValveType(r) ? -255 : 0;
+		if (PWM < Low) PWM = Low;
+		if (PWM > 255) PWM = 255;
+		TC_ManualPWM[r] = PWM;
 	}
 }
 
@@ -1079,6 +1140,8 @@ void TC_PrintStatus()
 		Serial.print(F(", 158 = "));
 		Serial.print(TC_Rx[r]);
 #endif
+		Serial.print(AutoOn[r] ? F(", auto") : F(", manual PWM "));
+		if (!AutoOn[r]) Serial.print(TC_ManualPWM[r]);
 		Serial.print(F(", target "));
 		Serial.print(Sensor[r].TargetUPM, 3);
 		Serial.print(F(" UPM, actual "));
@@ -1092,6 +1155,7 @@ void TC_PrintStatus()
 //   M           master on / off (Terminal mode)
 //   o<bin> <r>  operator rate for the bin, per ha (e.g. o0 120)
 //   v<bin>      the operator's VR on / off for the bin (off: 158 stays 0, operator rate)
+//   a<bin>      auto / manual for the bin (Terminal mode; manual + / - on the VT's product page)
 //   ?           status
 // Bench tools for the Group 2 step 3 tests (TC_RX_DDIS):
 //   r<bin>      refuse the next 158 = 1 (answer 0)
@@ -1129,6 +1193,10 @@ void TC_SerialCommands()
 				{
 					TC_PrintStatus();
 				}
+				else if (Cmd == 'a' && BinOk)
+				{
+					TC_SetAuto(Bin, !AutoOn[Bin]);
+				}
 #if TC_RX_DDIS
 				else if (Cmd == 'v' && BinOk)
 				{
@@ -1163,9 +1231,9 @@ void TC_SerialCommands()
 				else
 				{
 #if TC_RX_DDIS
-					Serial.println(F("TC: t, M, o<bin> <rate>, v<bin>, ?; bench r<bin>, x<bin> [n], d"));
+					Serial.println(F("TC: t, M, o<bin> <rate>, v<bin>, a<bin>, ?; bench r<bin>, x<bin> [n], d"));
 #else
-					Serial.println(F("TC: t, M, o<bin> <rate>, ?"));
+					Serial.println(F("TC: t, M, o<bin> <rate>, a<bin>, ?"));
 #endif
 				}
 			}
@@ -1195,6 +1263,13 @@ void TC_Update()
 		// the operator's master gates the TC's sections
 		RelayLo = MasterOn ? TC_SectionLo : 0;
 		RelayHi = MasterOn ? TC_SectionHi : 0;
+
+		// manual drives only with master and a section on (Q1, D3: no application without the TC's sections)
+		bool CanApply = MasterOn && (RelayLo || RelayHi);
+		for (uint8_t r = 0; r < TC_RateCount(); r++)
+		{
+			Sensor[r].ManualAdjust = (!AutoOn[r] && CanApply) ? TC_ManualPWM[r] : 0;
+		}
 	}
 
 	if (TC_DrivesProducts())
