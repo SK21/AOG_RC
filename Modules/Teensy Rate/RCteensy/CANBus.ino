@@ -498,10 +498,10 @@ void CANBus_HandleRateCommand(const CAN_message_t& msg) {
 	uint8_t senId = (msg.buf[0] >> 4) & 0x0F;
 
 #if ISOBUS_ENABLED
-	// while the TC commands only the PID-log bit is taken (as Receive.ino 32500), so the board can still be logged
+	// while the TC commands or in Terminal mode only the PID-log bit is taken (as Receive.ino 32500), so the board can still be logged
 	if (modId == MDL.ID) RC_LastRateCommand = millis();
-	if (modId == MDL.ID && TC_Commanding()) PidLogEnabled = ((msg.buf[6] & 0x20) == 0x20);
-	if (modId != MDL.ID || TC_Commanding()) return;  // Not for us, or the TC commands (ISOBUS_TC.ino)
+	if (modId == MDL.ID && RC_RateCommandsIgnored()) PidLogEnabled = ((msg.buf[6] & 0x20) == 0x20);
+	if (modId != MDL.ID || RC_RateCommandsIgnored()) return;  // Not for us, or the TC commands / Terminal mode (ISOBUS_TC.ino)
 #else
 	if (modId != MDL.ID) return;  // Not for us
 #endif
@@ -533,7 +533,7 @@ void CANBus_HandleRelayCommand(const CAN_message_t& msg) {
 	// Matches UDP PGN 32501 format
 	uint8_t modId = msg.buf[0] & 0x0F;
 #if ISOBUS_ENABLED
-	if (modId != MDL.ID || TC_Commanding()) return;  // or the TC commands (ISOBUS_TC.ino)
+	if (modId != MDL.ID || RC_RateCommandsIgnored()) return;  // or the TC commands / Terminal mode (ISOBUS_TC.ino)
 #else
 	if (modId != MDL.ID) return;
 #endif
